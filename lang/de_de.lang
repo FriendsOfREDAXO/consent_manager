@@ -1,0 +1,44 @@
+iwcc_title = Cookie Gedöhns
+iwcc_name = Name
+iwcc_name_empty_msg = Name ist ein Pflichtfeld
+iwcc_uid = Schlüssel
+iwcc_prio = Reihenfolge
+iwcc_uid_with_hint = Schlüssel [a-z0-9-]
+iwcc_uid_empty_msg = Schlüssel ist ein Pflichtfeld
+iwcc_uid_malformed_msg = Schlüssel darf nur aus klein a-z, 0-9 und - bestehen, zb "google-analytics" oder "youtube"
+iwcc_description = Beschreibung
+iwcc_not_deletable = Dieser Datensatz kann nicht gelöscht werden, da er vom Addon benötigt wird
+iwcc_successfully_deleted = Datensatz gelöscht
+
+iwcc_cookies = Cookies
+iwcc_cookie_add = Cookie erstellen
+iwcc_cookie_edit = Cookie bearbeiten
+iwcc_cookie_iwcc_info = "iwcc" wird vom Addon benötigt, in diesem Cookie wird die Auswahl des Nutzers gespeichert.
+iwcc_cookie_notice_provider_link_privacy = Leer lassen für Datenschutzerklärung der Domain
+iwcc_cookie_service_name = Dienstname
+iwcc_cookie_provider = Anbieter
+iwcc_cookie_provider_link_privacy = Datenschutzerklärung
+iwcc_cookie_name = Name
+iwcc_cookie_lifetime = Laufzeit
+
+iwcc_cookiegroups = Cookie Gruppen
+iwcc_cookiegroup_add = Cookie Gruppe erstellen
+iwcc_cookiegroup_edit = Cookie Gruppe bearbeiten
+iwcc_cookiegroup_required = diese Cookie Gruppe enthält die technisch notwendigen Cookies
+iwcc_cookiegroup_scripts = Skripte, die nach Einverständnis geladen werden
+iwcc_cookiegroup_scripts_notice = Skripte inklusive <code><script>...</script></code> eingeben
+
+iwcc_texts = Cookie Texte
+iwcc_text = Text
+iwcc_text_add = Text erstellen
+iwcc_text_edit = Text bearbeiten
+
+iwcc_domains = Domains
+iwcc_domain = Domain
+iwcc_domain_add = Domain hinzufügen
+iwcc_domain_edit = Domain bearbeiten
+iwcc_domain_privacy_policy = Datenschutzerklärung
+iwcc_domain_legal_notice = Impressum
+
+iwcc_cache_write_failed = Cachefile konnte nicht geschrieben werden
+
