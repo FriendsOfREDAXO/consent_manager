@@ -5,7 +5,7 @@ Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies werden in Gruppen zusamm
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc.jpg?raw=true)
 
 ## Installation
-Herunterladen und installieren. Bei der Installation wird ein Template "iwcc" anglegt. Dieses im <code>head</code> der Seite einbinden, zb über <code>REX_TEMPLATE[xx]</code>.
+Herunterladen und installieren. Bei der Installation wird ein Template "iwcc" anglegt. Dieses im <code>head</code> der Seite einbinden, zb über <code>REX_TEMPLATE[xx]</code>  
 Ausserdem werden einige Cookie-/Cookie Gruppen Definitionen für einen leichteren Einstieg angelegt.
 
 ## Einrichtung
@@ -36,18 +36,19 @@ Das Design kann nach Belieben angepasst werden. Dazu das mitegelieferte Styleshe
 Du hast einen Fehler gefunden oder ein nettes Feature was du gerne hättest? [Lege ein Issue an](https://github.com/FriendsOfREDAXO/iwcc/issues)
 
 ## Lizenz
-MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/iwcc/blob/master/LICENSE.md)
-[cookie.js](https://github.com/js-cookie/js-cookie): [MIT Lizenz](https://github.com/js-cookie/js-cookie/blob/master/LICENSE)
-[Font Awesome](https://fontawesome.com/v4.7.0/): [SIL Lizenz](https://fontawesome.com/v4.7.0/license/)
-[pretty checkbox](https://github.com/lokesh-coder/pretty-checkbox): [MIT Lizenz](https://github.com/lokesh-coder/pretty-checkbox/blob/master/LICENSE)
+MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/iwcc/blob/master/LICENSE.md)  
+[cookie.js](https://github.com/js-cookie/js-cookie): [MIT Lizenz](https://github.com/js-cookie/js-cookie/blob/master/LICENSE)  
+[Font Awesome](https://fontawesome.com/v4.7.0/): [SIL Lizenz](https://fontawesome.com/v4.7.0/license/)  
+[pretty checkbox](https://github.com/lokesh-coder/pretty-checkbox): [MIT Lizenz](https://github.com/lokesh-coder/pretty-checkbox/blob/master/LICENSE)  
 
 ## Autor
-**Friends Of REDAXO**
-http://www.redaxo.org
-https://github.com/FriendsOfREDAXO
-**Projekt-Lead**
+**Friends Of REDAXO**  
+http://www.redaxo.org  
+https://github.com/FriendsOfREDAXO  
+**Projekt-Lead**  
 [Ingo Winter](https://github.com/IngoWinter)
 
 ## Credits:
-First Release: [Ingo Winter](https://github.com/IngoWinter)
-[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie Gedöhns wiederfinden :)
+First Release: [Ingo Winter](https://github.com/IngoWinter)  
+[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie Gedöhns wiederfinden :)  
+ 
