@@ -1,11 +1,11 @@
 # Cookie Gedöhns
 
-Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies werden in Gruppen zusammengefasst. Der Website Nutzer kann Cookies gruppenweise akzeptieren. 
+Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies werden in Gruppen zusammengefasst. Der Website Nutzer kann Cookies gruppenweise akzeptieren. Die Cookie Box kann über einen Klick auf ein Element mit der Klasse <code>iwcc-show-box</code> wieder geöffnet werden, zb. ein <code>&lt;a class="iwcc-show-box"&gt;Cookie Einstellungen bearbeiten&lt;/a&gt;</code> im Footer oder der Datenschutzerklärung.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc.jpg?raw=true)
 
 ## Installation
-Herunterladen und installieren. Bei der Installation wird ein Template "iwcc" anglegt. Dieses im <code>head</code> der Seite einbinden, zb über <code>REX_TEMPLATE[xx]</code>  
+Herunterladen und installieren. Bei der Installation wird ein Template "iwcc" anglegt. Dieses im <code>head</code> der Seite einbinden, zb. über <code>REX_TEMPLATE[xx]</code>  
 Ausserdem werden einige Cookie-/Cookie Gruppen Definitionen für einen leichteren Einstieg angelegt.
 
 ## Einrichtung
@@ -21,7 +21,7 @@ Der nicht löschbare Cookie <code>iwcc</code> speichert die Auswahl des Nutzers.
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-cookies.jpg?raw=true)
 
 ### Texte
-Die Texte der Cookie Box :)
+Die Texte der Cookie Box
 
 ### Domains
 Das Addon erwartet die Domains im Format <code>meinedomain.de</code>. Im Template wird die hier hinterlegte Domain mit <code>$_SERVER['HTTP_HOST']</code> verglichen.
@@ -50,5 +50,5 @@ https://github.com/FriendsOfREDAXO
 
 ## Credits:
 First Release: [Ingo Winter](https://github.com/IngoWinter)  
-[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie Gedöhns wiederfinden :)  
+[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie Gedöhns wiederfinden  
  
