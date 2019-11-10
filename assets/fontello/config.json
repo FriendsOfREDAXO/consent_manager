@@ -29,6 +29,12 @@
       "css": "info-circled",
       "code": 59392,
       "src": "fontawesome"
+    },
+    {
+      "uid": "ce50292e85eb5d6ee3be61b32bf2bdf3",
+      "css": "ok-1",
+      "code": 59397,
+      "src": "mfglabs"
     }
   ]
 }
