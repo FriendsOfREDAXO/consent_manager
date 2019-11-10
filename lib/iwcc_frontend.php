@@ -33,6 +33,9 @@ class iwcc_frontend
         }
         if ($this->domainId)
         {
+            if(in_array(rex_article::getCurrentId(),[$this->links['privacy_policy'], $this->links['legal_notice']])) {
+                return true;
+            }
             if (isset($this->cache['cookiegroups'][rex_clang::getCurrentId()][$this->domainId]))
             {
                 $this->cookiegroups = $this->cache['cookiegroups'][rex_clang::getCurrentId()][$this->domainId];
@@ -47,11 +50,6 @@ class iwcc_frontend
                         $this->cookiegroups[$cgk]['cookie'][$ck]['provider_link_privacy'] = rex_getUrl($this->links['legal_notice']);
                     }
                 }
-                /*
-                if ($v['required'] = '|1|') {
-                    $this->cookiegroups[$k]['cookie'][0]['provider_link_privacy'] = rex_getUrl($this->links['legal_notice']);
-                }
-                */
             }
         }
     }

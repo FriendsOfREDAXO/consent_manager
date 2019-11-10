@@ -159,6 +159,13 @@
 }
 .iwcc-buttons {
 }
+.pretty.p-icon .state .icon {
+    font-size: 1.15em;
+    transition: all .1s ease;
+}
+.pretty.p-icon .state label:before {
+    margin-top: -.1em;
+}
 @media (min-width: 35em) {
     .iwcc-cookiegroups {
         display: flex;

@@ -44,13 +44,14 @@ document.addEventListener('DOMContentLoaded', function ()
     {
         el.addEventListener('click', function ()
         {
-            deleteCookies();
             if (el.classList.contains('iwcc-save-selection'))
             {
+                deleteCookies();
                 saveConsent('selection');
             }
-            else
+            else if (el.classList.contains('iwcc-accept-all'))
             {
+                deleteCookies();
                 saveConsent('all');
             }
             document.getElementById('iwcc-background').classList.add('iwcc-hidden');
