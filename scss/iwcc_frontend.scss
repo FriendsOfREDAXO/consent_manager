@@ -112,12 +112,14 @@
     font-size: 1.8em;
     background: none transparent;
     line-height: 1;
+    text-decoration: none;
     &:before {
         margin: 0;
     }
     &:hover {
         color: #404040;
         background: none transparent;
+        text-decoration: none;
     }
 }
 .iwcc-cookiegroups {
