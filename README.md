@@ -5,7 +5,7 @@ Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies werden in Gruppen zusamm
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc.jpg?raw=true)
 
 ## Installation
-Herunterladen und installieren. Bei der Installation wird ein Template "iwcc" anglegt. Dieses im <code>head</code> der Seite einbinden, zb. über <code>REX_TEMPLATE[xx]</code>  
+Herunterladen und installieren. Nach der Installation steht die Variable <code>REX_IWCC[]</code> zur Verfügung. Diese im <code>head</code> der Seite einbinden.  
 Ausserdem werden einige Cookie-/Cookie Gruppen Definitionen für einen leichteren Einstieg angelegt.
 
 ## Einrichtung
@@ -24,13 +24,13 @@ Der nicht löschbare Cookie <code>iwcc</code> speichert die Auswahl des Nutzers.
 Die Texte der Cookie Box
 
 ### Domains
-Das Addon erwartet die Domains im Format <code>meinedomain.de</code>. Im Template wird die hier hinterlegte Domain mit <code>$_SERVER['HTTP_HOST']</code> verglichen.
+Das Addon erwartet die Domains im Format <code>meinedomain.de</code>. Im Fragment wird die hier hinterlegte Domain mit <code>$_SERVER['HTTP_HOST']</code> verglichen.
 
 ## Mehrsprachigkeit
 Beim Anlegen einer neuen Sprache werden existierende Einträge in die neue Sprache kopiert. Bestimmte Felder (zb. Schlüssel, Skripte oder Cookie Namen) können nur in der ersten Sprache editiert werden.
 
 ## Design
-Das Design kann nach Belieben angepasst werden. Dazu das mitegelieferte Stylesheet (sieht Template) überschreiben oder komplett entfernen und was eigenes machen. Tipp hierzu: im Addon Verzeichnis findet sich das Stylesheet als SCSS. Wenn man als Admin eingeloggt ist und der Debug-Mode aktiviert ist, wird das Stylesheet nach Änderungen neu generiert.
+HTML, CSS und Skripte der Cookie Box liegen im Fragment <code>/redaxo/src/addons/iwcc/fragments/iwcc_box.php</code>. Das Design kann nach Belieben angepasst werden. Dazu das mitgelieferte Stylesheet überschreiben oder komplett entfernen und was eigenes machen. Tipp hierzu: in <code>/redaxo/src/addons/iwcc/scss/</code> findet sich das Stylesheet als SCSS. Wenn man als Admin eingeloggt ist und der Debug-Mode aktiviert ist, wird das Stylesheet nach Änderungen neu generiert.
 
 ## Fehler gefunden?
 Du hast einen Fehler gefunden oder ein nettes Feature was du gerne hättest? [Lege ein Issue an](https://github.com/FriendsOfREDAXO/iwcc/issues)
