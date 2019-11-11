@@ -1,4 +1,4 @@
-# Cookie Gedöhns
+# Cookie Gedöns
 
 Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies werden in Gruppen zusammengefasst. Der Website Nutzer kann Cookies gruppenweise akzeptieren. Die Cookie Box kann über einen Klick auf ein Element mit der Klasse <code>iwcc-show-box</code> wieder geöffnet werden, zb. ein <code>&lt;a class="iwcc-show-box"&gt;Cookie Einstellungen bearbeiten&lt;/a&gt;</code> im Footer oder der Datenschutzerklärung.
 
