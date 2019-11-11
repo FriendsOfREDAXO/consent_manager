@@ -26,7 +26,7 @@ elseif ($func == 'add' || $func == 'edit')
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('iwcc_domain'));
     $db->select('id,uid');
-    $domains = $db->getArray($qry);
+    $domains = $db->getArray();
 
     if ($clang_id == rex_clang::getStartId() || !$form->isEditMode())
     {
