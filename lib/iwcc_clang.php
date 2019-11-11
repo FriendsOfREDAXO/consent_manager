@@ -17,6 +17,7 @@ class iwcc_clang
             $db->setWhere('id = :id', ['id' => $v['id']]);
             $db->delete();
         }
+        iwcc_cache::forceWrite();
         return $msg;
     }
 
