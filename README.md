@@ -50,5 +50,5 @@ https://github.com/FriendsOfREDAXO
 
 ## Credits:
 First Release: [Ingo Winter](https://github.com/IngoWinter)  
-[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie Gedöhns wiederfinden  
+[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie Gedöns wiederfinden  
  
