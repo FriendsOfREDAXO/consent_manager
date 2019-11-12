@@ -98,8 +98,12 @@ document.addEventListener('DOMContentLoaded', function ()
         var domain = document.getElementById('iwcc-background').getAttribute('data-domain-name');
         for (var key in Cookies.get())
         {
-            Cookies.remove(key, {'domain': domain, 'path': '/'});
-            Cookies.remove(key, {'domain': ('.' + domain), 'path': '/'});
+            Cookies.remove(encodeURIComponent(key));
+            Cookies.remove(encodeURIComponent(key), {'domain': domain});
+            Cookies.remove(encodeURIComponent(key), {'path': '/'});
+            Cookies.remove(encodeURIComponent(key), {'domain': domain, 'path': '/'});
+            Cookies.remove(encodeURIComponent(key), {'domain': ('.' + domain)});
+            Cookies.remove(encodeURIComponent(key), {'domain': ('.' + domain), 'path': '/'});
         }
     }
 
