@@ -47,7 +47,7 @@ class iwcc_frontend
             foreach ($this->cookiegroups as $cgk => $cgv) {
                 foreach ($cgv['cookie'] as $ck => $cv) {
                     if (!$cv['provider_link_privacy']) {
-                        $this->cookiegroups[$cgk]['cookie'][$ck]['provider_link_privacy'] = rex_getUrl($this->links['legal_notice']);
+                        $this->cookiegroups[$cgk]['cookie'][$ck]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy']);
                     }
                 }
             }
