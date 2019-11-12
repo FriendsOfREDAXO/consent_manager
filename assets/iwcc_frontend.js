@@ -35,6 +35,10 @@ document.addEventListener('DOMContentLoaded', function ()
         addScript(iwccBox.querySelector('[data-uid="' + key + '"]'));
     }
 
+    if (iwccBox.classList.contains('iwcc-initially-hidden')) {
+        show = 0;
+    }
+
     if (show)
     {
         showBox();

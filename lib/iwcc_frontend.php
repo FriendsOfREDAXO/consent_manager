@@ -7,6 +7,7 @@ class iwcc_frontend
     public $cookiegroups = [];
     public $domainName = '';
     public $links = [];
+    public $boxClass = '';
     private $cache = [];
     private $domainId = 0;
 
@@ -34,7 +35,7 @@ class iwcc_frontend
         if ($this->domainId)
         {
             if(in_array(rex_article::getCurrentId(),[$this->links['privacy_policy'], $this->links['legal_notice']])) {
-                return true;
+                $this->boxClass = 'iwcc-initially-hidden';
             }
             if (isset($this->cache['cookiegroups'][rex_clang::getCurrentId()][$this->domainId]))
             {
@@ -52,6 +53,13 @@ class iwcc_frontend
                 }
             }
         }
+    }
+
+    public function getFragment($debug,$forceCache) {
+        $fragment = new rex_fragment();
+        $fragment->setVar('debug', $debug);
+        $fragment->setVar('forceCache', $forceCache);
+        return $fragment->parse('iwcc_box.php');
     }
 
 }
