@@ -35,10 +35,13 @@ iwcc_text_edit = Text bearbeiten
 
 iwcc_domains = Domains
 iwcc_domain = Domain
+iwcc_domain_empty_msg = Domain ist ein Pflichtfeld
+iwcc_domain_malformed_msg = Domain bitte im Format <code>meinedomain.de</code> eingeben, ohne Protokoll oder Pfade - zb
 iwcc_domain_add = Domain hinzufügen
 iwcc_domain_edit = Domain bearbeiten
 iwcc_domain_privacy_policy = Datenschutzerklärung
 iwcc_domain_legal_notice = Impressum
+iwcc_domain_privacy_policy_empty_msg = Datenschutzerklärung ist ein Pflichtfeld
+iwcc_domain_legal_notic_empty_msg = Impressum ist ein Pflichtfeld
 
 iwcc_cache_write_failed = Cachefile konnte nicht geschrieben werden
-

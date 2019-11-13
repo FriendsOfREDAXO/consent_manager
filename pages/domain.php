@@ -24,13 +24,15 @@ elseif ($func == 'add' || $func == 'edit')
     $field = $form->addTextField('uid');
     $field->setLabel($this->i18n('iwcc_domain'));
     $field->getValidator()->add('notEmpty', $this->i18n('iwcc_domain_empty_msg'));
-    $field->getValidator()->add('custom', $this->i18n('iwcc_hostname_malformed_msg'), 'iwcc_rex_form::validateHostname');
+    $field->getValidator()->add('custom', $this->i18n('iwcc_domain_malformed_msg').' <code>'.$_SERVER['HTTP_HOST'].'</code>', 'iwcc_rex_form::validateHostname');
 
     $field = $form->addLinkmapField('privacy_policy');
     $field->setLabel($this->i18n('iwcc_domain_privacy_policy'));
+    $field->getValidator()->add('notEmpty', $this->i18n('iwcc_domain_privacy_policy_empty_msg'));
 
     $field = $form->addLinkmapField('legal_notice');
     $field->setLabel($this->i18n('iwcc_domain_legal_notice'));
+    $field->getValidator()->add('notEmpty', $this->i18n('iwcc_domain_legal_notic_empty_msg'));
 
     $title = $form->isEditMode() ? $this->i18n('iwcc_domain_edit') : $this->i18n('iwcc_domain_add');
     $content = $form->get();
