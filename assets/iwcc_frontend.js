@@ -109,8 +109,13 @@ document.addEventListener('DOMContentLoaded', function ()
 
     function addScript(el)
     {
-        var scriptWrapper = el.parentNode.querySelector('.iwcc-script'),
+        var scriptWrapper,
             scriptDom;
+        if (!el)
+        {
+            return;
+        }
+        scriptWrapper = el.parentNode.querySelector('.iwcc-script');
         if (!scriptWrapper)
         {
             return;
@@ -146,9 +151,14 @@ document.addEventListener('DOMContentLoaded', function ()
 
     function showBox()
     {
+        var checkbox;
         for (var key in consents)
         {
-            iwccBox.querySelector('[data-uid="' + key + '"]').checked = true;
+            checkbox = iwccBox.querySelector('[data-uid="' + key + '"]');
+            if (!checkbox) {
+                continue;
+            }
+            checkbox.checked = true;
         }
         document.getElementById('iwcc-background').classList.remove('iwcc-hidden');
     }
