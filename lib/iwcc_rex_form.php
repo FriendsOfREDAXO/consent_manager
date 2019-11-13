@@ -27,35 +27,44 @@ class iwcc_rex_form
     {
         $html = '';
         $html .= '<dl class="rex-form-group form-group iwcc-fake">';
-        if ($label) {
-            $html .= '<dt><label class="control-label">'.$label.'</label></dt>';
+        if ($label)
+        {
+            $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
         }
         $html .= '<dd>';
-        foreach ($checkboxes as $v) {
+        foreach ($checkboxes as $v)
+        {
             $checked = $v[0] == '|1|' ? 'checked' : '';
-            $html .= '<div class="checkbox"><label class="control-label"><input type="checkbox" disabled '.$checked.'>'.$v[1].'</label></div>';
+            $html .= '<div class="checkbox"><label class="control-label"><input type="checkbox" disabled ' . $checked . '>' . $v[1] . '</label></div>';
         }
         $html .= '</dd>';
         $html .= '</dl>';
         return $html;
     }
 
-    public static function getId(&$form, $table) {
-        if (!$form->isEditMode()) {
+    public static function getId(&$form, $table)
+    {
+        if (!$form->isEditMode())
+        {
             $db = rex_sql::factory();
             $db->setTable($table);
             $form->addHiddenField('id', $db->setNewId('id', 1));
         }
-        else {
+        else
+        {
             $form->addHiddenField('id', $form->getSql()->getValue('id'));
         }
     }
 
     public static function removeDeleteButton(rex_extension_point $ep)
     {
-        $subject = $ep->getSubject();
-        $subject['delete'] = '';
-        $ep->setSubject($subject);
+        $formTable = $ep->getParams()['form']->getTableName();
+        if (in_array($formTable, iwcc_config::getTables()))
+        {
+            $subject = $ep->getSubject();
+            $subject['delete'] = '';
+            $ep->setSubject($subject);
+        }
     }
 
     public static function showInfo($msg)
@@ -75,14 +84,16 @@ class iwcc_rex_form
         $db->setWhere('id=' . $groupId);
         $db->select('uid,domain');
         $group = $db->getArray()[0];
-        if ($group['domain']) {
+        if ($group['domain'])
+        {
             $db = rex_sql::factory();
             $db->setTable(rex::getTable('iwcc_domain'));
             $db->setWhere('id=' . $group['domain']);
             $db->select('uid');
             $domain = $db->getArray();
-            if ($domain) {
-                return $group['uid'].' ['.$domain[0]['uid'].']';
+            if ($domain)
+            {
+                return $group['uid'] . ' [' . $domain[0]['uid'] . ']';
             }
         }
         return $group['uid'];
