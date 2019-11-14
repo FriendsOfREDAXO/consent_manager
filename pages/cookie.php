@@ -27,8 +27,6 @@ elseif ($func == 'add' || $func == 'edit')
     {
         $form->addRawField(iwcc_rex_form::showInfo($this->i18n('iwcc_cookie_iwcc_info')));
         $form->addRawField(iwcc_rex_form::getFakeText($this->i18n('iwcc_uid'), $form->getSql()->getValue('uid')));
-        $form->addRawField(iwcc_rex_form::getFakeText($this->i18n('iwcc_cookie_name'), $form->getSql()->getValue('cookie_name')));
-        $form->addRawField(iwcc_rex_form::getFakeText($this->i18n('iwcc_cookie_lifetime'), $form->getSql()->getValue('cookie_lifetime')));
     }
     else
     {
@@ -38,21 +36,16 @@ elseif ($func == 'add' || $func == 'edit')
             $field->setLabel($this->i18n('iwcc_uid_with_hint'));
             $field->getValidator()->add('notEmpty', $this->i18n('iwcc_uid_empty_msg'));
             $field->getValidator()->add('match', $this->i18n('iwcc_uid_malformed_msg'), '/^[a-z0-9-]+$/');
-            $field = $form->addTextField('cookie_name');
-            $field->setLabel($this->i18n('iwcc_cookie_name'));
         }
         else
         {
             $form->addRawField(iwcc_rex_form::getFakeText($this->i18n('iwcc_uid'), $form->getSql()->getValue('uid')));
-            $form->addRawField(iwcc_rex_form::getFakeText($this->i18n('iwcc_cookie_name'), $form->getSql()->getValue('cookie_name')));
         }
     }
-    $field = $form->addTextField('cookie_lifetime');
-    $field->setLabel($this->i18n('iwcc_cookie_lifetime'));
     $field = $form->addTextField('service_name');
     $field->setLabel($this->i18n('iwcc_cookie_service_name'));
-    $field = $form->addTextAreaField('description');
-    $field->setLabel($this->i18n('iwcc_description'));
+    $field = $form->addTextAreaField('definition');
+    $field->setLabel($this->i18n('iwcc_cookie_definition'));
     $field = $form->addTextField('provider');
     $field->setLabel($this->i18n('iwcc_cookie_provider'));
     $field = $form->addTextField('provider_link_privacy');
@@ -72,7 +65,7 @@ echo $msg;
 if ($showlist)
 {
     $listDebug = false;
-    $sql = 'SELECT pid,uid,cookie_name FROM ' . $table . ' WHERE clang_id = ' . $clang_id . ' ORDER BY uid';
+    $sql = 'SELECT pid,uid,service_name,provider FROM ' . $table . ' WHERE clang_id = ' . $clang_id . ' ORDER BY uid';
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
@@ -88,8 +81,11 @@ if ($showlist)
     $list->setColumnLabel('uid', $this->i18n('iwcc_uid'));
     $list->setColumnSortable('uid');
 
-    $list->setColumnLabel('cookie_name', $this->i18n('iwcc_name'));
-    $list->setColumnSortable('cookie_name');
+    $list->setColumnLabel('service_name', $this->i18n('iwcc_cookie_service_name'));
+    $list->setColumnSortable('service_name');
+
+    $list->setColumnLabel('provider', $this->i18n('iwcc_cookie_provider'));
+    $list->setColumnSortable('provider');
 
     $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
@@ -98,7 +94,7 @@ if ($showlist)
     $list->addColumn(rex_i18n::msg('delete'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete'), ['', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('delete'), ['pid' => '###pid###', 'func' => 'delete'] + $csrf->getUrlParams());
-    $list->addLinkAttribute(rex_i18n::msg('delete'), 'onclick', 'return confirm(\' ###cookie_name### ' . rex_i18n::msg('delete') . ' ?\')');
+    $list->addLinkAttribute(rex_i18n::msg('delete'), 'onclick', 'return confirm(\' ###service_name### ' . rex_i18n::msg('delete') . ' ?\')');
 
     $content = $list->get();
 

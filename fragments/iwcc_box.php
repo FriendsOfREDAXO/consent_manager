@@ -73,7 +73,7 @@ if ($this->getVar('debug'))
                             {
                                 echo '<div class="iwcc-cookie">';
                                 echo '<span class="iwcc-cookie-name"><strong>' . $cookie['cookie_name'] . '</strong> (' . $cookie['service_name'] . ')</span>';
-                                echo '<span class="iwcc-cookie-description">' . nl2br($cookie['description']) . '</span>';
+                                echo '<span class="iwcc-cookie-description">' . $cookie['description'] . '</span>';
                                 echo '<span class="iwcc-cookie-description">' . $iwcc->texts['lifetime'] . ' ' . $cookie['cookie_lifetime'] . '</span>';
                                 echo '<span class="iwcc-cookie-provider">' . $iwcc->texts['provider'] . ' ' . $cookie['provider'] . '</span>';
                                 echo '<span class="iwcc-cookie-link-privacy-policy"><a href="' . $cookie['provider_link_privacy'] . '">' . $iwcc->texts['link_privacy'] . '</a></span>';

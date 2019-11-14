@@ -27,17 +27,17 @@ class iwcc_clang
         $db = rex_sql::factory();
         $db->setTable(rex::getTable('iwcc_cookie'));
         $db->setWhere('pid = :pid', ['pid' => $pid]);
-        $db->select('cookie_name');
+        $db->select('uid');
         foreach ($db->getArray() as $v)
         {
-            if ($v['cookie_name'] == 'iwcc')
+            if ($v['uid'] == 'iwcc')
             {
                 $msg = rex_view::error(rex_i18n::msg('iwcc_not_deletable'));
                 break;
             }
             $db = rex_sql::factory();
             $db->setTable(rex::getTable('iwcc_cookie'));
-            $db->setWhere('cookie_name = :cookie_name', ['cookie_name' => $v['cookie_name']]);
+            $db->setWhere('uid = :uid', ['uid' => $v['uid']]);
             $db->delete();
         }
         return $msg;
@@ -133,7 +133,7 @@ class iwcc_clang
         }
         elseif (rex::getTable('iwcc_cookie') == $form->getTableName())
         {
-            $fields2Update = ['uid', 'cookie_name'];
+            $fields2Update = ['uid'];
             $db = rex_sql::factory();
             $db->setTable($form->getTableName());
             $db->setWhere('pid = :pid', ['pid' => $form->getSql()->getValue('pid')]);

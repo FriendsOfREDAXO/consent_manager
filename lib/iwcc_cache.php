@@ -24,11 +24,6 @@ class iwcc_cache
         $cache->writeCache();
     }
 
-    public static function forceWrite () {
-        $cache = new self();
-        $cache->writeCache();
-    }
-
     private function writeCache()
     {
         $addon = rex_addon::get('iwcc');
@@ -65,7 +60,7 @@ class iwcc_cache
 
         $db = rex_sql::factory();
         $db->setTable(rex::getTable('iwcc_cookie'));
-        $db->select('pid,id,clang_id,uid,service_name,provider,provider_link_privacy,cookie_name,cookie_lifetime,description');
+        $db->select('clang_id,uid,service_name,provider,provider_link_privacy,definition');
         foreach ($db->getArray() as $v)
         {
             $this->cookies[$v['uid']][] = $v;
@@ -87,13 +82,22 @@ class iwcc_cache
         {
             if ($uid == 'iwcc')
             {
-                foreach ($cookies as $cookie)
+                foreach ($cookies as $yamlCookie)
                 {
-                    $iwccCookie[$cookie['clang_id']] = $cookie;
+                    $cookieDefinitions = rex_string::yamlDecode($yamlCookie['definition']);
+                    unset($yamlCookie['definition']);
+                    foreach ($cookieDefinitions as $k => $v)
+                    {
+                        $cookies[$k] = $yamlCookie;
+                        $cookies[$k]['cookie_name'] = 'iwcc';
+                        $cookies[$k]['cookie_lifetime'] = $v['time'];
+                        $cookies[$k]['description'] = $v['desc'];
+                    }
+                    $iwccCookie[$yamlCookie['clang_id']] = $cookies[$k];
                 }
-
             }
         }
+
         foreach ($this->cookiegroups as $k => $cookiegroup)
         {
             $cookies = [];
@@ -124,18 +128,37 @@ class iwcc_cache
 
     private function getCookiesForGroup($groupId)
     {
-        $cookies = [];
+        $yamlCookies = [];
         foreach (array_filter(explode('|', $this->cookiegroups[$groupId]['cookie'])) as $cookieUid)
         {
-            if (isset($this->cookies[$cookieUid]))
+            if (!isset($this->cookies[$cookieUid]))
             {
-                foreach ($this->cookies[$cookieUid] as $cookie)
+                continue;
+            }
+            foreach ($this->cookies[$cookieUid] as $cookie)
+            {
+                if ($cookie['clang_id'] != $this->cookiegroups[$groupId]['clang_id'])
                 {
-                    if ($cookie['clang_id'] == $this->cookiegroups[$groupId]['clang_id'])
-                    {
-                        $cookies[] = $cookie;
-                    }
+                    continue;
                 }
+                if (!trim($cookie['definition']))
+                {
+                    continue;
+                }
+                $yamlCookies[] = $cookie;
+            }
+        }
+        $cookies = [];
+        foreach ($yamlCookies as $k => $yamlCookie)
+        {
+            $cookieDefinitions = rex_string::yamlDecode($yamlCookie['definition']);
+            unset($yamlCookie['definition']);
+            foreach ($cookieDefinitions as $k => $v)
+            {
+                $cookies[$k] = $yamlCookie;
+                $cookies[$k]['cookie_name'] = $v['name'];
+                $cookies[$k]['cookie_lifetime'] = $v['time'];
+                $cookies[$k]['description'] = $v['desc'];
             }
         }
         return $cookies;
@@ -157,6 +180,12 @@ class iwcc_cache
             $this->config['domains'][$v['id']] = $v;
         }
         $this->config['texts'] = $this->texts;
+    }
+
+    public static function forceWrite()
+    {
+        $cache = new self();
+        $cache->writeCache();
     }
 
     public static function read()

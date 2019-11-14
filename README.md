@@ -15,9 +15,27 @@ Hier werden die Cookie Gruppen definiert, die der Nutzer akzeptieren kann. Pro G
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-cookiegroups.jpg?raw=true)
 
 ### Cookies
-Der nicht löschbare Cookie <code>iwcc</code> speichert die Auswahl des Nutzers. Alle anderen hier definierten Cookies dienen nur der Information des Nutzers.
+Pro Eintrag wird ein Dienst (mit einer beliebigen Anzahl Cookies) definiert, zb Google Analytics oder Matomo.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-cookies.jpg?raw=true)
+
+Die einzelnen Cookies des Dienstes werden im YAML Format hinterlegt, zb:
+
+    -
+      name: _ga
+      time: 2 Jahre
+      desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
+    -
+      name: _gat
+      time: 1 Tag
+      desc: Verhindert, dass in zu schneller Folge Daten an den Analytics Server übertragen werden.
+    -
+      name: _gid
+      time: 1 Tag
+      desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
+
+Es gibt einen nicht löschbaren Cookie <code>iwcc</code>. In diesem speichert das Addon die Auswahl des Nutzers.
+**Alles was im Tab Cookies eingegeben wird dient nur zur Information des Nutzers und hat auf das Setzen/Löschen der Cookies oder deren Eigenschaften kein Einfluss.**
 
 ### Texte
 Die Texte der Cookie Box
