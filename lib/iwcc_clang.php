@@ -140,6 +140,9 @@ class iwcc_clang
             $db->select(implode(',', $fields2Update));
             $newValues = $db->getArray()[0];
         }
+        else {
+            return true;
+        }
         foreach (rex_clang::getAllIds() as $clangId)
         {
             if ($form->getSql()->getValue('clang_id') == $clangId)
