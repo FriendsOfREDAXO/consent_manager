@@ -5,9 +5,14 @@ $func = rex_request('func', 'string');
 $csrf = rex_csrf_token::factory('iwcc_domain');
 $clang_id = (int)str_replace('clang', '', rex_be_controller::getCurrentPagePart(3));
 $table = rex::getTable('iwcc_domain');
+$msg = '';
 if ($func == 'delete')
 {
-    iwcc_clang::deleteDataset($table, $id);
+    $db = rex_sql::factory();
+    $db->setTable($table);
+    $db->setWhere('id = :id', ['id' => $id]);
+    $db->delete();
+    $msg = rex_view::success(rex_i18n::msg('iwcc_successfully_deleted'));
 }
 elseif ($func == 'add' || $func == 'edit')
 {
@@ -24,7 +29,7 @@ elseif ($func == 'add' || $func == 'edit')
     $field = $form->addTextField('uid');
     $field->setLabel($this->i18n('iwcc_domain'));
     $field->getValidator()->add('notEmpty', $this->i18n('iwcc_domain_empty_msg'));
-    $field->getValidator()->add('custom', $this->i18n('iwcc_domain_malformed_msg').' <code>'.$_SERVER['HTTP_HOST'].'</code>', 'iwcc_rex_form::validateHostname');
+    $field->getValidator()->add('custom', $this->i18n('iwcc_domain_malformed_msg') . ' <code>' . $_SERVER['HTTP_HOST'] . '</code>', 'iwcc_rex_form::validateHostname');
 
     $field = $form->addLinkmapField('privacy_policy');
     $field->setLabel($this->i18n('iwcc_domain_privacy_policy'));
@@ -43,7 +48,7 @@ elseif ($func == 'add' || $func == 'edit')
     $fragment->setVar('body', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
-
+echo $msg;
 if ($showlist)
 {
     $listDebug = false;

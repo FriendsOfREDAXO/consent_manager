@@ -9,6 +9,7 @@ iwcc_uid_malformed_msg = Schlüssel darf nur aus klein a-z, 0-9 und - bestehen, 
 iwcc_description = Beschreibung
 iwcc_not_deletable = Dieser Datensatz kann nicht gelöscht werden, da er vom Addon benötigt wird
 iwcc_successfully_deleted = Datensatz gelöscht
+iwcc_help = Hilfe
 
 iwcc_cookies = Cookies
 iwcc_cookie_add = Cookie erstellen

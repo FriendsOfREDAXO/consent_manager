@@ -41,9 +41,3 @@ rex_extension::register('REX_FORM_SAVED', 'iwcc_clang::formSaved');
 rex_extension::register('REX_FORM_SAVED', 'iwcc_cache::write');
 rex_extension::register('CLANG_ADDED', 'iwcc_clang::clangAdded');
 rex_extension::register('CLANG_DELETED', 'iwcc_clang::clangDeleted');
-
-if (rex::getConfig('iwcc-just-installed', 0))
-{
-    iwcc_clang::addonJustInstalled();
-    rex::setConfig('iwcc-just-installed', 0);
-};

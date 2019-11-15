@@ -65,7 +65,8 @@ https://github.com/FriendsOfREDAXO
 **Projekt-Lead**  
 [Ingo Winter](https://github.com/IngoWinter)
 
-## Credits:
+## Credits
 First Release: [Ingo Winter](https://github.com/IngoWinter)  
-[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie-Gedöns wiederfinden  
- 
+[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie-Gedöns wiederfinden
+[Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet 
+[Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet

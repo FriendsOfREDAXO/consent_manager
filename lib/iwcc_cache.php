@@ -97,7 +97,6 @@ class iwcc_cache
                 }
             }
         }
-
         foreach ($this->cookiegroups as $k => $cookiegroup)
         {
             $cookies = [];
@@ -115,7 +114,7 @@ class iwcc_cache
             if ($cookies)
             {
                 $this->cookiegroups[$k]['cookie'] = $cookies;
-                $this->cookiegroups[$k]['cookie_uids'] = array_unique($cookie_uids);
+                $this->cookiegroups[$k]['cookie_uids'] = array_merge(array_unique($cookie_uids));
                 $this->cookiegroups[$k]['script'] = base64_encode($cookiegroup['script']);
             }
             else
@@ -149,16 +148,18 @@ class iwcc_cache
             }
         }
         $cookies = [];
-        foreach ($yamlCookies as $k => $yamlCookie)
+        $i = 0;
+        foreach ($yamlCookies as $yamlCookie)
         {
             $cookieDefinitions = rex_string::yamlDecode($yamlCookie['definition']);
             unset($yamlCookie['definition']);
-            foreach ($cookieDefinitions as $k => $v)
+            foreach ($cookieDefinitions as $v)
             {
-                $cookies[$k] = $yamlCookie;
-                $cookies[$k]['cookie_name'] = $v['name'];
-                $cookies[$k]['cookie_lifetime'] = $v['time'];
-                $cookies[$k]['description'] = $v['desc'];
+                $cookies[$i] = $yamlCookie;
+                $cookies[$i]['cookie_name'] = $v['name'];
+                $cookies[$i]['cookie_lifetime'] = $v['time'];
+                $cookies[$i]['description'] = $v['desc'];
+                $i++;
             }
         }
         return $cookies;

@@ -51,6 +51,9 @@ class iwcc_clang
             {
                 if ($key == 'domain') continue;
                 $page = rex_be_controller::getPageObject('iwcc/' . $key);
+                if (!$page) {
+                    continue;
+                }
                 $clang_id = str_replace('clang', '', rex_be_controller::getCurrentPagePart(3));
                 foreach (rex_clang::getAll() as $id => $clang)
                 {

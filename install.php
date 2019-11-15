@@ -1,6 +1,4 @@
 <?php
-rex::setConfig('iwcc-just-installed', 1);
-
 rex_sql_table::get(rex::getTable('iwcc_cookie'))
     ->ensureColumn(new rex_sql_column('pid', 'int(10) unsigned', false, null, 'AUTO_INCREMENT'))
     ->ensureColumn(new rex_sql_column('id', 'int(10) unsigned'))
@@ -60,3 +58,10 @@ rex_sql_table::get(rex::getTable('iwcc_text'))
     ->ensureColumn(new rex_sql_column('updatedate', 'datetime'))
     ->setPrimaryKey('pid')
     ->ensure();
+
+
+if (!$this->hasConfig()) {
+    rex_sql_util::importDump(rex_addon::get('iwcc')->getPath('_install.sql'));
+    iwcc_clang::addonJustInstalled();
+    $this->setConfig('config', []);
+}

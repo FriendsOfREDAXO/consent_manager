@@ -1,6 +1,6 @@
 package: iwcc
-version: '0.0.1'
-author: Ingo Winter
+version: '1.0.0'
+author: 'Friends Of REDAXO'
 supportpage: https://redaxo.org/support/community/#slack
 
 requires:
@@ -20,3 +20,5 @@ page:
             title: 'translate:iwcc_texts'
         domain:
             title: 'translate:iwcc_domains'
+        help:
+            {title: 'translate:iwcc_help',  icon: rex-icon fa-question-circle, subPath: README.md}
