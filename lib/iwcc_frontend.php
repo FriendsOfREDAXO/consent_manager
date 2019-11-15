@@ -55,7 +55,7 @@ class iwcc_frontend
         }
     }
 
-    public function getFragment($debug,$forceCache) {
+    public static function getFragment($debug,$forceCache) {
         $fragment = new rex_fragment();
         $fragment->setVar('debug', $debug);
         $fragment->setVar('forceCache', $forceCache);
