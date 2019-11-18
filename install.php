@@ -59,9 +59,6 @@ rex_sql_table::get(rex::getTable('iwcc_text'))
     ->setPrimaryKey('pid')
     ->ensure();
 
-
-if (!$this->hasConfig()) {
-    rex_sql_util::importDump(rex_addon::get('iwcc')->getPath('_install.sql'));
-    iwcc_clang::addonJustInstalled();
-    $this->setConfig('config', []);
+if ($this->getConfig('justInstalled', -1) === -1) {
+    $this->setConfig('justInstalled', true);
 }

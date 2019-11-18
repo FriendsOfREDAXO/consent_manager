@@ -195,11 +195,12 @@ class iwcc_clang
         foreach (iwcc_config::getTables(1) as $table)
         {
             $firstLang = rex_sql::factory();
-            $firstLang->setQuery('SELECT * FROM ' . $table . ' WHERE clang_id=?', [rex_clang::getStartId()]);
+            $firstLang->setTable($table);
+            $firstLang->setWhere('clang_id='.rex_clang::getStartId());
+            $firstLang->select();
             $fields = $firstLang->getFieldnames();
 
             $newLang = rex_sql::factory();
-            $newLang->setDebug(false);
             foreach ($firstLang as $firstLangEntry)
             {
                 $newLang->setTable($table);
