@@ -50,9 +50,10 @@ Beim Anlegen einer neuen Sprache werden existierende Einträge in die neue Sprac
 HTML, CSS und Skripte der Cookie Box liegen im Fragment <code>/redaxo/src/addons/iwcc/fragments/iwcc_box.php</code>. Das Design kann nach Belieben angepasst werden. Dazu das mitgelieferte Stylesheet überschreiben oder komplett entfernen und was eigenes machen. Tipp hierzu: in <code>/redaxo/src/addons/iwcc/scss/</code> findet sich das Stylesheet als SCSS. Wenn man als Admin eingeloggt ist und der Debug-Mode aktiviert ist, wird das Stylesheet nach Änderungen neu generiert.
 
 ## Troubleshooting
-Ist <code>REX_IWCC[]</code> in einem Redaxo Template hinterlegt? Nur in einem Redaxo Template werden auch die REX_VARs ersetzt, in eigenen PHP includes nicht.
-Ist eine Domain hinterlegt und den Cookie Gruppen zugeordnet?
-Stimmt die hinterlegte Domain mit der Frontend Domain überein (www.meinedomain.de ist etwas anderes als meinedomain.de)? 
+* Ist <code>REX_IWCC[]</code> in einem Redaxo Template hinterlegt? Nur in einem Redaxo Template werden auch die REX_VARs ersetzt, in eigenen PHP includes nicht.
+* Ist eine Domain hinterlegt und den Cookie Gruppen zugeordnet?
+* Stimmt die hinterlegte Domain mit der Frontend Domain überein (www.meinedomain.de ist etwas anderes als meinedomain.de)?
+* Ist die Website über eine Domain (meinedomain.de) erreichbar? Unterordner Installationen funktionieren nicht. 
 
 ## Fehler gefunden?
 Du hast einen Fehler gefunden oder ein nettes Feature was du gerne hättest? [Lege ein Issue an](https://github.com/FriendsOfREDAXO/iwcc/issues)
