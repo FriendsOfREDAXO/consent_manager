@@ -41,7 +41,7 @@ Es gibt einen nicht löschbaren Cookie <code>iwcc</code>. In diesem speichert da
 Die Texte der Cookie Box
 
 ### Domains
-Das Addon reagiert die Domain, z.B.:  <code>meinedomain.de</code>,für Subdomains **(auch www)*** ist ein gesonderter Eintrag erforderlich. Im Fragment wird die hier hinterlegte Domain mit <code>$_SERVER['HTTP_HOST']</code> verglichen.
+Das Addon reagiert auf die hinterlegte Domain, z.B.:  <code>meinedomain.de</code>,für Subdomains **(auch www)** ist ein gesonderter Eintrag erforderlich. Im Fragment wird die hier hinterlegte Domain mit <code>$_SERVER['HTTP_HOST']</code> verglichen.
 
 ## Mehrsprachigkeit
 Beim Anlegen einer neuen Sprache werden existierende Einträge in die neue Sprache kopiert. Bestimmte Felder (zb. Schlüssel, Skripte oder Cookie Namen) können nur in der ersten Sprache editiert werden.
