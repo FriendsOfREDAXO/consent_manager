@@ -15,7 +15,7 @@ rex_extension::register('PACKAGES_INCLUDED', function () {
             rex_file::copy($this->getPath('assets/iwcc_frontend.css'), $this->getAssetsPath('iwcc_frontend.css'));
             rex_file::copy($this->getPath('assets/iwcc_backend.css'), $this->getAssetsPath('iwcc_backend.css'));
             rex_file::copy($this->getPath('assets/iwcc_frontend.js'), $this->getAssetsPath('iwcc_frontend.js'));
-            rex_file::copy($this->getPath('assets/iwcc_backend.js'), $this->getAssetsPath('iwcc_backend.js'));
+            //rex_file::copy($this->getPath('assets/iwcc_backend.js'), $this->getAssetsPath('iwcc_backend.js'));
         }
         if (rex::isBackend())
         {
