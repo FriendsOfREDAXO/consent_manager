@@ -1,6 +1,6 @@
 # Cookie-Gedöns
 
-Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies werden in Gruppen zusammengefasst. Der Website Nutzer kann Cookies gruppenweise akzeptieren. Die Cookie Box kann über einen Klick auf ein Element mit der Klasse <code>iwcc-show-box</code> wieder geöffnet werden, zb. ein <code>&lt;a class="iwcc-show-box"&gt;Cookie Einstellungen bearbeiten&lt;/a&gt;</code> im Footer oder der Datenschutzerklärung.
+Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies werden in Gruppen zusammengefasst. Der Website Nutzer kann Cookies gruppenweise akzeptieren. Die Cookie Box kann über einen Klick auf ein Element mit der Klasse <code>iwcc-show-box</code> wieder geöffnet werden, z.B. ein <code>&lt;a class="iwcc-show-box"&gt;Cookie Einstellungen bearbeiten&lt;/a&gt;</code> im Footer oder der Datenschutzerklärung.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc.jpg?raw=true)
 
@@ -41,7 +41,7 @@ Es gibt einen nicht löschbaren Cookie <code>iwcc</code>. In diesem speichert da
 Die Texte der Cookie Box
 
 ### Domains
-Das Addon erwartet die Domains im Format <code>meinedomain.de</code>. Im Fragment wird die hier hinterlegte Domain mit <code>$_SERVER['HTTP_HOST']</code> verglichen.
+Das Addon reagiert auf die hinterlegte Domain, z.B.: <code>meinedomain.de</code>. Für Subdomains **(auch www)** ist ein gesonderter Eintrag erforderlich. Im Fragment wird die hier hinterlegte Domain mit <code>$_SERVER['HTTP_HOST']</code> verglichen.
 
 ## Mehrsprachigkeit
 Beim Anlegen einer neuen Sprache werden existierende Einträge in die neue Sprache kopiert. Bestimmte Felder (zb. Schlüssel, Skripte oder Cookie Namen) können nur in der ersten Sprache editiert werden.
