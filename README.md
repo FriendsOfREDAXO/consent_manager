@@ -32,10 +32,25 @@ Die einzelnen Cookies des Dienstes werden im YAML Format hinterlegt, zb:
     -
       name: _gid
       time: 1 Tag
-      desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
+      desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.     
 
 Es gibt einen nicht löschbaren Cookie <code>iwcc</code>. In diesem speichert das Addon die Auswahl des Nutzers.
 **Alles was im Tab Cookies eingegeben wird dient nur zur Information des Nutzers und hat auf das Setzen/Löschen der Cookies oder deren Eigenschaften kein Einfluss.**
+
+
+## iwcc Cookie per PHP auswerten 
+
+und Inhalte / Skripte entsprechend der Zustimmung darstellen
+
+```php 
+// iwcc cookie auslesen und in Array umwandeln
+$arr = json_decode($_COOKIE['iwcc'], true);  
+// prüfe ob die Googlemaps-Gruppe ausgewählt wurde
+if ($arr['googlemaps']) 
+{
+  // gewünschten Code ausgeben
+}
+```
 
 ### Texte
 Die Texte der Cookie Box
@@ -48,6 +63,7 @@ Beim Anlegen einer neuen Sprache werden existierende Einträge in die neue Sprac
 
 ## Design
 HTML, CSS und Skripte der Cookie Box liegen im Fragment <code>/redaxo/src/addons/iwcc/fragments/iwcc_box.php</code>. Das Design kann nach Belieben angepasst werden. Dazu das mitgelieferte Stylesheet überschreiben oder komplett entfernen und was eigenes machen. Tipp hierzu: in <code>/redaxo/src/addons/iwcc/scss/</code> findet sich das Stylesheet als SCSS. Wenn man als Admin eingeloggt ist und der Debug-Mode aktiviert ist, wird das Stylesheet nach Änderungen neu generiert.
+
 
 ## Troubleshooting
 * Ist <code>REX_IWCC[]</code> in einem Redaxo Template hinterlegt? Nur in einem Redaxo Template werden auch die REX_VARs ersetzt, in eigenen PHP includes nicht.
