@@ -38,7 +38,7 @@ Es gibt einen nicht löschbaren Cookie <code>iwcc</code>. In diesem speichert da
 **Alles was im Tab Cookies eingegeben wird dient nur zur Information des Nutzers und hat auf das Setzen/Löschen der Cookies oder deren Eigenschaften kein Einfluss.**
 
 
-## iwcc Cookie per PHP auswerten 
+#### iwcc Cookie per PHP auswerten 
 
 und Inhalte / Skripte entsprechend der Zustimmung darstellen
 
