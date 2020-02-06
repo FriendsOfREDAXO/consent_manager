@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function ()
                 {
                     scriptNode.innerHTML = scriptDom.scripts[i].innerHTML;
                 }
-                scriptWrapper.append(scriptNode);
+                scriptWrapper.appendChild(scriptNode);
             }
         }
     }
