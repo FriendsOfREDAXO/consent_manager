@@ -85,8 +85,8 @@ if ($this->getVar('debug'))
                     </div>
                     <div class="iwcc-buttons-sitelinks">
                         <div class="iwcc-buttons">
-                            <a class="iwcc-save-selection iwcc-close">Auswahl bestätigen</a>
-                            <a class="iwcc-accept-all iwcc-close">Alle auswählen</a>
+                            <a class="iwcc-save-selection iwcc-close"><?= $iwcc->texts['button_accept'] ?></a>
+                            <a class="iwcc-accept-all iwcc-close"><?= $iwcc->texts['button_select_all'] ?></a>
                         </div>
                         <div class="iwcc-sitelinks">
                             <?php
