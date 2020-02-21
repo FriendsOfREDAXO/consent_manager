@@ -13,5 +13,6 @@ INSERT INTO `%TABLE_PREFIX%iwcc_text` (`pid`, `id`, `clang_id`, `uid`, `text`) V
 (3, 3, 1, 'toggle_details', 'Details anzeigen/ausblenden'),
 (4, 4, 1, 'provider', 'Anbieter:'),
 (5, 5, 1, 'link_privacy', 'Datenschutzerklärung'),
-(6, 6, 1, 'button_accept', 'Auswahl bestätigen');
-(7, 7, 1, 'button_select_all', 'Alle auswählen');
+(6, 6, 1, 'lifetime', 'Laufzeit:'),
+(7, 7, 1, 'button_accept', 'Auswahl bestätigen'),
+(8, 8, 1, 'button_select_all', 'Alle auswählen');
