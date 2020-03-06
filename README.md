@@ -5,7 +5,14 @@ Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies werden in Gruppen zusamm
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc.jpg?raw=true)
 
 ## Installation
-Herunterladen und installieren. Nach der Installation steht die Variable <code>REX_IWCC[]</code> zur Verfügung. Diese im <code>head</code> der Seite einbinden. Ausserdem werden einige Cookie-/Cookie Gruppen Definitionen für einen leichteren Einstieg angelegt.
+
+1. Über den Installer herunterladen und installieren. 
+2. Domains hinterlegen, bei denen die Cookie Box aktiviert werden soll
+3. In den Cookie-Gruppen die gewünschten Domains zuweisen, ggf. zusätzliche Cookie-Gruppen pro Domain anlegen und gewünschtes JavaScript hinterlegen.
+4. Ggf. weitere Dienste unter `Cookie` anlegen und in den Cookie-Gruppen zuordnen.
+5. Den Platzhalter <code>REX_IWCC[]</code> in allen gewünschten Templates im <code>head</code>-Bereich des HTML-Quellcodes.
+
+Für den leichteren Einstieg wurden einige Cookie-/ und Cookie-Gruppen bereits angelegt.
 
 ## Einrichtung
 
