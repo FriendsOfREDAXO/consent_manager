@@ -22,7 +22,6 @@ rex_extension::register('PACKAGES_INCLUDED', function () {
         }
 
     }
-    rex_fragment::addDirectory(rex_path::addon('iwcc', 'fragments'));
 });
 
 rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
