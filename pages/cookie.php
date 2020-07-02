@@ -23,7 +23,7 @@ elseif ($func == 'add' || $func == 'edit')
     $form->addHiddenField('clang_id', $clang_id);
     iwcc_rex_form::getId($form, $table);
 
-    if ($form->getSql()->getValue('uid') == 'iwcc')
+    if ($func == 'edit' && $form->getSql()->getValue('uid') == 'iwcc')
     {
         $form->addRawField(iwcc_rex_form::showInfo($this->i18n('iwcc_cookie_iwcc_info')));
         $form->addRawField(iwcc_rex_form::getFakeText($this->i18n('iwcc_uid'), $form->getSql()->getValue('uid')));
