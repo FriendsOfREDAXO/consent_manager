@@ -21,6 +21,7 @@ class iwcc_frontend
 
     public function setDomain($domain)
     {
+        if (!isset($this->cache['domains'])) return;
         foreach ($this->cache['domains'] as $k => $v)
         {
             if ($v['uid'] == $domain)
