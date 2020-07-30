@@ -18,7 +18,7 @@ iwcc_cookie_iwcc_info = "iwcc" wird vom Addon benötigt, in diesem Cookie wird d
 iwcc_cookie_notice_provider_link_privacy = Leer lassen für Datenschutzerklärung der Domain
 iwcc_cookie_service_name = Dienstname
 iwcc_cookie_provider = Anbieter
-iwcc_cookie_provider_link_privacy = Datenschutzerklärung
+iwcc_cookie_provider_link_privacy = Link Datenschutzerklärung
 iwcc_cookie_definition = Cookie Definitionen
 
 iwcc_cookiegroups = Cookie Gruppen
