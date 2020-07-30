@@ -18,7 +18,7 @@ iwcc_cookie_iwcc_info = "iwcc" is required by this addon. It contains the users 
 iwcc_cookie_notice_provider_link_privacy = Leave empty for data protection statement for this domain
 iwcc_cookie_service_name = Service name
 iwcc_cookie_provider = Provider
-iwcc_cookie_provider_link_privacy = Data protection statement
+iwcc_cookie_provider_link_privacy = Data protection statement link
 iwcc_cookie_definition = Cookie definitions
 
 iwcc_cookiegroups = Cookie groups
