@@ -19,7 +19,7 @@ iwcc_cookie_notice_provider_link_privacy = Leave empty for data protection state
 iwcc_cookie_service_name = Service name
 iwcc_cookie_provider = Provider
 iwcc_cookie_provider_link_privacy = Data protection statement link
-iwcc_cookie_definition = Cookie definitions
+iwcc_cookie_definition = Cookie definitions (YAML)
 
 iwcc_cookiegroups = Cookie groups
 iwcc_cookiegroup_add = Create cookie group
