@@ -19,7 +19,7 @@ iwcc_cookie_notice_provider_link_privacy = Lämna tomt för dataskyddsdeklaratio
 iwcc_cookie_service_name = Servicenamn
 iwcc_cookie_provider = Leverantör
 iwcc_cookie_provider_link_privacy = Dataskyddsdeklaration länk
-iwcc_cookie_definition = Cookie definitionen
+iwcc_cookie_definition = Cookie definitionen (YAML)
 
 iwcc_cookiegroups = Cookie grupper
 iwcc_cookiegroup_add = Skapa cookie grupp
