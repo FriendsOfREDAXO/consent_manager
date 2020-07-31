@@ -45,6 +45,7 @@ elseif ($func == 'add' || $func == 'edit')
     $field = $form->addTextField('service_name');
     $field->setLabel($this->i18n('iwcc_cookie_service_name'));
     $field = $form->addTextAreaField('definition');
+    $field->setAttributes(['class' => 'form-control codemirror', 'data-codemirror-mode' => 'text/x-yaml']);
     $field->setLabel($this->i18n('iwcc_cookie_definition'));
     $field = $form->addTextField('provider');
     $field->setLabel($this->i18n('iwcc_cookie_provider'));
