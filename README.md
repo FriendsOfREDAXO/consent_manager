@@ -77,6 +77,7 @@ HTML, CSS und Skripte der Cookie Box liegen im Fragment <code>/redaxo/src/addons
 * Ist eine Domain hinterlegt und den Cookie Gruppen zugeordnet?
 * Stimmt die hinterlegte Domain mit der Frontend Domain überein (www.meinedomain.de ist etwas anderes als meinedomain.de)?
 * Ist die Website über eine Domain (meinedomain.de) erreichbar? Unterordner Installationen funktionieren nicht. 
+* <code>REX_IWCC[forceCache=1 debug=1]</code> zeigt im Frontend nützliche Informationen an.
 
 ## Fehler gefunden?
 Du hast einen Fehler gefunden oder ein nettes Feature was du gerne hättest? [Lege ein Issue an](https://github.com/FriendsOfREDAXO/iwcc/issues)
