@@ -21,4 +21,4 @@ page:
         domain:
             title: 'translate:iwcc_domains'
         help:
-            {title: 'translate:iwcc_help',  icon: rex-icon fa-question-circle, subPath: README.md}
+            {title: 'translate:iwcc_help',  icon: rex-icon fa-question-circle, subPath: README.md, itemclass: pull-right}
