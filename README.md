@@ -7,7 +7,7 @@ Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies werden in Gruppen zusamm
 ## Installation
 
 1. Über den Installer herunterladen und installieren. 
-2. Domains hinterlegen, bei denen die Cookie Box aktiviert werden soll
+2. Domains hinterlegen (ohne Protokoll z.B. www.Domain.de, ggf. Subdomains einzeln anlegen), bei denen die Cookie Box aktiviert werden soll
 3. In den Cookie-Gruppen die gewünschten Domains zuweisen, ggf. zusätzliche Cookie-Gruppen pro Domain anlegen und gewünschtes JavaScript hinterlegen.
 4. Ggf. weitere Dienste unter `Cookie` anlegen und in den Cookie-Gruppen zuordnen.
 5. Den Platzhalter <code>REX_IWCC[]</code> in allen gewünschten Templates im <code>head</code>-Bereich des HTML-Quellcodes.
