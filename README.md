@@ -96,7 +96,7 @@ if ($arr['googlemaps'])
 }
 ```
 
-### Einwilligung nachträglich anpassen
+### Cookie-Box manuell aufrufen
 Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anzupassen (zum Beispiel im Impressum oder auf einer Cookie-Seite) ist das mit folgendem Link möglich:
 `<a class="iwcc-show-box">Cookie Einstellungen bearbeiten</a>`.
 
