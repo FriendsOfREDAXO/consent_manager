@@ -98,6 +98,13 @@ document.addEventListener('DOMContentLoaded', function ()
             showBox();
         });
     });
+    document.querySelectorAll('.iwcc-show-box-reload').forEach(function (el)
+    {
+        el.addEventListener('click', function ()
+        {
+            showBoxReload();
+        });
+    });
 
     function saveConsent(toSave)
     {
@@ -186,6 +193,14 @@ document.addEventListener('DOMContentLoaded', function ()
             checkbox.checked = true;
         }
         document.getElementById('iwcc-background').classList.remove('iwcc-hidden');
+    }
+
+    function showBoxReload()
+    {
+        document.querySelector(".iwcc-accept-all, .iwcc-save-selection").addEventListener("click", function(evt) {
+            location.reload();
+        });
+        showBox();
     }
 
 });
