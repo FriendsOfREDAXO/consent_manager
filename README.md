@@ -82,23 +82,28 @@ Anschließend die Datei `iwcc_frontend.css` an einen beliebigen Ort kopieren, an
 ## Tipps & Tricks
 Hast du eigene Tipps & Tricks? [Füge Sie auf Github direkt in die Readme hinzu](https://github.com/FriendsOfREDAXO/iwcc/blob/master/README.md) oder lege ein [Issue](https://github.com/FriendsOfREDAXO/iwcc/issues) an.
 
+### Cookie-Box manuell aufrufen
+Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anzupassen (zum Beispiel im Impressum oder auf einer Cookie-Seite) ist das mit folgenden Links möglich:
+`<a class="iwcc-show-box">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box.
+`<a class="iwcc-show-box-reload">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box und erzwingt einen Page-Reload nach der Einwilligung. 
+
 ### Scripte mit PHP Laden
-Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Hier ein Biespiel für Google Maps.
+Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Somit kann man (am Beispiel GoogleMaps) eine Meldung ausgeben, dass bestimmte Cookies akzeptiert werden müssen um die Karte zu laden.
+Problem dabei: öffnet man die Cookie-Box und akzeptiert die Cookies, wird zwar das Script geladen, aber ohne Page-Reload ändert sich der Inhalt der Seite nicht. Deshalb sollte man hier den Link: `<a class="iwcc-show-box-reload">Cookie Einstellungen bearbeiten</a>` verwenden.
+ 
 ```php 
 // iwcc cookie auslesen und in Array umwandeln
 $arr = json_decode($_COOKIE['iwcc'], true);  
-// prüfe ob die Googlemaps-Gruppe ausgewählt wurde
+// prüfe ob die GoogleMaps-Gruppe ausgewählt wurde
 if ($arr['googlemaps']) 
 {
   // Code Ausgabe bei akzeptierter CookieGruppe
+  // GoogleMaps-Code
 } else {
   // Code Ausgabe bei abgelehnter CookieGruppe
+  // Warnhinweis + <a class="iwcc-show-box-reload">Cookie Einstellungen bearbeiten</a>
 }
 ```
-
-### Cookie-Box manuell aufrufen
-Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anzupassen (zum Beispiel im Impressum oder auf einer Cookie-Seite) ist das mit folgendem Link möglich:
-`<a class="iwcc-show-box">Cookie Einstellungen bearbeiten</a>`.
 
 ## Fehlerbehebung
 
