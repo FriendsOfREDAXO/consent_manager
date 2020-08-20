@@ -81,7 +81,7 @@ class iwcc_rex_form
     {
         $db = rex_sql::factory();
         $db->setTable(rex::getTable('iwcc_cookiegroup'));
-        $db->setWhere('id=' . $groupId);
+        $db->setWhere('pid=' . $groupId);
         $db->select('uid,domain');
         $group = $db->getArray()[0];
         if ($group['domain'])
