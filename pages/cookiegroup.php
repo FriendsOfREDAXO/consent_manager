@@ -6,15 +6,12 @@ $csrf = rex_csrf_token::factory('iwcc_cookiegroup');
 $clang_id = (int)str_replace('clang', '', rex_be_controller::getCurrentPagePart(3));
 $table = rex::getTable('iwcc_cookiegroup');
 $msg = '';
-if ($func == 'delete')
-{
+if ($func == 'delete') {
     $msg = iwcc_clang::deleteDataset($table, $pid);
-}
-elseif ($func == 'add' || $func == 'edit')
-{
+} elseif ($func == 'add' || $func == 'edit') {
     $formDebug = false;
     $showlist = false;
-    $form = rex_form::factory($table, '', 'pid = ' . $pid, 'post', $formDebug);
+    $form = rex_form::factory($table, '', 'pid = '.$pid, 'post', $formDebug);
     $form->addParam('pid', $pid);
     $form->addParam('sort', rex_request('sort', 'string', ''));
     $form->addParam('sorttype', rex_request('sorttype', 'string', ''));
@@ -28,8 +25,7 @@ elseif ($func == 'add' || $func == 'edit')
     $db->select('id,uid');
     $domains = $db->getArray();
 
-    if ($clang_id == rex_clang::getStartId() || !$form->isEditMode())
-    {
+    if ($clang_id == rex_clang::getStartId() || !$form->isEditMode()) {
 
         $field = $form->addTextField('uid');
         $field->setLabel($this->i18n('iwcc_uid'));
@@ -38,36 +34,38 @@ elseif ($func == 'add' || $func == 'edit')
 
         $field = $form->addCheckboxField('required');
         $field->addOption($this->i18n('iwcc_cookiegroup_required'), 1);
-
-        $field = $form->addSelectField('domain');
+        /*
+                $field = $form->addSelectField('domain');
+                $field->setLabel($this->i18n('iwcc_domain'));
+                $select = $field->getSelect();
+                $select->addOption('-', '');
+                foreach ($domains as $v)
+                {
+                    $select->addOption($v['uid'], $v['id']);
+                }
+        */
+        $field = $form->addCheckboxField('domain');
         $field->setLabel($this->i18n('iwcc_domain'));
-        $select = $field->getSelect();
-        $select->addOption('-', '');
-        foreach ($domains as $v)
-        {
-            $select->addOption($v['uid'], $v['id']);
+        foreach ($domains as $v) {
+            $field->addOption($v['uid'], $v['id']);
         }
 
         $field = $form->addPrioField('prio');
-        $field->setWhereCondition('clang_id = ' . $clang_id);
+        $field->setWhereCondition('clang_id = '.$clang_id);
         $field->setLabel($this->i18n('prio'));
-        $field->setLabelField('pid');
-        $field->setLabelCallback('iwcc_rex_form::formatCookiegroupPrioLabel');
-    }
-    else
-    {
+        $field->setLabelField('uid');
+    } else {
         $form->addRawField(iwcc_rex_form::getFakeText($this->i18n('iwcc_uid'), $form->getSql()->getValue('uid')));
-        $form->addRawField(iwcc_rex_form::getFakeCheckbox('', [[$form->getSql()->getValue('required'),$this->i18n('iwcc_cookiegroup_required')]]));
-        $domainName = '-';
-        foreach ($domains as $k => $v)
-        {
-            if ($form->getSql()->getValue('domain') == $v['id'])
-            {
-                $domainName = $v['uid'];
-                break;
-            }
+        $form->addRawField(iwcc_rex_form::getFakeCheckbox('', [[$form->getSql()->getValue('required'), $this->i18n('iwcc_cookiegroup_required')]]));
+
+        $checkboxes = [];
+        $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('domain')));
+        foreach ($domains as $v) {
+            $checked = (in_array($v['id'], $checkedBoxes)) ? '|1|' : '';
+            $checkboxes[] = [$checked, $v['uid']];
         }
-        $form->addRawField(iwcc_rex_form::getFakeText($this->i18n('iwcc_domain'), $domainName));
+        $form->addRawField(iwcc_rex_form::getFakeCheckbox('', $checkboxes));
+
     }
     $field = $form->addTextField('name');
     $field->setLabel($this->i18n('iwcc_name'));
@@ -77,39 +75,29 @@ elseif ($func == 'add' || $func == 'edit')
 
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('iwcc_cookie'));
-    $db->setWhere('clang_id = ' . $clang_id . ' AND uid != "iwcc" ORDER BY uid ASC');
+    $db->setWhere('clang_id = '.$clang_id.' AND uid != "iwcc" ORDER BY uid ASC');
     $db->select('DISTINCT uid');
     $cookies = $db->getArray();
 
-    if ($clang_id == rex_clang::getStartId() || !$form->isEditMode())
-    {
-        if ($cookies)
-        {
+    if ($clang_id == rex_clang::getStartId() || !$form->isEditMode()) {
+        if ($cookies) {
             $field = $form->addCheckboxField('cookie');
             $field->setLabel($this->i18n('iwcc_cookies'));
-            foreach ($cookies as $v)
-            {
+            foreach ($cookies as $v) {
                 $field->addOption($v['uid'], $v['uid']);
             }
         }
 
-        $field = $form->addTextAreaField('script');
-        $field->setLabel($this->i18n('iwcc_cookiegroup_scripts'));
-        $field->setNotice($this->i18n('iwcc_cookiegroup_scripts_notice'));
-    }
-    else
-    {
-        if ($cookies)
-        {
+    } else {
+        if ($cookies) {
             $checkboxes = [];
             $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('cookie')));
             foreach ($cookies as $v) {
                 $checked = (in_array($v['uid'], $checkedBoxes)) ? '|1|' : '';
-                $checkboxes[] = [$checked,$v['uid']];
+                $checkboxes[] = [$checked, $v['uid']];
             }
             $form->addRawField(iwcc_rex_form::getFakeCheckbox('', $checkboxes));
         }
-        $form->addRawField(iwcc_rex_form::getFakeTextarea($this->i18n('iwcc_cookiegroup_scripts'), $form->getSql()->getValue('script')));
     }
 
     $title = $form->isEditMode() ? $this->i18n('iwcc_cookiegroup_edit') : $this->i18n('iwcc_cookiegroup_add');
@@ -122,13 +110,12 @@ elseif ($func == 'add' || $func == 'edit')
     echo $fragment->parse('core/page/section.php');
 }
 echo $msg;
-if ($showlist)
-{
+if ($showlist) {
     $listDebug = false;
     $qry = '
     SELECT pid,uid,name,domain,cookie 
-    FROM ' . $table . ' 
-    WHERE clang_id = ' . $clang_id . ' 
+    FROM '.$table.' 
+    WHERE clang_id = '.$clang_id.' 
     ORDER BY prio';
 
     $list = rex_list::factory($qry, 100, '', $listDebug);
@@ -147,18 +134,18 @@ if ($showlist)
     $list->setColumnSortable('name');
 
     $tdIcon = '<i class="fa fa-coffee"></i>';
-    $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
+    $thIcon = '<a href="'.$list->getUrl(['func' => 'add']).'"'.rex::getAccesskey(rex_i18n::msg('add'), 'add').'><i class="rex-icon rex-icon-add"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'pid' => '###pid###']);
 
-    $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
+    $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> '.rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('function'), ['pid' => '###pid###', 'func' => 'edit', 'start' => rex_request('start', 'string')]);
 
-    $list->addColumn(rex_i18n::msg('delete'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
+    $list->addColumn(rex_i18n::msg('delete'), '<i class="rex-icon rex-icon-delete"></i> '.rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete'), ['', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('delete'), ['pid' => '###pid###', 'func' => 'delete'] + $csrf->getUrlParams());
-    $list->addLinkAttribute(rex_i18n::msg('delete'), 'onclick', 'return confirm(\' ###uid### ' . rex_i18n::msg('delete') . ' ?\')');
+    $list->addLinkAttribute(rex_i18n::msg('delete'), 'onclick', 'return confirm(\' ###uid### '.rex_i18n::msg('delete').' ?\')');
 
     $content = $list->get();
 

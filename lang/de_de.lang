@@ -20,6 +20,8 @@ iwcc_cookie_service_name = Dienstname
 iwcc_cookie_provider = Anbieter
 iwcc_cookie_provider_link_privacy = Link Datenschutzerklärung
 iwcc_cookie_definition = Cookie Definitionen (YAML)
+iwcc_cookie_placeholder_text = Platzhalter Text
+iwcc_cookie_placeholder_image = Platzhalter Bild
 
 iwcc_cookiegroups = Cookie Gruppen
 iwcc_cookiegroup_add = Cookie Gruppe erstellen

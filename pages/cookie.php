@@ -53,6 +53,25 @@ elseif ($func == 'add' || $func == 'edit')
     $field->setLabel($this->i18n('iwcc_cookie_provider_link_privacy'));
     $field->setNotice($this->i18n('iwcc_cookie_notice_provider_link_privacy'));
 
+    if ($func == 'edit' && $form->getSql()->getValue('uid') != 'iwcc')
+    {
+        if ($clang_id == rex_clang::getStartId() || !$form->isEditMode())
+        {
+            $field = $form->addTextAreaField('script');
+            $field->setLabel($this->i18n('iwcc_cookiegroup_scripts'));
+            $field->setNotice($this->i18n('iwcc_cookiegroup_scripts_notice'));
+        }
+        else
+        {
+            $form->addRawField(iwcc_rex_form::getFakeTextarea($this->i18n('iwcc_cookiegroup_scripts'), $form->getSql()->getValue('script')));
+        }
+    }
+
+    $field = $form->addTextAreaField('placeholder_text');
+    $field->setLabel($this->i18n('iwcc_cookie_placeholder_text'));
+    $field = $form->addMediaField('placeholder_image');
+    $field->setLabel($this->i18n('iwcc_cookie_placeholder_image'));
+
     $title = $form->isEditMode() ? $this->i18n('iwcc_cookie_edit') : $this->i18n('iwcc_cookie_add');
     $content = $form->get();
 

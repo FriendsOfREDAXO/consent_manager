@@ -20,6 +20,8 @@ iwcc_cookie_service_name = Servicenamn
 iwcc_cookie_provider = Leverantör
 iwcc_cookie_provider_link_privacy = Dataskyddsdeklaration länk
 iwcc_cookie_definition = Cookie definitionen (YAML)
+iwcc_cookie_placeholder_text = Platshållare text
+iwcc_cookie_placeholder_image = Platshållare bild
 
 iwcc_cookiegroups = Cookie grupper
 iwcc_cookiegroup_add = Skapa cookie grupp

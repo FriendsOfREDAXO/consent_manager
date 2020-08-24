@@ -77,26 +77,4 @@ class iwcc_rex_form
         return filter_var($hostname, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
     }
 
-    public static function formatCookiegroupPrioLabel($groupId)
-    {
-        $db = rex_sql::factory();
-        $db->setTable(rex::getTable('iwcc_cookiegroup'));
-        $db->setWhere('pid=' . $groupId);
-        $db->select('uid,domain');
-        $group = $db->getArray()[0];
-        if ($group['domain'])
-        {
-            $db = rex_sql::factory();
-            $db->setTable(rex::getTable('iwcc_domain'));
-            $db->setWhere('id=' . $group['domain']);
-            $db->select('uid');
-            $domain = $db->getArray();
-            if ($domain)
-            {
-                return $group['uid'] . ' [' . $domain[0]['uid'] . ']';
-            }
-        }
-        return $group['uid'];
-    }
-
 }
