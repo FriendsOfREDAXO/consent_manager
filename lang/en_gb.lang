@@ -20,6 +20,8 @@ iwcc_cookie_service_name = Service name
 iwcc_cookie_provider = Provider
 iwcc_cookie_provider_link_privacy = Data protection statement link
 iwcc_cookie_definition = Cookie definitions (YAML)
+iwcc_cookie_placeholder_text = Placeholder text
+iwcc_cookie_placeholder_image = Placeholder image
 
 iwcc_cookiegroups = Cookie groups
 iwcc_cookiegroup_add = Create cookie group
