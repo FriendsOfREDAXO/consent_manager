@@ -1,6 +1,5 @@
 <?php
 rex_extension::register('PACKAGES_INCLUDED', function () {
-    return;
     if (rex::getUser())
     {
         if (rex::getUser()->isAdmin() && rex::isDebugMode() && rex_request_method() == 'get')
