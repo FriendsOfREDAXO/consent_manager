@@ -1,5 +1,5 @@
 package: iwcc
-version: '2.0.0-beta2'
+version: '2.0.0-beta3'
 author: 'Friends Of REDAXO'
 supportpage: https://redaxo.org/support/community/#slack
 
@@ -20,5 +20,7 @@ page:
             title: 'translate:iwcc_texts'
         domain:
             title: 'translate:iwcc_domains'
+        setup:
+            title: 'translate:iwcc_setup'
         help:
             {title: 'translate:iwcc_help',  icon: rex-icon fa-question-circle, subPath: README.md, itemclass: pull-right}

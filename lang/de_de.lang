@@ -46,4 +46,10 @@ iwcc_domain_legal_notice = Impressum
 iwcc_domain_privacy_policy_empty_msg = Datenschutzerklärung ist ein Pflichtfeld
 iwcc_domain_legal_notic_empty_msg = Impressum ist ein Pflichtfeld
 
+iwcc_setup = Setup
+iwcc_setup_headline = Beispielkonfiguration importieren
+iwcc_setup_info = Texte und häufig benötigte Cookies/Cookiegruppen werden importiert.<br><strong>VORSICHT - vorhandene Texte und Cookies/Cookiegruppen werden gelöscht.</strong>
+iwcc_setup_import = Import
+iwcc_setup_import_successful = Beispielkonfiguration erfolgreich importiert
+
 iwcc_cache_write_failed = Cachefile konnte nicht geschrieben werden
