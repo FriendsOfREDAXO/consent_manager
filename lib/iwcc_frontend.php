@@ -22,6 +22,7 @@ class iwcc_frontend
         if (rex_addon::get('iwcc')->getVersion('%s') != $this->cache['majorVersion']) {
             iwcc_cache::forceWrite();
         }
+        $this->cacheLogId = $this->cache['cacheLogId'];
         $this->version = $this->cache['majorVersion'];
     }
 

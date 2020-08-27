@@ -13,7 +13,7 @@ if ($this->getVar('debug')) {
     <script src="/assets/addons/iwcc/iwcc_polyfills.js"></script>
     <script src="/assets/addons/iwcc/iwcc_frontend.js"></script>
     <script id="iwcc-template" type="text/template">
-        <div class="iwcc-background iwcc-hidden <?= $iwcc->boxClass ?>" id="iwcc-background" data-domain-name="<?= $iwcc->domainName ?>" data-version="<?= $iwcc->version ?>">
+        <div class="iwcc-background iwcc-hidden <?= $iwcc->boxClass ?>" id="iwcc-background" data-domain-name="<?= $iwcc->domainName ?>" data-version="<?= $iwcc->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $iwcc->cacheLogId ?>">
             <div class="iwcc-wrapper" id="iwcc-wrapper">
                 <div class="iwcc-wrapper-inner">
                     <div class="iwcc-summary" id="iwcc-summary">
