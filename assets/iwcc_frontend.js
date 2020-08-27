@@ -90,7 +90,9 @@ document.addEventListener('DOMContentLoaded', function () {
         consents = [];
         cookieData = {
             consents: [],
-            version: addonVersion
+            version: addonVersion,
+            consentid: document.getElementById('iwcc-background').getAttribute('data-consentid'),
+            cachelogid: document.getElementById('iwcc-background').getAttribute('data-cachelogid')
         };
         // checkboxen
         iwccBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
@@ -109,6 +111,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         cookieData.consents = consents;
         Cookies.set('iwcc', JSON.stringify(cookieData), {expires: expires, path: '/', sameSite: 'Lax', secure: false});
+
+        var http = new XMLHttpRequest(),
+            url = '/index.php?rex-api-call=iwcc',
+            params = 'consentid=' + document.getElementById('iwcc-background').getAttribute('data-consentid');
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        http.send(params);
+
         if (document.querySelectorAll('.iwcc-show-box-reload').length) {
             location.reload();
         } else {

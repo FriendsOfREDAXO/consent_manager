@@ -12,6 +12,7 @@ class iwcc_cache
         'cookiegroups' => [],
         'cookies' => [],
         'texts' => [],
+        'cacheLogId' => 0
     ];
 
     public static function write(rex_extension_point $ep)
@@ -33,6 +34,14 @@ class iwcc_cache
             $this->prepareData($clangId);
             $this->setConfig($clangId);
         }
+        $db = rex_sql::factory();
+        $db->setTable(rex::getTable('iwcc_cache_log'));
+        $db->setValue('consent', json_encode($this->config));
+        $user = rex::getUser() ? rex::getUser()->getLogin() : 'forceCache';
+        $db->setValue('createuser', $user);
+        $db->setRawValue('createdate', 'NOW()');
+        $db->insert();
+        $this->config['cacheLogId'] = $db->getLastId();
         if (!rex_file::putCache($configFile, $this->config)) {
             rex_logger::logError(1, rex_i18n::msg('iwcc_cache_write_failed'), __FILE__, __LINE__);
         }
