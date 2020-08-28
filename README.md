@@ -1,4 +1,7 @@
 # Cookie-Gedöns
+
+![logo](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-logo.png?raw=true)
+
 Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Cookie-Box angezeigt in der er allen oder einzelnen Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig** die nicht deaktiviert werden kann. Die Cookie-Box kann erneut (zum Beispiel über einen Link im Impressum) aufgerufen werden um die Auswahl nachträglich zu ändern. Alle Texte sowie die Gestaltung der Cookie-Box sind anpassbar.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc.jpg?raw=true)
