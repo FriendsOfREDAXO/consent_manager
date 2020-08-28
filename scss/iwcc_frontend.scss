@@ -165,8 +165,8 @@
     font-size: 1.15em;
     transition: all .1s ease;
 }
-.pretty.p-icon .state label:before {
-    margin-top: -.1em;
+#iwcc-wrapper .icon.icon-ok-1::before {
+    margin-left: .05em;
 }
 @media (min-width: 35em) {
     .iwcc-cookiegroups {
