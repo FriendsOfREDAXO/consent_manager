@@ -45,3 +45,7 @@ if (rex_be_controller::getCurrentPagePart(1) == 'iwcc' && $this->getConfig('just
     $this->setConfig('justInstalled', false);
     iwcc_clang::addonJustInstalled();
 }
+if ($this->getConfig('forceCache')) {
+    $this->setConfig('forceCache', false);
+    iwcc_cache::forceWrite();
+}
