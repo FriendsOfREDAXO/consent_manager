@@ -16,7 +16,7 @@ INSERT INTO `rex_iwcc_cookiegroup` (`pid`, `id`, `clang_id`, `domain`, `uid`, `p
 (4,	4,	1,	'',	'marketing',	3,	NULL,	'Marketing',	'Diese Cookies helfen uns bei der Analyse von Verbindungen zu und von Partnern sowie Kampagnen auf unserer Webseite. Durch diese Technologie werden Nutzer, die unsere Webseite bereits besucht und sich für unsere Webseite interessiert haben, durch zielgerichtete Werbung auf den Seiten der Partner erneut angesprochen.',	'|facebook|',	'',	'',	'',	'0000-00-00 00:00:00',	'0000-00-00 00:00:00');
 
 TRUNCATE `rex_iwcc_text`;
-INSERT IGNORE INTO `rex_iwcc_text` (`pid`, `id`, `clang_id`, `uid`, `text`) VALUES
+INSERT INTO `rex_iwcc_text` (`pid`, `id`, `clang_id`, `uid`, `text`) VALUES
 (1, 1, 1, 'headline', 'Cookie-Verwaltung'),
 (2, 2, 1, 'description', 'Wir verwenden Cookies, um Ihnen ein optimales Webseiten-Erlebnis zu bieten. Dazu zählen Cookies, die für den Betrieb der Seite und für die Steuerung unserer kommerziellen Unternehmensziele notwendig sind, sowie solche, die lediglich zu anonymen Statistikzwecken, für Komforteinstellungen oder zur Anzeige personalisierter Inhalte genutzt werden. Sie können selbst entscheiden, welche Kategorien Sie zulassen möchten. Bitte beachten Sie, dass auf Basis Ihrer Einstellungen womöglich nicht mehr alle Funktionalitäten der Seite zur Verfügung stehen.'),
 (3, 3, 1, 'toggle_details', 'Details anzeigen/ausblenden'),
