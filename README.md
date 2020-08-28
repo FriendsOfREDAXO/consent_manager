@@ -1,4 +1,7 @@
 # Cookie-Gedöns
+
+![logo](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-logo.png?raw=true)
+
 Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Cookie-Box angezeigt in der er allen oder einzelnen Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig** die nicht deaktiviert werden kann. Die Cookie-Box kann erneut (zum Beispiel über einen Link im Impressum) aufgerufen werden um die Auswahl nachträglich zu ändern. Alle Texte sowie die Gestaltung der Cookie-Box sind anpassbar.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc.jpg?raw=true)
@@ -144,4 +147,5 @@ https://github.com/FriendsOfREDAXO
 First Release: [Ingo Winter](https://github.com/IngoWinter)  
 [Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie-Gedöns wiederfinden  
 [Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet  
-[Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet  
+[Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet   
+[Oliver Kreischer](https://github.com/olien) hat den Keks gebacken
