@@ -14,6 +14,7 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
+    box-sizing: border-box;
 }
 .iwcc-wrapper {
     background: #fff;
@@ -23,6 +24,7 @@
     max-width: 60em;
     max-height: 100vh;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 .iwcc-wrapper-inner {
     padding: 1em;
