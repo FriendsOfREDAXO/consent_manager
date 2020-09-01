@@ -26,13 +26,13 @@ class iwcc_frontend
         $this->version = $this->cache['majorVersion'];
     }
 
-    public static function getFragment($debug, $forceCache)
+    public static function getFragment($debug, $forceCache, $fragmentFilename)
     {
         $fragment = new rex_fragment();
         $fragment->setVar('debug', $debug);
         $fragment->setVar('forceCache', $forceCache);
 
-        return $fragment->parse('iwcc_box.php');
+        return $fragment->parse($fragmentFilename);
     }
 
     public function setDomain($domain)
