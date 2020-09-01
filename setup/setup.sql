@@ -26,7 +26,7 @@ INSERT INTO `rex_iwcc_text` (`pid`, `id`, `clang_id`, `uid`, `text`) VALUES
 (7, 7, 1, 'button_accept', 'Auswahl bestätigen'),
 (8, 8, 1, 'button_select_all', 'Alle auswählen'),
 (9, 9, 1, 'cookiename', 'Cookie-Name:'),
-(10, 10, 1, 'usage', 'Service:'),
+(10, 10, 1, 'service', 'Service:'),
 (11, 11, 1, 'usage', 'Verwendungszweck:'),
 (12, 12, 1, 'category', 'Kategorie:'),
 (13, 13, 1, 'value', 'Wert:'),
