@@ -34,17 +34,17 @@ if ($iwcc->cookiegroups) {
 		$consents_uids_output = implode(', ', $consents_service_names);
 		
 		$output .= '<h2>'.$iwcc->texts['headline_currentconsent'].'</h2>';
-		$output .= '<p class="iwcc-hisotry-date"><span>'.$iwcc->texts['consent_date'].':</span> '.$history[0]['createdate'].'</p>';		
-		$output .= '<p class="iwcc-hisotry-id"><span>'.$iwcc->texts['consent_id'].':</span> '.$history[0]['consentid'].'</p>';
-		$output .= '<p class="iwcc-hisotry-consents"><span>'.$iwcc->texts['consent_consents'].':</span> '.$consents_uids_output.'</p>';
+		$output .= '<p class="iwcc-history-date"><span>'.$iwcc->texts['consent_date'].':</span> '.$history[0]['createdate'].'</p>';		
+		$output .= '<p class="iwcc-history-id"><span>'.$iwcc->texts['consent_id'].':</span> '.$history[0]['consentid'].'</p>';
+		$output .= '<p class="iwcc-history-consents"><span>'.$iwcc->texts['consent_consents'].':</span> '.$consents_uids_output.'</p>';
 		$output .= '<p><a class="iwcc-show-box">'.$iwcc->texts['edit_consent'].'</a></p>'; // mit iwcc-show-box-reload funktionierts nicht korrekt
 		
 		$output .= '<h2>'.$iwcc->texts['headline_historyconsent'].'</h2>';
 		$output .= '<table class="iwcc-historytable">';
 		$output .= '<tr>
-						<th class="iwcc-hisotry-date">'.$iwcc->texts['consent_date'].'</th>
-						<th class="iwcc-hisotry-id">'.$iwcc->texts['consent_id'].'</th>
-						<th class="iwcc-hisotry-consents">'.$iwcc->texts['consent_consents'].'</th>
+						<th class="iwcc-history-date">'.$iwcc->texts['consent_date'].'</th>
+						<th class="iwcc-history-id">'.$iwcc->texts['consent_id'].'</th>
+						<th class="iwcc-history-consents">'.$iwcc->texts['consent_consents'].'</th>
 					</tr>';
 		foreach ($history as $historyentry) {	
 			$consents = json_decode($historyentry['consents']);
@@ -55,9 +55,9 @@ if ($iwcc->cookiegroups) {
 			}
 			$consents_uids_output = implode(', ', $consents_service_names);
 			$output .= '<tr>';
-			$output .= '<td class="iwcc-hisotry-date">'.$historyentry['createdate'].'</td>';		
-			$output .= '<td class="iwcc-hisotry-id">'.$historyentry['consentid'].'</td>';
-			$output .= '<td class="iwcc-hisotry-consents">'.$consents_uids_output.'</td>';
+			$output .= '<td class="iwcc-history-date">'.$historyentry['createdate'].'</td>';		
+			$output .= '<td class="iwcc-history-id">'.$historyentry['consentid'].'</td>';
+			$output .= '<td class="iwcc-history-consents">'.$consents_uids_output.'</td>';
 			$output .= '</tr>';
 		}
 		$output .= '</table>';
