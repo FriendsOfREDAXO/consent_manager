@@ -12,4 +12,12 @@ INSERT IGNORE INTO `rex_iwcc_text` (`pid`, `id`, `clang_id`, `uid`, `text`) VALU
 (11, 11, 1, 'usage', 'Verwendungszweck:'),
 (12, 12, 1, 'category', 'Kategorie:'),
 (13, 13, 1, 'value', 'Wert:'),
-(14, 14, 1, 'missingdescription', 'Keine Informationen vorhanden');
+(14, 14, 1, 'missingdescription', 'Keine Informationen vorhanden'),
+(15, 15, 1, 'headline_usedcookies', 'Aktuell verwendet diese Website folgende Cookies'),
+(16, 16, 1, 'headline_mayusedcookies', 'Cookies, die diese Website verwenden kann'),
+(17, 17, 1, 'headline_currentconsent', 'Ihre aktuelle Einwilligung'),
+(18, 18, 1, 'headline_historyconsent', 'Ihr Einwilligungs-Verlauf'),
+(19, 19, 1, 'consent_date', 'Einwilligungsdatum'),
+(20, 20, 1, 'consent_id', 'Einwilligungs-ID'),
+(21, 21, 1, 'consent_consents', 'Einwilligungen'),
+(22, 22, 1, 'edit_consent', 'Cookie Einstellungen bearbeiten');
