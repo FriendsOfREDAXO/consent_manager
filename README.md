@@ -63,7 +63,7 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 **Name:** Name der Gruppe (wird dem Website-Besucher angezeigt).
 **Beschreibung:** Allgmeine Beschreibung der Gruppe (wird dem Website-Besucher angezeigt).
 **Cookies:** Hier werden die zuvor angelegten Cookies ausgewählt, die der Gruppe angehören sollen
-**Skripte, die nach Einverständnis geladen werden:** Hier werden alle Scripte (inklusive '<script>'-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Zu Beachten ist, dass nur die Scripte eingebunden werden die zu den vorher ausgewählten Cookies gehören.
+**Skripte, die nach Einverständnis geladen werden:** Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Zu Beachten ist, dass nur die Scripte eingebunden werden die zu den vorher ausgewählten Cookies gehören.
 
 ### In Template einfügen
 Der Platzhalter `REX_IWCC[]` muss im `head`-Bereich des Templates eingefügt werden. Gibt es mehrere Templates mit `head`-Bereichen, muss der Platzhalter in allen Templates eingefügt werden, die die Cookie-Box aufrufen sollen. **Wichtig: der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
