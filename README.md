@@ -1,10 +1,11 @@
 # Cookie-Gedöns
-
-![logo](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-logo.jpg?raw=true)
-
 ## ACHTUNG !
 Die Anleitung bezieht sich auf iwcc 1.x die hier installierte Version 2.0 ist im Moment noch Beta und bringt einige Änderungen mit sich.
 Hier gibt es ein [Beispielmodul](https://gist.github.com/IngoWinter/31df14685b45ad8980aadaec1e757363) zur aktuellen Version
+
+
+![logo](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-logo.jpg?raw=true)
+
 
 Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Cookie-Box angezeigt in der er allen oder einzelnen Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig** die nicht deaktiviert werden kann. Die Cookie-Box kann erneut (zum Beispiel über einen Link im Impressum) aufgerufen werden um die Auswahl nachträglich zu ändern. Alle Texte sowie die Gestaltung der Cookie-Box sind anpassbar.
 
