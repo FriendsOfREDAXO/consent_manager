@@ -34,7 +34,7 @@ if ($consent_manager->cookiegroups) {
 		$consents_uids_output = implode(', ', $consents_service_names);
 		
 		$output .= '<h2>'.$consent_manager->texts['headline_currentconsent'].'</h2>';
-		$output .= '<p class="consent_manager-history-date"><span>'.$consent_manager->texts['consent_date'].':</span> '.$history[0]['createdate'].'</p>';		
+		$output .= '<p class="consent_manager-history-date"><span>'.$consent_manager->texts['consent_date'].':</span> '.$history[0]['createdate'].'</p>';
 		$output .= '<p class="consent_manager-history-id"><span>'.$consent_manager->texts['consent_id'].':</span> '.$history[0]['consentid'].'</p>';
 		$output .= '<p class="consent_manager-history-consents"><span>'.$consent_manager->texts['consent_consents'].':</span> '.$consents_uids_output.'</p>';
 		$output .= '<p><a class="consent_manager-show-box">'.$consent_manager->texts['edit_consent'].'</a></p>'; // mit consent_manager-show-box-reload funktionierts nicht korrekt
@@ -55,7 +55,7 @@ if ($consent_manager->cookiegroups) {
 			}
 			$consents_uids_output = implode(', ', $consents_service_names);
 			$output .= '<tr>';
-			$output .= '<td class="consent_manager-history-date">'.$historyentry['createdate'].'</td>';		
+			$output .= '<td class="consent_manager-history-date">'.$historyentry['createdate'].'</td>';
 			$output .= '<td class="consent_manager-history-id">'.$historyentry['consentid'].'</td>';
 			$output .= '<td class="consent_manager-history-consents">'.$consents_uids_output.'</td>';
 			$output .= '</tr>';
@@ -88,7 +88,7 @@ if ($consent_manager->cookiegroups) {
 			$cookie = $consent_manager->cookies[$cookieUid];
 			foreach ($cookie['definition'] as $def) {
 				$output .= '<tr>';
-				$output .= '<td class="consent_manager-cookie-name">'.$def['cookie_name'].'</td>';		
+				$output .= '<td class="consent_manager-cookie-name">'.$def['cookie_name'].'</td>';
 				$output .= '<td class="consent_manager-cookie-provider"><a href="'.$cookie['provider_link_privacy'].'">'.$cookie['provider'].'</a></td>';
 				$output .= '<td class="consent_manager-cookie-description">'.$def['description'].'</td>';
 				$output .= '<td class="consent_manager-cookie-lifetime">'.$def['cookie_lifetime'].'</td>';
@@ -127,7 +127,7 @@ if ($consent_manager->cookiegroups) {
 				</tr>';
 	foreach ($_COOKIE as $cookiename => $cookieValue) {
 		$output .= '<tr>';
-		$output .= '<td class="consent_manager-cookie-name">'.$cookiename.'</td>';		
+		$output .= '<td class="consent_manager-cookie-name">'.$cookiename.'</td>';
 		if (isset($cookiedb[$cookiename]) || array_key_exists($cookiename, $cookiedb)) {
 			$output .= '<td class="consent_manager-cookie-provider">'.$cookiedb[$cookiename]['provider'].'</td>';
 			$output .= '<td class="consent_manager-cookie-description">'.$cookiedb[$cookiename]['description'].'</td>';

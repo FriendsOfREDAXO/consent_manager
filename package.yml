@@ -1,5 +1,5 @@
 package: consent_manager
-version: '2.0.0-beta8'
+version: '2.0.0-beta9'
 author: 'Friends Of REDAXO'
 supportpage: https://redaxo.org/support/community/#slack
 
@@ -8,7 +8,7 @@ requires:
 
 page:
     title: 'translate:consent_manager_title'
-    perm: iw_cookie_consent[]
+    perm: consent_manager[]
     pjax: true
     icon: rex-icon fa fa-coffee
     subpages:
