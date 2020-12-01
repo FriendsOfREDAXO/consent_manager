@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'iwcc-fontello';
+  font-family: 'consent_manager-fontello';
   src: url('../font/fontello.eot?71575097');
   src: url('../font/fontello.eot?71575097#iefix') format('embedded-opentype'),
        url('../font/fontello.woff2?71575097') format('woff2'),
@@ -20,8 +20,8 @@
 }
 */
 
- #iwcc-wrapper [class^="icon-"]:before, #iwcc-wrapper [class*=" icon-"]:before {
-  font-family: "iwcc-fontello";
+ #consent_manager-wrapper [class^="icon-"]:before, #consent_manager-wrapper [class*=" icon-"]:before {
+  font-family: "consent_manager-fontello";
   font-style: normal;
   font-weight: normal;
   speak: none;

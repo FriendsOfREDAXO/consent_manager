@@ -1,29 +1,29 @@
 <?php
-$iwcc = new consent_manager_frontend($this->getVar('forceCache'));
-$iwcc->setDomain($_SERVER['HTTP_HOST']);
+$consent_manager = new consent_manager_frontend($this->getVar('forceCache'));
+$consent_manager->setDomain($_SERVER['HTTP_HOST']);
 if ($this->getVar('debug')) {
-    dump($iwcc);
+    dump($consent_manager);
 }
 ?>
-<?php if ($iwcc->cookiegroups): ?>
-    <link href="/assets/addons/iwcc/fontello/css/fontello.css" rel="stylesheet" type="text/css">
-    <link href="/assets/addons/iwcc/pretty-checkbox.min.css" rel="stylesheet" type="text/css">
-    <link href="/assets/addons/iwcc/consent_manager_frontend.css" rel="stylesheet" type="text/css">
-    <script src="/assets/addons/iwcc/js.cookie-2.2.1.min.js"></script>
-    <script src="/assets/addons/iwcc/consent_manager_polyfills.js"></script>
-    <script src="/assets/addons/iwcc/consent_manager_frontend.js"></script>
-    <script id="iwcc-template" type="text/template">
-        <div class="iwcc-background iwcc-hidden <?= $iwcc->boxClass ?>" id="iwcc-background" data-domain-name="<?= $iwcc->domainName ?>" data-version="<?= $iwcc->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $iwcc->cacheLogId ?>">
-            <div class="iwcc-wrapper" id="iwcc-wrapper">
-                <div class="iwcc-wrapper-inner">
-                    <div class="iwcc-summary" id="iwcc-summary">
-                        <p class="iwcc-headline"><?= $iwcc->texts['headline'] ?></p>
-                        <p class="iwcc-text"><?= nl2br($iwcc->texts['description']) ?></p>
-                        <div class="iwcc-cookiegroups">
+<?php if ($consent_manager->cookiegroups): ?>
+    <link href="/assets/addons/consent_manager/fontello/css/fontello.css" rel="stylesheet" type="text/css">
+    <link href="/assets/addons/consent_manager/pretty-checkbox.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/addons/consent_manager/consent_manager_frontend.css" rel="stylesheet" type="text/css">
+    <script src="/assets/addons/consent_manager/js.cookie-2.2.1.min.js"></script>
+    <script src="/assets/addons/consent_manager/consent_manager_polyfills.js"></script>
+    <script src="/assets/addons/consent_manager/consent_manager_frontend.js"></script>
+    <script id="consent_manager-template" type="text/template">
+        <div class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>">
+            <div class="consent_manager-wrapper" id="consent_manager-wrapper">
+                <div class="consent_manager-wrapper-inner">
+                    <div class="consent_manager-summary" id="consent_manager-summary">
+                        <p class="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></p>
+                        <p class="consent_manager-text"><?= nl2br($consent_manager->texts['description']) ?></p>
+                        <div class="consent_manager-cookiegroups">
                             <?php
-                            foreach ($iwcc->cookiegroups as $cookiegroup) {
+                            foreach ($consent_manager->cookiegroups as $cookiegroup) {
                                 if ($cookiegroup['required']) {
-                                    echo '<div class="iwcc-cookiegroup-checkbox pretty p-icon p-curve p-locked">';
+                                    echo '<div class="consent_manager-cookiegroup-checkbox pretty p-icon p-curve p-locked">';
                                     echo '<input type="checkbox" data-action="toggle-cookie" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\' checked>';
                                     echo '<div class="state">';
                                     echo '<i class="icon icon-ok-1"></i>';
@@ -31,7 +31,7 @@ if ($this->getVar('debug')) {
                                     echo '</div>';
                                     echo '</div>';
                                 } else {
-                                    echo '<div class="iwcc-cookiegroup-checkbox pretty p-icon p-curve">';
+                                    echo '<div class="consent_manager-cookiegroup-checkbox pretty p-icon p-curve">';
                                     echo '<input type="checkbox" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\'>';
                                     echo '<div class="state">';
                                     echo '<i class="icon icon-ok-1"></i>';
@@ -42,29 +42,29 @@ if ($this->getVar('debug')) {
                             }
                             ?>
                         </div>
-                        <div class="iwcc-show-details">
-                            <a id="iwcc-toggle-details" class="icon-info-circled"><?= $iwcc->texts['toggle_details'] ?></a>
+                        <div class="consent_manager-show-details">
+                            <a id="consent_manager-toggle-details" class="icon-info-circled"><?= $consent_manager->texts['toggle_details'] ?></a>
                         </div>
                     </div>
-                    <div class="iwcc-detail iwcc-hidden" id="iwcc-detail">
+                    <div class="consent_manager-detail consent_manager-hidden" id="consent_manager-detail">
                         <?php
-                        foreach ($iwcc->cookiegroups as $cookiegroup) {
-                            echo '<div class="iwcc-cookiegroup-title iwcc-headline">';
+                        foreach ($consent_manager->cookiegroups as $cookiegroup) {
+                            echo '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
                             echo $cookiegroup['name'].' <span>('.count($cookiegroup['cookie_uids']).')</span>';
                             echo '</div>';
-                            echo '<div class="iwcc-cookiegroup-description">';
+                            echo '<div class="consent_manager-cookiegroup-description">';
                             echo $cookiegroup['description'];
                             echo '</div>';
-                            echo '<div class="iwcc-cookiegroup">';
+                            echo '<div class="consent_manager-cookiegroup">';
                             foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
-                                $cookie = $iwcc->cookies[$cookieUid];
+                                $cookie = $consent_manager->cookies[$cookieUid];
                                 foreach ($cookie['definition'] as $def) {
-                                    echo '<div class="iwcc-cookie">';
-                                    echo '<span class="iwcc-cookie-name"><strong>'.$def['cookie_name'].'</strong> ('.$cookie['service_name'].')</span>';
-                                    echo '<span class="iwcc-cookie-description">'.$def['description'].'</span>';
-                                    echo '<span class="iwcc-cookie-description">'.$iwcc->texts['lifetime'].' '.$def['cookie_lifetime'].'</span>';
-                                    echo '<span class="iwcc-cookie-provider">'.$iwcc->texts['provider'].' '.$cookie['provider'].'</span>';
-                                    echo '<span class="iwcc-cookie-link-privacy-policy"><a href="'.$cookie['provider_link_privacy'].'">'.$iwcc->texts['link_privacy'].'</a></span>';
+                                    echo '<div class="consent_manager-cookie">';
+                                    echo '<span class="consent_manager-cookie-name"><strong>'.$def['cookie_name'].'</strong> ('.$cookie['service_name'].')</span>';
+                                    echo '<span class="consent_manager-cookie-description">'.$def['description'].'</span>';
+                                    echo '<span class="consent_manager-cookie-description">'.$consent_manager->texts['lifetime'].' '.$def['cookie_lifetime'].'</span>';
+                                    echo '<span class="consent_manager-cookie-provider">'.$consent_manager->texts['provider'].' '.$cookie['provider'].'</span>';
+                                    echo '<span class="consent_manager-cookie-link-privacy-policy"><a href="'.$cookie['provider_link_privacy'].'">'.$consent_manager->texts['link_privacy'].'</a></span>';
                                     echo '</div>';
                                 }
                             }
@@ -72,25 +72,25 @@ if ($this->getVar('debug')) {
                         }
                         ?>
                     </div>
-                    <div class="iwcc-buttons-sitelinks">
-                        <div class="iwcc-buttons">
-                            <a class="iwcc-save-selection iwcc-close"><?= $iwcc->texts['button_accept'] ?></a>
-                            <a class="iwcc-accept-all iwcc-close"><?= $iwcc->texts['button_select_all'] ?></a>
+                    <div class="consent_manager-buttons-sitelinks">
+                        <div class="consent_manager-buttons">
+                            <a class="consent_manager-save-selection consent_manager-close"><?= $consent_manager->texts['button_accept'] ?></a>
+                            <a class="consent_manager-accept-all consent_manager-close"><?= $consent_manager->texts['button_select_all'] ?></a>
                         </div>
-                        <div class="iwcc-sitelinks">
+                        <div class="consent_manager-sitelinks">
                             <?php
-                            foreach ($iwcc->links as $v) {
+                            foreach ($consent_manager->links as $v) {
                                 echo '<a href="'.rex_getUrl($v).'">'.rex_article::get($v)->getName().'</a>';
                             }
                             ?>
                         </div>
                     </div>
-                    <a class="icon-cancel-circled iwcc-close iwcc-close-box"></a>
+                    <a class="icon-cancel-circled consent_manager-close consent_manager-close-box"></a>
                 </div>
             </div>
             <?php
-            foreach ($iwcc->scripts as $uid => $script) {
-                echo '<div style="display: none" class="iwcc-script" data-uid="'.$uid.'" data-script="'.$script.'"></div>';
+            foreach ($consent_manager->scripts as $uid => $script) {
+                echo '<div style="display: none" class="consent_manager-script" data-uid="'.$uid.'" data-script="'.$script.'"></div>';
             }
             ?>
         </div>

@@ -1,4 +1,4 @@
-package: iwcc
+package: consent_manager
 version: '2.0.0-beta8'
 author: 'Friends Of REDAXO'
 supportpage: https://redaxo.org/support/community/#slack

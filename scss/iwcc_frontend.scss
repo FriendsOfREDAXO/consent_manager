@@ -1,4 +1,4 @@
-.iwcc-background {
+.consent_manager-background {
     position: fixed;
     left: 0;
     top: 0;
@@ -16,7 +16,7 @@
     overflow: hidden;
     box-sizing: border-box;
 }
-.iwcc-wrapper {
+.consent_manager-wrapper {
     background: #fff;
     position: relative;
     font-size: 15px;
@@ -26,24 +26,24 @@
     overflow-y: auto;
     box-sizing: border-box;
 }
-.iwcc-wrapper-inner {
+.consent_manager-wrapper-inner {
     padding: 1em;
     position: relative;
 }
-.iwcc-hidden {
+.consent_manager-hidden {
     display: none;
 }
-.iwcc-detail {
+.consent_manager-detail {
     margin-bottom: 1em;
 }
-.iwcc-headline {
+.consent_manager-headline {
     font-weight: bold;
     font-size: 1.2em;
     span {
         font-weight: normal;
     }
 }
-.iwcc-show-details {
+.consent_manager-show-details {
     padding: 0 0 1em 0;
     a {
         color: green;
@@ -54,8 +54,8 @@
         }
     }
 }
-.iwcc-save-selection,
-.iwcc-accept-all {
+.consent_manager-save-selection,
+.consent_manager-accept-all {
     transition: 200ms ease all;
     background: green;
     border: 1px solid green;
@@ -73,7 +73,7 @@
         text-decoration: none;
     }
 }
-.iwcc-save-selection {
+.consent_manager-save-selection {
     background: none transparent;
     border: 1px solid #999;
     color: #666;
@@ -83,7 +83,7 @@
         color: #fff;
     }
 }
-.iwcc-sitelinks {
+.consent_manager-sitelinks {
     a {
     display: inline-block;
     margin: .5em .5em .5em 0;
@@ -95,13 +95,13 @@
     }
 }
 }
-.iwcc-save-and-close {
+.consent_manager-save-and-close {
     color: green;
     &:hover {
         color: #004000;
     }
 }
-.iwcc-close-box {
+.consent_manager-close-box {
     position: absolute;
     right: .5em;
     top: .5em;
@@ -124,10 +124,10 @@
         text-decoration: none;
     }
 }
-.iwcc-cookiegroups {
+.consent_manager-cookiegroups {
     padding: 1em 0;
 }
-.iwcc-cookiegroup-checkbox {
+.consent_manager-cookiegroup-checkbox {
     display: block;
     margin: 0 0 1em 0;
     &.pretty .state label {
@@ -144,15 +144,15 @@
         opacity: .75;
     }
 }
-.iwcc-cookiegroup {
-    & + .iwcc-cookiegroup-title {
+.consent_manager-cookiegroup {
+    & + .consent_manager-cookiegroup-title {
         margin-top: 1em;
     }
 }
-.iwcc-cookiegroup-title {
+.consent_manager-cookiegroup-title {
 
 }
-.iwcc-cookie {
+.consent_manager-cookie {
     margin-top: .5em;
     border-left: 2px solid #999;
     padding: .5em .5em .5em 1em;
@@ -161,58 +161,58 @@
         display: block;
     }
 }
-.iwcc-buttons {
+.consent_manager-buttons {
 }
 .pretty.p-icon .state .icon {
     font-size: 1.15em;
     transition: all .1s ease;
 }
-#iwcc-wrapper .icon.icon-ok-1::before {
+#consent_manager-wrapper .icon.icon-ok-1::before {
     margin-left: .05em;
 }
 @media (min-width: 35em) {
-    .iwcc-cookiegroups {
+    .consent_manager-cookiegroups {
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
         padding-top: 2em;
     }
-    .iwcc-cookiegroup-checkbox {
+    .consent_manager-cookiegroup-checkbox {
         margin: 0 2em 0 0;
     }
-    .iwcc-show-details {
+    .consent_manager-show-details {
         text-align: right;
         padding: 1em 2em 2em 0;
     }
-    .iwcc-buttons {
+    .consent_manager-buttons {
         display: flex;
         justify-content: flex-end;
         align-items: center;
     }
-    .iwcc-sitelinks {
+    .consent_manager-sitelinks {
         text-align: right;
         padding-right: 1.5em;
         a {
             margin: .5em 0 .5em 1em;
         }
     }
-    .iwcc-save-selection,
-    .iwcc-accept-all {
+    .consent_manager-save-selection,
+    .consent_manager-accept-all {
         display: inline-block;
         margin: 0 0 0 .5em;
     }
 }
 @media (min-width: 50em) {
-    .iwcc-wrapper-inner {
+    .consent_manager-wrapper-inner {
         padding: 2em;
     }
-    .iwcc-buttons-sitelinks {
+    .consent_manager-buttons-sitelinks {
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-direction: row-reverse;
     }
-    .iwcc-close-box {
+    .consent_manager-close-box {
         font-size: 2em;
         margin: 0;
     }

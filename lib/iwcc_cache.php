@@ -27,7 +27,7 @@ class consent_manager_cache
 
     private function writeCache()
     {
-        $addon = rex_addon::get('iwcc');
+        $addon = rex_addon::get('consent_manager');
         $configFile = $addon->getDataPath('config.json');
         $this->fetchData();
         foreach (rex_clang::getAllIds() as $clangId) {
@@ -97,7 +97,7 @@ class consent_manager_cache
         foreach ($this->cookiegroups[$clangId] as $uid => $cookiegroup) {
             $cookie_uids = array_filter(explode('|', $cookiegroup['cookie']));
             if ($cookiegroup['required'] == '|1|') {
-                $cookie_uids[] = 'iwcc';
+                $cookie_uids[] = 'consent_manager';
             }
             $this->cookiegroups[$clangId][$uid]['cookie_uids'] = array_merge(array_filter(array_unique($cookie_uids)));
             $domainIds = array_filter(explode('|', $cookiegroup['domain']));
@@ -122,7 +122,7 @@ class consent_manager_cache
             $this->config['domains'][$v['uid']] = $v;
         }
         $this->config['texts'][$clangId] = $this->texts[$clangId];
-        $this->config['majorVersion'] = rex_addon::get('iwcc')->getVersion('%s');
+        $this->config['majorVersion'] = rex_addon::get('consent_manager')->getVersion('%s');
     }
 
     public static function forceWrite()
@@ -133,7 +133,7 @@ class consent_manager_cache
 
     public static function read()
     {
-        $addon = rex_addon::get('iwcc');
+        $addon = rex_addon::get('consent_manager');
         $configFile = $addon->getDataPath('config.json');
 
         return rex_file::getCache($configFile);

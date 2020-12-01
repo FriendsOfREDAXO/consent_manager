@@ -29,7 +29,7 @@ rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
     if (rex::isBackend() && rex_clang::count() == 1)
     {
         $s = '</head>';
-        $r = '<style>[id*="rex-page-iwcc"] .rex-page-nav .navbar{display:none}</style></head>';
+        $r = '<style>[id*="rex-page-consent_manager"] .rex-page-nav .navbar{display:none}</style></head>';
         $ep->setSubject(str_replace($s, $r, $ep->getSubject()));
     }
 });
@@ -40,7 +40,7 @@ rex_extension::register('REX_FORM_SAVED', 'consent_manager_cache::write');
 rex_extension::register('CLANG_ADDED', 'consent_manager_clang::clangAdded');
 rex_extension::register('CLANG_DELETED', 'consent_manager_clang::clangDeleted');
 
-if (rex_be_controller::getCurrentPagePart(1) == 'iwcc' && $this->getConfig('justInstalled'))
+if (rex_be_controller::getCurrentPagePart(1) == 'consent_manager' && $this->getConfig('justInstalled'))
 {
     $this->setConfig('justInstalled', false);
     consent_manager_clang::addonJustInstalled();

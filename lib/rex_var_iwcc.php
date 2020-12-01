@@ -1,6 +1,6 @@
 <?php
 
-class rex_var_iwcc extends rex_var
+class rex_var_consent_manager extends rex_var
 {
     protected function getOutput()
     {

@@ -1,4 +1,4 @@
-/* globals Cookies, iwccIEVersion */
+/* globals Cookies, consent_managerIEVersion */
 document.addEventListener('DOMContentLoaded', function () {
     'use strict';
     var expires = new Date(),
@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', function () {
         consents = [],
         addonVersion = -1,
         cookieVersion = -1,
-        iwccBox;
+        consent_managerBox;
 
     expires.setFullYear(expires.getFullYear() + 1);
     // es gibt keinen datenschutzcookie, banner zeigen
-    if (typeof Cookies.get('iwcc') === 'undefined') {
+    if (typeof Cookies.get('consent_manager') === 'undefined') {
         show = 1;
         Cookies.set('test', 'test', {path: '/', sameSite: 'Lax', secure: false});
         // cookie konnte nicht gesetzt werden, kein cookie banner anzeigen
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
             Cookies.remove('test');
         }
     } else {
-        cookieData = JSON.parse(Cookies.get('iwcc'));
+        cookieData = JSON.parse(Cookies.get('consent_manager'));
         // cookie version auslesen. cookie version = major addon version zum zeitpunkt des cookie speicherns
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
@@ -29,12 +29,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    iwccBox = new DOMParser().parseFromString(document.getElementById('iwcc-template').innerHTML, 'text/html');
-    iwccBox = iwccBox.getElementById('iwcc-background');
-    document.querySelectorAll('body')[0].appendChild(iwccBox);
+    consent_managerBox = new DOMParser().parseFromString(document.getElementById('consent_manager-template').innerHTML, 'text/html');
+    consent_managerBox = consent_managerBox.getElementById('consent_manager-background');
+    document.querySelectorAll('body')[0].appendChild(consent_managerBox);
 
     // aktuelle major addon version auslesen
-    addonVersion = parseInt(document.getElementById('iwcc-background').getAttribute('data-version'));
+    addonVersion = parseInt(document.getElementById('consent_manager-background').getAttribute('data-version'));
     // cookie wurde mit einer aelteren major version gesetzt, alle consents loeschen und box zeigen
     if (addonVersion !== cookieVersion) {
         show = 1;
@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', function () {
         deleteCookies();
     }
 
-    if (iwccIEVersion() === 9) {
-        iwccBox.querySelectorAll('.iwcc-cookiegroup-checkbox').forEach(function (el) {
+    if (consent_managerIEVersion() === 9) {
+        consent_managerBox.querySelectorAll('.consent_manager-cookiegroup-checkbox').forEach(function (el) {
             el.classList.remove('pretty');
             el.querySelectorAll('.icon').forEach(function (icon) {
                 icon.remove();
@@ -52,10 +52,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     consents.forEach(function (uid) {
-        addScript(iwccBox.querySelector('[data-uid="' + uid + '"]'));
+        addScript(consent_managerBox.querySelector('[data-uid="' + uid + '"]'));
     });
 
-    if (iwccBox.classList.contains('iwcc-initially-hidden')) {
+    if (consent_managerBox.classList.contains('consent_manager-initially-hidden')) {
         show = 0;
     }
 
@@ -63,24 +63,24 @@ document.addEventListener('DOMContentLoaded', function () {
         showBox();
     }
 
-    iwccBox.querySelectorAll('.iwcc-close').forEach(function (el) {
+    consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
         el.addEventListener('click', function () {
-            if (el.classList.contains('iwcc-save-selection')) {
+            if (el.classList.contains('consent_manager-save-selection')) {
                 deleteCookies();
                 saveConsent('selection');
-            } else if (el.classList.contains('iwcc-accept-all')) {
+            } else if (el.classList.contains('consent_manager-accept-all')) {
                 deleteCookies();
                 saveConsent('all');
             }
-            document.getElementById('iwcc-background').classList.add('iwcc-hidden');
+            document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
         });
     });
 
-    document.getElementById('iwcc-toggle-details').addEventListener('click', function () {
-        document.getElementById('iwcc-detail').classList.toggle('iwcc-hidden');
+    document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
+        document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
     });
 
-    document.querySelectorAll('.iwcc-show-box, .iwcc-show-box-reload').forEach(function (el) {
+    document.querySelectorAll('.consent_manager-show-box, .consent_manager-show-box-reload').forEach(function (el) {
         el.addEventListener('click', function () {
             showBox();
         });
@@ -91,43 +91,43 @@ document.addEventListener('DOMContentLoaded', function () {
         cookieData = {
             consents: [],
             version: addonVersion,
-            consentid: document.getElementById('iwcc-background').getAttribute('data-consentid'),
-            cachelogid: document.getElementById('iwcc-background').getAttribute('data-cachelogid')
+            consentid: document.getElementById('consent_manager-background').getAttribute('data-consentid'),
+            cachelogid: document.getElementById('consent_manager-background').getAttribute('data-cachelogid')
         };
         // checkboxen
-        iwccBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+        consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
             // array mit cookie uids
             var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
             if (el.checked || toSave === 'all') {
                 cookieUids.forEach(function (uid) {
                     consents.push(uid);
-                    addScript(iwccBox.querySelector('[data-uid="' + uid + '"]'));
+                    addScript(consent_managerBox.querySelector('[data-uid="' + uid + '"]'));
                 });
             } else {
                 cookieUids.forEach(function (uid) {
-                    removeScript(iwccBox.querySelector('[data-uid="' + uid + '"]'));
+                    removeScript(consent_managerBox.querySelector('[data-uid="' + uid + '"]'));
                 });
             }
         });
         cookieData.consents = consents;
-        Cookies.set('iwcc', JSON.stringify(cookieData), {expires: expires, path: '/', sameSite: 'Lax', secure: false});
+        Cookies.set('consent_manager', JSON.stringify(cookieData), {expires: expires, path: '/', sameSite: 'Lax', secure: false});
 
         var http = new XMLHttpRequest(),
-            url = '/index.php?rex-api-call=iwcc',
-            params = 'consentid=' + document.getElementById('iwcc-background').getAttribute('data-consentid');
+            url = '/index.php?rex-api-call=consent_manager',
+            params = 'consentid=' + document.getElementById('consent_manager-background').getAttribute('data-consentid');
         http.open('POST', url, true);
         http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         http.send(params);
 
-        if (document.querySelectorAll('.iwcc-show-box-reload').length) {
+        if (document.querySelectorAll('.consent_manager-show-box-reload').length) {
             location.reload();
         } else {
-            document.dispatchEvent(new CustomEvent('iwcc-saved', {detail: JSON.stringify(consents)}));
+            document.dispatchEvent(new CustomEvent('consent_manager-saved', {detail: JSON.stringify(consents)}));
         }
     }
 
     function deleteCookies() {
-        var domain = document.getElementById('iwcc-background').getAttribute('data-domain-name');
+        var domain = document.getElementById('consent_manager-background').getAttribute('data-domain-name');
         for (var key in Cookies.get()) {
             Cookies.remove(encodeURIComponent(key));
             Cookies.remove(encodeURIComponent(key), {'domain': domain});
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function showBox() {
-        iwccBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+        consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
             var check = true,
                 cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
             cookieUids.forEach(function (uid) {
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 el.checked = true;
             }
         });
-        document.getElementById('iwcc-background').classList.remove('iwcc-hidden');
+        document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
     }
 
 });

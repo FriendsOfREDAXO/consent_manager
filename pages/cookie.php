@@ -23,7 +23,7 @@ elseif ($func == 'add' || $func == 'edit')
     $form->addHiddenField('clang_id', $clang_id);
     consent_manager_rex_form::getId($form, $table);
 
-    if ($func == 'edit' && $form->getSql()->getValue('uid') == 'iwcc')
+    if ($func == 'edit' && $form->getSql()->getValue('uid') == 'consent_manager')
     {
         $form->addRawField(consent_manager_rex_form::showInfo($this->i18n('consent_manager_cookie_consent_manager_info')));
         $form->addRawField(consent_manager_rex_form::getFakeText($this->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
@@ -53,7 +53,7 @@ elseif ($func == 'add' || $func == 'edit')
     $field->setLabel($this->i18n('consent_manager_cookie_provider_link_privacy'));
     $field->setNotice($this->i18n('consent_manager_cookie_notice_provider_link_privacy'));
 
-    if ($func == 'edit' && $form->getSql()->getValue('uid') != 'iwcc')
+    if ($func == 'edit' && $form->getSql()->getValue('uid') != 'consent_manager')
     {
         if ($clang_id == rex_clang::getStartId() || !$form->isEditMode())
         {
@@ -89,8 +89,8 @@ if ($showlist)
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
-    $list->addTableAttribute('class', 'iwcc-table iwcc-table-cookie');
-    $list->addTableAttribute('id', 'iwcc-table-cookie');
+    $list->addTableAttribute('class', 'consent_manager-table consent_manager-table-cookie');
+    $list->addTableAttribute('id', 'consent_manager-table-cookie');
 
     $tdIcon = '<i class="fa fa-coffee"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';

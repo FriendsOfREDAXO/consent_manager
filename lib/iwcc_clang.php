@@ -30,7 +30,7 @@ class consent_manager_clang
         $db->select('uid');
         foreach ($db->getArray() as $v)
         {
-            if ($v['uid'] == 'iwcc')
+            if ($v['uid'] == 'consent_manager')
             {
                 $msg = rex_view::error(rex_i18n::msg('consent_manager_not_deletable'));
                 break;
@@ -50,7 +50,7 @@ class consent_manager_clang
             foreach (consent_manager_config::getKeys() as $key)
             {
                 if ($key == 'domain') continue;
-                $page = rex_be_controller::getPageObject('iwcc/' . $key);
+                $page = rex_be_controller::getPageObject('consent_manager/' . $key);
                 if (!$page) {
                     continue;
                 }
@@ -58,7 +58,7 @@ class consent_manager_clang
                 foreach (rex_clang::getAll() as $id => $clang)
                 {
                     $page->addSubpage((new rex_be_page('clang' . $id, $clang->getName()))
-                        ->setSubPath(rex_path::addon('iwcc', 'pages/' . $key . '.php'))
+                        ->setSubPath(rex_path::addon('consent_manager', 'pages/' . $key . '.php'))
                         ->setIsActive($id == $clang_id)
                     );
                 }

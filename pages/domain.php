@@ -56,7 +56,7 @@ if ($showlist)
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
-    $list->addTableAttribute('class', 'iwcc-table iwcc-table-cookiegroup');
+    $list->addTableAttribute('class', 'consent_manager-table consent_manager-table-cookiegroup');
 
     $list->removeColumn('id');
     $list->setColumnLabel('uid', $this->i18n('consent_manager_domain'));

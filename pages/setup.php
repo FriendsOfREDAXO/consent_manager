@@ -6,7 +6,7 @@ if ($func != '') {
         echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
     } else {
         if ($func == 'setup') {
-            $file = rex_path::addon('iwcc').'setup/setup.sql';
+            $file = rex_path::addon('consent_manager').'setup/setup.sql';
             rex_sql_util::importDump($file);
             consent_manager_clang::addonJustInstalled();
             echo rex_view::success($this->i18n('consent_manager_setup_import_successful'));

@@ -19,7 +19,7 @@ class consent_manager_frontend
             consent_manager_cache::forceWrite();
         }
         $this->cache = consent_manager_cache::read();
-        if (rex_addon::get('iwcc')->getVersion('%s') != $this->cache['majorVersion']) {
+        if (rex_addon::get('consent_manager')->getVersion('%s') != $this->cache['majorVersion']) {
             consent_manager_cache::forceWrite();
         }
         $this->cacheLogId = $this->cache['cacheLogId'];
@@ -48,7 +48,7 @@ class consent_manager_frontend
         $this->links['legal_notice'] = $this->cache['domains'][$domain]['legal_notice'];
 
         if (in_array(rex_article::getCurrentId(), [$this->links['privacy_policy'], $this->links['legal_notice']])) {
-            $this->boxClass = 'iwcc-initially-hidden';
+            $this->boxClass = 'consent_manager-initially-hidden';
         }
         foreach ($this->cache['cookies'][rex_clang::getCurrentId()] as $uid => $cookie) {
             if (!$cookie['provider_link_privacy']) {
