@@ -1,6 +1,6 @@
 <?php
 
-class iwcc_frontend
+class consent_manager_frontend
 {
 
     public $cookiegroups = [];
@@ -16,11 +16,11 @@ class iwcc_frontend
     public function __construct($forceWrite = 0)
     {
         if ($forceWrite) {
-            iwcc_cache::forceWrite();
+            consent_manager_cache::forceWrite();
         }
-        $this->cache = iwcc_cache::read();
+        $this->cache = consent_manager_cache::read();
         if (rex_addon::get('iwcc')->getVersion('%s') != $this->cache['majorVersion']) {
-            iwcc_cache::forceWrite();
+            consent_manager_cache::forceWrite();
         }
         $this->cacheLogId = $this->cache['cacheLogId'];
         $this->version = $this->cache['majorVersion'];

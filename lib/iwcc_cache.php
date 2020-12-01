@@ -1,6 +1,6 @@
 <?php
 
-class iwcc_cache
+class consent_manager_cache
 {
 
     private $domains = [];
@@ -18,7 +18,7 @@ class iwcc_cache
     public static function write(rex_extension_point $ep)
     {
         $form = $ep->getParams()['form'];
-        if (!in_array($form->getTableName(), iwcc_config::getTables())) {
+        if (!in_array($form->getTableName(), consent_manager_config::getTables())) {
             return true;
         }
         $cache = new self();
@@ -35,7 +35,7 @@ class iwcc_cache
             $this->setConfig($clangId);
         }
         $db = rex_sql::factory();
-        $db->setTable(rex::getTable('iwcc_cache_log'));
+        $db->setTable(rex::getTable('consent_manager_cache_log'));
         $db->setValue('consent', json_encode($this->config));
         $user = rex::getUser() ? rex::getUser()->getLogin() : 'forceCache';
         $db->setValue('createuser', $user);
@@ -43,14 +43,14 @@ class iwcc_cache
         $db->insert();
         $this->config['cacheLogId'] = $db->getLastId();
         if (!rex_file::putCache($configFile, $this->config)) {
-            rex_logger::logError(1, rex_i18n::msg('iwcc_cache_write_failed'), __FILE__, __LINE__);
+            rex_logger::logError(1, rex_i18n::msg('consent_manager_cache_write_failed'), __FILE__, __LINE__);
         }
     }
 
     private function fetchData()
     {
         $db = rex_sql::factory();
-        $db->setTable(rex::getTable('iwcc_domain'));
+        $db->setTable(rex::getTable('consent_manager_domain'));
         $db->select('*');
         $domains = $db->getArray();
         foreach ($domains as $v) {
@@ -58,7 +58,7 @@ class iwcc_cache
         }
 
         $db = rex_sql::factory();
-        $db->setTable(rex::getTable('iwcc_cookiegroup'));
+        $db->setTable(rex::getTable('consent_manager_cookiegroup'));
         $db->setWhere('1=1 ORDER BY prio ASC');
         $db->select('*');
         $cookiegroups = $db->getArray();
@@ -67,13 +67,13 @@ class iwcc_cache
         }
 
         $db = rex_sql::factory();
-        $db->setTable(rex::getTable('iwcc_cookie'));
+        $db->setTable(rex::getTable('consent_manager_cookie'));
         $db->select('*');
         foreach ($db->getArray() as $v) {
             $this->cookies[$v['clang_id']][$v['uid']] = $v;
         }
         $db = rex_sql::factory();
-        $db->setTable(rex::getTable('iwcc_text'));
+        $db->setTable(rex::getTable('consent_manager_text'));
         $db->select('*');
         foreach ($db->getArray() as $v) {
             $this->texts[$v['clang_id']][$v['uid']] = $v['text'];

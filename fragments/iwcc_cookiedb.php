@@ -1,5 +1,5 @@
 <?php
-$iwcc = new iwcc_frontend($this->getVar('forceCache'));
+$iwcc = new consent_manager_frontend($this->getVar('forceCache'));
 $iwcc->setDomain($_SERVER['HTTP_HOST']);
 if ($this->getVar('debug')) {	
     dump($iwcc);
@@ -11,17 +11,17 @@ $output = '';
 if ($iwcc->cookiegroups) {
 	
 	// Cookie Consent + History
-	$iwcc_cookie = isset($_COOKIE['iwcc']) ? json_decode($_COOKIE['iwcc'],1) : false;
-	if ($iwcc_cookie) {
+	$consent_manager_cookie = isset($_COOKIE['iwcc']) ? json_decode($_COOKIE['iwcc'],1) : false;
+	if ($consent_manager_cookie) {
 		
 		$db = rex_sql::factory();
 		$db->setDebug(false);
-		$db->setQuery('SELECT '.rex::getTable('iwcc_consent_log').'.* 
-						FROM '.rex::getTable('iwcc_consent_log').' 
-						WHERE '.rex::getTable('iwcc_consent_log').'.cachelogid = :cachelogid
-						ORDER BY '.rex::getTable('iwcc_consent_log').'.id DESC
+		$db->setQuery('SELECT '.rex::getTable('consent_manager_consent_log').'.* 
+						FROM '.rex::getTable('consent_manager_consent_log').' 
+						WHERE '.rex::getTable('consent_manager_consent_log').'.cachelogid = :cachelogid
+						ORDER BY '.rex::getTable('consent_manager_consent_log').'.id DESC
 						LIMIT 5'						
-						,['cachelogid'=>$iwcc_cookie['cachelogid']]
+						,['cachelogid'=>$consent_manager_cookie['cachelogid']]
 					);
 		$history = $db->getArray();
 		

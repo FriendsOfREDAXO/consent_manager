@@ -1,6 +1,6 @@
 <?php
 
-class iwcc_rex_form
+class consent_manager_rex_form
 {
 
     public static function getFakeText($label, $value)
@@ -59,7 +59,7 @@ class iwcc_rex_form
     public static function removeDeleteButton(rex_extension_point $ep)
     {
         $formTable = $ep->getParams()['form']->getTableName();
-        if (in_array($formTable, iwcc_config::getTables()))
+        if (in_array($formTable, consent_manager_config::getTables()))
         {
             $subject = $ep->getSubject();
             $subject['delete'] = '';

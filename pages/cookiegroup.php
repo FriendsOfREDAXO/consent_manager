@@ -2,12 +2,12 @@
 $showlist = true;
 $pid = rex_request('pid', 'int', 0);
 $func = rex_request('func', 'string');
-$csrf = rex_csrf_token::factory('iwcc_cookiegroup');
+$csrf = rex_csrf_token::factory('consent_manager_cookiegroup');
 $clang_id = (int)str_replace('clang', '', rex_be_controller::getCurrentPagePart(3));
-$table = rex::getTable('iwcc_cookiegroup');
+$table = rex::getTable('consent_manager_cookiegroup');
 $msg = '';
 if ($func == 'delete') {
-    $msg = iwcc_clang::deleteDataset($table, $pid);
+    $msg = consent_manager_clang::deleteDataset($table, $pid);
 } elseif ($func == 'add' || $func == 'edit') {
     $formDebug = false;
     $showlist = false;
@@ -18,25 +18,25 @@ if ($func == 'delete') {
     $form->addParam('start', rex_request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
     $form->addHiddenField('clang_id', $clang_id);
-    iwcc_rex_form::getId($form, $table);
+    consent_manager_rex_form::getId($form, $table);
 
     $db = rex_sql::factory();
-    $db->setTable(rex::getTable('iwcc_domain'));
+    $db->setTable(rex::getTable('consent_manager_domain'));
     $db->select('id,uid');
     $domains = $db->getArray();
 
     if ($clang_id == rex_clang::getStartId() || !$form->isEditMode()) {
 
         $field = $form->addTextField('uid');
-        $field->setLabel($this->i18n('iwcc_uid'));
-        $field->getValidator()->add('notEmpty', $this->i18n('iwcc_uid_empty_msg'));
-        $field->getValidator()->add('match', $this->i18n('iwcc_uid_malformed_msg'), '/^[a-z0-9-]+$/');
+        $field->setLabel($this->i18n('consent_manager_uid'));
+        $field->getValidator()->add('notEmpty', $this->i18n('consent_manager_uid_empty_msg'));
+        $field->getValidator()->add('match', $this->i18n('consent_manager_uid_malformed_msg'), '/^[a-z0-9-]+$/');
 
         $field = $form->addCheckboxField('required');
-        $field->addOption($this->i18n('iwcc_cookiegroup_required'), 1);
+        $field->addOption($this->i18n('consent_manager_cookiegroup_required'), 1);
         /*
                 $field = $form->addSelectField('domain');
-                $field->setLabel($this->i18n('iwcc_domain'));
+                $field->setLabel($this->i18n('consent_manager_domain'));
                 $select = $field->getSelect();
                 $select->addOption('-', '');
                 foreach ($domains as $v)
@@ -45,7 +45,7 @@ if ($func == 'delete') {
                 }
         */
         $field = $form->addCheckboxField('domain');
-        $field->setLabel($this->i18n('iwcc_domain'));
+        $field->setLabel($this->i18n('consent_manager_domain'));
         foreach ($domains as $v) {
             $field->addOption($v['uid'], $v['id']);
         }
@@ -55,8 +55,8 @@ if ($func == 'delete') {
         $field->setLabel($this->i18n('prio'));
         $field->setLabelField('uid');
     } else {
-        $form->addRawField(iwcc_rex_form::getFakeText($this->i18n('iwcc_uid'), $form->getSql()->getValue('uid')));
-        $form->addRawField(iwcc_rex_form::getFakeCheckbox('', [[$form->getSql()->getValue('required'), $this->i18n('iwcc_cookiegroup_required')]]));
+        $form->addRawField(consent_manager_rex_form::getFakeText($this->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
+        $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', [[$form->getSql()->getValue('required'), $this->i18n('consent_manager_cookiegroup_required')]]));
 
         $checkboxes = [];
         $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('domain')));
@@ -64,17 +64,17 @@ if ($func == 'delete') {
             $checked = (in_array($v['id'], $checkedBoxes)) ? '|1|' : '';
             $checkboxes[] = [$checked, $v['uid']];
         }
-        $form->addRawField(iwcc_rex_form::getFakeCheckbox('', $checkboxes));
+        $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', $checkboxes));
 
     }
     $field = $form->addTextField('name');
-    $field->setLabel($this->i18n('iwcc_name'));
+    $field->setLabel($this->i18n('consent_manager_name'));
 
     $field = $form->addTextAreaField('description');
-    $field->setLabel($this->i18n('iwcc_description'));
+    $field->setLabel($this->i18n('consent_manager_description'));
 
     $db = rex_sql::factory();
-    $db->setTable(rex::getTable('iwcc_cookie'));
+    $db->setTable(rex::getTable('consent_manager_cookie'));
     $db->setWhere('clang_id = '.$clang_id.' AND uid != "iwcc" ORDER BY uid ASC');
     $db->select('DISTINCT uid');
     $cookies = $db->getArray();
@@ -82,7 +82,7 @@ if ($func == 'delete') {
     if ($clang_id == rex_clang::getStartId() || !$form->isEditMode()) {
         if ($cookies) {
             $field = $form->addCheckboxField('cookie');
-            $field->setLabel($this->i18n('iwcc_cookies'));
+            $field->setLabel($this->i18n('consent_manager_cookies'));
             foreach ($cookies as $v) {
                 $field->addOption($v['uid'], $v['uid']);
             }
@@ -96,11 +96,11 @@ if ($func == 'delete') {
                 $checked = (in_array($v['uid'], $checkedBoxes)) ? '|1|' : '';
                 $checkboxes[] = [$checked, $v['uid']];
             }
-            $form->addRawField(iwcc_rex_form::getFakeCheckbox('', $checkboxes));
+            $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', $checkboxes));
         }
     }
 
-    $title = $form->isEditMode() ? $this->i18n('iwcc_cookiegroup_edit') : $this->i18n('iwcc_cookiegroup_add');
+    $title = $form->isEditMode() ? $this->i18n('consent_manager_cookiegroup_edit') : $this->i18n('consent_manager_cookiegroup_add');
     $content = $form->get();
 
     $fragment = new rex_fragment();
@@ -123,14 +123,14 @@ if ($showlist) {
     $list->addTableAttribute('class', 'iwcc-table iwcc-table-cookiegroup');
 
     $list->removeColumn('pid');
-    $list->setColumnLabel('domain', $this->i18n('iwcc_domain'));
+    $list->setColumnLabel('domain', $this->i18n('consent_manager_domain'));
     $list->setColumnSortable('domain');
-    $list->setColumnFormat('domain', 'custom', 'iwcc_rex_list::formatDomain');
-    $list->setColumnLabel('cookie', $this->i18n('iwcc_cookies'));
-    $list->setColumnFormat('cookie', 'custom', 'iwcc_rex_list::formatCookie');
-    $list->setColumnLabel('uid', $this->i18n('iwcc_uid'));
+    $list->setColumnFormat('domain', 'custom', 'consent_manager_rex_list::formatDomain');
+    $list->setColumnLabel('cookie', $this->i18n('consent_manager_cookies'));
+    $list->setColumnFormat('cookie', 'custom', 'consent_manager_rex_list::formatCookie');
+    $list->setColumnLabel('uid', $this->i18n('consent_manager_uid'));
     $list->setColumnSortable('uid');
-    $list->setColumnLabel('name', $this->i18n('iwcc_name'));
+    $list->setColumnLabel('name', $this->i18n('consent_manager_name'));
     $list->setColumnSortable('name');
 
     $tdIcon = '<i class="fa fa-coffee"></i>';
@@ -150,7 +150,7 @@ if ($showlist) {
     $content = $list->get();
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', $this->i18n('iwcc_cookiegroups'));
+    $fragment->setVar('title', $this->i18n('consent_manager_cookiegroups'));
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 }

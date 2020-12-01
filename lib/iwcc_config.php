@@ -1,18 +1,18 @@
 <?php
 
-class iwcc_config
+class consent_manager_config
 {
 
     public static function getTables($multilangOnly = false)
     {
         $tables = [];
-        foreach (iwcc_config::getKeys() as $key)
+        foreach (consent_manager_config::getKeys() as $key)
         {
             if ($multilangOnly && $key == 'domain')
             {
                 continue;
             }
-            $tables[] = rex::getTable('iwcc_' . $key);
+            $tables[] = rex::getTable('consent_manager_' . $key);
         }
 
         return $tables;

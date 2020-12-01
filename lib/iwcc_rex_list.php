@@ -1,6 +1,6 @@
 <?php
 
-class iwcc_rex_list
+class consent_manager_rex_list
 {
 
     public static function formatDomain($params)
@@ -10,7 +10,7 @@ class iwcc_rex_list
         {
             $domains = [];
             $db = rex_sql::factory();
-            $db->setTable(rex::getTable('iwcc_domain'));
+            $db->setTable(rex::getTable('consent_manager_domain'));
             $db->setWhere('id IN(' . implode(',', $ids) . ') ORDER BY uid ASC');
             $db->select('uid');
             foreach ($db->getArray() as $v)

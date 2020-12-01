@@ -1,11 +1,11 @@
 <?php
 
-class iwcc_clang
+class consent_manager_clang
 {
 
     public static function deleteDataset($table, $pid)
     {
-        $msg = rex_view::success(rex_i18n::msg('iwcc_successfully_deleted'));
+        $msg = rex_view::success(rex_i18n::msg('consent_manager_successfully_deleted'));
         $db = rex_sql::factory();
         $db->setTable($table);
         $db->setWhere('pid = :pid', ['pid' => $pid]);
@@ -17,26 +17,26 @@ class iwcc_clang
             $db->setWhere('id = :id', ['id' => $v['id']]);
             $db->delete();
         }
-        iwcc_cache::forceWrite();
+        consent_manager_cache::forceWrite();
         return $msg;
     }
 
     public static function deleteCookie($pid)
     {
-        $msg = rex_view::success(rex_i18n::msg('iwcc_successfully_deleted'));
+        $msg = rex_view::success(rex_i18n::msg('consent_manager_successfully_deleted'));
         $db = rex_sql::factory();
-        $db->setTable(rex::getTable('iwcc_cookie'));
+        $db->setTable(rex::getTable('consent_manager_cookie'));
         $db->setWhere('pid = :pid', ['pid' => $pid]);
         $db->select('uid');
         foreach ($db->getArray() as $v)
         {
             if ($v['uid'] == 'iwcc')
             {
-                $msg = rex_view::error(rex_i18n::msg('iwcc_not_deletable'));
+                $msg = rex_view::error(rex_i18n::msg('consent_manager_not_deletable'));
                 break;
             }
             $db = rex_sql::factory();
-            $db->setTable(rex::getTable('iwcc_cookie'));
+            $db->setTable(rex::getTable('consent_manager_cookie'));
             $db->setWhere('uid = :uid', ['uid' => $v['uid']]);
             $db->delete();
         }
@@ -47,7 +47,7 @@ class iwcc_clang
     {
         if (rex::isBackend() && rex::getUser())
         {
-            foreach (iwcc_config::getKeys() as $key)
+            foreach (consent_manager_config::getKeys() as $key)
             {
                 if ($key == 'domain') continue;
                 $page = rex_be_controller::getPageObject('iwcc/' . $key);
@@ -71,7 +71,7 @@ class iwcc_clang
     {
         $form = $ep->getParams()['form'];
         $params = $ep->getParams();
-        if (!in_array($form->getTableName(), iwcc_config::getTables(1)))
+        if (!in_array($form->getTableName(), consent_manager_config::getTables(1)))
         {
             return true;
         }
@@ -125,7 +125,7 @@ class iwcc_clang
     {
         $fields2Update = [];
         $newValues = [];
-        if (rex::getTable('iwcc_cookiegroup') == $form->getTableName())
+        if (rex::getTable('consent_manager_cookiegroup') == $form->getTableName())
         {
             $fields2Update = ['domain', 'uid', 'prio', 'required', 'cookie', 'script'];
             $db = rex_sql::factory();
@@ -134,7 +134,7 @@ class iwcc_clang
             $db->select(implode(',', $fields2Update));
             $newValues = $db->getArray()[0];
         }
-        elseif (rex::getTable('iwcc_cookie') == $form->getTableName())
+        elseif (rex::getTable('consent_manager_cookie') == $form->getTableName())
         {
             $fields2Update = ['uid'];
             $db = rex_sql::factory();
@@ -166,7 +166,7 @@ class iwcc_clang
 
     public static function clangDeleted(rex_extension_point $ep)
     {
-        foreach (iwcc_config::getTables(1) as $table)
+        foreach (consent_manager_config::getTables(1) as $table)
         {
             $deleteLang = rex_sql::factory();
             $deleteLang->setQuery('DELETE FROM ' . $table . ' WHERE clang_id=?', [$ep->getParam('clang')->getId()]);
@@ -192,7 +192,7 @@ class iwcc_clang
 
     private static function addClang($clangId)
     {
-        foreach (iwcc_config::getTables(1) as $table)
+        foreach (consent_manager_config::getTables(1) as $table)
         {
             $firstLang = rex_sql::factory();
             $firstLang->setTable($table);

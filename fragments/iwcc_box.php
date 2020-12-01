@@ -1,5 +1,5 @@
 <?php
-$iwcc = new iwcc_frontend($this->getVar('forceCache'));
+$iwcc = new consent_manager_frontend($this->getVar('forceCache'));
 $iwcc->setDomain($_SERVER['HTTP_HOST']);
 if ($this->getVar('debug')) {
     dump($iwcc);
@@ -8,10 +8,10 @@ if ($this->getVar('debug')) {
 <?php if ($iwcc->cookiegroups): ?>
     <link href="/assets/addons/iwcc/fontello/css/fontello.css" rel="stylesheet" type="text/css">
     <link href="/assets/addons/iwcc/pretty-checkbox.min.css" rel="stylesheet" type="text/css">
-    <link href="/assets/addons/iwcc/iwcc_frontend.css" rel="stylesheet" type="text/css">
+    <link href="/assets/addons/iwcc/consent_manager_frontend.css" rel="stylesheet" type="text/css">
     <script src="/assets/addons/iwcc/js.cookie-2.2.1.min.js"></script>
-    <script src="/assets/addons/iwcc/iwcc_polyfills.js"></script>
-    <script src="/assets/addons/iwcc/iwcc_frontend.js"></script>
+    <script src="/assets/addons/iwcc/consent_manager_polyfills.js"></script>
+    <script src="/assets/addons/iwcc/consent_manager_frontend.js"></script>
     <script id="iwcc-template" type="text/template">
         <div class="iwcc-background iwcc-hidden <?= $iwcc->boxClass ?>" id="iwcc-background" data-domain-name="<?= $iwcc->domainName ?>" data-version="<?= $iwcc->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $iwcc->cacheLogId ?>">
             <div class="iwcc-wrapper" id="iwcc-wrapper">

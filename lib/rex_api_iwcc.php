@@ -22,7 +22,7 @@ class rex_api_iwcc extends rex_api_function
                 $anonymizedIp = implode(':', $pieces);
             }
             $db = rex_sql::factory();
-            $db->setTable(rex::getTable('iwcc_consent_log'));
+            $db->setTable(rex::getTable('consent_manager_consent_log'));
             $db->setValue('consentid', $consentid);
             $db->setValue('consents', json_encode($iwcc['consents']));
             $db->setValue('cachelogid', $iwcc['cachelogid']);

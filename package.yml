@@ -7,20 +7,20 @@ requires:
     redaxo: '^5.8'
 
 page:
-    title: 'translate:iwcc_title'
+    title: 'translate:consent_manager_title'
     perm: iw_cookie_consent[]
     pjax: true
     icon: rex-icon fa fa-coffee
     subpages:
         cookiegroup:
-            title: 'translate:iwcc_cookiegroups'
+            title: 'translate:consent_manager_cookiegroups'
         cookie:
-            title: 'translate:iwcc_cookies'
+            title: 'translate:consent_manager_cookies'
         text:
-            title: 'translate:iwcc_texts'
+            title: 'translate:consent_manager_texts'
         domain:
-            title: 'translate:iwcc_domains'
+            title: 'translate:consent_manager_domains'
         setup:
-            title: 'translate:iwcc_setup'
+            title: 'translate:consent_manager_setup'
         help:
-            {title: 'translate:iwcc_help',  icon: rex-icon fa-question-circle, subPath: README.md, itemclass: pull-right}
+            {title: 'translate:consent_manager_help',  icon: rex-icon fa-question-circle, subPath: README.md, itemclass: pull-right}

@@ -83,8 +83,8 @@ Hier können alle allgemeinen Texte der CookieBox angepasst werden.
 Verfügt die Website über mehrere Sprachen oder wird eine neue Sprache angelegt, werden die Inhalte der Startsprache automatisch übertragen und können nachher angepasst werden. **Einige Felder wie Schlüssel, Scripte, Domain und Cookie-Auswahl können nur in der Startsprache geändert werden. Die Änderungen werden automatisch auf alle weiteren Sprachen übertragen.**
 
 ### Design anpassen
-Das Design der Cookie-Box kann nach Belieben angepasst werden. HTML, CSS und Skripte der Cookie Box liegen im Fragment `/redaxo/src/addons/iwcc/fragments/iwcc_box.php`. Änderungen in dieser Datei werden aber beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulgen 'theme/private/fragments/iwcc_box.php' und die Änderungen hier vorzunehmen.
-Anschließend die Datei `iwcc_frontend.css` an einen beliebigen Ort kopieren, anpassen und im eigenen Fragment einbinden.
+Das Design der Cookie-Box kann nach Belieben angepasst werden. HTML, CSS und Skripte der Cookie Box liegen im Fragment `/redaxo/src/addons/iwcc/fragments/consent_manager_box.php`. Änderungen in dieser Datei werden aber beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulgen 'theme/private/fragments/consent_manager_box.php' und die Änderungen hier vorzunehmen.
+Anschließend die Datei `consent_manager_frontend.css` an einen beliebigen Ort kopieren, anpassen und im eigenen Fragment einbinden.
 
 
 ## Tipps & Tricks
