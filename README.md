@@ -1,4 +1,4 @@
-# Cookie-Gedöns
+# Consent-Manager
 ## ACHTUNG !
 Die Anleitung bezieht sich auf consent_manager 1.x die hier installierte Version 2.0 ist im Moment noch Beta und bringt einige Änderungen mit sich.
 Hier gibt es ein [Beispielmodul](https://gist.github.com/IngoWinter/31df14685b45ad8980aadaec1e757363) zur aktuellen Version
@@ -24,14 +24,14 @@ Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies können in selbst defini
 ## Einrichten
 
 ### Domains hinzufügen
-Cookie-Gedöns kann für mehrere Domains einzeln gesteuert werden. Jede Domain der Redaxo-Instanz die Cookie-Gedöns nutzen soll muss einzeln hinterlegt werden. Zum Beispiel `www.meinedomain.de (ohne Protokoll http/https)`. Das gilt auch für Subdomains **(auch www)**.
+Consent-Manager kann für mehrere Domains einzeln gesteuert werden. Jede Domain der Redaxo-Instanz die Consent-Manager nutzen soll muss einzeln hinterlegt werden. Zum Beispiel `www.meinedomain.de (ohne Protokoll http/https)`. Das gilt auch für Subdomains **(auch www)**.
 Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Cookie-Box verlinkt.
 Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Cookie-Box wird bei Übereinstimmung angezeigt.
 
 ### Cookies anlegen
 Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!**
 Als Beispiel sind zwei Dienste  (google-analytics und matomo) angelegt, diese könnnen ggf. angepasst oder gelöscht werden. 
-**Der Dienst consent_manager wird zwingend von Cookie-Gedöns benötigt. Er ist der Gruppe Notwendig zugeordnet und kann nicht gelöscht werden. Hier werden die Einstellungen der Website Besucher gespeichert.**
+**Der Dienst consent_manager wird zwingend von Consent-Manager benötigt. Er ist der Gruppe Notwendig zugeordnet und kann nicht gelöscht werden. Hier werden die Einstellungen der Website Besucher gespeichert.**
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.jpg?raw=true)
 
@@ -74,7 +74,7 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 Der Platzhalter `REX_consent_manager[]` muss im `head`-Bereich des Templates eingefügt werden. Gibt es mehrere Templates mit `head`-Bereichen, muss der Platzhalter in allen Templates eingefügt werden, die die Cookie-Box aufrufen sollen. **Wichtig: der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
 
 ## Anpassen (optional)
-Die folgenden Einstellungen sind optional. Mit ihnen kann man Cookie-Gedöns an die eigenen Bedürfnisse anpassen. Sie ändern jedoch nichts an der Funktionalität des AddOns.
+Die folgenden Einstellungen sind optional. Mit ihnen kann man Consent-Manager an die eigenen Bedürfnisse anpassen. Sie ändern jedoch nichts an der Funktionalität des AddOns.
 
 ### Cookie-Texte anpassen
 Hier können alle allgemeinen Texte der CookieBox angepasst werden.
@@ -150,7 +150,7 @@ https://github.com/FriendsOfREDAXO
 
 ### Credits
 First Release: [Ingo Winter](https://github.com/IngoWinter)  
-[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie-Gedöns wiederfinden  
+[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Consent-Manager wiederfinden  
 [Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet  
 [Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet   
 [Oliver Kreischer](https://github.com/olien) hat den Keks gebacken
