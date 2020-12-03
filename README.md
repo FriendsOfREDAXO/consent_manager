@@ -1,13 +1,8 @@
-# Consent-Manager
-## ACHTUNG !
-Die Anleitung bezieht sich auf consent_manager 1.x die hier installierte Version 2.0 ist im Moment noch Beta und bringt einige Änderungen mit sich.
-Hier gibt es ein [Beispielmodul](https://gist.github.com/IngoWinter/31df14685b45ad8980aadaec1e757363) zur aktuellen Version
-
+# Consent-Manager 2.0 für REDAXO CMS
 
 ![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.jpg?raw=true)
 
-
-Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Cookie-Box angezeigt in der er allen oder einzelnen Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig** die nicht deaktiviert werden kann. Die Cookie-Box kann erneut (zum Beispiel über einen Link im Impressum) aufgerufen werden um die Auswahl nachträglich zu ändern. Alle Texte sowie die Gestaltung der Cookie-Box sind anpassbar.
+Stellt ein Opt-In Cookie-Banner zur Verfügung. Cookies können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Cookie-Box angezeigt in der er allen oder einzelnen Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Cookie-Box kann erneut (zum Beispiel über einen Link im Impressum) aufgerufen werden, um die Auswahl nachträglich zu ändern. Alle Texte sowie die Gestaltung der Cookie-Box sind anpassbar.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.jpg?raw=true)
 
@@ -73,6 +68,112 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 ### In Template einfügen
 Der Platzhalter `REX_CONSENT_MANAGER[]` muss im `head`-Bereich des Templates eingefügt werden. Gibt es mehrere Templates mit `head`-Bereichen, muss der Platzhalter in allen Templates eingefügt werden, die die Cookie-Box aufrufen sollen. **Wichtig: der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
 
+### Beispiel-Modul zur nachträglichen Abfrage
+
+#### Eingabe-Modul (mit MForm)
+
+```php
+<?php
+$mform = new mform();
+$cookies = [];
+$qry = 'SELECT uid,service_name FROM '.rex::getTable('consent_manager_cookie').' WHERE clang_id = '.rex_clang::getCurrentId();
+foreach (rex_sql::factory()->getArray($qry) as $v) {
+    if ($v['uid'] == 'consent_manager') continue;
+    $cookies[$v['uid']] = $v['service_name'];
+}
+$mform->addSelectField(1);
+$mform->setOptions($cookies);
+$mform->setSize(1);
+$mform->setLabel('Dienst');
+
+$mform->addTextAreaField(2, ['label' => 'HTML/JS das bei Consent geladen wird']);
+$mform->addCheckboxField(5, [1 => 'Seitenreload nötig']);
+
+$mform->addTextAreaField(3, ['label' => 'Platzhaltertext']);
+$mform->addMediaField(1, ['label' => 'Platzhalterbild']);
+
+echo $mform->show();
+```
+
+#### Ausgabe-Modul
+
+```php
+
+<?php
+$serviceName = '';
+$cookieUid = 'REX_VALUE[1]';
+$needsReload = (bool)'REX_VALUE[5]' ? '-reload' : '';
+$consented = false;
+$placeholderImage = '';
+$placeholderText = '';
+
+$consent_manager = new consent_manager_frontend();
+$consent_manager->setDomain($_SERVER['HTTP_HOST']);
+
+// "globale" platzhalter aus dem addon setzen
+if (isset($consent_manager->cookies[$cookieUid])) {
+    $placeholderImage = $consent_manager->cookies[$cookieUid]['placeholder_image'];
+    $placeholderText = $consent_manager->cookies[$cookieUid]['placeholder_text'];
+}
+
+if (isset($_COOKIE['consent_manager'])) {
+    $cookieData = json_decode($_COOKIE['consent_manager'], true);
+    foreach ($cookieData['consents'] as $consent) {
+        if ($cookieUid == $consent) {
+            $consented = true;
+            break;
+        }
+    }
+
+}
+?>
+
+<?php if (rex::isFrontend()): ?>
+    <?php if ($consented): ?>
+        <div class="consent_manager-module" data-uid="<?= $cookieUid ?>">
+            REX_VALUE[2 output=html]
+        </div>
+    <?php else: ?>
+        <div class="consent_manager-module" data-payload="<?= base64_encode('REX_VALUE[2 output=html]') ?>" data-uid="<?= $cookieUid ?>">
+            <div class="consent_manager-module__placeholder">
+                <div class="consent_manager-module__placeholder-image">
+                    <img src="/media/<?= ('REX_MEDIA[1]' ? 'REX_MEDIA[1]' : $placeholderImage) ?>" alt="">
+                </div>
+                <div class="consent_manager-module__placeholder-text">
+                    <div class="consent_manager-module__placeholder-text-background">
+                        <?= nl2br('REX_VALUE[3 output=html]' ? 'REX_VALUE[3 output=html]' : $placeholderText) ?>
+                        <div class="consent_manager-show-box<?= $needsReload ?>"><b>Datenschutz-Einstellungen anpassen</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif ?>
+<?php else: ?>
+    <label><?= $serviceName ?></label>
+    <textarea readonly disabled style="width:100%;" id="consent_manager-module-textarea-REX_SLICE_ID">REX_VALUE[2 output=html]</textarea>
+<?php endif ?>
+```
+
+#### zusätzliches JS
+
+```js
+jQuery(function ($) {
+    'use strict';
+    $('.consent_manager-module').each(function () {
+        var $this = $(this),
+            uid = $this.data('uid');
+        $(document).on('consent_manager-saved', function (e) {
+            var consents = JSON.parse(e.originalEvent.detail);
+            consents.forEach(function (v) {
+                if (v === uid) {
+                    $this.html(window.atob($this.data('payload')));
+                }
+            });
+        });
+    });
+});
+```
+
 ## Anpassen (optional)
 Die folgenden Einstellungen sind optional. Mit ihnen kann man Consent-Manager an die eigenen Bedürfnisse anpassen. Sie ändern jedoch nichts an der Funktionalität des AddOns.
 
@@ -85,7 +186,6 @@ Verfügt die Website über mehrere Sprachen oder wird eine neue Sprache angelegt
 ### Design anpassen
 Das Design der Cookie-Box kann nach Belieben angepasst werden. HTML, CSS und Skripte der Cookie Box liegen im Fragment `/redaxo/src/addons/consent_manager/fragments/consent_manager_box.php`. Änderungen in dieser Datei werden aber beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulgen 'theme/private/fragments/consent_manager_box.php' und die Änderungen hier vorzunehmen.
 Anschließend die Datei `consent_manager_frontend.css` an einen beliebigen Ort kopieren, anpassen und im eigenen Fragment einbinden.
-
 
 ## Tipps & Tricks
 Hast du eigene Tipps & Tricks? [Füge Sie auf Github direkt in die Readme hinzu](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/README.md) oder lege ein [Issue](https://github.com/FriendsOfREDAXO/consent_manager/issues) an.
