@@ -1,39 +1,34 @@
-# Cookie-Gedöns
-## ACHTUNG !
-Die Anleitung bezieht sich auf iwcc 1.x die hier installierte Version 2.0 ist im Moment noch Beta und bringt einige Änderungen mit sich.
-Hier gibt es ein [Beispielmodul](https://gist.github.com/IngoWinter/31df14685b45ad8980aadaec1e757363) zur aktuellen Version
+# Consent-Manager 2.0 für REDAXO CMS
 
+![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.jpg?raw=true)
 
-![logo](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-logo.jpg?raw=true)
+Stellt ein Opt-In Cookie-Banner zur Verfügung. Cookies können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Cookie-Box angezeigt in der er allen oder einzelnen Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Cookie-Box kann erneut (zum Beispiel über einen Link im Impressum) aufgerufen werden, um die Auswahl nachträglich zu ändern. Alle Texte sowie die Gestaltung der Cookie-Box sind anpassbar.
 
-
-Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Cookie-Box angezeigt in der er allen oder einzelnen Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig** die nicht deaktiviert werden kann. Die Cookie-Box kann erneut (zum Beispiel über einen Link im Impressum) aufgerufen werden um die Auswahl nachträglich zu ändern. Alle Texte sowie die Gestaltung der Cookie-Box sind anpassbar.
-
-![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc.jpg?raw=true)
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.jpg?raw=true)
 
 
 ## Kurzanleitung
-1. AddOn iwcc über den Installer herunterladen und installieren. 
+1. AddOn consent_manager über den Installer herunterladen und installieren. 
 2. [Domains hinterlegen](#header-domains-hinzufuegen)
 3. [Cookies anlegen](#header-cookies-anlegen)
 4. [Cookie-Gruppen anlegen](#header-cookie-gruppen-anlegen)
 5. Der jeweiligen Domain-Gruppe die gewünschten Domains und Cookies zuordnen und JS Scripte hinterlegen.
-6. <code>REX_IWCC[]</code> in den <code>head</code>-Bereich in alle gewünschten [Templates einfügen](#header-in-template-einfuegen)
+6. <code>REX_CONSENT_MANAGER[]</code> in den <code>head</code>-Bereich in alle gewünschten [Templates einfügen](#header-in-template-einfuegen)
 7. Alle weiteren Einstellungen sind optional.
 
 ## Einrichten
 
 ### Domains hinzufügen
-Cookie-Gedöns kann für mehrere Domains einzeln gesteuert werden. Jede Domain der Redaxo-Instanz die Cookie-Gedöns nutzen soll muss einzeln hinterlegt werden. Zum Beispiel `www.meinedomain.de (ohne Protokoll http/https)`. Das gilt auch für Subdomains **(auch www)**.
+Consent-Manager kann für mehrere Domains einzeln gesteuert werden. Jede Domain der Redaxo-Instanz die Consent-Manager nutzen soll muss einzeln hinterlegt werden. Zum Beispiel `www.meinedomain.de (ohne Protokoll http/https)`. Das gilt auch für Subdomains **(auch www)**.
 Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Cookie-Box verlinkt.
 Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Cookie-Box wird bei Übereinstimmung angezeigt.
 
 ### Cookies anlegen
 Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!**
 Als Beispiel sind zwei Dienste  (google-analytics und matomo) angelegt, diese könnnen ggf. angepasst oder gelöscht werden. 
-**Der Dienst iwcc wird zwingend von Cookie-Gedöns benötigt. Er ist der Gruppe Notwendig zugeordnet und kann nicht gelöscht werden. Hier werden die Einstellungen der Website Besucher gespeichert.**
+**Der Dienst consent_manager wird zwingend von Consent-Manager benötigt. Er ist der Gruppe Notwendig zugeordnet und kann nicht gelöscht werden. Hier werden die Einstellungen der Website Besucher gespeichert.**
 
-![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-cookies.jpg?raw=true)
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.jpg?raw=true)
 
 **Schlüssel:** ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 **Dienstname:** wird später in der Cookie-Box angezeigt.
@@ -59,7 +54,7 @@ Als Beispiel sind zwei Dienste  (google-analytics und matomo) angelegt, diese k�
 ### Cookie-Gruppen anlegen
 Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren oder ablehnen kann. **Außerdem werden hier die Scripte hinterlegt, die geladen werden, sobald der Benutzer die Gruppe akzeptiert hat.**
 
-![Screenshot](https://github.com/FriendsOfREDAXO/iwcc/blob/assets/iwcc-cookiegroups.jpg?raw=true)
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookiegroups.jpg?raw=true)
 
 **Schlüssel:** Zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 **Checkbox Technisch notwenidge Cookies:** Ist die Checkbox aktiv, wird die Gruppe vorausgewählt und kann nicht deaktiviert werden (Sinnvoll ist nur eine Gruppe mit notwendigen Cookies).
@@ -71,10 +66,116 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 **Skripte, die nach Einverständnis geladen werden:** Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Zu Beachten ist, dass nur die Scripte eingebunden werden die zu den vorher ausgewählten Cookies gehören.
 
 ### In Template einfügen
-Der Platzhalter `REX_IWCC[]` muss im `head`-Bereich des Templates eingefügt werden. Gibt es mehrere Templates mit `head`-Bereichen, muss der Platzhalter in allen Templates eingefügt werden, die die Cookie-Box aufrufen sollen. **Wichtig: der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
+Der Platzhalter `REX_CONSENT_MANAGER[]` muss im `head`-Bereich des Templates eingefügt werden. Gibt es mehrere Templates mit `head`-Bereichen, muss der Platzhalter in allen Templates eingefügt werden, die die Cookie-Box aufrufen sollen. **Wichtig: der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
+
+### Beispiel-Modul zur nachträglichen Abfrage
+
+#### Eingabe-Modul (mit MForm)
+
+```php
+<?php
+$mform = new mform();
+$cookies = [];
+$qry = 'SELECT uid,service_name FROM '.rex::getTable('consent_manager_cookie').' WHERE clang_id = '.rex_clang::getCurrentId();
+foreach (rex_sql::factory()->getArray($qry) as $v) {
+    if ($v['uid'] == 'consent_manager') continue;
+    $cookies[$v['uid']] = $v['service_name'];
+}
+$mform->addSelectField(1);
+$mform->setOptions($cookies);
+$mform->setSize(1);
+$mform->setLabel('Dienst');
+
+$mform->addTextAreaField(2, ['label' => 'HTML/JS das bei Consent geladen wird']);
+$mform->addCheckboxField(5, [1 => 'Seitenreload nötig']);
+
+$mform->addTextAreaField(3, ['label' => 'Platzhaltertext']);
+$mform->addMediaField(1, ['label' => 'Platzhalterbild']);
+
+echo $mform->show();
+```
+
+#### Ausgabe-Modul
+
+```php
+
+<?php
+$serviceName = '';
+$cookieUid = 'REX_VALUE[1]';
+$needsReload = (bool)'REX_VALUE[5]' ? '-reload' : '';
+$consented = false;
+$placeholderImage = '';
+$placeholderText = '';
+
+$consent_manager = new consent_manager_frontend();
+$consent_manager->setDomain($_SERVER['HTTP_HOST']);
+
+// "globale" platzhalter aus dem addon setzen
+if (isset($consent_manager->cookies[$cookieUid])) {
+    $placeholderImage = $consent_manager->cookies[$cookieUid]['placeholder_image'];
+    $placeholderText = $consent_manager->cookies[$cookieUid]['placeholder_text'];
+}
+
+if (isset($_COOKIE['consent_manager'])) {
+    $cookieData = json_decode($_COOKIE['consent_manager'], true);
+    foreach ($cookieData['consents'] as $consent) {
+        if ($cookieUid == $consent) {
+            $consented = true;
+            break;
+        }
+    }
+
+}
+?>
+
+<?php if (rex::isFrontend()): ?>
+    <?php if ($consented): ?>
+        <div class="consent_manager-module" data-uid="<?= $cookieUid ?>">
+            REX_VALUE[2 output=html]
+        </div>
+    <?php else: ?>
+        <div class="consent_manager-module" data-payload="<?= base64_encode('REX_VALUE[2 output=html]') ?>" data-uid="<?= $cookieUid ?>">
+            <div class="consent_manager-module__placeholder">
+                <div class="consent_manager-module__placeholder-image">
+                    <img src="/media/<?= ('REX_MEDIA[1]' ? 'REX_MEDIA[1]' : $placeholderImage) ?>" alt="">
+                </div>
+                <div class="consent_manager-module__placeholder-text">
+                    <div class="consent_manager-module__placeholder-text-background">
+                        <?= nl2br('REX_VALUE[3 output=html]' ? 'REX_VALUE[3 output=html]' : $placeholderText) ?>
+                        <div class="consent_manager-show-box<?= $needsReload ?>"><b>Datenschutz-Einstellungen anpassen</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif ?>
+<?php else: ?>
+    <label><?= $serviceName ?></label>
+    <textarea readonly disabled style="width:100%;" id="consent_manager-module-textarea-REX_SLICE_ID">REX_VALUE[2 output=html]</textarea>
+<?php endif ?>
+```
+
+#### zusätzliches JS
+
+```js
+jQuery(function ($) {
+    'use strict';
+    $('.consent_manager-module').each(function () {
+        var $this = $(this),
+            uid = $this.data('uid');
+        $(document).on('consent_manager-saved', function (e) {
+            var consents = JSON.parse(e.originalEvent.detail);
+            consents.forEach(function (v) {
+                if (v === uid) {
+                    $this.html(window.atob($this.data('payload')));
+                }
+            });
+        });
+    });
+});
+```
 
 ## Anpassen (optional)
-Die folgenden Einstellungen sind optional. Mit ihnen kann man Cookie-Gedöns an die eigenen Bedürfnisse anpassen. Sie ändern jedoch nichts an der Funktionalität des AddOns.
+Die folgenden Einstellungen sind optional. Mit ihnen kann man Consent-Manager an die eigenen Bedürfnisse anpassen. Sie ändern jedoch nichts an der Funktionalität des AddOns.
 
 ### Cookie-Texte anpassen
 Hier können alle allgemeinen Texte der CookieBox angepasst werden.
@@ -83,25 +184,24 @@ Hier können alle allgemeinen Texte der CookieBox angepasst werden.
 Verfügt die Website über mehrere Sprachen oder wird eine neue Sprache angelegt, werden die Inhalte der Startsprache automatisch übertragen und können nachher angepasst werden. **Einige Felder wie Schlüssel, Scripte, Domain und Cookie-Auswahl können nur in der Startsprache geändert werden. Die Änderungen werden automatisch auf alle weiteren Sprachen übertragen.**
 
 ### Design anpassen
-Das Design der Cookie-Box kann nach Belieben angepasst werden. HTML, CSS und Skripte der Cookie Box liegen im Fragment `/redaxo/src/addons/iwcc/fragments/iwcc_box.php`. Änderungen in dieser Datei werden aber beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulgen 'theme/private/fragments/iwcc_box.php' und die Änderungen hier vorzunehmen.
-Anschließend die Datei `iwcc_frontend.css` an einen beliebigen Ort kopieren, anpassen und im eigenen Fragment einbinden.
-
+Das Design der Cookie-Box kann nach Belieben angepasst werden. HTML, CSS und Skripte der Cookie Box liegen im Fragment `/redaxo/src/addons/consent_manager/fragments/consent_manager_box.php`. Änderungen in dieser Datei werden aber beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulgen 'theme/private/fragments/consent_manager_box.php' und die Änderungen hier vorzunehmen.
+Anschließend die Datei `consent_manager_frontend.css` an einen beliebigen Ort kopieren, anpassen und im eigenen Fragment einbinden.
 
 ## Tipps & Tricks
-Hast du eigene Tipps & Tricks? [Füge Sie auf Github direkt in die Readme hinzu](https://github.com/FriendsOfREDAXO/iwcc/blob/master/README.md) oder lege ein [Issue](https://github.com/FriendsOfREDAXO/iwcc/issues) an.
+Hast du eigene Tipps & Tricks? [Füge Sie auf Github direkt in die Readme hinzu](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/README.md) oder lege ein [Issue](https://github.com/FriendsOfREDAXO/consent_manager/issues) an.
 
 ### Cookie-Box manuell aufrufen
 Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anzupassen (zum Beispiel im Impressum oder auf einer Cookie-Seite) ist das mit folgenden Links möglich:
-`<a class="iwcc-show-box">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box.
-`<a class="iwcc-show-box-reload">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box und erzwingt einen Page-Reload nach der Einwilligung. 
+`<a class="consent_manager-show-box">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box.
+`<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box und erzwingt einen Page-Reload nach der Einwilligung. 
 
 ### Scripte mit PHP Laden
 Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Somit kann man (am Beispiel GoogleMaps) eine Meldung ausgeben, dass bestimmte Cookies akzeptiert werden müssen um die Karte zu laden.
-Problem dabei: öffnet man die Cookie-Box und akzeptiert die Cookies, wird zwar das Script geladen, aber ohne Page-Reload ändert sich der Inhalt der Seite nicht. Deshalb sollte man hier den Link: `<a class="iwcc-show-box-reload">Cookie Einstellungen bearbeiten</a>` verwenden.
+Problem dabei: öffnet man die Cookie-Box und akzeptiert die Cookies, wird zwar das Script geladen, aber ohne Page-Reload ändert sich der Inhalt der Seite nicht. Deshalb sollte man hier den Link: `<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` verwenden.
  
 ```php 
-// iwcc cookie auslesen und in Array umwandeln
-$arr = json_decode($_COOKIE['iwcc'], true);  
+// consent_manager cookie auslesen und in Array umwandeln
+$arr = json_decode($_COOKIE['consent_manager'], true);  
 // prüfe ob die GoogleMaps-Gruppe ausgewählt wurde
 if ($arr['googlemaps']) 
 {
@@ -109,7 +209,7 @@ if ($arr['googlemaps'])
   // GoogleMaps-Code
 } else {
   // Code Ausgabe bei abgelehnter CookieGruppe
-  // Warnhinweis + <a class="iwcc-show-box-reload">Cookie Einstellungen bearbeiten</a>
+  // Warnhinweis + <a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>
 }
 ```
 
@@ -119,7 +219,7 @@ if ($arr['googlemaps'])
 * Ist eine Domain hinterlegt und in der Cookie-Gruppe zugeordnet? - Bei mehreren Domains sind die Cookie-Gruppen für jede Domain einzeln anzulegen.
 * Stimmt die zugeordnete Domain mit der aufgerufenen Domain überein? - www.meinedomain.de und meinedomain.de sind zwei verschiedene Domains.
 * Ist die Website über die zugeordnete Domain (www.meinedomain.de) erreichbar? - Unterordner Installationen funktionieren nicht.
-* Ist der Platzhalter REX_IWCC[] in einem Template im `head`-Bereich hinterlegt? - eine Integration über php include ist nicht möglich.
+* Ist der Platzhalter REX_CONSENT_MANAGER[] in einem Template im `head`-Bereich hinterlegt? - eine Integration über php include ist nicht möglich.
 
 ### Die Cookie-Box wird angezeigt, aber die Cookies werden nicht angezeigt
 * Ist eine entsprechende Cookie-Gruppe angelegt?
@@ -130,13 +230,13 @@ if ($arr['googlemaps'])
 * Sind die Scripte inklusive `<script>...</script>`-Tag hinterlegt?
 
 ### Fehler melden
-Du hast einen Fehler gefunden oder wünscht dir ein Feature? Lege ein [Issue auf Github an](https://github.com/FriendsOfREDAXO/iwcc/issues).
+Du hast einen Fehler gefunden oder wünscht dir ein Feature? Lege ein [Issue auf Github an](https://github.com/FriendsOfREDAXO/consent_manager/issues).
 
 
 ## Lizenz, Autor, Credits
 
 ### Lizenz
-MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/iwcc/blob/master/LICENSE.md)  
+MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/LICENSE.md)  
 [cookie.js](https://github.com/js-cookie/js-cookie): [MIT Lizenz](https://github.com/js-cookie/js-cookie/blob/master/LICENSE)  
 [Font Awesome](https://fontawesome.com/v4.7.0/): [SIL Lizenz](https://fontawesome.com/v4.7.0/license/)  
 [pretty checkbox](https://github.com/lokesh-coder/pretty-checkbox): [MIT Lizenz](https://github.com/lokesh-coder/pretty-checkbox/blob/master/LICENSE)  
@@ -150,7 +250,7 @@ https://github.com/FriendsOfREDAXO
 
 ### Credits
 First Release: [Ingo Winter](https://github.com/IngoWinter)  
-[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Cookie-Gedöns wiederfinden  
+[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Consent-Manager wiederfinden  
 [Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet  
 [Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet   
 [Oliver Kreischer](https://github.com/olien) hat den Keks gebacken

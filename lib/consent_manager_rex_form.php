@@ -1,12 +1,12 @@
 <?php
 
-class iwcc_rex_form
+class consent_manager_rex_form
 {
 
     public static function getFakeText($label, $value)
     {
         $html = '';
-        $html .= '<dl class="rex-form-group form-group iwcc-fake">';
+        $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
         $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
         $html .= '<dd><input disabled class="form-control" type="text" value="' . $value . '"></dd>';
         $html .= '</dl>';
@@ -16,7 +16,7 @@ class iwcc_rex_form
     public static function getFakeTextarea($label, $value)
     {
         $html = '';
-        $html .= '<dl class="rex-form-group form-group iwcc-fake">';
+        $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
         $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
         $html .= '<dd><textarea disabled class="form-control" rows="6">' . $value . '</textarea></dd>';
         $html .= '</dl>';
@@ -26,7 +26,7 @@ class iwcc_rex_form
     public static function getFakeCheckbox($label, $checkboxes)
     {
         $html = '';
-        $html .= '<dl class="rex-form-group form-group iwcc-fake">';
+        $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
         if ($label)
         {
             $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
@@ -59,7 +59,7 @@ class iwcc_rex_form
     public static function removeDeleteButton(rex_extension_point $ep)
     {
         $formTable = $ep->getParams()['form']->getTableName();
-        if (in_array($formTable, iwcc_config::getTables()))
+        if (in_array($formTable, consent_manager_config::getTables()))
         {
             $subject = $ep->getSubject();
             $subject['delete'] = '';
@@ -69,7 +69,7 @@ class iwcc_rex_form
 
     public static function showInfo($msg)
     {
-        return '<div class="iwcc-rex-form-info"><i class="fa fa-info-circle"></i>' . $msg . '</div>';
+        return '<div class="consent_manager-rex-form-info"><i class="fa fa-info-circle"></i>' . $msg . '</div>';
     }
 
     public static function validateHostname($hostname)

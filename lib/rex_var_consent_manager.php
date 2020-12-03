@@ -1,11 +1,11 @@
 <?php
 
-class rex_var_iwcc extends rex_var
+class rex_var_consent_manager extends rex_var
 {
     protected function getOutput()
     {
         $debug = $this->getArg('debug', 0, false);
         $forceCache = $this->getArg('forceCache', 0, false);
-        return "iwcc_frontend::getFragment($debug,$forceCache,'iwcc_box.php')";
+        return "consent_manager_frontend::getFragment($debug,$forceCache,'consent_manager_box.php')";
     }
 }
