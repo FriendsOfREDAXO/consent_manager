@@ -18,7 +18,7 @@ Stellt ein Opt-In Cookie Banner zur Verfügung. Cookies können in selbst defini
 3. [Cookies anlegen](#header-cookies-anlegen)
 4. [Cookie-Gruppen anlegen](#header-cookie-gruppen-anlegen)
 5. Der jeweiligen Domain-Gruppe die gewünschten Domains und Cookies zuordnen und JS Scripte hinterlegen.
-6. <code>REX_consent_manager[]</code> in den <code>head</code>-Bereich in alle gewünschten [Templates einfügen](#header-in-template-einfuegen)
+6. <code>REX_CONSENT_MANAGER[]</code> in den <code>head</code>-Bereich in alle gewünschten [Templates einfügen](#header-in-template-einfuegen)
 7. Alle weiteren Einstellungen sind optional.
 
 ## Einrichten
@@ -71,7 +71,7 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 **Skripte, die nach Einverständnis geladen werden:** Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Zu Beachten ist, dass nur die Scripte eingebunden werden die zu den vorher ausgewählten Cookies gehören.
 
 ### In Template einfügen
-Der Platzhalter `REX_consent_manager[]` muss im `head`-Bereich des Templates eingefügt werden. Gibt es mehrere Templates mit `head`-Bereichen, muss der Platzhalter in allen Templates eingefügt werden, die die Cookie-Box aufrufen sollen. **Wichtig: der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
+Der Platzhalter `REX_CONSENT_MANAGER[]` muss im `head`-Bereich des Templates eingefügt werden. Gibt es mehrere Templates mit `head`-Bereichen, muss der Platzhalter in allen Templates eingefügt werden, die die Cookie-Box aufrufen sollen. **Wichtig: der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
 
 ## Anpassen (optional)
 Die folgenden Einstellungen sind optional. Mit ihnen kann man Consent-Manager an die eigenen Bedürfnisse anpassen. Sie ändern jedoch nichts an der Funktionalität des AddOns.
@@ -119,7 +119,7 @@ if ($arr['googlemaps'])
 * Ist eine Domain hinterlegt und in der Cookie-Gruppe zugeordnet? - Bei mehreren Domains sind die Cookie-Gruppen für jede Domain einzeln anzulegen.
 * Stimmt die zugeordnete Domain mit der aufgerufenen Domain überein? - www.meinedomain.de und meinedomain.de sind zwei verschiedene Domains.
 * Ist die Website über die zugeordnete Domain (www.meinedomain.de) erreichbar? - Unterordner Installationen funktionieren nicht.
-* Ist der Platzhalter REX_consent_manager[] in einem Template im `head`-Bereich hinterlegt? - eine Integration über php include ist nicht möglich.
+* Ist der Platzhalter REX_CONSENT_MANAGER[] in einem Template im `head`-Bereich hinterlegt? - eine Integration über php include ist nicht möglich.
 
 ### Die Cookie-Box wird angezeigt, aber die Cookies werden nicht angezeigt
 * Ist eine entsprechende Cookie-Gruppe angelegt?
