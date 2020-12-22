@@ -17,7 +17,7 @@ rex_extension::register('PACKAGES_INCLUDED', function () {
             rex_file::copy($this->getPath('assets/consent_manager_polyfills.js'), $this->getAssetsPath('consent_manager_frontend.js'));
             rex_file::copy($this->getPath('assets/consent_manager_frontend.js'), $this->getAssetsPath('consent_manager_frontend.js'));
         }
-        if (rex::isBackend())
+        if (rex::isBackend() && rex_be_controller::getCurrentPagePart(1) == 'consent_manager')
         {
             rex_view::addCssFile($this->getAssetsUrl('consent_manager_backend.css'));
         }
