@@ -1,4 +1,4 @@
-consent_manager_title = Cookie rigmarole
+consent_manager_title = Consent manager
 consent_manager_name = Name
 consent_manager_name_empty_msg = Name is a required field
 consent_manager_uid = Key
@@ -45,5 +45,11 @@ consent_manager_domain_privacy_policy = Data protection statement
 consent_manager_domain_legal_notice = Masthead
 consent_manager_domain_privacy_policy_empty_msg = Data protection statement is a required field
 consent_manager_domain_legal_notic_empty_msg = Masthead is a required field
+
+consent_manager_setup =	Setup
+consent_manager_setup_headline = Import example configuration
+consent_manager_setup_info = Texts and often used cookies/cookiegroups will be imported.<br><strong>CAUTION - present texts and cookies/cookiegruops will be deleted.</strong>
+consent_manager_setup_import = Import
+consent_manager_setup_import_successful = Example configuration was imported succesfully
 
 consent_manager_cache_write_failed = Cache file could not be written
