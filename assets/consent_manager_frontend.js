@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // es gibt keinen datenschutzcookie, banner zeigen
     if (typeof Cookies.get('consent_manager') === 'undefined') {
         show = 1;
-        Cookies.set('test', 'test', {path: '/', sameSite: 'Lax', secure: false});
+        Cookies.set('test', 'test', {path: '/', secure: true, sameSite: 'Strict'});
         // cookie konnte nicht gesetzt werden, kein cookie banner anzeigen
         if (typeof Cookies.get('test') === 'undefined') {
             show = 0;
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         cookieData.consents = consents;
-        Cookies.set('consent_manager', JSON.stringify(cookieData), {expires: expires, path: '/', sameSite: 'Lax', secure: false});
+        Cookies.set('consent_manager', JSON.stringify(cookieData), {expires: expires, path: '/', secure: true, sameSite: 'Strict'});
 
         var http = new XMLHttpRequest(),
             url = '/index.php?rex-api-call=consent_manager',
