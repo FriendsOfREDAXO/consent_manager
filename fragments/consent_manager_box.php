@@ -6,12 +6,10 @@ if ($this->getVar('debug')) {
 }
 ?>
 <?php if ($consent_manager->cookiegroups): ?>
-    <link href="/assets/addons/consent_manager/fontello/css/fontello.css" rel="stylesheet" type="text/css">
-    <link href="/assets/addons/consent_manager/pretty-checkbox.min.css" rel="stylesheet" type="text/css">
-    <link href="/assets/addons/consent_manager/consent_manager_frontend.css" rel="stylesheet" type="text/css">
-    <script src="/assets/addons/consent_manager/js.cookie-2.2.1.min.js"></script>
-    <script src="/assets/addons/consent_manager/consent_manager_polyfills.js"></script>
-    <script src="/assets/addons/consent_manager/consent_manager_frontend.js"></script>
+    <link href="<?php echo rex_url::base('assets/addons/consent_manager/consent_manager_frontend.css'); ?>" rel="stylesheet" type="text/css">
+    <script src="<?php echo rex_url::base('assets/addons/consent_manager/js.cookie-2.2.1.min.js'); ?>"></script>
+    <script src="<?php echo rex_url::base('assets/addons/consent_manager/consent_manager_polyfills.js'); ?>"></script>
+    <script src="<?php echo rex_url::base('assets/addons/consent_manager/consent_manager_frontend.js'); ?>"></script>
     <script id="consent_manager-template" type="text/template">
         <div class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>">
             <div class="consent_manager-wrapper" id="consent_manager-wrapper">
@@ -23,21 +21,15 @@ if ($this->getVar('debug')) {
                             <?php
                             foreach ($consent_manager->cookiegroups as $cookiegroup) {
                                 if ($cookiegroup['required']) {
-                                    echo '<div class="consent_manager-cookiegroup-checkbox pretty p-icon p-curve p-locked">';
-                                    echo '<input type="checkbox" data-action="toggle-cookie" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\' checked>';
-                                    echo '<div class="state">';
-                                    echo '<i class="icon icon-ok-1"></i>';
-                                    echo '<label>'.$cookiegroup['name'].'</label>';
-                                    echo '</div>';
-                                    echo '</div>';
+                                    echo '<div class="consent_manager-cookiegroup-checkbox p-icon p-curve p-locked">';
+                                    echo '<label for="'.$cookiegroup['uid'].'"><input type="checkbox" disabled="disabled" data-action="toggle-cookie" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\' checked>';
+                                    echo '<span>'.$cookiegroup['name'].'</span></label>';
+                                    echo '</div>' . PHP_EOL;
                                 } else {
-                                    echo '<div class="consent_manager-cookiegroup-checkbox pretty p-icon p-curve">';
-                                    echo '<input type="checkbox" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\'>';
-                                    echo '<div class="state">';
-                                    echo '<i class="icon icon-ok-1"></i>';
-                                    echo '<label>'.$cookiegroup['name'].'</label>';
-                                    echo '</div>';
-                                    echo '</div>';
+                                    echo '<div class="consent_manager-cookiegroup-checkbox p-icon p-curve">';
+                                    echo '<label for="'.$cookiegroup['uid'].'"><input type="checkbox" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\'>';
+                                    echo '<span>'.$cookiegroup['name'].'</span></label>';
+                                    echo '</div>' . PHP_EOL;
                                 }
                             }
                             ?>
@@ -65,7 +57,7 @@ if ($this->getVar('debug')) {
                                     echo '<span class="consent_manager-cookie-description">'.$consent_manager->texts['lifetime'].' '.$def['cookie_lifetime'].'</span>';
                                     echo '<span class="consent_manager-cookie-provider">'.$consent_manager->texts['provider'].' '.$cookie['provider'].'</span>';
                                     echo '<span class="consent_manager-cookie-link-privacy-policy"><a href="'.$cookie['provider_link_privacy'].'">'.$consent_manager->texts['link_privacy'].'</a></span>';
-                                    echo '</div>';
+                                    echo '</div>' . PHP_EOL;
                                 }
                             }
                             echo '</div>';
