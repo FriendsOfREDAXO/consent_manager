@@ -180,6 +180,9 @@ a.consent_manager-close-box {
 
 a.consent_manager-close, #consent_manager-toggle-details {cursor:pointer;}
 
+.consent_manager-cookiegroup-checkbox {
+    margin: 0 2em .5em 0;
+}
 .consent_manager-cookiegroups label {
   position: relative;
   font-weight:bold;
@@ -230,7 +233,6 @@ a.consent_manager-close, #consent_manager-toggle-details {cursor:pointer;}
   cursor: default;
 }
 
-
 @media (min-width: 35em) {
     .consent_manager-cookiegroups {
         display: flex;
@@ -263,6 +265,7 @@ a.consent_manager-close, #consent_manager-toggle-details {cursor:pointer;}
         margin: 0 0 0 .5em;
     }
 }
+
 @media (min-width: 50em) {
     .consent_manager-wrapper-inner {
         padding: 2em;

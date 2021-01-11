@@ -21,12 +21,12 @@ if ($this->getVar('debug')) {
                             <?php
                             foreach ($consent_manager->cookiegroups as $cookiegroup) {
                                 if ($cookiegroup['required']) {
-                                    echo '<div class="consent_manager-cookiegroup-checkbox p-icon p-curve p-locked">';
+                                    echo '<div class="consent_manager-cookiegroup-checkbox">';
                                     echo '<label for="'.$cookiegroup['uid'].'"><input type="checkbox" disabled="disabled" data-action="toggle-cookie" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\' checked>';
                                     echo '<span>'.$cookiegroup['name'].'</span></label>';
                                     echo '</div>' . PHP_EOL;
                                 } else {
-                                    echo '<div class="consent_manager-cookiegroup-checkbox p-icon p-curve">';
+                                    echo '<div class="consent_manager-cookiegroup-checkbox">';
                                     echo '<label for="'.$cookiegroup['uid'].'"><input type="checkbox" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\'>';
                                     echo '<span>'.$cookiegroup['name'].'</span></label>';
                                     echo '</div>' . PHP_EOL;
