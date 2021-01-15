@@ -20,6 +20,8 @@ page:
             title: 'translate:consent_manager_texts'
         domain:
             title: 'translate:consent_manager_domains'
+        config:
+            title: 'translate:consent_manager_config'
         setup:
             title: 'translate:consent_manager_setup'
         help:

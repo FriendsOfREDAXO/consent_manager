@@ -15,7 +15,7 @@ if ($func != '') {
 }
 $content = '<h3>'.$this->i18n('consent_manager_setup_headline').'</h3>';
 $content .= '<p>'.rex_i18n::rawMsg('consent_manager_setup_info').'</p>';
-$content .= '<p><a class="btn btn-primary" href="'.rex_url::currentBackendPage(['func' => 'setup'] + $csrf->getUrlParams()).'">'.$this->i18n('consent_manager_setup_import').'</a></p>';
+$content .= '<p><a class="btn btn-primary" href="'.rex_url::currentBackendPage(['func' => 'setup'] + $csrf->getUrlParams()).'" data-confirm="'.$this->i18n('consent_manager_setup_import_confirm').'">'.$this->i18n('consent_manager_setup_import').'</a></p>';
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('consent_manager_setup'));

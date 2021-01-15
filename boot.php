@@ -49,3 +49,25 @@ if ($this->getConfig('forceCache')) {
     $this->setConfig('forceCache', false);
     consent_manager_cache::forceWrite();
 }
+
+rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
+    if (rex::isFrontend())
+    {
+        $consent_manager = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'], 1) : false;
+        $outcssjs = !$this->getConfig('outputcssjs', false);
+        $_search = '<!--REX_CONSENT_MANAGER_OUTPUT[]-->';
+        $_replace = '';
+        if (!$consent_manager || $outcssjs || strstr($ep->getSubject(), 'consent_manager-show-box') || strstr($ep->getSubject(), 'consent_manager-show-box-reload')) {
+            $_replace = $_SESSION['consent_manager']['outputcssjs'];
+        }
+        $ep->setSubject(str_replace($_search, $_replace, $ep->getSubject()));
+    }
+});
+
+rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
+    if (rex_get('consent_manager_outputjs', 'bool', false) === true) {
+        $consent_manager = new consent_manager_frontend($_SESSION['consent_manager']['forceCache']);
+        $consent_manager->setDomain($_SERVER['HTTP_HOST']);
+        $consent_manager->outputJavascript();
+    }
+});

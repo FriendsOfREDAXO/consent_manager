@@ -65,6 +65,9 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 **Cookies:** Hier werden die zuvor angelegten Cookies ausgewählt, die der Gruppe angehören sollen
 **Skripte, die nach Einverständnis geladen werden:** Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Zu Beachten ist, dass nur die Scripte eingebunden werden die zu den vorher ausgewählten Cookies gehören.
 
+### Beispielkonfiguration importieren
+Über den Menüpunkt **Setup** kann eine Beispielkonfiguration mit Cookiegruppen importiert werden. Vorhandene Cookies und Cookiegruppen werden dabei gelöscht.
+
 ### In Template einfügen
 Der Platzhalter `REX_CONSENT_MANAGER[]` muss im `head`-Bereich des Templates eingefügt werden. Gibt es mehrere Templates mit `head`-Bereichen, muss der Platzhalter in allen Templates eingefügt werden, die die Cookie-Box aufrufen sollen. **Wichtig: der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
 
@@ -184,8 +187,23 @@ Hier können alle allgemeinen Texte der CookieBox angepasst werden.
 Verfügt die Website über mehrere Sprachen oder wird eine neue Sprache angelegt, werden die Inhalte der Startsprache automatisch übertragen und können nachher angepasst werden. **Einige Felder wie Schlüssel, Scripte, Domain und Cookie-Auswahl können nur in der Startsprache geändert werden. Die Änderungen werden automatisch auf alle weiteren Sprachen übertragen.**
 
 ### Design anpassen
-Das Design der Cookie-Box kann nach Belieben angepasst werden. HTML, CSS und Skripte der Cookie Box liegen im Fragment `/redaxo/src/addons/consent_manager/fragments/consent_manager_box.php`. Änderungen in dieser Datei werden aber beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulgen 'theme/private/fragments/consent_manager_box.php' und die Änderungen hier vorzunehmen.
-Anschließend die Datei `consent_manager_frontend.css` an einen beliebigen Ort kopieren, anpassen und im eigenen Fragment einbinden.
+Das Design der Cookie-Box kann nach Belieben angepasst werden. Der HTML-Code der Cookie Box liegt im Fragment `/redaxo/src/addons/consent_manager/fragments/consent_manager_box.php`. Änderungen in dieser Datei werden aber beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulegen 'theme/private/fragments/consent_manager_box.php' und die Änderungen hier vorzunehmen.
+Anschließend die Datei `consent_manager_frontend.css` an einen beliebigen Ort kopieren, anpassen und im eigenen Template/CSS einbinden (Eigenes CSS verwenden in den Einstellungen aktivieren!).
+
+### Ausgabe-Einstellungen
+Über den Menüpunkt **Einstellungen** kann die Ausgabe für CSS und JavaScript im Frontend gesteuert werden.
+Standardmäßig wird auf jeder Seite das benötigte JavaScript und die CSS-Datei `consent_manager_frontend.css` ausgegeben. 
+
+Der Platzhalter `REX_CONSENT_MANAGER[]` im Template wird durch folgenden Code ersetzt.
+```html
+<link rel="stylesheet" href="/assets/addons/consent_manager/consent_manager_frontend.css?v=1610741049">
+<script>var consent_manager_initially_hidden = false;</script>
+<script src="/index.php?consent_manager_outputjs=1&amp;v=1610705007"></script>
+```
+Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier die Ausgabe der CSS-Datei `consent_manager_frontend.css` durch aktivieren der Einstellung **Eigenes CSS verwenden** unterdrückt werden. Es werden dann nur die JavaScript-Zeilen ausgegeben.
+
+Soll JavaScript für die Consent-Box nur ausgegeben werden wenn dies auch notwendig ist, kann das durch aktivieren der Einstellung **CSS + JavaScript im Frontend nur bei Bedarf ausgeben** erreicht werden.
+JavaScript wird dann nur ausgegeben wenn noch kein Cookie gesetzt wurde oder auf der Seite ein Link mit der Klasse `consent_manager-show-box` oder `consent_manager-show-box-reload` existiert.
 
 ## Tipps & Tricks
 Hast du eigene Tipps & Tricks? [Füge Sie auf Github direkt in die Readme hinzu](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/README.md) oder lege ein [Issue](https://github.com/FriendsOfREDAXO/consent_manager/issues) an.

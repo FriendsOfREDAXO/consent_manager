@@ -1,16 +1,8 @@
 <?php
-$consent_manager = new consent_manager_frontend($this->getVar('forceCache'));
+$consent_manager = new consent_manager_frontend($_SESSION['consent_manager']['forceCache']);
 $consent_manager->setDomain($_SERVER['HTTP_HOST']);
-if ($this->getVar('debug')) {
-    dump($consent_manager);
-}
 ?>
 <?php if ($consent_manager->cookiegroups): ?>
-    <link href="<?php echo rex_url::base('assets/addons/consent_manager/consent_manager_frontend.css'); ?>" rel="stylesheet" type="text/css">
-    <script src="<?php echo rex_url::base('assets/addons/consent_manager/js.cookie-2.2.1.min.js'); ?>"></script>
-    <script src="<?php echo rex_url::base('assets/addons/consent_manager/consent_manager_polyfills.js'); ?>"></script>
-    <script src="<?php echo rex_url::base('assets/addons/consent_manager/consent_manager_frontend.js'); ?>"></script>
-    <script id="consent_manager-template" type="text/template">
         <div class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>">
             <div class="consent_manager-wrapper" id="consent_manager-wrapper">
                 <div class="consent_manager-wrapper-inner">
@@ -77,7 +69,7 @@ if ($this->getVar('debug')) {
                             ?>
                         </div>
                     </div>
-                    <a class="icon-cancel-circled consent_manager-close consent_manager-close-box"></a>
+                    <a class="icon-cancel-circled consent_manager-close consent_manager-close-box">&#10006;</a>
                 </div>
             </div>
             <?php
@@ -86,5 +78,4 @@ if ($this->getVar('debug')) {
             }
             ?>
         </div>
-    </script>
 <?php endif; ?>
