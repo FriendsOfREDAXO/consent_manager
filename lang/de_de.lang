@@ -50,6 +50,15 @@ consent_manager_setup = Setup
 consent_manager_setup_headline = Beispielkonfiguration importieren
 consent_manager_setup_info = Texte und häufig benötigte Cookies/Cookiegruppen werden importiert.<br><strong>VORSICHT - vorhandene Texte und Cookies/Cookiegruppen werden gelöscht.</strong>
 consent_manager_setup_import = Import
+consent_manager_setup_import_confirm = Daten importieren und vorhandene löschen!?
 consent_manager_setup_import_successful = Beispielkonfiguration erfolgreich importiert
 
 consent_manager_cache_write_failed = Cachefile konnte nicht geschrieben werden
+
+consent_manager_config = Einstellungen
+consent_manager_config_title = Consent-Manager Einstellungen
+consent_manager_config_legend = Ausgabe-Einstellungen Frontend
+consent_manager_config_cssjs_desc = Wenn aktiviert werden CSS + JavaScript für das Frontend nur ausgegeben wenn dieses auch notwendig ist.<br>1. Wenn noch kein Cookie für den Consent-Manager gesetzt wurde (Cookie consent_manager)<br>2. Wenn ein Link zum öffnen der Consent-Box auf der Webseite vorhanden ist (mit der Klasse consent_manager-show-box oder consent_manager-show-box-reload).
+consent_manager_config_cssjs = CSS + JavaScript im Frontend nur bei Bedarf ausgeben
+consent_manager_config_owncss_desc = Wenn aktiviert wird im Frontend kein Standard-CSS für die Consent-Box ausgegeben (consent_manager_frontend.css).<br>CSS für das Styling der Consent-Box muss in eigenen CSS-Dateien vorhanden sein!
+consent_manager_config_owncss = Eigenes CSS verwenden

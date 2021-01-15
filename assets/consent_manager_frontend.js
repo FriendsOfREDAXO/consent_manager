@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    consent_managerBox = new DOMParser().parseFromString(document.getElementById('consent_manager-template').innerHTML, 'text/html');
+    consent_managerBox = new DOMParser().parseFromString(consent_manager_box_template, 'text/html');
     consent_managerBox = consent_managerBox.getElementById('consent_manager-background');
     document.querySelectorAll('body')[0].appendChild(consent_managerBox);
 
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
         addScript(consent_managerBox.querySelector('[data-uid="' + uid + '"]'));
     });
 
-    if (consent_managerBox.classList.contains('consent_manager-initially-hidden')) {
+    if (consent_manager_initially_hidden) {
         show = 0;
     }
 

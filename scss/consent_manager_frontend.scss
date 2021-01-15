@@ -104,14 +104,15 @@
 
 a.consent_manager-close-box {
     position: absolute;
-    right: .5em;
-    top: .5em;
+    right: .75em;
+    top: .75em;
     display: block;
     border-radius: 50% !important;
     width: 28px;
     height: 28px;
     color: #fff;
     background-color:#999;
+    text-indent:-999px;
     &:hover {
         background-color: #333;
         color: #fff;
@@ -163,74 +164,76 @@ a.consent_manager-close-box {
 }
 
 .consent_manager-show-details .icon-info-circled:before {
-	color: #fff;
-	background-color: green;
-	content: "i";
-	font-family: "Serif";
-	font-weight:bold;
-	display: inline-block;
-	border-radius: 50% !important;
-	line-height:1.0em;
-	width:1.0em;
-	height:1.0em;
-	text-align:center;
-	vertical-align:middle;
-	margin-right:5px;
+    color: #fff;
+    background-color: green;
+    content: "i";
+    font-family: "Serif";
+    font-weight:bold;
+    display: inline-block;
+    border-radius: 50% !important;
+    line-height:1.0em;
+    width:1.0em;
+    height:1.0em;
+    text-align:center;
+    vertical-align:middle;
+    margin-right:5px;
 }
 
-a.consent_manager-close, #consent_manager-toggle-details {cursor:pointer;}
+a.consent_manager-close, #consent_manager-toggle-details {
+    cursor:pointer;
+}
 
 .consent_manager-cookiegroup-checkbox {
     margin: 0 2em .5em 0;
 }
 .consent_manager-cookiegroups label {
-  position: relative;
-  font-weight:bold;
-  font-size:1.2em;
-  color:#333;
-  cursor:pointer;
+    position: relative;
+    font-weight:bold;
+    font-size:1.2em;
+    color:#333;
+    cursor:pointer;
 }
 .consent_manager-cookiegroups label > input[type="checkbox"] {
-  display: none;
+    display: none;
 }
 .consent_manager-cookiegroups label > input[type="checkbox"] + *::before {
-  content: "";
-  display: inline-block;
-  vertical-align: top;
-  width: 20px;
-  height: 20px;
-  border-radius: 20% !important;
-  border-style: solid;
-  border-width: 1px; 
-  margin-right: 5px;
+    content: "";
+    display: inline-block;
+    vertical-align: top;
+    width: 20px;
+    height: 20px;
+    border-radius: 20% !important;
+    border-style: solid;
+    border-width: 1px; 
+    margin-right: 5px;
 }
 
 /* When we use SVG with background-image property, we should ensure that reserved URL characters are encoded (e.g. < === %3C and > === %3E) and also replace the space with '%20'. */
 
 .consent_manager-cookiegroups label > input[type="checkbox"]:checked + *::before {
-  content: "";
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20height='20'%20width='20'%3E%3Cpath%20fill='none'%20stroke='black'%20stroke-opacity='0.8'%20stroke-width='3'%20d='M1.73%2012.91l6.37%206.37L22.79%204.59'%20/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: -1px -4px;
-  display: inline-block;
-  height: 20px;
-  width: 20px;
+    content: "";
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20height='20'%20width='20'%3E%3Cpath%20fill='none'%20stroke='black'%20stroke-opacity='0.8'%20stroke-width='3'%20d='M1.73%2012.91l6.37%206.37L22.79%204.59'%20/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: -1px -4px;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
 }
 .consent_manager-cookiegroups label > input[type="checkbox"]:disabled + *::before {
-  content: "";
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20height='20'%20width='20'%3E%3Cpath%20fill='none'%20stroke='gray'%20stroke-opacity='1.0'%20stroke-width='3'%20d='M1.73%2012.91l6.37%206.37L22.79%204.59'%20/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 0px -4px;
-  display: inline-block;
-  height: 20px;
-  width: 20px;
+    content: "";
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20height='20'%20width='20'%3E%3Cpath%20fill='none'%20stroke='gray'%20stroke-opacity='1.0'%20stroke-width='3'%20d='M1.73%2012.91l6.37%206.37L22.79%204.59'%20/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 0px -4px;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
 }
 .consent_manager-cookiegroups label > input[type="checkbox"]:checked + * {
-  color: #000;
+    color: #000;
 }
 .consent_manager-cookiegroups label > input[type="checkbox"]:disabled + * {
-  color: #999;
-  cursor: default;
+    color: #999;
+    cursor: default;
 }
 
 @media (min-width: 35em) {
@@ -276,8 +279,8 @@ a.consent_manager-close, #consent_manager-toggle-details {cursor:pointer;}
         align-items: center;
         flex-direction: row-reverse;
     }
-    .consent_manager-close-box {
-        font-size: 2em;
-        margin: 0;
+    a.consent_manager-close-box {
+        right: 1.5em;
+        top: 1.5em;
     }
 }
