@@ -238,8 +238,6 @@ Du hast einen Fehler gefunden oder wünscht dir ein Feature? Lege ein [Issue auf
 ### Lizenz
 MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/LICENSE.md)  
 [cookie.js](https://github.com/js-cookie/js-cookie): [MIT Lizenz](https://github.com/js-cookie/js-cookie/blob/master/LICENSE)  
-[Font Awesome](https://fontawesome.com/v4.7.0/): [SIL Lizenz](https://fontawesome.com/v4.7.0/license/)  
-[pretty checkbox](https://github.com/lokesh-coder/pretty-checkbox): [MIT Lizenz](https://github.com/lokesh-coder/pretty-checkbox/blob/master/LICENSE)  
 
 ### Autor
 **Friends Of REDAXO**  

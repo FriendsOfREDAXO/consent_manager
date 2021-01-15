@@ -101,49 +101,49 @@
         color: #004000;
     }
 }
-.consent_manager-close-box {
+
+a.consent_manager-close-box {
     position: absolute;
     right: .5em;
     top: .5em;
     display: block;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    cursor: pointer;
-    color: #999;
-    font-size: 1.8em;
-    background: none transparent;
-    line-height: 1;
-    text-decoration: none;
-    &:before {
-        margin: 0;
-    }
+    border-radius: 50% !important;
+    width: 28px;
+    height: 28px;
+    color: #fff;
+    background-color:#999;
     &:hover {
-        color: #404040;
-        background: none transparent;
-        text-decoration: none;
+        background-color: #333;
+        color: #fff;
+    }
+    &::before {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #fff;
+        width: 4px;
+        left: 12px;
+        top: 7px;
+        bottom: 7px;
+        transform: rotate(45deg);
+    }
+    &::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #fff;
+        width: 4px;
+        left: 12px;
+        top: 7px;
+        bottom: 7px;
+        transform: rotate(-45deg);
     }
 }
+
 .consent_manager-cookiegroups {
     padding: 1em 0;
 }
-.consent_manager-cookiegroup-checkbox {
-    display: block;
-    margin: 0 0 1em 0;
-    &.pretty .state label {
-        font-weight: bold;
-        font-size: 1.2em;
-    }
-    &.pretty.p-default input:checked ~ .state label::before {
-        border-color: green;
-    }
-    &.pretty.p-default input:checked ~ .state label::after {
-        background-color: green !important;
-    }
-    &.pretty.p-locked {
-        opacity: .75;
-    }
-}
+
 .consent_manager-cookiegroup {
     & + .consent_manager-cookiegroup-title {
         margin-top: 1em;
@@ -161,15 +161,78 @@
         display: block;
     }
 }
-.consent_manager-buttons {
+
+.consent_manager-show-details .icon-info-circled:before {
+	color: #fff;
+	background-color: green;
+	content: "i";
+	font-family: "Serif";
+	font-weight:bold;
+	display: inline-block;
+	border-radius: 50% !important;
+	line-height:1.0em;
+	width:1.0em;
+	height:1.0em;
+	text-align:center;
+	vertical-align:middle;
+	margin-right:5px;
 }
-.pretty.p-icon .state .icon {
-    font-size: 1.15em;
-    transition: all .1s ease;
+
+a.consent_manager-close, #consent_manager-toggle-details {cursor:pointer;}
+
+.consent_manager-cookiegroup-checkbox {
+    margin: 0 2em .5em 0;
 }
-#consent_manager-wrapper .icon.icon-ok-1::before {
-    margin-left: .05em;
+.consent_manager-cookiegroups label {
+  position: relative;
+  font-weight:bold;
+  font-size:1.2em;
+  color:#333;
+  cursor:pointer;
 }
+.consent_manager-cookiegroups label > input[type="checkbox"] {
+  display: none;
+}
+.consent_manager-cookiegroups label > input[type="checkbox"] + *::before {
+  content: "";
+  display: inline-block;
+  vertical-align: top;
+  width: 20px;
+  height: 20px;
+  border-radius: 20% !important;
+  border-style: solid;
+  border-width: 1px; 
+  margin-right: 5px;
+}
+
+/* When we use SVG with background-image property, we should ensure that reserved URL characters are encoded (e.g. < === %3C and > === %3E) and also replace the space with '%20'. */
+
+.consent_manager-cookiegroups label > input[type="checkbox"]:checked + *::before {
+  content: "";
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20height='20'%20width='20'%3E%3Cpath%20fill='none'%20stroke='black'%20stroke-opacity='0.8'%20stroke-width='3'%20d='M1.73%2012.91l6.37%206.37L22.79%204.59'%20/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: -1px -4px;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+}
+.consent_manager-cookiegroups label > input[type="checkbox"]:disabled + *::before {
+  content: "";
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20height='20'%20width='20'%3E%3Cpath%20fill='none'%20stroke='gray'%20stroke-opacity='1.0'%20stroke-width='3'%20d='M1.73%2012.91l6.37%206.37L22.79%204.59'%20/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 0px -4px;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+}
+.consent_manager-cookiegroups label > input[type="checkbox"]:checked + * {
+  color: #000;
+}
+.consent_manager-cookiegroups label > input[type="checkbox"]:disabled + * {
+  color: #999;
+  cursor: default;
+}
+
 @media (min-width: 35em) {
     .consent_manager-cookiegroups {
         display: flex;
@@ -202,6 +265,7 @@
         margin: 0 0 0 .5em;
     }
 }
+
 @media (min-width: 50em) {
     .consent_manager-wrapper-inner {
         padding: 2em;
