@@ -12,6 +12,7 @@ class consent_manager_frontend
     public $boxClass = '';
     public $cache = [];
     public $version = '';
+	public $cacheLogId = '';
 
     public function __construct($forceWrite = 0)
     {
@@ -84,7 +85,7 @@ class consent_manager_frontend
         //header('Cache-Control: public');
         //header('Expires: ' . date('D, j M Y', strtotime('+1 week')) . ' 00:00:00 GMT');
         ob_start();
-        echo self::getFragment($_SESSION['consent_manager']['debug'], $_SESSION['consent_manager']['forceCache'], 'consent_manager_box.php');
+        echo self::getFragment($_SESSION['consent_manager']['debug'], 0, 'consent_manager_box.php');
         $boxtemplate = ob_get_contents();
         ob_end_clean(); 
         $boxtemplate = str_replace("'", "\'", $boxtemplate);
