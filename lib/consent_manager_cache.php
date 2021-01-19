@@ -23,6 +23,7 @@ class consent_manager_cache
         }
         $cache = new self();
         $cache->writeCache();
+        touch(rex_addon::get('consent_manager')->getAssetsPath('consent_manager_frontend.js'));
     }
 
     private function writeCache()

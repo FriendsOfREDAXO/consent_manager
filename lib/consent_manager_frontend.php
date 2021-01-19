@@ -20,8 +20,9 @@ class consent_manager_frontend
             consent_manager_cache::forceWrite();
         }
         $this->cache = consent_manager_cache::read();
-        if (rex_addon::get('consent_manager')->getVersion('%s') != $this->cache['majorVersion']) {
+        if (!$this->cache || rex_addon::get('consent_manager')->getVersion('%s') != $this->cache['majorVersion']) {
             consent_manager_cache::forceWrite();
+            $this->cache = consent_manager_cache::read();
         }
         $this->cacheLogId = $this->cache['cacheLogId'];
         $this->version = $this->cache['majorVersion'];
@@ -84,13 +85,16 @@ class consent_manager_frontend
         //header('Pragma: cache');
         //header('Cache-Control: public');
         //header('Expires: ' . date('D, j M Y', strtotime('+1 week')) . ' 00:00:00 GMT');
-        ob_start();
-        echo self::getFragment($_SESSION['consent_manager']['debug'], 0, 'consent_manager_box.php');
-        $boxtemplate = ob_get_contents();
-        ob_end_clean(); 
-        $boxtemplate = str_replace("'", "\'", $boxtemplate);
-        $boxtemplate = str_replace("\r", "", $boxtemplate);
-        $boxtemplate = str_replace("\n", " ", $boxtemplate);
+        $boxtemplate = '';
+        if (isset($_SESSION['consent_manager'])) {
+            ob_start();
+            echo self::getFragment($_SESSION['consent_manager']['debug'], 0, 'consent_manager_box.php');
+            $boxtemplate = ob_get_contents();
+            ob_end_clean();
+            $boxtemplate = str_replace("'", "\'", $boxtemplate);
+            $boxtemplate = str_replace("\r", "", $boxtemplate);
+            $boxtemplate = str_replace("\n", " ", $boxtemplate);            
+        }
         echo '/* --- Consent-Manager Box Template --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
         echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
