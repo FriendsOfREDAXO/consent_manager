@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('body')[0].appendChild(consent_managerBox);
 
     // aktuelle major addon version auslesen
-    addonVersion = parseInt(document.getElementById('consent_manager-background').getAttribute('data-version'));
+    addonVersion = parseInt(consent_manager_parameters.version);
     // cookie wurde mit einer aelteren major version gesetzt, alle consents loeschen und box zeigen
     if (addonVersion !== cookieVersion) {
         show = 1;
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
         addScript(consent_managerBox.querySelector('[data-uid="' + uid + '"]'));
     });
 
-    if (consent_manager_initially_hidden) {
+    if (consent_manager_parameters.initially_hidden) {
         show = 0;
     }
 
@@ -91,8 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
         cookieData = {
             consents: [],
             version: addonVersion,
-            consentid: document.getElementById('consent_manager-background').getAttribute('data-consentid'),
-            cachelogid: document.getElementById('consent_manager-background').getAttribute('data-cachelogid')
+            consentid: consent_manager_parameters.consentid,
+            cachelogid: consent_manager_parameters.cacheLogId
         };
         // checkboxen
         consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
@@ -113,8 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
         Cookies.set('consent_manager', JSON.stringify(cookieData), {expires: expires, path: '/', sameSite: 'Lax', secure: false});
 
         var http = new XMLHttpRequest(),
-            url = '/index.php?rex-api-call=consent_manager',
-            params = 'consentid=' + document.getElementById('consent_manager-background').getAttribute('data-consentid');
+            url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager',
+            params = 'consentid=' + consent_manager_parameters.consentid;
         http.open('POST', url, true);
         http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         http.send(params);
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function deleteCookies() {
-        var domain = document.getElementById('consent_manager-background').getAttribute('data-domain-name');
+        var domain = consent_manager_parameters.domain;
         for (var key in Cookies.get()) {
             Cookies.remove(encodeURIComponent(key));
             Cookies.remove(encodeURIComponent(key), {'domain': domain});

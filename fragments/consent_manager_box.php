@@ -1,5 +1,5 @@
 <?php
-$consent_manager = new consent_manager_frontend($_SESSION['consent_manager']['forceCache']);
+$consent_manager = new consent_manager_frontend(0);
 $consent_manager->setDomain($_SERVER['HTTP_HOST']);
 ?>
 <?php if ($consent_manager->cookiegroups): ?>
