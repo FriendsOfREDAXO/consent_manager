@@ -80,6 +80,7 @@ class consent_manager_frontend
 
     public static function outputJavascript($host = null, $article_id = null) {
         rex_response::cleanOutputBuffers();
+        if (!isset($_SESSION)) session_start();
         header('Content-Type: application/javascript');
         header("Cache-Control: max-age=604800, public");
         //header('Pragma: cache');
@@ -93,7 +94,7 @@ class consent_manager_frontend
             ob_end_clean();
             $boxtemplate = str_replace("'", "\'", $boxtemplate);
             $boxtemplate = str_replace("\r", "", $boxtemplate);
-            $boxtemplate = str_replace("\n", " ", $boxtemplate);            
+            $boxtemplate = str_replace("\n", " ", $boxtemplate);
         }
         echo '/* --- Consent-Manager Box Template --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
