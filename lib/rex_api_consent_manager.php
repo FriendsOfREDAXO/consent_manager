@@ -5,9 +5,10 @@ class rex_api_consent_manager extends rex_api_function
 
     function execute()
     {
+        $domain = rex_post('domain', 'string', false);
         $consentid = rex_post('consentid', 'string', false);
-        $consent_manager = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'],1) : false;
-        if (!$consentid || !$consent_manager) exit;
+        $consent_manager = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'], 1) : false;
+        if (!$domain || !$consentid || !$consent_manager) exit;
         if ((string)$consent_manager['consentid'] == $consentid) {
             $ip = $_SERVER['REMOTE_ADDR'];
             if (strpos($ip, '.') !== false) {
@@ -23,6 +24,7 @@ class rex_api_consent_manager extends rex_api_function
             }
             $db = rex_sql::factory();
             $db->setTable(rex::getTable('consent_manager_consent_log'));
+            $db->setValue('domain', $domain);
             $db->setValue('consentid', $consentid);
             $db->setValue('consents', json_encode($consent_manager['consents']));
             $db->setValue('cachelogid', $consent_manager['cachelogid']);
