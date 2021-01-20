@@ -64,7 +64,7 @@ rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
     }
 });
 
-rex_extension::register('PACKAGES_INCLUDED', static function (rex_extension_point $ep) {
+rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
     if (rex_get('consent_manager_outputjs', 'bool', false) === true) {
         $consent_manager = new consent_manager_frontend(0);
         $consent_manager->setDomain($_SERVER['HTTP_HOST']);
