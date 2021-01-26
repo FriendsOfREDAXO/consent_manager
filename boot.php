@@ -1,4 +1,17 @@
 <?php
+rex_perm::register('consent_manager[texteditonly]');
+if (rex::isBackend() && rex::getUser()) {
+    if (!rex::getUser()->isAdmin() && rex::getUser()->hasPerm('consent_manager[texteditonly]')) {
+        $page = $this->getProperty('page');
+        if ($page) {
+        foreach (['cookiegroup', 'cookie', 'domain', 'config', 'setup', 'help'] as $removepage) {
+            unset($page['subpages'][$removepage]);
+        }
+        $this->setProperty('page', $page);
+        }
+    }
+}
+
 rex_extension::register('PACKAGES_INCLUDED', function () {
     if (rex::getUser())
     {
@@ -21,7 +34,6 @@ rex_extension::register('PACKAGES_INCLUDED', function () {
         {
             rex_view::addCssFile($this->getAssetsUrl('consent_manager_backend.css'));
         }
-
     }
 });
 
