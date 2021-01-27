@@ -20,7 +20,7 @@ if ($consent_manager->cookiegroups) {
 						FROM '.rex::getTable('consent_manager_consent_log').' 
 						WHERE '.rex::getTable('consent_manager_consent_log').'.cachelogid = :cachelogid
 						ORDER BY '.rex::getTable('consent_manager_consent_log').'.id DESC
-						LIMIT 5'						
+						LIMIT 5'
 						,['cachelogid'=>$consent_manager_cookie['cachelogid']]
 					);
 		$history = $db->getArray();
@@ -46,7 +46,7 @@ if ($consent_manager->cookiegroups) {
 						<th class="consent_manager-history-id">'.$consent_manager->texts['consent_id'].'</th>
 						<th class="consent_manager-history-consents">'.$consent_manager->texts['consent_consents'].'</th>
 					</tr>';
-		foreach ($history as $historyentry) {	
+		foreach ($history as $historyentry) {
 			$consents = json_decode($historyentry['consents']);
 			//$consents_uids_output = implode(', ', $consents);
 			$consents_service_names = array();
@@ -69,35 +69,37 @@ if ($consent_manager->cookiegroups) {
 	$output .= '<h2>'.$consent_manager->texts['headline_mayusedcookies'].'</h2>';
 
 	foreach ($consent_manager->cookiegroups as $cookiegroup) {
-		$output .= '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
-		$output .= $cookiegroup['name'].' <span>('.count($cookiegroup['cookie_uids']).')</span>';
-		$output .= '</div>';
-		$output .= '<div class="consent_manager-cookiegroup-description">';
-		$output .= $cookiegroup['description'];
-		$output .= '</div>';
-		$output .= '<div class="consent_manager-cookiegroup">';
-		$output .= '<table class="consent_manager-cookietable">';
-		$output .= '<tr>
-						<th class="consent_manager-cookie-name">'.$consent_manager->texts['cookiename'].'</th>
-						<th class="consent_manager-cookie-provider">'.$consent_manager->texts['provider'].'</th>
-						<th class="consent_manager-cookie-description">'.$consent_manager->texts['usage'].'</th>
-						<th class="consent_manager-cookie-lifetime">'.$consent_manager->texts['lifetime'].'</th>
-						<th class="consent_manager-cookie-service">'.$consent_manager->texts['service'].'</th>
-					</tr>';
-		foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
-			$cookie = $consent_manager->cookies[$cookieUid];
-			foreach ($cookie['definition'] as $def) {
-				$output .= '<tr>';
-				$output .= '<td class="consent_manager-cookie-name">'.$def['cookie_name'].'</td>';
-				$output .= '<td class="consent_manager-cookie-provider"><a href="'.$cookie['provider_link_privacy'].'">'.$cookie['provider'].'</a></td>';
-				$output .= '<td class="consent_manager-cookie-description">'.$def['description'].'</td>';
-				$output .= '<td class="consent_manager-cookie-lifetime">'.$def['cookie_lifetime'].'</td>';
-				$output .= '<td class="consent_manager-cookie-service">'.$cookie['service_name'].'</td>';
-				$output .= '</tr>';
-			}
-		}
-		$output .= '</table>';
-		$output .= '</div>';
+        if (count($cookiegroup['cookie_uids']) >= 1) {
+            $output .= '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
+            $output .= $cookiegroup['name'].' <span>('.count($cookiegroup['cookie_uids']).')</span>';
+            $output .= '</div>';
+            $output .= '<div class="consent_manager-cookiegroup-description">';
+            $output .= $cookiegroup['description'];
+            $output .= '</div>';
+            $output .= '<div class="consent_manager-cookiegroup">';
+            $output .= '<table class="consent_manager-cookietable">';
+            $output .= '<tr>
+                            <th class="consent_manager-cookie-name">'.$consent_manager->texts['cookiename'].'</th>
+                            <th class="consent_manager-cookie-provider">'.$consent_manager->texts['provider'].'</th>
+                            <th class="consent_manager-cookie-description">'.$consent_manager->texts['usage'].'</th>
+                            <th class="consent_manager-cookie-lifetime">'.$consent_manager->texts['lifetime'].'</th>
+                            <th class="consent_manager-cookie-service">'.$consent_manager->texts['service'].'</th>
+                        </tr>';
+            foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
+                $cookie = $consent_manager->cookies[$cookieUid];
+                foreach ($cookie['definition'] as $def) {
+                    $output .= '<tr>';
+                    $output .= '<td class="consent_manager-cookie-name">'.$def['cookie_name'].'</td>';
+                    $output .= '<td class="consent_manager-cookie-provider"><a href="'.$cookie['provider_link_privacy'].'">'.$cookie['provider'].'</a></td>';
+                    $output .= '<td class="consent_manager-cookie-description">'.$def['description'].'</td>';
+                    $output .= '<td class="consent_manager-cookie-lifetime">'.$def['cookie_lifetime'].'</td>';
+                    $output .= '<td class="consent_manager-cookie-service">'.$cookie['service_name'].'</td>';
+                    $output .= '</tr>';
+                }
+            }
+            $output .= '</table>';
+            $output .= '</div>';
+        }
 	}
 
 	// Cookies actually used
@@ -107,11 +109,11 @@ if ($consent_manager->cookiegroups) {
 	
 	foreach ($consent_manager->cookies as $cookies) {
 		foreach ($cookies['definition'] as $def) {
-			$cookiedb[$def['cookie_name']] = array(			
+			$cookiedb[$def['cookie_name']] = array(
 				"service_name"=>$cookies['service_name'],
 				"provider"=>$cookies['provider'],
 				"lifetime"=>$def['cookie_lifetime'],
-				"description"=>$def['description']					
+				"description"=>$def['description']
 			);
 		}
 	}
