@@ -4,10 +4,10 @@ if (rex::isBackend() && rex::getUser()) {
     if (!rex::getUser()->isAdmin() && rex::getUser()->hasPerm('consent_manager[texteditonly]')) {
         $page = $this->getProperty('page');
         if ($page) {
-        foreach (['cookiegroup', 'cookie', 'domain', 'config', 'setup', 'help'] as $removepage) {
-            unset($page['subpages'][$removepage]);
-        }
-        $this->setProperty('page', $page);
+            foreach (['cookiegroup', 'cookie', 'domain', 'config', 'setup', 'help'] as $removepage) {
+                unset($page['subpages'][$removepage]);
+            }
+            $this->setProperty('page', $page);
         }
     }
 }
@@ -61,7 +61,9 @@ if ($this->getConfig('forceCache')) {
     $this->setConfig('forceCache', false);
     consent_manager_cache::forceWrite();
 }
-
+if (rex::isFrontend()){
+    if (!isset($_SESSION)) session_start();
+}
 rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
     if (rex::isFrontend())
     {

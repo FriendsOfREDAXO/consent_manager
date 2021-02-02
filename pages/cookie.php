@@ -58,6 +58,7 @@ elseif ($func == 'add' || $func == 'edit')
         if ($clang_id == rex_clang::getStartId() || !$form->isEditMode())
         {
             $field = $form->addTextAreaField('script');
+            $field->setAttributes(['class' => 'form-control codemirror', 'name'=> $field->getAttribute('name'), 'data-codemirror-mode' => 'text/javascript']);
             $field->setLabel($this->i18n('consent_manager_cookiegroup_scripts'));
             $field->setNotice($this->i18n('consent_manager_cookiegroup_scripts_notice'));
         }
