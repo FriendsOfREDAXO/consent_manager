@@ -265,7 +265,7 @@ MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manage
 http://www.redaxo.org  
 https://github.com/FriendsOfREDAXO  
 **Projekt-Lead**  
-[Ingo Winter](https://github.com/IngoWinter)
+[Ingo Winter](https://github.com/IngoWinter)  
 [Andreas Eberhard](https://github.com/aeberhard)
 
 ### Credits
