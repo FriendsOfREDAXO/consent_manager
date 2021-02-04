@@ -266,6 +266,7 @@ http://www.redaxo.org
 https://github.com/FriendsOfREDAXO  
 **Projekt-Lead**  
 [Ingo Winter](https://github.com/IngoWinter)
+[Andreas Eberhard](https://github.com/aeberhard)
 
 ### Credits
 First Release: [Ingo Winter](https://github.com/IngoWinter)  
