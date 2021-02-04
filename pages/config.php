@@ -2,10 +2,9 @@
 
 $addon = rex_addon::get('consent_manager');
 
-$form = rex_config_form::factory($addon->name);
+$form = rex_config_form::factory($addon->getPackageId());
 
 $field = $form->addFieldset($addon->i18n('consent_manager_config_legend'));
-
 
 $field = $form->addCheckboxField('outputcssjs');
 $field->addOption($addon->i18n('consent_manager_config_cssjs'), 1);

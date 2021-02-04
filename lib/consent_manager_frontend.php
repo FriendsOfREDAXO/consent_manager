@@ -95,6 +95,9 @@ class consent_manager_frontend
             $boxtemplate = str_replace("'", "\'", $boxtemplate);
             $boxtemplate = str_replace("\r", "", $boxtemplate);
             $boxtemplate = str_replace("\n", " ", $boxtemplate);
+            if (rex_addon::get('sprog')->isInstalled()) {
+                $boxtemplate = sprogdown($boxtemplate, rex_clang::getCurrentId());
+            }
         }
         echo '/* --- Consent-Manager Box Template --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
