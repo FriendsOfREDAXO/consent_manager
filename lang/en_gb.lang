@@ -46,10 +46,19 @@ consent_manager_domain_legal_notice = Masthead
 consent_manager_domain_privacy_policy_empty_msg = Data protection statement is a required field
 consent_manager_domain_legal_notic_empty_msg = Masthead is a required field
 
-consent_manager_setup =	Setup
+consent_manager_setup = Setup
 consent_manager_setup_headline = Import example configuration
 consent_manager_setup_info = Texts and often used cookies/cookiegroups will be imported.<br><strong>CAUTION - present texts and cookies/cookiegruops will be deleted.</strong>
 consent_manager_setup_import = Import
+consent_manager_setup_import_confirm = Import and delete existing data?
 consent_manager_setup_import_successful = Example configuration was imported succesfully
 
 consent_manager_cache_write_failed = Cache file could not be written
+
+consent_manager_config = Settings
+consent_manager_config_title = Consent-Manager settings
+consent_manager_config_legend = Frontend output settings
+consent_manager_config_cssjs_desc = When set to active, frontend CSS and JS will only be loaded when required.<br>1. when no cookie has been set by and for Consent-Manager<br>2. when a link to open the consent box is present on the website (with a class of either consent_manager-show-box or consent_manager-show-box-reload).
+consent_manager_config_cssjs = Conditionally load frontend CSS and JS as required
+consent_manager_config_owncss_desc = When set to active default frontend CSS for the consent box will not be loaded (consent_manager_frontend.css). <br>CSS styles for the consent box need to be present in custom (own) stylesheet.
+consent_manager_config_owncss = Use custom CSS
