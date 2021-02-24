@@ -18,7 +18,7 @@ if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->
 
 $output = '';
 
-if ('|1|' <> $addon->getConfig('outputowncss', false)) {
+if ('|1|' != $addon->getConfig('outputowncss', false)) {
     $_cssfilename = 'consent_manager_frontend.css';
     $output .= '    <link rel="stylesheet" href="' . $addon->getAssetsUrl($_cssfilename) . '?v=' . filemtime($addon->getAssetsPath($_cssfilename)) . '">' . PHP_EOL;
 }
@@ -26,9 +26,11 @@ if ('|1|' <> $addon->getConfig('outputowncss', false)) {
 $output .= '    <script>consent_manager_parameters = { initially_hidden: ' . $initially_hidden . ', domain: "' . $_SERVER['HTTP_HOST'] . '", consentid: "' . uniqid('', true) . '", cacheLogId: "' . $consent_manager->cacheLogId . '", version: "' . $consent_manager->version . '", fe_controller: "' . rex_url::frontendController(). '" };</script>' . PHP_EOL;
 $_params = [];
 $_params['consent_manager_outputjs'] = true;
-$_params['v'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js'));
+$_params['clang'] = rex_clang::getCurrentId();
+$_params['v'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
 $output .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script"></script>';
 
 $_SESSION['consent_manager']['outputcssjs'] = $output;
+$_SESSION['consent_manager']['clang'] = rex_clang::getCurrentId();
 ?>
 <!--REX_CONSENT_MANAGER_OUTPUT[]-->
