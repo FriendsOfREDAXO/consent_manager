@@ -2,7 +2,6 @@
 
 class consent_manager_frontend
 {
-
     public $cookiegroups = [];
     public $cookies = [];
     public $texts = [];
@@ -12,7 +11,7 @@ class consent_manager_frontend
     public $boxClass = '';
     public $cache = [];
     public $version = '';
-	public $cacheLogId = '';
+    public $cacheLogId = '';
 
     public function __construct($forceWrite = 0)
     {
@@ -52,37 +51,40 @@ class consent_manager_frontend
         if (in_array($_SESSION['consent_manager']['article'], [$this->links['privacy_policy'], $this->links['legal_notice']])) {
             $this->boxClass = 'consent_manager-initially-hidden';
         }
-        if (isset($this->cache['cookies'][rex_clang::getCurrentId()])) {
-            foreach ($this->cache['cookies'][rex_clang::getCurrentId()] as $uid => $cookie) {
-            if (!$cookie['provider_link_privacy']) {
-                $this->cache['cookies'][rex_clang::getCurrentId()][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy']);
-            }
+        if (isset($this->cache['cookies'][$_SESSION['consent_manager']['clang']])) {
+            foreach ($this->cache['cookies'][$_SESSION['consent_manager']['clang']] as $uid => $cookie) {
+                if (!$cookie['provider_link_privacy']) {
+                    $this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy']);
+                }
             }
         }
         if (isset($this->cache['domains'][$domain]['cookiegroups'])) {
             foreach ($this->cache['domains'][$domain]['cookiegroups'] as $uid) {
-                $this->cookiegroups[$uid] = $this->cache['cookiegroups'][rex_clang::getCurrentId()][$uid];
+                $this->cookiegroups[$uid] = $this->cache['cookiegroups'][$_SESSION['consent_manager']['clang']][$uid];
             }
         }
         foreach ($this->cookiegroups as $cookiegroup) {
             foreach ($cookiegroup['cookie_uids'] as $uid) {
-                if (isset($this->cache['cookies'][rex_clang::getCurrentId()][$uid])) {
-                    $this->cookies[$uid] = $this->cache['cookies'][rex_clang::getCurrentId()][$uid];
-                    $this->scripts[$uid] = $this->cache['cookies'][rex_clang::getCurrentId()][$uid]['script'];
+                if (isset($this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid])) {
+                    $this->cookies[$uid] = $this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid];
+                    $this->scripts[$uid] = $this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid]['script'];
                 }
             }
             $this->scripts = array_filter($this->scripts);
         }
-        if (isset($this->cache['texts'][rex_clang::getCurrentId()])) {
-            $this->texts = $this->cache['texts'][rex_clang::getCurrentId()];
+        if (isset($this->cache['texts'][$_SESSION['consent_manager']['clang']])) {
+            $this->texts = $this->cache['texts'][$_SESSION['consent_manager']['clang']];
         }
     }
 
-    public static function outputJavascript($host = null, $article_id = null) {
+    public static function outputJavascript($host = null, $article_id = null)
+    {
         rex_response::cleanOutputBuffers();
-        if (!isset($_SESSION)) session_start();
+        if (!isset($_SESSION)) {
+            session_start();
+        }
         header('Content-Type: application/javascript');
-        header("Cache-Control: max-age=604800, public");
+        header('Cache-Control: max-age=604800, public');
         //header('Pragma: cache');
         //header('Cache-Control: public');
         //header('Expires: ' . date('D, j M Y', strtotime('+1 week')) . ' 00:00:00 GMT');
@@ -93,13 +95,13 @@ class consent_manager_frontend
             $boxtemplate = ob_get_contents();
             ob_end_clean();
             $boxtemplate = str_replace("'", "\'", $boxtemplate);
-            $boxtemplate = str_replace("\r", "", $boxtemplate);
-            $boxtemplate = str_replace("\n", " ", $boxtemplate);
+            $boxtemplate = str_replace("\r", '', $boxtemplate);
+            $boxtemplate = str_replace("\n", ' ', $boxtemplate);
             if (rex_addon::get('sprog')->isInstalled()) {
-                $boxtemplate = sprogdown($boxtemplate, rex_clang::getCurrentId());
+                $boxtemplate = sprogdown($boxtemplate, $_SESSION['consent_manager']['clang']);
             }
         }
-        echo '/* --- Consent-Manager Box Template --- */' . PHP_EOL;
+        echo '/* --- Consent-Manager Box Template ' . $_SESSION['consent_manager']['clang'] . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
         echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
 
@@ -114,5 +116,4 @@ class consent_manager_frontend
         echo $content;
         exit;
     }
-
 }
