@@ -6,6 +6,7 @@ $forceCache = $this->getVar('forceCache');
 $_SESSION['consent_manager']['article'] = rex_article::getCurrentId();
 $_SESSION['consent_manager']['debug'] = $debug;
 $_SESSION['consent_manager']['outputcssjs'] = '';
+$_SESSION['consent_manager']['clang'] = rex_clang::getCurrentId();
 
 $initially_hidden = 'false';
 $consent_manager = new consent_manager_frontend($forceCache);
@@ -31,6 +32,5 @@ $_params['v'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) 
 $output .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script"></script>';
 
 $_SESSION['consent_manager']['outputcssjs'] = $output;
-$_SESSION['consent_manager']['clang'] = rex_clang::getCurrentId();
 ?>
 <!--REX_CONSENT_MANAGER_OUTPUT[]-->
