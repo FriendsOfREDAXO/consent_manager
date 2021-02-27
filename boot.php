@@ -1,4 +1,5 @@
 <?php
+
 rex_perm::register('consent_manager[texteditonly]');
 if (rex::isBackend() && rex::getUser()) {
     if (!rex::getUser()->isAdmin() && rex::getUser()->hasPerm('consent_manager[texteditonly]')) {
@@ -13,10 +14,8 @@ if (rex::isBackend() && rex::getUser()) {
 }
 
 rex_extension::register('PACKAGES_INCLUDED', function () {
-    if (rex::getUser())
-    {
-        if (rex::getUser()->isAdmin() && rex::isDebugMode() && rex_request_method() == 'get')
-        {
+    if (rex::getUser()) {
+        if (rex::getUser()->isAdmin() && rex::isDebugMode() && 'get' == rex_request_method()) {
             $compiler = new rex_scss_compiler();
             $compiler->setRootDir($this->getPath());
             $compiler->setScssFile($this->getPath('scss/consent_manager_backend.scss'));
@@ -30,16 +29,14 @@ rex_extension::register('PACKAGES_INCLUDED', function () {
             rex_file::copy($this->getPath('assets/consent_manager_polyfills.js'), $this->getAssetsPath('consent_manager_frontend.js'));
             rex_file::copy($this->getPath('assets/consent_manager_frontend.js'), $this->getAssetsPath('consent_manager_frontend.js'));
         }
-        if (rex::isBackend() && rex_be_controller::getCurrentPagePart(1) == 'consent_manager')
-        {
+        if (rex::isBackend() && 'consent_manager' == rex_be_controller::getCurrentPagePart(1)) {
             rex_view::addCssFile($this->getAssetsUrl('consent_manager_backend.css'));
         }
     }
 });
 
-rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
-    if (rex::isBackend() && rex_clang::count() == 1)
-    {
+rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+    if (rex::isBackend() && 1 == rex_clang::count()) {
         $s = '</head>';
         $r = '<style>[id*="rex-page-consent_manager"] .rex-page-nav .navbar{display:none}</style></head>';
         $ep->setSubject(str_replace($s, $r, $ep->getSubject()));
@@ -52,8 +49,7 @@ rex_extension::register('REX_FORM_SAVED', 'consent_manager_cache::write');
 rex_extension::register('CLANG_ADDED', 'consent_manager_clang::clangAdded');
 rex_extension::register('CLANG_DELETED', 'consent_manager_clang::clangDeleted');
 
-if (rex_be_controller::getCurrentPagePart(1) == 'consent_manager' && $this->getConfig('justInstalled'))
-{
+if ('consent_manager' == rex_be_controller::getCurrentPagePart(1) && $this->getConfig('justInstalled')) {
     $this->setConfig('justInstalled', false);
     consent_manager_clang::addonJustInstalled();
 }
@@ -61,14 +57,18 @@ if ($this->getConfig('forceCache')) {
     $this->setConfig('forceCache', false);
     consent_manager_cache::forceWrite();
 }
-if (rex::isFrontend()){
-    if (!isset($_SESSION)) session_start();
+if (rex::isFrontend()) {
+    if (!isset($_SESSION)) {
+        session_start();
+    }
 }
 rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
-    if (rex::isFrontend())
-    {
+    if (rex::isFrontend()) {
         $consent_manager = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'], 1) : false;
         $outcssjs = !$this->getConfig('outputcssjs', false);
+        if ($consent_manager && $consent_manager['cachelogid'] != $_SESSION['consent_manager']['cachelogid']) {
+            $outcssjs = true;
+        }
         $_search = '<!--REX_CONSENT_MANAGER_OUTPUT[]-->';
         $_replace = '';
         if (!$consent_manager || $outcssjs || strstr($ep->getSubject(), 'consent_manager-show-box') || strstr($ep->getSubject(), 'consent_manager-show-box-reload')) {
@@ -79,7 +79,7 @@ rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
 });
 
 rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
-    if (rex_get('consent_manager_outputjs', 'bool', false) === true) {
+    if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
         $consent_manager = new consent_manager_frontend(0);
         $consent_manager->setDomain($_SERVER['HTTP_HOST']);
         $consent_manager->outputJavascript();
