@@ -6,14 +6,16 @@ document.addEventListener('DOMContentLoaded', function () {
         cookieData = {},
         consents = [],
         addonVersion = -1,
+        cachelogid = -1,
         cookieVersion = -1,
+        cookieCachelogid = -1,
         consent_managerBox;
 
     expires.setFullYear(expires.getFullYear() + 1);
     // es gibt keinen datenschutzcookie, banner zeigen
     if (typeof Cookies.get('consent_manager') === 'undefined') {
         show = 1;
-        Cookies.set('test', 'test', {path: '/', sameSite: 'Lax', secure: false});
+        Cookies.set('test', 'test', { path: '/', sameSite: 'Lax', secure: false });
         // cookie konnte nicht gesetzt werden, kein cookie banner anzeigen
         if (typeof Cookies.get('test') === 'undefined') {
             show = 0;
@@ -26,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
             cookieVersion = parseInt(cookieData.version);
+            cookieCachelogid = parseInt(cookieData.cachelogid);
         }
     }
 
@@ -35,8 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // aktuelle major addon version auslesen
     addonVersion = parseInt(consent_manager_parameters.version);
+    cachelogid = parseInt(consent_manager_parameters.cachelogid);
     // cookie wurde mit einer aelteren major version gesetzt, alle consents loeschen und box zeigen
-    if (addonVersion !== cookieVersion) {
+    if (addonVersion !== cookieVersion || cachelogid !== cookieCachelogid) {
         show = 1;
         consents = [];
         deleteCookies();
@@ -110,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         cookieData.consents = consents;
-        Cookies.set('consent_manager', JSON.stringify(cookieData), {expires: expires, path: '/', sameSite: 'Lax', secure: false});
+        Cookies.set('consent_manager', JSON.stringify(cookieData), { expires: expires, path: '/', sameSite: 'Lax', secure: false });
 
         var http = new XMLHttpRequest(),
             url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager',
@@ -122,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (document.querySelectorAll('.consent_manager-show-box-reload').length) {
             location.reload();
         } else {
-            document.dispatchEvent(new CustomEvent('consent_manager-saved', {detail: JSON.stringify(consents)}));
+            document.dispatchEvent(new CustomEvent('consent_manager-saved', { detail: JSON.stringify(consents) }));
         }
     }
 
@@ -130,11 +134,11 @@ document.addEventListener('DOMContentLoaded', function () {
         var domain = consent_manager_parameters.domain;
         for (var key in Cookies.get()) {
             Cookies.remove(encodeURIComponent(key));
-            Cookies.remove(encodeURIComponent(key), {'domain': domain});
-            Cookies.remove(encodeURIComponent(key), {'path': '/'});
-            Cookies.remove(encodeURIComponent(key), {'domain': domain, 'path': '/'});
-            Cookies.remove(encodeURIComponent(key), {'domain': ('.' + domain)});
-            Cookies.remove(encodeURIComponent(key), {'domain': ('.' + domain), 'path': '/'});
+            Cookies.remove(encodeURIComponent(key), { 'domain': domain });
+            Cookies.remove(encodeURIComponent(key), { 'path': '/' });
+            Cookies.remove(encodeURIComponent(key), { 'domain': domain, 'path': '/' });
+            Cookies.remove(encodeURIComponent(key), { 'domain': ('.' + domain) });
+            Cookies.remove(encodeURIComponent(key), { 'domain': ('.' + domain), 'path': '/' });
         }
     }
 
