@@ -248,10 +248,10 @@ Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch
 Problem dabei: öffnet man die Cookie-Box und akzeptiert die Cookies, wird zwar das Script geladen, aber ohne Page-Reload ändert sich der Inhalt der Seite nicht. Deshalb sollte man hier den Link: `<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` verwenden.
 
 ```php 
-$arr = json_decode($_COOKIE['consent_manager'], true);
+$arr = json_decode($_COOKIE['consent_manager'], true);  
 $check = [];
 if ($arr)
-{
+{     
 $check = array_flip($arr['consents']);
 }
 #dump($arr);
