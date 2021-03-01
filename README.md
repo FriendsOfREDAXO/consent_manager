@@ -302,6 +302,7 @@ MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manage
 
 **Projekt-Lead**
 [Ingo Winter](https://github.com/IngoWinter)
+
 [Andreas Eberhard](https://github.com/aeberhard)
 
 ### Credits
