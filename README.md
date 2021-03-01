@@ -247,7 +247,7 @@ Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anz
 Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Somit kann man (am Beispiel GoogleMaps) eine Meldung ausgeben, dass bestimmte Cookies akzeptiert werden müssen um die Karte zu laden.
 Problem dabei: öffnet man die Cookie-Box und akzeptiert die Cookies, wird zwar das Script geladen, aber ohne Page-Reload ändert sich der Inhalt der Seite nicht. Deshalb sollte man hier den Link: `<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` verwenden.
 
-```php
+```php 
 $arr = json_decode($_COOKIE['consent_manager'], true);
 $check = [];
 if ($arr)
