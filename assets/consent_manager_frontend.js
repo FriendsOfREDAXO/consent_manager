@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    if (consent_manager_box_template === '') {
+        console.warn('Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen!');
+        return;
+    }
     consent_managerBox = new DOMParser().parseFromString(consent_manager_box_template, 'text/html');
     consent_managerBox = consent_managerBox.getElementById('consent_manager-background');
     document.querySelectorAll('body')[0].appendChild(consent_managerBox);

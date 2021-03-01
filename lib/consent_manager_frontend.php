@@ -94,6 +94,9 @@ class consent_manager_frontend
             echo self::getFragment($_SESSION['consent_manager']['debug'], 0, 'consent_manager_box.php');
             $boxtemplate = ob_get_contents();
             ob_end_clean();
+            if ('' == $boxtemplate) {
+                rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen!');
+            }
             $boxtemplate = str_replace("'", "\'", $boxtemplate);
             $boxtemplate = str_replace("\r", '', $boxtemplate);
             $boxtemplate = str_replace("\n", ' ', $boxtemplate);
