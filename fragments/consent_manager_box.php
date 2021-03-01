@@ -44,16 +44,18 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
                                 echo '</div>';
                                 echo '<div class="consent_manager-cookiegroup">';
                                 foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
-                                    $cookie = $consent_manager->cookies[$cookieUid];
-                                    if (isset($cookie['definition'])) {
-                                        foreach ($cookie['definition'] as $def) {
-                                            echo '<div class="consent_manager-cookie">';
-                                            echo '<span class="consent_manager-cookie-name"><strong>'.$def['cookie_name'].'</strong> ('.$cookie['service_name'].')</span>';
-                                            echo '<span class="consent_manager-cookie-description">'.$def['description'].'</span>';
-                                            echo '<span class="consent_manager-cookie-description">'.$consent_manager->texts['lifetime'].' '.$def['cookie_lifetime'].'</span>';
-                                            echo '<span class="consent_manager-cookie-provider">'.$consent_manager->texts['provider'].' '.$cookie['provider'].'</span>';
-                                            echo '<span class="consent_manager-cookie-link-privacy-policy"><a href="'.$cookie['provider_link_privacy'].'">'.$consent_manager->texts['link_privacy'].'</a></span>';
-                                            echo '</div>' . PHP_EOL;
+                                    if (isset($consent_manager->cookies[$cookieUid])) {
+                                        $cookie = $consent_manager->cookies[$cookieUid];
+                                        if (isset($cookie['definition'])) {
+                                            foreach ($cookie['definition'] as $def) {
+                                                echo '<div class="consent_manager-cookie">';
+                                                echo '<span class="consent_manager-cookie-name"><strong>'.$def['cookie_name'].'</strong> ('.$cookie['service_name'].')</span>';
+                                                echo '<span class="consent_manager-cookie-description">'.$def['description'].'</span>';
+                                                echo '<span class="consent_manager-cookie-description">'.$consent_manager->texts['lifetime'].' '.$def['cookie_lifetime'].'</span>';
+                                                echo '<span class="consent_manager-cookie-provider">'.$consent_manager->texts['provider'].' '.$cookie['provider'].'</span>';
+                                                echo '<span class="consent_manager-cookie-link-privacy-policy"><a href="'.$cookie['provider_link_privacy'].'">'.$consent_manager->texts['link_privacy'].'</a></span>';
+                                                echo '</div>' . PHP_EOL;
+                                            }
                                         }
                                     }
                                 }
