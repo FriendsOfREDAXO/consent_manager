@@ -1,17 +1,20 @@
 <?php
+
 class rex_api_consent_manager extends rex_api_function
 {
     protected $published = true;
 
-    function execute()
+    public function execute()
     {
         $domain = rex_post('domain', 'string', false);
         $consentid = rex_post('consentid', 'string', false);
         $consent_manager = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'], 1) : false;
-        if (!$domain || !$consentid || !$consent_manager) exit;
-        if ((string)$consent_manager['consentid'] == $consentid) {
+        if (!$domain || !$consentid || !$consent_manager) {
+            exit;
+        }
+        if ((string) $consent_manager['consentid'] == $consentid) {
             $ip = $_SERVER['REMOTE_ADDR'];
-            if (strpos($ip, '.') !== false) {
+            if (false !== strpos($ip, '.')) {
                 $pieces = explode('.', $ip);
                 $nPieces = count($pieces);
                 $pieces[$nPieces - 1] = $pieces[$nPieces - 2] = 'XXX';
