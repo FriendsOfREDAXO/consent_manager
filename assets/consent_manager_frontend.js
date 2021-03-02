@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
             consents: [],
             version: addonVersion,
             consentid: consent_manager_parameters.consentid,
-            cachelogid: consent_manager_parameters.cacheLogId
+            cachelogid: consent_manager_parameters.cachelogid
         };
         // checkboxen
         consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {

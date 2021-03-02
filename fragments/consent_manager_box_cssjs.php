@@ -24,7 +24,7 @@ if ('|1|' != $addon->getConfig('outputowncss', false)) {
     $output .= '    <link rel="stylesheet" href="' . $addon->getAssetsUrl($_cssfilename) . '?v=' . filemtime($addon->getAssetsPath($_cssfilename)) . '">' . PHP_EOL;
 }
 
-$output .= '    <script>consent_manager_parameters = { initially_hidden: ' . $initially_hidden . ', domain: "' . $_SERVER['HTTP_HOST'] . '", consentid: "' . uniqid('', true) . '", cacheLogId: "' . $consent_manager->cacheLogId . '", version: "' . $consent_manager->version . '", fe_controller: "' . rex_url::frontendController(). '" };</script>' . PHP_EOL;
+$output .= '    <script>consent_manager_parameters = { initially_hidden: ' . $initially_hidden . ', domain: "' . $_SERVER['HTTP_HOST'] . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . $consent_manager->cacheLogId . '", version: "' . $consent_manager->version . '", fe_controller: "' . rex_url::frontendController(). '" };</script>' . PHP_EOL;
 $_params = [];
 $_params['consent_manager_outputjs'] = true;
 $_params['clang'] = rex_clang::getCurrentId();

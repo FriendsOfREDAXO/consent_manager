@@ -247,11 +247,11 @@ Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anz
 Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Somit kann man (am Beispiel GoogleMaps) eine Meldung ausgeben, dass bestimmte Cookies akzeptiert werden müssen um die Karte zu laden.
 Problem dabei: öffnet man die Cookie-Box und akzeptiert die Cookies, wird zwar das Script geladen, aber ohne Page-Reload ändert sich der Inhalt der Seite nicht. Deshalb sollte man hier den Link: `<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` verwenden.
 
-```php 
-$arr = json_decode($_COOKIE['consent_manager'], true);  
+```php
+$arr = json_decode($_COOKIE['consent_manager'], true);
 $check = [];
 if ($arr)
-{     
+{
 $check = array_flip($arr['consents']);
 }
 #dump($arr);
@@ -272,6 +272,7 @@ if ($check['googlemaps']) {
 * Stimmt die zugeordnete Domain mit der aufgerufenen Domain überein? - www.meinedomain.de und meinedomain.de sind zwei verschiedene Domains.
 * Ist die Website über die zugeordnete Domain (www.meinedomain.de) erreichbar? - Unterordner Installationen funktionieren nicht.
 * Ist der Platzhalter REX_CONSENT_MANAGER[] in einem Template im `head`-Bereich hinterlegt? - eine Integration über php include ist nicht möglich.
+* Unter Einstellungen ist *Eigenes CSS verwenden* aktiviert aber es wird kein eigenes CSS eingebunden (HTML der Box wird am Seitenende angezeigt und nicht als Popup)
 
 ### Die Cookie-Box wird angezeigt, aber die Cookies werden nicht angezeigt
 
@@ -302,7 +303,6 @@ MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manage
 
 **Projekt-Lead**
 [Ingo Winter](https://github.com/IngoWinter)
-
 [Andreas Eberhard](https://github.com/aeberhard)
 
 ### Credits
