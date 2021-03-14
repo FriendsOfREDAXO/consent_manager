@@ -21,7 +21,7 @@ $output = '';
 
 if ('|1|' != $addon->getConfig('outputowncss', false)) {
     $_cssfilename = 'consent_manager_frontend.css';
-    $output .= '    <link rel="stylesheet" href="' . $addon->getAssetsUrl($_cssfilename) . '?v=' . filemtime($addon->getAssetsPath($_cssfilename)) . '">' . PHP_EOL;
+    $output .= '    <style>' . trim(file_get_contents($addon->getAssetsPath($_cssfilename))) . '</style>' . PHP_EOL;
 }
 
 $output .= '    <script>consent_manager_parameters = { initially_hidden: ' . $initially_hidden . ', domain: "' . $_SERVER['HTTP_HOST'] . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . $consent_manager->cacheLogId . '", version: "' . $consent_manager->version . '", fe_controller: "' . rex_url::frontendController(). '" };</script>' . PHP_EOL;
