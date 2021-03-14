@@ -29,7 +29,7 @@ $_params = [];
 $_params['consent_manager_outputjs'] = true;
 $_params['clang'] = rex_clang::getCurrentId();
 $_params['v'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
-$output .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script"></script>';
+$output .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script" defer></script>';
 
 $_SESSION['consent_manager']['cachelogid'] = $consent_manager->cacheLogId;
 $_SESSION['consent_manager']['outputcssjs'] = $output;

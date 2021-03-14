@@ -1,5 +1,5 @@
 /* globals Cookies, consent_managerIEVersion */
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
     'use strict';
     var expires = new Date(),
         show = 0,
@@ -188,4 +188,4 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
     }
 
-});
+})();
