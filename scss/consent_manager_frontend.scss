@@ -151,7 +151,8 @@ a.consent_manager-close-box {
     }
 }
 .consent_manager-cookiegroup-title {
-
+    background-color: #d4d4d4;
+    padding: 5px 10px;
 }
 .consent_manager-cookie {
     margin-top: .5em;
@@ -204,7 +205,7 @@ a.consent_manager-close, #consent_manager-toggle-details {
     height: 20px;
     border-radius: 20% !important;
     border-style: solid;
-    border-width: 1px; 
+    border-width: 1px;
     margin-right: 5px;
 }
 

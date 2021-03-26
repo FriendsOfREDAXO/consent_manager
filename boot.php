@@ -62,17 +62,25 @@ if (rex::isFrontend()) {
         session_start();
     }
 }
-rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
+rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
     if (rex::isFrontend()) {
         $consent_manager = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'], 1) : false;
-        $outcssjs = !$this->getConfig('outputcssjs', false);
-        if ($consent_manager && $consent_manager['cachelogid'] != $_SESSION['consent_manager']['cachelogid']) {
-            $outcssjs = true;
-        }
+        $outcss = rex_addon::get('consent_manager')->getConfig('outputcss', false);
         $_search = '<!--REX_CONSENT_MANAGER_OUTPUT[]-->';
         $_replace = '';
-        if (!$consent_manager || $outcssjs || strstr($ep->getSubject(), 'consent_manager-show-box') || strstr($ep->getSubject(), 'consent_manager-show-box-reload')) {
-            $_replace = $_SESSION['consent_manager']['outputcssjs'];
+        if ($outcss) {
+            if (!$consent_manager || strstr($ep->getSubject(), 'consent_manager-show-box') || strstr($ep->getSubject(), 'consent_manager-show-box-reload')) {
+                if (isset($_SESSION['consent_manager']['outputcss'])) {
+                    $_replace .= $_SESSION['consent_manager']['outputcss'];
+                }
+            } else {
+                $_replace .= '    <style>.consent_manager-hidden{display:none}</style>' . PHP_EOL;
+            }
+        } else {
+            $_replace .= $_SESSION['consent_manager']['outputcss'];
+        }
+        if (isset($_SESSION['consent_manager']['outputjs'])) {
+            $_replace .= $_SESSION['consent_manager']['outputjs'];
         }
         $ep->setSubject(str_replace($_search, $_replace, $ep->getSubject()));
     }

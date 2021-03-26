@@ -75,10 +75,10 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 
 ### In Template einfügen
 
-Der Platzhalter `REX_CONSENT_MANAGER[]` muss im `head`-Bereich des Templates eingefügt werden. Gibt es mehrere Templates mit `head`-Bereichen, muss der Platzhalter in allen Templates eingefügt werden, die die Cookie-Box aufrufen sollen.
+Der Platzhalter `REX_CONSENT_MANAGER[]` kann im `<head>`-Bereich des Templates oder vor dem `</body>`-Tag eingefügt werden.
+Gibt es mehrere Templates die die Cookie-Box aufrufen sollen muss der Platzhalter entsprechend in allen Templates eingefügt werden.
 
-**Wichtig:
-Der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
+**Wichtig: Der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
 
 **Beispiel:**
 
@@ -91,6 +91,22 @@ Der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht übe
 REX_CONSENT_MANAGER[]
 </head>
 ```
+
+oder
+
+```php
+<head>
+    <meta charset="UTF-8">
+    <title>Meine Webseite</title>
+    ...
+    <link rel="stylesheet" href="<?php echo template_asset_url('theme/css/meincss.min.css'); ?>">
+</head>
+<body>
+    ...
+REX_CONSENT_MANAGER[]
+</body>
+```
+
 
 ### Beispiel-Modul zur nachträglichen Abfrage
 
@@ -223,8 +239,8 @@ Der Platzhalter `REX_CONSENT_MANAGER[]` im Template wird durch folgenden Code er
 
 ```html
 <link rel="stylesheet" href="/assets/addons/consent_manager/consent_manager_frontend.css?v=1610997727">
-<script>consent_manager_parameters = { initially_hidden: false, domain: "domain.de", consentid: "6005e443914e75.55868698", cacheLogId: "46", version: "3", fe_controller: "/index.php" };</script>
-<script src="/index.php?consent_manager_outputjs=1&amp;v=1610978112" id="consent_manager_script"></script>
+<script>var consent_manager_parameters = {initially_hidden: false, domain: "domain.de", consentid: "6005e443914e75.55868698", cacheLogId: "46", version: "3", fe_controller: "/index.php", hidebodyscrollbar: true};</script>
+<script src="/index.php?consent_manager_outputjs=1&amp;clang=1&amp;v=1610978112" id="consent_manager_script"></script>
 ```
 
 Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier die Ausgabe der CSS-Datei `consent_manager_frontend.css` durch aktivieren der Einstellung **Eigenes CSS verwenden** unterdrückt werden. Es werden dann nur die JavaScript-Zeilen ausgegeben.
