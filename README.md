@@ -13,7 +13,7 @@ Stellt ein Opt-In Cookie-Banner zur Verfügung. Cookies können in selbst defini
 3. [Cookies anlegen](#header-cookies-anlegen)
 4. [Cookie-Gruppen anlegen](#header-cookie-gruppen-anlegen)
 5. Der jeweiligen Domain-Gruppe die gewünschten Domains und Cookies zuordnen und JS Scripte hinterlegen.
-6. `REX_CONSENT_MANAGER[]` in den `head`-Bereich in alle gewünschten [Templates einfügen](#header-in-template-einfuegen)
+6. `REX_CONSENT_MANAGER[]` in den `head`-Bereich in alle gewünschten [Templates einfügen](#header-in-template-einfuegen), bzw. `echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`, wenn via PHP.
 7. Alle weiteren Einstellungen sind optional.
 
 > **Hinweis:** Wird keine Cookie-Box angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#header-fehlerbehebung)
@@ -78,7 +78,7 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 Der Platzhalter `REX_CONSENT_MANAGER[]` kann im `<head>`-Bereich des Templates oder vor dem `</body>`-Tag eingefügt werden.
 Gibt es mehrere Templates die die Cookie-Box aufrufen sollen muss der Platzhalter entsprechend in allen Templates eingefügt werden.
 
-**Wichtig: Der Platzhalter muss zwingend in ein Template kopiert werden und darf nicht über php include eingebunden werden.**
+**Wichtig: Der Platzhalter funktioniert ausschließlich in REDAXO-Templates, nicht innerhalb von php-includes oder Fragmenten.**
 
 **Beispiel:**
 
@@ -107,6 +107,17 @@ REX_CONSENT_MANAGER[]
 </body>
 ```
 
+**Beispiel PHP-Ausgabe**
+
+```php
+...
+<body>
+...
+`echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`
+...
+</body>
+...
+```
 
 ### Beispiel-Modul zur nachträglichen Abfrage
 
