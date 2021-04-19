@@ -64,10 +64,12 @@ class consent_manager_frontend
             }
         }
         foreach ($this->cookiegroups as $cookiegroup) {
-            foreach ($cookiegroup['cookie_uids'] as $uid) {
-                if (isset($this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid])) {
-                    $this->cookies[$uid] = $this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid];
-                    $this->scripts[$uid] = $this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid]['script'];
+            if (isset($cookiegroup['cookie_uids'])) {
+                foreach ($cookiegroup['cookie_uids'] as $uid) {
+                    if (isset($this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid])) {
+                        $this->cookies[$uid] = $this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid];
+                        $this->scripts[$uid] = $this->cache['cookies'][$_SESSION['consent_manager']['clang']][$uid]['script'];
+                    }
                 }
             }
             $this->scripts = array_filter($this->scripts);
