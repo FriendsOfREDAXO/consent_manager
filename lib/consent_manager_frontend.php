@@ -99,12 +99,12 @@ class consent_manager_frontend
             if ('' == $boxtemplate) {
                 rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen!');
             }
-            $boxtemplate = str_replace("'", "\'", $boxtemplate);
-            $boxtemplate = str_replace("\r", '', $boxtemplate);
-            $boxtemplate = str_replace("\n", ' ', $boxtemplate);
             if (rex_addon::get('sprog')->isInstalled()) {
                 $boxtemplate = sprogdown($boxtemplate, $_SESSION['consent_manager']['clang']);
             }
+            $boxtemplate = str_replace("'", "\'", $boxtemplate);
+            $boxtemplate = str_replace("\r", '', $boxtemplate);
+            $boxtemplate = str_replace("\n", ' ', $boxtemplate);
         }
         echo '/* --- Consent-Manager Box Template ' . $_SESSION['consent_manager']['clang'] . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
