@@ -60,6 +60,10 @@ if ($this->getConfig('forceCache')) {
 if (rex::isFrontend()) {
     if (!isset($_SESSION)) {
         session_start();
+        $_SESSION['consent_manager']['article'] = rex_article::getCurrentId();
+        $_SESSION['consent_manager']['outputcss'] = '';
+        $_SESSION['consent_manager']['outputjs'] = '';
+        $_SESSION['consent_manager']['clang'] = rex_clang::getCurrentId();
     }
 }
 rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
