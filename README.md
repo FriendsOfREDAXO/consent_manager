@@ -35,7 +35,9 @@ Als Beispiel sind zwei Dienste  (google-analytics und matomo) angelegt, diese k�
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.jpg?raw=true)
 
 **Schlüssel:** ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
+
 **Dienstname:** wird später in der Cookie-Box angezeigt.
+
 **Cookie Definitionen:** enthält die Beschreibung aller Cookies des Dienstes die in der Cookie-Box angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
 
     -
@@ -52,7 +54,12 @@ Als Beispiel sind zwei Dienste  (google-analytics und matomo) angelegt, diese k�
       desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
 
 **Anbieter:** Hier kann optional der Anbieter hinterlegt werden (zum Beispiel Google). Die Angaben werden in der Beschreibung angzeigt.
-**Datenschutzerklärung:** Standardmäßig wird die Datenschutzerklärung der Domain angezeigt. Exisitiert für den Dienst eine separate Datenschutzerklärung (zum Beispiel: [https://policies.google.com/privacy](https://policies.google.com/privacy)) kann diese hier hinterlegt werden. Auch REDAXO-Links (redaxo://1) können genutzt werden.
+
+**Link Datenschutzerklärung:** Standardmäßig wird die Datenschutzerklärung der Domain angezeigt. Exisitiert für den Dienst eine separate Datenschutzerklärung (zum Beispiel: [https://policies.google.com/privacy](https://policies.google.com/privacy)) kann diese hier hinterlegt werden. Auch REDAXO-Links (redaxo://1) können genutzt werden.
+
+**Platzhalter Text:** Hier kann optional ein Platzhalter Text hinterlegt werden
+
+**Platzhalter Bild:** Hier kann optional ein Platzhalter Bild aus dem Medienpoolhinterlegt werden
 
 ### Cookie-Gruppen anlegen
 
@@ -61,12 +68,19 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookiegroups.jpg?raw=true)
 
 **Schlüssel:** Zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
+
 **Checkbox Technisch notwenidge Cookies:** Ist die Checkbox aktiv, wird die Gruppe vorausgewählt und kann nicht deaktiviert werden (Sinnvoll ist nur eine Gruppe mit notwendigen Cookies).
+
 **Domain:** Hier wird die zuvor angelegte Domain ausgewählt, bei deren Aufruf die Gruppe angezeigt werden soll.
+
 **Reihenfolge:** Die Reihenfolge in der die Gruppen dem Website-Besucher angezeigt werden.
+
 **Name:** Name der Gruppe (wird dem Website-Besucher angezeigt).
+
 **Beschreibung:** Allgmeine Beschreibung der Gruppe (wird dem Website-Besucher angezeigt).
+
 **Cookies:** Hier werden die zuvor angelegten Cookies ausgewählt, die der Gruppe angehören sollen
+
 **Skripte, die nach Einverständnis geladen werden:** Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Zu Beachten ist, dass nur die Scripte eingebunden werden die zu den vorher ausgewählten Cookies gehören.
 
 ### Beispielkonfiguration importieren
@@ -290,6 +304,10 @@ if ($check['googlemaps']) {
   // Warnhinweis + <a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>
 }
 ```
+
+### Berechtigung für Redakteure
+
+Um die Cookie-Texte auch für Redakteure zur Änderung bereitzustellen muss diesen das Recht `consent_manager[]` und zusätzlich das Recht `consent_manager[texteditonly]` zugewiesen werden. Die Redakteure können dann nur die Cookie-Texte ändern, alle anderen Funktionen werden ausgeblendet.
 
 ## Fehlerbehebung
 
