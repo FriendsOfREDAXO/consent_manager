@@ -1,30 +1,26 @@
 <?php
 $consent_manager = new consent_manager_frontend($this->getVar('forceCache'));
 $consent_manager->setDomain($_SERVER['HTTP_HOST']);
-if ($this->getVar('debug')) {	
-    dump($consent_manager);
-	print_r($_COOKIE);
-}
 
 $output = '';
 
 if ($consent_manager->cookiegroups) {
-	
+
 	// Cookie Consent + History
 	$consent_manager_cookie = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'],1) : false;
 	if ($consent_manager_cookie) {
-		
+
 		$db = rex_sql::factory();
 		$db->setDebug(false);
-		$db->setQuery('SELECT '.rex::getTable('consent_manager_consent_log').'.* 
-						FROM '.rex::getTable('consent_manager_consent_log').' 
+		$db->setQuery('SELECT '.rex::getTable('consent_manager_consent_log').'.*
+						FROM '.rex::getTable('consent_manager_consent_log').'
 						WHERE '.rex::getTable('consent_manager_consent_log').'.cachelogid = :cachelogid
 						ORDER BY '.rex::getTable('consent_manager_consent_log').'.id DESC
 						LIMIT 5'
 						,['cachelogid'=>$consent_manager_cookie['cachelogid']]
 					);
 		$history = $db->getArray();
-		
+
 		$consents = json_decode($history[0]['consents']);
 		//$consents_uids_output = implode(', ', $consents);
 		$consents_service_names = array();
@@ -32,13 +28,13 @@ if ($consent_manager->cookiegroups) {
 			$consents_service_names[] = $consent_manager->cookies[$consent]['service_name'].' ('.$consent.')';
 		}
 		$consents_uids_output = implode(', ', $consents_service_names);
-		
+
 		$output .= '<h2>'.$consent_manager->texts['headline_currentconsent'].'</h2>';
 		$output .= '<p class="consent_manager-history-date"><span>'.$consent_manager->texts['consent_date'].':</span> '.$history[0]['createdate'].'</p>';
 		$output .= '<p class="consent_manager-history-id"><span>'.$consent_manager->texts['consent_id'].':</span> '.$history[0]['consentid'].'</p>';
 		$output .= '<p class="consent_manager-history-consents"><span>'.$consent_manager->texts['consent_consents'].':</span> '.$consents_uids_output.'</p>';
 		$output .= '<p><a class="consent_manager-show-box">'.$consent_manager->texts['edit_consent'].'</a></p>'; // mit consent_manager-show-box-reload funktionierts nicht korrekt
-		
+
 		$output .= '<h2>'.$consent_manager->texts['headline_historyconsent'].'</h2>';
 		$output .= '<table class="consent_manager-historytable">';
 		$output .= '<tr>
@@ -62,9 +58,9 @@ if ($consent_manager->cookiegroups) {
 		}
 		$output .= '</table>';
 	}
-	
+
 	// Cookies We May Use
-	
+
 	$output .= '<hr>';
 	$output .= '<h2>'.$consent_manager->texts['headline_mayusedcookies'].'</h2>';
 
@@ -103,10 +99,10 @@ if ($consent_manager->cookiegroups) {
 	}
 
 	// Cookies actually used
-	
+
 	$output .= '<hr>';
 	$output .= '<h2>'.$consent_manager->texts['headline_usedcookies'].'</h2>';
-	
+
 	foreach ($consent_manager->cookies as $cookies) {
 		foreach ($cookies['definition'] as $def) {
 			$cookiedb[$def['cookie_name']] = array(
@@ -117,7 +113,7 @@ if ($consent_manager->cookiegroups) {
 			);
 		}
 	}
-	
+
 	$output .= '<div class="consent_manager-cookiegroup">';
 	$output .= '<table class="consent_manager-cookietable">';
 	$output .= '<tr>

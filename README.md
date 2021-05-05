@@ -13,7 +13,7 @@ Stellt ein Opt-In Cookie-Banner zur Verfügung. Cookies können in selbst defini
 3. [Cookies anlegen](#cookies-anlegen)
 4. [Cookie-Gruppen anlegen](#cookie-gruppen-anlegen)
 5. Der jeweiligen Domain-Gruppe die gewünschten Domains und Cookies zuordnen und JS Scripte hinterlegen.
-6. `REX_CONSENT_MANAGER[]` in den `head`-Bereich in alle gewünschten [Templates einfügen](#in-template-einfuegen), bzw. `echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`, wenn via PHP.
+6. `REX_CONSENT_MANAGER[]` in den `head`-Bereich in alle gewünschten [Templates einfügen](#in-template-einfuegen), bzw. `echo consent_manager_frontend::getFragment(false, 'consent_manager_box_cssjs.php');`, wenn via PHP.
 7. Alle weiteren Einstellungen sind optional.
 
 > **Hinweis:** Wird keine Cookie-Box angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#fehlerbehebung)
@@ -127,7 +127,7 @@ REX_CONSENT_MANAGER[]
 ...
 <body>
 ...
-`echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`
+`echo consent_manager_frontend::getFragment(false, 'consent_manager_box_cssjs.php');`
 ...
 </body>
 ...

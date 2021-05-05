@@ -1,10 +1,8 @@
 <?php
 $addon = rex_addon::get('consent_manager');
-$debug = $this->getVar('debug');
 $forceCache = $this->getVar('forceCache');
 
 $_SESSION['consent_manager']['article'] = rex_article::getCurrentId();
-$_SESSION['consent_manager']['debug'] = $debug;
 $_SESSION['consent_manager']['outputcss'] = '';
 $_SESSION['consent_manager']['outputjs'] = '';
 $_SESSION['consent_manager']['clang'] = rex_clang::getCurrentId();

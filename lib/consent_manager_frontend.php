@@ -27,10 +27,9 @@ class consent_manager_frontend
         $this->version = $this->cache['majorVersion'];
     }
 
-    public static function getFragment($debug, $forceCache, $fragmentFilename)
+    public static function getFragment($forceCache, $fragmentFilename)
     {
         $fragment = new rex_fragment();
-        $fragment->setVar('debug', $debug);
         $fragment->setVar('forceCache', $forceCache);
 
         return $fragment->parse($fragmentFilename);
@@ -93,7 +92,7 @@ class consent_manager_frontend
         $boxtemplate = '';
         if (isset($_SESSION['consent_manager'])) {
             ob_start();
-            echo self::getFragment($_SESSION['consent_manager']['debug'], 0, 'consent_manager_box.php');
+            echo self::getFragment(0, 'consent_manager_box.php');
             $boxtemplate = ob_get_contents();
             ob_end_clean();
             if ('' == $boxtemplate) {
