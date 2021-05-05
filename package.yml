@@ -1,29 +1,34 @@
 package: consent_manager
-version: '3.0.0beta7'
-author: 'Friends Of REDAXO'
+version: "3.0.0beta8"
+author: "Friends Of REDAXO"
 supportpage: https://redaxo.org/support/community/#slack
 
 requires:
-    redaxo: '^5.8'
-    php: '>=7.1'
+  redaxo: "^5.8"
+  php: ">=7.1"
 
 page:
-    title: 'translate:consent_manager_title'
-    perm: consent_manager[]
-    pjax: true
-    icon: rex-icon fa fa-coffee
-    subpages:
-        cookiegroup:
-            title: 'translate:consent_manager_cookiegroups'
-        cookie:
-            title: 'translate:consent_manager_cookies'
-        text:
-            title: 'translate:consent_manager_texts'
-        domain:
-            title: 'translate:consent_manager_domains'
-        config:
-            title: 'translate:consent_manager_config'
-        setup:
-            title: 'translate:consent_manager_setup'
-        help:
-            {title: 'translate:consent_manager_help',  icon: rex-icon fa-question-circle, subPath: README.md, itemclass: pull-right}
+  title: "translate:consent_manager_title"
+  perm: consent_manager[]
+  pjax: true
+  icon: rex-icon fa fa-coffee
+  subpages:
+    cookiegroup:
+      title: "translate:consent_manager_cookiegroups"
+    cookie:
+      title: "translate:consent_manager_cookies"
+    text:
+      title: "translate:consent_manager_texts"
+    domain:
+      title: "translate:consent_manager_domains"
+    config:
+      title: "translate:consent_manager_config"
+    setup:
+      title: "translate:consent_manager_setup"
+    help:
+      {
+        title: "translate:consent_manager_help",
+        icon: rex-icon fa-question-circle,
+        subPath: README.md,
+        itemclass: pull-right,
+      }
