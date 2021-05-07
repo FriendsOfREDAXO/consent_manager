@@ -326,7 +326,7 @@ Um die Cookie-Texte auch für Redakteure zur Änderung bereitzustellen muss dies
 
 ### Die Cookie-Box und Cookies werden angezeigt, Scripte aber nicht geladen.
 
-* Sind die Scripte in der entsprechenden Cookie-Gruppe hinterlegt?
+* Sind die Scripte in der entsprechenden Cookies hinterlegt?
 * Sind die Scripte inklusive `<script>...</script>`-Tag hinterlegt?
 
 ### Fehler melden
