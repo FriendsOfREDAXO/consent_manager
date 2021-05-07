@@ -99,7 +99,12 @@ class consent_manager_cache
 
         if (isset($this->cookiegroups[$clangId])) {
             foreach ($this->cookiegroups[$clangId] as $uid => $cookiegroup) {
-                $cookie_uids = array_filter(explode('|', $cookiegroup['cookie']));
+                $cookie_uids = [];
+                foreach(array_filter(explode('|', $cookiegroup['cookie'])) as $cookieUid) {
+                    if (isset($this->cookies[$clangId][$cookieUid])) {
+                        $cookie_uids[] = $cookieUid;
+                    }
+                }
                 if ($cookiegroup['required'] == '|1|') {
                     $cookie_uids[] = 'consent_manager';
                 }
