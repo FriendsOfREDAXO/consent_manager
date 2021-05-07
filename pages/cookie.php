@@ -9,6 +9,7 @@ $msg = '';
 if ($func == 'delete')
 {
     $msg = consent_manager_clang::deleteCookie($pid);
+    consent_manager_cache::forceWrite();
 }
 elseif ($func == 'add' || $func == 'edit')
 {
