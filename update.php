@@ -19,4 +19,7 @@ if(count(rex_clang::getAllIds()) > 1) {
 
 		$sql->next();
 	}
+	
+	// Write cache
+	consent_manager_cache::forceWrite();
 }
