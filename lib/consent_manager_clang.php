@@ -136,7 +136,7 @@ class consent_manager_clang
         }
         elseif (rex::getTable('consent_manager_cookie') == $form->getTableName())
         {
-            $fields2Update = ['uid'];
+            $fields2Update = ['uid', 'script'];
             $db = rex_sql::factory();
             $db->setTable($form->getTableName());
             $db->setWhere('pid = :pid', ['pid' => $form->getSql()->getValue('pid')]);
