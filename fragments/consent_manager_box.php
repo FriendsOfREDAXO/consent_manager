@@ -3,7 +3,7 @@ $consent_manager = new consent_manager_frontend(0);
 $consent_manager->setDomain($_SERVER['HTTP_HOST']);
 ?>
 <?php if ($consent_manager->cookiegroups): ?>
-        <div class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>">
+        <div class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet>
             <div class="consent_manager-wrapper" id="consent_manager-wrapper">
                 <div class="consent_manager-wrapper-inner">
                     <div class="consent_manager-summary" id="consent_manager-summary">
