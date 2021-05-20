@@ -1,5 +1,5 @@
 package: consent_manager
-version: "3.0.0beta8"
+version: "3.0.0-dev"
 author: "Friends Of REDAXO"
 supportpage: https://redaxo.org/support/community/#slack
 
