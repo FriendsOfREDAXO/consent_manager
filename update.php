@@ -23,3 +23,9 @@ if(count(rex_clang::getAllIds()) > 1) {
 	// Write cache
 	consent_manager_cache::forceWrite();
 }
+
+// Update legacy default cookie "iwcc" to "consent_manager"
+$sql = \rex_sql::factory();
+$sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_cookie` '
+	.'SET uid = "consent_manager", definition = REPLACE(definition, "name: iwcc", "name: consent_manager") '
+	.'WHERE uid = "iwcc"');
