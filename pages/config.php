@@ -6,12 +6,15 @@ $form = rex_config_form::factory($addon->getPackageId());
 
 $field = $form->addFieldset($addon->i18n('consent_manager_config_legend'));
 
+/* Entfällt vorerst siehe https://github.com/FriendsOfREDAXO/consent_manager/issues/149
+
 $field = $form->addCheckboxField('outputcss');
 $field->addOption($addon->i18n('consent_manager_config_css'), 1);
 
 $field = $form->addRawField('<p><strong>'.$addon->i18n('consent_manager_config_css').'</strong></p><p>'.$addon->i18n('consent_manager_config_css_desc').'</p>');
 
 $field = $form->addRawField('<hr>');
+*/
 
 $field = $form->addCheckboxField('outputowncss');
 $field->addOption($addon->i18n('consent_manager_config_owncss'), 1);
