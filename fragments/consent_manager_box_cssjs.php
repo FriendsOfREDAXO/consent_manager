@@ -18,6 +18,10 @@ if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->
     }
 }
 
+if (rex_config::get('consent_manager', 'skip_consent') != "" && rex_get('skip_consent') == rex_config::get('consent_manager', 'skip_consent')) {
+    $initially_hidden = 'true';
+}
+
 $outputcss = '';
 $outputjs = '';
 
