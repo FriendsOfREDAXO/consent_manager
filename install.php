@@ -107,3 +107,8 @@ rex_sql_table::get(rex::getTable('consent_manager_consent_log'))
 if (-1 === $this->getConfig('justInstalled', -1)) {
     $this->setConfig('justInstalled', $justinstalled);
 }
+
+// Delete Template cache
+rex_dir::delete(rex_path::cache('addons/templates'));
+// Delete Module cache
+rex_addon::get('structure')->clearCache();
