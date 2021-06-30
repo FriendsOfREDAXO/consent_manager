@@ -1,11 +1,7 @@
 package: consent_manager
-version: "3.0.0beta9"
+version: "3.0.0"
 author: "Friends Of REDAXO"
 supportpage: https://redaxo.org/support/community/#slack
-
-requires:
-  redaxo: "^5.8"
-  php: ">=7.1"
 
 page:
   title: "translate:consent_manager_title"
@@ -32,3 +28,8 @@ page:
         subPath: README.md,
         itemclass: pull-right,
       }
+
+requires:
+  redaxo: "^5.8"
+  php:
+    version: ">=7, <9"
