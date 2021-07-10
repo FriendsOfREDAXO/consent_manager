@@ -296,7 +296,7 @@ if ($arr)
 $check = array_flip($arr['consents']);
 }
 #dump($arr);
-if ($check['googlemaps']) {
+if ($check['google-maps']) {
   // Code Ausgabe bei akzeptierter CookieGruppe
   // GoogleMaps-Code
 } else {
