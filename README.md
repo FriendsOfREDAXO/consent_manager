@@ -275,7 +275,7 @@ JavaScript wird dann nur ausgegeben wenn noch kein Cookie gesetzt wurde, wenn Co
 
 ## Gesetzte Cookies / Einwilligungshistorie
 
-Über den Aufruf von REX_COOKIEDB[] können alle derzeit gesetzten Cookies swoie die Einwilligungshistorie z.B. in der Datenschutzerklärung ausgegeben werden. 
+Mit Hilfe des Platzhalters `REX_COOKIEDB[]` können alle derzeit gesetzten Cookies sowie die Einwilligungshistorie z.B. in der Datenschutzerklärung ausgegeben werden. 
 
 ## Tipps & Tricks
 
