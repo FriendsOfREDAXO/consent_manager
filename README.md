@@ -273,7 +273,7 @@ Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier d
 Soll JavaScript für die Consent-Box nur ausgegeben werden wenn dies auch notwendig ist, kann das durch aktivieren der Einstellung **CSS + JavaScript im Frontend nur bei Bedarf ausgeben** erreicht werden.
 JavaScript wird dann nur ausgegeben wenn noch kein Cookie gesetzt wurde, wenn Cookies entfallen oder neu hinzugefügt wurden, oder auf der Seite ein Link mit der Klasse `consent_manager-show-box` oder `consent_manager-show-box-reload` existiert.
 
-### Gesetzte Cookies / Einwilligungshistorie
+## Gesetzte Cookies / Einwilligungshistorie
 
 Über den Aufruf von REX_COOKIEDB[] können alle derzeit gesetzten Cookies swoie die Einwilligungshistorie z.B. in der Datenschutzerklärung ausgegeben werden. 
 
