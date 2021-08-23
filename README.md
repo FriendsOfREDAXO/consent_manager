@@ -287,7 +287,7 @@ Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anz
 `<a class="consent_manager-show-box">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box.
 `<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box und erzwingt einen Page-Reload nach der Einwilligung.
 
-### Scripte mit PHP Laden
+### Scripte mit PHP laden
 
 Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Somit kann man (am Beispiel GoogleMaps) eine Meldung ausgeben, dass bestimmte Cookies akzeptiert werden müssen um die Karte zu laden.
 Problem dabei: öffnet man die Cookie-Box und akzeptiert die Cookies, wird zwar das Script geladen, aber ohne Page-Reload ändert sich der Inhalt der Seite nicht. Deshalb sollte man hier den Link: `<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` verwenden.
