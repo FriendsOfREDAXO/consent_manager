@@ -126,7 +126,7 @@
         var http = new XMLHttpRequest(),
             url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager',
             params = 'domain=' + consent_manager_parameters.domain + '&consentid=' + consent_manager_parameters.consentid;
-        http.open('POST', url, true);
+        http.open('POST', url, false);
         http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         http.send(params);
 
