@@ -20,8 +20,11 @@ if ($consent_manager->cookiegroups) {
 						,['cachelogid'=>$consent_manager_cookie['cachelogid']]
 					);
 		$history = $db->getArray();
-
-		$consents = json_decode($history[0]['consents']);
+		$consents = [];
+		if (isset($history[0]['consents'])) {
+		    $consents = json_decode($history[0]['consents']);
+		}
+		
 		//$consents_uids_output = implode(', ', $consents);
 		$consents_service_names = array();
 		foreach($consents as $consent) {
@@ -30,8 +33,8 @@ if ($consent_manager->cookiegroups) {
 		$consents_uids_output = implode(', ', $consents_service_names);
 
 		$output .= '<h2>'.$consent_manager->texts['headline_currentconsent'].'</h2>';
-		$output .= '<p class="consent_manager-history-date"><span>'.$consent_manager->texts['consent_date'].':</span> '.$history[0]['createdate'].'</p>';
-		$output .= '<p class="consent_manager-history-id"><span>'.$consent_manager->texts['consent_id'].':</span> '.$history[0]['consentid'].'</p>';
+		$output .= '<p class="consent_manager-history-date"><span>'.$consent_manager->texts['consent_date'].':</span> '.($history[0]['createdate'] ?? '-').'</p>';
+		$output .= '<p class="consent_manager-history-id"><span>'.$consent_manager->texts['consent_id'].':</span> '.($history[0]['consentid'] ?? '-').'</p>';
 		$output .= '<p class="consent_manager-history-consents"><span>'.$consent_manager->texts['consent_consents'].':</span> '.$consents_uids_output.'</p>';
 		$output .= '<p><a class="consent_manager-show-box">'.$consent_manager->texts['edit_consent'].'</a></p>'; // mit consent_manager-show-box-reload funktionierts nicht korrekt
 
