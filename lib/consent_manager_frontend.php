@@ -82,7 +82,7 @@ class consent_manager_frontend
     {
         rex_response::cleanOutputBuffers();
         if (!isset($_SESSION)) {
-            session_start();
+            rex_login::startSession();
         }
         header('Content-Type: application/javascript');
         header('Cache-Control: max-age=604800, public');

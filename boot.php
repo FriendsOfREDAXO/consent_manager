@@ -59,7 +59,7 @@ if ($this->getConfig('forceCache')) {
 }
 if (rex::isFrontend()) {
     if (!isset($_SESSION)) {
-        session_start();
+        rex_login::startSession();
         $_SESSION['consent_manager']['article'] = rex_article::getCurrentId();
         $_SESSION['consent_manager']['outputcss'] = '';
         $_SESSION['consent_manager']['outputjs'] = '';
