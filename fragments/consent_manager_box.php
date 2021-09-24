@@ -73,7 +73,7 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
                             <?php
                             $clang = rex_request('clang', 'integer', 1);
                             foreach ($consent_manager->links as $v) {
-                                echo '<a href="' . rex_getUrl($v, $clang) . '">' . rex_article::get($v, $clang)->getName() . '</a>';
+                                echo '<a href="' . rex_getUrl($v, $clang) . '">' . (!is_null(rex_article::get($v, $clang)) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
                             }
                             ?>
                         </div>
