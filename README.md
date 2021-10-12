@@ -69,7 +69,7 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 
 **Schlüssel:** Zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 
-**Checkbox Technisch notwenidge Cookies:** Ist die Checkbox aktiv, wird die Gruppe vorausgewählt und kann nicht deaktiviert werden (Sinnvoll ist nur eine Gruppe mit notwendigen Cookies).
+**Checkbox Technisch notwendige Cookies:** Ist die Checkbox aktiv, wird die Gruppe vorausgewählt und kann nicht deaktiviert werden (Sinnvoll ist nur eine Gruppe mit notwendigen Cookies).
 
 **Domain:** Hier wird die zuvor angelegte Domain ausgewählt, bei deren Aufruf die Gruppe angezeigt werden soll.
 
