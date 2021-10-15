@@ -263,8 +263,7 @@ Standardmäßig wird auf jeder Seite das benötigte JavaScript und die CSS-Datei
 Der Platzhalter `REX_CONSENT_MANAGER[]` im Template wird durch folgenden Code ersetzt.
 
 ```html
-<link rel="stylesheet" href="/assets/addons/consent_manager/consent_manager_frontend.css?v=1610997727">
-<script>var consent_manager_parameters = {initially_hidden: false, domain: "domain.de", consentid: "6005e443914e75.55868698", cacheLogId: "46", version: "3", fe_controller: "/index.php", hidebodyscrollbar: true};</script>
+<style>.consent_manager-background{position:fixed ...;}</style>
 <script src="/index.php?consent_manager_outputjs=1&amp;clang=1&amp;v=1610978112" id="consent_manager_script"></script>
 ```
 
@@ -275,7 +274,7 @@ JavaScript wird dann nur ausgegeben wenn noch kein Cookie gesetzt wurde, wenn Co
 
 ## Gesetzte Cookies / Einwilligungshistorie
 
-Mit Hilfe des Platzhalters `REX_COOKIEDB[]` können alle derzeit gesetzten Cookies sowie die Einwilligungshistorie z.B. in der Datenschutzerklärung ausgegeben werden. 
+Mit Hilfe des Platzhalters `REX_COOKIEDB[]` können alle derzeit gesetzten Cookies sowie die Einwilligungshistorie z.B. in der Datenschutzerklärung ausgegeben werden.
 
 ## Tipps & Tricks
 

@@ -28,9 +28,13 @@ if (!$addon->getConfig('outputowncss', false)) {
     $outputcss .= '    <style>' . trim(file_get_contents($addon->getAssetsPath($_cssfilename))) . '</style>' . PHP_EOL;
 }
 
-$hidesb = ('|1|' == $addon->getConfig('hidebodyscrollbar', false)) ? 'true' : 'false';
+$hidescrollbar = ('|1|' == $addon->getConfig('hidebodyscrollbar', false)) ? 'true' : 'false';
 
-$outputjs .= '    <script>var consent_manager_parameters = {initially_hidden: ' . $initially_hidden . ', domain: "' . $_SERVER['HTTP_HOST'] . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . $consent_manager->cacheLogId . '", version: "' . $consent_manager->version . '", fe_controller: "' . rex_url::frontendController(). '", hidebodyscrollbar: '.$hidesb.'};</script>' . PHP_EOL;
+$_SESSION['consent_manager']['initially_hidden'] = $initially_hidden;
+$_SESSION['consent_manager']['cachelogid'] = $consent_manager->cacheLogId;
+$_SESSION['consent_manager']['version'] = $consent_manager->version;
+$_SESSION['consent_manager']['hidescrollbar'] = $hidescrollbar;
+
 $_params = [];
 $_params['consent_manager_outputjs'] = true;
 $_params['clang'] = rex_clang::getCurrentId();
