@@ -98,7 +98,7 @@ class consent_manager_frontend
             if ('' == $boxtemplate) {
                 rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen!');
             }
-            if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isActivated()) {
+            if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable()) {
                 $boxtemplate = sprogdown($boxtemplate, $_SESSION['consent_manager']['clang']);
             }
             $boxtemplate = str_replace("'", "\'", $boxtemplate);
