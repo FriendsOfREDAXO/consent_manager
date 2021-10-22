@@ -57,15 +57,6 @@ if ($this->getConfig('forceCache')) {
     $this->setConfig('forceCache', false);
     consent_manager_cache::forceWrite();
 }
-if (rex::isFrontend()) {
-    if (!isset($_SESSION)) {
-        rex_login::startSession();
-        $_SESSION['consent_manager']['article'] = rex_article::getCurrentId();
-        $_SESSION['consent_manager']['outputcss'] = '';
-        $_SESSION['consent_manager']['outputjs'] = '';
-        $_SESSION['consent_manager']['clang'] = rex_clang::getCurrentId();
-    }
-}
 rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
     if (rex::isFrontend()) {
         $consent_manager = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'], 1) : false;
