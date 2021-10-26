@@ -40,18 +40,20 @@ Als Beispiel sind zwei Dienste  (google-analytics und matomo) angelegt, diese k�
 
 **Cookie Definitionen:** enthält die Beschreibung aller Cookies des Dienstes die in der Cookie-Box angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
 
-    -
-      name: _ga
-      time: 2 Jahre
-      desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
-    -
-      name: _gat
-      time: 1 Tag
-      desc: Verhindert, dass in zu schneller Folge Daten an den Analytics Server übertragen werden.
-    -
-      name: _gid
-      time: 1 Tag
-      desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
+```yaml
+-
+ name: _ga
+ time: 2 Jahre
+ desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
+-
+ name: _gat
+ time: 1 Tag
+ desc: Verhindert, dass in zu schneller Folge Daten an den Analytics Server übertragen werden.
+-
+ name: _gid
+ time: 1 Tag
+ desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
+```
 
 **Anbieter:** Hier kann optional der Anbieter hinterlegt werden (zum Beispiel Google). Die Angaben werden in der Beschreibung angzeigt.
 
