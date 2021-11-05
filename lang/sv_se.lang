@@ -62,5 +62,8 @@ consent_manager_config_css_desc = Om det är aktiverat matas CSS endast ut för 
 consent_manager_config_css = Ladda CSS i frontend endast när det behövs
 consent_manager_config_owncss_desc = Om den är aktiverad matas ingen standard-CSS för samtyckesrutan ut i frontend (consent_manager_frontend.css). <br> CSS för att utforma samtyckesrutan måste finnas i sina egna CSS-filer!
 consent_manager_config_owncss = Använda egna CSS
-consent_manager_config_hidebodyscrollbar =
-consent_manager_config_hidebodyscrollbar_desc =
+consent_manager_config_hidebodyscrollbar = Dölj rullningslisten på webbplatsen
+consent_manager_config_hidebodyscrollbar_desc = Om den är aktiverad döljs webbplatsens rullningslåda när samtyckesrutan visas. Detta förhindrar att webbplatsen rullar i rutans bakgrund. När samtyckesrutan stängs visas rullningslisten igen.
+consent_manager_config_token_legend = Hoppa över samtyckesfönstret
+consent_manager_config_token_label = Token
+consent_manager_config_token_notice = Skicka denna token som en GET-parameter <code> skip_consent = MINTOKEN </code> för att hoppa över samtycket.
