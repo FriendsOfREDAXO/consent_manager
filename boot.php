@@ -83,6 +83,13 @@ rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $e
 
 rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
     if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
+        if (!isset($_SESSION) || !isset($_SESSION['consent_manager'])) {
+            rex_login::startSession();
+            $_SESSION['consent_manager']['article'] = rex_article::getCurrentId();
+            $_SESSION['consent_manager']['outputcss'] = '';
+            $_SESSION['consent_manager']['outputjs'] = '';
+            $_SESSION['consent_manager']['clang'] = rex_clang::getCurrentId();
+        }
         $consent_manager = new consent_manager_frontend(0);
         $consent_manager->setDomain($_SERVER['HTTP_HOST']);
         $consent_manager->outputJavascript();

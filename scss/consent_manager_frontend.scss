@@ -46,10 +46,10 @@
 .consent_manager-show-details {
     padding: 0 0 1em 0;
     a {
-        color: green;
+        color: #999;
         text-decoration: none;
         &:hover {
-            color: #004000;
+            color: #444;
             text-decoration: none;
         }
     }
@@ -57,8 +57,8 @@
 .consent_manager-save-selection,
 .consent_manager-accept-all {
     transition: 200ms ease all;
-    background: green;
-    border: 1px solid green;
+    background: #999;
+    border: 1px solid #444;
     color: #fff;
     padding: .5em 2em;
     border-radius: .2em;
@@ -67,20 +67,10 @@
     margin: .5em 0;
     display: block;
     &:hover {
-        background: #004000;
-        border-color: #004000;
+        background: #444;
+        border-color: #444;
         color: #fff;
         text-decoration: none;
-    }
-}
-.consent_manager-save-selection {
-    background: none transparent;
-    border: 1px solid #999;
-    color: #666;
-    &:hover {
-        background: #666;
-        border-color: #666;
-        color: #fff;
     }
 }
 .consent_manager-sitelinks {
@@ -90,15 +80,15 @@
     color: #999;
     text-decoration: none;
     &:hover {
-        color: #404040;
+        color: #444;
         text-decoration: none;
     }
 }
 }
 .consent_manager-save-and-close {
-    color: green;
+    color: #999;
     &:hover {
-        color: #004000;
+        color: #444;
     }
 }
 
@@ -111,10 +101,10 @@ a.consent_manager-close-box {
     width: 28px;
     height: 28px;
     color: #fff;
-    background-color:#999;
+    background-color:#666;
     text-indent:-999px;
     &:hover {
-        background-color: #333;
+        background-color: #444;
         color: #fff;
     }
     &::before {
@@ -166,7 +156,7 @@ a.consent_manager-close-box {
 
 .consent_manager-show-details .icon-info-circled:before {
     color: #fff;
-    background-color: green;
+    background-color: #666;
     content: "i";
     font-family: "Serif";
     font-weight:bold;
@@ -242,14 +232,14 @@ a.consent_manager-close, #consent_manager-toggle-details {
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
-        padding-top: 2em;
+        padding-top: 1em;
     }
     .consent_manager-cookiegroup-checkbox {
         margin: 0 2em 0 0;
     }
     .consent_manager-show-details {
         text-align: right;
-        padding: 1em 2em 2em 0;
+        padding: 1em 2em 1em 0;
     }
     .consent_manager-buttons {
         display: flex;
