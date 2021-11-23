@@ -68,6 +68,16 @@ elseif ($func == 'add' || $func == 'edit')
             $form->addRawField(consent_manager_rex_form::getFakeTextarea($this->i18n('consent_manager_cookiegroup_scripts'), $form->getSql()->getValue('script')));
         }
     }
+    if ($func == 'add')
+    {
+        if ($clang_id == rex_clang::getStartId() || !$form->isEditMode())
+        {
+            $field = $form->addTextAreaField('script');
+            $field->setAttributes(['class' => 'form-control codemirror', 'name'=> $field->getAttribute('name'), 'data-codemirror-mode' => 'text/javascript']);
+            $field->setLabel($this->i18n('consent_manager_cookiegroup_scripts'));
+            $field->setNotice($this->i18n('consent_manager_cookiegroup_scripts_notice'));
+        }
+    }
 
     $field = $form->addTextAreaField('placeholder_text');
     $field->setLabel($this->i18n('consent_manager_cookie_placeholder_text'));
