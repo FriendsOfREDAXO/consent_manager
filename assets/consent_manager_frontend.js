@@ -81,7 +81,7 @@
                 saveConsent('all');
             }
             if (consent_manager_parameters.hidebodyscrollbar) {
-                $('body').css('overflow', 'auto');
+                document.querySelector('body').style.overflow = 'auto';
             }
             document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
         });
@@ -189,7 +189,7 @@
             }
         });
         if (consent_manager_parameters.hidebodyscrollbar) {
-            $('body').css('overflow', 'hidden');
+            document.querySelector('body').style.overflow = 'hidden';
         }
         document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
     }
