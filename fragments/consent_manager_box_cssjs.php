@@ -1,4 +1,15 @@
 <?php
+if (!rex_article::getCurrentId() or rex_article::getCurrentId() == rex_article::getNotfoundArticleId()) {
+    return;
+}
+
+// Session starten falls noch nicht vorhanden
+if (rex::isFrontend()) {
+    if (!isset($_SESSION)) {
+        rex_login::startSession();
+    }
+}
+
 $addon = rex_addon::get('consent_manager');
 $forceCache = $this->getVar('forceCache');
 
@@ -30,16 +41,16 @@ if (!$addon->getConfig('outputowncss', false)) {
 
 $hidescrollbar = ('|1|' == $addon->getConfig('hidebodyscrollbar', false)) ? 'true' : 'false';
 
+if (isset($_SESSION['consent_manager']['initially_hidden']) && $_SESSION['consent_manager']['initially_hidden'] != $initially_hidden) {
+    touch($addon->getAssetsPath('consent_manager_frontend.js'));
+}
+
 $_SESSION['consent_manager']['initially_hidden'] = $initially_hidden;
 $_SESSION['consent_manager']['cachelogid'] = $consent_manager->cacheLogId;
 $_SESSION['consent_manager']['version'] = $consent_manager->version;
 $_SESSION['consent_manager']['hidescrollbar'] = $hidescrollbar;
 
-$_params = [];
-$_params['consent_manager_outputjs'] = true;
-$_params['clang'] = rex_clang::getCurrentId();
-$_params['v'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
-$outputjs .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script" defer></script>';
+$outputjs .= '    <script src="?consent_manager_outputjs=1&clang=' . rex_clang::getCurrentId() . '&v=' . filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . '" id="consent_manager_script" defer></script>';
 
 $_SESSION['consent_manager']['cachelogid'] = $consent_manager->cacheLogId;
 $_SESSION['consent_manager']['outputcss'] = $outputcss;

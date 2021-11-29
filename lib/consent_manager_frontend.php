@@ -84,7 +84,8 @@ class consent_manager_frontend
         if (!isset($_SESSION)) {
             rex_login::startSession();
         }
-        header('Content-Type: application/javascript');
+        header_remove();
+        header('Content-Type: application/javascript; charset=utf-8');
         header('Cache-Control: max-age=604800, public');
         //header('Pragma: cache');
         //header('Cache-Control: public');
@@ -106,7 +107,7 @@ class consent_manager_frontend
             $boxtemplate = str_replace("\n", ' ', $boxtemplate);
         }
         echo '/* --- Parameters --- */' . PHP_EOL;
-        echo 'var consent_manager_parameters = {initially_hidden: ' . $_SESSION['consent_manager']['initially_hidden'] . ', domain: "' . $_SERVER['HTTP_HOST'] . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . $_SESSION['consent_manager']['cachelogid'] . '", version: "' . $_SESSION['consent_manager']['version'] . '", fe_controller: "' . rex_url::frontendController(). '", hidebodyscrollbar: ' . $_SESSION['consent_manager']['hidescrollbar'] . '};' . PHP_EOL . PHP_EOL;
+        echo 'var consent_manager_parameters = {initially_hidden: ' . $_SESSION['consent_manager']['initially_hidden'] . ', domain: "' . $_SERVER['HTTP_HOST'] . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . $_SESSION['consent_manager']['cachelogid'] . '", version: "' . $_SESSION['consent_manager']['version'] . '", fe_controller: "' . rex_url::frontend() . '", hidebodyscrollbar: ' . $_SESSION['consent_manager']['hidescrollbar'] . '};' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template ' . $_SESSION['consent_manager']['clang'] . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
         echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
