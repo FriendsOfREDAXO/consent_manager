@@ -323,6 +323,7 @@ Um die Cookie-Texte auch für Redakteure zur Änderung bereitzustellen muss dies
 * Ist die Website über die zugeordnete Domain (www.meinedomain.de) erreichbar? - Unterordner Installationen funktionieren nicht.
 * Ist der Platzhalter REX_CONSENT_MANAGER[] in einem Template im `head`-Bereich hinterlegt? - eine Integration über php include ist nicht möglich.
 * Unter Einstellungen ist *Eigenes CSS verwenden* aktiviert aber es wird kein eigenes CSS eingebunden (HTML der Box wird am Seitenende angezeigt und nicht als Popup)
+* Ist der Startkartikel der Seite auch als Not Found Artikel (404) konfiguriert? - Die Cookie-Box wird beim 404 Artikel nicht ausgegeben
 
 ### Die Cookie-Box wird angezeigt, aber die Cookies werden nicht angezeigt
 
