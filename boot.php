@@ -73,7 +73,10 @@ if (rex::isFrontend()) {
             exit;
         }
 
-        if (!rex_article::getCurrentId() or rex_article::getCurrentId() == rex_article::getNotfoundArticleId()) {
+        if (!rex_article::getCurrentId()) {
+            return;
+        }
+        if (rex_article::getCurrentId() != rex_article::getSiteStartArticleId() && rex_article::getCurrentId() == rex_article::getNotfoundArticleId()) {
             return;
         }
 
