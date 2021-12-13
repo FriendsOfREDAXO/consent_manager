@@ -83,7 +83,7 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
             </div>
             <?php
             foreach ($consent_manager->scripts as $uid => $script) {
-                echo '<div style="display: none" class="consent_manager-script" data-uid="'.$uid.'" data-script="'.$script.'"></div>';
+                echo '<div style="display: none" class="consent_manager-script" data-uid="script-'.$uid.'" data-script="'.$script.'"></div>';
             }
             ?>
         </div>

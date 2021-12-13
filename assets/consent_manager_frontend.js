@@ -60,7 +60,7 @@
     }
 
     consents.forEach(function (uid) {
-        addScript(consent_managerBox.querySelector('[data-uid="' + uid + '"]'));
+        addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
     });
 
     if (consent_manager_parameters.initially_hidden) {
