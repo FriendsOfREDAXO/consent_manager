@@ -47,6 +47,13 @@ class consent_manager_frontend
         $this->links['privacy_policy'] = $this->cache['domains'][$domain]['privacy_policy'];
         $this->links['legal_notice'] = $this->cache['domains'][$domain]['legal_notice'];
 
+        if (!isset($_SESSION['consent_manager']['article'])) {
+            $_SESSION['consent_manager']['article'] = rex_article::getCurrentId();
+        }
+        if (!isset($_SESSION['consent_manager']['clang'])) {
+            $_SESSION['consent_manager']['clang'] = rex_clang::getCurrent()->getId();
+        }
+
         if (in_array($_SESSION['consent_manager']['article'], [$this->links['privacy_policy'], $this->links['legal_notice']])) {
             $this->boxClass = 'consent_manager-initially-hidden';
         }
