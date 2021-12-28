@@ -266,7 +266,7 @@ Der Platzhalter `REX_CONSENT_MANAGER[]` im Template wird durch folgenden Code er
 
 ```html
 <style>.consent_manager-background{position:fixed ...;}</style>
-<script src="/index.php?consent_manager_outputjs=1&amp;clang=1&amp;v=1610978112" id="consent_manager_script"></script>
+<script src="?consent_manager_outputjs=1&clang=1&a=2&i=true&h=false&cid=32&v=3&t=1640642931" id="consent_manager_script" defer></script>
 ```
 
 Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier die Ausgabe der CSS-Datei `consent_manager_frontend.css` durch aktivieren der Einstellung **Eigenes CSS verwenden** unterdrückt werden. Es werden dann nur die JavaScript-Zeilen ausgegeben.
@@ -358,8 +358,8 @@ MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manage
 
 ### Credits
 
-First Release: [Ingo Winter](https://github.com/IngoWinter)
-[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Consent-Manager wiederfinden
-[Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet
-[Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet
+First Release: [Ingo Winter](https://github.com/IngoWinter).
+[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Consent-Manager wiederfinden.
+[Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet,
+[Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet,
 [Oliver Kreischer](https://github.com/olien) hat den Keks gebacken

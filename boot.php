@@ -64,39 +64,14 @@ if (rex::isBackend()) {
 
 // Nur im Frontend
 if (rex::isFrontend()) {
+
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
 
         if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
             $consent_manager = new consent_manager_frontend(0);
-            $consent_manager->setDomain($_SERVER['HTTP_HOST']);
+            //$consent_manager->setDomain($_SERVER['HTTP_HOST']);
             $consent_manager->outputJavascript();
             exit;
-        }
-
-        if (!rex_article::getCurrentId()) {
-            return;
-        }
-
-        if (isset($_SESSION['consent_manager']['outputjs']) && strstr($ep->getSubject(), '<!--REX_CONSENT_MANAGER_OUTPUT[]-->')) {
-            $consent_manager = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'], 1) : false;
-            $outcss = rex_addon::get('consent_manager')->getConfig('outputcss', false);
-            $_search = '<!--REX_CONSENT_MANAGER_OUTPUT[]-->';
-            $_replace = '';
-            if ($outcss) {
-                if (!$consent_manager || strstr($ep->getSubject(), 'consent_manager-show-box') || strstr($ep->getSubject(), 'consent_manager-show-box-reload')) {
-                    if (isset($_SESSION['consent_manager']['outputcss'])) {
-                        $_replace .= $_SESSION['consent_manager']['outputcss'];
-                    }
-                } else {
-                    $_replace .= '    <style>.consent_manager-hidden{display:none}</style>' . PHP_EOL;
-                }
-            } else {
-                $_replace .= $_SESSION['consent_manager']['outputcss'];
-            }
-            if (isset($_SESSION['consent_manager']['outputjs'])) {
-                $_replace .= $_SESSION['consent_manager']['outputjs'];
-            }
-            $ep->setSubject(str_replace($_search, $_replace, $ep->getSubject()));
         }
 
     });
