@@ -269,10 +269,7 @@ Der Platzhalter `REX_CONSENT_MANAGER[]` im Template wird durch folgenden Code er
 <script src="?consent_manager_outputjs=1&clang=1&a=2&i=true&h=false&cid=32&v=3&t=1640642931" id="consent_manager_script" defer></script>
 ```
 
-Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier die Ausgabe der CSS-Datei `consent_manager_frontend.css` durch aktivieren der Einstellung **Eigenes CSS verwenden** unterdrückt werden. Es werden dann nur die JavaScript-Zeilen ausgegeben.
-
-Soll JavaScript für die Consent-Box nur ausgegeben werden wenn dies auch notwendig ist, kann das durch aktivieren der Einstellung **CSS + JavaScript im Frontend nur bei Bedarf ausgeben** erreicht werden.
-JavaScript wird dann nur ausgegeben wenn noch kein Cookie gesetzt wurde, wenn Cookies entfallen oder neu hinzugefügt wurden, oder auf der Seite ein Link mit der Klasse `consent_manager-show-box` oder `consent_manager-show-box-reload` existiert.
+Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier die Ausgabe der CSS-Datei `consent_manager_frontend.css` durch aktivieren der Einstellung **Eigenes CSS verwenden** unterdrückt werden. Es wird dann nur die JavaScript-Zeile ausgegeben.
 
 ## Gesetzte Cookies / Einwilligungshistorie
 
