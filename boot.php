@@ -65,7 +65,7 @@ if (rex::isBackend()) {
 // Nur im Frontend
 if (rex::isFrontend()) {
 
-    rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+    rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
 
         if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
             $consent_manager = new consent_manager_frontend(0);

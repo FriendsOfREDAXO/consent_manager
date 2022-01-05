@@ -14,7 +14,7 @@ $consentparams = [];
 $consentparams['article'] = rex_article::getCurrentId();
 $consentparams['outputcss'] = '';
 $consentparams['outputjs'] = '';
-$consentparams['clang'] = rex_clang::getCurrentId();
+$consentparams['lang'] = rex_clang::getCurrentId();
 $consentparams['initially_hidden'] = 'false';
 
 $consent_manager = new consent_manager_frontend($forceCache);
@@ -39,10 +39,18 @@ if (!$addon->getConfig('outputowncss', false)) {
 }
 
 $consentparams['hidescrollbar'] = ('|1|' == $addon->getConfig('hidebodyscrollbar', false)) ? 'true' : 'false';
-$consentparams['cachelogid'] = $consent_manager->cacheLogId;
-$consentparams['version'] = $consent_manager->version;
 
-$consentparams['outputjs'] .= '    <script src="?consent_manager_outputjs=1&clang=' . $consentparams['clang'] . '&a=' . $consentparams['article'] . '&i=' . $consentparams['initially_hidden'] . '&h=' . $consentparams['hidescrollbar'] . '&cid=' . $consentparams['cachelogid'] . '&v=' . $consentparams['version'] . '&t=' . filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . '" id="consent_manager_script" defer></script>' . PHP_EOL;
+$_params = [];
+$_params['consent_manager_outputjs'] = true;
+$_params['lang'] = $consentparams['lang'];
+$_params['a'] = $consentparams['article'];
+$_params['i'] = $consentparams['initially_hidden'];
+$_params['h'] = $consentparams['hidescrollbar'];
+$_params['cid'] = $consent_manager->cacheLogId;
+$_params['v'] = $consent_manager->version;
+$_params['t'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
+
+$consentparams['outputjs'] .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script" defer></script>' . PHP_EOL;
 
 // Ausgabe CSS + JavaScript
 echo $consentparams['outputcss'];

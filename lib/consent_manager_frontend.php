@@ -48,7 +48,10 @@ class consent_manager_frontend
         $this->links['legal_notice'] = $this->cache['domains'][$domain]['legal_notice'];
 
         $article = rex_article::getCurrentId();
-        $clang = rex_clang::getCurrent()->getId();
+        $clang = rex_request('lang', 'integer', 0);
+        if ($clang === 0) {
+            $clang = rex_clang::getCurrent()->getId();
+        }
 
         if (in_array($article, [$this->links['privacy_policy'], $this->links['legal_notice']])) {
             $this->boxClass = 'consent_manager-initially-hidden';
@@ -83,6 +86,10 @@ class consent_manager_frontend
 
     public static function outputJavascript($host = null, $article_id = null)
     {
+        $clang = rex_request('lang', 'integer', 0);
+        if ($clang === 0) {
+            $clang = rex_clang::getCurrent()->getId();
+        }
         rex_response::cleanOutputBuffers();
         header_remove();
         header('Content-Type: application/javascript; charset=utf-8');
@@ -99,7 +106,7 @@ class consent_manager_frontend
             rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen!');
         }
         if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable()) {
-            $boxtemplate = sprogdown($boxtemplate, rex_get('clang', 'string', '1'));
+            $boxtemplate = sprogdown($boxtemplate, $clang);
         }
         $boxtemplate = str_replace("'", "\'", $boxtemplate);
         $boxtemplate = str_replace("\r", '', $boxtemplate);
@@ -107,7 +114,7 @@ class consent_manager_frontend
 
         echo '/* --- Parameters --- */' . PHP_EOL;
         echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . $_SERVER['HTTP_HOST'] . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . '};' . PHP_EOL . PHP_EOL;
-        echo '/* --- Consent-Manager Box Template ' . rex_get('clang', 'string', '1') . ' --- */' . PHP_EOL;
+        echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
         echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
 

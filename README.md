@@ -266,7 +266,7 @@ Der Platzhalter `REX_CONSENT_MANAGER[]` im Template wird durch folgenden Code er
 
 ```html
 <style>.consent_manager-background{position:fixed ...;}</style>
-<script src="?consent_manager_outputjs=1&clang=1&a=2&i=true&h=false&cid=32&v=3&t=1640642931" id="consent_manager_script" defer></script>
+<script src="./index.php?consent_manager_outputjs=1&amp;lang=1&amp;a=1&amp;i=false&amp;h=false&amp;cid=54&amp;v=3&amp;t=16394249212" id="consent_manager_script" defer></script>
 ```
 
 Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier die Ausgabe der CSS-Datei `consent_manager_frontend.css` durch aktivieren der Einstellung **Eigenes CSS verwenden** unterdrückt werden. Es wird dann nur die JavaScript-Zeile ausgegeben.
