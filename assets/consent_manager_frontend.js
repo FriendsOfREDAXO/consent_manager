@@ -33,7 +33,7 @@
     }
 
     if (consent_manager_box_template === '') {
-        console.warn('Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen!');
+        console.warn('Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' + location.hostname + ')');
         return;
     }
     consent_managerBox = new DOMParser().parseFromString(consent_manager_box_template, 'text/html');
