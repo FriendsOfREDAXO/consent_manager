@@ -64,3 +64,15 @@ consent_manager_config_owncss_desc = When set to active default frontend CSS for
 consent_manager_config_owncss = Use custom CSS
 consent_manager_config_hidebodyscrollbar =
 consent_manager_config_hidebodyscrollbar_desc =
+consent_manager_config_token_legend = 
+consent_manager_config_token_label = 
+consent_manager_config_token_notice = 
+
+consent_manager_log =
+consent_manager_thead_title =
+consent_manager_thead_id =
+consent_manager_thead_createdate =
+consent_manager_thead_domain =
+consent_manager_thead_consents =
+consent_manager_thead_cachelogid =
+consent_manager_thead_consentid =

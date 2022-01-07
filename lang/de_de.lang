@@ -67,3 +67,12 @@ consent_manager_config_hidebodyscrollbar_desc = Wenn aktiviert wird der Scrollba
 consent_manager_config_token_legend = Consent-Fenster überspringen
 consent_manager_config_token_label = Token
 consent_manager_config_token_notice = Diesen Token als GET-Parameter <code>skip_consent=MEINTOKEN</code> übergeben, um die Einwilligung zu überspringen.
+
+consent_manager_log = Consent-Log
+consent_manager_thead_title = Consent-Log
+consent_manager_thead_id = ID
+consent_manager_thead_createdate = Datum
+consent_manager_thead_domain = Domain
+consent_manager_thead_consents = Consents
+consent_manager_thead_cachelogid = Cachelog-Id
+consent_manager_thead_consentid = Consent-Id

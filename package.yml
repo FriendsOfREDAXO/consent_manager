@@ -19,6 +19,8 @@ page:
       title: "translate:consent_manager_domains"
     config:
       title: "translate:consent_manager_config"
+    log:
+      title: "translate:consent_manager_log"
     setup:
       title: "translate:consent_manager_setup"
     help:
