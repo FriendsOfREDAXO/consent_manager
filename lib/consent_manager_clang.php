@@ -170,6 +170,7 @@ class consent_manager_clang
         {
             $deleteLang = rex_sql::factory();
             $deleteLang->setQuery('DELETE FROM ' . $table . ' WHERE clang_id=?', [$ep->getParam('clang')->getId()]);
+            consent_manager_cache::forceWrite();
         }
     }
 
@@ -227,6 +228,7 @@ class consent_manager_clang
     public static function clangAdded(rex_extension_point $ep)
     {
         self::addClang($ep->getParam('clang')->getId());
+        consent_manager_cache::forceWrite();
     }
 
 }
