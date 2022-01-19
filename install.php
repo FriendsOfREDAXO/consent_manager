@@ -108,6 +108,8 @@ if (-1 === $this->getConfig('justInstalled', -1)) {
     $this->setConfig('justInstalled', $justinstalled);
 }
 
+consent_manager_cache::forceWrite();
+
 // Delete Template cache
 rex_dir::delete(rex_path::cache('addons/templates'));
 // Delete Module cache
