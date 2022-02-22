@@ -112,11 +112,11 @@
             if (el.checked || toSave === 'all') {
                 cookieUids.forEach(function (uid) {
                     consents.push(uid);
-                    addScript(consent_managerBox.querySelector('[data-uid="' + uid + '"]'));
+                    addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
                 });
             } else {
                 cookieUids.forEach(function (uid) {
-                    removeScript(consent_managerBox.querySelector('[data-uid="' + uid + '"]'));
+                    removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
                 });
             }
         });
