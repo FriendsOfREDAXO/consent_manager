@@ -36,7 +36,7 @@ elseif ($func == 'add' || $func == 'edit')
             $field = $form->addTextField('uid');
             $field->setLabel($this->i18n('consent_manager_uid_with_hint'));
             $field->getValidator()->add('notEmpty', $this->i18n('consent_manager_uid_empty_msg'));
-            $field->getValidator()->add('match', $this->i18n('consent_manager_uid_malformed_msg'), '/^[a-z0-9-]+$/');
+            $field->getValidator()->add('match', $this->i18n('consent_manager_uid_malformed_msg'), '/^[a-z0-9-_]+$/');
         }
         else
         {
