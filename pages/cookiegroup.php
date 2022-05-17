@@ -44,12 +44,13 @@ if ($func == 'delete') {
                     $select->addOption($v['uid'], $v['id']);
                 }
         */
-        $field = $form->addCheckboxField('domain');
-        $field->setLabel($this->i18n('consent_manager_domain'));
-        foreach ($domains as $v) {
-            $field->addOption($v['uid'], $v['id']);
+        if (count($domains)>0) {
+            $field = $form->addCheckboxField('domain');
+            $field->setLabel($this->i18n('consent_manager_domain'));
+            foreach ($domains as $v) {
+                $field->addOption($v['uid'], $v['id']);
+            }
         }
-
         $field = $form->addPrioField('prio');
         $field->setWhereCondition('clang_id = '.$clang_id);
         $field->setLabel($this->i18n('prio'));
@@ -64,8 +65,9 @@ if ($func == 'delete') {
             $checked = (in_array($v['id'], $checkedBoxes)) ? '|1|' : '';
             $checkboxes[] = [$checked, $v['uid']];
         }
-        $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', $checkboxes));
-
+        if (count($checkboxes)>0) {
+            $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', $checkboxes));
+        }
     }
     $field = $form->addTextField('name');
     $field->setLabel($this->i18n('consent_manager_name'));
@@ -113,9 +115,9 @@ echo $msg;
 if ($showlist) {
     $listDebug = false;
     $qry = '
-    SELECT pid,uid,name,domain,cookie 
-    FROM '.$table.' 
-    WHERE clang_id = '.$clang_id.' 
+    SELECT pid,uid,name,domain,cookie
+    FROM '.$table.'
+    WHERE clang_id = '.$clang_id.'
     ORDER BY prio';
 
     $list = rex_list::factory($qry, 100, '', $listDebug);
