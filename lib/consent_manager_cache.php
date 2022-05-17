@@ -134,7 +134,9 @@ class consent_manager_cache
         foreach ($this->domains as $v) {
             $this->config['domains'][$v['uid']] = $v;
         }
-        $this->config['texts'][$clangId] = $this->texts[$clangId];
+        if (isset($this->texts[$clangId])) {
+            $this->config['texts'][$clangId] = $this->texts[$clangId];
+        }
         $this->config['majorVersion'] = rex_addon::get('consent_manager')->getVersion('%s');
     }
 
