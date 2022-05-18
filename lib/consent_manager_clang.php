@@ -54,7 +54,7 @@ class consent_manager_clang
                 if (!$page) {
                     continue;
                 }
-                $clang_id = str_replace('clang', '', rex_be_controller::getCurrentPagePart(3));
+                $clang_id = str_replace('clang', '', rex_be_controller::getCurrentPagePart(3, ''));
                 foreach (rex_clang::getAll() as $id => $clang)
                 {
                     $page->addSubpage((new rex_be_page('clang' . $id, $clang->getName()))
