@@ -74,6 +74,9 @@ class consent_manager_rex_form
 
     public static function validateHostname($hostname)
     {
+        if (str_contains($hostname, ':')) {
+            [$hostname, $port] = explode(':', $hostname, 2);
+        }
         return filter_var($hostname, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
     }
 
