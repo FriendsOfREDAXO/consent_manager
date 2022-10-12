@@ -21,3 +21,13 @@
 ### Bugfixes
 
 * PHP 8.1 - Bugfix by @tbaddade in #242
+
+## Version 3.0.7 – 12.05.2022
+
+### Changes
+
+Update package.yml by @tyrant88 in #238
+
+### Bugfixes
+
+* keine
