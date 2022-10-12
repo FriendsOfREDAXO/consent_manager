@@ -10,6 +10,7 @@ consent_manager_description = Beschreibung
 consent_manager_not_deletable = Dieser Datensatz kann nicht gelöscht werden, da er vom Addon benötigt wird
 consent_manager_successfully_deleted = Datensatz gelöscht
 consent_manager_help = Hilfe
+consent_manager_changelog = Changelog
 
 consent_manager_cookies = Dienste
 consent_manager_cookie_add = Dienst erstellen

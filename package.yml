@@ -30,6 +30,12 @@ page:
         subPath: README.md,
         itemclass: pull-right,
       }
+    changelog:
+      {
+        title: "translate:consent_manager_changelog",
+        subPath: CHANGELOG.md,
+        itemclass: pull-right,
+      }
 
 requires:
   redaxo: "^5.8"
