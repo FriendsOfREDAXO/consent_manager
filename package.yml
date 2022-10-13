@@ -41,6 +41,6 @@ requires:
   redaxo: "^5.8"
   php:
     version: ">=7, <9"
-    
+
 installer_ignore:
     - .github
