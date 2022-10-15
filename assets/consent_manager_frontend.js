@@ -192,6 +192,12 @@
             document.querySelector('body').style.overflow = 'hidden';
         }
         document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+        document.getElementById('consent_manager-save-selection').focus();
     }
 
 })();
+
+function consent_manager_showBox() {
+    document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+    document.getElementById('consent_manager-save-selection').focus();
+}
