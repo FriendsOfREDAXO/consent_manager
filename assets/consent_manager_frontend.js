@@ -198,6 +198,29 @@
 })();
 
 function consent_manager_showBox() {
+    var consents = [];
+    if (typeof Cookies.get('consent_manager') != 'undefined') {
+        cookieData = JSON.parse(Cookies.get('consent_manager'));
+        if (cookieData.hasOwnProperty('version')) {
+            consents = cookieData.consents;
+        }
+    }
+    consent_managerBox = document.getElementById('consent_manager-background');
+    consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+        var check = true,
+            cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+        cookieUids.forEach(function (uid) {
+            if (consents.indexOf(uid) === -1) {
+                check = false;
+            }
+        });
+        if (check) {
+            el.checked = true;
+        }
+    });
+    if (consent_manager_parameters.hidebodyscrollbar) {
+        document.querySelector('body').style.overflow = 'hidden';
+    }
     document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
     document.getElementById('consent_manager-save-selection').focus();
 }
