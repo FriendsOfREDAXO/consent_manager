@@ -15,7 +15,7 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
                                 if (count($cookiegroup['cookie_uids']) >= 1) {
                                     if ($cookiegroup['required']) {
                                         echo '<div class="consent_manager-cookiegroup-checkbox">';
-                                        echo '<label for="'.$cookiegroup['uid'].'"><input tabindex= "0" ype="checkbox" disabled="disabled" data-action="toggle-cookie" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\' checked>';
+                                        echo '<label for="'.$cookiegroup['uid'].'"><input tabindex= "0" type="checkbox" disabled="disabled" data-action="toggle-cookie" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\' checked>';
                                         echo '<span>'.$cookiegroup['name'].'</span></label>';
                                         echo '</div>' . PHP_EOL;
                                     } else {
