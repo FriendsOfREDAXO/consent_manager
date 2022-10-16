@@ -92,42 +92,22 @@
     }
 }
 
-a.consent_manager-close-box {
+.consent_manager-close-box {
     position: absolute;
-    right: .75em;
-    top: .75em;
+    right: 1em;
+    top: 1em;
     display: block;
     border-radius: 50% !important;
-    width: 28px;
-    height: 28px;
-    color: #fff;
+    border: solid 2px #666;
+    width: 30px;
+    height: 30px;
     background-color:#666;
-    text-indent:-999px;
+    color:#fff;
+    font-size: 16px;
     &:hover {
+        border-color: #444;
         background-color: #444;
         color: #fff;
-    }
-    &::before {
-        content: " ";
-        position: absolute;
-        display: block;
-        background-color: #fff;
-        width: 4px;
-        left: 12px;
-        top: 7px;
-        bottom: 7px;
-        transform: rotate(45deg);
-    }
-    &::after {
-        content: " ";
-        position: absolute;
-        display: block;
-        background-color: #fff;
-        width: 4px;
-        left: 12px;
-        top: 7px;
-        bottom: 7px;
-        transform: rotate(-45deg);
     }
 }
 

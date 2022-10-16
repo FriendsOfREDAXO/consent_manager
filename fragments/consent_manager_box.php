@@ -4,7 +4,7 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
 ?>
 <?php if ($consent_manager->cookiegroups): ?>
         <div class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet>
-            <div class="consent_manager-wrapper" id="consent_manager-wrapper">
+            <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="0" aria-modal="true" role="dialog">
                 <div class="consent_manager-wrapper-inner">
                     <div class="consent_manager-summary" id="consent_manager-summary">
                         <p class="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></p>
@@ -20,7 +20,7 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
                                         echo '</div>' . PHP_EOL;
                                     } else {
                                         echo '<div class="consent_manager-cookiegroup-checkbox">';
-                                        echo '<label for="'.$cookiegroup['uid'].'"><input type="checkbox" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\'>';
+                                        echo '<label for="'.$cookiegroup['uid'].'"><input tabindex="0" type="checkbox" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\'>';
                                         echo '<span>'.$cookiegroup['name'].'</span></label>';
                                         echo '</div>' . PHP_EOL;
                                     }
@@ -29,7 +29,7 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
                             ?>
                         </div>
                         <div class="consent_manager-show-details">
-                            <a id="consent_manager-toggle-details" class="icon-info-circled"><?= $consent_manager->texts['toggle_details'] ?></a>
+                            <a id="consent_manager-toggle-details" class="icon-info-circled" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></a>
                         </div>
                     </div>
                     <div class="consent_manager-detail consent_manager-hidden" id="consent_manager-detail">
@@ -66,8 +66,8 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
                     </div>
                     <div class="consent_manager-buttons-sitelinks">
                         <div class="consent_manager-buttons">
-                            <a class="consent_manager-save-selection consent_manager-close"><?= $consent_manager->texts['button_accept'] ?></a>
-                            <a class="consent_manager-accept-all consent_manager-close"><?= $consent_manager->texts['button_select_all'] ?></a>
+                            <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close"><?= $consent_manager->texts['button_accept'] ?></button>
+                            <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close"><?= $consent_manager->texts['button_select_all'] ?></button>
                         </div>
                         <div class="consent_manager-sitelinks">
                             <?php
@@ -76,12 +76,12 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
                                 $clang = rex_clang::getCurrent()->getId();
                             }
                             foreach ($consent_manager->links as $v) {
-                                echo '<a href="' . rex_getUrl($v, $clang) . '">' . (!is_null(rex_article::get($v, $clang)) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
+                                echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . (!is_null(rex_article::get($v, $clang)) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
                             }
                             ?>
                         </div>
                     </div>
-                    <a class="icon-cancel-circled consent_manager-close consent_manager-close-box">&#10006;</a>
+                    <button tabindex="0" class="icon-cancel-circled consent_manager-close consent_manager-close-box">&#10006;</button>
                 </div>
             </div>
             <?php
