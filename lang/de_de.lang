@@ -23,6 +23,7 @@ consent_manager_cookie_provider_link_privacy = Link Datenschutzerklärung
 consent_manager_cookie_definition = Definitionen (YAML)
 consent_manager_cookie_placeholder_text = Platzhalter Text
 consent_manager_cookie_placeholder_image = Platzhalter Bild
+consent_manager_cookie_malformed_yaml = Definitionen (YAML) sind ungültig! Bitte korrekten YAML-Code eingeben.
 
 consent_manager_cookiegroups = Gruppen
 consent_manager_cookiegroup_add = Gruppe erstellen

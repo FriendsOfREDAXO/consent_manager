@@ -48,6 +48,8 @@ elseif ($func == 'add' || $func == 'edit')
     $field = $form->addTextAreaField('definition');
     $field->setAttributes(['class' => 'form-control codemirror', 'name'=> $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
     $field->setLabel($this->i18n('consent_manager_cookie_definition'));
+    $field->getValidator()->add('custom', $this->i18n('consent_manager_cookie_malformed_yaml'), 'consent_manager_rex_form::validateYaml');
+
     $field = $form->addTextField('provider');
     $field->setLabel($this->i18n('consent_manager_cookie_provider'));
     $field = $form->addTextField('provider_link_privacy');

@@ -81,4 +81,15 @@ class consent_manager_rex_form
         return false;
     }
 
+    public static function validateYaml($yaml)
+    {
+        $valid = true;
+        try {
+            rex_string::yamlDecode($yaml);
+        } catch (rex_yaml_parse_exception $exception) {
+            $valid = false;
+        }
+        return $valid;
+    }
+
 }
