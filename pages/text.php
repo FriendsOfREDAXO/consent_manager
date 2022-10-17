@@ -44,7 +44,7 @@ if ($showlist)
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
-    $list->addTableAttribute('class', 'consent_manager-table consent_manager-table-text');
+    $list->addTableAttribute('class', 'table table-striped table-hover consent_manager-table consent_manager-table-text');
 
     $list->removeColumn('pid');
 

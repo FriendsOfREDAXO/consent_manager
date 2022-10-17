@@ -36,7 +36,7 @@ $list->setColumnFormat('consents', 'custom', static function ($params) {
 });
 $list->setNoRowsMessage($addon->i18n('list_no_rows'));
 
-$list->addTableAttribute('class', 'table-striped table-hover');
+$list->addTableAttribute('class', 'table table-striped table-hover');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('thead_title'));
