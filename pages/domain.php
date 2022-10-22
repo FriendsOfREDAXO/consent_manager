@@ -60,6 +60,7 @@ if ($showlist)
 
     $list->removeColumn('id');
     $list->setColumnLabel('uid', $this->i18n('consent_manager_domain'));
+    $list->setColumnParams('uid', ['func' => 'edit', 'id' => '###id###']);
     $list->setColumnSortable('uid');
 
     $tdIcon = '<i class="fa fa-coffee"></i>';

@@ -113,6 +113,7 @@ if ($showlist)
 
     $list->removeColumn('pid');
     $list->setColumnLabel('uid', $this->i18n('consent_manager_uid'));
+    $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
     $list->setColumnSortable('uid');
 
     $list->setColumnLabel('service_name', $this->i18n('consent_manager_cookie_service_name'));

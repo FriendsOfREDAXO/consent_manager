@@ -54,6 +54,8 @@ if ($showlist)
     $list->setColumnParams('', ['func' => 'edit', 'pid' => '###pid###']);
 
     $list->setColumnLabel('uid', $this->i18n('consent_manager_uid'));
+    $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
+
     $list->setColumnLabel('text', $this->i18n('consent_manager_text'));
 
     $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));

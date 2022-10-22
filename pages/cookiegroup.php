@@ -131,6 +131,7 @@ if ($showlist) {
     $list->setColumnLabel('cookie', $this->i18n('consent_manager_cookies'));
     $list->setColumnFormat('cookie', 'custom', 'consent_manager_rex_list::formatCookie');
     $list->setColumnLabel('uid', $this->i18n('consent_manager_uid'));
+    $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
     $list->setColumnSortable('uid');
     $list->setColumnLabel('name', $this->i18n('consent_manager_name'));
     $list->setColumnSortable('name');
