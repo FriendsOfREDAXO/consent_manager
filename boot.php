@@ -33,6 +33,7 @@ if (rex::isBackend()) {
             }
             if ('consent_manager' == rex_be_controller::getCurrentPagePart(1)) {
                 rex_view::addCssFile($this->getAssetsUrl('consent_manager_backend.css'));
+                rex_view::addJsFile($this->getAssetsUrl('consent_manager_backend.js'));
             }
         }
     });

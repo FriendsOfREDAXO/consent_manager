@@ -75,6 +75,7 @@ consent_manager_thead_title = Consent-Log
 consent_manager_thead_id = ID
 consent_manager_thead_createdate = Datum
 consent_manager_thead_domain = Domain
+consent_manager_thead_ip = IP
 consent_manager_thead_consents = Consents
 consent_manager_thead_cachelogid = Cachelog-Id
 consent_manager_thead_consentid = Consent-Id
