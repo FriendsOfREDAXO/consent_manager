@@ -120,7 +120,7 @@ class consent_manager_frontend
 
         $content = '';
         $filenames = [];
-        $filenames[] = 'js.cookie-2.2.1.min.js';
+        $filenames[] = 'js.cookie.min.js';
         $filenames[] = 'consent_manager_polyfills.js';
         $filenames[] = 'consent_manager_frontend.js';
         foreach ($filenames as $filename) {
