@@ -127,7 +127,7 @@
             }
         });
         cookieData.consents = consents;
-        Cookies.set('consent_manager', JSON.stringify(cookieData), { expires: expires, path: '/', sameSite: 'Lax', secure: false });
+        Cookies.set('consent_manager', JSON.stringify(cookieData), { expires: expires, path: '/', domain: consent_manager_parameters.domain, sameSite: 'Lax', secure: false });
 
         var http = new XMLHttpRequest(),
             url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager',
