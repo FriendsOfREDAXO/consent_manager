@@ -2,7 +2,7 @@
 
 $addon = rex_addon::get('consent_manager');
 $addon->includeFile(__DIR__.'/install.php');
-$this->setConfig('forceCache', true);
+$addon->setConfig('forceCache', true);
 
 // Copy scripts to every language
 if (count(rex_clang::getAllIds()) > 1) {

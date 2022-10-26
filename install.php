@@ -1,4 +1,5 @@
 <?php
+$addon = rex_addon::get('consent_manager');
 
 $justinstalled = true;
 
@@ -104,8 +105,8 @@ rex_sql_table::get(rex::getTable('consent_manager_consent_log'))
     ->setPrimaryKey('id')
     ->ensure();
 
-if (-1 === $this->getConfig('justInstalled', -1)) {
-    $this->setConfig('justInstalled', $justinstalled);
+if (-1 === $addon->getConfig('justInstalled', -1)) {
+    $addon->setConfig('justInstalled', $justinstalled);
 }
 
 consent_manager_cache::forceWrite();
@@ -113,4 +114,4 @@ consent_manager_cache::forceWrite();
 // Delete Template cache
 rex_dir::delete(rex_path::cache('addons/templates'));
 // Delete Module cache
-rex_addon::get('structure')->clearCache();
+rex_addon::get('structure')->clearCache(); /** @phpstan-ignore-line */
