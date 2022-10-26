@@ -101,9 +101,13 @@
     border: solid 2px #666;
     width: 30px;
     height: 30px;
+    line-height: 28px;
     background-color:#666;
     color:#fff;
-    font-size: 16px;
+    font-family: Arial;
+    font-size: 18px;
+    padding: 0;
+    margin: 0;
     &:hover {
         border-color: #444;
         background-color: #444;
