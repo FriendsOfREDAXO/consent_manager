@@ -1,6 +1,6 @@
 <?php
 $consent_manager = new consent_manager_frontend(0);
-$consent_manager->setDomain($_SERVER['HTTP_HOST']);
+$consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 ?>
 <?php if ($consent_manager->cookiegroups): ?>
         <div class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet>

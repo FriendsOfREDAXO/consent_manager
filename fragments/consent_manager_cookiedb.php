@@ -1,14 +1,14 @@
 <?php
 $consent_manager = new consent_manager_frontend($this->getVar('forceCache'));
-$consent_manager->setDomain($_SERVER['HTTP_HOST']);
+$consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 
 $output = '';
 
 if ($consent_manager->cookiegroups) {
 
     // Cookie Consent + History
-    $consent_manager_cookie = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'],1) : false;
-    if ($consent_manager_cookie) {
+    $consent_manager_cookie =  null !== rex_request::cookie('consent_manager') ? (array)json_decode(strval(rex_request::cookie('consent_manager')), true) : null;
+    if (null !== $consent_manager_cookie && isset($consent_manager_cookie['cachelogid'])) {
 
         $db = rex_sql::factory();
         $db->setDebug(false);
@@ -17,15 +17,14 @@ if ($consent_manager->cookiegroups) {
                         WHERE '.rex::getTable('consent_manager_consent_log').'.cachelogid = :cachelogid
                         ORDER BY '.rex::getTable('consent_manager_consent_log').'.id DESC
                         LIMIT 5'
-                        ,['cachelogid'=>$consent_manager_cookie['cachelogid']]
+                        ,['cachelogid' => $consent_manager_cookie['cachelogid']]
                     );
         $history = $db->getArray();
         $consents = [];
         if (isset($history[0]['consents'])) {
-            $consents = json_decode($history[0]['consents']);
+            $consents = (array)json_decode(strval($history[0]['consents']));
         }
 
-        //$consents_uids_output = implode(', ', $consents);
         $consents_service_names = array();
         foreach($consents as $consent) {
             $consents_service_names[] = $consent_manager->cookies[$consent]['service_name'].' ('.$consent.')';
@@ -46,8 +45,7 @@ if ($consent_manager->cookiegroups) {
                         <th class="consent_manager-history-consents">'.$consent_manager->texts['consent_consents'].'</th>
                     </tr>';
         foreach ($history as $historyentry) {
-            $consents = json_decode($historyentry['consents']);
-            //$consents_uids_output = implode(', ', $consents);
+            $consents = (array)json_decode(strval($historyentry['consents']));
             $consents_service_names = array();
             foreach($consents as $consent) {
                 $consents_service_names[] = $consent_manager->cookies[$consent]['service_name'].' ('.$consent.')';
@@ -105,6 +103,7 @@ if ($consent_manager->cookiegroups) {
 
     $output .= '<hr>';
     $output .= '<h2>'.$consent_manager->texts['headline_usedcookies'].'</h2>';
+    $cookiedb = [];
 
     foreach ($consent_manager->cookies as $cookies) {
         foreach ($cookies['definition'] as $def) {
@@ -126,7 +125,7 @@ if ($consent_manager->cookiegroups) {
                     <th class="consent_manager-cookie-lifetime">'.$consent_manager->texts['lifetime'].'</th>
                     <th class="consent_manager-cookie-service">'.$consent_manager->texts['service'].'</th>
                 </tr>';
-    foreach ($_COOKIE as $cookiename => $cookieValue) {
+    foreach ($_COOKIE as $cookiename => $cookieValue) { /** @phpstan-ignore-line */
         $output .= '<tr>';
         $output .= '<td class="consent_manager-cookie-name">'.$cookiename.'</td>';
         if (isset($cookiedb[$cookiename]) || array_key_exists($cookiename, $cookiedb)) {
