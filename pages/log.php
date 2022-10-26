@@ -8,17 +8,18 @@ if ($searchvalue !== '') {
     $dosearch = str_replace(['\'', ';', '"'], '', $searchvalue);
     $sql = rex_sql::factory();
     if (DateTime::createFromFormat('d.m.Y', $searchvalue) !== false) {
-        $where = ' WHERE `createdate` LIKE ' . $sql->escape(date('Y-m-d', strtotime($dosearch)).'%') . ' ';
+        $searchdate = strtotime($dosearch);
+        if (false !== $searchdate) {
+            $where = ' WHERE `createdate` LIKE ' . $sql->escape(date('Y-m-d', $searchdate).'%') . ' ';
+        }
     }
-    $intbool = ( !is_int($dosearch) ? (ctype_digit($dosearch)) : true );
-    if ($intbool && $where == '') {
-        $dosearch = (int)$dosearch;
+    $intbool = (bool)preg_match('/^[1-9][0-9]{0,15}$/', $dosearch);
+    if (true === $intbool) {
         $where = ' WHERE `cachelogid` = ' . $sql->escape($dosearch) . ' ';
     }
-    if ($where == '') {
+    if ($where === '') {
         $where = ' WHERE `domain` LIKE ' . $sql->escape($dosearch.'%') . ' OR `ip` LIKE ' . $sql->escape($dosearch.'%') . ' OR `consentid` LIKE ' . $sql->escape($dosearch.'%') . ' ';
     }
-    dump($where);
 }
 
 $list = rex_list::factory(
@@ -55,7 +56,7 @@ $list->setColumnFormat('createdate', 'custom', static function ($params) {
 });
 $list->setColumnFormat('consents', 'custom', static function ($params) {
     $list = $params['list'];
-    $consents = json_decode($list->getValue('consents'));
+    $consents = (array)json_decode($list->getValue('consents'));
     $str = implode(', ', $consents);
     return $str;
 });

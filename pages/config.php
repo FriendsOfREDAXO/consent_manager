@@ -2,7 +2,7 @@
 
 $addon = rex_addon::get('consent_manager');
 
-$form = rex_config_form::factory($addon->getPackageId());
+$form = rex_config_form::factory(strval($addon->getPackageId()));
 
 $field = $form->addFieldset($addon->i18n('consent_manager_config_legend'));
 
@@ -31,8 +31,8 @@ $field = $form->addRawField('<p><strong>'.$addon->i18n('consent_manager_config_h
 $field = $form->addFieldset($addon->i18n('consent_manager_config_token_legend'));
 
 $field = $form->addTextField('skip_consent');
-$field->setLabel($addon->i18n('consent_manager_config_token_label'), 1);
-$field->setNotice($addon->i18n('consent_manager_config_token_notice'), 1);
+$field->setLabel($addon->i18n('consent_manager_config_token_label'));
+$field->setNotice($addon->i18n('consent_manager_config_token_notice'));
 
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);

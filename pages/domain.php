@@ -1,12 +1,14 @@
 <?php
+$addon = rex_addon::get('consent_manager');
+
 $showlist = true;
 $id = rex_request('id', 'int', 0);
 $func = rex_request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_domain');
-$clang_id = (int)str_replace('clang', '', rex_be_controller::getCurrentPagePart(3));
+$clang_id = (int)str_replace('clang', '', rex_be_controller::getCurrentPagePart(3)); /** @phpstan-ignore-line */
 $table = rex::getTable('consent_manager_domain');
 $msg = '';
-if ($func == 'delete')
+if ($func === 'delete')
 {
     $db = rex_sql::factory();
     $db->setTable($table);
@@ -14,7 +16,7 @@ if ($func == 'delete')
     $db->delete();
     $msg = rex_view::success(rex_i18n::msg('consent_manager_successfully_deleted'));
 }
-elseif ($func == 'add' || $func == 'edit')
+elseif ($func === 'add' || $func === 'edit')
 {
     $formDebug = false;
     $showlist = false;
@@ -27,19 +29,19 @@ elseif ($func == 'add' || $func == 'edit')
 
 
     $field = $form->addTextField('uid');
-    $field->setLabel($this->i18n('consent_manager_domain'));
-    $field->getValidator()->add('notEmpty', $this->i18n('consent_manager_domain_empty_msg'));
-    $field->getValidator()->add('custom', $this->i18n('consent_manager_domain_malformed_msg'), 'consent_manager_rex_form::validateHostname');
+    $field->setLabel($addon->i18n('consent_manager_domain'));
+    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_empty_msg'));
+    $field->getValidator()->add('custom', $addon->i18n('consent_manager_domain_malformed_msg'), 'consent_manager_rex_form::validateHostname');
 
     $field = $form->addLinkmapField('privacy_policy');
-    $field->setLabel($this->i18n('consent_manager_domain_privacy_policy'));
-    $field->getValidator()->add('notEmpty', $this->i18n('consent_manager_domain_privacy_policy_empty_msg'));
+    $field->setLabel($addon->i18n('consent_manager_domain_privacy_policy'));
+    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_privacy_policy_empty_msg'));
 
     $field = $form->addLinkmapField('legal_notice');
-    $field->setLabel($this->i18n('consent_manager_domain_legal_notice'));
-    $field->getValidator()->add('notEmpty', $this->i18n('consent_manager_domain_legal_notic_empty_msg'));
+    $field->setLabel($addon->i18n('consent_manager_domain_legal_notice'));
+    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_legal_notic_empty_msg'));
 
-    $title = $form->isEditMode() ? $this->i18n('consent_manager_domain_edit') : $this->i18n('consent_manager_domain_add');
+    $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
     $content = $form->get();
 
     $fragment = new rex_fragment();
@@ -59,7 +61,7 @@ if ($showlist)
     $list->addTableAttribute('class', 'table table-striped table-hover consent_manager-table consent_manager-table-cookiegroup');
 
     $list->removeColumn('id');
-    $list->setColumnLabel('uid', $this->i18n('consent_manager_domain'));
+    $list->setColumnLabel('uid', $addon->i18n('consent_manager_domain'));
     $list->setColumnParams('uid', ['func' => 'edit', 'id' => '###id###']);
     $list->setColumnSortable('uid');
 
@@ -80,7 +82,7 @@ if ($showlist)
     $content = $list->get();
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', $this->i18n('consent_manager_domains'));
+    $fragment->setVar('title', $addon->i18n('consent_manager_domains'));
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
