@@ -3,12 +3,18 @@
 class consent_manager_config
 {
 
+    /**
+     * get consent_manager tables
+     *
+     * @param boolean $multilangOnly
+     * @return array<int, string>
+     */
     public static function getTables($multilangOnly = false)
     {
         $tables = [];
         foreach (consent_manager_config::getKeys() as $key)
         {
-            if ($multilangOnly && $key == 'domain')
+            if ($multilangOnly && $key === 'domain')
             {
                 continue;
             }
@@ -18,6 +24,11 @@ class consent_manager_config
         return $tables;
     }
 
+    /**
+     * get consent_manager keys
+     *
+     * @return array<int, string>
+     */
     public static function getKeys()
     {
         return [

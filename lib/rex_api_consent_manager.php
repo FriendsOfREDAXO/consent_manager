@@ -8,12 +8,12 @@ class rex_api_consent_manager extends rex_api_function
     {
         $domain = rex_post('domain', 'string', false);
         $consentid = rex_post('consentid', 'string', false);
-        $consent_manager = isset($_COOKIE['consent_manager']) ? json_decode($_COOKIE['consent_manager'], 1) : false;
-        if (!$domain || !$consentid || !$consent_manager) {
+        $consent_manager = (null !== rex_request::cookie('consent_manager')) ? (array)json_decode(strval(rex_request::cookie('consent_manager')), true) : false;
+        if (false === $domain || false === $consentid || false === $consent_manager) {
             exit;
         }
-        if ((string) $consent_manager['consentid'] == $consentid) {
-            $ip = $_SERVER['REMOTE_ADDR'];
+        if ($consent_manager['consentid'] === $consentid) {
+            $ip = strval(rex_request::server('REMOTE_ADDR'));
             if (false !== strpos($ip, '.')) {
                 $pieces = explode('.', $ip);
                 $nPieces = count($pieces);
