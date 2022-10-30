@@ -32,7 +32,7 @@ if (rex::isBackend()) {
                 $compiler->compile();
                 rex_file::copy($addon->getPath('assets/consent_manager_frontend.css'), $addon->getAssetsPath('consent_manager_frontend.css'));
                 rex_file::copy($addon->getPath('assets/consent_manager_backend.css'), $addon->getAssetsPath('consent_manager_backend.css'));
-                rex_file::copy($addon->getPath('assets/consent_manager_polyfills.js'), $addon->getAssetsPath('consent_manager_frontend.js'));
+                rex_file::copy($addon->getPath('assets/consent_manager_polyfills.js'), $addon->getAssetsPath('consent_manager_polyfills.js'));
                 rex_file::copy($addon->getPath('assets/consent_manager_frontend.js'), $addon->getAssetsPath('consent_manager_frontend.js'));
             }
             if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)) {
