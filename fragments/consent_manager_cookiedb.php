@@ -1,10 +1,10 @@
 <?php
 $consent_manager = new consent_manager_frontend($this->getVar('forceCache'));
-$consent_manager->setDomain(rex_request::server('HTTP_HOST'));
+$consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
 
 $output = '';
 
-if ($consent_manager->cookiegroups) {
+if ($consent_manager->cookiegroups) { /** @phpstan-ignore-line */
 
     // Cookie Consent + History
     $consent_manager_cookie =  null !== rex_request::cookie('consent_manager') ? (array)json_decode(strval(rex_request::cookie('consent_manager')), true) : null;

@@ -99,7 +99,7 @@ class consent_manager_cache
     }
 
     /**
-     * @param integer $clangId
+     * @param int $clangId
      * @return void
      */
     private function prepareCookie($clangId)

@@ -2,31 +2,39 @@
 
 class consent_manager_frontend
 {
-    public $cookiegroups = [];
-    public $cookies = [];
-    public $texts = [];
-    public $domainName = '';
-    public $links = [];
-    public $scripts = [];
-    public $boxClass = '';
-    public $cache = [];
-    public $version = '';
-    public $cacheLogId = '';
+    public $cookiegroups = []; /** @phpstan-ignore-line */
+    public $cookies = []; /** @phpstan-ignore-line */
+    public $texts = []; /** @phpstan-ignore-line */
+    public $domainName = ''; /** @phpstan-ignore-line */
+    public $links = []; /** @phpstan-ignore-line */
+    public $scripts = []; /** @phpstan-ignore-line */
+    public $boxClass = ''; /** @phpstan-ignore-line */
+    public $cache = []; /** @phpstan-ignore-line */
+    public $version = ''; /** @phpstan-ignore-line */
+    public $cacheLogId = ''; /** @phpstan-ignore-line */
 
+    /**
+     * @param int $forceWrite
+     */
     public function __construct($forceWrite = 0)
     {
-        if ($forceWrite) {
+        if ($forceWrite === 1) {
             consent_manager_cache::forceWrite();
         }
         $this->cache = consent_manager_cache::read();
-        if (!$this->cache || rex_addon::get('consent_manager')->getVersion('%s') != $this->cache['majorVersion']) {
+        if (null === $this->cache || (null !== $this->cache && rex_addon::get('consent_manager')->getVersion('%s') !== $this->cache['majorVersion'])) { /** @phpstan-ignore-line */
             consent_manager_cache::forceWrite();
             $this->cache = consent_manager_cache::read();
         }
-        $this->cacheLogId = $this->cache['cacheLogId'];
-        $this->version = $this->cache['majorVersion'];
+        $this->cacheLogId = $this->cache['cacheLogId']; /** @phpstan-ignore-line */
+        $this->version = $this->cache['majorVersion']; /** @phpstan-ignore-line */
     }
 
+    /**
+     * @param int $forceCache
+     * @param string $fragmentFilename
+     * @return string
+     */
     public static function getFragment($forceCache, $fragmentFilename)
     {
         $fragment = new rex_fragment();
@@ -35,6 +43,10 @@ class consent_manager_frontend
         return $fragment->parse($fragmentFilename);
     }
 
+    /**
+     * @param string $domain
+     * @return void
+     */
     public function setDomain($domain)
     {
         if (!isset($this->cache['domains'])) {
@@ -53,7 +65,7 @@ class consent_manager_frontend
             $clang = rex_clang::getCurrent()->getId();
         }
 
-        if (in_array($article, [$this->links['privacy_policy'], $this->links['legal_notice']])) {
+        if (in_array($article, [$this->links['privacy_policy'], $this->links['legal_notice']], true)) {
             $this->boxClass = 'consent_manager-initially-hidden';
         }
         if (isset($this->cache['cookies'][$clang])) {
@@ -84,7 +96,12 @@ class consent_manager_frontend
         }
     }
 
-    public static function outputJavascript($host = null, $article_id = null)
+    /**
+     * @param string $host
+     * @param string $article_id
+     * @return void
+     */
+    public function outputJavascript($host = null, $article_id = null)
     {
         $clang = rex_request('lang', 'integer', 0);
         if ($clang === 0) {
@@ -102,10 +119,11 @@ class consent_manager_frontend
         echo self::getFragment(0, 'consent_manager_box.php');
         $boxtemplate = ob_get_contents();
         ob_end_clean();
-        if ('' == $boxtemplate) {
-            rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . $_SERVER['HTTP_HOST'] . ')');
+        if ('' === $boxtemplate) {
+            rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . rex_request::server('HTTP_HOST') . ')');
         }
         if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable()) {
+            /** @phpstan-ignore-next-line */
             $boxtemplate = sprogdown($boxtemplate, $clang);
         }
         $boxtemplate = str_replace("'", "\'", $boxtemplate);
@@ -113,10 +131,10 @@ class consent_manager_frontend
         $boxtemplate = str_replace("\n", ' ', $boxtemplate);
 
         echo '/* --- Parameters --- */' . PHP_EOL;
-        echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . $_SERVER['HTTP_HOST'] . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . '};' . PHP_EOL . PHP_EOL;
+        echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . rex_request::server('HTTP_HOST') . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . '};' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
-        echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
+        echo strval($boxtemplate) . '\';' . PHP_EOL . PHP_EOL;
 
         $content = '';
         $filenames = [];

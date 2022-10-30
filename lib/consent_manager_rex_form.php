@@ -3,6 +3,11 @@
 class consent_manager_rex_form
 {
 
+    /**
+     * @param string $label
+     * @param string $value
+     * @return string
+     */
     public static function getFakeText($label, $value)
     {
         $html = '';
@@ -13,6 +18,11 @@ class consent_manager_rex_form
         return $html;
     }
 
+    /**
+     * @param string $label
+     * @param string $value
+     * @return string
+     */
     public static function getFakeTextarea($label, $value)
     {
         $html = '';
@@ -23,18 +33,23 @@ class consent_manager_rex_form
         return $html;
     }
 
+    /**
+     * @param string $label
+     * @param array<string, string> $checkboxes
+     * @return string
+     */
     public static function getFakeCheckbox($label, $checkboxes)
     {
         $html = '';
         $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
-        if ($label)
+        if (null !== $label)
         {
             $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
         }
         $html .= '<dd>';
         foreach ($checkboxes as $v)
         {
-            $checked = $v[0] == '|1|' ? 'checked' : '';
+            $checked = $v[0] === '|1|' ? 'checked' : '';
             $html .= '<div class="checkbox"><label class="control-label"><input type="checkbox" disabled ' . $checked . '>' . $v[1] . '</label></div>';
         }
         $html .= '</dd>';
@@ -42,6 +57,11 @@ class consent_manager_rex_form
         return $html;
     }
 
+    /**
+     * @param rex_form $form
+     * @param string $table
+     * @return void
+     */
     public static function getId(&$form, $table)
     {
         if (!$form->isEditMode())
@@ -56,22 +76,34 @@ class consent_manager_rex_form
         }
     }
 
+    /**
+     * @param rex_extension_point<object> $ep
+     * @return void
+     */
     public static function removeDeleteButton(rex_extension_point $ep)
     {
         $formTable = $ep->getParams()['form']->getTableName();
-        if (in_array($formTable, consent_manager_config::getTables()))
+        if (in_array($formTable, consent_manager_config::getTables(), true))
         {
             $subject = $ep->getSubject();
-            $subject['delete'] = '';
+            $subject['delete'] = ''; /** @phpstan-ignore-line */
             $ep->setSubject($subject);
         }
     }
 
+    /**
+     * @param string $msg
+     * @return string
+     */
     public static function showInfo($msg)
     {
         return '<div class="consent_manager-rex-form-info"><i class="fa fa-info-circle"></i>' . $msg . '</div>';
     }
 
+    /**
+     * @param string $hostname
+     * @return boolean|string
+     */
     public static function validateHostname($hostname)
     {
         $host = parse_url('https://' . $hostname);
@@ -81,6 +113,10 @@ class consent_manager_rex_form
         return false;
     }
 
+    /**
+     * @param string $yaml
+     * @return boolean
+     */
     public static function validateYaml($yaml)
     {
         $valid = true;
