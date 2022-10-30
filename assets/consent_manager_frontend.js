@@ -230,3 +230,10 @@ function consent_manager_showBox() {
     document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
     document.getElementById('consent_manager-save-selection').focus();
 }
+
+function consent_manager_hasconsent(id) {
+    if (typeof Cookies.get('consent_manager') !== 'undefined') {
+        return JSON.parse(Cookies.get('consent_manager')).consents.indexOf(id) !== -1;
+    }
+    return false;
+}
