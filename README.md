@@ -94,7 +94,9 @@ Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptie
 Der Platzhalter `REX_CONSENT_MANAGER[]` kann im `<head>`-Bereich des Templates oder vor dem `</body>`-Tag eingefügt werden.
 Gibt es mehrere Templates die die Cookie-Box aufrufen sollen muss der Platzhalter entsprechend in allen Templates eingefügt werden.
 
-**Wichtig: Der Platzhalter funktioniert ausschließlich in REDAXO-Templates, nicht innerhalb von php-includes oder Fragmenten.**
+**Wichtig: Der Platzhalter funktioniert ausschließlich in REDAXO-Templates, nicht innerhalb von php-includes, Modulen oder Fragmenten.**
+
+Durch den Parameter `forceReload=1` kann ein Reload der Webseite bei Auswahl der Cookies erzwungen werden. `REX_CONSENT_MANAGER[forceReload=1]`
 
 **Beispiel:**
 
@@ -287,6 +289,12 @@ Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anz
 
 Die Cookie-Box kann auch durch einen JavaScript-Aufruf geöffnet werden `consent_manager_showBox()`.
 
+```php
+// Achtung hier mit Unterstrichen da sonst der Beispiel-Code verstümmelt wird.
+// Unterstriche bei `on_click` und `java_script` müssen entfernt werden!
+<button on_click="java_script:consent_manager_showBox();">Cookie-Einstellungen</button>
+```
+
 ### Scripte mit PHP laden
 
 Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Somit kann man (am Beispiel GoogleMaps) eine Meldung ausgeben, dass bestimmte Cookies akzeptiert werden müssen um die Karte zu laden.
@@ -352,8 +360,7 @@ MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manage
 [https://github.com/FriendsOfREDAXO](https://github.com/FriendsOfREDAXO)
 
 **Projekt-Lead**
-[Ingo Winter](https://github.com/IngoWinter)
-[Andreas Eberhard](https://github.com/aeberhard)
+[Ingo Winter](https://github.com/IngoWinter), [Andreas Eberhard](https://github.com/aeberhard)
 
 ### Credits
 

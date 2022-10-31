@@ -2,20 +2,35 @@
 
 ## Version 3.1.0beta1 – xx.xx.2022
 
-**Achtung:** Das Template für die Consent-Box und CSS wurde angepasst (consent_manager_box.php-Fragment)! Bei eigenen Fragmenten entsprechend anpassen!
+**Achtung:** Das Template für die Consent-Box und CSS wurde angepasst (Fragment consent_manager_box.php)! Bei eigenen Fragmenten entsprechend anpassen!
 
 ### Changes
 
 * CHANGELOG.md hinzugefügt, Anzeige im Backend (package.yml)
 * Host-Validation angepasst (consent_manager_rex_form::validateHostname)
-* Template für die Consent-Box angepasst (fragments/consent_manager_box.php)
+* **Template für die Consent-Box angepasst** (fragments/consent_manager_box.php)
   * Buttons statt Links für die Buttons und den Close-Button
+  * Tabindex(e) hinzugefügt
   * CSS angepasst (scss/consent_manager_frontend.scss)
-* Funktion **consent_manager_showBox** zum anzeigen der Consent-Box (assets/consent_manager_frontend.js)
+  * Browser-Default-Checkboxen ohne SchnickSchnak (nur greyscale, und mit scale vergrössert), dadurch sind die Checkboxen auch per Tastatur erreichbar
+* JavaScript-Funktion **consent_manager_showBox** zum anzeigen der Consent-Box (assets/consent_manager_frontend.js) #230
+* JavaScript-Funktion **consent_manager_hasconsent** zur Consent-Abfrage hinzugefügt
+* Toggle Details anzeigen auch per Tastatur mit Enter (assets/consent_manager_frontend.js)
+* Domain bei Setcookie hinzugefügt, Subdomains sollten damit auch möglich sein (assets/consent_manager_frontend.js) #110
+* Consent-Log
+  * IP-Adresse im Log ausgeben
+  * Suchfeld hinzugefügt (Suche nach Datum, Host, IP, Cachelog-Id)
+  * consent_manager_backend.js im Backend hinzugefügt
+* Standard-Klassen für Listen hinzugefügt (table-striped, table-hover)
+* Schlüsselfelder in den Listen verlinkt (editieren)
+* Update js.cookie-3.0.1.min.js
+* Reload der Seite kann erzwungen werden **REX_CONSENT_MANAGER[forceReload=1]**
+* Code-Quality (rexstan)
 
 ### Bugfixes
 
-* keine
+* YAML validieren, bevor es gespeichert / übernommen wird #248
+* fix target file name @alxndr-w PR #258
 
 ## Version 3.0.8 – 16.08.2022
 
