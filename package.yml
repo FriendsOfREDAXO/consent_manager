@@ -1,5 +1,5 @@
 package: consent_manager
-version: "3.0.8"
+version: "3.1.0beta1"
 author: "Friends Of REDAXO"
 supportpage: https://redaxo.org/support/community/#slack
 
@@ -44,3 +44,4 @@ requires:
 
 installer_ignore:
     - .github
+    - .gitignore
