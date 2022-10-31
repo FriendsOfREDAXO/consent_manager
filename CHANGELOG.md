@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 3.1.0beta1 – xx.xx.2022
+## Version 3.1.0beta1 – 31.10.2022
 
 **Achtung:** Das Template für die Consent-Box und CSS wurde angepasst (Fragment consent_manager_box.php)! Bei eigenen Fragmenten entsprechend anpassen!
 
