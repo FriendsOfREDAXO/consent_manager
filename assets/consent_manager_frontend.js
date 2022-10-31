@@ -136,7 +136,7 @@
         http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         http.send(params);
 
-        if (document.querySelectorAll('.consent_manager-show-box-reload').length) {
+        if (document.querySelectorAll('.consent_manager-show-box-reload').length || consent_manager_parameters.forcereload === 1) {
             location.reload();
         } else {
             document.dispatchEvent(new CustomEvent('consent_manager-saved', { detail: JSON.stringify(consents) }));

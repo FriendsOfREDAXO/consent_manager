@@ -32,13 +32,15 @@ class consent_manager_frontend
 
     /**
      * @param int $forceCache
+     * @param int $forceReload
      * @param string $fragmentFilename
      * @return string
      */
-    public static function getFragment($forceCache, $fragmentFilename)
+    public static function getFragment($forceCache, $forceReload, $fragmentFilename)
     {
         $fragment = new rex_fragment();
         $fragment->setVar('forceCache', $forceCache);
+        $fragment->setVar('forceReload', $forceReload);
 
         return $fragment->parse($fragmentFilename);
     }
@@ -116,7 +118,7 @@ class consent_manager_frontend
         //header('Expires: ' . date('D, j M Y', strtotime('+1 week')) . ' 00:00:00 GMT');
         $boxtemplate = '';
         ob_start();
-        echo self::getFragment(0, 'consent_manager_box.php');
+        echo self::getFragment(0, 0, 'consent_manager_box.php');
         $boxtemplate = ob_get_contents();
         ob_end_clean();
         if ('' === $boxtemplate) {
@@ -131,7 +133,7 @@ class consent_manager_frontend
         $boxtemplate = str_replace("\n", ' ', $boxtemplate);
 
         echo '/* --- Parameters --- */' . PHP_EOL;
-        echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . rex_request::server('HTTP_HOST') . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . '};' . PHP_EOL . PHP_EOL;
+        echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . rex_request::server('HTTP_HOST') . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", forcereload: ' . rex_get('r', 'int', 0) . ', hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . '};' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
         echo strval($boxtemplate) . '\';' . PHP_EOL . PHP_EOL;

@@ -9,6 +9,7 @@ if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
 
 $addon = rex_addon::get('consent_manager');
 $forceCache = $this->getVar('forceCache');
+$forceReload = $this->getVar('forceReload');
 
 $consentparams = [];
 $consentparams['article'] = rex_article::getCurrentId();
@@ -51,6 +52,7 @@ $_params['i'] = $consentparams['initially_hidden'];
 $_params['h'] = $consentparams['hidescrollbar'];
 $_params['cid'] = $consent_manager->cacheLogId;
 $_params['v'] = $consent_manager->version;
+$_params['r'] = $forceReload;
 $_params['t'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
 
 $consentparams['outputjs'] .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script" defer></script>' . PHP_EOL;
