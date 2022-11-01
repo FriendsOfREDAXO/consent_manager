@@ -94,6 +94,7 @@
 
 .consent_manager-close-box {
     position: absolute;
+    cursor: pointer;
     right: 1em;
     top: 1em;
     display: block;
@@ -156,6 +157,10 @@
 
 a.consent_manager-close, #consent_manager-toggle-details {
     cursor:pointer;
+}
+
+.consent_manager-cookiegroups label > span {
+    cursor: pointer;
 }
 
 .consent_manager-cookiegroups label > input[type="checkbox"] {
