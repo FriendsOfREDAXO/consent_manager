@@ -114,7 +114,17 @@ if ($func === 'delete') {
     echo $fragment->parse('core/page/section.php');
 }
 echo $msg;
+
 if ($showlist) {
+    $db = rex_sql::factory();
+    $db->setTable(rex::getTable('consent_manager_cookiegroup'));
+    $db->setWhere('domain != ""');
+    $db->select('count(*) as count');
+    $dbresult = $db->execute();
+    if ($dbresult->getValue('count') === '0') {
+        echo rex_view::warning($addon->i18n('consent_manager_cookiegroup_nodomain_notice'));
+    }
+
     $listDebug = false;
     $qry = '
     SELECT pid,uid,name,domain,cookie
