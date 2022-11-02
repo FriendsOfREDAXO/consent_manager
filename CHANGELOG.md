@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 3.1.0beta1 – 31.10.2022
+## Version 4.0.0beta1 – 02.11.2022
 
 **Achtung:** Das Template für die Consent-Box und CSS wurde angepasst (Fragment consent_manager_box.php)! Bei eigenen Fragmenten entsprechend anpassen!
 
@@ -12,7 +12,7 @@
   * Buttons statt Links für die Buttons und den Close-Button
   * Tabindex(e) hinzugefügt
   * CSS angepasst (scss/consent_manager_frontend.scss)
-  * Browser-Default-Checkboxen ohne SchnickSchnak (nur greyscale, und mit scale vergrössert), dadurch sind die Checkboxen auch per Tastatur erreichbar
+  * Browser-Default-Checkboxen ohne SchnickSchnack (nur greyscale, und mit scale vergrössert), dadurch sind die Checkboxen auch per Tastatur erreichbar
 * JavaScript-Funktion **consent_manager_showBox** zum anzeigen der Consent-Box (assets/consent_manager_frontend.js) #230
 * JavaScript-Funktion **consent_manager_hasconsent** zur Consent-Abfrage hinzugefügt
 * Toggle Details anzeigen auch per Tastatur mit Enter (assets/consent_manager_frontend.js)
@@ -25,7 +25,8 @@
 * Schlüsselfelder in den Listen verlinkt (editieren)
 * Update js.cookie-3.0.1.min.js
 * Reload der Seite kann erzwungen werden **REX_CONSENT_MANAGER[forceReload=1]**
-* Code-Quality (rexstan)
+* In der Übersicht der Gruppen eine Warning ausgeben wenn noch keine Domain zugeordnet wurde #257
+* Code-Quality (rexstan) Extensions: Bleeding-Edge, Strict-Mode, Deprecation Warnings, PHPUnit, phpstan-dba, cognitive complexity
 
 ### Bugfixes
 
