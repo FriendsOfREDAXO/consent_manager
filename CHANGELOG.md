@@ -2,17 +2,19 @@
 
 ## Version 4.0.0beta1 – 02.11.2022
 
-**Achtung:** Das Template für die Consent-Box und CSS wurde angepasst (Fragment consent_manager_box.php)! Bei eigenen Fragmenten entsprechend anpassen!
+### Breaking Changes
 
-### Changes
-
-* CHANGELOG.md hinzugefügt, Anzeige im Backend (package.yml)
-* Host-Validation angepasst (consent_manager_rex_form::validateHostname)
+* **Achtung:** Das Template für die Consent-Box und CSS wurde angepasst (Fragment consent_manager_box.php)! Bei eigenen Fragmenten entsprechend anpassen!
 * **Template für die Consent-Box angepasst** (fragments/consent_manager_box.php)
   * Buttons statt Links für die Buttons und den Close-Button
   * Tabindex(e) hinzugefügt
   * CSS angepasst (scss/consent_manager_frontend.scss)
   * Browser-Default-Checkboxen ohne SchnickSchnack (nur greyscale, und mit scale vergrössert), dadurch sind die Checkboxen auch per Tastatur erreichbar
+
+### Features
+
+* CHANGELOG.md hinzugefügt, Anzeige im Backend (package.yml)
+* Host-Validation angepasst (consent_manager_rex_form::validateHostname)
 * JavaScript-Funktion **consent_manager_showBox** zum anzeigen der Consent-Box (assets/consent_manager_frontend.js) #230
 * JavaScript-Funktion **consent_manager_hasconsent** zur Consent-Abfrage hinzugefügt
 * Toggle Details anzeigen auch per Tastatur mit Enter (assets/consent_manager_frontend.js)
