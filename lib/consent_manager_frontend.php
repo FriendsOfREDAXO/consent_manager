@@ -149,4 +149,18 @@ class consent_manager_frontend
         echo $content;
         exit;
     }
+
+    /**
+     * @return string|boolean
+     */
+    public static function getFrontendCss()
+    {
+        $addon = rex_addon::get('consent_manager');
+
+        $_cssfilename = 'consent_manager_frontend.css';
+        $_csscontent = file_get_contents($addon->getAssetsPath($_cssfilename));
+
+        return $_csscontent;
+    }
+
 }
