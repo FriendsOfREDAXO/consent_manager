@@ -67,7 +67,7 @@ class consent_manager_frontend
             $clang = rex_clang::getCurrent()->getId();
         }
 
-        if (in_array($article, [$this->links['privacy_policy'], $this->links['legal_notice']], true)) {
+        if (in_array($article, [(int) $this->links['privacy_policy'], (int) $this->links['legal_notice']], true)) {
             $this->boxClass = 'consent_manager-initially-hidden';
         }
         if (isset($this->cache['cookies'][$clang])) {
