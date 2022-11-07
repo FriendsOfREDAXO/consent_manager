@@ -151,7 +151,7 @@ class consent_manager_frontend
     }
 
     /**
-     * @return string|boolean
+     * @return string|false
      */
     public static function getFrontendCss()
     {
