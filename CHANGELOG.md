@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 4.0.0beta2 – 07.11.2022
+## Version 4.0.0beta3 – 24.11.2022
 
 ### Breaking Changes
 
