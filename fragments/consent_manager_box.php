@@ -66,6 +66,7 @@ $consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
                     </div>
                     <div class="consent_manager-buttons-sitelinks">
                         <div class="consent_manager-buttons">
+                            <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close"><?= $consent_manager->texts['button_select_none'] ?></button>
                             <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close"><?= $consent_manager->texts['button_accept'] ?></button>
                             <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close"><?= $consent_manager->texts['button_select_all'] ?></button>
                         </div>

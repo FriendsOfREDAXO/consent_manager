@@ -55,7 +55,8 @@
     }
 }
 .consent_manager-save-selection,
-.consent_manager-accept-all {
+.consent_manager-accept-all,
+.consent_manager-accept-none {
     transition: 200ms ease all;
     background: #999;
     border: 1px solid #444;
@@ -69,7 +70,7 @@
     &:hover {
         background: #444;
         border-color: #444;
-        color: #fff;
+        color: #fff; 
         text-decoration: none;
     }
 }
@@ -201,7 +202,8 @@ a.consent_manager-close, #consent_manager-toggle-details {
         }
     }
     .consent_manager-save-selection,
-    .consent_manager-accept-all {
+    .consent_manager-accept-all,
+    .consent_manager-accept-none {
         display: inline-block;
         margin: 0 0 0 .5em;
     }

@@ -79,6 +79,9 @@
             } else if (el.classList.contains('consent_manager-accept-all')) {
                 deleteCookies();
                 saveConsent('all');
+            } else if (el.classList.contains('consent_manager-accept-none')) {
+                deleteCookies();
+                saveConsent('none');
             }
             if (consent_manager_parameters.hidebodyscrollbar) {
                 document.querySelector('body').style.overflow = 'auto';
@@ -112,20 +115,22 @@
             cachelogid: consent_manager_parameters.cachelogid
         };
         // checkboxen
-        consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
-            // array mit cookie uids
-            var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
-            if (el.checked || toSave === 'all') {
-                cookieUids.forEach(function (uid) {
-                    consents.push(uid);
-                    addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
-                });
-            } else {
-                cookieUids.forEach(function (uid) {
-                    removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
-                });
-            }
-        });
+        if(toSave !== 'none'){
+            consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+                // array mit cookie uids
+                var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+                if (el.checked || toSave === 'all') {
+                    cookieUids.forEach(function (uid) {
+                        consents.push(uid);
+                        addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                    });
+                } else {
+                    cookieUids.forEach(function (uid) {
+                        removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                    });
+                }
+            });
+        }
         cookieData.consents = consents;
         Cookies.set('consent_manager', JSON.stringify(cookieData), { expires: expires, path: '/', domain: consent_manager_parameters.domain, sameSite: 'Lax', secure: false });
 
