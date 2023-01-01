@@ -1,12 +1,13 @@
 # REDAXO consent_manager - Changelog
 
-## Version 4.0.0beta3 – 24.11.2022
+## Version 4.0.0beta4 – 01.01.2023
 
 ### Breaking Changes
 
 * **Achtung:** Das Template für die Consent-Box und CSS wurde angepasst (Fragment consent_manager_box.php)! Bei eigenen Fragmenten entsprechend anpassen!
 * **Template für die Consent-Box angepasst** (fragments/consent_manager_box.php)
   * Buttons statt Links für die Buttons und den Close-Button
+  * Neuer Button "Alles ablehnen" (@thorol)
   * Tabindex(e) hinzugefügt
   * CSS angepasst (scss/consent_manager_frontend.scss)
   * Browser-Default-Checkboxen ohne SchnickSchnack (nur greyscale, und mit scale vergrössert), dadurch sind die Checkboxen auch per Tastatur erreichbar

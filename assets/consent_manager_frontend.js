@@ -115,7 +115,7 @@
             cachelogid: consent_manager_parameters.cachelogid
         };
         // checkboxen
-        if(toSave !== 'none'){
+        if (toSave !== 'none'){
             consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
                 // array mit cookie uids
                 var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
