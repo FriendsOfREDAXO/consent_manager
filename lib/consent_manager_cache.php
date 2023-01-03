@@ -23,6 +23,7 @@ class consent_manager_cache
     /**
      * @param rex_extension_point<object> $ep
      * @return boolean
+     * @api
      */
     public static function write(rex_extension_point $ep)
     {

@@ -1,16 +1,18 @@
 <?php
+
 $addon = rex_addon::get('consent_manager');
 
 // Nur im Backend
 if (rex::isBackend()) {
-
     rex_perm::register('consent_manager[texteditonly]');
     if (null !== rex::getUser()) {
         if (!rex::getUser()->isAdmin() && rex::getUser()->hasPerm('consent_manager[texteditonly]')) {
             $page = (array)$addon->getProperty('page', []);
             if ([] !== $page) {
-                foreach (['cookiegroup', 'cookie', 'domain', 'config', 'setup', 'changelog', 'help'] as $removepage) {
-                    unset($page['subpages'][$removepage]);
+                /** @var array<int, string> */
+                $rarray = ['cookiegroup', 'cookie', 'domain', 'config', 'setup', 'changelog', 'help'];
+                foreach ($rarray as $removepage) {
+                    unset($page['subpages'][$removepage]); /** @phpstan-ignore-line */
                 }
                 $addon->setProperty('page', $page);
             }
@@ -64,21 +66,16 @@ if (rex::isBackend()) {
         $addon->setConfig('forceCache', false);
         consent_manager_cache::forceWrite();
     }
-
 }
 
 // Nur im Frontend
 if (rex::isFrontend()) {
-
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
-
         if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
             $consent_manager = new consent_manager_frontend(0);
             //$consent_manager->setDomain($_SERVER['HTTP_HOST']);
             $consent_manager->outputJavascript();
             exit;
         }
-
     });
-
 }

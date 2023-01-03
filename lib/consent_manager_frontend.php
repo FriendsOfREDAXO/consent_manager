@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @api
+ */
+
 class consent_manager_frontend
 {
     public $cookiegroups = []; /** @phpstan-ignore-line */
@@ -35,6 +39,7 @@ class consent_manager_frontend
      * @param int $forceReload
      * @param string $fragmentFilename
      * @return string
+     * @api
      */
     public static function getFragment($forceCache, $forceReload, $fragmentFilename)
     {

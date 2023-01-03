@@ -79,6 +79,7 @@ class consent_manager_rex_form
     /**
      * @param rex_extension_point<object> $ep
      * @return void
+     * @api
      */
     public static function removeDeleteButton(rex_extension_point $ep)
     {
@@ -103,6 +104,7 @@ class consent_manager_rex_form
     /**
      * @param string $hostname
      * @return boolean|string
+     * @api
      */
     public static function validateHostname($hostname)
     {
@@ -116,6 +118,7 @@ class consent_manager_rex_form
     /**
      * @param string $yaml
      * @return boolean
+     * @api
      */
     public static function validateYaml($yaml)
     {

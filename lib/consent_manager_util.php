@@ -8,6 +8,7 @@ class consent_manager_util
      *
      * @param string $cookieUid
      * @return boolean
+     * @api
      */
     public static function has_consent($cookieUid): bool
     {

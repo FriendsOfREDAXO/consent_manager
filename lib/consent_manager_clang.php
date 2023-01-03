@@ -55,6 +55,7 @@ class consent_manager_clang
     /**
      * @param rex_extension_point<object> $ep
      * @return void
+     * @api
      */
     public static function addLangNav(rex_extension_point $ep)
     {
@@ -83,6 +84,7 @@ class consent_manager_clang
     /**
      * @param rex_extension_point<object> $ep
      * @return boolean
+     * @api
      */
     public static function formSaved(rex_extension_point $ep)
     {
@@ -195,6 +197,7 @@ class consent_manager_clang
     /**
      * @param rex_extension_point<object> $ep
      * @return void
+     * @api
      */
     public static function clangDeleted(rex_extension_point $ep)
     {
@@ -268,6 +271,7 @@ class consent_manager_clang
     /**
      * @param rex_extension_point<object> $ep
      * @return void
+     * @api
      */
     public static function clangAdded(rex_extension_point $ep)
     {

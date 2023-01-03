@@ -8,6 +8,7 @@ class consent_manager_rex_list
      *
      * @param array<string, string> $params
      * @return string
+     * @api
      */
     public static function formatDomain($params)
     {
@@ -33,6 +34,7 @@ class consent_manager_rex_list
      *
      * @param array<string, string> $params
      * @return string
+     * @api
      */
     public static function formatCookie($params)
     {

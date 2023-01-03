@@ -29,7 +29,7 @@
 * Update js.cookie-3.0.1.min.js
 * Reload der Seite kann erzwungen werden **REX_CONSENT_MANAGER[forceReload=1]**
 * In der Übersicht der Gruppen eine Warning ausgeben wenn noch keine Domain zugeordnet wurde #257
-* Code-Quality (rexstan) Extensions: REDAXO SuperGlobals, Bleeding-Edge, Strict-Mode, Strict-Mode, phpstan-dba, code complexity, dead code
+* Code-Quality (rexstan) Extensions: REDAXO SuperGlobals, Bleeding-Edge, Strict-Mode, Deprecation Warnings, PHPUnit, phpstan-dba, report-mixed, dead code
 
 ### Bugfixes
 
