@@ -8,7 +8,7 @@ class rex_api_consent_manager extends rex_api_function
     {
         $domain = rex_post('domain', 'string', false);
         $consentid = rex_post('consentid', 'string', false);
-        $consent_manager = (null !== rex_request::cookie('consent_manager')) ? (array)json_decode(strval(rex_request::cookie('consent_manager')), true) : false;
+        $consent_manager = (null !== rex_request::cookie('consent_manager')) ? (array) json_decode(strval(rex_request::cookie('consent_manager')), true) : false;
         if (false === $domain || false === $consentid || false === $consent_manager) {
             exit;
         }

@@ -7,7 +7,7 @@ if (rex::isBackend()) {
     rex_perm::register('consent_manager[texteditonly]');
     if (null !== rex::getUser()) {
         if (!rex::getUser()->isAdmin() && rex::getUser()->hasPerm('consent_manager[texteditonly]')) {
-            $page = (array)$addon->getProperty('page', []);
+            $page = (array) $addon->getProperty('page', []);
             if ([] !== $page) {
                 /** @var array<int, string> */
                 $rarray = ['cookiegroup', 'cookie', 'domain', 'config', 'setup', 'changelog', 'help'];
@@ -19,7 +19,7 @@ if (rex::isBackend()) {
         }
     }
 
-    rex_extension::register('PACKAGES_INCLUDED', function () {
+    rex_extension::register('PACKAGES_INCLUDED', static function () {
         $addon = rex_addon::get('consent_manager');
 
         if (null !== rex::getUser()) {
@@ -58,11 +58,11 @@ if (rex::isBackend()) {
     rex_extension::register('CLANG_ADDED', 'consent_manager_clang::clangAdded');
     rex_extension::register('CLANG_DELETED', 'consent_manager_clang::clangDeleted');
 
-    if ('consent_manager' === rex_be_controller::getCurrentPagePart(1) && $addon->getConfig('justInstalled') === true) {
+    if ('consent_manager' === rex_be_controller::getCurrentPagePart(1) && true === $addon->getConfig('justInstalled')) {
         $addon->setConfig('justInstalled', false);
         consent_manager_clang::addonJustInstalled();
     }
-    if ($addon->getConfig('forceCache') === true) {
+    if (true === $addon->getConfig('forceCache')) {
         $addon->setConfig('forceCache', false);
         consent_manager_cache::forceWrite();
     }
@@ -73,7 +73,7 @@ if (rex::isFrontend()) {
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
         if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
             $consent_manager = new consent_manager_frontend(0);
-            //$consent_manager->setDomain($_SERVER['HTTP_HOST']);
+            // $consent_manager->setDomain($_SERVER['HTTP_HOST']);
             $consent_manager->outputJavascript();
             exit;
         }

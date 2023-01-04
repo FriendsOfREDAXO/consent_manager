@@ -1,20 +1,18 @@
 <?php
+
 $addon = rex_addon::get('consent_manager');
 
 $showlist = true;
 $pid = rex_request('pid', 'int', 0);
 $func = rex_request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_cookie');
-$clang_id = (int)str_replace('clang', '', rex_be_controller::getCurrentPagePart(3)); /** @phpstan-ignore-line */
+$clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3)); /** @phpstan-ignore-line */
 $table = rex::getTable('consent_manager_cookie');
 $msg = '';
-if ($func === 'delete')
-{
+if ('delete' === $func) {
     $msg = consent_manager_clang::deleteCookie($pid);
     consent_manager_cache::forceWrite();
-}
-elseif ($func === 'add' || $func === 'edit')
-{
+} elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
     $form = rex_form::factory($table, '', 'pid = ' . $pid, 'post', $formDebug);
@@ -26,29 +24,23 @@ elseif ($func === 'add' || $func === 'edit')
     $form->addHiddenField('clang_id', $clang_id);
     consent_manager_rex_form::getId($form, $table);
 
-    if ($func === 'edit' && $form->getSql()->getValue('uid') === 'consent_manager')
-    {
+    if ('edit' === $func && 'consent_manager' === $form->getSql()->getValue('uid')) {
         $form->addRawField(consent_manager_rex_form::showInfo($addon->i18n('consent_manager_cookie_consent_manager_info')));
         $form->addRawField(consent_manager_rex_form::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
-    }
-    else
-    {
-        if ($clang_id === rex_clang::getStartId() || !$form->isEditMode())
-        {
+    } else {
+        if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
             $field = $form->addTextField('uid');
             $field->setLabel($addon->i18n('consent_manager_uid_with_hint'));
             $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_uid_empty_msg'));
             $field->getValidator()->add('match', $addon->i18n('consent_manager_uid_malformed_msg'), '/^[a-z0-9-_]+$/');
-        }
-        else
-        {
+        } else {
             $form->addRawField(consent_manager_rex_form::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
         }
     }
     $field = $form->addTextField('service_name');
     $field->setLabel($addon->i18n('consent_manager_cookie_service_name'));
     $field = $form->addTextAreaField('definition');
-    $field->setAttributes(['class' => 'form-control codemirror', 'name'=> $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
+    $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
     $field->setLabel($addon->i18n('consent_manager_cookie_definition'));
     $field->getValidator()->add('custom', $addon->i18n('consent_manager_cookie_malformed_yaml'), 'consent_manager_rex_form::validateYaml');
 
@@ -58,26 +50,20 @@ elseif ($func === 'add' || $func === 'edit')
     $field->setLabel($addon->i18n('consent_manager_cookie_provider_link_privacy'));
     $field->setNotice($addon->i18n('consent_manager_cookie_notice_provider_link_privacy'));
 
-    if ($func === 'edit' && $form->getSql()->getValue('uid') !== 'consent_manager')
-    {
-        if ($clang_id === rex_clang::getStartId() || !$form->isEditMode())
-        {
+    if ('edit' === $func && 'consent_manager' !== $form->getSql()->getValue('uid')) {
+        if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
             $field = $form->addTextAreaField('script');
-            $field->setAttributes(['class' => 'form-control codemirror', 'name'=> $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
+            $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));
             $field->setNotice($addon->i18n('consent_manager_cookiegroup_scripts_notice'));
-        }
-        else
-        {
+        } else {
             $form->addRawField(consent_manager_rex_form::getFakeTextarea($addon->i18n('consent_manager_cookiegroup_scripts'), $form->getSql()->getValue('script')));
         }
     }
-    if ($func === 'add')
-    {
-        if ($clang_id === rex_clang::getStartId() || !$form->isEditMode())
-        {
+    if ('add' === $func) {
+        if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
             $field = $form->addTextAreaField('script');
-            $field->setAttributes(['class' => 'form-control codemirror', 'name'=> $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
+            $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));
             $field->setNotice($addon->i18n('consent_manager_cookiegroup_scripts_notice'));
         }
@@ -98,8 +84,7 @@ elseif ($func === 'add' || $func === 'edit')
     echo $fragment->parse('core/page/section.php');
 }
 echo $msg;
-if ($showlist)
-{
+if ($showlist) {
     $listDebug = false;
     $sql = 'SELECT pid,uid,service_name,provider FROM ' . $table . ' WHERE clang_id = ' . $clang_id . ' ORDER BY uid';
 

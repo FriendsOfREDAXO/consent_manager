@@ -1,18 +1,16 @@
 <?php
+
 $addon = rex_addon::get('consent_manager');
 
 $showlist = true;
 $pid = rex_request('pid', 'int', 0);
 $func = rex_request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_text');
-$clang_id = (int)str_replace('clang', '', rex_be_controller::getCurrentPagePart(3)); /** @phpstan-ignore-line */
+$clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3)); /** @phpstan-ignore-line */
 $table = rex::getTable('consent_manager_text');
-if ($func === 'delete')
-{
+if ('delete' === $func) {
     consent_manager_clang::deleteDataset($table, $pid);
-}
-elseif ($func === 'add' || $func === 'edit')
-{
+} elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
     $form = rex_form::factory($table, '', 'pid = ' . $pid, 'post', $formDebug);
@@ -39,8 +37,7 @@ elseif ($func === 'add' || $func === 'edit')
     echo $fragment->parse('core/page/section.php');
 }
 
-if ($showlist)
-{
+if ($showlist) {
     $listDebug = false;
     $sql = 'SELECT pid,uid,text FROM ' . $table . ' WHERE clang_id = ' . $clang_id;
 
@@ -51,7 +48,7 @@ if ($showlist)
     $list->removeColumn('pid');
 
     $tdIcon = '<i class="fa fa-coffee"></i>';
-    //$thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
+    // $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
     $list->addColumn('', $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams('', ['func' => 'edit', 'pid' => '###pid###']);
 

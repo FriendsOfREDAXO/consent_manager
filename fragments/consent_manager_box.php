@@ -26,14 +26,14 @@ $consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
                                     }
                                 }
                             }
-                            ?>
+?>
                         </div>
                         <div class="consent_manager-show-details">
                             <a id="consent_manager-toggle-details" class="icon-info-circled" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></a>
                         </div>
                     </div>
                     <div class="consent_manager-detail consent_manager-hidden" id="consent_manager-detail">
-                        <?php
+<?php
                         foreach ($consent_manager->cookiegroups as $cookiegroup) {
                             if (count($cookiegroup['cookie_uids']) >= 1) {
                                 echo '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
@@ -62,7 +62,7 @@ $consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
                                 echo '</div>';
                             }
                         }
-                        ?>
+?>
                     </div>
                     <div class="consent_manager-buttons-sitelinks">
                         <div class="consent_manager-buttons">
@@ -73,15 +73,15 @@ $consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
                             <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close"><?= $consent_manager->texts['button_select_all'] ?></button>
                         </div>
                         <div class="consent_manager-sitelinks">
-                            <?php
-                            $clang = rex_request('lang', 'integer', 0);
-                            if ($clang === 0) {
-                                $clang = rex_clang::getCurrent()->getId();
-                            }
-                            foreach ($consent_manager->links as $v) {
-                                echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . (!is_null(rex_article::get($v, $clang)) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
-                            }
-                            ?>
+<?php
+$clang = rex_request('lang', 'integer', 0);
+if (0 === $clang) {
+    $clang = rex_clang::getCurrent()->getId();
+}
+foreach ($consent_manager->links as $v) {
+    echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . (!is_null(rex_article::get($v, $clang)) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
+}
+?>
                         </div>
                     </div>
                     <button tabindex="0" class="icon-cancel-circled consent_manager-close consent_manager-close-box">&#10006;</button>
@@ -91,6 +91,6 @@ $consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
             foreach ($consent_manager->scripts as $uid => $script) {
                 echo '<div style="display: none" class="consent_manager-script" data-uid="script-'.$uid.'" data-script="'.$script.'"></div>';
             }
-            ?>
+?>
         </div>
 <?php endif; ?>

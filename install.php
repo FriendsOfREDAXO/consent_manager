@@ -1,4 +1,5 @@
 <?php
+
 $addon = rex_addon::get('consent_manager');
 
 $justinstalled = true;

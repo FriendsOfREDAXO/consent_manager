@@ -2,20 +2,17 @@
 
 class consent_manager_config
 {
-
     /**
-     * get consent_manager tables
+     * get consent_manager tables.
      *
-     * @param boolean $multilangOnly
+     * @param bool $multilangOnly
      * @return array<int, string>
      */
     public static function getTables($multilangOnly = false)
     {
         $tables = [];
-        foreach (consent_manager_config::getKeys() as $key)
-        {
-            if ($multilangOnly && $key === 'domain')
-            {
+        foreach (consent_manager_config::getKeys() as $key) {
+            if ($multilangOnly && 'domain' === $key) {
                 continue;
             }
             $tables[] = rex::getTable('consent_manager_' . $key);
@@ -25,7 +22,7 @@ class consent_manager_config
     }
 
     /**
-     * get consent_manager keys
+     * get consent_manager keys.
      *
      * @return array<int, string>
      */
@@ -35,8 +32,7 @@ class consent_manager_config
             'cookie',
             'cookiegroup',
             'text',
-            'domain'
+            'domain',
         ];
     }
-
 }

@@ -1,13 +1,14 @@
 <?php
+
 $addon = rex_addon::get('consent_manager');
 
 $func = rex_request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_setup');
-if ($func !== '') {
+if ('' !== $func) {
     if (!$csrf->isValid()) {
         echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
     } else {
-        if ($func === 'setup') {
+        if ('setup' === $func) {
             $file = rex_path::addon('consent_manager').'setup/setup.sql';
             rex_sql_util::importDump($file);
             consent_manager_clang::addonJustInstalled();

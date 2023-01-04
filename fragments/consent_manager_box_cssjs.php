@@ -29,7 +29,7 @@ if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->
 }
 
 // Consent bei Parameter skip_consent ausblenden
-if (rex_config::get('consent_manager', 'skip_consent') !== "" && rex_get('skip_consent') === rex_config::get('consent_manager', 'skip_consent')) {
+if ('' !== rex_config::get('consent_manager', 'skip_consent') && rex_get('skip_consent') === rex_config::get('consent_manager', 'skip_consent')) {
     $consentparams['initially_hidden'] = 'true';
 }
 

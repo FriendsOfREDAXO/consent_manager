@@ -22,7 +22,7 @@ class consent_manager_frontend
      */
     public function __construct($forceWrite = 0)
     {
-        if ($forceWrite === 1) {
+        if (1 === $forceWrite) {
             consent_manager_cache::forceWrite();
         }
         $this->cache = consent_manager_cache::read();
@@ -68,7 +68,7 @@ class consent_manager_frontend
 
         $article = rex_article::getCurrentId();
         $clang = rex_request('lang', 'integer', 0);
-        if ($clang === 0) {
+        if (0 === $clang) {
             $clang = rex_clang::getCurrent()->getId();
         }
 
@@ -111,16 +111,16 @@ class consent_manager_frontend
     public function outputJavascript($host = null, $article_id = null)
     {
         $clang = rex_request('lang', 'integer', 0);
-        if ($clang === 0) {
+        if (0 === $clang) {
             $clang = rex_clang::getCurrent()->getId();
         }
         rex_response::cleanOutputBuffers();
         header_remove();
         header('Content-Type: application/javascript; charset=utf-8');
         header('Cache-Control: max-age=604800, public');
-        //header('Pragma: cache');
-        //header('Cache-Control: public');
-        //header('Expires: ' . date('D, j M Y', strtotime('+1 week')) . ' 00:00:00 GMT');
+        // header('Pragma: cache');
+        // header('Cache-Control: public');
+        // header('Expires: ' . date('D, j M Y', strtotime('+1 week')) . ' 00:00:00 GMT');
         $boxtemplate = '';
         ob_start();
         echo self::getFragment(0, 0, 'consent_manager_box.php');
@@ -167,5 +167,4 @@ class consent_manager_frontend
 
         return $_csscontent;
     }
-
 }

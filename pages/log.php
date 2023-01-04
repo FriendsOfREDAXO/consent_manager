@@ -1,23 +1,24 @@
 <?php
+
 $addon = rex_addon::get('consent_manager');
 
 $searchvalue = rex_request('Consent_Search', 'string', '');
 $where = '';
 
-if ($searchvalue !== '') {
+if ('' !== $searchvalue) {
     $dosearch = str_replace(['\'', ';', '"'], '', $searchvalue);
     $sql = rex_sql::factory();
-    if (DateTime::createFromFormat('d.m.Y', $searchvalue) !== false) {
+    if (false !== DateTime::createFromFormat('d.m.Y', $searchvalue)) {
         $searchdate = strtotime($dosearch);
         if (false !== $searchdate) {
             $where = ' WHERE `createdate` LIKE ' . $sql->escape(date('Y-m-d', $searchdate).'%') . ' ';
         }
     }
-    $intbool = (bool)preg_match('/^[1-9][0-9]{0,15}$/', $dosearch);
+    $intbool = (bool) preg_match('/^[1-9][0-9]{0,15}$/', $dosearch);
     if (true === $intbool) {
         $where = ' WHERE `cachelogid` = ' . $sql->escape($dosearch) . ' ';
     }
-    if ($where === '') {
+    if ('' === $where) {
         $where = ' WHERE `domain` LIKE ' . $sql->escape($dosearch.'%') . ' OR `ip` LIKE ' . $sql->escape($dosearch.'%') . ' OR `consentid` LIKE ' . $sql->escape($dosearch.'%') . ' ';
     }
 }
@@ -30,7 +31,7 @@ $list = rex_list::factory(
     ',
     30, 'Consent-Log', false);
 
-if ($searchvalue !== '') {
+if ('' !== $searchvalue) {
     $list->addParam('Consent_Search', $searchvalue);
 }
 
@@ -56,7 +57,7 @@ $list->setColumnFormat('createdate', 'custom', static function ($params) {
 });
 $list->setColumnFormat('consents', 'custom', static function ($params) {
     $list = $params['list'];
-    $consents = (array)json_decode($list->getValue('consents'));
+    $consents = (array) json_decode($list->getValue('consents'));
     $str = implode(', ', $consents);
     return $str;
 });

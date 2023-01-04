@@ -1,16 +1,17 @@
 <?php
+
 $addon = rex_addon::get('consent_manager');
 
 $showlist = true;
 $pid = rex_request('pid', 'int', 0);
 $func = rex_request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_cookiegroup');
-$clang_id = (int)str_replace('clang', '', rex_be_controller::getCurrentPagePart(3)); /** @phpstan-ignore-line */
+$clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3)); /** @phpstan-ignore-line */
 $table = rex::getTable('consent_manager_cookiegroup');
 $msg = '';
-if ($func === 'delete') {
+if ('delete' === $func) {
     $msg = consent_manager_clang::deleteDataset($table, $pid);
-} elseif ($func === 'add' || $func === 'edit') {
+} elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
     $form = rex_form::factory($table, '', 'pid = '.$pid, 'post', $formDebug);
@@ -28,7 +29,6 @@ if ($func === 'delete') {
     $domains = $db->getArray();
 
     if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
-
         $field = $form->addTextField('uid');
         $field->setLabel($addon->i18n('consent_manager_uid'));
         $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_uid_empty_msg'));
@@ -46,7 +46,7 @@ if ($func === 'delete') {
                     $select->addOption($v['uid'], $v['id']);
                 }
         */
-        if (count($domains)>0) {
+        if (count($domains) > 0) {
             $field = $form->addCheckboxField('domain');
             $field->setLabel($addon->i18n('consent_manager_domain'));
             foreach ($domains as $v) {
@@ -67,7 +67,7 @@ if ($func === 'delete') {
             $checked = (in_array($v['id'], $checkedBoxes, true)) ? '|1|' : '';
             $checkboxes[] = [$checked, $v['uid']];
         }
-        if (count($checkboxes)>0) {
+        if (count($checkboxes) > 0) {
             $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', $checkboxes)); /** @phpstan-ignore-line */
         }
     }
@@ -91,7 +91,6 @@ if ($func === 'delete') {
                 $field->addOption($v['uid'], $v['uid']);
             }
         }
-
     } else {
         if ($cookies) { /** @phpstan-ignore-line */
             $checkboxes = [];
@@ -121,7 +120,7 @@ if ($showlist) {
     $db->setWhere('domain != ""');
     $db->select('count(*) as count');
     $dbresult = $db->execute();
-    if ($dbresult->getValue('count') === '0') {
+    if ('0' === $dbresult->getValue('count')) {
         echo rex_view::warning($addon->i18n('consent_manager_cookiegroup_nodomain_notice'));
     }
 

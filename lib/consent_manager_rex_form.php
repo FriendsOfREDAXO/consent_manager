@@ -2,7 +2,6 @@
 
 class consent_manager_rex_form
 {
-
     /**
      * @param string $label
      * @param string $value
@@ -42,14 +41,12 @@ class consent_manager_rex_form
     {
         $html = '';
         $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
-        if (null !== $label)
-        {
+        if (null !== $label) {
             $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
         }
         $html .= '<dd>';
-        foreach ($checkboxes as $v)
-        {
-            $checked = $v[0] === '|1|' ? 'checked' : '';
+        foreach ($checkboxes as $v) {
+            $checked = '|1|' === $v[0] ? 'checked' : '';
             $html .= '<div class="checkbox"><label class="control-label"><input type="checkbox" disabled ' . $checked . '>' . $v[1] . '</label></div>';
         }
         $html .= '</dd>';
@@ -64,14 +61,11 @@ class consent_manager_rex_form
      */
     public static function getId(&$form, $table)
     {
-        if (!$form->isEditMode())
-        {
+        if (!$form->isEditMode()) {
             $db = rex_sql::factory();
             $db->setTable($table);
             $form->addHiddenField('id', $db->setNewId('id', 1));
-        }
-        else
-        {
+        } else {
             $form->addHiddenField('id', $form->getSql()->getValue('id'));
         }
     }
@@ -84,8 +78,7 @@ class consent_manager_rex_form
     public static function removeDeleteButton(rex_extension_point $ep)
     {
         $formTable = $ep->getParams()['form']->getTableName();
-        if (in_array($formTable, consent_manager_config::getTables(), true))
-        {
+        if (in_array($formTable, consent_manager_config::getTables(), true)) {
             $subject = $ep->getSubject();
             $subject['delete'] = ''; /** @phpstan-ignore-line */
             $ep->setSubject($subject);
@@ -103,7 +96,7 @@ class consent_manager_rex_form
 
     /**
      * @param string $hostname
-     * @return boolean|string
+     * @return bool|string
      * @api
      */
     public static function validateHostname($hostname)
@@ -117,7 +110,7 @@ class consent_manager_rex_form
 
     /**
      * @param string $yaml
-     * @return boolean
+     * @return bool
      * @api
      */
     public static function validateYaml($yaml)
@@ -130,5 +123,4 @@ class consent_manager_rex_form
         }
         return $valid;
     }
-
 }

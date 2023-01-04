@@ -2,7 +2,6 @@
 
 class consent_manager_cache
 {
-
     /** @var array<mixed> */
     private $domains = [];
     /** @var array<mixed> */
@@ -17,12 +16,12 @@ class consent_manager_cache
         'cookiegroups' => [],
         'cookies' => [],
         'texts' => [],
-        'cacheLogId' => 0
+        'cacheLogId' => 0,
     ];
 
     /**
      * @param rex_extension_point<object> $ep
-     * @return boolean
+     * @return bool
      * @api
      */
     public static function write(rex_extension_point $ep)
@@ -106,9 +105,9 @@ class consent_manager_cache
     private function prepareCookie($clangId)
     {
         if (isset($this->cookies[$clangId])) {
-            foreach ((array)$this->cookies[$clangId] as $uid => $cookie) {
+            foreach ((array) $this->cookies[$clangId] as $uid => $cookie) {
                 $defs = [];
-                $cookie = (array)$cookie;
+                $cookie = (array) $cookie;
                 foreach (rex_string::yamlDecode(strval($cookie['definition'])) as $k => $v) {
                     $defs[$k]['cookie_name'] = $v['name'];
                     $defs[$k]['cookie_lifetime'] = $v['time'];
@@ -128,15 +127,15 @@ class consent_manager_cache
     private function prepareCookieGroups($clangId)
     {
         if (isset($this->cookiegroups[$clangId])) {
-            foreach ((array)$this->cookiegroups[$clangId] as $uid => $cookiegroup) {
+            foreach ((array) $this->cookiegroups[$clangId] as $uid => $cookiegroup) {
                 $cookie_uids = [];
-                $cookiegroup = (array)$cookiegroup;
-                foreach(array_filter(explode('|', strval($cookiegroup['cookie']))) as $cookieUid) {
+                $cookiegroup = (array) $cookiegroup;
+                foreach (array_filter(explode('|', strval($cookiegroup['cookie']))) as $cookieUid) {
                     if (isset($this->cookies[$clangId][$cookieUid])) { /** @phpstan-ignore-line */
                         $cookie_uids[] = $cookieUid;
                     }
                 }
-                if ($cookiegroup['required'] === '|1|') {
+                if ('|1|' === $cookiegroup['required']) {
                     $cookie_uids[] = 'consent_manager';
                 }
                 $this->cookiegroups[$clangId][$uid]['cookie_uids'] = array_merge(array_filter(array_unique($cookie_uids))); /** @phpstan-ignore-line */
@@ -157,12 +156,12 @@ class consent_manager_cache
     private function setConfig($clangId)
     {
         if (isset($this->cookiegroups[$clangId])) {
-            foreach ((array)$this->cookiegroups[$clangId] as $v) {
+            foreach ((array) $this->cookiegroups[$clangId] as $v) {
                 $this->config['cookiegroups'][$v['clang_id']][$v['uid']] = $v; /** @phpstan-ignore-line */
             }
         }
         if (isset($this->cookies[$clangId])) {
-            foreach ((array)$this->cookies[$clangId] as $v) {
+            foreach ((array) $this->cookies[$clangId] as $v) {
                 $this->config['cookies'][$v['clang_id']][$v['uid']] = $v; /** @phpstan-ignore-line */
             }
         }

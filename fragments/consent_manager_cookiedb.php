@@ -1,32 +1,30 @@
 <?php
+
 $consent_manager = new consent_manager_frontend($this->getVar('forceCache'));
 $consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
 
 $output = '';
 
 if ($consent_manager->cookiegroups) { /** @phpstan-ignore-line */
-
     // Cookie Consent + History
-    $consent_manager_cookie =  null !== rex_request::cookie('consent_manager') ? (array)json_decode(strval(rex_request::cookie('consent_manager')), true) : null;
+    $consent_manager_cookie = null !== rex_request::cookie('consent_manager') ? (array) json_decode(strval(rex_request::cookie('consent_manager')), true) : null;
     if (null !== $consent_manager_cookie && isset($consent_manager_cookie['cachelogid'])) {
-
         $db = rex_sql::factory();
         $db->setDebug(false);
         $db->setQuery('SELECT '.rex::getTable('consent_manager_consent_log').'.*
                         FROM '.rex::getTable('consent_manager_consent_log').'
                         WHERE '.rex::getTable('consent_manager_consent_log').'.cachelogid = :cachelogid
                         ORDER BY '.rex::getTable('consent_manager_consent_log').'.id DESC
-                        LIMIT 5'
-                        ,['cachelogid' => $consent_manager_cookie['cachelogid']]
-                    );
+                        LIMIT 5', ['cachelogid' => $consent_manager_cookie['cachelogid']]
+        );
         $history = $db->getArray();
         $consents = [];
         if (isset($history[0]['consents'])) {
-            $consents = (array)json_decode(strval($history[0]['consents']));
+            $consents = (array) json_decode(strval($history[0]['consents']));
         }
 
-        $consents_service_names = array();
-        foreach($consents as $consent) {
+        $consents_service_names = [];
+        foreach ($consents as $consent) {
             $consents_service_names[] = $consent_manager->cookies[$consent]['service_name'].' ('.$consent.')';
         }
         $consents_uids_output = implode(', ', $consents_service_names);
@@ -45,9 +43,9 @@ if ($consent_manager->cookiegroups) { /** @phpstan-ignore-line */
                         <th class="consent_manager-history-consents">'.$consent_manager->texts['consent_consents'].'</th>
                     </tr>';
         foreach ($history as $historyentry) {
-            $consents = (array)json_decode(strval($historyentry['consents']));
-            $consents_service_names = array();
-            foreach($consents as $consent) {
+            $consents = (array) json_decode(strval($historyentry['consents']));
+            $consents_service_names = [];
+            foreach ($consents as $consent) {
                 $consents_service_names[] = $consent_manager->cookies[$consent]['service_name'].' ('.$consent.')';
             }
             $consents_uids_output = implode(', ', $consents_service_names);
@@ -107,12 +105,12 @@ if ($consent_manager->cookiegroups) { /** @phpstan-ignore-line */
 
     foreach ($consent_manager->cookies as $cookies) {
         foreach ($cookies['definition'] as $def) {
-            $cookiedb[$def['cookie_name']] = array(
-                "service_name"=>$cookies['service_name'],
-                "provider"=>$cookies['provider'],
-                "lifetime"=>$def['cookie_lifetime'],
-                "description"=>$def['description']
-            );
+            $cookiedb[$def['cookie_name']] = [
+                'service_name' => $cookies['service_name'],
+                'provider' => $cookies['provider'],
+                'lifetime' => $def['cookie_lifetime'],
+                'description' => $def['description'],
+            ];
         }
     }
 
@@ -133,8 +131,7 @@ if ($consent_manager->cookiegroups) { /** @phpstan-ignore-line */
             $output .= '<td class="consent_manager-cookie-description">'.$cookiedb[$cookiename]['description'].'</td>';
             $output .= '<td class="consent_manager-cookie-lifetime">'.$cookiedb[$cookiename]['lifetime'].'</td>';
             $output .= '<td class="consent_manager-cookie-service">'.$cookiedb[$cookiename]['service_name'].'</td>';
-        }
-        else {
+        } else {
             $output .= '<td colspan="4">'.$consent_manager->texts['missingdescription'].'</td>';
         }
         $output .= '</tr>';
@@ -143,5 +140,4 @@ if ($consent_manager->cookiegroups) { /** @phpstan-ignore-line */
     $output .= '</div>';
 
     echo $output;
-
 }
