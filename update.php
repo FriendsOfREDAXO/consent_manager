@@ -30,20 +30,3 @@ $sql = \rex_sql::factory();
 $sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_cookie` '
     .'SET uid = "consent_manager", definition = REPLACE(definition, "name: iwcc", "name: consent_manager") '
     .'WHERE uid = "iwcc"');
-
-// Add Text for new Button button_select_none
-if (rex_string::versionCompare($this->getVersion(), '4.0', '<'))
-{
-    $sql = \rex_sql::factory();
-    $sql->setQuery('SELECT count(*) AS `count` FROM `'. rex::getTablePrefix() .'consent_manager_text` WHERE `uid` = \'button_select_none\'');
-    if ('0' === $sql->getValue('count')) {
-        foreach (rex_clang::getAllIds() as $lang) {
-            $sql = \rex_sql::factory();
-            $sql->setTable(rex::getTable('consent_manager_text'));
-            $sql->setValue('uid', 'button_select_none');
-            $sql->setValue('clang_id', $lang);
-            $sql->setValue('text', 'Alles ablehnen');
-            $sql->insert();
-        }
-    }
-}
