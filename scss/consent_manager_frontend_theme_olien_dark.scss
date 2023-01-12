@@ -1,16 +1,16 @@
 /*
-Theme: {"name": "Standard-Theme Light", "description": "Standard-Theme Light mit hellem Hintergrund, Auswahl mit Checkboxen, farbneutral gehalten", "type": "light", "style": "Popup zentriert, Checkboxen", "autor": "@IngoWinter, @aeberhard"}
+Theme: {"name": "Olien's Dark Theme", "description": "Olien's Dark Theme mit dunklem Hintergrund, Auswahl mit Switches, Blurry Webseite, Highlight-Color ist grün", "type": "dark", "style": "Popup zentriert, Switches", "autor": "@olien"}
 */
 
 $font-family: Verdana, Geneva, sans-serif;
-$font-size: 14px;
+$font-size: 13px;
 
-$overlay-background: rgba(0, 0, 0, .4);
+$overlay-background: rgba(0, 0, 0, .5);
 
-$consent_manager-background: #fefefe;
+$consent_manager-background: #2a2a2a;
 
 $title-color: #666;
-$text-color: #444;
+$text-color: #fff;
 
 $close-background: #666;
 $close-color: #eee;
@@ -19,16 +19,16 @@ $close-hover-color: lighten($close-color, 10);
 
 $checkbox-color: #111;
 
-$button-background: #999;
+$button-background: #16a085;
 $button-color: #fff;
-$button-hover-background: darken($button-background, 30);
+$button-hover-background: darken($button-background, 10);
 $button-hover-color: lighten($button-color, 30);
 
-$link-color: #999;
-$link-hover-color: darken($link-color, 20);
+$link-color: #16a085;
+$link-hover-color: darken($link-color, 10);
 
-$cookie-title-color: $title-color;
-$cookie-title-background: #d4d4d4;
+$cookie-title-color: $text-color;
+$cookie-title-background: #16a085;
 $cookie-desc-background: #f9f9f9;
 
 /* Animations */
@@ -72,7 +72,8 @@ div.consent_manager-background {
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
-    animation: fadeIn .2s;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 /* Wrapper */
@@ -80,9 +81,9 @@ div.consent_manager-background {
 div.consent_manager-wrapper {
     font-family: $font-family;
     font-size: $font-size;
-    line-height: 1.5em;
+    line-height: 1.65;
     background: $consent_manager-background;
-    border: 1px solid darken($consent_manager-background, 20);
+    border: 1px solid lighten($consent_manager-background, 10);
     color: $text-color;
     position: relative;
     width: 100%;
@@ -94,7 +95,7 @@ div.consent_manager-wrapper {
 }
 
 div.consent_manager-wrapper-inner {
-    padding: 2em;
+    padding: 24px;
     position: relative;
 }
 
@@ -105,30 +106,47 @@ div.consent_manager-hidden {
 /* Close-Button */
 
 .consent_manager-close-box {
+    border: 0;
     position: absolute;
-    cursor: pointer;
-    right: 1.5em;
-    top: 1em;
-    display: block;
-    border-radius: 50% !important;
-    border: solid 2px $close-background;
+    right: 20px;
+    top: 20px;
+    display: inline-block;
     width: 30px;
     height: 30px;
-    line-height: 28px;
-    background-color: $close-background;
-    color: $close-color;
-    font-family: Arial;
-    font-size: 18px;
-    padding: 0;
-    margin: 0;
-    opacity: .5;
-    transition: .3s ease all;
+    display: inline-block;
+    background-color: $consent_manager-background;
+    text-indent: -9999px;
+    color: $text-color;
+    cursor: pointer;
+
+    &::before,
+    &::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: $text-color;
+        width: 3px;
+        left: 13px;
+        top: 7px;
+        bottom: 7px;
+    }
+
+    &::before {
+        transform: rotate(45deg);
+    }
+
+    &::after {
+        transform: rotate(-45deg);
+    }
 
     &:hover {
-        border-color: $close-hover-background;
-        background-color: $close-hover-background;
-        color: $close-hover-color;
-        opacity: 1;
+
+        &::before,
+        &::after {
+            transition: .2s ease all;
+            background: $link-color;
+            cursor: pointer;
+        }
     }
 }
 
@@ -137,44 +155,90 @@ div.consent_manager-hidden {
 div.consent_manager-wrapper .consent_manager-headline {
     margin: 0 0 1em 0;
     font-weight: bold;
-    font-size: $font-size +4px;
-    color: $title-color;
+    font-size: $font-size +3px;
+    color: $text-color;
 }
 
 /* Text-Block */
 
 div.consent_manager-wrapper p.consent_manager-text {
     margin: 0 0 1.5em 0;
+    text-align: justify;
 }
 
-/* Cookie Checkboxen */
+/* Cookie Checkboxen/Switches */
 
 div.consent_manager-cookiegroups {
     margin: 0 0 1.5em 0;
 }
 
-div.consent_manager-cookiegroup-checkbox {
+.consent_manager-cookiegroup-checkbox {
     margin-bottom: 1.5em;
+
+    span {
+        font-size: $font-size -2px;
+        line-height: 1.85;
+        vertical-align: top;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }
 
-div.consent_manager-cookiegroups label {
+.consent_manager-wrapper [type="checkbox"] {
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
     position: relative;
-    font-weight: bold;
-    font-size: $font-size +1px;
-    color: $checkbox-color;
+    border: 0;
+    outline: 0;
     cursor: pointer;
+    display: inline-block;
+    width: 40px;
+    background: transparent;
 }
 
-div.consent_manager-cookiegroups label>span {
-    cursor: pointer;
+.consent_manager-wrapper [type="checkbox"]:after {
+    content: '';
+    width: 32px;
+    height: 16px;
+    display: inline-block;
+    background: lighten($consent_manager-background, 20);
+    border-radius: 8px;
+    clear: both;
 }
 
-div.consent_manager-cookiegroups label>input[type="checkbox"] {
-    filter: grayscale(1);
-    filter: hue-rotate(275deg);
-    transform: scale(1.6);
-    margin: 0 .7em 0 .2em;
-    cursor: pointer;
+.consent_manager-wrapper [type="checkbox"]:before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    background: rgb(255, 255, 255);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.consent_manager-wrapper [type="checkbox"]:checked:before {
+    left: 16px;
+    box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.consent_manager-wrapper [type="checkbox"]:checked:after {
+    background: $button-background;
+}
+
+.consent_manager-wrapper [type="checkbox"],
+.consent_manager-wrapper [type="checkbox"]:before,
+.consent_manager-wrapper [type="checkbox"]:after,
+.consent_manager-wrapper [type="checkbox"]:checked:before,
+.consent_manager-wrapper [type="checkbox"]:checked:after {
+    transition: ease .2s;
+    -webkit-transition: ease .2s;
+    -moz-transition: ease .2s;
+    -o-transition: ease .2s;
 }
 
 .consent_manager-wrapper input[type="checkbox"]:disabled,
@@ -187,34 +251,23 @@ div.consent_manager-cookiegroups label>input[type="checkbox"] {
 
 div.consent_manager-show-details {
     padding: 0 0 1.5em 0;
+}
 
+.consent_manager-show-details {
     a {
-        display: inline-block;
-        line-height: 1.2em;
-        height: 1.4em;
+        color: $text-color;
+        text-decoration: none;
         cursor: pointer;
-        color: $link-color;
 
         &:hover {
-            color: $link-hover-color;
+            color: $link-color;
+            text-decoration: none;
         }
     }
 }
 
-div.consent_manager-show-details a.icon-info-circled:before {
-    color: #fff;
-    background-color: $link-color;
-    opacity: .7;
-    content: "i";
-    font-family: "Serif";
-    font-weight: bold;
-    display: inline-block;
-    border-radius: 50%;
-    text-align: center;
-    margin-right: 7px;
-    line-height: 1.4em;
-    height: 1.4em;
-    width: 1.4em;
+div.consent_manager-show-details .icon-info-circled:before {
+    display: none;
 }
 
 /* Buttons */
@@ -222,7 +275,7 @@ div.consent_manager-show-details a.icon-info-circled:before {
 button.consent_manager-save-selection,
 button.consent_manager-accept-all,
 button.consent_manager-accept-none {
-    transition: .3s ease all;
+    transition: .2s ease all;
     background: $button-background;
     border: 1px solid $button-background;
     color: $button-color;
@@ -247,18 +300,18 @@ button.consent_manager-accept-none {
 
 /* Seitenlinks - Datenschutz + Impressum */
 
-div.consent_manager-sitelinks {
+.consent_manager-sitelinks {
     margin: 1.5em 0 0 0;
+    cursor: pointer;
 
     a {
         display: inline-block;
         margin: .4em 1em .4em 0;
-        color: $link-color;
+        color: $text-color;
         text-decoration: none;
-        cursor: pointer;
 
         &:hover {
-            color: $link-hover-color;
+            color: $link-color;
             text-decoration: none;
         }
     }
@@ -272,11 +325,11 @@ div.consent_manager-wrapper div.consent_manager-detail {
 
 div.consent_manager-wrapper div.consent_manager-detail a {
     color: $link-color;
+}
 
-    &:hover {
-        color: $link-hover-color;
-        text-decoration: none;
-    }
+div.consent_manager-wrapper div.consent_manager-detail a:hover {
+    color: $link-hover-color;
+    text-decoration: none;
 }
 
 div.consent_manager-wrapper div.consent_manager-detail div.consent_manager-cookiegroup-title {
@@ -289,18 +342,17 @@ div.consent_manager-wrapper div.consent_manager-detail div.consent_manager-cooki
 div.consent_manager-wrapper div.consent_manager-cookiegroup-description {
     border-left: 1px solid $cookie-title-background;
     padding: 5px 10px;
-    background: $cookie-desc-background;
+    background: lighten($consent_manager-background, 5);
 }
 
 div.consent_manager-wrapper div.consent_manager-cookie {
     margin-top: 3px;
     border-left: 1px solid $cookie-title-background;
     padding: 5px 10px;
-    background: $cookie-desc-background;
+    background: lighten($consent_manager-background, 5);
 
     span {
         display: block;
-        margin-top: .5em;
     }
 }
 

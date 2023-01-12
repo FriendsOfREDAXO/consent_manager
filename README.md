@@ -1,19 +1,19 @@
-# Consent-Manager 3.0 für REDAXO CMS
+# Consent-Manager 4.0 für das REDAXO CMS
 
 ![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.png?raw=true)
 
 Stellt ein Opt-In Cookie-Banner zur Verfügung. Cookies können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Cookie-Box angezeigt in der er allen oder einzelnen Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Cookie-Box kann erneut (zum Beispiel über einen Link im Impressum) aufgerufen werden, um die Auswahl nachträglich zu ändern. Alle Texte sowie die Gestaltung der Cookie-Box sind anpassbar.
 
-![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.jpg?raw=true)
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
 ## Kurzanleitung
 
-1. AddOn consent_manager über den Installer herunterladen und installieren.
+1. AddOn `consent_manager` über den Installer herunterladen und installieren.
 2. [Domains hinterlegen](#domains-hinzufuegen)
 3. [Cookies anlegen](#cookies-anlegen)
 4. [Cookie-Gruppen anlegen](#cookie-gruppen-anlegen)
 5. Der jeweiligen Domain-Gruppe die gewünschten Domains und Cookies zuordnen und JS Scripte hinterlegen.
-6. `REX_CONSENT_MANAGER[]` in den `head`-Bereich in alle gewünschten [Templates einfügen](#in-template-einfuegen), bzw. `echo consent_manager_frontend::getFragment(false, 'consent_manager_box_cssjs.php');`, wenn via PHP.
+6. `REX_CONSENT_MANAGER[forceCache=0 forceReload=0]` in den `head`-Bereich in alle gewünschten [Templates einfügen](#in-template-einfuegen), bzw.<br>`echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`,<br> wenn via PHP.
 7. Alle weiteren Einstellungen sind optional.
 
 > **Hinweis:** Wird keine Cookie-Box angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#fehlerbehebung)
@@ -131,7 +131,7 @@ REX_CONSENT_MANAGER[]
 ...
 <body>
 ...
-`echo consent_manager_frontend::getFragment(false, 'consent_manager_box_cssjs.php');`
+<?php echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php'); ?>
 ...
 </body>
 ...
@@ -259,6 +259,8 @@ Verfügt die Website über mehrere Sprachen oder wird eine neue Sprache angelegt
 Das Design der Cookie-Box kann nach Belieben angepasst werden. Der HTML-Code der Cookie Box liegt im Fragment `/redaxo/src/addons/consent_manager/fragments/consent_manager_box.php`. Änderungen in dieser Datei werden aber beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulegen 'theme/private/fragments/consent_manager_box.php' und die Änderungen hier vorzunehmen.
 Anschließend die Datei `consent_manager_frontend.css` an einen beliebigen Ort kopieren, anpassen und im eigenen Template/CSS einbinden (Eigenes CSS verwenden in den Einstellungen aktivieren!).
 
+> **Hinweis:** Das Design kann auch über ein eigenes Theme angepasst werden. Siehe unter Tipps & Tricks Eigene Themes für die Consent-Box weiter unten.
+
 ### Ausgabe-Einstellungen
 
 Über den Menüpunkt **Einstellungen** kann die Ausgabe für CSS und JavaScript im Frontend gesteuert werden.
@@ -267,8 +269,8 @@ Standardmäßig wird auf jeder Seite das benötigte JavaScript und die CSS-Datei
 Der Platzhalter `REX_CONSENT_MANAGER[]` im Template wird durch folgenden Code ersetzt.
 
 ```html
-<style>.consent_manager-background{position:fixed ...;}</style>
-<script src="./index.php?consent_manager_outputjs=1&amp;lang=1&amp;a=1&amp;i=false&amp;h=false&amp;cid=54&amp;v=3&amp;t=16394249212" id="consent_manager_script" defer></script>
+<style><style>/*consent_manager_frontend.css*/ @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}</style>
+<script src="./index.php?consent_manager_outputjs=1&amp;lang=1&amp;a=6&amp;i=false&amp;h=false&amp;cid=43&amp;v=4&amp;r=0&amp;t=16732118931" id="consent_manager_script" defer></script>
 ```
 
 Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier die Ausgabe der CSS-Datei `consent_manager_frontend.css` durch aktivieren der Einstellung **Eigenes CSS verwenden** unterdrückt werden. Es wird dann nur die JavaScript-Zeile ausgegeben.
@@ -294,6 +296,38 @@ Die Cookie-Box kann auch durch einen JavaScript-Aufruf geöffnet werden `consent
 // Unterstriche bei `on_click` und `java_script` müssen entfernt werden!
 <button on_click="java_script:consent_manager_showBox();">Cookie-Einstellungen</button>
 ```
+
+### Consent mit JavaScript abfragen
+
+Um mit JavaScript einen Consent abzufragen die Funktion `consent_manager_hasconsent()` verwenden.
+
+```js
+<script>
+window.addEventListener('load', (event) => {
+    if (true === consent_manager_hasconsent('youtube')) {
+        alert('youtube Ok');
+    }
+});
+</script>
+```
+
+### Consent mit PHP abfragen
+
+Um mit PHP einen Consent abzufragen die Klassen-Funktion `consent_manager_util::has_consent()` verwenden.
+
+```php
+<?php
+if (true === consent_manager_util::has_consent('youtube')) {
+    echo('youtube Ok');
+}
+?>
+```
+
+### Eigene Themes für die Consent-Box
+
+Um eigene Themes zu erstellen am besten ein bereits bestehendes Theme kopieren (im AddOn-Verzeichnis `/consent_manager/scss/`)
+und im Project-AddOn im Verzeichnis `/project/consent_manager_themes/` ablegen.
+Hier dann die gewünschten Anpassungen vornehmen und dann unter **Themes** in der Theme-Vorschau das eigene Theme **anwenden**.
 
 ### Scripte mit PHP laden
 
@@ -356,7 +390,6 @@ MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manage
 ### Autor
 
 **Friends Of REDAXO**
-[http://www.redaxo.org](http://www.redaxo.org)
 [https://github.com/FriendsOfREDAXO](https://github.com/FriendsOfREDAXO)
 
 **Projekt-Lead**
@@ -368,4 +401,4 @@ First Release: [Ingo Winter](https://github.com/IngoWinter).
 [Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Consent-Manager wiederfinden.
 [Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet,
 [Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet,
-[Oliver Kreischer](https://github.com/olien) hat den Keks gebacken
+[Oliver Kreischer](https://github.com/olien) hat den Keks gebacken.

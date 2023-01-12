@@ -21,22 +21,7 @@ if (rex::isBackend()) {
 
     rex_extension::register('PACKAGES_INCLUDED', static function () {
         $addon = rex_addon::get('consent_manager');
-
         if (null !== rex::getUser()) {
-            if (rex::getUser()->isAdmin() && rex::isDebugMode() && 'get' === rex_request_method()) {
-                $compiler = new rex_scss_compiler();
-                $compiler->setRootDir($addon->getPath());
-                $compiler->setScssFile($addon->getPath('scss/consent_manager_backend.scss'));
-                $compiler->setCssFile($addon->getPath('assets/consent_manager_backend.css'));
-                $compiler->compile();
-                $compiler->setScssFile($addon->getPath('scss/consent_manager_frontend.scss'));
-                $compiler->setCssFile($addon->getPath('assets/consent_manager_frontend.css'));
-                $compiler->compile();
-                rex_file::copy($addon->getPath('assets/consent_manager_frontend.css'), $addon->getAssetsPath('consent_manager_frontend.css'));
-                rex_file::copy($addon->getPath('assets/consent_manager_backend.css'), $addon->getAssetsPath('consent_manager_backend.css'));
-                rex_file::copy($addon->getPath('assets/consent_manager_polyfills.js'), $addon->getAssetsPath('consent_manager_polyfills.js'));
-                rex_file::copy($addon->getPath('assets/consent_manager_frontend.js'), $addon->getAssetsPath('consent_manager_frontend.js'));
-            }
             if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)) {
                 rex_view::addCssFile($addon->getAssetsUrl('consent_manager_backend.css'));
                 rex_view::addJsFile($addon->getAssetsUrl('consent_manager_backend.js'));

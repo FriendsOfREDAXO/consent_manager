@@ -39,3 +39,8 @@ $fragment->setVar('class', 'edit', false);
 $fragment->setVar('title', $addon->i18n('consent_manager_config_title'), false);
 $fragment->setVar('body', $form->get(), false);
 echo $fragment->parse('core/page/section.php');
+
+if ('' !== rex_post('_csrf_token', 'string', '')) {
+    consent_manager_theme::generateDefaultAssets();
+    consent_manager_theme::copyAllAssets();
+}

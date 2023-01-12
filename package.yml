@@ -1,5 +1,5 @@
 package: consent_manager
-version: "4.0.0beta4"
+version: "4.0.0beta5"
 author: "Friends Of REDAXO"
 supportpage: https://redaxo.org/support/community/#slack
 
@@ -19,6 +19,8 @@ page:
       title: "translate:consent_manager_domains"
     config:
       title: "translate:consent_manager_config"
+    theme:
+      title: "translate:consent_manager_theme"
     log:
       title: "translate:consent_manager_log"
     setup:
@@ -41,6 +43,12 @@ requires:
   redaxo: "^5.8"
   php:
     version: ">=7, <9"
+
+default_config:
+  hidebodyscrollbar: false
+  outputowncss: false
+  skip_consent: ''
+  theme: false
 
 installer_ignore:
     - .github

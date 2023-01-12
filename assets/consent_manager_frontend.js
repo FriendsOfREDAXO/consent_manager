@@ -82,6 +82,10 @@
             } else if (el.classList.contains('consent_manager-accept-none')) {
                 deleteCookies();
                 saveConsent('none');
+            } else if (el.classList.contains('consent_manager-close')) {
+                if (!document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden')) {
+                    document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+                }
             }
             if (consent_manager_parameters.hidebodyscrollbar) {
                 document.querySelector('body').style.overflow = 'auto';
