@@ -104,3 +104,4 @@ consent_manager_themes_project_addon_info = (SCSS-Dateien im Ordner: <b>./src/ad
 
 consent_manager_error_no_themes = Es sind keine Themes vorhanden!<br>Ordner: {0}
 consent_manager_error_css_notfound = Die angeforderte SCSS-Datei '{0}' ist nicht vorhanden!
+consent_manager_error_noconfig = Es sind noch keine Texte/Domains/Dienste konfiguriert!

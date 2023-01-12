@@ -94,15 +94,19 @@
         });
     });
 
-    document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
-        document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-    });
-
-    document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
-        if (event.key == 'Enter') {
+    if (document.getElementById('consent_manager-toggle-details')) {
+        document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
             document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-        }
-    });
+        });
+    }
+
+    if (document.getElementById('consent_manager-toggle-details')) {
+        document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
+            if (event.key == 'Enter') {
+                document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+            }
+        });
+    }
 
     document.querySelectorAll('.consent_manager-show-box, .consent_manager-show-box-reload').forEach(function (el) {
         el.addEventListener('click', function () {
@@ -207,7 +211,9 @@
             document.querySelector('body').style.overflow = 'hidden';
         }
         document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-        document.getElementById('consent_manager-save-selection').focus();
+        if (document.getElementById('consent_manager-save-selection')) {
+            document.getElementById('consent_manager-save-selection').focus();
+        }
     }
 
 })();
@@ -237,7 +243,9 @@ function consent_manager_showBox() {
         document.querySelector('body').style.overflow = 'hidden';
     }
     document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-    document.getElementById('consent_manager-save-selection').focus();
+    if (document.getElementById('consent_manager-save-selection')) {
+        document.getElementById('consent_manager-save-selection').focus();
+    }
 }
 
 function consent_manager_hasconsent(id) {

@@ -93,39 +93,43 @@ div.theme_description span {
 <?php echo $cmbox; ?>
 
 <script>
-    document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-    consent_managerBox = document.getElementById('consent_manager-background');
-    consent_managerBox.querySelectorAll('.consent_manager-sitelinks').forEach(function (el) {
-        el.querySelectorAll('a').forEach(function (link) {
-            link.removeAttribute("href");
-        });
-    });
-    document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
-        document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-    });
-    consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
-        el.addEventListener('click', function () {
-            document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
-        });
-    });
-    document.getElementById('previewtitle').onclick = function() {
+    if (document.getElementById('consent_manager-background')) {
         document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-    };
-    document.onkeydown = function(evt) {
-        evt = evt || window.event;
-        if (evt.keyCode == 27) {
-            parent.consent_manager_close_preview();
+        consent_managerBox = document.getElementById('consent_manager-background');
+        consent_managerBox.querySelectorAll('.consent_manager-sitelinks').forEach(function (el) {
+            el.querySelectorAll('a').forEach(function (link) {
+                link.removeAttribute("href");
+            });
+        });
+        if (document.getElementById('consent_manager-toggle-details')) {
+            document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
+                document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+            });
         }
-        if (evt.keyCode == 13) {
+        consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
+            el.addEventListener('click', function () {
+                document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
+            });
+        });
+        document.getElementById('previewtitle').onclick = function() {
+            document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+        };
+        document.onkeydown = function(evt) {
+            evt = evt || window.event;
+            if (evt.keyCode == 27) {
+                parent.consent_manager_close_preview();
+            }
+            if (evt.keyCode == 13) {
+                document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+            }
+        };
+        // for all dom elements on click
+        document.onclick = function(evt) {
+            if (evt.target.closest('.consent_manager-wrapper-inner')) {
+                return;
+            }
             document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
         }
-    };
-    // for all dom elements on click
-    document.onclick = function(evt) {
-        if (evt.target.closest('.consent_manager-wrapper-inner')) {
-            return;
-        }
-        document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
     }
 </script>
 
@@ -139,6 +143,17 @@ div.theme_description span {
 
 if ('|1|' === $addon->getConfig('outputowncss', false)) {
     echo rex_view::error($addon->i18n('config_owncss_active'));
+}
+
+// check Konfiguration
+
+$db = rex_sql::factory();
+$db->setTable(rex::getTable('consent_manager_cookiegroup'));
+$db->setWhere('domain != ""');
+$db->select('count(*) as count');
+$dbresult = $db->execute();
+if (0 === (int) $dbresult->getValue('count')) {
+    echo rex_view::warning($addon->i18n('consent_manager_cookiegroup_nodomain_notice'));
 }
 
 $content = '';
