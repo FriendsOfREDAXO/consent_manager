@@ -192,6 +192,7 @@ if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
 // Ausgabe der Themes
 
 $themes = (array) glob($addon->getPath('scss/consent_manager_frontend*.scss'));
+natsort($themes);
 if (count($themes) > 0) {
     echo '<h2>' . $addon->i18n('themes_addon') . '</h2>';
     echo '<p>' . $addon->i18n('themes_addon_info') . '</p>';
@@ -287,6 +288,7 @@ if (count($themes) > 0) {
 
 // Themes im project-Addon
 $themes = (array) glob(rex_addon::get('project')->getPath('consent_manager_themes/consent_manager_frontend*.scss'));
+natsort($themes);
 if (count($themes) > 0) {
     echo '<h2>' . $addon->i18n('themes_project_addon') . '</h2>';
     echo '<p>' . $addon->i18n('themes_project_addon_info') . '</p>';
