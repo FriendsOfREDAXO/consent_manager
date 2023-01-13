@@ -1,4 +1,4 @@
-# Consent-Manager 4.0 für das REDAXO CMS
+# Consent-Manager für [REDAXO CMS](https://redaxo.org)
 
 ![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.png?raw=true)
 
