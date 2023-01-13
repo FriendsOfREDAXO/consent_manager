@@ -1,10 +1,10 @@
 # Consent-Manager für [REDAXO CMS](https://redaxo.org)
 
-![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.png?raw=true)
+![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.jpg?raw=true)
 
 Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Auswahlbox angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Auswahlbox kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Auswahlbox sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
 
-![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.jpg?raw=true)
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
 ## Kurzanleitung
 
@@ -30,7 +30,7 @@ Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglic
 
 Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!. Im Reiter **Setup** besteht die Möglichkeit einen Import gängiger Dienste durchzuführen.
 
-![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.jpg?raw=true)
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.png?raw=true)
 
 **Schlüssel:** ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 
@@ -67,7 +67,7 @@ Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner
 
 Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren oder ablehnen kann. **Außerdem werden hier die Scripte hinterlegt, die geladen werden, sobald der Benutzer die Gruppe akzeptiert hat.**
 
-![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookiegroups.jpg?raw=true)
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookiegroups.png?raw=true)
 
 | Feld | Beschreibung |
 | ---- | ------------ |
