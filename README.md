@@ -329,6 +329,13 @@ Um eigene Themes zu erstellen am besten ein bereits bestehendes Theme kopieren (
 und im Project-AddOn im Verzeichnis `/project/consent_manager_themes/` ablegen.
 Hier dann die gewünschten Anpassungen vornehmen und dann unter **Themes** in der Theme-Vorschau das eigene Theme **anwenden**.
 
+### Seite ohne Consent-Box
+
+Um z.B. einen Link zu teilen bei dem keine Consent-Box erscheinen soll kann in den Einstellungen ein **TOKEN** hinterlegt werden.
+An die URL dann einfach `skip_consent=MEINTOKEN` anhängen.
+
+z.B.: `https://meinedomain.de/SeiteOhneToken.html?skip_consent=MEINTOKEN`
+
 ### Scripte mit PHP laden
 
 Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Somit kann man (am Beispiel GoogleMaps) eine Meldung ausgeben, dass bestimmte Cookies akzeptiert werden müssen um die Karte zu laden.
