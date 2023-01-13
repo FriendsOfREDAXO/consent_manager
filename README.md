@@ -1,6 +1,6 @@
 # Consent-Manager für [REDAXO CMS](https://redaxo.org)
 
-![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.png?raw=true)
+![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.jpg?raw=true)
 
 Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Auswahlbox angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Auswahlbox kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Auswahlbox sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
 
@@ -10,20 +10,20 @@ Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies
 
 1. AddOn `consent_manager` über den Installer herunterladen und installieren.
 2. [Domains hinterlegen](#domains-hinzufuegen)
-3. [Cookies anlegen](#cookies-anlegen)
-4. [Cookie-Gruppen anlegen](#cookie-gruppen-anlegen)
+3. [Dienste anlegen](#cookies-anlegen)
+4. [Dienste-Gruppen anlegen](#cookie-gruppen-anlegen)
 5. Der jeweiligen Domain-Gruppe die gewünschten Domains und Cookies zuordnen und JS Scripte hinterlegen.
-6. `REX_CONSENT_MANAGER[forceCache=0 forceReload=0]` in den `head`-Bereich in alle gewünschten [Templates einfügen](#in-template-einfuegen), bzw.<br>`echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`,<br> wenn via PHP.
+6. `REX_CONSENT_MANAGER[forceCache=0 forceReload=0]` in den `<head>`-Bereich der gewünschten [Templates einfügen](#in-template-einfuegen), bzw.<br>`echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`,<br> wenn via PHP.
 7. Alle weiteren Einstellungen sind optional.
 
-> **Hinweis:** Wird keine Cookie-Box angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#fehlerbehebung)
+> **Hinweis:** Wird keine Auswahbox angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#fehlerbehebung)
 
 ## Einrichten
 
 ### Domains hinzufügen
 
 Consent-Manager kann für mehrere Domains einzeln gesteuert werden. Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln hinterlegt werden. Zum Beispiel `www.meinedomain.de (ohne Protokoll http/https)`. Das gilt auch für Subdomains **(auch www)**.
-Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Cookie-Box verlinkt.
+Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Auswahlbox verlinkt.
 Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Auswahlbox wird bei Übereinstimmung angezeigt.
 
 ### Dienste anlegen
@@ -34,9 +34,9 @@ Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner
 
 **Schlüssel:** ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 
-**Dienstname:** wird später in der Cookie-Box angezeigt.
+**Dienstname:** wird später in der Auswahlbox angezeigt.
 
-**Cookie Definitionen:** enthält die Beschreibung aller Cookies des Dienstes die in der Cookie-Box angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
+**Cookie Definitionen:** enthält die Beschreibung aller Cookies des Dienstes die in der Auswahlbox angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
 
 ```yaml
 -
@@ -61,27 +61,22 @@ Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner
 
 **Platzhalter Bild:** Hier kann optional ein Platzhalter Bild aus dem Medienpoolhinterlegt werden
 
+**Skripte, die nach Einverständnis geladen werden:** Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Werden unterschiedliche Skripte je Domain benötigt, muss je Domain der Dienst extra angelegt werden. 
+
 ### Gruppen anlegen
 
 Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren oder ablehnen kann. **Außerdem werden hier die Scripte hinterlegt, die geladen werden, sobald der Benutzer die Gruppe akzeptiert hat.**
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookiegroups.png?raw=true)
 
-**Schlüssel:** Zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
-
-**Checkbox Technisch notwendige Cookies:** Ist die Checkbox aktiv, wird die Gruppe vorausgewählt und kann nicht deaktiviert werden (Sinnvoll ist nur eine Gruppe mit notwendigen Cookies).
-
-**Domain:** Hier wird die zuvor angelegte Domain ausgewählt, bei deren Aufruf die Gruppe angezeigt werden soll.
-
-**Reihenfolge:** Die Reihenfolge in der die Gruppen dem Website-Besucher angezeigt werden.
-
-**Name:** Name der Gruppe (wird dem Website-Besucher angezeigt).
-
-**Beschreibung:** Allgmeine Beschreibung der Gruppe (wird dem Website-Besucher angezeigt).
-
-**Cookies:** Hier werden die zuvor angelegten Cookies ausgewählt, die der Gruppe angehören sollen
-
-**Skripte, die nach Einverständnis geladen werden:** Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Zu Beachten ist, dass nur die Scripte eingebunden werden die zu den vorher ausgewählten Cookies gehören.
+| Feld | Beschreibung |
+| ---- | ------------ |
+| Schlüssel | Zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten |
+| Technisch notwendige Dienste: | Wenn aktiv, wird die Gruppe vorausgewählt und kann nicht deaktiviert werden Dienste |
+| Domain | Hier wird die zuvor angelegte Domain ausgewählt, bei deren Aufruf die Gruppe angezeigt werden soll. |
+| Name | Name der Gruppe (wird dem Website-Besucher angezeigt). |
+| Beschreibung | Allgmeine Beschreibung der Gruppe (wird dem Website-Besucher angezeigt). |
+| Dienste | Hier werden die zuvor angelegten Dienste ausgewählt, die der Gruppe angehören sollen |
 
 ### Beispielkonfiguration importieren
 
