@@ -6,7 +6,6 @@ $showlist = true;
 $id = rex_request('id', 'int', 0);
 $func = rex_request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_domain');
-$clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3)); /** @phpstan-ignore-line */
 $table = rex::getTable('consent_manager_domain');
 $msg = '';
 if ('delete' === $func) {
