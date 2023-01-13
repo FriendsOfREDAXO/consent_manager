@@ -35,9 +35,11 @@ class consent_manager_rex_list
      */
     public static function formatCookie($params)
     {
-        $uids = array_filter(explode('|', $params['value']));
-        if ($uids) { /** @phpstan-ignore-line */
-            return implode('<br>', $uids);
+        if (isset($params['value'])) {
+            $uids = array_filter(explode('|', $params['value']));
+            if ($uids) { /** @phpstan-ignore-line */
+                return implode('<br>', $uids);
+            }
         }
         return '-';
     }
