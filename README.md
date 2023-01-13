@@ -2,7 +2,7 @@
 
 ![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.png?raw=true)
 
-Stellt ein Opt-In Cookie-Banner zur Verfügung. Cookies können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Cookie-Box angezeigt in der er allen oder einzelnen Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Cookie-Box kann erneut (zum Beispiel über einen Link im Impressum) aufgerufen werden, um die Auswahl nachträglich zu ändern. Alle Texte sowie die Gestaltung der Cookie-Box sind anpassbar.
+Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Auswahlbox angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Auswahlbox kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Auswahlbox sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start. 
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
@@ -24,13 +24,11 @@ Stellt ein Opt-In Cookie-Banner zur Verfügung. Cookies können in selbst defini
 
 Consent-Manager kann für mehrere Domains einzeln gesteuert werden. Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln hinterlegt werden. Zum Beispiel `www.meinedomain.de (ohne Protokoll http/https)`. Das gilt auch für Subdomains **(auch www)**.
 Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Cookie-Box verlinkt.
-Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Cookie-Box wird bei Übereinstimmung angezeigt.
+Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Auswahlbox wird bei Übereinstimmung angezeigt.
 
-### Cookies anlegen
+### Dienste anlegen
 
-Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!**
-Als Beispiel sind zwei Dienste  (google-analytics und matomo) angelegt, diese könnnen ggf. angepasst oder gelöscht werden.
-**Der Dienst consent_manager wird zwingend von Consent-Manager benötigt. Er ist der Gruppe Notwendig zugeordnet und kann nicht gelöscht werden. Hier werden die Einstellungen der Website Besucher gespeichert.**
+Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!. Im Reiter **Setup** besteht die Möglichkeit einen Import ggängiger Dienste durchzuführen. 
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.jpg?raw=true)
 
@@ -63,9 +61,9 @@ Als Beispiel sind zwei Dienste  (google-analytics und matomo) angelegt, diese k�
 
 **Platzhalter Bild:** Hier kann optional ein Platzhalter Bild aus dem Medienpoolhinterlegt werden
 
-### Cookie-Gruppen anlegen
+### Gruppen anlegen
 
-Cookie-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren oder ablehnen kann. **Außerdem werden hier die Scripte hinterlegt, die geladen werden, sobald der Benutzer die Gruppe akzeptiert hat.**
+Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren oder ablehnen kann. **Außerdem werden hier die Scripte hinterlegt, die geladen werden, sobald der Benutzer die Gruppe akzeptiert hat.**
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookiegroups.jpg?raw=true)
 
