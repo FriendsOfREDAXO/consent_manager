@@ -77,7 +77,7 @@ div.theme_description span {
 
 <h1 id="previewtitle"> <?php echo $theme_options['name'] ?? $preview; ?></h1>
 
-<?php if (false !== $cmstyle) { ?>
+<?php if (false !== $cmstyle && [] !== $theme_options) { ?>
 <div class="theme_description">
 <p><span><?php echo $addon->i18n('theme_name') ?></span><?php echo $theme_options['name']; ?></p>
 <p><span><?php echo $addon->i18n('theme_description') ?></span><?php echo $theme_options['description']; ?></p>
