@@ -50,7 +50,7 @@ if ('delete' === $func) {
 echo $msg;
 if ($showlist) {
     $listDebug = false;
-    $sql = 'SELECT id,uid FROM ' . $table;
+    $sql = 'SELECT id, uid FROM ' . $table . ' ORDER BY uid ASC';
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
