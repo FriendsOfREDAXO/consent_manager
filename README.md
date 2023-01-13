@@ -2,7 +2,7 @@
 
 ![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.png?raw=true)
 
-Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Auswahlbox angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Auswahlbox kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Auswahlbox sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start. 
+Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Auswahlbox angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Auswahlbox kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Auswahlbox sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.jpg?raw=true)
 
@@ -28,7 +28,7 @@ Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglic
 
 ### Dienste anlegen
 
-Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!. Im Reiter **Setup** besteht die Möglichkeit einen Import ggängiger Dienste durchzuführen. 
+Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!. Im Reiter **Setup** besteht die Möglichkeit einen Import gängiger Dienste durchzuführen.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.jpg?raw=true)
 
