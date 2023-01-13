@@ -16,14 +16,14 @@ Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies
 6. `REX_CONSENT_MANAGER[forceCache=0 forceReload=0]` in den `<head>`-Bereich der gewünschten [Templates einfügen](#in-template-einfuegen), bzw.<br>`echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`,<br> wenn via PHP.
 7. Alle weiteren Einstellungen sind optional.
 
-> **Hinweis:** Wird keine Cookie-Box angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#fehlerbehebung)
+> **Hinweis:** Wird keine Auswahbox angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#fehlerbehebung)
 
 ## Einrichten
 
 ### Domains hinzufügen
 
 Consent-Manager kann für mehrere Domains einzeln gesteuert werden. Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln hinterlegt werden. Zum Beispiel `www.meinedomain.de (ohne Protokoll http/https)`. Das gilt auch für Subdomains **(auch www)**.
-Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Cookie-Box verlinkt.
+Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Auswahlbox verlinkt.
 Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Auswahlbox wird bei Übereinstimmung angezeigt.
 
 ### Dienste anlegen
@@ -34,9 +34,9 @@ Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner
 
 **Schlüssel:** ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 
-**Dienstname:** wird später in der Cookie-Box angezeigt.
+**Dienstname:** wird später in der Auswahlbox angezeigt.
 
-**Cookie Definitionen:** enthält die Beschreibung aller Cookies des Dienstes die in der Cookie-Box angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
+**Cookie Definitionen:** enthält die Beschreibung aller Cookies des Dienstes die in der Auswahlbox angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
 
 ```yaml
 -
