@@ -253,7 +253,7 @@ if (count($themes) > 0) {
 
             // dump($themeid, $addon->getConfig('theme', ''));
             $configtheme = $addon->getConfig('theme', 'consent_manager_frontend.scss');
-            if ('' === $configtheme) {
+            if ('' === $configtheme || false === $configtheme) {
                 $configtheme = 'consent_manager_frontend.scss';
             }
             if ($themeid === $configtheme) {
