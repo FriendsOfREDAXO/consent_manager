@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 4.0.0beta5 – 12.01.2023
+## Version 4.0.0beta5 – 13.01.2023
 
 ### Breaking Changes
 
@@ -14,8 +14,10 @@
 
 ### Features
 
-* Themes sind jetzt möglich, SCSS mit Variablen, 3 Standard-Themes sind beim Addon dabei, Theme-Vorschau im Backend
+* Themes sind jetzt möglich, SCSS mit Variablen, 5 Standard-Themes sind beim Addon dabei, Theme-Vorschau im Backend
   * Standard Theme Light
+  * Standard Theme Light Bottom-Bar
+  * Standard Theme Light Bottom-Right
   * Standard Theme Dark
   * Olien's Dark Theme von @olien
 * Eigene Themes können im project-Addon im Ordner **consent_manager_themes** gespeichert werden
