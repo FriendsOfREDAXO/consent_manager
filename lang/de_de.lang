@@ -80,3 +80,28 @@ consent_manager_thead_ip = IP
 consent_manager_thead_consents = Consents
 consent_manager_thead_cachelogid = Cachelog-Id
 consent_manager_thead_consentid = Consent-Id
+
+consent_manager_theme = Themes
+consent_manager_config_owncss_active = „Eigenes CSS verwenden” ist in den Einstellungen aktiv. Für die Verwendung von Themes muss diese Einstellung deaktiviert werden!
+consent_manager_config_active_theme = [Aktives Theme]
+consent_manager_config_btn_preview = Theme Vorschau
+consent_manager_config_btn_select = Theme „{0}” anwenden
+consent_manager_config_confirm_select = Theme „{0}” anwenden!?
+consent_manager_config_saved = Theme wurde angewendet und ist jetzt aktiv!
+consent_manager_config_invalid_theme = Theme-Datei ungültig. Keine Theme-Informationen vorhanden!
+
+consent_manager_theme_name = Theme-Name:
+consent_manager_theme_scssfile = SCSS-Datei:
+consent_manager_theme_description = Beschreibung:
+consent_manager_theme_type = Theme-Typ:
+consent_manager_theme_style = Theme-Stil:
+consent_manager_theme_autor = Autor(en):
+
+consent_manager_themes_addon = Themes im Consent-Manager-Addon
+consent_manager_themes_addon_info = (SCSS-Dateien im Ordner: <b>./src/addons/consent_manager/scss/</b>)
+consent_manager_themes_project_addon = Themes im project-Addon
+consent_manager_themes_project_addon_info = (SCSS-Dateien im Ordner: <b>./src/addons/project/consent_manager_themes/</b>)
+
+consent_manager_error_no_themes = Es sind keine Themes vorhanden!<br>Ordner: {0}
+consent_manager_error_css_notfound = Die angeforderte SCSS-Datei '{0}' ist nicht vorhanden!
+consent_manager_error_noconfig = Es sind noch keine Texte/Domains/Dienste konfiguriert!

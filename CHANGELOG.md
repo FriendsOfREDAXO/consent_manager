@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 4.0.0beta4 – 01.01.2023
+## Version 4.0.0beta5 – 13.01.2023
 
 ### Breaking Changes
 
@@ -9,11 +9,18 @@
   * Buttons statt Links für die Buttons und den Close-Button
   * Neuer Button "Alles ablehnen" (@thorol)
   * Tabindex(e) hinzugefügt
-  * CSS angepasst (scss/consent_manager_frontend.scss)
-  * Browser-Default-Checkboxen ohne SchnickSchnack (nur greyscale, und mit scale vergrössert), dadurch sind die Checkboxen auch per Tastatur erreichbar
+  * SCSS angepasst, Variablen hinzugefügt und Style vereinfacht (scss/consent_manager_frontend.scss)
+  * Browser-Default-Checkboxen ohne SchnickSchnack (nur greyscale/hue-rotate, und mit scale vergrössert), dadurch sind die Checkboxen auch per Tastatur erreichbar
 
 ### Features
 
+* Themes sind jetzt möglich, SCSS mit Variablen, 5 Standard-Themes sind beim Addon dabei, Theme-Vorschau im Backend
+  * Standard Theme Light
+  * Standard Theme Light Bottom-Bar
+  * Standard Theme Light Bottom-Right
+  * Standard Theme Dark
+  * Olien's Dark Theme von @olien
+* Eigene Themes können im project-Addon im Ordner **consent_manager_themes** gespeichert werden
 * CHANGELOG.md hinzugefügt, Anzeige im Backend (package.yml)
 * Host-Validation angepasst (consent_manager_rex_form::validateHostname)
 * JavaScript-Funktion **consent_manager_showBox** zum anzeigen der Consent-Box (assets/consent_manager_frontend.js) #230
@@ -29,7 +36,8 @@
 * Update js.cookie-3.0.1.min.js
 * Reload der Seite kann erzwungen werden **REX_CONSENT_MANAGER[forceReload=1]**
 * In der Übersicht der Gruppen eine Warning ausgeben wenn noch keine Domain zugeordnet wurde #257
-* Code-Quality (rexstan) Extensions: REDAXO SuperGlobals, Bleeding-Edge, Strict-Mode, Deprecation Warnings, PHPUnit, phpstan-dba, report-mixed, dead code
+* Code-Quality (rexstan) Level 9, Extensions: REDAXO SuperGlobals, Bleeding-Edge, Strict-Mode, Deprecation Warnings, PHPUnit, phpstan-dba, report-mixed, dead code
+* added .php-cs-fixer.dist.php, Code überarbeitet mit Coding Standards
 
 ### Bugfixes
 

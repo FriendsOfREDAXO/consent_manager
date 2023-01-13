@@ -36,7 +36,7 @@ if ('' !== rex_config::get('consent_manager', 'skip_consent') && rex_get('skip_c
 // Standard-CSS ausgeben
 if (false === $addon->getConfig('outputowncss', false)) {
     $_csscontent = consent_manager_frontend::getFrontendCss();
-    if (false !== $_csscontent) {
+    if ('' !== $_csscontent) {
         $consentparams['outputcss'] .= '    <style>' . trim(strval($_csscontent)) . '</style>' . PHP_EOL;
     }
 }

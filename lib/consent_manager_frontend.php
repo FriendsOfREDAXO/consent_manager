@@ -1,5 +1,7 @@
 <?php
 
+use rex_article;
+
 /**
  * @api
  */
@@ -155,16 +157,23 @@ class consent_manager_frontend
         exit;
     }
 
-    /**
-     * @return string|false
-     */
-    public static function getFrontendCss()
+    public static function getFrontendCss(): string
     {
         $addon = rex_addon::get('consent_manager');
 
         $_cssfilename = 'consent_manager_frontend.css';
-        $_csscontent = file_get_contents($addon->getAssetsPath($_cssfilename));
+        if (false !== $addon->getConfig('theme', false)) {
+            $_themecssfilename = strval($addon->getConfig('theme', false));
+            $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $_themecssfilename));
+            if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {
+                $_cssfilename = $_themecssfilename;
+            }
+        }
 
-        return $_csscontent;
+        $_csscontent = file_get_contents($addon->getAssetsPath($_cssfilename));
+        if (false === $_csscontent) {
+            return '';
+        }
+        return '/*' . $_cssfilename . '*/ ' . $_csscontent;
     }
 }

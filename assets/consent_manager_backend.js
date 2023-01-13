@@ -1,4 +1,27 @@
+// Show theme preview
+
+function consent_manager_show_preview(theme) {
+    $('.cm_modal-iframe').css('opacity', 0);
+    $('.cm_modal-iframe').attr('src', '?page=consent_manager/theme&preview=' + theme)
+    $('.cm_modal-iframe').on('load', function () {
+        $('.cm_modal-iframe').off('load');
+        $('.cm_modal-overlay').addClass('is-open');
+        $('.cm_modal-iframe').css('opacity', 1);
+    });
+}
+
+// Close theme preview
+
+function consent_manager_close_preview() {
+    $(document).off('keydown');
+    $('.cm_modal-overlay').removeClass('is-open');
+    $('.cm_modal-iframe').attr('src', 'about:blank');
+    $('.cm_modal-iframe').css('opacity', 0);
+}
+
 $(document).on('rex:ready', function () {
+
+    // Search on consent logfile
 
     function consent_manager_setsearch() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -43,4 +66,21 @@ $(document).on('rex:ready', function () {
     });
 
     rex_searchfield_init("#consent_manager_log_search");
+
+    // Theme preview
+
+    $('.cm_modal-button-close').on('click', function (e) {
+        consent_manager_close_preview();
+    });
+
+    $('div.thumbnail-container, a.consent_manager-button-preview').on('click', function (e) {
+        e.preventDefault();
+        consent_manager_show_preview($(this).data('theme'));
+        $(document).on('keydown', function (e) {
+            if (e.keyCode === 27) { // ESC
+                consent_manager_close_preview();
+            }
+        });
+    });
+
 });
