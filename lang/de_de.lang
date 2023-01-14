@@ -85,8 +85,8 @@ consent_manager_theme = Themes
 consent_manager_config_owncss_active = „Eigenes CSS verwenden” ist in den Einstellungen aktiv. Für die Verwendung von Themes muss diese Einstellung deaktiviert werden!
 consent_manager_config_active_theme = [Aktives Theme]
 consent_manager_config_btn_preview = Theme Vorschau
-consent_manager_config_btn_select = Theme „{0}” anwenden
-consent_manager_config_confirm_select = Theme „{0}” anwenden!?
+consent_manager_config_btn_select = Theme <b>{0}</b> anwenden
+consent_manager_config_confirm_select = Theme [ {0} ] anwenden!?
 consent_manager_config_saved = Theme wurde angewendet und ist jetzt aktiv!
 consent_manager_config_invalid_theme = Theme-Datei ungültig. Keine Theme-Informationen vorhanden!
 
