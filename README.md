@@ -397,7 +397,11 @@ MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manage
 
 ### Credits
 
+[Contributors:](https://github.com/FriendsOfREDAXO/consent_manager/graphs/contributors)
 First Release: [Ingo Winter](https://github.com/IngoWinter).
+
+### Sponors:
+
 [Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Consent-Manager wiederfinden.
 [Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet,
 [Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet,
