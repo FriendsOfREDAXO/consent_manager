@@ -100,8 +100,14 @@ div.theme_description span {
 
 <script>
     if (document.getElementById('consent_manager-background')) {
-        document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
         consent_managerBox = document.getElementById('consent_manager-background');
+        consent_managerBox.classList.remove('consent_manager-hidden');
+
+        var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
+        var firstFocusableEl = focusableEls[0];
+        consent_managerBox.focus();
+        firstFocusableEl.focus();
+
         consent_managerBox.querySelectorAll('.consent_manager-sitelinks').forEach(function (el) {
             el.querySelectorAll('a').forEach(function (link) {
                 link.removeAttribute("href");
@@ -114,14 +120,16 @@ div.theme_description span {
         }
         consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
             el.addEventListener('click', function () {
-                document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
+                //document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
+                consent_managerBox.classList.add('consent_manager-hidden');
+
                 if (!document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden')) {
                     document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
                 }
             });
         });
         document.getElementById('previewtitle').onclick = function() {
-            document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+            consent_managerBox.classList.remove('consent_manager-hidden');
         };
         document.onkeydown = function(evt) {
             evt = evt || window.event;
@@ -129,7 +137,7 @@ div.theme_description span {
                 parent.consent_manager_close_preview();
             }
             if (evt.keyCode == 13) {
-                document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+                consent_managerBox.classList.remove('consent_manager-hidden');
             }
         };
         // for all dom elements on click

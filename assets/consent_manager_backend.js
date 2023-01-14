@@ -6,7 +6,7 @@ function consent_manager_show_preview(theme) {
     $('.cm_modal-iframe').on('load', function () {
         $('.cm_modal-iframe').off('load');
         $('.cm_modal-overlay').addClass('is-open');
-        $('.cm_modal-iframe').css('opacity', 1);
+        $('.cm_modal-iframe').css('opacity', 1).focus();
     });
 }
 
