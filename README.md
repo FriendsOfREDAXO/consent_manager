@@ -392,12 +392,13 @@ MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manage
 **Friends Of REDAXO**
 [https://github.com/FriendsOfREDAXO](https://github.com/FriendsOfREDAXO)
 
-**Projekt-Lead**
+**Projekt-Leads**
 [Ingo Winter](https://github.com/IngoWinter), [Andreas Eberhard](https://github.com/aeberhard)
 
 ### Credits
 
 [Contributors:](https://github.com/FriendsOfREDAXO/consent_manager/graphs/contributors)
+
 First Release: [Ingo Winter](https://github.com/IngoWinter).
 
 ### Sponors:
