@@ -211,9 +211,10 @@
             document.querySelector('body').style.overflow = 'hidden';
         }
         document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-        if (document.getElementById('consent_manager-save-selection')) {
-            document.getElementById('consent_manager-save-selection').focus();
-        }
+        var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
+        var firstFocusableEl = focusableEls[0];
+        consent_managerBox.focus();
+        firstFocusableEl.focus();
     }
 
 })();
@@ -243,9 +244,10 @@ function consent_manager_showBox() {
         document.querySelector('body').style.overflow = 'hidden';
     }
     document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-    if (document.getElementById('consent_manager-save-selection')) {
-        document.getElementById('consent_manager-save-selection').focus();
-    }
+    var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
+    var firstFocusableEl = focusableEls[0];
+    consent_managerBox.focus();
+    firstFocusableEl.focus();
 }
 
 function consent_manager_hasconsent(id) {
