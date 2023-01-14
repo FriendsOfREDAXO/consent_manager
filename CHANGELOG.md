@@ -8,7 +8,7 @@
 * **Template für die Consent-Box angepasst** (fragments/consent_manager_box.php)
   * Buttons statt Links für die Buttons und den Close-Button
   * Neuer Button "Alles ablehnen" (@thorol)
-  * Tabindex(e) hinzugefügt
+  * Tabindex(e) hinzugefügt, Consent-Box ist jetzt auch per Tastatur bedienbar
   * SCSS angepasst, Variablen hinzugefügt und Style vereinfacht (scss/consent_manager_frontend.scss)
   * Browser-Default-Checkboxen ohne SchnickSchnack (nur greyscale/hue-rotate, und mit scale vergrössert), dadurch sind die Checkboxen auch per Tastatur erreichbar
 
