@@ -70,7 +70,8 @@ div.theme_description span {
     width: 150px;
     margin-right: 15px;
 }
-.alert-danger{color:#fff;background-color:#d9534f;border-color:#c9302c;padding: 20px 30px;}
+.alert-danger{color:#fff;background-color:#d9534f;border-color:#c9302c;padding: 20px 30px;margin-top:2em;}
+.alert-info{color:#fff;background-color:#4b9ad9;border-color:#2a81c7;padding: 20px 30px;margin-top:2em;}
 </style>
 </head>
 <body>
@@ -89,8 +90,13 @@ div.theme_description span {
 
 <?php } ?>
 
-<?php echo '<style>' . $cmstyle . '</style>' . PHP_EOL; ?>
-<?php echo $cmbox; ?>
+<?php
+    echo '<style>' . $cmstyle . '</style>' . PHP_EOL;
+    echo $cmbox;
+    if ('' !== $cmstyle) {
+        echo rex_view::info($addon->i18n('theme_preview_info'));
+    }
+    ?>
 
 <script>
     if (document.getElementById('consent_manager-background')) {
@@ -109,6 +115,9 @@ div.theme_description span {
         consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
             el.addEventListener('click', function () {
                 document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
+                if (!document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden')) {
+                    document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+                }
             });
         });
         document.getElementById('previewtitle').onclick = function() {
@@ -136,7 +145,7 @@ div.theme_description span {
 </body>
 </html>
 <?php
-    exit;
+            exit;
 }
 
 // Eigenes CSS verwenden darf nicht aktiviert sein
