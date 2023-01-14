@@ -14,7 +14,7 @@
 
 ### Features
 
-* Themes sind jetzt möglich, SCSS mit Variablen, 5 Standard-Themes sind beim Addon dabei, Theme-Vorschau im Backend
+* Themes sind jetzt möglich, SCSS mit Variablen, 5 Standard-Themes sind beim Addon dabei, Theme-Vorschau im Backend, @aeberhard
   * Standard Theme Light
   * Standard Theme Light Bottom-Bar
   * Standard Theme Light Bottom-Right
