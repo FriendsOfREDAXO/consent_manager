@@ -20,9 +20,13 @@ $close-hover-color: lighten($close-color, 10);
 
 $checkbox-color: #111;
 
-$button-background: #16a085;
+$checkbox-background: #16a085;
+
+$button-background: transparent;
+
+
 $button-color: #fff;
-$button-hover-background: darken($button-background, 10);
+$button-hover-background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(55,55,55,.4) 87%);
 $button-hover-color: lighten($button-color, 30);
 
 $link-color: #eee;
@@ -111,20 +115,6 @@ div.consent_manager-wrapper-inner {
 div.consent_manager-hidden {
     display: none;
 }
-
-div.consent_manager-buttons a {
-    border: 1px solid $close-background;
-    padding: 0.9em;
-    border-radius: $consent_border_radius;
-    cursor: pointer; 
-    }
-
-div.consent_manager-buttons a:hover {
-    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(55,55,55,.7) 87%);
-    color: #fff;
-    }
-
-
 
 /* Close-Button */
 
@@ -250,7 +240,7 @@ div.consent_manager-cookiegroups {
 }
 
 .consent_manager-wrapper [type="checkbox"]:checked:after {
-    background: $button-background;
+    background: $checkbox-background;
 }
 
 .consent_manager-wrapper [type="checkbox"],
@@ -301,7 +291,6 @@ button.consent_manager-accept-all,
 button.consent_manager-accept-none {
     transition: .2s ease all;
     background: $button-background;
-    border: 1px solid $button-background;
     color: $button-color;
     padding: .5em 2em;
     border-radius: 3px;
@@ -311,6 +300,7 @@ button.consent_manager-accept-none {
     display: block;
     min-height: 3em;
     width: 100%;
+    border: 1px solid $close-background;
     margin-bottom: 1.0em;
     cursor: pointer;
     border-radius: $consent_border_radius;
