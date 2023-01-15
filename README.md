@@ -318,18 +318,32 @@ Hast du eigene Tipps & Tricks? [Füge Sie auf Github direkt in die Readme hinzu]
 ### Cookie-Box manuell aufrufen
 
 Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anzupassen (zum Beispiel im Impressum oder auf einer Cookie-Seite) ist das mit folgenden Links möglich:
-`<a class="consent_manager-show-box">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box.
-`<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` öffnet die Cookie-Box und erzwingt einen Page-Reload nach der Einwilligung.
+
+### Link zur Consent-Box; 
+
+```html
+<a class="consent_manager-show-box">Datenschutz-Einstellungen</a>
+```
+
+### Link mit Reload
+
+öffnet die Cookie-Box und erzwingt einen Page-Reload nach der Einwilligung.
+
+```html
+<a class="consent_manager-show-box-reload">Datenschutz-Einstellungen</a>
+```
+
+### Aufruf per Javascript
 
 Die Cookie-Box kann auch durch einen JavaScript-Aufruf geöffnet werden `consent_manager_showBox()`.
 
-```php
+```htmo
 // Achtung hier mit Unterstrichen da sonst der Beispiel-Code verstümmelt wird.
 // Unterstriche bei `on_click` und `java_script` müssen entfernt werden!
-<button on_click="java_script:consent_manager_showBox();">Cookie-Einstellungen</button>
+<button on_click="java_script:consent_manager_showBox();">Datenschutz-Einstellungen</button>
 ```
 
-### Consent mit JavaScript abfragen
+### Consent per JavaScript ermittlen
 
 Um mit JavaScript einen Consent abzufragen die Funktion `consent_manager_hasconsent()` verwenden.
 
@@ -343,7 +357,7 @@ window.addEventListener('load', (event) => {
 </script>
 ```
 
-### Consent mit PHP abfragen
+### Consent mit PHP ermitteln
 
 Um mit PHP einen Consent abzufragen die Klassen-Funktion `consent_manager_util::has_consent()` verwenden.
 
@@ -363,7 +377,7 @@ An die URL dann einfach `skip_consent=MEINTOKEN` anhängen.
 
 z.B.: `https://meinedomain.de/SeiteOhneToken.html?skip_consent=MEINTOKEN`
 
-### Scripte mit PHP laden
+### Scripte per PHP laden
 
 Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Somit kann man (am Beispiel GoogleMaps) eine Meldung ausgeben, dass bestimmte Cookies akzeptiert werden müssen um die Karte zu laden.
 Problem dabei: öffnet man die Cookie-Box und akzeptiert die Cookies, wird zwar das Script geladen, aber ohne Page-Reload ändert sich der Inhalt der Seite nicht. Deshalb sollte man hier den Link: `<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` verwenden.
@@ -395,7 +409,7 @@ Um die Cookie-Texte auch für Redakteure zur Änderung bereitzustellen muss dies
 
 * Ist eine Domain hinterlegt und in der Cookie-Gruppe zugeordnet? - Bei mehreren Domains sind die Gruppen für jede Domain einzeln anzulegen.
 * Stimmt die zugeordnete Domain mit der aufgerufenen Domain überein? - www.meinedomain.de und meinedomain.de sind zwei verschiedene Domains.
-* Ist die Website über die zugeordnete Domain (www.meinedomain.de) erreichbar? - Unterordner Installationen funktionieren nicht.
+* Ist die Website über die zugeordnete Domain (www.meinedomain.tld) erreichbar? - Unterordner Installationen funktionieren nicht.
 * Sind der Platzhalter REX_CONSENT_MANAGER[] oder der PHP-Code in einem Template im `head`-Bereich hinterlegt? .
 * Unter Einstellungen ist *Eigenes CSS verwenden* aktiviert aber es wird kein eigenes CSS eingebunden (HTML der Box wird am Seitenende angezeigt und nicht als Popup)
 * Ist der Startkartikel der Seite auch als Not Found Artikel (404) konfiguriert? - Die Cookie-Box wird beim 404 Artikel nicht ausgegeben
