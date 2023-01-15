@@ -2,7 +2,7 @@
 
 ![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.jpg?raw=true)
 
-Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Auswahlbox angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Auswahlbox kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Auswahlbox sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
+Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Consent-Box angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Consent-Box kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Consent-Box sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
@@ -23,8 +23,8 @@ Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies
 ### Domains hinzufügen
 
 Consent-Manager kann für mehrere Domains einzeln gesteuert werden. Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln hinterlegt werden. Zum Beispiel `www.meinedomain.de (ohne Protokoll http/https)`. Das gilt auch für Subdomains **(auch www)**.
-Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Auswahlbox verlinkt.
-Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Auswahlbox wird bei Übereinstimmung angezeigt.
+Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Consent-Box verlinkt.
+Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Consent-Box wird bei Übereinstimmung angezeigt.
 
 ### Dienste anlegen
 
@@ -34,9 +34,9 @@ Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner
 
 **Schlüssel:** ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 
-**Dienstname:** wird später in der Auswahlbox angezeigt.
+**Dienstname:** wird später in der Consent-Box angezeigt.
 
-**Cookie Definitionen:** enthält die Beschreibung aller Cookies des Dienstes die in der Auswahlbox angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
+**Cookie Definitionen:** enthält die Beschreibung aller Cookies des Dienstes die in der Consent-Box angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
 
 ```yaml
 -
@@ -239,9 +239,9 @@ jQuery(function ($) {
 
 Die folgenden Einstellungen sind optional. Mit ihnen kann man Consent-Manager an die eigenen Bedürfnisse anpassen. Sie ändern jedoch nichts an der Funktionalität des AddOns.
 
-### Cookie-Texte anpassen
+### Dienste-Texte anpassen
 
-Hier können alle allgemeinen Texte der CookieBox angepasst werden.
+Hier können alle allgemeinen Texte der Consent-Box angepasst werden.
 
 ### Mehrsprachigkeit
 
