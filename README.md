@@ -5,7 +5,7 @@
 Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Consent-Box angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Consent-Box kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Consent-Box sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
 
 ## Rechtlicher Hinweis 
-Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. unvollständig oder nicht aktuell. Es liegt in der Verantwortung der Betreiber und Entwickler der Website sicherzustellen, dass die Texte, Dienste, Cookies der geltenden Rechtslage und den Datenschutzbestimmungen entsprechen. Dies gilt auch für die korrekte Integration der Lösung.
+Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. unvollständig oder nicht aktuell. Es liegt in der Verantwortung der Betreiber und Entwickler der Website sicherzustellen, das die Funktionalität der Abfrage, die Texte, Dienste, Cookies der geltenden Rechtslage und den Datenschutzbestimmungen entsprechen. Dies gilt auch für die korrekte Integration der Lösung.
 
 > Wir empfehlen für die Formulierung der Texte und Cookie-Listen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung) 
 
