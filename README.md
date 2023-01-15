@@ -7,6 +7,8 @@ Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies
 ## Rechtlicher Hinweis 
 Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. unvollständig oder nicht aktuell. Es liegt in der Verantwortung der Betreiber und Entwickler der Website sicherzustellen, dass die Texte, Dienste, Cookies der geltenden Rechtslage und den Datenschutzbestimmungen entsprechen. Dies gilt auch für die korrekte Integration der Lösung.
 
+> Wir empfehlen hierzu einen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung) 
+
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
 ## Kurzanleitung
@@ -25,9 +27,12 @@ Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. u
 
 ### Domains hinzufügen
 
-Consent-Manager kann für mehrere Domains einzeln gesteuert werden. Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln hinterlegt werden. Zum Beispiel `www.meinedomain.de (ohne Protokoll http/https)`. Das gilt auch für Subdomains **(auch www)**.
-Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Consent-Box verlinkt.
-Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Consent-Box wird bei Übereinstimmung angezeigt.
+Consent-Manager kann für mehrere Domains einzeln gesteuert werden. 
+Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln (ohne Protokoll http/https) hinterlegt werden. 
+
+Zum Beispiel:  `www.meinedomain.tld` und  `meinedomain.tld`
+
+Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Consent-Box verlinkt. Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Consent-Box wird bei Übereinstimmung angezeigt.
 
 ### Dienste anlegen
 
@@ -35,11 +40,17 @@ Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.png?raw=true)
 
-**Schlüssel:** ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
+#### Schlüssel: 
 
-**Dienstname:** wird später in der Consent-Box angezeigt.
+ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 
-**Cookie Definitionen:** enthält die Beschreibung aller Cookies des Dienstes die in der Consent-Box angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
+#### Dienstname:
+
+wird später in der Consent-Box angezeigt.
+
+#### Cookie Definitionen:
+
+enthält die Beschreibung aller Cookies des Dienstes die in der Consent-Box angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
 
 ```yaml
 -
@@ -56,15 +67,25 @@ Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner
  desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
 ```
 
-**Anbieter:** Hier kann optional der Anbieter hinterlegt werden (zum Beispiel Google). Die Angaben werden in der Beschreibung angzeigt.
+#### Anbieter: 
 
-**Link Datenschutzerklärung:** Standardmäßig wird die Datenschutzerklärung der Domain angezeigt. Exisitiert für den Dienst eine separate Datenschutzerklärung (zum Beispiel: [https://policies.google.com/privacy](https://policies.google.com/privacy)) kann diese hier hinterlegt werden. Auch REDAXO-Links (redaxo://1) können genutzt werden.
+Hier kann optional der Anbieter hinterlegt werden (zum Beispiel Google). Die Angaben werden in der Beschreibung angzeigt.
 
-**Platzhalter Text:** Hier kann optional ein Platzhalter Text hinterlegt werden
+#### Link Datenschutzerklärung:
 
-**Platzhalter Bild:** Hier kann optional ein Platzhalter Bild aus dem Medienpoolhinterlegt werden
+Standardmäßig wird die Datenschutzerklärung der Domain angezeigt. Exisitiert für den Dienst eine separate Datenschutzerklärung (zum Beispiel: [https://policies.google.com/privacy](https://policies.google.com/privacy)) kann diese hier hinterlegt werden. Auch REDAXO-Links (redaxo://1) können genutzt werden.
 
-**Skripte, die nach Einverständnis geladen werden:** Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Werden unterschiedliche Skripte je Domain benötigt, muss je Domain der Dienst extra angelegt werden. 
+#### Platzhalter Text:
+
+Hier kann optional ein Platzhalter Text hinterlegt werden
+
+#### Platzhalter Bild: 
+
+Hier kann optional ein Platzhalter Bild aus dem Medienpoolhinterlegt werden
+
+#### Skripte, die nach Einverständnis geladen werden:
+
+Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Werden unterschiedliche Skripte je Domain benötigt, muss je Domain der Dienst extra angelegt werden. 
 
 ### Gruppen anlegen
 
@@ -83,12 +104,12 @@ Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren ode
 
 ### Beispielkonfiguration importieren
 
-Über den Menüpunkt **Setup** kann eine Beispielkonfiguration mit Cookiegruppen importiert werden. **Vorhandene Cookies und Cookiegruppen werden dabei gelöscht!**
+Über den Menüpunkt **Setup** kann eine Beispielkonfiguration mit Gruppen importiert werden. **Vorhandene Dienste und Gruppen werden dabei gelöscht!**
 
 ### In Template einfügen
 
-Der Platzhalter `REX_CONSENT_MANAGER[]` kann im `<head>`-Bereich des Templates oder vor dem `</body>`-Tag eingefügt werden.
-Gibt es mehrere Templates die die Cookie-Box aufrufen sollen muss der Platzhalter entsprechend in allen Templates eingefügt werden.
+Der Platzhalter `REX_CONSENT_MANAGER[]` wird im `<head>`-Bereich des Templates oder vor dem `</body>`-Tag eingefügt.
+Gibt es mehrere Templates die die Consent-Box aufrufen sollen, muss der Platzhalter entsprechend in allen Templates eingefügt werden.
 
 **Wichtig: Der Platzhalter funktioniert ausschließlich in REDAXO-Templates, nicht innerhalb von php-includes, Modulen oder Fragmenten.**
 
@@ -238,13 +259,15 @@ jQuery(function ($) {
 });
 ```
 
-## Anpassen (optional)
+## Einstellungen und Optionen
 
 Die folgenden Einstellungen sind optional. Mit ihnen kann man Consent-Manager an die eigenen Bedürfnisse anpassen. Sie ändern jedoch nichts an der Funktionalität des AddOns.
 
 ### Dienste-Texte anpassen
 
 Hier können alle allgemeinen Texte der Consent-Box angepasst werden.
+
+> Wir empfehlen hierzu einen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung) 
 
 ### Mehrsprachigkeit
 
