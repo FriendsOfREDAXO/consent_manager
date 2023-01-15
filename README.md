@@ -284,7 +284,7 @@ und im Project-AddOn im Verzeichnis `/project/consent_manager_themes/` ablegen.
 Der Dateiname sollte diesem Schema entsprechen: `consent_manager_frontend*.scss`
 Hier dann die gewünschten Anpassungen vornehmen und dann unter **Themes** in der Theme-Vorschau das eigene Theme **anwenden**.
 
-> Gerne können eigene Themes auch als PR eingereicht werden 😀. In diesem Fall bitt mit Screenshot oder Demo-Link. 
+> Gerne können eigene Themes auch als PR eingereicht werden 😀. Bitte mit Screenshot oder Demo-Link. 
 
 
 ### Individuelles Design
