@@ -5,7 +5,7 @@
 Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Consent-Box angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Consent-Box kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Consent-Box sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
 
 ## Rechtlicher Hinweis 
-Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. unvollständig. Es liegt in der Verantwortung der Betreiber und Entwickler der Website sicherzustellen, dass die Texte, Dienste und die Verwendung dieser der geltenden Rechtslage und Datenschutzbestimmungen entsprechen. 
+Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. unvollständig oder nicht aktuell. Es liegt in der Verantwortung der Betreiber und Entwickler der Website sicherzustellen, dass die Texte, Dienste, Cookies der geltenden Rechtslage und den Datenschutzbestimmungen entsprechen. Dies gilt auch für die korrekte Integration der Lösung.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
