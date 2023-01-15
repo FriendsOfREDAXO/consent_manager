@@ -293,7 +293,7 @@ Zum Testen und Entwickeln des eigenen Themes kann man die Vorschau auch direkt a
 
 z.B:
 ```
-/redaxo/index.php?page=consent_manager/theme&preview=consent_manager_frontend__mein_theme.scss
+/redaxo/index.php?page=consent_manager/theme&preview=consent_manager_frontend_mein_theme.scss
 ```
 
 ### Individuelles Design
