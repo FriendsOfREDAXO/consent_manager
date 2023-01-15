@@ -318,6 +318,8 @@ if (true === consent_manager_util::has_consent('youtube')) {
 
 ### Eigene Themes für die Consent-Box
 
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/themes.png?raw=true)
+
 Um eigene Themes zu erstellen am besten ein bereits bestehendes Theme kopieren (im AddOn-Verzeichnis `/consent_manager/scss/`)
 und im Project-AddOn im Verzeichnis `/project/consent_manager_themes/` ablegen.
 Hier dann die gewünschten Anpassungen vornehmen und dann unter **Themes** in der Theme-Vorschau das eigene Theme **anwenden**.
