@@ -19,7 +19,7 @@ function consent_manager_close_preview() {
     $('.cm_modal-iframe').css('opacity', 0);
 }
 
-$(document).on('rex:ready', function () {
+$(document).on('rex:ready', function (event, container) {
 
     // Search on consent logfile
 
@@ -82,5 +82,15 @@ $(document).on('rex:ready', function () {
             }
         });
     });
+
+    // external links in new window
+    container.find("a[href^=http]").each(function () {
+        if (this.href.indexOf(location.hostname) == -1) {
+            $(this).attr({
+                target: "_blank",
+                title: "Opens in a new window"
+            });
+        }
+    })
 
 });
