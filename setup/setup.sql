@@ -17,8 +17,8 @@ INSERT INTO `rex_consent_manager_cookiegroup` (`pid`, `id`, `clang_id`, `domain`
 
 TRUNCATE `rex_consent_manager_text`;
 INSERT INTO `rex_consent_manager_text` (`pid`, `id`, `clang_id`, `uid`, `text`) VALUES
-(1, 1, 1, 'headline', 'Cookie-Verwaltung'),
-(2, 2, 1, 'description', 'Wir verwenden Cookies, um Ihnen ein optimales Webseiten-Erlebnis zu bieten. Dazu zählen Cookies, die für den Betrieb der Seite und für die Steuerung unserer kommerziellen Unternehmensziele notwendig sind, sowie solche, die lediglich zu anonymen Statistikzwecken, für Komforteinstellungen oder zur Anzeige personalisierter Inhalte genutzt werden. Sie können selbst entscheiden, welche Kategorien Sie zulassen möchten. Bitte beachten Sie, dass auf Basis Ihrer Einstellungen womöglich nicht mehr alle Funktionalitäten der Seite zur Verfügung stehen.'),
+(1, 1, 1, 'headline', 'Datenschutz-Einstellungen'),
+(2, 2, 1, 'description', 'Unsere Website verwendet externe Dienste für verschiedene Zwecke, wie z.B. für Statistiken oder die Ausspielung von Multimedia. Durch Auswahl und Bestätigung der Dienste stimmen Sie der Übertragung von Daten an diese Dienste zu. Diese Dienste und auch diese Website setzen ggf. auch Cookies. Die  Auswahl kann jederzeit  geändert und widerrufen werden.'),
 (3, 3, 1, 'toggle_details', 'Details anzeigen/ausblenden'),
 (4, 4, 1, 'provider', 'Anbieter:'),
 (5, 5, 1, 'link_privacy', 'Datenschutzerklärung'),
