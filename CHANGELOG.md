@@ -20,9 +20,12 @@
   * Standard Theme Light Bottom-Right
   * Standard Theme Dark
   * Olien's Dark Theme von @olien
+  * Olien's Light Theme von @olien
   * Skerbis' Dark glass von @skerbis
+  * Skerbis' Light glass von @skerbis
 * Eigene Themes können im project-Addon im Ordner **consent_manager_themes** gespeichert werden
 * README.md grundlegend überarbeitet und verbessert, Danke @skerbis
+* Hinweistext überarbeitet, Cookie* an vielen Stellen durch Dienste ersetzt @skerbis
 * CHANGELOG.md hinzugefügt, Anzeige im Backend (package.yml)
 * Host-Validation angepasst (consent_manager_rex_form::validateHostname)
 * JavaScript-Funktion **consent_manager_showBox** zum anzeigen der Consent-Box (assets/consent_manager_frontend.js) #230
