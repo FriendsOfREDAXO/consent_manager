@@ -117,6 +117,11 @@ div.theme_description span {
             document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
                 document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
             });
+            document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
+                if (event.key == 'Enter') {
+                    document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+                }
+            });
         }
         consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
             el.addEventListener('click', function () {
