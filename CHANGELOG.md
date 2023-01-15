@@ -14,15 +14,11 @@
 
 ### Features
 
-* Themes sind jetzt möglich, SCSS mit Variablen, 5 Standard-Themes sind beim Addon dabei, Theme-Vorschau im Backend, @aeberhard
-  * Standard Theme Light
-  * Standard Theme Light Bottom-Bar
-  * Standard Theme Light Bottom-Right
-  * Standard Theme Dark
-  * Olien's Dark Theme von @olien
-  * Olien's Light Theme von @olien
-  * Skerbis' Dark glass von @skerbis
-  * Skerbis' Light glass von @skerbis
+* Themes sind jetzt möglich, SCSS mit Variablen, mehrere Standard-Themes sind beim Addon dabei, Theme-Vorschau im Backend, @aeberhard
+  * Standard Theme Light, Light Bottom-Bar, Light Bottom-Right
+  * Standard Theme Dark, Dark Bottom-Bar, Dark Bottom-Right
+  * Olien's Dark Theme, Olien's Light Theme von @olien
+  * Skerbis' Dark glass, Skerbis' Light glass von @skerbis
 * Eigene Themes können im project-Addon im Ordner **consent_manager_themes** gespeichert werden
 * README.md grundlegend überarbeitet und verbessert, Danke @skerbis
 * Hinweistext überarbeitet, Cookie* an vielen Stellen durch Dienste ersetzt, rechtliche Hinweise @skerbis
