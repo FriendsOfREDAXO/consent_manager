@@ -362,21 +362,21 @@ Um die Cookie-Texte auch für Redakteure zur Änderung bereitzustellen muss dies
 
 ## Fehlerbehebung
 
-### Die Cookie-Box wird nicht angzeigt
+### Die Consent-Box wird nicht angzeigt
 
-* Ist eine Domain hinterlegt und in der Cookie-Gruppe zugeordnet? - Bei mehreren Domains sind die Cookie-Gruppen für jede Domain einzeln anzulegen.
+* Ist eine Domain hinterlegt und in der Cookie-Gruppe zugeordnet? - Bei mehreren Domains sind die Gruppen für jede Domain einzeln anzulegen.
 * Stimmt die zugeordnete Domain mit der aufgerufenen Domain überein? - www.meinedomain.de und meinedomain.de sind zwei verschiedene Domains.
 * Ist die Website über die zugeordnete Domain (www.meinedomain.de) erreichbar? - Unterordner Installationen funktionieren nicht.
-* Ist der Platzhalter REX_CONSENT_MANAGER[] in einem Template im `head`-Bereich hinterlegt? - eine Integration über php include ist nicht möglich.
+* Sind der Platzhalter REX_CONSENT_MANAGER[] oder der PHP-Code in einem Template im `head`-Bereich hinterlegt? .
 * Unter Einstellungen ist *Eigenes CSS verwenden* aktiviert aber es wird kein eigenes CSS eingebunden (HTML der Box wird am Seitenende angezeigt und nicht als Popup)
 * Ist der Startkartikel der Seite auch als Not Found Artikel (404) konfiguriert? - Die Cookie-Box wird beim 404 Artikel nicht ausgegeben
 
-### Die Cookie-Box wird angezeigt, aber die Cookies werden nicht angezeigt
+### Die Consent-Box wird angezeigt, aber die Cookies werden nicht angezeigt
 
 * Ist eine entsprechende Cookie-Gruppe angelegt?
 * Wurde Dienst in der entsprechenden Gruppe aktiviert?
 
-### Die Cookie-Box und Cookies werden angezeigt, Scripte aber nicht geladen.
+### Die Consent-Box und Cookies werden angezeigt, Scripte aber nicht geladen.
 
 * Sind die Scripte in der entsprechenden Cookies hinterlegt?
 * Sind die Scripte inklusive `<script>...</script>`-Tag hinterlegt?
@@ -385,7 +385,7 @@ Um die Cookie-Texte auch für Redakteure zur Änderung bereitzustellen muss dies
 
 Du hast einen Fehler gefunden oder wünscht dir ein Feature? Lege ein [Issue auf Github an](https://github.com/FriendsOfREDAXO/consent_manager/issues).
 
-## Lizenz, Autor, Credits
+## Lizenz, Autor, Credits, Sponsoren
 
 ### Lizenz
 
@@ -406,7 +406,7 @@ MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manage
 
 First Release: [Ingo Winter](https://github.com/IngoWinter).
 
-### Sponors:
+### Sponoren:
 
 [Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Consent-Manager wiederfinden.
 [Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet,
