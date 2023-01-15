@@ -279,13 +279,22 @@ Verfügt die Website über mehrere Sprachen oder wird eine neue Sprache angelegt
 
 Das AddOn liefert bereits eine Auswahl Themes mit, die im Reiter nur ausgewählt und aktiviert werden müssen.
 
-Um eigene Themes zu erstellen am besten ein bereits bestehendes Theme kopieren (im AddOn-Verzeichnis `/consent_manager/scss/`)
-und im Project-AddOn im Verzeichnis `/project/consent_manager_themes/` ablegen.
-Der Dateiname sollte diesem Schema entsprechen: `consent_manager_frontend*.scss`
-Hier dann die gewünschten Anpassungen vornehmen und dann unter **Themes** in der Theme-Vorschau das eigene Theme **anwenden**.
+Um ein eigenes Theme zu erstellen, empfiehlt es sich, ein bestehendes Theme zu kopieren und im Verzeichnis `/project/consent_manager_themes/` des Projekt-AddOns abzulegen. Der neue Dateiname sollte der Schreibweise `consent_manager_frontend*.scss` entsprechen. 
+
+z.B: `/project/consent_manager_themes/consent_manager_frontend_mein_theme.scss`
+
+Anschließend können die gewünschten Anpassungen vorgenommen werden und das neue Theme kann unter "Themes" in der Theme-Vorschau ausgewählt werden.
 
 > Gerne können eigene Themes auch als PR eingereicht werden 😀. Bitte mit Screenshot oder Demo-Link. 
 
+#### Tipp:
+
+Zum Testen und Entwickeln des eigenen Themes kann man die Vorschau auch direkt aufrufen:
+
+z.B:
+```
+/redaxo/index.php?page=consent_manager/theme&preview=consent_manager_frontend__mein_theme.scss
+```
 
 ### Individuelles Design
 
