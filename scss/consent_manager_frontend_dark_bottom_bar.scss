@@ -1,35 +1,35 @@
 /*
-Theme: {"name": "Standard-Theme „Light Bottom-Right“", "description": "Theme „Light Bottom-Right“ mit hellem Hintergrund, Auswahl mit Checkboxen, farbneutral gehalten", "type": "light", "style": "Popup unten rechts, Checkboxen", "autor": "@IngoWinter, @aeberhard"}
+Theme: {"name": "Standard-Theme „Dark Bottom-Bar“", "description": "Theme „Dark Bottom-Bar“ mit dunklem Hintergrund, Auswahl mit Checkboxen, relativ farbneutral gehalten", "type": "dark", "style": "Popup unten über die ganze Breite, Checkboxen", "autor": "@IngoWinter, @aeberhard"}
 */
 
 $font-family: Verdana, Geneva, sans-serif;
 $font-size: 14px;
 
-$overlay-background: rgba(0, 0, 0, .4);
+$overlay-background: rgba(0, 0, 0, .6);
 
-$consent_manager-background: #fefefe;
+$consent_manager-background: #161a1c;
 
-$title-color: #666;
-$text-color: #444;
+$title-color: #d8e5ea;
+$text-color: #b3bfc5;
 
-$close-background: #666;
-$close-color: #eee;
-$close-hover-background: darken($close-background, 10);
+$close-background: #33383c;
+$close-color: #d8e5ea;
+$close-hover-background: lighten($close-background, 10);
 $close-hover-color: lighten($close-color, 10);
 
-$checkbox-color: #111;
+$checkbox-color: #d8e5ea;
 
-$button-background: #999;
-$button-color: #fff;
-$button-hover-background: darken($button-background, 30);
-$button-hover-color: lighten($button-color, 30);
+$button-background: #33383c;
+$button-color: #d8e5ea;
+$button-hover-background: lighten($button-background, 10);
+$button-hover-color: lighten($button-color, 10);
 
-$link-color: #999;
-$link-hover-color: darken($link-color, 20);
+$link-color: #a6c4dd;
+$link-hover-color: darken($link-color, 10);
 
 $cookie-title-color: $title-color;
-$cookie-title-background: #d4d4d4;
-$cookie-desc-background: #f9f9f9;
+$cookie-title-background: #2b3035;
+$cookie-desc-background: #23272a;
 
 /* Animations */
 
@@ -43,10 +43,10 @@ $cookie-desc-background: #f9f9f9;
     }
 }
 
-@keyframes bottomRightIn {
+@keyframes bottomIn {
     from {
         opacity: 0;
-        transform: translate(+100%, +100%);
+        transform: translate(+0%, +100%);
     }
 
     to {
@@ -84,22 +84,24 @@ div.consent_manager-wrapper {
     font-size: $font-size;
     line-height: 1.5em;
     background: $consent_manager-background;
-    border: 1px solid darken($consent_manager-background, 20);
+    border: 1px solid lighten($consent_manager-background, 20);
     color: $text-color;
     position: absolute;
-    bottom: 0px;
-    right: 0px;
+    bottom: 0;
+    right: 0;
     width: 100%;
-    max-width: 620px;
+    max-width: 100%;
     max-height: 85vh;
     overflow-y: auto;
     box-sizing: border-box;
-    animation: bottomRightIn .4s;
+    animation: bottomIn .4s;
 }
 
 div.consent_manager-wrapper-inner {
     padding: 2em;
     position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 div.consent_manager-hidden {
@@ -175,7 +177,7 @@ div.consent_manager-cookiegroups label>span {
 
 div.consent_manager-cookiegroups label>input[type="checkbox"] {
     filter: grayscale(1);
-    filter: hue-rotate(275deg);
+    filter: hue-rotate(225deg);
     transform: scale(1.6);
     margin: 0 .7em 0 .2em;
     cursor: pointer;
@@ -327,6 +329,8 @@ div.consent_manager-wrapper div.consent_manager-cookie {
     div.consent_manager-show-details {
         text-align: right;
         padding: 1.5em 0 1.5em 0;
+        text-align: left !important;
+        margin-top: -4em !important;
     }
 
     div.consent_manager-buttons {

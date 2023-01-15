@@ -5,7 +5,7 @@ Theme: { "name": "Standard-Theme „Light Bottom-Bar“", "description": "Theme 
 $font-family: Verdana, Geneva, sans-serif;
 $font-size: 14px;
 
-$overlay-background: rgba(0, 0, 0, .6);
+$overlay-background: rgba(0, 0, 0, .4);
 
 $consent_manager-background: #fefefe;
 
@@ -25,7 +25,7 @@ $button-hover-background: darken($button-background, 30);
 $button-hover-color: lighten($button-color, 30);
 
 $link-color: #999;
-$link-hover-color: darken($link-color, 10);
+$link-hover-color: darken($link-color, 20);
 
 $cookie-title-color: $title-color;
 $cookie-title-background: #d4d4d4;
@@ -43,13 +43,15 @@ $cookie-desc-background: #f9f9f9;
     }
 }
 
-@keyframes fadeOut {
-    0% {
-        opacity: 1;
+@keyframes bottomIn {
+    from {
+        opacity: 0;
+        transform: translate(+0%, +100%);
     }
 
-    100% {
-        opacity: 0;
+    to {
+        transform: translate(0%, 0%);
+        opacity: 1;
     }
 }
 
@@ -73,8 +75,6 @@ div.consent_manager-background {
     overflow: hidden;
     box-sizing: border-box;
     animation: fadeIn .2s;
-    -webkit-backdrop-filter: grayscale(80%);
-    backdrop-filter: grayscale(80%);
 }
 
 /* Wrapper */
@@ -87,17 +87,15 @@ div.consent_manager-wrapper {
     border: 1px solid darken($consent_manager-background, 20);
     color: $text-color;
     position: absolute;
-	bottom:0;
-	right:0;
+    bottom: 0;
+    right: 0;
     width: 100%;
     max-width: 100%;
     max-height: 85vh;
     overflow-y: auto;
     box-sizing: border-box;
-    animation: fadeIn .2s;
-
+    animation: bottomIn .4s;
 }
-
 
 div.consent_manager-wrapper-inner {
     padding: 2em;
@@ -210,7 +208,7 @@ div.consent_manager-show-details {
 }
 
 div.consent_manager-show-details a.icon-info-circled:before {
-    color: #fff;
+    color: $consent_manager-background;
     background-color: $link-color;
     opacity: .7;
     content: "i";
@@ -331,8 +329,8 @@ div.consent_manager-wrapper div.consent_manager-cookie {
     div.consent_manager-show-details {
         text-align: right;
         padding: 1.5em 0 1.5em 0;
-            text-align: left !important;
-                margin-top: -4em !important;
+        text-align: left !important;
+        margin-top: -4em !important;
     }
 
     div.consent_manager-buttons {

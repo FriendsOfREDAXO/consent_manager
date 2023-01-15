@@ -43,16 +43,6 @@ $cookie-desc-background: #f9f9f9;
     }
 }
 
-@keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
 /* Overlay */
 
 div.consent_manager-background {
@@ -90,7 +80,7 @@ div.consent_manager-wrapper {
     max-height: 95vh;
     overflow-y: auto;
     box-sizing: border-box;
-    animation: fadeIn .2s;
+    animation: fadeIn .4s;
 }
 
 div.consent_manager-wrapper-inner {
@@ -202,7 +192,7 @@ div.consent_manager-show-details {
 }
 
 div.consent_manager-show-details a.icon-info-circled:before {
-    color: #fff;
+    color: $consent_manager-background;
     background-color: $link-color;
     opacity: .7;
     content: "i";

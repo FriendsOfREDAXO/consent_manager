@@ -43,16 +43,6 @@ $cookie-desc-background: #f9f9f9;
     }
 }
 
-@keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
 /* Overlay */
 
 div.consent_manager-background {
@@ -72,6 +62,7 @@ div.consent_manager-background {
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
+    animation: fadeIn .2s;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
@@ -91,7 +82,7 @@ div.consent_manager-wrapper {
     max-height: 95vh;
     overflow-y: auto;
     box-sizing: border-box;
-    animation: fadeIn .2s;
+    animation: fadeIn .4s;
 }
 
 div.consent_manager-wrapper-inner {
