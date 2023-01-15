@@ -319,7 +319,7 @@ Hast du eigene Tipps & Tricks? [Füge Sie auf Github direkt in die Readme hinzu]
 
 Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anzupassen (zum Beispiel im Impressum oder auf einer Cookie-Seite) ist das mit folgenden Links möglich:
 
-### Link zur Consent-Box; 
+### Link zur Consent-Box
 
 ```html
 <a class="consent_manager-show-box">Datenschutz-Einstellungen</a>
@@ -343,7 +343,7 @@ Die Cookie-Box kann auch durch einen JavaScript-Aufruf geöffnet werden `consent
 <button on_click="java_script:consent_manager_showBox();">Datenschutz-Einstellungen</button>
 ```
 
-### Consent per JavaScript ermittlen
+### Consent per JavaScript ermitteln
 
 Um mit JavaScript einen Consent abzufragen die Funktion `consent_manager_hasconsent()` verwenden.
 
