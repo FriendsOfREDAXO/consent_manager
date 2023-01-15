@@ -1,13 +1,14 @@
-# Consent-Manager für [REDAXO CMS](https://redaxo.org)
+# Consent-Manager für das [REDAXO CMS](https://redaxo.org)
 
 ![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.jpg?raw=true)
 
-Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Consent-Box angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Consent-Box kann erneut (zum Beispiel über einen Link im Impressum, oder Footer)aufgerufen werden. So können nachträglich Änderungen durchgeführt. Alle Texte sowie die Gestaltung der Consent-Box sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
+Stellt ein Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Consent-Box angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Consent-Box kann erneut (zum Beispiel über einen Link im Impressum, oder Footer) aufgerufen werden. So können nachträglich Änderungen durchgeführt werden. Alle Texte sowie die Gestaltung der Consent-Box sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
 
-## Rechtlicher Hinweis 
+## Rechtlicher Hinweis
+
 Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. unvollständig oder nicht aktuell. Es liegt in der Verantwortung der Betreiber und Entwickler der Website sicherzustellen, das die Funktionalität der Abfrage, die Texte, Dienste, Cookies der geltenden Rechtslage und den Datenschutzbestimmungen entsprechen. Dies gilt auch für die korrekte Integration der Lösung.
 
-> Wir empfehlen für die Formulierung der Texte und Cookie-Listen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung) 
+> Wir empfehlen für die Formulierung der Texte und Cookie-Listen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung)
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
@@ -15,20 +16,22 @@ Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. u
 
 1. AddOn `consent_manager` über den Installer herunterladen und installieren.
 2. [Domains hinterlegen](#domains-hinzufuegen)
-3. [Dienste anlegen](#cookies-anlegen)
-4. [Dienste-Gruppen anlegen](#cookie-gruppen-anlegen)
-5. Der jeweiligen Domain-Gruppe die gewünschten Domains und Cookies zuordnen und JS Scripte hinterlegen.
+3. [Dienste anlegen](#dienste-anlegen) und JS Scripte hinterlegen
+4. [Dienste-Gruppen anlegen](#gruppen-anlegen)
+5. Der jeweiligen Domain-Gruppe die gewünschten Domains und Dienste zuordnen
 6. `REX_CONSENT_MANAGER[forceCache=0 forceReload=0]` in den `<head>`-Bereich der gewünschten [Templates einfügen](#in-template-einfuegen), bzw.<br>`echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`,<br> wenn via PHP.
 7. Alle weiteren Einstellungen sind optional.
 
-> **Hinweis:** Wird keine Auswahbox angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#fehlerbehebung)
+> **Hinweis:** Wird keine Auswahlbox angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#fehlerbehebung)
+
+> **Hinweis:** Im Reiter **Setup** besteht die Möglichkeit einen Import gängiger Dienste durchzuführen.
 
 ## Einrichten
 
 ### Domains hinzufügen
 
-Consent-Manager kann für mehrere Domains einzeln gesteuert werden. 
-Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln (ohne Protokoll http/https) hinterlegt werden. 
+Consent-Manager kann für mehrere Domains einzeln gesteuert werden.
+Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln (ohne Protokoll http/https) hinterlegt werden.
 
 Zum Beispiel:  `www.meinedomain.tld` und  `meinedomain.tld`
 
@@ -36,11 +39,11 @@ Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Di
 
 ### Dienste anlegen
 
-Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!. Im Reiter **Setup** besteht die Möglichkeit einen Import gängiger Dienste durchzuführen.
+Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!** Im Reiter **Setup** besteht die Möglichkeit einen Import gängiger Dienste durchzuführen.
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.png?raw=true)
 
-#### Schlüssel: 
+#### Schlüssel:
 
 ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 
@@ -67,7 +70,7 @@ enthält die Beschreibung aller Cookies des Dienstes die in der Consent-Box ange
  desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
 ```
 
-#### Anbieter: 
+#### Anbieter:
 
 Hier kann optional der Anbieter hinterlegt werden (zum Beispiel Google). Die Angaben werden in der Beschreibung angzeigt.
 
@@ -79,24 +82,24 @@ Standardmäßig wird die Datenschutzerklärung der Domain angezeigt. Exisitiert 
 
 Hier kann optional ein Platzhalter Text hinterlegt werden
 
-#### Platzhalter Bild: 
+#### Platzhalter Bild:
 
 Hier kann optional ein Platzhalter Bild aus dem Medienpoolhinterlegt werden
 
 #### Skripte, die nach Einverständnis geladen werden:
 
-Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Werden unterschiedliche Skripte je Domain benötigt, muss je Domain der Dienst extra angelegt werden. 
+Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Werden unterschiedliche Skripte je Domain benötigt, muss je Domain der Dienst extra angelegt werden.
 
 ### Gruppen anlegen
 
-Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren oder ablehnen kann. **Außerdem werden hier die Scripte hinterlegt, die geladen werden, sobald der Benutzer die Gruppe akzeptiert hat.**
+Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren oder ablehnen kann. **Außerdem werden hier über die zugewiesenen Dienste die Scripte hinterlegt, die geladen werden, sobald der Benutzer die Gruppe akzeptiert hat.**
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookiegroups.png?raw=true)
 
 | Feld | Beschreibung |
 | ---- | ------------ |
 | Schlüssel | Zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten |
-| Technisch notwendige Dienste: | Wenn aktiv, wird die Gruppe vorausgewählt und kann nicht deaktiviert werden Dienste |
+| Technisch notwendige Dienste | Wenn aktiv, wird die Gruppe vorausgewählt und kann nicht deaktiviert werden Dienste |
 | Domain | Hier wird die zuvor angelegte Domain ausgewählt, bei deren Aufruf die Gruppe angezeigt werden soll. |
 | Name | Name der Gruppe (wird dem Website-Besucher angezeigt). |
 | Beschreibung | Allgmeine Beschreibung der Gruppe (wird dem Website-Besucher angezeigt). |
@@ -106,7 +109,7 @@ Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren ode
 
 Über den Menüpunkt **Setup** kann eine Beispielkonfiguration mit Gruppen importiert werden. **Vorhandene Dienste und Gruppen werden dabei gelöscht!**
 
-### In Template einfügen
+### Im Template einfügen
 
 Der Platzhalter `REX_CONSENT_MANAGER[]` wird im `<head>`-Bereich des Templates oder vor dem `</body>`-Tag eingefügt.
 Gibt es mehrere Templates die die Consent-Box aufrufen sollen, muss der Platzhalter entsprechend in allen Templates eingefügt werden.
@@ -123,7 +126,7 @@ Durch den Parameter `forceReload=1` kann ein Reload der Webseite bei Auswahl der
     <title>Meine Webseite</title>
     ...
     <link rel="stylesheet" href="<?php echo template_asset_url('theme/css/meincss.min.css'); ?>">
-REX_CONSENT_MANAGER[]
+REX_CONSENT_MANAGER[forceReload=1]
 </head>
 ```
 
@@ -138,7 +141,7 @@ oder
 </head>
 <body>
     ...
-REX_CONSENT_MANAGER[]
+REX_CONSENT_MANAGER[forceReload=1]
 </body>
 ```
 
@@ -267,7 +270,7 @@ Die folgenden Einstellungen sind optional. Mit ihnen kann man Consent-Manager an
 
 Hier können alle allgemeinen Texte der Consent-Box angepasst werden.
 
-> Wir empfehlen hierzu einen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung) 
+> Wir empfehlen hierzu einen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung)
 
 ### Mehrsprachigkeit
 
@@ -279,27 +282,27 @@ Verfügt die Website über mehrere Sprachen oder wird eine neue Sprache angelegt
 
 Das AddOn liefert bereits eine Auswahl Themes mit, die im Reiter nur ausgewählt und aktiviert werden müssen.
 
-Um ein eigenes Theme zu erstellen, empfiehlt es sich, ein bestehendes Theme zu kopieren und im Verzeichnis `/project/consent_manager_themes/` des Projekt-AddOns abzulegen. Der neue Dateiname sollte der Schreibweise `consent_manager_frontend*.scss` entsprechen. 
+Um ein eigenes Theme zu erstellen, empfiehlt es sich, ein bestehendes Theme zu kopieren und im Verzeichnis `/project/consent_manager_themes/` des Projekt-AddOns abzulegen. Der neue Dateiname sollte der Schreibweise `consent_manager_frontend_theme*.scss` entsprechen.
 
-z.B: `/project/consent_manager_themes/consent_manager_frontend_mein_theme.scss`
+z.B: `/project/consent_manager_themes/consent_manager_frontend_theme_mein_theme.scss`
 
 Anschließend können die gewünschten Anpassungen vorgenommen werden und das neue Theme kann unter "Themes" in der Theme-Vorschau ausgewählt werden.
 
-> Gerne können eigene Themes auch als PR eingereicht werden 😀. Bitte mit Screenshot oder Demo-Link. 
+> Gerne können eigene Themes auch als PR eingereicht werden 😀. Bitte mit Screenshot oder Demo-Link.
 
 #### Tipp:
 
-Zum Testen und Entwickeln des eigenen Themes kann man die Vorschau auch direkt aufrufen:
+Zum Testen und Entwickeln des eigenen Themes (im Ordner `/project/consent_manager_themes/`) kann man die Vorschau auch direkt aufrufen:
 
 z.B:
 ```
-/redaxo/index.php?page=consent_manager/theme&preview=consent_manager_frontend_mein_theme.scss
+/redaxo/index.php?page=consent_manager/theme&preview=project:consent_manager_frontend_mein_theme.scss
 ```
 
 ### Individuelles Design
 
-Reicht die Lösung über ein Theme nicht, kann die Box auch vollständig individualisert werden. 
-Der HTML-Code der Cookie Box liegt im Fragment `/redaxo/src/addons/consent_manager/fragments/consent_manager_box.php`. Änderungen in dieser Datei werden beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulegen 'theme/private/fragments/consent_manager_box.php' und die Änderungen hier vorzunehmen. Das eigene CSS stellt man entweder über ein Theme scss bereit oder individuell im Template als eigene CSS-Datei. 
+Reicht die Lösung über ein Theme nicht, kann die Box auch vollständig individualisert werden.
+Der HTML-Code der Cookie Box liegt im Fragment `/redaxo/src/addons/consent_manager/fragments/consent_manager_box.php`. Änderungen in dieser Datei werden beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulegen 'theme/private/fragments/consent_manager_box.php' und die Änderungen hier vorzunehmen. Das eigene CSS stellt man entweder über ein Theme scss bereit oder individuell im Template als eigene CSS-Datei.
 
 
 ### Ausgabe-Einstellungen
@@ -319,6 +322,8 @@ Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier d
 ## Gesetzte Cookies / Einwilligungshistorie
 
 Mit Hilfe des Platzhalters `REX_COOKIEDB[]` können alle derzeit gesetzten Cookies sowie die Einwilligungshistorie z.B. in der Datenschutzerklärung ausgegeben werden.
+
+**Wichtig: Der Platzhalter funktioniert ausschließlich in REDAXO-Templates, nicht innerhalb von php-includes, Modulen oder Fragmenten.**
 
 ## Tipps & Tricks
 
