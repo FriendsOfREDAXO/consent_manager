@@ -7,7 +7,7 @@ Stellt Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies
 ## Rechtlicher Hinweis 
 Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. unvollständig oder nicht aktuell. Es liegt in der Verantwortung der Betreiber und Entwickler der Website sicherzustellen, dass die Texte, Dienste, Cookies der geltenden Rechtslage und den Datenschutzbestimmungen entsprechen. Dies gilt auch für die korrekte Integration der Lösung.
 
-> Wir empfehlen hierzu einen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung) 
+> Wir empfehlen für die Formulierung der Texte und Cokie-Listen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung) 
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
