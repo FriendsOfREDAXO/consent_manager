@@ -5,7 +5,7 @@ Theme: {"name": "„Olien's Light Theme“", "description": "„Olien's Light Th
 $font-family: Verdana, Geneva, sans-serif;
 $font-size: 13px;
 
-$overlay-background: rgba(0,0,0, .5);
+$overlay-background: rgba(0, 0, 0, .5);
 
 $consent_manager-background: #ddd;
 
@@ -40,16 +40,6 @@ $cookie-desc-background: #f9f9f9;
 
     100% {
         opacity: 1;
-    }
-}
-
-@keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
     }
 }
 

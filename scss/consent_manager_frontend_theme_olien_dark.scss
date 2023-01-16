@@ -62,7 +62,6 @@ div.consent_manager-background {
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
-    animation: fadeIn .2s;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
@@ -82,7 +81,7 @@ div.consent_manager-wrapper {
     max-height: 95vh;
     overflow-y: auto;
     box-sizing: border-box;
-    animation: fadeIn .4s;
+    animation: fadeIn .2s;
 }
 
 div.consent_manager-wrapper-inner {
