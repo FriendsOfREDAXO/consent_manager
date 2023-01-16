@@ -112,6 +112,8 @@ class consent_manager_frontend
      */
     public function outputJavascript($host = null, $article_id = null)
     {
+        $addon = rex_addon::get('consent_manager');
+
         $clang = rex_request('lang', 'integer', 0);
         if (0 === $clang) {
             $clang = rex_clang::getCurrent()->getId();
@@ -149,7 +151,11 @@ class consent_manager_frontend
         $filenames = [];
         $filenames[] = 'js.cookie.min.js';
         $filenames[] = 'consent_manager_polyfills.js';
-        $filenames[] = 'consent_manager_frontend.js';
+        if (file_exists($addon->getAssetsPath('consent_manager_frontend.min.js'))) {
+            $filenames[] = 'consent_manager_frontend.min.js';
+        } else {
+            $filenames[] = 'consent_manager_frontend.js';
+        }
         foreach ($filenames as $filename) {
             $content .= '/* --- ' . rex_url::base('assets/addons/consent_manager/') . $filename . ' --- */' . PHP_EOL . rex_file::get(rex_path::addonAssets('consent_manager', $filename)) . PHP_EOL . PHP_EOL;
         }
