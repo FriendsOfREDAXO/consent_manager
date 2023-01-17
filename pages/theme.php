@@ -266,7 +266,7 @@ if (count($themes) > 0) {
             $confirmmsg = $addon->i18n('config_confirm_select', $theme_options['name']);
             $formElements = [];
             $n = [];
-            $n['field'] = '<a class="btn rex-form-aligned btn-info consent_manager-button-preview" data-toggle="modal" data-theme="' . $themeid . '">' . $addon->i18n('config_btn_preview') . '</a> ';
+            $n['field'] = '<a href="?page=consent_manager/theme&preview=' . $themeid . '" class="btn rex-form-aligned btn-info consent_manager-button-preview" data-toggle="modal" data-theme="' . $themeid . '">' . $addon->i18n('config_btn_preview') . '</a> ';
             $n['field'] .= '<button class="btn btn-save" type="submit" name="save" data-confirm="' . $confirmmsg . '" value="' . $addon->i18n('config_btn_select', $theme_options['name']) . '">' . $addon->i18n('config_btn_select', $theme_options['name']) . '</button>';
             $formElements[] = $n;
             $fragment = new rex_fragment();
@@ -361,7 +361,7 @@ if (count($themes) > 0) {
             $confirmmsg = $addon->i18n('config_confirm_select', $theme_options['name']);
             $formElements = [];
             $n = [];
-            $n['field'] = '<a class="btn rex-form-aligned btn-info consent_manager-button-preview" data-toggle="modal" data-theme="' . $themeid . '">' . $addon->i18n('config_btn_preview') . '</a> ';
+            $n['field'] = '<a href="?page=consent_manager/theme&preview=' . $themeid . '" class="btn rex-form-aligned btn-info consent_manager-button-preview" data-toggle="modal" data-theme="' . $themeid . '">' . $addon->i18n('config_btn_preview') . '</a> ';
             $n['field'] .= '<button class="btn btn-save" type="submit" name="save" data-confirm="' . $confirmmsg . '" value="' . $addon->i18n('config_btn_select', $theme_options['name']) . '">' . $addon->i18n('config_btn_select', $theme_options['name']) . '</button>';
             $formElements[] = $n;
             $fragment = new rex_fragment();
