@@ -1,0 +1,351 @@
+/*
+Theme: {"name": "Theme „XOrange Bottom-Bar“", "description": "Theme „XOrange Bottom-Bar“ mit orangenem Hintergrund und Auswahl mit Checkboxen, dunkle Buttons", "type": "light, colorful", "style": "Popup unten über die ganze Breite, Checkboxen", "autor": "@aeberhard"}
+*/
+
+$font-family: Verdana, Geneva, sans-serif;
+$font-size: 14px;
+
+$overlay-background: rgba(0, 0, 0, .4);
+
+$consent_manager-background: rgba(255, 209, 67, 1);
+
+$title-color: #333;
+$text-color: #000;
+
+$close-background: #666;
+$close-color: #eee;
+$close-hover-background: darken($close-background, 20);
+$close-hover-color: lighten($close-color, 20);
+
+$checkbox-color: #333;
+
+$button-background: #333;
+$button-color: #fff;
+$button-hover-background: lighten($button-background, 30);
+$button-hover-color: lighten($button-color, 30);
+
+$link-color: #333;
+$link-hover-color: lighten($link-color, 20);
+
+$cookie-title-color: $title-color;
+$cookie-title-background: rgba(255, 209, 67, .8);
+$cookie-desc-background: rgba(255, 209, 67, .2);
+
+/* Animations */
+
+@keyframes bottomIn {
+    from {
+        opacity: 0;
+        transform: translate(+0%, +100%);
+    }
+
+    to {
+        transform: translate(0%, 0%);
+        opacity: 1;
+    }
+}
+
+/* Overlay */
+
+div.consent_manager-background {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: $overlay-background;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+    z-index: 999999;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    animation: fadeIn .2s;
+    -webkit-backdrop-filter: grayscale(40%);
+    backdrop-filter: grayscale(40%);
+}
+
+/* Wrapper */
+
+div.consent_manager-wrapper {
+    font-family: $font-family;
+    font-size: $font-size;
+    line-height: 1.5em;
+    background: $consent_manager-background;
+    border: 1px solid $consent_manager-background;
+    color: $text-color;
+    position: absolute;
+	bottom:0;
+	right:0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    animation: bottomIn .4s linear;
+    background-image: radial-gradient(circle farthest-corner at 20% 20%, rgba(255, 209, 67, 1) 0%, rgba(255, 155, 83, 1) 90%);
+}
+
+
+div.consent_manager-wrapper-inner {
+    padding: 2em;
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+div.consent_manager-hidden {
+    display: none;
+}
+
+/* Close-Button */
+
+.consent_manager-close-box {
+    position: absolute;
+    cursor: pointer;
+    right: 1.5em;
+    top: 1em;
+    display: block;
+    border: solid 2px $close-background;
+    width: 30px;
+    height: 30px;
+    line-height: 28px;
+    background-color: $close-background;
+    color: $close-color;
+    font-family: Arial;
+    font-size: 18px;
+    padding: 0;
+    margin: 0;
+    opacity: .5;
+    transition: .3s ease all;
+
+    &:hover {
+        border-color: $close-hover-background;
+        background-color: $close-hover-background;
+        color: $close-hover-color;
+        opacity: 1;
+    }
+}
+
+/* Headline */
+
+div.consent_manager-wrapper .consent_manager-headline {
+    margin: 0 0 1em 0;
+    font-weight: bold;
+    font-size: $font-size +4px;
+    color: $title-color;
+}
+
+/* Text-Block */
+
+div.consent_manager-wrapper p.consent_manager-text {
+    margin: 0 0 1.5em 0;
+}
+
+/* Cookie Checkboxen */
+
+div.consent_manager-cookiegroups {
+    margin: 0 0 1.5em 0;
+}
+
+div.consent_manager-cookiegroup-checkbox {
+    margin-bottom: 1.5em;
+}
+
+div.consent_manager-cookiegroups label {
+    position: relative;
+    font-weight: bold;
+    font-size: $font-size +1px;
+    color: $checkbox-color;
+    cursor: pointer;
+}
+
+div.consent_manager-cookiegroups label>span {
+    cursor: pointer;
+}
+
+div.consent_manager-cookiegroups label>input[type="checkbox"] {
+    filter: grayscale(1);
+    filter: hue-rotate(275deg);
+    transform: scale(1.6);
+    margin: 0 .7em 0 .2em;
+    cursor: pointer;
+}
+
+.consent_manager-wrapper input[type="checkbox"]:disabled,
+.consent_manager-cookiegroups label>input[type="checkbox"]:disabled+* {
+    opacity: .7;
+    cursor: not-allowed;
+}
+
+/* Detail-Link Toggle */
+
+div.consent_manager-show-details {
+    padding: 0 0 1.5em 0;
+
+    a {
+        display: inline-block;
+        line-height: 1.2em;
+        height: 1.4em;
+        cursor: pointer;
+        color: $link-color;
+
+        &:hover {
+            color: $link-hover-color;
+        }
+    }
+}
+
+div.consent_manager-show-details a.icon-info-circled:before {
+    color: $consent_manager-background;
+    background-color: $link-color;
+    opacity: .7;
+    content: "i";
+    font-family: "Serif";
+    font-weight: bold;
+    display: inline-block;
+    border-radius: 50%;
+    text-align: center;
+    margin-right: 7px;
+    line-height: 1.4em;
+    height: 1.4em;
+    width: 1.4em;
+}
+
+/* Buttons */
+
+button.consent_manager-save-selection,
+button.consent_manager-accept-all,
+button.consent_manager-accept-none {
+    transition: .3s ease all;
+    background: $button-background;
+    border: 1px solid $button-background;
+    color: $button-color;
+    padding: .5em 2em;
+    font-size: $font-size;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    min-height: 3em;
+    width: 100%;
+    margin-bottom: 1.0em;
+    cursor: pointer;
+
+    &:hover {
+        background: $button-hover-background;
+        border-color: $button-hover-background;
+        color: $button-hover-color;
+        text-decoration: none;
+    }
+}
+
+/* Seitenlinks - Datenschutz + Impressum */
+
+div.consent_manager-sitelinks {
+    margin: 1.5em 0 0 0;
+
+    a {
+        display: inline-block;
+        margin: .4em 1em .4em 0;
+        color: $link-color;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+            color: $link-hover-color;
+            text-decoration: none;
+        }
+    }
+}
+
+/* Detail Block */
+
+div.consent_manager-wrapper div.consent_manager-detail {
+    margin-bottom: 3em;
+}
+
+div.consent_manager-wrapper div.consent_manager-detail a {
+    color: $link-color;
+
+    &:hover {
+        color: $link-hover-color;
+        text-decoration: none;
+    }
+}
+
+div.consent_manager-wrapper div.consent_manager-detail div.consent_manager-cookiegroup-title {
+    color: $cookie-title-color;
+    background-color: $cookie-title-background;
+    padding: 5px 11px;
+    margin: 1.5em 0 0 0;
+}
+
+div.consent_manager-wrapper div.consent_manager-cookiegroup-description {
+    border-left: 1px solid $cookie-title-background;
+    padding: 5px 10px;
+    background: $cookie-desc-background;
+}
+
+div.consent_manager-wrapper div.consent_manager-cookie {
+    margin-top: 3px;
+    border-left: 1px solid $cookie-title-background;
+    padding: 5px 10px;
+    background: $cookie-desc-background;
+
+    span {
+        display: block;
+        margin-top: .5em;
+    }
+}
+
+/* Breakpoints */
+
+@media only screen and (min-width: 600px) {
+    div.consent_manager-cookiegroups {
+        padding: 1em 0 0 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        margin-bottom: 0;
+    }
+
+    div.consent_manager-cookiegroup-checkbox {
+        margin-left: 1.5em;
+        margin-bottom: 1.0em;
+    }
+
+    div.consent_manager-show-details {
+        text-align: right;
+        padding: 1.5em 0 1.5em 0;
+        text-align: left !important;
+        margin-top: -4em !important;
+    }
+
+    div.consent_manager-buttons {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    button.consent_manager-save-selection,
+    button.consent_manager-accept-all,
+    button.consent_manager-accept-none {
+        display: inline-block;
+        margin: 0 0 0 .5em;
+        width: auto;
+    }
+    div.consent_manager-sitelinks {
+        margin: 0 0 0 0;
+    }
+
+    div.consent_manager-buttons-sitelinks {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row-reverse;
+    }
+}
