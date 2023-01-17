@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 4.0.0beta6 – 16.01.2023
+## Version 4.0.0 – 18.01.2023
 
 ### Breaking Changes
 
@@ -19,6 +19,7 @@
   * Standard Theme Dark, Dark Bottom-Bar, Dark Bottom-Right
   * Olien's Dark Theme, Olien's Light Theme von @olien
   * Skerbis' Dark glass, Skerbis' Light glass von @skerbis
+  * XOrange Themes von @aeberhard
 * Eigene Themes können im project-Addon im Ordner **consent_manager_themes** gespeichert werden
 * README.md grundlegend überarbeitet und verbessert, Danke @skerbis
 * Hinweistext überarbeitet, Cookie* an vielen Stellen durch Dienste ersetzt, rechtliche Hinweise @skerbis
