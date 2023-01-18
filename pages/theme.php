@@ -3,6 +3,7 @@
 $addon = rex_addon::get('consent_manager');
 
 $preview = rex_request('preview', 'string', '');
+$clang_id = rex_clang::getStartId();
 
 // Theme-Preview
 
@@ -106,7 +107,7 @@ div.theme_description span {
         var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
         var firstFocusableEl = focusableEls[0];
         consent_managerBox.focus();
-        firstFocusableEl.focus();
+        if (firstFocusableEl) firstFocusableEl.focus();
 
         consent_managerBox.querySelectorAll('.consent_manager-sitelinks').forEach(function (el) {
             el.querySelectorAll('a').forEach(function (link) {
@@ -168,12 +169,10 @@ if ('|1|' === $addon->getConfig('outputowncss', false)) {
 }
 
 // check Konfiguration
-
 $db = rex_sql::factory();
 $db->setTable(rex::getTable('consent_manager_cookiegroup'));
-$db->setWhere('domain != ""');
-$db->select('count(*) as count');
-$dbresult = $db->execute();
+$db->setWhere('domain != "" AND clang_id = '.$clang_id);
+$dbresult = $db->select('count(*) as count');
 if (0 === (int) $dbresult->getValue('count')) {
     echo rex_view::warning($addon->i18n('consent_manager_cookiegroup_nodomain_notice'));
 }
