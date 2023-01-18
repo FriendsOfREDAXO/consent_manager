@@ -214,7 +214,7 @@
         var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
         var firstFocusableEl = focusableEls[0];
         consent_managerBox.focus();
-        firstFocusableEl.focus();
+        if (firstFocusableEl) firstFocusableEl.focus();
     }
 
 })();
@@ -247,7 +247,7 @@ function consent_manager_showBox() {
     var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
     var firstFocusableEl = focusableEls[0];
     consent_managerBox.focus();
-    firstFocusableEl.focus();
+    if (firstFocusableEl) firstFocusableEl.focus();
 }
 
 function consent_manager_hasconsent(id) {
