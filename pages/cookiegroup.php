@@ -6,7 +6,7 @@ $showlist = true;
 $pid = rex_request('pid', 'int', 0);
 $func = rex_request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_cookiegroup');
-$clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3)); /** @phpstan-ignore-line */
+$clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3) ?? '');
 $table = rex::getTable('consent_manager_cookiegroup');
 $msg = '';
 if ('delete' === $func) {

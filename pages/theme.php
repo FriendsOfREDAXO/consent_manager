@@ -201,10 +201,8 @@ if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
     } else {
         $addon->setConfig('theme', $theme);
         echo rex_view::success($addon->i18n('config_saved'));
-        if (rex::getUser()->isAdmin()) { /** @phpstan-ignore-line */
-            consent_manager_theme::generateThemeAssets($theme);
-            consent_manager_theme::copyAllAssets();
-        }
+        consent_manager_theme::generateThemeAssets($theme);
+        consent_manager_theme::copyAllAssets();
     }
 }
 
