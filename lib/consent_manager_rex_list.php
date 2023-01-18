@@ -12,11 +12,11 @@ class consent_manager_rex_list
     public static function formatDomain($params)
     {
         $ids = array_filter(explode('|', $params['value']));
-        if ($ids) { /** @phpstan-ignore-line */
+        if ([] !== $ids) {
             $domains = [];
             $db = rex_sql::factory();
             $db->setTable(rex::getTable('consent_manager_domain'));
-            $db->setWhere('id IN(' . $db->escape(implode(',', $ids)) . ') ORDER BY uid ASC'); /** @phpstan-ignore-line */
+            $db->setWhere('id IN(' . $db->in($ids) . ') ORDER BY uid ASC');
             $db->select('uid');
             foreach ($db->getArray() as $v) {
                 $domains[] = $v['uid'];
@@ -37,7 +37,7 @@ class consent_manager_rex_list
     {
         if (isset($params['value'])) {
             $uids = array_filter(explode('|', $params['value']));
-            if ($uids) { /** @phpstan-ignore-line */
+            if ([] !== $uids) {
                 return implode('<br>', $uids);
             }
         }
