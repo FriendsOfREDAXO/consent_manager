@@ -90,7 +90,7 @@ class consent_manager_clang
         if (!$form->isEditMode()) {
             self::insertDataset($form, $params);
         }
-        if ($form->isEditMode() && $form->getSql()->getValue('clang_id') === rex_clang::getStartId()) {
+        if ($form->isEditMode() && (int) $form->getSql()->getValue('clang_id') === rex_clang::getStartId()) {
             self::updateDataset($form);
         }
         return false;
@@ -109,7 +109,7 @@ class consent_manager_clang
         $db->select('*');
         $inserted = $db->getArray()[0];
         foreach (rex_clang::getAllIds() as $clangId) {
-            if ($inserted['clang_id'] === $clangId) {
+            if ((int) $inserted['clang_id'] === $clangId) {
                 continue;
             }
 

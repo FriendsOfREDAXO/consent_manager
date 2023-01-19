@@ -21,6 +21,7 @@ if ('delete' === $func) {
     $form->addParam('start', rex_request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
     $form->addHiddenField('clang_id', $clang_id);
+    $form->addHiddenField('domain', '');
     consent_manager_rex_form::getId($form, $table);
 
     $db = rex_sql::factory();
@@ -36,16 +37,7 @@ if ('delete' === $func) {
 
         $field = $form->addCheckboxField('required');
         $field->addOption($addon->i18n('consent_manager_cookiegroup_required'), 1);
-        /*
-                $field = $form->addSelectField('domain');
-                $field->setLabel($addon->i18n('consent_manager_domain'));
-                $select = $field->getSelect();
-                $select->addOption('-', '');
-                foreach ($domains as $v)
-                {
-                    $select->addOption($v['uid'], $v['id']);
-                }
-        */
+
         if (count($domains) > 0) {
             $field = $form->addCheckboxField('domain');
             $field->setLabel($addon->i18n('consent_manager_domain'));
@@ -53,6 +45,7 @@ if ('delete' === $func) {
                 $field->addOption($v['uid'], $v['id']);
             }
         }
+
         $field = $form->addPrioField('prio');
         $field->setWhereCondition('clang_id = '.$clang_id);
         $field->setLabel($addon->i18n('prio'));
@@ -73,9 +66,11 @@ if ('delete' === $func) {
     }
     $field = $form->addTextField('name');
     $field->setLabel($addon->i18n('consent_manager_name'));
+    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_uid_empty_msg'));
 
     $field = $form->addTextAreaField('description');
     $field->setLabel($addon->i18n('consent_manager_description'));
+    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_uid_empty_msg'));
 
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('consent_manager_cookie'));
