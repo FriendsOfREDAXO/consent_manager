@@ -38,9 +38,6 @@ $cookie-desc-background: #f9f9f9;
 
 /* Animations */
 
-
-
-
 @keyframes fadeIn {
     from {
         transform: translateY(-100%);
@@ -78,6 +75,7 @@ div.consent_manager-background {
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
+    outline: 0;
 }
 
 /* Wrapper */

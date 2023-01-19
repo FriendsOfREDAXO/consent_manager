@@ -33,6 +33,23 @@ $cookie-desc-background: rgba(255, 209, 67, .2);
 
 /* Animations */
 
+@keyframes bgOpen {
+    0% {
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 0px;
+    }
+
+    50% {
+        height: 50%;
+    }
+
+    100% {
+        height: 100%;
+    }
+}
+
 @keyframes bottomIn {
     from {
         opacity: 0;
@@ -67,6 +84,8 @@ div.consent_manager-background {
     animation: fadeIn .2s;
     -webkit-backdrop-filter: grayscale(40%);
     backdrop-filter: grayscale(40%);
+    animation: bgOpen .2s linear;
+    outline: 0;
 }
 
 /* Wrapper */
@@ -86,7 +105,7 @@ div.consent_manager-wrapper {
     max-height: 85vh;
     overflow-y: auto;
     box-sizing: border-box;
-    animation: bottomIn .4s linear;
+    animation: bottomIn .3s linear;
     background-image: radial-gradient(circle farthest-corner at 20% 20%, rgba(255, 209, 67, 1) 0%, rgba(255, 155, 83, 1) 90%);
 }
 
