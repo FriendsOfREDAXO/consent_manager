@@ -249,7 +249,7 @@ if (count($themes) > 0) {
 
             $n['field'] .= '<div class="thumbnail-container" title="' .  $theme_options['name'] . '" data-theme="' . $themeid . '">';
             $n['field'] .= '  <div class="thumbnail">';
-            $n['field'] .= '   <iframe class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1" loading="lazy"></iframe>';
+            $n['field'] .= '   <iframe loading="lazy" class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
             $n['field'] .= '  </div>';
             $n['field'] .= '</div>';
 
@@ -344,7 +344,7 @@ if (count($themes) > 0) {
 
             $n['field'] .= '<div class="thumbnail-container" title="' .  $theme_options['name'] . '" data-theme="' . $themeid . '">';
             $n['field'] .= '  <div class="thumbnail">';
-            $n['field'] .= '   <iframe class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1" loading="lazy"></iframe>';
+            $n['field'] .= '   <iframe loading="lazy" class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
             $n['field'] .= '  </div>';
             $n['field'] .= '</div>';
 
