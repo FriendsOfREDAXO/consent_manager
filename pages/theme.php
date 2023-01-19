@@ -249,7 +249,7 @@ if (count($themes) > 0) {
 
             $n['field'] .= '<div class="thumbnail-container" title="' .  $theme_options['name'] . '" data-theme="' . $themeid . '">';
             $n['field'] .= '  <div class="thumbnail">';
-            $n['field'] .= '   <iframe class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
+            $n['field'] .= '   <iframe class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1" loading="lazy"></iframe>';
             $n['field'] .= '  </div>';
             $n['field'] .= '</div>';
 
@@ -263,7 +263,7 @@ if (count($themes) > 0) {
             $confirmmsg = $addon->i18n('config_confirm_select', $theme_options['name']);
             $formElements = [];
             $n = [];
-            $n['field'] = '<a href="?page=consent_manager/theme&preview=' . $themeid . '" class="btn rex-form-aligned btn-info consent_manager-button-preview" data-toggle="modal" data-theme="' . $themeid . '">' . $addon->i18n('config_btn_preview') . '</a> ';
+            $n['field'] = '<a href="?page=consent_manager/theme&preview=' . $themeid . '" class="btn rex-form-aligned btn-info consent_manager-button-preview" data-theme="' . $themeid . '">' . $addon->i18n('config_btn_preview') . '</a> ';
             $n['field'] .= '<button class="btn btn-save" type="submit" name="save" data-confirm="' . $confirmmsg . '" value="' . $addon->i18n('config_btn_select', $theme_options['name']) . '">' . $addon->i18n('config_btn_select', $theme_options['name']) . '</button>';
             $formElements[] = $n;
             $fragment = new rex_fragment();
@@ -290,7 +290,7 @@ if (count($themes) > 0) {
             $output = $fragment->parse('core/page/section.php');
 
             $output = '
-<form action="' . rex_url::currentBackendPage() . '" method="post">
+<form action="' . rex_url::currentBackendPage() . '#'.$themeid.'" method="post" id="'.$themeid.'">
 <input type="hidden" name="formsubmit" value="1" />
 <input type="hidden" name="theme" value="' . $themeid . '" />
     ' . $csrfToken->getHiddenField() . '
@@ -344,7 +344,7 @@ if (count($themes) > 0) {
 
             $n['field'] .= '<div class="thumbnail-container" title="' .  $theme_options['name'] . '" data-theme="' . $themeid . '">';
             $n['field'] .= '  <div class="thumbnail">';
-            $n['field'] .= '   <iframe class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
+            $n['field'] .= '   <iframe class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1" loading="lazy"></iframe>';
             $n['field'] .= '  </div>';
             $n['field'] .= '</div>';
 
@@ -358,7 +358,7 @@ if (count($themes) > 0) {
             $confirmmsg = $addon->i18n('config_confirm_select', $theme_options['name']);
             $formElements = [];
             $n = [];
-            $n['field'] = '<a href="?page=consent_manager/theme&preview=' . $themeid . '" class="btn rex-form-aligned btn-info consent_manager-button-preview" data-toggle="modal" data-theme="' . $themeid . '">' . $addon->i18n('config_btn_preview') . '</a> ';
+            $n['field'] = '<a href="?page=consent_manager/theme&preview=' . $themeid . '" class="btn rex-form-aligned btn-info consent_manager-button-preview" data-theme="' . $themeid . '">' . $addon->i18n('config_btn_preview') . '</a> ';
             $n['field'] .= '<button class="btn btn-save" type="submit" name="save" data-confirm="' . $confirmmsg . '" value="' . $addon->i18n('config_btn_select', $theme_options['name']) . '">' . $addon->i18n('config_btn_select', $theme_options['name']) . '</button>';
             $formElements[] = $n;
             $fragment = new rex_fragment();
@@ -385,7 +385,7 @@ if (count($themes) > 0) {
             $output = $fragment->parse('core/page/section.php');
 
             $output = '
-<form action="' . rex_url::currentBackendPage() . '" method="post">
+<form action="' . rex_url::currentBackendPage() . '#'.str_replace(':', '-', $themeid).'" method="post" id="'.str_replace(':', '-', $themeid).'">
 <input type="hidden" name="formsubmit" value="1" />
 <input type="hidden" name="theme" value="' . $themeid . '" />
     ' . $csrfToken->getHiddenField() . '
