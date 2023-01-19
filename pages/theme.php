@@ -100,14 +100,19 @@ div.theme_description span {
     ?>
 
 <script>
+window.onload = function(event) {
     if (document.getElementById('consent_manager-background')) {
         consent_managerBox = document.getElementById('consent_manager-background');
         consent_managerBox.classList.remove('consent_manager-hidden');
 
-        var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
-        var firstFocusableEl = focusableEls[0];
-        consent_managerBox.focus();
-        if (firstFocusableEl) firstFocusableEl.focus();
+        if (window.location.href.indexOf('nofocus') == -1) {
+            var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
+            var firstFocusableEl = focusableEls[0];
+            consent_managerBox.focus();
+            if (firstFocusableEl) {
+                firstFocusableEl.focus();
+            }
+        }
 
         consent_managerBox.querySelectorAll('.consent_manager-sitelinks').forEach(function (el) {
             el.querySelectorAll('a').forEach(function (link) {
@@ -154,6 +159,7 @@ div.theme_description span {
             document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
         }
     }
+}
 </script>
 
 </body>
@@ -249,7 +255,7 @@ if (count($themes) > 0) {
 
             $n['field'] .= '<div class="thumbnail-container" title="' .  $theme_options['name'] . '" data-theme="' . $themeid . '">';
             $n['field'] .= '  <div class="thumbnail">';
-            $n['field'] .= '   <iframe loading="lazy" class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
+            $n['field'] .= '   <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'&nofocus" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
             $n['field'] .= '  </div>';
             $n['field'] .= '</div>';
 
@@ -344,7 +350,7 @@ if (count($themes) > 0) {
 
             $n['field'] .= '<div class="thumbnail-container" title="' .  $theme_options['name'] . '" data-theme="' . $themeid . '">';
             $n['field'] .= '  <div class="thumbnail">';
-            $n['field'] .= '   <iframe loading="lazy" class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
+            $n['field'] .= '   <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'&nofocus" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
             $n['field'] .= '  </div>';
             $n['field'] .= '</div>';
 
