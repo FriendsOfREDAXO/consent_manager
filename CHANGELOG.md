@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 4.0.0 – 19.01.2023
+## Version 4.0.0 – 20.01.2023
 
 ### Breaking Changes
 
@@ -38,6 +38,7 @@
 * Update js.cookie-3.0.1.min.js
 * Reload der Seite kann erzwungen werden **REX_CONSENT_MANAGER[forceReload=1]**
 * In der Übersicht der Gruppen eine Warning ausgeben wenn noch keine Domain zugeordnet wurde #257
+* Validierungen in der Gruppenverwaltung verbessert
 * Code-Quality (rexstan) Level 9, Extensions: REDAXO SuperGlobals, Bleeding-Edge, Strict-Mode, Deprecation Warnings, PHPUnit, phpstan-dba, report-mixed, dead code
 * added .php-cs-fixer.dist.php, Code überarbeitet mit Coding Standards
 
