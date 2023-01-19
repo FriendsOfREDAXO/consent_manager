@@ -299,6 +299,8 @@ z.B:
 /redaxo/index.php?page=consent_manager/theme&preview=project:consent_manager_frontend_mein_theme.scss
 ```
 
+Einfach mit der rechten Maustaste auf den Button `Theme Vorschau` klicken und Link in neuem Fenster öffnen.
+
 ### Individuelles Design
 
 Reicht die Lösung über ein Theme nicht, kann die Box auch vollständig individualisert werden.
