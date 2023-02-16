@@ -80,7 +80,7 @@ class consent_manager_frontend
         if (isset($this->cache['cookies'][$clang])) {
             foreach ($this->cache['cookies'][$clang] as $uid => $cookie) {
                 if (!$cookie['provider_link_privacy']) {
-                    $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy']);
+                    $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy'], $clang);
                 }
             }
         }

@@ -91,12 +91,14 @@
                 document.querySelector('body').style.overflow = 'auto';
             }
             document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
+            return false;
         });
     });
 
     if (document.getElementById('consent_manager-toggle-details')) {
         document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
             document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+            return false;
         });
     }
 
@@ -104,6 +106,7 @@
         document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
             if (event.key == 'Enter') {
                 document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+                return false;
             }
         });
     }
@@ -111,6 +114,7 @@
     document.querySelectorAll('.consent_manager-show-box, .consent_manager-show-box-reload').forEach(function (el) {
         el.addEventListener('click', function () {
             showBox();
+            return false;
         });
     });
 
@@ -133,6 +137,22 @@
                         addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
                     });
                 } else {
+                    cookieUids.forEach(function (uid) {
+                        removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                    });
+                }
+            });
+        } else {
+            consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+                // array mit cookie uids
+                var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+                if (el.disabled) {
+                    cookieUids.forEach(function (uid) {
+                        consents.push(uid);
+                        addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                    });
+                } else {
+                    el.checked = false;
                     cookieUids.forEach(function (uid) {
                         removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
                     });
@@ -165,6 +185,8 @@
             Cookies.remove(encodeURIComponent(key), { 'domain': domain, 'path': '/' });
             Cookies.remove(encodeURIComponent(key), { 'domain': ('.' + domain) });
             Cookies.remove(encodeURIComponent(key), { 'domain': ('.' + domain), 'path': '/' });
+            Cookies.remove(encodeURIComponent(key), { 'domain': ('www.' + domain) });
+            Cookies.remove(encodeURIComponent(key), { 'domain': ('www.' + domain), 'path': '/' });
         }
     }
 

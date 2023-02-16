@@ -1,5 +1,15 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.0.1 – 16.02.2023
+
+### Bugfixes
+
+* Beim Button **Alles ablehnen** die notwendigen Dienste setzen statt "leer", Ausgabe auch im Consent-Log
+* Cookies mit www löschen, behebt evtl. #284 @alxndr-w
+* Fragment `consent_manager_box.php`: Link **Details anzeigen** um `href=#` erweitert, Click-Ereignisse mit return false in `consent_manager_frontend.js`
+* Fix #286 - Link Datenschutzerklärung nicht lokalisiert @clausbde
+* removed .php-cs-fixer.dist.php
+
 ## Version 4.0.0 – 20.01.2023
 
 ### Breaking Changes

@@ -33,7 +33,7 @@ if (0 === count($consent_manager->texts)) {
 ?>
                         </div>
                         <div class="consent_manager-show-details">
-                            <a id="consent_manager-toggle-details" class="icon-info-circled" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></a>
+                            <a href="#" id="consent_manager-toggle-details" class="icon-info-circled" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></a>
                         </div>
                     </div>
                     <div class="consent_manager-detail consent_manager-hidden" id="consent_manager-detail">
