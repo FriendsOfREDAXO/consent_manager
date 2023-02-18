@@ -123,15 +123,17 @@ if (rex_version::compare($addon->getVersion(), '4.0', '<')) {
                 $sql->setValue('id', 23);
                 $sql->setValue('uid', 'button_select_none');
                 $sql->setValue('clang_id', $lang);
-                $sql->setValue('text', 'Alles ablehnen');
+                $sql->setValue('text', 'Nur notwendige');
                 $sql->insert();
             }
         }
     }
 }
 
-// Rewrite Cache
-consent_manager_cache::forceWrite();
+// Rewrite
+if (class_exists('consent_manager_cache')) {
+    consent_manager_cache::forceWrite();
+}
 
 // Delete Template cache
 rex_dir::delete(rex_path::cache('addons/templates'));

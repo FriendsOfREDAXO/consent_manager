@@ -39,4 +39,4 @@ INSERT INTO `rex_consent_manager_text` (`pid`, `id`, `clang_id`, `uid`, `text`) 
 (20, 20, 1, 'consent_id', 'Einwilligungs-ID'),
 (21, 21, 1, 'consent_consents', 'Einwilligungen'),
 (22, 22, 1, 'edit_consent', 'Cookie Einstellungen bearbeiten'),
-(23, 23, 1, 'button_select_none', 'Alles ablehnen');
+(23, 23, 1, 'button_select_none', 'Nur notwendige');
