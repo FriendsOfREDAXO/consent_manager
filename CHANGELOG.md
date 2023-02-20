@@ -1,5 +1,13 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.0.2 – 20.02.2023
+
+* Wording: "Alles ablehnen" in "Nur notwendige" geändert
+
+### Bugfixes
+
+* update 4.0 -> 4.0.1 class not found #287, @skerbis
+
 ## Version 4.0.1 – 16.02.2023
 
 ### Bugfixes
