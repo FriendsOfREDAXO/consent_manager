@@ -88,7 +88,11 @@ if ('delete' === $func) {
     } else {
         if ([] !== $cookies) {
             $checkboxes = [];
-            $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('cookie')));
+            if (null !== $form->getSql()->getValue('cookie')) {
+                $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('cookie')));
+            } else {
+                $checkedBoxes = [];
+            }
             foreach ($cookies as $v) {
                 $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
                 $checkboxes[] = [$checked, $v['uid']];
