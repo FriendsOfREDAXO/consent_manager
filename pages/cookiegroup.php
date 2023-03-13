@@ -21,7 +21,6 @@ if ('delete' === $func) {
     $form->addParam('start', rex_request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
     $form->addHiddenField('clang_id', $clang_id);
-    $form->addHiddenField('domain', '');
     consent_manager_rex_form::getId($form, $table);
 
     $db = rex_sql::factory();
@@ -57,7 +56,7 @@ if ('delete' === $func) {
         $checkboxes = [];
         $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('domain')));
         foreach ($domains as $v) {
-            $checked = (in_array($v['id'], $checkedBoxes, true)) ? '|1|' : '';
+            $checked = (in_array((string) $v['id'], $checkedBoxes, true)) ? '|1|' : '';
             $checkboxes[] = [$checked, $v['uid']];
         }
         if (count($checkboxes) > 0) {
@@ -91,7 +90,7 @@ if ('delete' === $func) {
             $checkboxes = [];
             $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('cookie')));
             foreach ($cookies as $v) {
-                $checked = (in_array($v['uid'], $checkedBoxes, true)) ? '|1|' : '';
+                $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
                 $checkboxes[] = [$checked, $v['uid']];
             }
             $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', $checkboxes)); /** @phpstan-ignore-line */
