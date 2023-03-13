@@ -60,7 +60,7 @@ if ('delete' === $func) {
             $checkboxes[] = [$checked, $v['uid']];
         }
         if (count($checkboxes) > 0) {
-            $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', $checkboxes)); /** @phpstan-ignore-line */
+            $form->addRawField(consent_manager_rex_form::getFakeCheckbox($addon->i18n('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
     $field = $form->addTextField('name');
@@ -97,7 +97,7 @@ if ('delete' === $func) {
                 $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
                 $checkboxes[] = [$checked, $v['uid']];
             }
-            $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', $checkboxes)); /** @phpstan-ignore-line */
+            $form->addRawField(consent_manager_rex_form::getFakeCheckbox($addon->i18n('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
 
