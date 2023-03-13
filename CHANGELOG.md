@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.0.3 – 13.03.2023
+
+### Bugfixes
+
+* Fix #289 - Bei neu angelegter Sprache werden die Domains aus der Gruppe nicht übernommen @clausbde
+
 ## Version 4.0.2 – 20.02.2023
 
 * Wording: "Alles ablehnen" in "Nur notwendige" geändert
