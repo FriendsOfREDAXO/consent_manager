@@ -5,6 +5,9 @@
 ### Bugfixes
 
 * Fix #289 - Bei neu angelegter Sprache werden die Domains aus der Gruppe nicht übernommen @clausbde
+  Die Domains wurden übernommen aber nicht als ausgewählt angezeigt. Beim Speichern in der zusätzlichen Sprache wurden die Domains gelöscht.
+* Wenn keine Dienste ausgewählt waren, wurden in den weiteren Sprachen keine Dienste angezeigt
+* Label Domains+Dienste wurde in weiteren Sprachen nicht angezeigt
 
 ## Version 4.0.2 – 20.02.2023
 
