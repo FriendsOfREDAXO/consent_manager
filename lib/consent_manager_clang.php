@@ -64,11 +64,15 @@ class consent_manager_clang
                 if (null === $page) {
                     continue;
                 }
-                $clang_id = (int) str_replace('clang', '', strval(rex_be_controller::getCurrentPagePart(3, '')));
+                if (null !== rex_be_controller::getCurrentPagePart(3, '')) {
+                    $clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3, ''));
+                } else {
+                    $clang_id = rex_clang::getStartId();
+                }
                 foreach (rex_clang::getAll() as $id => $clang) {
                     $page->addSubpage((new rex_be_page('clang' . $id, $clang->getName()))
                         ->setSubPath(rex_path::addon('consent_manager', 'pages/' . $key . '.php'))
-                        ->setIsActive($id === $clang_id)
+                        ->setIsActive($id === $clang_id),
                     );
                 }
             }
@@ -122,7 +126,7 @@ class consent_manager_clang
                 if ('clang_id' === $k) {
                     $db->setValue($k, $clangId);
                 } else {
-                    $db->setValue(strval($k), $v);
+                    $db->setValue((string) $k, $v);
                 }
             }
             $db->insert();
