@@ -15,7 +15,7 @@
     // es gibt keinen datenschutzcookie, banner zeigen
     if (typeof Cookies.get('consent_manager') === 'undefined') {
         show = 1;
-        Cookies.set('test', 'test', { path: '/', sameSite: 'Lax', secure: false });
+        Cookies.set('test', 'test', { path: '/', domain: consent_manager_parameters.domain, sameSite: 'Lax', secure: false });
         // cookie konnte nicht gesetzt werden, kein cookie banner anzeigen
         if (typeof Cookies.get('test') === 'undefined') {
             show = 0;
