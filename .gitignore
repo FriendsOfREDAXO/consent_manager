@@ -1,0 +1,20 @@
+# ignore TODO
+.TODO.txt
+
+.DS_Store
+.definition
+.dislap
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+*.iml
+modules.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/encodings.xml
+*.ipr
+
+# VSCode setting
+.vscode
