@@ -1,8 +1,9 @@
-/* globals Cookies, consent_managerIEVersion */
+const cmCookieExpires = 365;
+const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', domain: consent_manager_parameters.domain, sameSite: 'strict', secure: true });
+
 (function () {
     'use strict';
-    var expires = new Date(),
-        show = 0,
+    var show = 0,
         cookieData = {},
         consents = [],
         addonVersion = -1,
@@ -11,20 +12,23 @@
         cookieCachelogid = -1,
         consent_managerBox;
 
-    expires.setFullYear(expires.getFullYear() + 1);
-    // es gibt keinen datenschutzcookie, banner zeigen
-    if (typeof Cookies.get('consent_manager') === 'undefined') {
-        show = 1;
-        Cookies.set('test', 'test', { path: '/', domain: consent_manager_parameters.domain, sameSite: 'Lax', secure: false });
-        // cookie konnte nicht gesetzt werden, kein cookie banner anzeigen
-        if (typeof Cookies.get('test') === 'undefined') {
+    consent_manager_parameters.no_cookie_set = false;
+
+    // Es gibt keinen Datenschutzcookie, Consent zeigen
+    if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {
+        cmCookieAPI.set('consent_manager_test', 'test');
+        // Test-Cookie konnte nicht gesetzt werden, kein Consent anzeigen
+        if (typeof cmCookieAPI.get('consent_manager_test') === 'undefined') {
             show = 0;
+            consent_manager_parameters.no_cookie_set = true;
+            console.warn('Addon consent_manager: Es konnte kein Cookie für die Domain ' + consent_manager_parameters.domain + ' gesetzt werden!');
         } else {
-            Cookies.remove('test');
+            cmCookieAPI.remove('consent_manager_test');
+            show = 1;
         }
     } else {
-        cookieData = JSON.parse(Cookies.get('consent_manager'));
-        // cookie version auslesen. cookie version = major addon version zum zeitpunkt des cookie speicherns
+        cookieData = JSON.parse(cmCookieAPI.get('consent_manager'));
+        // Cookie-Version auslesen. Cookie-Version = Major-Version des AddOns zum Zeitpunkt des speicherns
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
             cookieVersion = parseInt(cookieData.version);
@@ -40,30 +44,21 @@
     consent_managerBox = consent_managerBox.getElementById('consent_manager-background');
     document.querySelectorAll('body')[0].appendChild(consent_managerBox);
 
-    // aktuelle major addon version auslesen
+    // aktuelle Major-AddOn-Version auslesen
     addonVersion = parseInt(consent_manager_parameters.version);
     cachelogid = parseInt(consent_manager_parameters.cachelogid);
-    // cookie wurde mit einer aelteren major version gesetzt, alle consents loeschen und box zeigen
+    // Cookie wurde mit einer aelteren Major-Version gesetzt, alle Consents loeschen und Consent anzeigen
     if (addonVersion !== cookieVersion || cachelogid !== cookieCachelogid) {
         show = 1;
         consents = [];
         deleteCookies();
     }
 
-    if (consent_managerIEVersion() === 9) {
-        consent_managerBox.querySelectorAll('.consent_manager-cookiegroup-checkbox').forEach(function (el) {
-            el.classList.remove('pretty');
-            el.querySelectorAll('.icon').forEach(function (icon) {
-                icon.remove();
-            });
-        });
-    }
-
     consents.forEach(function (uid) {
         addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
     });
 
-    if (consent_manager_parameters.initially_hidden) {
+    if (consent_manager_parameters.initially_hidden || consent_manager_parameters.no_cookie_set) {
         show = 0;
     }
 
@@ -127,7 +122,7 @@
             cachelogid: consent_manager_parameters.cachelogid
         };
         // checkboxen
-        if (toSave !== 'none'){
+        if (toSave !== 'none') {
             consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
                 // array mit cookie uids
                 var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
@@ -159,15 +154,27 @@
                 }
             });
         }
-        cookieData.consents = consents;
-        Cookies.set('consent_manager', JSON.stringify(cookieData), { expires: expires, path: '/', domain: consent_manager_parameters.domain, sameSite: 'Lax', secure: false });
 
-        var http = new XMLHttpRequest(),
-            url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager',
-            params = 'domain=' + consent_manager_parameters.domain + '&consentid=' + consent_manager_parameters.consentid;
-        http.open('POST', url, false);
-        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        http.send(params);
+        cookieData.consents = consents;
+
+        cmCookieAPI.set('consent_manager', JSON.stringify(cookieData));
+        if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {
+            consent_manager_parameters.no_cookie_set = true;
+            console.warn('Addon consent_manager: Es konnte kein Cookie für die Domain ' + consent_manager_parameters.domain + ' gesetzt werden!');
+        } else {
+            var http = new XMLHttpRequest(),
+                url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager&buster=' + new Date().getTime(),
+                params = 'domain=' + consent_manager_parameters.domain + '&consentid=' + consent_manager_parameters.consentid + '&buster=' + new Date().getTime();
+            http.onerror = (e) => {
+                console.error('Addon consent_manager: Fehler beim speichern des Consent! ' + http.statusText);
+            };
+            http.open('POST', url, false);
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            http.setRequestHeader('Cache-Control', 'no-cache, no-store, max-age=0');
+            http.setRequestHeader('Expires', 'Thu, 1 Jan 1970 00:00:00 GMT');
+            http.setRequestHeader('Pragma', 'no-cache');
+            http.send(params);
+        }
 
         if (document.querySelectorAll('.consent_manager-show-box-reload').length || consent_manager_parameters.forcereload === 1) {
             location.reload();
@@ -178,15 +185,13 @@
 
     function deleteCookies() {
         var domain = consent_manager_parameters.domain;
-        for (var key in Cookies.get()) {
-            Cookies.remove(encodeURIComponent(key));
-            Cookies.remove(encodeURIComponent(key), { 'domain': domain });
-            Cookies.remove(encodeURIComponent(key), { 'path': '/' });
-            Cookies.remove(encodeURIComponent(key), { 'domain': domain, 'path': '/' });
-            Cookies.remove(encodeURIComponent(key), { 'domain': ('.' + domain) });
-            Cookies.remove(encodeURIComponent(key), { 'domain': ('.' + domain), 'path': '/' });
-            Cookies.remove(encodeURIComponent(key), { 'domain': ('www.' + domain) });
-            Cookies.remove(encodeURIComponent(key), { 'domain': ('www.' + domain), 'path': '/' });
+        for (var key in cmCookieAPI.get()) {
+            cmCookieAPI.remove(encodeURIComponent(key));
+            cmCookieAPI.remove(encodeURIComponent(key), { 'domain': domain });
+            cmCookieAPI.remove(encodeURIComponent(key), { 'path': '/' });
+            cmCookieAPI.remove(encodeURIComponent(key), { 'domain': domain, 'path': '/' });
+            cmCookieAPI.remove(encodeURIComponent(key), { 'domain': ('.' + domain) });
+            cmCookieAPI.remove(encodeURIComponent(key), { 'domain': ('.' + domain), 'path': '/' });
         }
     }
 
@@ -243,8 +248,8 @@
 
 function consent_manager_showBox() {
     var consents = [];
-    if (typeof Cookies.get('consent_manager') != 'undefined') {
-        cookieData = JSON.parse(Cookies.get('consent_manager'));
+    if (typeof cmCookieAPI.get('consent_manager') != 'undefined') {
+        cookieData = JSON.parse(cmCookieAPI.get('consent_manager'));
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
         }
@@ -273,8 +278,8 @@ function consent_manager_showBox() {
 }
 
 function consent_manager_hasconsent(id) {
-    if (typeof Cookies.get('consent_manager') !== 'undefined') {
-        return JSON.parse(Cookies.get('consent_manager')).consents.indexOf(id) !== -1;
+    if (typeof cmCookieAPI.get('consent_manager') !== 'undefined') {
+        return JSON.parse(cmCookieAPI.get('consent_manager')).consents.indexOf(id) !== -1;
     }
     return false;
 }
