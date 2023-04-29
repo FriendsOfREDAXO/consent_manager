@@ -1,5 +1,25 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.1.0 – 29.04.2023
+
+**Hinweis:** In den Fragementen wurde `rex_request::server('HTTP_HOST')` durch `consent_manager_util::hostname()` ersetzt. Bei Verwendung eigener Fragmente sollten diese entsprechend angepasst werden (ist aber nicht zwingend erforderlich).
+
+**Hinweis:** Die Verwendung von REX_VARS ist ab jetzt `deprecated`! In der Version 5.x des Consent-Managers wird nur noch `REX_CONSENT_MANAGER[]` unterstützt, sollte aber nicht mehr verwendet werden. `REX_COOKIEDB[]` wird entfallen. Mehr Infos in der Version 5.x
+
+### Features
+
+* neue Methode `consent_manager_util::hostname()` - liefert Hostname ohne Subdomain und Port
+* `consent_manager_frontend.js` überarbeitet
+  * einheitliche Verarbeitung der Cookies durch Cookie-API mit `Cookies.withAttributes`
+  * Cookie-Parameter `sameSite: 'strict'` und  `secure: true`
+  * Code-Stabilität und Error-Handling verbessert
+* Update js-cookie Version 3.0.5
+* PHP Code-Quality
+
+### Bugfixes
+
+* Es gab unter Umständen Fehler beim setzen der Cookies, das sollte jetzt behoben sein
+
 ## Version 4.0.3 – 13.03.2023
 
 ### Bugfixes
