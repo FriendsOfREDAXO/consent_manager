@@ -2,8 +2,6 @@
 
 ## Version 4.1.0 – 29.04.2023
 
-**Hinweis:** In den Fragementen wurde `rex_request::server('HTTP_HOST')` durch `consent_manager_util::hostname()` ersetzt. Bei Verwendung eigener Fragmente sollten diese entsprechend angepasst werden (ist aber nicht zwingend erforderlich).
-
 **Hinweis:** Die Verwendung von REX_VARS ist ab jetzt `deprecated`! In der Version 5.x des Consent-Managers wird nur noch `REX_CONSENT_MANAGER[]` unterstützt, sollte aber nicht mehr verwendet werden. `REX_COOKIEDB[]` wird entfallen. Mehr Infos in der Version 5.x
 
 ### Features
