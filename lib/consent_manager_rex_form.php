@@ -41,7 +41,7 @@ class consent_manager_rex_form
     {
         $html = '';
         $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
-        if (null !== $label) {
+        if ('' !== $label) {
             $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
         }
         $html .= '<dd>';
