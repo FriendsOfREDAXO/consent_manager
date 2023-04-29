@@ -1,6 +1,6 @@
 <?php
 $consent_manager = new consent_manager_frontend(0);
-$consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
+$consent_manager->setDomain(consent_manager_util::hostname());
 if (0 === count($consent_manager->texts)) {
     echo '<div id="consent_manager-background">' . rex_view::error(rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig')) . '</div>';
     return;

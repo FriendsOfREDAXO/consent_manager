@@ -19,7 +19,7 @@ $consentparams['lang'] = rex_clang::getCurrentId();
 $consentparams['initially_hidden'] = 'false';
 
 $consent_manager = new consent_manager_frontend($forceCache);
-$consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
+$consent_manager->setDomain(consent_manager_util::hostname());
 
 // Consent bei Datenschutz und Impressum ausblenden
 if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->links['legal_notice'])) {

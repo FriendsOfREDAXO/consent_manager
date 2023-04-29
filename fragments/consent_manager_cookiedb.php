@@ -1,7 +1,7 @@
 <?php
 
 $consent_manager = new consent_manager_frontend($this->getVar('forceCache'));
-$consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
+$consent_manager->setDomain(consent_manager_util::hostname());
 
 $output = '';
 
