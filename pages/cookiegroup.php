@@ -77,7 +77,7 @@ if ('delete' === $func) {
     $db->select('DISTINCT uid');
     $cookies = $db->getArray();
 
-    if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
+    if ($clang_id === rex_clang::getStartId() || true !== $form->isEditMode()) {
         if ([] !== $cookies) {
             $field = $form->addCheckboxField('cookie');
             $field->setLabel($addon->i18n('consent_manager_cookies'));
@@ -117,7 +117,7 @@ if ($showlist) {
     $db->setTable(rex::getTable('consent_manager_cookiegroup'));
     $db->setWhere('domain != "" AND clang_id = '.$clang_id);
     $dbresult = $db->select('count(*) as count');
-    if (0 === (int) $dbresult->getValue('count')) {
+    if (0 === $dbresult->getValue('count')) {
         echo rex_view::warning($addon->i18n('consent_manager_cookiegroup_nodomain_notice'));
     }
 

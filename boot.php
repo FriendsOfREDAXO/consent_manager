@@ -58,7 +58,6 @@ if (rex::isFrontend()) {
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
         if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
             $consent_manager = new consent_manager_frontend(0);
-            // $consent_manager->setDomain($_SERVER['HTTP_HOST']);
             $consent_manager->outputJavascript();
             exit;
         }
