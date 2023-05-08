@@ -28,7 +28,7 @@ class consent_manager_frontend
             consent_manager_cache::forceWrite();
         }
         $this->cache = consent_manager_cache::read();
-        if (null === $this->cache || (null !== $this->cache && rex_addon::get('consent_manager')->getVersion('%s') !== $this->cache['majorVersion'])) { /** @phpstan-ignore-line */
+        if (null === $this->cache || (null !== $this->cache && rex_addon::get('consent_manager')->getVersion() !== $this->cache['majorVersion'])) { /** @phpstan-ignore-line */
             consent_manager_cache::forceWrite();
             $this->cache = consent_manager_cache::read();
         }

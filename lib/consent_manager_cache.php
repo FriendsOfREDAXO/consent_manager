@@ -171,7 +171,7 @@ class consent_manager_cache
         if (isset($this->texts[$clangId])) {
             $this->config['texts'][$clangId] = $this->texts[$clangId]; /** @phpstan-ignore-line */
         }
-        $this->config['majorVersion'] = rex_addon::get('consent_manager')->getVersion('%s');
+        $this->config['majorVersion'] = rex_addon::get('consent_manager')->getVersion();
     }
 
     /**
