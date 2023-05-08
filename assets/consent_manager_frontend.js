@@ -192,6 +192,9 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
             cmCookieAPI.remove(encodeURIComponent(key), { 'domain': domain, 'path': '/' });
             cmCookieAPI.remove(encodeURIComponent(key), { 'domain': ('.' + domain) });
             cmCookieAPI.remove(encodeURIComponent(key), { 'domain': ('.' + domain), 'path': '/' });
+            Cookies.remove(encodeURIComponent(key), { 'domain': window.location.hostname });
+            Cookies.remove(encodeURIComponent(key), { 'path': '/' });
+            Cookies.remove(encodeURIComponent(key), { 'domain': window.location.hostname, 'path': '/' });
         }
     }
 
