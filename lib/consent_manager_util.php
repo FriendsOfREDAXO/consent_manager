@@ -24,6 +24,30 @@ class consent_manager_util
     }
 
     /**
+     * Check if consent is configured.
+     * @api
+     */
+    public static function consentConfigured(): bool
+    {
+        $db = rex_sql::factory();
+        $db->setDebug(false);
+
+        // Check host
+        $db->prepareQuery('SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` = :uid');
+        $dbresult = $db->execute(['uid' => self::hostname()]);
+        if (1 === (int) $dbresult->getRows()) {
+            $domain = $dbresult->getValue('id');
+            // Check domain in cookie group
+            $db->prepareQuery('SELECT count(*) as `count` FROM `' . rex::getTable('consent_manager_cookiegroup') . '` WHERE `domain` LIKE :domain AND `clang_id` = :clang');
+            $dbresult = $db->execute(['domain' => '%|' . $domain . '|%', 'clang' => rex_clang::getCurrentId()]);
+            if (0 !== (int) $dbresult->getValue('count')) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Hostname without subdomain and port.
      * https:// onlinecode.org/php-get-domain-name-from-full-url-with-parameters-programming/
      * @api
