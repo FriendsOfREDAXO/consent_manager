@@ -28,6 +28,12 @@ if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->
     }
 }
 
+// Consent ausblenden wenn keine Dienste konfiguriert sind
+if (0 === count($consent_manager->cookiegroups)) {
+    rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . consent_manager_util::hostname() . ')');
+    $consentparams['initially_hidden'] = 'true';
+}
+
 // Consent bei Parameter skip_consent ausblenden
 if ('' !== rex_config::get('consent_manager', 'skip_consent') && rex_get('skip_consent') === rex_config::get('consent_manager', 'skip_consent')) {
     $consentparams['initially_hidden'] = 'true';
@@ -37,7 +43,7 @@ if ('' !== rex_config::get('consent_manager', 'skip_consent') && rex_get('skip_c
 if (false === $addon->getConfig('outputowncss', false)) {
     $_csscontent = consent_manager_frontend::getFrontendCss();
     if ('' !== $_csscontent) {
-        $consentparams['outputcss'] .= '    <style>' . trim(strval($_csscontent)) . '</style>' . PHP_EOL;
+        $consentparams['outputcss'] .= '    <style>' . trim($_csscontent) . '</style>' . PHP_EOL;
     }
 }
 
