@@ -175,11 +175,7 @@ if ('|1|' === $addon->getConfig('outputowncss', false)) {
 }
 
 // check Konfiguration
-$db = rex_sql::factory();
-$db->setTable(rex::getTable('consent_manager_cookiegroup'));
-$db->setWhere('domain != "" AND clang_id = '.$clang_id);
-$dbresult = $db->select('count(*) as count');
-if (0 === $dbresult->getValue('count')) {
+if (false === consent_manager_util::consentConfigured()) {
     echo rex_view::warning($addon->i18n('consent_manager_cookiegroup_nodomain_notice'));
 }
 
