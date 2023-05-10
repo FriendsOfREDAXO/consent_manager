@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 4.1.1 – 08.05.2023
+## Version 4.1.1 – 10.05.2023
 
 **Hinweis:** Die Verwendung von REX_VARS ist ab jetzt `deprecated`! In der Version 5.x des Consent-Managers wird nur noch `REX_CONSENT_MANAGER[]` unterstützt, sollte aber nicht mehr verwendet werden. `REX_COOKIEDB[]` wird entfallen. Mehr Infos in der Version 5.x
 
@@ -12,7 +12,7 @@
   Das Consent-Popup wurde immer wieder angezeigt.
 * Fix #294 Undefined array key "majorVersion" @tbaddade
 * Consent nicht einblenden wenn kein Consent konfiguriert ist (Mulditdomain)
-  Danke an alle Melder/Tester und besonders Stefan @dpf-dd + Peter @bitshiftersgmbh!
+  Danke an alle Melder/Tester und besonders Stefan @dpf-dd + Peter @bitshiftersgmbh + Thomas @tbaddade!
 
 ## Version 4.1.0 – 05.05.2023
 
