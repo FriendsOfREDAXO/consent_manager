@@ -34,7 +34,7 @@ class consent_manager_util
 
         // Check host
         $db->prepareQuery('SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` = :uid');
-        $dbresult = $db->execute(['uid' => self::hostname()]);
+        $dbresult = $db->execute(['uid' => rex_request::server('HTTP_HOST')]);
         if (1 === (int) $dbresult->getRows()) {
             $domain = $dbresult->getValue('id');
             // Check domain in cookie group
