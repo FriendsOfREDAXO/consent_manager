@@ -54,10 +54,10 @@ class consent_manager_util
     public static function hostname(): string
     {
         $parts = parse_url('https://' . rex_request::server('HTTP_HOST'));
-        $domain = $parts['host'] ?? '';
-        $validatedDomain = filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
-        if ($validatedDomain !== false) {
-            return $validatedDomain;
+        $host = $parts['host'] ?? '';
+        $validatedHost = filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
+        if ($validatedHost !== false) {
+            return $validatedHost;
         }
         return ''.rex_request::server('HTTP_HOST');
     }
