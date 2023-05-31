@@ -55,7 +55,7 @@ class consent_manager_util
     {
         $parts = parse_url('https://' . rex_request::server('HTTP_HOST'));
         $domain = $parts['host'] ?? '';
-        $validatedDomain = filter_var($domain, FILTER_VALIDATE_DOMAIN);
+        $validatedDomain = filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
         if ($validatedDomain !== false) {
             return $validatedDomain;
         }
