@@ -58,7 +58,7 @@ class consent_manager_util
         //$parts = parse_url('http://' . 'test.aesoft.de/foo/bar'); // test
         //$parts = parse_url('http://' . 'mail.onlinecode.co.uk'); // test
         $domain = $parts['host'] ?? '';
-        if (false !== preg_match('/(?P<domain>[a-z0-9][a-z0-9-]{1,63}.[a-z.]{2,6})$/i', $domain, $regs)) {
+        if (false !== preg_match('/(?P<domain>[a-z0-9][a-z0-9-]{1,63}.[a-z.]{2,24})$/i', $domain, $regs)) {
             return $regs['domain'];
         }
         return ''.rex_request::server('HTTP_HOST');
