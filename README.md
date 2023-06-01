@@ -88,7 +88,7 @@ Hier kann optional ein Platzhalter Bild aus dem Medienpoolhinterlegt werden
 
 #### Skripte, die nach Einverständnis geladen werden:
 
-Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Werden unterschiedliche Skripte je Domain benötigt, muss je Domain der Dienst extra angelegt werden.
+Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Werden unterschiedliche Skripte je Domain benötigt, muss je Domain der Dienst extra angelegt werden. Die Scripte müssen nicht inline ausgeführt werden. Aufrufe externer Scripte sind möglich, z.B.: `<script type="text/javascript” src="/ressources/script.js">`. 
 
 ### Gruppen anlegen
 
