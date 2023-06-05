@@ -1,5 +1,18 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.1.3 - 05.06.2023
+
+**Hinweis:** Die Verwendung von REX_VARS ist ab jetzt `deprecated`! In der Version 5.x des Consent-Managers wird nur noch `REX_CONSENT_MANAGER[]` unterstützt, sollte aber nicht mehr verwendet werden. `REX_COOKIEDB[]` wird entfallen. Mehr Infos in der Version 5.x
+
+## Updates
+
+* README - Ergänzung für Skripte die nach Einverständnis geladen werden @skerbis
+
+### Bugfixes
+
+* TLD wurde bei .localhost nicht erkannt. #295 fixed by @skerbis mit #297
+* Whoops bei Themes verhindern wenn das project-AddOn nicht existiert @TobiasKrais @aeberhard
+
 ## Version 4.1.2 – 16.05.2023
 
 **Hinweis:** Die Verwendung von REX_VARS ist ab jetzt `deprecated`! In der Version 5.x des Consent-Managers wird nur noch `REX_CONSENT_MANAGER[]` unterstützt, sollte aber nicht mehr verwendet werden. `REX_COOKIEDB[]` wird entfallen. Mehr Infos in der Version 5.x
