@@ -40,7 +40,7 @@ page:
       }
 
 requires:
-  redaxo: "^5.8"
+  redaxo: "^5.12"
   php:
     version: ">=7, <9"
 
