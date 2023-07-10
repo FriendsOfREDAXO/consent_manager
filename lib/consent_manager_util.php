@@ -38,7 +38,7 @@ class consent_manager_util
         if (1 === (int) $dbresult->getRows()) {
             $domain = $dbresult->getValue('id');
             // Check domain in cookie group
-            $db->prepareQuery('SELECT count(*) as `count` FROM `' . rex::getTable('consent_manager_cookiegroup') . '` WHERE `domain` LIKE :domain AND `clang_id` = :clang');
+            $db->prepareQuery('SELECT count(*) as `count` FROM `' . rex::getTable('consent_manager_cookiegroup') . '` WHERE `domain` LIKE :domain AND `clang_id` = :clang AND `cookie` != \'\'');
             $dbresult = $db->execute(['domain' => '%|' . $domain . '|%', 'clang' => rex_clang::getCurrentId()]);
             if (0 !== (int) $dbresult->getValue('count')) {
                 return true;
