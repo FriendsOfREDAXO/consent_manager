@@ -10,8 +10,8 @@ class consent_manager_util
      */
     public static function has_consent($cookieUid): bool
     {
-        if (null !== rex_request::cookie('consent_manager')) {
-            $cookieData = (array) json_decode(strval(rex_request::cookie('consent_manager')), true);
+        if (null !== rex_request::cookie('consent_manager') && is_string(rex_request::cookie('consent_manager'))) {
+            $cookieData = (array) json_decode(rex_request::cookie('consent_manager'), true);
             if (isset($cookieData['consents']) && is_array($cookieData['consents']) && 0 !== count($cookieData['consents'])) {
                 foreach ($cookieData['consents'] as $consent) {
                     if ($cookieUid === $consent) {
@@ -49,19 +49,46 @@ class consent_manager_util
 
     /**
      * Hostname without subdomain and port.
-     * https:// onlinecode.org/php-get-domain-name-from-full-url-with-parameters-programming/
      * @api
      */
     public static function hostname(): string
     {
-        $parts = parse_url('https://' . rex_request::server('HTTP_HOST'));
-        //$parts = parse_url('http://' . 'test.aesoft.de/foo/bar'); // test
-        //$parts = parse_url('http://' . 'mail.onlinecode.co.uk'); // test
-        $domain = $parts['host'] ?? '';
-        if (false !== preg_match('/(?P<domain>[a-z0-9][a-z0-9-]{1,63}.[a-z.]{2,24})$/i', $domain, $regs)) {
-            return $regs['domain'];
-        }
-        return ''.rex_request::server('HTTP_HOST');
+        $dominfo = self::get_domaininfo('https://' . rex_request::server('HTTP_HOST'));
+        return $dominfo['domain'];
     }
 
+    /**
+     * Daomain info from Url.
+     * @return array<string, string>
+     * @api
+     */
+    public static function get_domaininfo(string $url): array
+    {
+        $urlinfo = parse_url($url);
+        if (is_array($urlinfo) && isset($urlinfo['host'])) {
+            $url = 'https://' . $urlinfo['host'];
+        }
+
+        // regex can be replaced with parse_url
+        preg_match('/^(https|http|ftp):\\/\\/(.*?)\\//', "$url/", $matches);
+        $parts = explode('.', $matches[2]);
+        $tld = array_pop($parts);
+        $host = array_pop($parts);
+        if (2 === strlen($tld) && strlen($host) <= 3) { /** @phpstan-ignore-line */
+            $tld = "$host.$tld";
+            $host = array_pop($parts);
+        }
+
+        $domain = ltrim("$host.$tld", '.');
+        if (null === $host) {
+            $host = $tld;
+        }
+        return [
+            'protocol' => $matches[1],
+            'subdomain' => implode('.', $parts),
+            'domain' => $domain,
+            'host' => $host,
+            'tld' => $tld,
+        ];
+    }
 }
