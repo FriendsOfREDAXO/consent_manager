@@ -1,5 +1,5 @@
 const cmCookieExpires = 365;
-const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', domain: consent_manager_parameters.domain, sameSite: 'strict', secure: false });
+const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', domain: consent_manager_parameters.domain, sameSite: 'Strict', secure: false });
 
 (function () {
     'use strict';
