@@ -29,13 +29,18 @@ if (rex::isBackend()) {
         }
     });
 
-    rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
-        if (1 === rex_clang::count()) {
-            $s = '</head>';
-            $r = '<style>[id*="rex-page-consent_manager"] .rex-page-nav .navbar{display:none}</style></head>';
-            $ep->setSubject(str_replace($s, $r, strval($ep->getSubject())));
-        }
-    });
+    if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)) {
+        rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+            if (1 === rex_clang::count()) {
+                $s = '</head>';
+                $r = '<style>.rex-page-nav .navbar{display:none}</style></head>';
+                if (is_string($ep->getSubject())) {
+                    $ep->setSubject(str_replace($s, $r, $ep->getSubject()));
+                }
+            }
+        });
+    }
+
     rex_extension::register('REX_FORM_CONTROL_FIELDS', 'consent_manager_rex_form::removeDeleteButton');
     rex_extension::register('PAGES_PREPARED', 'consent_manager_clang::addLangNav');
     rex_extension::register('REX_FORM_SAVED', 'consent_manager_clang::formSaved');
