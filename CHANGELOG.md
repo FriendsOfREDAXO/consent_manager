@@ -1,5 +1,24 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.1.4 - xx.07.2023
+
+## Updates
+
+* Mindestversion REDAXO 5.12 @ingowinter
+* Non-Secure Cookies @tyrant88
+* `consent_manager_frontend.js` Cookie strict -> Strict, Update min-Version
+* Function `consent_manager_util::consentConfigured()` erweitert um gesetzte Cookies @aeberhard
+* `consent_manager_util::hostname()` überarbeitet
+* `consent_manager_util::get_domaininfo()` hinzugefügt
+* Code-Quality rexfactor/rexstan-Anpassungen
+* Text Info-Meldung angepasst wenn keine Domain/Dienste zugeordnet sind
+
+### Bugfixes
+
+* Probleme bei Subdomains behoben @aeberhard
+  * `consent_manager_util::hostname()` angepasst. Domain ohne Subdomain wurde durch die Anpassung #297 für locale Hosts nicht korrekt zurückgeliefert
+* Sprachnavigation bei nur einer Sprache wurde nicht ausgeblendet
+
 ## Version 4.1.3 - 05.06.2023
 
 **Hinweis:** Die Verwendung von REX_VARS ist ab jetzt `deprecated`! In der Version 5.x des Consent-Managers wird nur noch `REX_CONSENT_MANAGER[]` unterstützt, sollte aber nicht mehr verwendet werden. `REX_COOKIEDB[]` wird entfallen. Mehr Infos in der Version 5.x
