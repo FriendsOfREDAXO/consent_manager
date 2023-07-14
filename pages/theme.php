@@ -9,9 +9,7 @@ $clang_id = rex_clang::getStartId();
 
 if ('' !== $preview) {
     rex_response::cleanOutputBuffers();
-    ?>
 
-<?php
     $backgrounds = (array) glob($addon->getAssetsPath('*.jpg'));
     $backgroundimage = basename((string) $backgrounds[array_rand($backgrounds)]);
 
@@ -24,7 +22,7 @@ if ('' !== $preview) {
         $cmstyle = '';
         $cmbox = rex_view::error($addon->i18n('error_css_notfound', $preview));
     }
-    ?><!doctype html>
+?><!doctype html>
 <html lang="de">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -232,7 +230,7 @@ if (count($themes) > 0) {
             $authors = explode(',', $theme_options['autor']);
             foreach ($authors as $author) {
                 $url = 'https://github.com/' . str_replace('@', '', trim($author));
-                $authorlinks[] = '<a href="'.$url.'" target="_blank">'.$author.'</a>';
+                $authorlinks[] = '<a href="' . $url . '" target="_blank">' . $author . '</a>';
             }
 
             $formElements = [];
@@ -249,9 +247,9 @@ if (count($themes) > 0) {
             $n['field'] .= '<span>' . $addon->i18n('theme_autor') . '</span> ' . implode(', ', $authorlinks) . '<br>';
             $n['field'] .= '</p>';
 
-            $n['field'] .= '<div class="thumbnail-container" title="' .  $theme_options['name'] . '" data-theme="' . $themeid . '">';
+            $n['field'] .= '<div class="thumbnail-container" title="' . $theme_options['name'] . '" data-theme="' . $themeid . '">';
             $n['field'] .= '  <div class="thumbnail">';
-            $n['field'] .= '   <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'&nofocus" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
+            $n['field'] .= '   <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview=' . $themeid . '&nofocus" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
             $n['field'] .= '  </div>';
             $n['field'] .= '</div>';
 
@@ -292,7 +290,7 @@ if (count($themes) > 0) {
             $output = $fragment->parse('core/page/section.php');
 
             $output = '
-<form action="' . rex_url::currentBackendPage() . '#'.$themeid.'" method="post" id="'.$themeid.'">
+<form action="' . rex_url::currentBackendPage() . '#' . $themeid . '" method="post" id="' . $themeid . '">
 <input type="hidden" name="formsubmit" value="1" />
 <input type="hidden" name="theme" value="' . $themeid . '" />
     ' . $csrfToken->getHiddenField() . '
@@ -328,7 +326,7 @@ if (true === rex_addon::exists('project')) {
                 $authors = explode(',', $theme_options['autor']);
                 foreach ($authors as $author) {
                     $url = 'https://github.com/' . str_replace('@', '', trim($author));
-                    $authorlinks[] = '<a href="'.$url.'" target="_blank">'.$author.'</a>';
+                    $authorlinks[] = '<a href="' . $url . '" target="_blank">' . $author . '</a>';
                 }
 
                 $formElements = [];
@@ -345,9 +343,9 @@ if (true === rex_addon::exists('project')) {
                 $n['field'] .= '<span>' . $addon->i18n('theme_autor') . '</span> ' . implode(', ', $authorlinks) . '<br>';
                 $n['field'] .= '</p>';
 
-                $n['field'] .= '<div class="thumbnail-container" title="' .  $theme_options['name'] . '" data-theme="' . $themeid . '">';
+                $n['field'] .= '<div class="thumbnail-container" title="' . $theme_options['name'] . '" data-theme="' . $themeid . '">';
                 $n['field'] .= '  <div class="thumbnail">';
-                $n['field'] .= '   <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview='.$themeid.'&nofocus" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
+                $n['field'] .= '   <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview=' . $themeid . '&nofocus" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
                 $n['field'] .= '  </div>';
                 $n['field'] .= '</div>';
 
@@ -388,7 +386,7 @@ if (true === rex_addon::exists('project')) {
                 $output = $fragment->parse('core/page/section.php');
 
                 $output = '
-    <form action="' . rex_url::currentBackendPage() . '#'.str_replace(':', '-', $themeid).'" method="post" id="'.str_replace(':', '-', $themeid).'">
+    <form action="' . rex_url::currentBackendPage() . '#' . str_replace(':', '-', $themeid) . '" method="post" id="' . str_replace(':', '-', $themeid) . '">
     <input type="hidden" name="formsubmit" value="1" />
     <input type="hidden" name="theme" value="' . $themeid . '" />
         ' . $csrfToken->getHiddenField() . '

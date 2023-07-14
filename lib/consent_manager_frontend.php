@@ -145,7 +145,7 @@ class consent_manager_frontend
         echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . consent_manager_util::hostname() . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", forcereload: ' . rex_get('r', 'int', 0) . ', hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . '};' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
-        echo strval($boxtemplate) . '\';' . PHP_EOL . PHP_EOL;
+        echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL; /** @phpstan-ignore-line */
 
         $content = '';
         $filenames = [];
@@ -168,8 +168,8 @@ class consent_manager_frontend
         $addon = rex_addon::get('consent_manager');
 
         $_cssfilename = 'consent_manager_frontend.css';
-        if (false !== $addon->getConfig('theme', false)) {
-            $_themecssfilename = strval($addon->getConfig('theme', false));
+        if (false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
+            $_themecssfilename = $addon->getConfig('theme', false);
             $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $_themecssfilename));
             if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {
                 $_cssfilename = $_themecssfilename;

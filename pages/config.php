@@ -4,7 +4,7 @@ $addon = rex_addon::get('consent_manager');
 
 $form = rex_config_form::factory(strval($addon->getPackageId()));
 
-$field = $form->addFieldset($addon->i18n('consent_manager_config_legend'));
+$form->addFieldset($addon->i18n('consent_manager_config_legend'));
 
 /* Entfällt vorerst siehe https://github.com/FriendsOfREDAXO/consent_manager/issues/149
 
@@ -28,7 +28,7 @@ $field->addOption($addon->i18n('consent_manager_config_hidebodyscrollbar'), 1);
 
 $field = $form->addRawField('<p><strong>'.$addon->i18n('consent_manager_config_hidebodyscrollbar').'</strong></p><p>'.$addon->i18n('consent_manager_config_hidebodyscrollbar_desc').'</p>');
 
-$field = $form->addFieldset($addon->i18n('consent_manager_config_token_legend'));
+$form->addFieldset($addon->i18n('consent_manager_config_token_legend'));
 
 $field = $form->addTextField('skip_consent');
 $field->setLabel($addon->i18n('consent_manager_config_token_label'));

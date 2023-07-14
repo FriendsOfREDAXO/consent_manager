@@ -108,10 +108,12 @@ class consent_manager_cache
             foreach ((array) $this->cookies[$clangId] as $uid => $cookie) {
                 $defs = [];
                 $cookie = (array) $cookie;
-                foreach (rex_string::yamlDecode(strval($cookie['definition'])) as $k => $v) {
-                    $defs[$k]['cookie_name'] = $v['name'];
-                    $defs[$k]['cookie_lifetime'] = $v['time'];
-                    $defs[$k]['description'] = $v['desc'];
+                if (is_string($cookie['definition'])) {
+                    foreach (rex_string::yamlDecode($cookie['definition']) as $k => $v) {
+                        $defs[$k]['cookie_name'] = $v['name'];
+                        $defs[$k]['cookie_lifetime'] = $v['time'];
+                        $defs[$k]['description'] = $v['desc'];
+                    }
                 }
                 $cookie['definition'] = $defs;
                 $cookie['script'] = base64_encode($cookie['script']);
@@ -130,9 +132,11 @@ class consent_manager_cache
             foreach ((array) $this->cookiegroups[$clangId] as $uid => $cookiegroup) {
                 $cookie_uids = [];
                 $cookiegroup = (array) $cookiegroup;
-                foreach (array_filter(explode('|', strval($cookiegroup['cookie']))) as $cookieUid) {
-                    if (isset($this->cookies[$clangId][$cookieUid])) { /** @phpstan-ignore-line */
-                        $cookie_uids[] = $cookieUid;
+                if (is_string($cookiegroup['cookie'])) {
+                    foreach (array_filter(explode('|', $cookiegroup['cookie'])) as $cookieUid) {
+                        if (isset($this->cookies[$clangId][$cookieUid])) { /** @phpstan-ignore-line */
+                            $cookie_uids[] = $cookieUid;
+                        }
                     }
                 }
                 if ('|1|' === $cookiegroup['required']) {

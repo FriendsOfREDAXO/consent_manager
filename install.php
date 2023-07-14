@@ -113,9 +113,9 @@ if (-1 === $addon->getConfig('justInstalled', -1)) {
 // Add Text for new Button button_select_none
 if (rex_version::compare($addon->getVersion(), '4.0', '<')) {
     $sql = \rex_sql::factory();
-    $sql->setQuery('SELECT count(*) AS `count` FROM `'. rex::getTablePrefix() .'consent_manager_text` WHERE `uid` = \'button_accept\'');
-    if ((int) $sql->getValue('count') > 0) {
-        $sql->setQuery('SELECT count(*) AS `count` FROM `'. rex::getTablePrefix() .'consent_manager_text` WHERE `uid` = \'button_select_none\'');
+    $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = \'button_accept\'');
+    if ($sql->getValue('count') > 0) {
+        $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = \'button_select_none\'');
         if (0 === (int) $sql->getValue('count')) { /** @phpstan-ignore-line */
             foreach (rex_clang::getAllIds() as $lang) {
                 $sql = \rex_sql::factory();

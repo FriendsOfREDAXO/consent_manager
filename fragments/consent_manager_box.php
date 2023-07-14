@@ -1,6 +1,8 @@
 <?php
 $consent_manager = new consent_manager_frontend(0);
-$consent_manager->setDomain(strval(rex_request::server('HTTP_HOST')));
+if (is_string(rex_request::server('HTTP_HOST'))) {
+    $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
+}
 if (0 === count($consent_manager->texts)) {
     echo '<div id="consent_manager-background">' . rex_view::error(rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig')) . '</div>';
     return;
@@ -19,13 +21,13 @@ if (0 === count($consent_manager->texts)) {
                                 if (count($cookiegroup['cookie_uids']) >= 1) {
                                     if ($cookiegroup['required']) {
                                         echo '<div class="consent_manager-cookiegroup-checkbox">';
-                                        echo '<label for="'.$cookiegroup['uid'].'"><input type="checkbox" disabled="disabled" data-action="toggle-cookie" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\' checked>';
-                                        echo '<span>'.$cookiegroup['name'].'</span></label>';
+                                        echo '<label for="' . $cookiegroup['uid'] . '"><input type="checkbox" disabled="disabled" data-action="toggle-cookie" id="' . $cookiegroup['uid'] . '" data-uid="' . $cookiegroup['uid'] . '" data-cookie-uids=\'' . json_encode($cookiegroup['cookie_uids']) . '\' checked>';
+                                        echo '<span>' . $cookiegroup['name'] . '</span></label>';
                                         echo '</div>' . PHP_EOL;
                                     } else {
                                         echo '<div class="consent_manager-cookiegroup-checkbox">';
-                                        echo '<label for="'.$cookiegroup['uid'].'"><input tabindex="0" type="checkbox" id="'.$cookiegroup['uid'].'" data-uid="'.$cookiegroup['uid'].'" data-cookie-uids=\''.json_encode($cookiegroup['cookie_uids']).'\'>';
-                                        echo '<span>'.$cookiegroup['name'].'</span></label>';
+                                        echo '<label for="' . $cookiegroup['uid'] . '"><input tabindex="0" type="checkbox" id="' . $cookiegroup['uid'] . '" data-uid="' . $cookiegroup['uid'] . '" data-cookie-uids=\'' . json_encode($cookiegroup['cookie_uids']) . '\'>';
+                                        echo '<span>' . $cookiegroup['name'] . '</span></label>';
                                         echo '</div>' . PHP_EOL;
                                     }
                                 }
@@ -41,7 +43,7 @@ if (0 === count($consent_manager->texts)) {
                         foreach ($consent_manager->cookiegroups as $cookiegroup) {
                             if (count($cookiegroup['cookie_uids']) >= 1) {
                                 echo '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
-                                echo $cookiegroup['name'].' <span>('.count($cookiegroup['cookie_uids']).')</span>';
+                                echo $cookiegroup['name'] . ' <span>(' . count($cookiegroup['cookie_uids']) . ')</span>';
                                 echo '</div>';
                                 echo '<div class="consent_manager-cookiegroup-description">';
                                 echo $cookiegroup['description'];
@@ -53,11 +55,11 @@ if (0 === count($consent_manager->texts)) {
                                         if (isset($cookie['definition'])) {
                                             foreach ($cookie['definition'] as $def) {
                                                 echo '<div class="consent_manager-cookie">';
-                                                echo '<span class="consent_manager-cookie-name"><strong>'.$def['cookie_name'].'</strong> ('.$cookie['service_name'].')</span>';
-                                                echo '<span class="consent_manager-cookie-description">'.$def['description'].'</span>';
-                                                echo '<span class="consent_manager-cookie-description">'.$consent_manager->texts['lifetime'].' '.$def['cookie_lifetime'].'</span>';
-                                                echo '<span class="consent_manager-cookie-provider">'.$consent_manager->texts['provider'].' '.$cookie['provider'].'</span>';
-                                                echo '<span class="consent_manager-cookie-link-privacy-policy"><a href="'.$cookie['provider_link_privacy'].'">'.$consent_manager->texts['link_privacy'].'</a></span>';
+                                                echo '<span class="consent_manager-cookie-name"><strong>' . $def['cookie_name'] . '</strong> (' . $cookie['service_name'] . ')</span>';
+                                                echo '<span class="consent_manager-cookie-description">' . $def['description'] . '</span>';
+                                                echo '<span class="consent_manager-cookie-description">' . $consent_manager->texts['lifetime'] . ' ' . $def['cookie_lifetime'] . '</span>';
+                                                echo '<span class="consent_manager-cookie-provider">' . $consent_manager->texts['provider'] . ' ' . $cookie['provider'] . '</span>';
+                                                echo '<span class="consent_manager-cookie-link-privacy-policy"><a href="' . $cookie['provider_link_privacy'] . '">' . $consent_manager->texts['link_privacy'] . '</a></span>';
                                                 echo '</div>' . PHP_EOL;
                                             }
                                         }
@@ -83,7 +85,7 @@ if (0 === $clang) {
     $clang = rex_clang::getCurrent()->getId();
 }
 foreach ($consent_manager->links as $v) {
-    echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . (!is_null(rex_article::get($v, $clang)) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
+    echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . (null !== rex_article::get($v, $clang) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
 }
 ?>
                         </div>
@@ -93,8 +95,8 @@ foreach ($consent_manager->links as $v) {
             </div>
             <?php
             foreach ($consent_manager->scripts as $uid => $script) {
-                echo '<div style="display: none" class="consent_manager-script" data-uid="script-'.$uid.'" data-script="'.$script.'"></div>';
+                echo '<div style="display: none" class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . $script . '"></div>';
             }
 ?>
         </div>
-<?php endif; ?>
+<?php endif ?>

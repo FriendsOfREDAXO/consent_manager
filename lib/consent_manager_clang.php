@@ -126,7 +126,7 @@ class consent_manager_clang
                 if ('clang_id' === $k) {
                     $db->setValue($k, $clangId);
                 } else {
-                    $db->setValue((string) $k, $v);
+                    $db->setValue($k, $v);
                 }
             }
             $db->insert();
