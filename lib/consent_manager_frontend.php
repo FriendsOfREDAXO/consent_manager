@@ -147,7 +147,7 @@ class consent_manager_frontend
         echo 'var consent_manager_box_template = \'';
         echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL; /** @phpstan-ignore-line */
 
-        $content = '';
+        $content = 'const cmCookieExpires = '.$addon->getConfig('lifespan', 365).';';
         $filenames = [];
         $filenames[] = 'js.cookie.min.js';
         $filenames[] = 'consent_manager_polyfills.js';
