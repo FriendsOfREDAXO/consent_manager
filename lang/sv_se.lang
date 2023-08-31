@@ -64,6 +64,8 @@ consent_manager_config_owncss_desc = Om den är aktiverad matas ingen standard-C
 consent_manager_config_owncss = Använda egna CSS
 consent_manager_config_hidebodyscrollbar = Dölj rullningslisten på webbplatsen
 consent_manager_config_hidebodyscrollbar_desc = Om den är aktiverad döljs webbplatsens rullningslåda när samtyckesrutan visas. Detta förhindrar att webbplatsen rullar i rutans bakgrund. När samtyckesrutan stängs visas rullningslisten igen.
+consent_manager_config_lifespan_label = Livslängd
+consent_manager_config_lifespan_notice = Inställningskakans livslängd i dagar. Standard: 365
 consent_manager_config_token_legend = Hoppa över samtyckesfönstret
 consent_manager_config_token_label = Token
 consent_manager_config_token_notice = Skicka denna token som en GET-parameter <code> skip_consent = MINTOKEN </code> för att hoppa över samtycket.
