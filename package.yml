@@ -1,5 +1,5 @@
 package: consent_manager
-version: "4.1.4"
+version: "4.2.0"
 author: "Friends Of REDAXO"
 supportpage: https://redaxo.org/support/community/#slack
 
@@ -48,6 +48,7 @@ default_config:
   hidebodyscrollbar: false
   outputowncss: false
   skip_consent: ''
+  lifespan: 365
   theme: false
 
 installer_ignore:
