@@ -64,9 +64,11 @@ consent_manager_config_owncss_desc = When set to active default frontend CSS for
 consent_manager_config_owncss = Use custom CSS
 consent_manager_config_hidebodyscrollbar =
 consent_manager_config_hidebodyscrollbar_desc =
-consent_manager_config_token_legend = 
-consent_manager_config_token_label = 
-consent_manager_config_token_notice = 
+consent_manager_config_lifespan_label = Lifespan
+consent_manager_config_lifespan_notice = Lifespan of the settings cookie in days. Default: 365
+consent_manager_config_token_legend =
+consent_manager_config_token_label =
+consent_manager_config_token_notice =
 
 consent_manager_log =
 consent_manager_thead_title =

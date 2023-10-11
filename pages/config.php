@@ -28,6 +28,16 @@ $field->addOption($addon->i18n('consent_manager_config_hidebodyscrollbar'), 1);
 
 $field = $form->addRawField('<p><strong>'.$addon->i18n('consent_manager_config_hidebodyscrollbar').'</strong></p><p>'.$addon->i18n('consent_manager_config_hidebodyscrollbar_desc').'</p>');
 
+$field = $form->addRawField('<hr>');
+
+$field = $form->addTextField('lifespan');
+$field->setLabel($addon->i18n('consent_manager_config_lifespan_label'));
+$field->setAttribute('type', 'number');
+$field->setAttribute('step', '1');
+$field->setAttribute('pattern', '[0-9]*');
+$field->setAttribute('placeholder', '365');
+$field->setNotice($addon->i18n('consent_manager_config_lifespan_notice'));
+
 $form->addFieldset($addon->i18n('consent_manager_config_token_legend'));
 
 $field = $form->addTextField('skip_consent');
