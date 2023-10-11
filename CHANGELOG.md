@@ -1,5 +1,15 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.2.0 - 12.10.2023
+
+### Features
+
+* Lebensdauer des Einstellungs-Cookies konfigurierbar #305 - Danke @xong
+
+### Bugfixes
+
+* $_COOKIE['consent_manager'] leer nach Consent und Aufruf von externer Seite #307 - Danke @paddle07
+
 ## Version 4.1.4 - 20.07.2023
 
 ## Updates
