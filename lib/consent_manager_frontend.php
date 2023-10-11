@@ -137,7 +137,7 @@ class consent_manager_frontend
             /** @phpstan-ignore-next-line */
             $boxtemplate = sprogdown($boxtemplate, $clang);
         }
-        $boxtemplate = str_replace("'", "\'", $boxtemplate);
+        $boxtemplate = str_replace("'", "\\'", $boxtemplate);
         $boxtemplate = str_replace("\r", '', $boxtemplate);
         $boxtemplate = str_replace("\n", ' ', $boxtemplate);
 
@@ -147,7 +147,11 @@ class consent_manager_frontend
         echo 'var consent_manager_box_template = \'';
         echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL; /** @phpstan-ignore-line */
 
-        $content = 'const cmCookieExpires = '.$addon->getConfig('lifespan', 365).';';
+        $lifespan = $addon->getConfig('lifespan', 365);
+        if ('' === $lifespan) {
+            $lifespan = 365;
+        }
+        $content = 'const cmCookieExpires = ' . $lifespan . ';' . PHP_EOL . PHP_EOL;
         $filenames = [];
         $filenames[] = 'js.cookie.min.js';
         $filenames[] = 'consent_manager_polyfills.js';
