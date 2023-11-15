@@ -110,9 +110,9 @@ class consent_manager_cache
                 $cookie = (array) $cookie;
                 if (is_string($cookie['definition'])) {
                     foreach (rex_string::yamlDecode($cookie['definition']) as $k => $v) {
-                        $defs[$k]['cookie_name'] = $v['name'];
-                        $defs[$k]['cookie_lifetime'] = $v['time'];
-                        $defs[$k]['description'] = $v['desc'];
+                        $defs[$k]['cookie_name'] = $v['name'] ?? '';
+                        $defs[$k]['cookie_lifetime'] = $v['time'] ?? '';
+                        $defs[$k]['description'] = $v['desc'] ?? '';
                     }
                 }
                 $cookie['definition'] = $defs;
