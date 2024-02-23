@@ -9,8 +9,8 @@ if (0 === count($consent_manager->texts)) {
 }
 ?>
 <?php if (null !== $consent_manager->cookiegroups): ?>
-        <div tabindex="-1" aria-modal="true" role="dialog" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet>
-            <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" aria-modal="true" role="dialog">
+        <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet>
+            <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" aria-modal="true" role="dialog" title="Cookie Consent">
                 <div class="consent_manager-wrapper-inner">
                     <div class="consent_manager-summary" id="consent_manager-summary">
                         <p class="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></p>
