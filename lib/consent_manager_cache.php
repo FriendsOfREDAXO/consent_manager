@@ -117,6 +117,7 @@ class consent_manager_cache
                 }
                 $cookie['definition'] = $defs;
                 $cookie['script'] = base64_encode($cookie['script']);
+                $cookie['script_unselect'] = base64_encode($cookie['script_unselect']);
                 $this->cookies[$clangId][$uid] = $cookie; /** @phpstan-ignore-line */
             }
         }

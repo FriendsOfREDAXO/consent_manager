@@ -27,7 +27,8 @@ consent_manager_cookiegroups = Services
 consent_manager_cookiegroup_add = Create service
 consent_manager_cookiegroup_edit = Edit service
 consent_manager_cookiegroup_required = this group contains required services and cookies
-consent_manager_cookiegroup_scripts = Scripts which will be loaded once cookies are approved
+consent_manager_cookiegroup_scripts = Scripts which will be loaded once consent is set
+consent_manager_cookiegroup_scripts_unselect = Scripts will be loaded once consent is withdrawn
 consent_manager_cookiegroup_scripts_notice = Enter scripts including <code><script>...</script></code>
 
 consent_manager_texts = Texts

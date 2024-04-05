@@ -97,6 +97,9 @@ foreach ($consent_manager->links as $v) {
             foreach ($consent_manager->scripts as $uid => $script) {
                 echo '<div style="display: none" class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . $script . '"></div>';
             }
+            foreach ($consent_manager->scriptsUnselect as $uid => $script) {
+                echo '<div style="display: none" class="consent_manager-script" data-uid="script-unselect-' . $uid . '" data-script="' . $script . '"></div>';
+            }
 ?>
         </div>
 <?php endif ?>
