@@ -129,10 +129,12 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
                     cookieUids.forEach(function (uid) {
                         consents.push(uid);
                         addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                        removeScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
                     });
                 } else {
                     cookieUids.forEach(function (uid) {
                         removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                        addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
                     });
                 }
             });
@@ -144,11 +146,13 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
                     cookieUids.forEach(function (uid) {
                         consents.push(uid);
                         addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                        removeScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
                     });
                 } else {
                     el.checked = false;
                     cookieUids.forEach(function (uid) {
                         removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                        addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
                     });
                 }
             });

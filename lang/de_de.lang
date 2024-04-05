@@ -30,6 +30,7 @@ consent_manager_cookiegroup_add = Gruppe erstellen
 consent_manager_cookiegroup_edit = Gruppe bearbeiten
 consent_manager_cookiegroup_required = diese Gruppe enthält die technisch notwendigen Dienste und Cookies
 consent_manager_cookiegroup_scripts = Skripte, die nach Einverständnis geladen werden
+consent_manager_cookiegroup_scripts_unselect = Skripte, die nach Widerrufen des Einverständnisses geladen werden
 consent_manager_cookiegroup_scripts_notice = Skripte inklusive <code><script>...</script></code> eingeben
 consent_manager_cookiegroup_nodomain_notice = Es wurde noch keine Domain oder keine Dienste zugeordnet! Im Frontent wird evtl. keine Consent-Box angezeigt.
 

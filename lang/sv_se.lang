@@ -28,6 +28,7 @@ consent_manager_cookiegroup_add = Skapa cookie grupp
 consent_manager_cookiegroup_edit = Bearbeta cookie grupp
 consent_manager_cookiegroup_required = denna cookie-grupp innehåller de tekniskt nödvändiga cookies
 consent_manager_cookiegroup_scripts = Skript som laddas efter godkännande
+consent_manager_cookiegroup_scripts_unselect = Skript som laddas efter att samtycket har återkallats
 consent_manager_cookiegroup_scripts_notice = Ange skript inklusive <code> <script> ... </script> </code>
 
 consent_manager_texts = Cookie texter

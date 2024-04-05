@@ -56,8 +56,14 @@ if ('delete' === $func) {
             $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));
             $field->setNotice($addon->i18n('consent_manager_cookiegroup_scripts_notice'));
+
+            $field = $form->addTextAreaField('script_unselect');
+            $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
+            $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts_unselect'));
+            $field->setNotice($addon->i18n('consent_manager_cookiegroup_scripts_notice'));
         } else {
             $form->addRawField(consent_manager_rex_form::getFakeTextarea($addon->i18n('consent_manager_cookiegroup_scripts'), $form->getSql()->getValue('script')));
+            $form->addRawField(consent_manager_rex_form::getFakeTextarea($addon->i18n('consent_manager_cookiegroup_scripts_unselect'), $form->getSql()->getValue('script_unselect')));
         }
     }
     if ('add' === $func) {
@@ -65,6 +71,11 @@ if ('delete' === $func) {
             $field = $form->addTextAreaField('script');
             $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));
+            $field->setNotice($addon->i18n('consent_manager_cookiegroup_scripts_notice'));
+
+            $field = $form->addTextAreaField('script_unselect');
+            $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
+            $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts_unselect'));
             $field->setNotice($addon->i18n('consent_manager_cookiegroup_scripts_notice'));
         }
     }
