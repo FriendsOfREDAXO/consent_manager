@@ -1,5 +1,17 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.3.0 - 11.04.2024
+
+### Features
+
+* Feld für Skripte eingeführt, die beim **Deselektieren** eines Dienstes geladen werden @bitshiftersgmbh
+* Änderungen zur Verbesserung der Barrierefreiheit @skerbis
+
+### Bugfixes
+
+* Consent-Log zeigt falsche Domain an #309 @aeberhard
+* Fix warnings in consent_manager_cache.php @tyrant88
+
 ## Version 4.2.0 - 12.10.2023
 
 ### Features
