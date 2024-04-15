@@ -53,8 +53,23 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
         deleteCookies();
     }
 
+    // on startup trigger scripts of enabled consents
     consents.forEach(function (uid) {
         addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+        removeScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
+    });
+
+    // on startup trigger unselect-scripts of disabled consents
+    consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+        // array mit cookie uids
+        var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+
+        cookieUids.forEach(function (uid) {
+            if(!consents.includes(uid)) {
+                removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
+            }
+        });
     });
 
     if (consent_manager_parameters.initially_hidden || consent_manager_parameters.no_cookie_set) {
