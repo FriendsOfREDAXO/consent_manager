@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.3.1 - 17.04.2024
+
+### Bugfixes
+
+* Unselect-Skripte werden nun bei jedem Page-Load ausgeführt (Fix für Setups, wo der CM mit Reload eingestellt ist) @bitshiftersgmbh
+
 ## Version 4.3.0 - 11.04.2024
 
 ### Features
