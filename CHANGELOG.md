@@ -2,6 +2,10 @@
 
 ## Version 4.3.1 - 17.04.2024
 
+**ACHTUNG:** In Version 4.3.0 wurde das Fragment, welches den Frontend-Code zusammenbaut (`consent_manager_box.php`),
+angepasst. Sollte das Fragment **überschrieben** worden sein, muss es entsprechend angepasst werden. Bitte führt in
+diesem Fall einen Merge durch.
+
 ### Bugfixes
 
 * Unselect-Skripte werden nun bei jedem Page-Load ausgeführt (Fix für Setups, wo der CM mit Reload eingestellt ist) @bitshiftersgmbh
