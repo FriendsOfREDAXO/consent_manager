@@ -61,8 +61,8 @@ if (null !== $consent_manager->cookiegroups): ?>
                                         $cookie = $consent_manager->cookies[$cookieUid];
                                         if (isset($cookie['definition'])) {
                                             foreach ($cookie['definition'] as $def) {
-                                                $erviceName		= '';
-                                                if($cookie['service_name']) $erviceName = '('.$cookie['service_name'].')';
+                                                $serviceName		= '';
+                                                if($cookie['service_name']) $serviceName = '('.$cookie['service_name'].')';
                                                 
                                                 $linkTarget		=  '';
 												$linkRel		=  '';
@@ -80,11 +80,10 @@ if (null !== $consent_manager->cookiegroups): ?>
 												$expressionsAry = ['diese website','this website'];
                                                 
                                                 echo '<div class="consent_manager-cookie">';
-                                                echo '<span class="consent_manager-cookie-name"><strong>' . $def['cookie_name'] . '</strong> ' . $erviceName . '</span>';
+                                                echo '<span class="consent_manager-cookie-name"><strong>' . $def['cookie_name'] . '</strong> ' . $serviceName . '</span>';
                                                 echo '<span class="consent_manager-cookie-description">' . $def['description'] . '</span>';
                                                 echo '<span class="consent_manager-cookie-description">' . $consent_manager->texts['lifetime'] . ' ' . $def['cookie_lifetime'] . '</span>';
                                                 echo '<span class="consent_manager-cookie-provider">' . $consent_manager->texts['provider'] . ' ' . $cookie['provider'] . '</span>';
-                                               	echo '<span class="consent_manager-cookie-link-privacy-policy"><a href="' . $cookie['provider_link_privacy'] . '">' . $consent_manager->texts['link_privacy'] . '</a></span>';
                                                 
                                                 if(!in_array($cookProvider, $expressionsAry)) {
                                                 	$linkTarget = 'target="_blank"';
