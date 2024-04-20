@@ -80,7 +80,7 @@ if (null !== $consent_manager->cookiegroups): ?>
 												$expressionsAry = ['diese website','this website'];
                                                 
                                                 echo '<div class="consent_manager-cookie">';
-                                                echo '<span class="consent_manager-cookie-name"><strong>' . $def['cookie_name'] . '</strong> (' . $cookie['service_name'] . ')</span>';
+                                                echo '<span class="consent_manager-cookie-name"><strong>' . $def['cookie_name'] . '</strong> ' . $erviceName . '</span>';
                                                 echo '<span class="consent_manager-cookie-description">' . $def['description'] . '</span>';
                                                 echo '<span class="consent_manager-cookie-description">' . $consent_manager->texts['lifetime'] . ' ' . $def['cookie_lifetime'] . '</span>';
                                                 echo '<span class="consent_manager-cookie-provider">' . $consent_manager->texts['provider'] . ' ' . $cookie['provider'] . '</span>';
