@@ -346,7 +346,7 @@ Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anz
 öffnet die Cookie-Box und erzwingt einen Page-Reload nach der Einwilligung.
 
 ```html
-<a class="consent_manager-show-box-reload">Datenschutz-Einstellungen</a>
+<a href="#" class="consent_manager-show-box-reload">Datenschutz-Einstellungen</a>
 ```
 
 ### Aufruf per Javascript
