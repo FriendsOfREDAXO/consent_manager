@@ -79,3 +79,10 @@ consent_manager_thead_domain =
 consent_manager_thead_consents =
 consent_manager_thead_cachelogid =
 consent_manager_thead_consentid =
+
+consent_manager_cronjob_delete = Consent-Log: delete old entries
+consent_manager_cronjob_delete_days = Age in days
+consent_manager_cronjob_delete_days_notice = Delete all entries that are older than thatmany days
+consent_manager_cronjob_deleted = {0} Entries were deleted
+consent_manager_cronjob_not_available = Consent-Manager AddOn is not installed
+consent_manager_cronjob_none_deleted = No entries were deleted
