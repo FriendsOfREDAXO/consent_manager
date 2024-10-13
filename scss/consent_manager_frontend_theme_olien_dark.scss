@@ -243,10 +243,12 @@ div.consent_manager-show-details {
 }
 
 .consent_manager-show-details {
-    a {
+    .icon-info-circled {
         color: $text-color;
         text-decoration: none;
         cursor: pointer;
+        border: none;
+        background-color: transparent;
 
         &:hover {
             color: $link-color;
