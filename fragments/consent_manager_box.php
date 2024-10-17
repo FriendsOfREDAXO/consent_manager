@@ -7,8 +7,7 @@ if (0 === count($consent_manager->texts)) {
     echo '<div id="consent_manager-background">' . rex_view::error(rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig')) . '</div>';
     return;
 }
-?>
-<?php if (null !== $consent_manager->cookiegroups): ?>
+if (null !== $consent_manager->cookiegroups): ?>
         <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet>
             <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" aria-modal="true" role="dialog" title="Cookie Consent">
                 <div class="consent_manager-wrapper-inner">
@@ -32,18 +31,26 @@ if (0 === count($consent_manager->texts)) {
                                     }
                                 }
                             }
-?>
+                            ?>
                         </div>
                         <div class="consent_manager-show-details">
                             <a href="#" id="consent_manager-toggle-details" class="icon-info-circled" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></a>
                         </div>
                     </div>
                     <div class="consent_manager-detail consent_manager-hidden" id="consent_manager-detail">
-<?php
+                    	<?php
                         foreach ($consent_manager->cookiegroups as $cookiegroup) {
                             if (count($cookiegroup['cookie_uids']) >= 1) {
-                                echo '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
-                                echo $cookiegroup['name'] . ' <span>(' . count($cookiegroup['cookie_uids']) . ')</span>';
+                               $countDefs	= 0;
+                        		$countAll 	= 0;
+                            	if (isset($cookiegroup['cookie_uids'])) {
+									foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
+										$countDefs = count($consent_manager->cookies[$cookieUid]['definition']);
+										$countAll = $countAll + $countDefs;
+									}
+                        		}
+								echo '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
+                                echo $cookiegroup['name'] . ' <span class="consent_manager-cookiegroup-number">(' . $countAll . ')</span>'; 
                                 echo '</div>';
                                 echo '<div class="consent_manager-cookiegroup-description">';
                                 echo $cookiegroup['description'];
@@ -54,12 +61,37 @@ if (0 === count($consent_manager->texts)) {
                                         $cookie = $consent_manager->cookies[$cookieUid];
                                         if (isset($cookie['definition'])) {
                                             foreach ($cookie['definition'] as $def) {
+                                                $serviceName		= '';
+                                                if($cookie['service_name']) $serviceName = '('.$cookie['service_name'].')';
+                                                
+                                                $linkTarget		=  '';
+												$linkRel		=  '';
+												$cookProvider	= strtolower($cookie['provider']);
+												
+												/** - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+													TODO (!): 
+													This is used to detect, if a link targets to a foreign website or is an internal link. If foreign 
+													we add rel="noopener noreferrer nofollow" to the link.
+													Beside of German and English the $expressionsAry is not completed for all maybe also used languages yet. 
+													Please add for all the other supported languages (in small letters) the used language dependend expressions
+													identifying "this website" in the specific language. 
+													For example: "esta pagina" or whatever is used in each language ...
+												- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - **/
+												$expressionsAry = ['diese website','this website'];
+                                                
                                                 echo '<div class="consent_manager-cookie">';
-                                                echo '<span class="consent_manager-cookie-name"><strong>' . $def['cookie_name'] . '</strong> (' . $cookie['service_name'] . ')</span>';
+                                                echo '<span class="consent_manager-cookie-name"><strong>' . $def['cookie_name'] . '</strong> ' . $serviceName . '</span>';
                                                 echo '<span class="consent_manager-cookie-description">' . $def['description'] . '</span>';
                                                 echo '<span class="consent_manager-cookie-description">' . $consent_manager->texts['lifetime'] . ' ' . $def['cookie_lifetime'] . '</span>';
                                                 echo '<span class="consent_manager-cookie-provider">' . $consent_manager->texts['provider'] . ' ' . $cookie['provider'] . '</span>';
-                                                echo '<span class="consent_manager-cookie-link-privacy-policy"><a href="' . $cookie['provider_link_privacy'] . '">' . $consent_manager->texts['link_privacy'] . '</a></span>';
+                                                
+                                                if(!in_array($cookProvider, $expressionsAry)) {
+                                                	$linkTarget = 'target="_blank"';
+													$linkRel	= 'rel="noopener noreferrer nofollow"';
+                                                }
+                                                echo '<span class="consent_manager-cookie-link-privacy-policy">'.PHP_EOL;
+                                                echo '	<a href="'.$cookie['provider_link_privacy'].'" '.$linkTarget.' '.$linkRel .'>'.$consent_manager->texts['link_privacy'].'</a>'.PHP_EOL;
+                                                echo '</span>'.PHP_EOL;
                                                 echo '</div>' . PHP_EOL;
                                             }
                                         }
@@ -68,7 +100,7 @@ if (0 === count($consent_manager->texts)) {
                                 echo '</div>';
                             }
                         }
-?>
+						?>
                     </div>
                     <div class="consent_manager-buttons-sitelinks">
                         <div class="consent_manager-buttons">
@@ -94,12 +126,14 @@ foreach ($consent_manager->links as $v) {
                 </div>
             </div>
             <?php
+            // NOTE: For CSP-compatibility - Do no longer use inline styles like style="display: none" 
+            // Use the given class name "consent_manager-script" in combination with css to hide an element instead (if needed)
             foreach ($consent_manager->scripts as $uid => $script) {
-                echo '<div style="display: none" class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . $script . '"></div>';
+                echo '<div class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . $script . '"></div>';
             }
             foreach ($consent_manager->scriptsUnselect as $uid => $script) {
-                echo '<div style="display: none" class="consent_manager-script" data-uid="script-unselect-' . $uid . '" data-script="' . $script . '"></div>';
+                echo '<div class="consent_manager-script" data-uid="script-unselect-' . $uid . '" data-script="' . $script . '"></div>';
             }
-?>
+			?>
         </div>
 <?php endif ?>
