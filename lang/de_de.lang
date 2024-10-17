@@ -110,3 +110,10 @@ consent_manager_error_css_notfound = Die angeforderte SCSS-Datei '{0}' ist nicht
 consent_manager_error_noconfig = Es sind noch keine Texte/Domains/Dienste konfiguriert!
 
 consent_manager_theme_preview_info = <b>Hinweise:</b> Es wird kein Cookie gesetzt! ESC zum beenden der Vorschau. Klick auf die Seite öffnet das Popup erneut.
+
+consent_manager_cronjob_delete = Consent-Log: alte Einträge löschen
+consent_manager_cronjob_delete_days = Alter in Tagen
+consent_manager_cronjob_delete_days_notice = Lösche alle Einträge, die älter als soviele Tage sind
+consent_manager_cronjob_deleted = Es wurden {0} Einträge gelöscht
+consent_manager_cronjob_not_available = Consent-Manager AddOn ist nicht aktiviert
+consent_manager_cronjob_none_deleted = Es wurden keine Einträge gelöscht

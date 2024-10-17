@@ -79,3 +79,10 @@ consent_manager_thead_domain =
 consent_manager_thead_consents =
 consent_manager_thead_cachelogid =
 consent_manager_thead_consentid =
+
+consent_manager_cronjob_delete = Consent-Log: radera gamla poster
+consent_manager_cronjob_delete_days = Ålder i dagar
+consent_manager_cronjob_delete_days_notice = Ta bort alla poster som är äldre än så många dagar
+consent_manager_cronjob_deleted = {0} poster raderades.
+consent_manager_cronjob_not_available = Consent-Manager AddOn är inte installerat
+consent_manager_cronjob_none_deleted = Inga poster har raderats.
