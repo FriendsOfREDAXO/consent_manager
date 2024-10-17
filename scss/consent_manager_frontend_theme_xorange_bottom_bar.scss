@@ -206,12 +206,14 @@ div.consent_manager-cookiegroups label>input[type="checkbox"] {
 div.consent_manager-show-details {
     padding: 0 0 1.5em 0;
 
-    a {
+    .icon-info-circled {
         display: inline-block;
         line-height: 1.2em;
         height: 1.4em;
         cursor: pointer;
         color: $link-color;
+        border: none;
+        background-color: transparent;
 
         &:hover {
             color: $link-hover-color;
@@ -219,7 +221,7 @@ div.consent_manager-show-details {
     }
 }
 
-div.consent_manager-show-details a.icon-info-circled:before {
+div.consent_manager-show-details .icon-info-circled:before {
     color: $consent_manager-background;
     background-color: $link-color;
     opacity: .7;

@@ -34,10 +34,11 @@ if (null !== $consent_manager->cookiegroups): ?>
                             ?>
                         </div>
                         <div class="consent_manager-show-details">
-                            <a href="#" id="consent_manager-toggle-details" class="icon-info-circled" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></a>
+                            <button id="consent_manager-toggle-details" class="icon-info-circled" aria-controls="consent_manager-detail" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></button>
                         </div>
                     </div>
-                    <div class="consent_manager-detail consent_manager-hidden" id="consent_manager-detail">
+
+                    <div class="consent_manager-detail consent_manager-hidden" id="consent_manager-detail" aria-labelledby="consent_manager-toggle-details">
                     	<?php
                         foreach ($consent_manager->cookiegroups as $cookiegroup) {
                             if (count($cookiegroup['cookie_uids']) >= 1) {
