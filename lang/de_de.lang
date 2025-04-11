@@ -21,6 +21,7 @@ consent_manager_cookie_service_name = Dienst- / Cookiename
 consent_manager_cookie_provider = Anbieter
 consent_manager_cookie_provider_link_privacy = Link Datenschutzerklärung
 consent_manager_cookie_definition = Definitionen (YAML)
+consent_manager_cookie_description = Beschreibung
 consent_manager_cookie_placeholder_text = Platzhalter Text
 consent_manager_cookie_placeholder_image = Platzhalter Bild
 consent_manager_cookie_malformed_yaml = Definitionen (YAML) sind ungültig! Bitte korrekten YAML-Code eingeben.
@@ -28,11 +29,10 @@ consent_manager_cookie_malformed_yaml = Definitionen (YAML) sind ungültig! Bitt
 consent_manager_cookiegroups = Gruppen
 consent_manager_cookiegroup_add = Gruppe erstellen
 consent_manager_cookiegroup_edit = Gruppe bearbeiten
-consent_manager_cookiegroup_required = diese Gruppe enthält die technisch notwendigen Dienste und Cookies
+consent_manager_cookiegroup_required = Diese Gruppe enthält die technisch notwendigen Dienste und Cookies
 consent_manager_cookiegroup_scripts = Skripte, die nach Einverständnis geladen werden
-consent_manager_cookiegroup_scripts_unselect = Skripte, die nach Widerrufen des Einverständnisses geladen werden
 consent_manager_cookiegroup_scripts_notice = Skripte inklusive <code><script>...</script></code> eingeben
-consent_manager_cookiegroup_nodomain_notice = Es wurde noch keine Domain oder keine Dienste zugeordnet! Im Frontent wird evtl. keine Consent-Box angezeigt.
+consent_manager_cookiegroup_nodomain_notice = Es wurde noch keine Domain oder keine Dienste zugeordnet! Im Frontend wird keine Consent-Box angezeigt.
 
 consent_manager_texts = Texte
 consent_manager_text = Text
@@ -49,6 +49,10 @@ consent_manager_domain_privacy_policy = Datenschutzerklärung
 consent_manager_domain_legal_notice = Impressum
 consent_manager_domain_privacy_policy_empty_msg = Datenschutzerklärung ist ein Pflichtfeld
 consent_manager_domain_legal_notic_empty_msg = Impressum ist ein Pflichtfeld
+consent_manager_domain_google_consent_mode = Google Consent Mode
+consent_manager_domain_google_consent_mode_label = Google Consent Mode aktivieren
+consent_manager_domain_google_consent_mode_v2 = Google Consent Mode V2
+consent_manager_domain_google_consent_mode_v2_label = Google Consent Mode V2 aktivieren (empfohlen)
 
 consent_manager_setup = Setup
 consent_manager_setup_headline = Beispielkonfiguration importieren
@@ -62,10 +66,6 @@ consent_manager_cache_write_failed = Cachefile konnte nicht geschrieben werden
 consent_manager_config = Einstellungen
 consent_manager_config_title = Consent-Manager Einstellungen
 consent_manager_config_legend = Ausgabe-Einstellungen Frontend
-consent_manager_config_css_desc = Wenn aktiviert wird CSS für das Frontend nur ausgegeben wenn dieses auch notwendig ist.<br>1. Wenn noch kein Cookie für den Consent-Manager gesetzt wurde (Cookie consent_manager)<br>2. Wenn ein Link zum öffnen der Consent-Box auf der Webseite vorhanden ist (mit der Klasse <code>consent_manager-show-box</code> oder <code>consent_manager-show-box-reload</code>).
-consent_manager_config_css = CSS im Frontend nur bei Bedarf ausgeben
-consent_manager_config_owncss_desc = Wenn aktiviert wird im Frontend kein Standard-CSS für die Consent-Box ausgegeben (consent_manager_frontend.css).<br>CSS für das Styling der Consent-Box muss in eigenen CSS-Dateien vorhanden sein!
-consent_manager_config_owncss = Eigenes CSS verwenden
 consent_manager_config_hidebodyscrollbar = Scrollbar der Webseite ausblenden
 consent_manager_config_hidebodyscrollbar_desc = Wenn aktiviert wird der Scrollbar der Webseite bei Anzeige der Consent-Box ausgeblendet. Dadurch wird ein scrollen der Webseite im Hintergrund der Box verhindert. Beim schließen der Consent-Box wird der Scollbar wieder eingeblendet.
 consent_manager_config_lifespan_label = Lebensdauer
@@ -84,36 +84,5 @@ consent_manager_thead_consents = Consents
 consent_manager_thead_cachelogid = Cachelog-Id
 consent_manager_thead_consentid = Consent-Id
 
-consent_manager_theme = Themes
-consent_manager_config_owncss_active = „Eigenes CSS verwenden” ist in den Einstellungen aktiv. Für die Verwendung von Themes muss diese Einstellung deaktiviert werden!
-consent_manager_config_active_theme = [Aktives Theme]
-consent_manager_config_btn_preview = Theme Vorschau
-consent_manager_config_btn_select = Theme <b>{0}</b> anwenden
-consent_manager_config_confirm_select = Theme [ {0} ] anwenden!?
-consent_manager_config_saved = Theme wurde angewendet und ist jetzt aktiv!
-consent_manager_config_invalid_theme = Theme-Datei ungültig. Keine Theme-Informationen vorhanden!
-
-consent_manager_theme_name = Theme-Name:
-consent_manager_theme_scssfile = SCSS-Datei:
-consent_manager_theme_description = Beschreibung:
-consent_manager_theme_type = Theme-Typ:
-consent_manager_theme_style = Theme-Stil:
-consent_manager_theme_autor = Autor(en):
-
-consent_manager_themes_addon = Themes im Consent-Manager-Addon
-consent_manager_themes_addon_info = (SCSS-Dateien im Ordner: <b>./src/addons/consent_manager/scss/</b>)
-consent_manager_themes_project_addon = Themes im project-Addon
-consent_manager_themes_project_addon_info = (SCSS-Dateien im Ordner: <b>./src/addons/project/consent_manager_themes/</b>)
-
-consent_manager_error_no_themes = Es sind keine Themes vorhanden!<br>Ordner: {0}
-consent_manager_error_css_notfound = Die angeforderte SCSS-Datei '{0}' ist nicht vorhanden!
+consent_manager_error_css_notfound = Consent-Manager Box konnte nicht geladen werden!
 consent_manager_error_noconfig = Es sind noch keine Texte/Domains/Dienste konfiguriert!
-
-consent_manager_theme_preview_info = <b>Hinweise:</b> Es wird kein Cookie gesetzt! ESC zum beenden der Vorschau. Klick auf die Seite öffnet das Popup erneut.
-
-consent_manager_cronjob_delete = Consent-Log: alte Einträge löschen
-consent_manager_cronjob_delete_days = Alter in Tagen
-consent_manager_cronjob_delete_days_notice = Lösche alle Einträge, die älter als soviele Tage sind
-consent_manager_cronjob_deleted = Es wurden {0} Einträge gelöscht
-consent_manager_cronjob_not_available = Consent-Manager AddOn ist nicht aktiviert
-consent_manager_cronjob_none_deleted = Es wurden keine Einträge gelöscht

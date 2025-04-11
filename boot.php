@@ -2,32 +2,17 @@
 
 $addon = rex_addon::get('consent_manager');
 
-// Nur im Backend
 if (rex::isBackend()) {
-    rex_perm::register('consent_manager[texteditonly]');
-    if (null !== rex::getUser()) {
-        if (!rex::getUser()->isAdmin() && rex::getUser()->hasPerm('consent_manager[texteditonly]')) {
-            $page = (array) $addon->getProperty('page', []);
-            if ([] !== $page) {
-                /** @var array<int, string> */
-                $rarray = ['cookiegroup', 'cookie', 'domain', 'config', 'setup', 'changelog', 'help'];
-                foreach ($rarray as $removepage) {
-                    unset($page['subpages'][$removepage]); /** @phpstan-ignore-line */
-                }
-                $addon->setProperty('page', $page);
-            }
-        }
-    }
+    rex_view::addJsFile($addon->getAssetsUrl('js/js.cookie.min.js'));
 
-    rex_extension::register('PACKAGES_INCLUDED', static function () {
-        $addon = rex_addon::get('consent_manager');
-        if (null !== rex::getUser()) {
+    if (rex::getUser()) {
+        rex_extension::register('PACKAGES_INCLUDED', function () use ($addon) {
             if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)) {
                 rex_view::addCssFile($addon->getAssetsUrl('consent_manager_backend.css'));
-                rex_view::addJsFile($addon->getAssetsUrl('consent_manager_backend.js'));
+                rex_view::addJsFile($addon->getAssetsUrl('js/consent_manager_backend.js'));
             }
-        }
-    });
+        });
+    }
 
     if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)) {
         rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
@@ -58,17 +43,25 @@ if (rex::isBackend()) {
     }
 }
 
-// Nur im Frontend
 if (rex::isFrontend()) {
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
-        if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
-            $consent_manager = new consent_manager_frontend(0);
-            $consent_manager->outputJavascript();
-            exit;
+        if (!consent_manager_util::consentConfigured()) {
+            return;
         }
-    });
-}
+        
+        $output = $ep->getSubject();
+        if (!is_string($output)) {
+            return;
+        }
+        
+        $addon = rex_addon::get('consent_manager');
 
-if (rex_addon::get('cronjob')->isAvailable() && !rex::isSafeMode()) {
-    rex_cronjob_manager::registerType(rex_cronjob_log_delete::class);
+        // Box Template einfügen
+        $search = '</head>';
+        $javascript = consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+        $replace = $javascript . $search;
+        $output = str_replace($search, $replace, $output);
+        
+        $ep->setSubject($output);
+    });
 }

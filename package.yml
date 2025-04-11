@@ -1,55 +1,48 @@
 package: consent_manager
-version: "4.3.0"
-author: "Friends Of REDAXO"
-supportpage: https://redaxo.org/support/community/#slack
+version: '5.0.0'
+author: Friends Of REDAXO
+supportpage: https://github.com/FriendsOfREDAXO/consent_manager
 
 page:
-  title: "translate:consent_manager_title"
-  perm: consent_manager[]
-  pjax: true
-  icon: rex-icon fa fa-coffee
-  subpages:
-    cookiegroup:
-      title: "translate:consent_manager_cookiegroups"
-    cookie:
-      title: "translate:consent_manager_cookies"
-    text:
-      title: "translate:consent_manager_texts"
-    domain:
-      title: "translate:consent_manager_domains"
-    config:
-      title: "translate:consent_manager_config"
-    theme:
-      title: "translate:consent_manager_theme"
-    log:
-      title: "translate:consent_manager_log"
-    setup:
-      title: "translate:consent_manager_setup"
-    help:
-      {
-        title: "translate:consent_manager_help",
-        icon: rex-icon fa-question-circle,
-        subPath: README.md,
-        itemClass: pull-right,
-      }
-    changelog:
-      {
-        title: "translate:consent_manager_changelog",
-        subPath: CHANGELOG.md,
-        itemClass: pull-right,
-      }
+    title: 'translate:consent_manager'
+    perm: consent_manager[]
+    pjax: true
+    icon: rex-icon fa-coffee
+    subpages:
+        cookiegroup: { title: 'translate:consent_manager_cookiegroups' }
+        cookie: { title: 'translate:consent_manager_cookies' }
+        text: { title: 'translate:consent_manager_text' }
+        domain: { title: 'translate:consent_manager_domains' }
+        config: { title: 'translate:consent_manager_config' }
+        log: { title: 'translate:consent_manager_log', perm: 'consent_manager[log]' }
+
+pages:
+    consent_manager/log: { title: 'translate:consent_manager_log', hidden: true }
 
 requires:
-  redaxo: "^5.12"
-  php:
-    version: ">=7, <9"
+    redaxo: '^5.13.0'
+    php:
+        version: '>=7.4, <9'
 
 default_config:
-  hidebodyscrollbar: false
-  outputowncss: false
-  skip_consent: ''
-  lifespan: 365
-  theme: false
+    domains: 0
+    cookiegroups: 0
+    cookies: 0
+    texts: 0
+    hidebodyscrollbar: false
+    forcecache: false
+    justinstalled: true
+    version: '5.0.0'
+    changelog: '
+        <h3>Version 5.0.0</h3>
+        <p>Neue Features:</p>
+        <ul>
+            <li>Implementierung als Web Component für bessere Kapselung und Wartbarkeit</li>
+            <li>Modernere JavaScript-Architektur mit Shadow DOM</li>
+            <li>Verbesserte Styles und Animationen</li>
+            <li>Entfernung veralteter Browser-Unterstützung</li>
+            <li>Optimierte Fehlerbehandlung</li>
+        </ul>'
 
 installer_ignore:
     - .github

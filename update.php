@@ -4,6 +4,21 @@ $addon = rex_addon::get('consent_manager');
 $addon->includeFile(__DIR__.'/install.php');
 $addon->setConfig('forceCache', true);
 
+// Altes output_css aus Config entfernen, da durch Web Components ersetzt
+if (($outputcss = $addon->getConfig('outputcss', null)) !== null) {
+    $addon->removeConfig('outputcss');
+}
+
+// Alte Theme-bezogene Configs entfernen
+if (($theme = $addon->getConfig('theme', null)) !== null) {
+    $addon->removeConfig('theme');
+}
+
+// outputowncss entfernen, da durch Shadow DOM ersetzt
+if (($outputowncss = $addon->getConfig('outputowncss', null)) !== null) {
+    $addon->removeConfig('outputowncss');
+}
+
 // Copy scripts to every language
 if (count(rex_clang::getAllIds()) > 1) {
     $sql = \rex_sql::factory();
@@ -30,3 +45,8 @@ $sql = \rex_sql::factory();
 $sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_cookie` '
     .'SET uid = "consent_manager", definition = REPLACE(definition, "name: iwcc", "name: consent_manager") '
     .'WHERE uid = "iwcc"');
+
+// Cache neu aufbauen
+if (class_exists('consent_manager_cache')) {
+    consent_manager_cache::forceWrite();
+}

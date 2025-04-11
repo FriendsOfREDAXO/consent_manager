@@ -67,23 +67,7 @@ $(document).on('rex:ready', function (event, container) {
 
     rex_searchfield_init("#consent_manager_log_search");
 
-    // Theme preview
-
-    $('.cm_modal-button-close').on('click', function (e) {
-        consent_manager_close_preview();
-    });
-
-    $('div.thumbnail-container, a.consent_manager-button-preview').on('click', function (e) {
-        e.preventDefault();
-        consent_manager_show_preview($(this).data('theme'));
-        $(document).on('keydown', function (e) {
-            if (e.keyCode === 27) { // ESC
-                consent_manager_close_preview();
-            }
-        });
-    });
-
-    // external links in new window
+    // External links in new window
     container.find("a[href^=http]").each(function () {
         if (this.href.indexOf(location.hostname) == -1) {
             $(this).attr({
@@ -91,6 +75,5 @@ $(document).on('rex:ready', function (event, container) {
                 title: "Opens in a new window"
             });
         }
-    })
-
+    });
 });

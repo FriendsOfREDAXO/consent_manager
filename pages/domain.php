@@ -37,6 +37,14 @@ if ('delete' === $func) {
     $field->setLabel($addon->i18n('consent_manager_domain_legal_notice')); /** @phpstan-ignore-line */
     $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_legal_notic_empty_msg')); /** @phpstan-ignore-line */
 
+    $field = $form->addCheckboxField('google_consent_mode');
+    $field->setLabel($addon->i18n('consent_manager_domain_google_consent_mode'));
+    $field->addOption($addon->i18n('consent_manager_domain_google_consent_mode_label'), 1);
+
+    $field = $form->addCheckboxField('google_consent_mode_v2');
+    $field->setLabel($addon->i18n('consent_manager_domain_google_consent_mode_v2'));
+    $field->addOption($addon->i18n('consent_manager_domain_google_consent_mode_v2_label'), 1);
+
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
     $content = $form->get();
 

@@ -24,7 +24,7 @@ class consent_manager_util
     }
 
     /**
-     * Check if consent is configured.
+     * Check if consent is configured for current domain.
      * @api
      */
     public static function consentConfigured(): bool
@@ -35,16 +35,18 @@ class consent_manager_util
         // Check host
         $db->prepareQuery('SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` = :uid');
         $dbresult = $db->execute(['uid' => rex_request::server('HTTP_HOST')]);
-        if (1 === (int) $dbresult->getRows()) {
-            $domain = $dbresult->getValue('id');
-            // Check domain in cookie group
-            $db->prepareQuery('SELECT count(*) as `count` FROM `' . rex::getTable('consent_manager_cookiegroup') . '` WHERE `domain` LIKE :domain AND `clang_id` = :clang AND `cookie` != \'\'');
-            $dbresult = $db->execute(['domain' => '%|' . $domain . '|%', 'clang' => rex_clang::getCurrentId()]);
-            if (0 !== (int) $dbresult->getValue('count')) {
-                return true;
-            }
+        
+        // Wenn keine Domain gefunden wurde, keine Warnung ausgeben
+        if ($dbresult->getRows() === 0) {
+            return false;
         }
-        return false;
+
+        $domain = $dbresult->getValue('id');
+        // Check domain in cookie group
+        $db->prepareQuery('SELECT count(*) as `count` FROM `' . rex::getTable('consent_manager_cookiegroup') . '` WHERE `domain` LIKE :domain AND `clang_id` = :clang AND `cookie` != \'\'');
+        $dbresult = $db->execute(['domain' => '%|' . $domain . '|%', 'clang' => rex_clang::getCurrentId()]);
+        
+        return $dbresult->getValue('count') > 0;
     }
 
     /**

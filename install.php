@@ -68,6 +68,8 @@ rex_sql_table::get(rex::getTable('consent_manager_domain'))
     ->ensureColumn(new rex_sql_column('uid', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('privacy_policy', 'int(10) unsigned'))
     ->ensureColumn(new rex_sql_column('legal_notice', 'int(10) unsigned'))
+    ->ensureColumn(new rex_sql_column('google_consent_mode', 'tinyint(1)', true, '0'))
+    ->ensureColumn(new rex_sql_column('google_consent_mode_v2', 'tinyint(1)', true, '0'))
     ->ensureColumn(new rex_sql_column('createuser', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('updateuser', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('createdate', 'datetime'))
@@ -111,13 +113,13 @@ if (-1 === $addon->getConfig('justInstalled', -1)) {
     $addon->setConfig('justInstalled', $justinstalled);
 }
 
-// Add Text for new Button button_select_none
+// Button für "Nur notwendige" hinzufügen falls nötig
 if (rex_version::compare($addon->getVersion(), '4.0', '<')) {
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = \'button_accept\'');
     if ($sql->getValue('count') > 0) {
         $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = \'button_select_none\'');
-        if (0 === (int) $sql->getValue('count')) { /** @phpstan-ignore-line */
+        if (0 === (int) $sql->getValue('count')) {
             foreach (rex_clang::getAllIds() as $lang) {
                 $sql = \rex_sql::factory();
                 $sql->setTable(rex::getTable('consent_manager_text'));
@@ -131,12 +133,7 @@ if (rex_version::compare($addon->getVersion(), '4.0', '<')) {
     }
 }
 
-// Rewrite
+// Cache aktualisieren
 if (class_exists('consent_manager_cache')) {
     consent_manager_cache::forceWrite();
 }
-
-// Delete Template cache
-rex_dir::delete(rex_path::cache('addons/templates'));
-// Delete Module cache
-rex_addon::get('structure')->clearCache(); /** @phpstan-ignore-line */
