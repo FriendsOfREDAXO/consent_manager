@@ -2,7 +2,7 @@
 
 $addon = rex_addon::get('consent_manager');
 
-$form = new rex_config_form('consent_manager');
+$form = rex_config_form::factory('consent_manager');
 
 $field = $form->addCheckboxField('hidebodyscrollbar');
 $field->setLabel($addon->i18n('consent_manager_config_hidebodyscrollbar'));
