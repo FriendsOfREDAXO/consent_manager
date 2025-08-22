@@ -120,7 +120,11 @@ $(document).on('rex:ready pjax:complete', function() {
         
         if ($textarea.length === 0) {
             // Fallback Selektoren
-            $textarea = $("#rex-form-script, textarea[id*='script'], textarea[name='REX_INPUT_VALUE[script]']").first();
+        // Robust textarea selection
+        var $textarea = findScriptTextarea();
+        
+        if ($textarea.length === 0) {
+            console.error('No script textarea found after all selectors');
         }
         
         console.log('Found textarea:', $textarea.length, $textarea.attr('name') || $textarea.attr('id'));
