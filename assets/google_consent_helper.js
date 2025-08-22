@@ -35,6 +35,9 @@ $(document).on('rex:ready pjax:complete', function() {
         'matomo': {
             'analytics_storage': true
         },
+        'matomo-self-hosted': {
+            'analytics_storage': true
+        },
         'adwords': {
             'ad_storage': true,
             'ad_user_data': true,
@@ -276,7 +279,10 @@ $(document).on('rex:ready pjax:complete', function() {
                 (type === 'facebook-pixel' && /facebook.*pixel|fb.*pixel/.test(serviceName)) ||
                 (type === 'youtube' && /youtube|yt/.test(serviceName)) ||
                 (type === 'google-maps' && /maps|gmaps/.test(serviceName)) ||
-                (type === 'matomo' && /matomo|piwik/.test(serviceName))) {
+                (type === 'matomo' && /matomo|piwik/.test(serviceName)) ||
+                (type === 'matomo-self-hosted' && /matomo.*self|self.*matomo|matomo.*hosted|hosted.*matomo/.test(serviceName)) ||
+                (type === 'vimeo' && /vimeo/.test(serviceName)) ||
+                (type === 'pinterest-tag' && /pinterest/.test(serviceName))) {
                 
                 $('#google-helper-service').val(type);
                 showMessage('Service "' + type + '" automatisch erkannt!', 'info');

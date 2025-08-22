@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "export_version": "1.0",
+    "export_date": "2025-08-22",
+    "addon_version": "2.8.0",
+    "description": "Vollständige Consent-Manager Konfiguration mit 22 modernen Services für deutsche Unternehmen"
+  },
+  "cookiegroups": [
+    {
+      "prio": 1,
+      "uid": "necessary",
+      "clang_id": 1,
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "prio": 2,
+      "uid": "analytics",
+      "clang_id": 1,
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "prio": 3,
+      "uid": "marketing",
+      "clang_id": 1,
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "prio": 4,
+      "uid": "external-media",
+      "clang_id": 1,
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    }
+  ],
+  "cookies": [
+    {
+      "prio": 1,
+      "uid": "consent_manager",
+      "cookiegroup_id": 1,
+      "clang_id": 1,
+      "service_name": "Consent-Manager",
+      "provider": "Eigene Website",
+      "provider_link_privacy": "",
+      "definition": "- \n name: consent_manager\n time: \"1 Jahr\"\n desc: \"Speichert die Cookie-Einstellungen des Besuchers.\"",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "script_activate": "",
+      "script_deactivate": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    }
+  ],
+  "texts": [
+    {
+      "uid": "title",
+      "clang_id": 1,
+      "text": "Cookie-Einstellungen"
+    },
+    {
+      "uid": "description",
+      "clang_id": 1,
+      "text": "Wir verwenden Cookies und ähnliche Technologien, um Ihnen die bestmögliche Erfahrung auf unserer Website zu bieten. Einige davon sind technisch notwendig, andere helfen uns, die Website zu verbessern und Ihnen personalisierte Inhalte anzuzeigen."
+    },
+    {
+      "uid": "button_accept_all",
+      "clang_id": 1,
+      "text": "Alle akzeptieren"
+    },
+    {
+      "uid": "button_accept_necessary",
+      "clang_id": 1,
+      "text": "Nur notwendige"
+    },
+    {
+      "uid": "button_choose",
+      "clang_id": 1,
+      "text": "Individuelle Auswahl"
+    },
+    {
+      "uid": "button_save",
+      "clang_id": 1,
+      "text": "Einstellungen speichern"
+    },
+    {
+      "uid": "button_show",
+      "clang_id": 1,
+      "text": "Cookie-Einstellungen"
+    },
+    {
+      "uid": "group_necessary_title",
+      "clang_id": 1,
+      "text": "Technisch notwendig"
+    },
+    {
+      "uid": "group_necessary_desc",
+      "clang_id": 1,
+      "text": "Diese Cookies sind für die Grundfunktionen der Website erforderlich und können nicht deaktiviert werden."
+    },
+    {
+      "uid": "group_analytics_title",
+      "clang_id": 1,
+      "text": "Statistiken"
+    },
+    {
+      "uid": "group_analytics_desc",
+      "clang_id": 1,
+      "text": "Diese Cookies helfen uns zu verstehen, wie Besucher mit der Website interagieren, indem sie anonyme Informationen sammeln."
+    },
+    {
+      "uid": "group_marketing_title",
+      "clang_id": 1,
+      "text": "Marketing"
+    },
+    {
+      "uid": "group_marketing_desc",
+      "clang_id": 1,
+      "text": "Diese Cookies werden verwendet, um Ihnen relevante Werbung und personalisierte Inhalte anzuzeigen."
+    },
+    {
+      "uid": "group_external-media_title",
+      "clang_id": 1,
+      "text": "Externe Medien"
+    },
+    {
+      "uid": "group_external-media_desc",
+      "clang_id": 1,
+      "text": "Inhalte von externen Plattformen werden standardmäßig blockiert. Wenn Sie diese akzeptieren, werden externe Inhalte automatisch geladen."
+    },
+    {
+      "uid": "privacy_policy_link_text",
+      "clang_id": 1,
+      "text": "Datenschutzerklärung"
+    },
+    {
+      "uid": "legal_notice_link_text",
+      "clang_id": 1,
+      "text": "Impressum"
+    }
+  ],
+  "domains": [
+    {
+      "domain": "example.com",
+      "privacy_policy": "/datenschutz",
+      "legal_notice": "/impressum",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    }
+  ],
+  "services_info": {
+    "total_services": 22,
+    "categories": {
+      "analytics": ["Google Analytics", "Google Analytics 4", "Matomo", "Matomo Self-Hosted"],
+      "marketing": ["Google Ads", "Facebook Pixel", "Pinterest Tag"],
+      "tag_management": ["Google Tag Manager", "Google Tag Manager (All Permissions)"],
+      "video": ["YouTube", "Vimeo"],
+      "maps": ["Google Maps"],
+      "hotels": ["HRS Hotel Booking", "Booking.com", "Viato"],
+      "real_estate": ["onOffice", "ImmobilienScout24"]
+    },
+    "german_business_focus": true,
+    "privacy_compliant": true
+  }
+}

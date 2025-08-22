@@ -47,12 +47,52 @@ consent_manager_domain_legal_notice = Masthead
 consent_manager_domain_privacy_policy_empty_msg = Data protection statement is a required field
 consent_manager_domain_legal_notic_empty_msg = Masthead is a required field
 
-consent_manager_setup = Setup
+consent_manager_setup = Import / Export
 consent_manager_setup_headline = Import example configuration
 consent_manager_setup_info = Texts and often used cookies/cookiegroups will be imported.<br><strong>CAUTION - present texts and cookies/cookiegruops will be deleted.</strong>
 consent_manager_setup_import = Import
 consent_manager_setup_import_confirm = Import and delete existing data?
 consent_manager_setup_import_successful = Example configuration was imported succesfully
+
+# Export/Import
+consent_manager_export_headline = Export configuration
+consent_manager_export = Export
+consent_manager_export_info = Exports all services, groups, texts and domains as JSON file for backup or transfer to other installations.
+consent_manager_export_download = Download configuration
+
+consent_manager_import_headline = Import configuration
+consent_manager_import = Import
+consent_manager_import_info = Imports a previously exported JSON configuration.<br><b>WARNING - existing data will be deleted.</b>
+consent_manager_import_file_label = Select JSON file
+consent_manager_import_json = Import JSON
+consent_manager_import_confirm = Import JSON configuration and delete existing data!?
+consent_manager_import_json_successful = JSON configuration successfully imported
+consent_manager_import_json_error = Error importing JSON configuration
+consent_manager_import_json_invalid = Invalid JSON file
+consent_manager_import_json_no_file = No file selected
+
+# First-Run Welcome Modal
+consent_manager_welcome_modal_title = Welcome to Consent Manager
+consent_manager_welcome_modal_intro = This guide helps with setting up the cookie consent system:
+consent_manager_welcome_modal_step1_title = 1. Load Base Configuration
+consent_manager_welcome_modal_step1_desc = Import of pre-configured services like Google Analytics, Facebook Pixel, YouTube etc.
+consent_manager_welcome_modal_step2_title = 2. Configure Domain
+consent_manager_welcome_modal_step2_desc = Configuration of domains for which the Consent Manager should be active.
+consent_manager_welcome_modal_step3_title = 3. Customize Services
+consent_manager_welcome_modal_step3_desc = Editing of imported services and adding custom services.
+consent_manager_welcome_modal_step4_title = 4. Personalize Texts
+consent_manager_welcome_modal_step4_desc = Customization of consent box texts according to requirements.
+consent_manager_welcome_modal_step5_title = 5. Choose Design
+consent_manager_welcome_modal_step5_desc = Selection of a design for the consent box.
+consent_manager_welcome_modal_button_start = Load Example Configuration
+consent_manager_welcome_modal_button_skip = Skip
+consent_manager_welcome_modal_button_close = Close
+consent_manager_welcome_modal_dont_show = Don't show this hint again
+consent_manager_welcome_modal_link_setup = Go to Import/Export
+consent_manager_welcome_modal_link_domains = Go to Domains  
+consent_manager_welcome_modal_link_services = Go to Services/Cookies
+consent_manager_welcome_modal_link_texts = Go to Texts
+consent_manager_welcome_modal_link_theme = Go to Themes
 
 consent_manager_cache_write_failed = Cache file could not be written
 
@@ -108,8 +148,31 @@ google_consent_service_google_analytics_4 = Google Analytics 4 (analytics_storag
 google_consent_service_google_tag_manager = Google Tag Manager
 google_consent_service_google_tag_manager_all = Google Tag Manager (All Permissions) (analytics_storage)
 google_consent_service_matomo = Matomo (analytics_storage)
+google_consent_service_matomo-self-hosted = Matomo Self-Hosted (analytics_storage)
 google_consent_service_adwords = Google AdWords (ad_storage, ad_user_data, ad_personalization)
 google_consent_service_google_ads = Google Ads (ad_storage, ad_user_data, ad_personalization)
 google_consent_service_facebook_pixel = Facebook Pixel (ad_storage, ad_user_data, ad_personalization)
 google_consent_service_youtube = YouTube (ad_storage, personalization_storage)
 google_consent_service_google_maps = Google Maps (functionality_storage, personalization_storage)
+
+# Additional Service Translations
+consent_manager_service_pinterest-tag_name = Pinterest Tag
+consent_manager_service_vimeo_name = Vimeo
+consent_manager_service_onoffice_name = onOffice Property Software
+consent_manager_service_hrs-hotel-booking_name = HRS Hotel Booking System
+consent_manager_service_booking-com_name = Booking.com Widget
+consent_manager_service_immoscout24_name = ImmobilienScout24 Widget
+
+consent_manager_service_pinterest-tag_desc = Pinterest tracking and social media features
+consent_manager_service_vimeo_desc = Vimeo video player and streaming functionality
+consent_manager_service_onoffice_desc = Property management software and listing management
+consent_manager_service_hrs-hotel-booking_desc = HRS hotel booking widget
+consent_manager_service_booking-com_desc = Booking.com hotel booking widget
+consent_manager_service_immoscout24_desc = ImmobilienScout24 property search widget
+
+# Additional Services
+consent_manager_service_matomo-self-hosted_name = Matomo (Self-Hosted)
+consent_manager_service_viato_name = Viato Hotel Booking System
+
+consent_manager_service_matomo-self-hosted_desc = Privacy-friendly web analytics (self-hosted)
+consent_manager_service_viato_desc = Viato hotel booking widget

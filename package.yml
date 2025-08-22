@@ -9,6 +9,9 @@ page:
   pjax: true
   icon: rex-icon fa fa-coffee
   subpages:
+    dashboard:
+      title: "Dashboard"
+      icon: rex-icon fa-tachometer
     cookiegroup:
       title: "translate:consent_manager_cookiegroups"
     cookie:
@@ -50,6 +53,7 @@ default_config:
   skip_consent: ''
   lifespan: 365
   theme: false
+  first_run_completed: false
 
 installer_ignore:
     - .github
