@@ -10,6 +10,36 @@ Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. u
 
 > Wir empfehlen für die Formulierung der Texte und Cookie-Listen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung)
 
+## Google Consent Mode v2 Integration
+
+Das Consent Manager AddOn unterstützt jetzt **Google Consent Mode v2** zur automatischen Integration mit Google Analytics und Google Ads. Diese Integration erfolgt GDPR-konform mit restriktiven Default-Einstellungen.
+
+### Features
+
+- **Automatische Google Consent Mode v2 Integration**: Wird automatisch geladen wenn aktiviert
+- **GDPR-konforme Defaults**: `analytics_storage: denied`, `ad_storage: denied`, `ad_user_data: denied`, `ad_personalization: denied`
+- **Domain-spezifische Aktivierung**: Kann pro Domain einzeln aktiviert/deaktiviert werden
+- **Debug-Konsole**: Entwickler-Tools zur Überwachung des Consent-Status
+- **Externe optimierte Scripts**: Minifizierte JavaScript-Dateien für bessere Performance
+- **PJAX-kompatibel**: Funktioniert mit AJAX-Navigation
+
+### Aktivierung
+
+1. In den **Domain-Einstellungen** die Option "Google Consent Mode v2 aktivieren" aktivieren
+2. Der Consent Manager lädt automatisch die benötigten Google-Scripts
+3. Die Debug-Konsole kann über den Debug-Modus aktiviert werden (`?debug_consent=1`)
+
+### Debug-Konsole
+
+Die Debug-Konsole bietet umfassende Informationen:
+
+- **Consent Status**: Aktuelle und Default-Consent-Einstellungen
+- **Dienste**: Übersicht aller konfigurierten Services  
+- **Cookies**: Analyse aller gesetzten Cookies
+- **localStorage**: Übersicht der Browser-Storage-Inhalte
+
+Die Debug-Konsole ist über einen Button links im Bildschirm erreichbar und zeigt auch vor der Consent-Erteilung sinnvolle Default-Werte an.
+
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
 ## Kurzanleitung
@@ -36,6 +66,10 @@ Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln (ohn
 Zum Beispiel:  `www.meinedomain.tld` und  `meinedomain.tld`
 
 Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Consent-Box verlinkt. Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Consent-Box wird bei Übereinstimmung angezeigt.
+
+#### Google Consent Mode v2
+
+Für jede Domain kann optional **Google Consent Mode v2** aktiviert werden. Diese Integration erfolgt automatisch und GDPR-konform mit restriktiven Standard-Einstellungen. Bei Aktivierung werden die entsprechenden Google-Scripts automatisch geladen und die Consent-Einstellungen an Google übertragen.
 
 ### Dienste anlegen
 
@@ -320,6 +354,21 @@ Der Platzhalter `REX_CONSENT_MANAGER[]` im Template wird durch folgenden Code er
 ```
 
 Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier die Ausgabe der CSS-Datei `consent_manager_frontend.css` durch aktivieren der Einstellung **Eigenes CSS verwenden** unterdrückt werden. Es wird dann nur die JavaScript-Zeile ausgegeben.
+
+### Debug-Modus
+
+Der Consent Manager verfügt über eine umfassende Debug-Konsole, die während der Entwicklung hilfreich ist. Sie kann auf verschiedene Weise aktiviert werden:
+
+- **Global**: REDAXO Debug-Modus aktivieren (`rex::isDebugMode()`)
+- **Per URL-Parameter**: `?debug_consent=1` an die URL anhängen
+- **Programmatisch**: Über die Consent Manager API
+
+Die Debug-Konsole zeigt:
+- **Consent Status**: Aktuelle und Default-Consent-Einstellungen
+- **Dienste**: Alle konfigurierten Services mit Status
+- **Cookies**: Detailanalyse aller gesetzten Cookies
+- **localStorage**: Browser-Storage-Inhalte
+- **Google Consent Mode**: Status der Google-Integration (falls aktiviert)
 
 ## Gesetzte Cookies / Einwilligungshistorie
 
