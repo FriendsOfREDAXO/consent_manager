@@ -47,12 +47,54 @@ consent_manager_domain_legal_notice = Masthead
 consent_manager_domain_privacy_policy_empty_msg = Data protection statement is a required field
 consent_manager_domain_legal_notic_empty_msg = Masthead is a required field
 
-consent_manager_setup = Setup
+consent_manager_setup = Import / Export
 consent_manager_setup_headline = Import example configuration
 consent_manager_setup_info = Texts and often used cookies/cookiegroups will be imported.<br><strong>CAUTION - present texts and cookies/cookiegruops will be deleted.</strong>
 consent_manager_setup_import = Import
 consent_manager_setup_import_confirm = Import and delete existing data?
 consent_manager_setup_import_successful = Example configuration was imported succesfully
+
+# Export/Import
+consent_manager_export_headline = Export configuration
+consent_manager_export = Export
+consent_manager_export_info = Exports all services, groups, texts and domains as JSON file for backup or transfer to other installations.
+consent_manager_export_download = Download configuration
+
+consent_manager_import_headline = Import configuration
+consent_manager_import = Import
+consent_manager_import_info = Imports a previously exported JSON configuration.<br><b>WARNING - existing data will be deleted.</b>
+consent_manager_import_file_label = Select JSON file
+consent_manager_import_json = Import JSON
+consent_manager_import_confirm = Import JSON configuration and delete existing data!?
+consent_manager_import_json_successful = JSON configuration successfully imported
+consent_manager_import_json_error = Error importing JSON configuration
+consent_manager_import_json_invalid = Invalid JSON file
+consent_manager_import_json_no_file = No file selected
+consent_manager_import_json_invalid_extension = Only JSON files (.json) are allowed
+consent_manager_import_json_file_too_large = File too large (max. 2MB allowed)
+
+# First-Run Welcome Modal
+consent_manager_welcome_modal_title = Welcome to Consent Manager
+consent_manager_welcome_modal_intro = This guide helps with setting up the cookie consent system:
+consent_manager_welcome_modal_step1_title = 1. Load Base Configuration
+consent_manager_welcome_modal_step1_desc = Import of pre-configured services like Google Analytics, Facebook Pixel, YouTube etc.
+consent_manager_welcome_modal_step2_title = 2. Configure Domain
+consent_manager_welcome_modal_step2_desc = Configuration of domains for which the Consent Manager should be active.
+consent_manager_welcome_modal_step3_title = 3. Customize Services
+consent_manager_welcome_modal_step3_desc = Editing of imported services and adding custom services.
+consent_manager_welcome_modal_step4_title = 4. Personalize Texts
+consent_manager_welcome_modal_step4_desc = Customization of consent box texts according to requirements.
+consent_manager_welcome_modal_step5_title = 5. Choose Design
+consent_manager_welcome_modal_step5_desc = Selection of a design for the consent box.
+consent_manager_welcome_modal_button_start = Load Example Configuration
+consent_manager_welcome_modal_button_skip = Skip
+consent_manager_welcome_modal_button_close = Close
+consent_manager_welcome_modal_dont_show = Don't show this hint again
+consent_manager_welcome_modal_link_setup = Go to Import/Export
+consent_manager_welcome_modal_link_domains = Go to Domains  
+consent_manager_welcome_modal_link_services = Go to Services/Cookies
+consent_manager_welcome_modal_link_texts = Go to Texts
+consent_manager_welcome_modal_link_theme = Go to Themes
 
 consent_manager_cache_write_failed = Cache file could not be written
 
@@ -86,3 +128,95 @@ consent_manager_cronjob_delete_days_notice = Delete all entries that are older t
 consent_manager_cronjob_deleted = {0} Entries were deleted
 consent_manager_cronjob_not_available = Consent-Manager AddOn is not installed
 consent_manager_cronjob_none_deleted = No entries were deleted
+
+# Google Consent Mode v2 Helper
+google_consent_helper_title = Google Consent Mode v2 Helper
+google_consent_helper_show = Show helper
+google_consent_helper_hide = Hide helper
+google_consent_helper_description = Automatic generation of <code>gtag("consent", "update", {...})</code> scripts for known services.
+google_consent_helper_service_type = Service type
+google_consent_helper_select_service = -- Select service --
+google_consent_helper_auto_detection = Will be automatically suggested based on the service name
+google_consent_helper_consent_script = Consent script
+google_consent_helper_revoke_script = Revoke script
+google_consent_helper_generated_script = Generated script
+google_consent_helper_copy_to_clipboard = Copy to clipboard
+google_consent_helper_copy = Copy
+
+# Google Consent Service Types
+google_consent_service_analytics = Analytics (analytics_storage)
+google_consent_service_google_analytics = Google Analytics (analytics_storage)
+google_consent_service_google_analytics_4 = Google Analytics 4 (analytics_storage)
+google_consent_service_google_tag_manager = Google Tag Manager
+google_consent_service_google_tag_manager_all = Google Tag Manager (All Permissions) (analytics_storage)
+google_consent_service_matomo = Matomo (analytics_storage)
+google_consent_service_matomo-self-hosted = Matomo Self-Hosted (analytics_storage)
+google_consent_service_adwords = Google AdWords (ad_storage, ad_user_data, ad_personalization)
+google_consent_service_google_ads = Google Ads (ad_storage, ad_user_data, ad_personalization)
+google_consent_service_facebook_pixel = Facebook Pixel (ad_storage, ad_user_data, ad_personalization)
+google_consent_service_youtube = YouTube (ad_storage, personalization_storage)
+google_consent_service_google_maps = Google Maps (functionality_storage, personalization_storage)
+
+# Additional Service Translations
+consent_manager_service_pinterest-tag_name = Pinterest Tag
+consent_manager_service_vimeo_name = Vimeo
+consent_manager_service_onoffice_name = onOffice Property Software
+consent_manager_service_hrs-hotel-booking_name = HRS Hotel Booking System
+consent_manager_service_booking-com_name = Booking.com Widget
+consent_manager_service_immoscout24_name = ImmobilienScout24 Widget
+
+consent_manager_service_pinterest-tag_desc = Pinterest tracking and social media features
+consent_manager_service_vimeo_desc = Vimeo video player and streaming functionality
+consent_manager_service_onoffice_desc = Property management software and listing management
+consent_manager_service_hrs-hotel-booking_desc = HRS hotel booking widget
+consent_manager_service_booking-com_desc = Booking.com hotel booking widget
+consent_manager_service_immoscout24_desc = ImmobilienScout24 property search widget
+
+# Additional Services
+consent_manager_service_matomo-self-hosted_name = Matomo (Self-Hosted)
+consent_manager_service_viato_name = Viato Hotel Booking System
+
+consent_manager_service_matomo-self-hosted_desc = Privacy-friendly web analytics (self-hosted)
+consent_manager_service_viato_desc = Viato hotel booking widget
+
+# Quick Start Guide
+consent_manager_quickstart_title = Consent Manager Quick Start Guide
+consent_manager_quickstart_welcome = These steps help with the initial setup of the Consent Manager.
+consent_manager_quickstart_button = Quick Start Guide
+consent_manager_quickstart_import_hint = After importing you only need: <strong>Configure domain (Step 2)</strong> and <strong>Choose design (Step 6)</strong>.<br>Cookie groups, services and texts are already pre-configured.
+consent_manager_quickstart_manual_config = Manual configuration step by step (only if you have <u>not</u> imported):
+consent_manager_quickstart_step_import = Import standard setup
+consent_manager_quickstart_step_import_desc = Import a pre-configured setup file with domain, cookie groups, services and texts.
+consent_manager_quickstart_import_hint = After import, all following steps are already completed! You only need to adjust the domain and choose the design.
+consent_manager_quickstart_manual_config = Alternative: Manual configuration step by step (only if you have not imported):
+consent_manager_quickstart_step_domain = Configure domain
+consent_manager_quickstart_step_domain_desc = Add and configure website domain.
+consent_manager_quickstart_step_cookiegroups = Create cookie groups
+consent_manager_quickstart_step_cookiegroups_desc = Create cookie groups like "Technically necessary", "Marketing", "Analytics".
+consent_manager_quickstart_step_services = Define services/cookies
+consent_manager_quickstart_step_services_desc = Configure specific services like Google Analytics, Facebook Pixel etc.
+consent_manager_quickstart_step_texts = Customize texts
+consent_manager_quickstart_step_texts_desc = Customize banner texts, privacy policy and other content.
+consent_manager_quickstart_step_theme = Choose Design
+consent_manager_quickstart_step_theme_desc = Select or customize the appropriate display for the cookie banner.
+consent_manager_quickstart_step_template = Template Integration
+consent_manager_quickstart_step_template_desc = Final step: Integrate the Consent Manager into the website template.
+consent_manager_quickstart_template_code_label = Template Code:
+consent_manager_quickstart_template_code_info = This code should be placed before the closing &lt;/body&gt; tag in the template.
+consent_manager_quickstart_template_final_message = Setup successful! Your Consent Manager is now ready to use.
+consent_manager_quickstart_privacy_settings_info = Test the functionality via:
+consent_manager_quickstart_privacy_settings_link = Privacy Settings
+
+# Import/Export
+consent_manager_quickstart_status_required = always required
+consent_manager_quickstart_status_final = final
+consent_manager_quickstart_status_recommended = recommended
+consent_manager_quickstart_status_after_import = completed after import ✓
+
+# Quickstart Button Labels
+consent_manager_quickstart_btn_domain = Manage Domains
+consent_manager_quickstart_btn_cookiegroups = Manage Groups
+consent_manager_quickstart_btn_services = Manage Services
+consent_manager_quickstart_btn_texts = Edit Texts
+consent_manager_quickstart_btn_theme = Choose Theme
+consent_manager_quickstart_status_done = done after import ✓

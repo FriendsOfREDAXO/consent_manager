@@ -1,5 +1,47 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.4.0 - 22.08.2025
+
+### Features
+
+* **Google Consent Mode v2 Integration**: Vollständige Unterstützung für Google Consent Mode v2 mit automatischer gtag-Integration
+  * GDPR-konforme Default-Einstellungen (`analytics_storage: denied`, `ad_storage: denied`, `ad_user_data: denied`, `ad_personalization: denied`)
+  * Domain-spezifische Aktivierung über Backend-Einstellungen
+  * Automatische Weiterleitung der Consent-Entscheidungen an Google Analytics und Google Ads
+  * Externe minifizierte JavaScript-Dateien für optimierte Performance
+* **Umfassende Debug-Konsole**: Neue Entwickler-Tools zur Überwachung des Consent-Status
+  * Consent Status mit Default- und aktuellen Werten
+  * Service-Übersicht mit Aktivierungsstatus
+  * Cookie-Analyse mit detaillierter Aufschlüsselung
+  * localStorage-Monitoring
+  * Google Consent Mode Status (falls aktiviert)
+  * Aktivierbar über Debug-Modus oder `?debug_consent=1`
+* **Verbesserte Frontend-Integration**: Optimierte Script-Verwaltung mit bedingtem Laden
+* **PJAX-Kompatibilität**: Debug-Konsole funktioniert mit AJAX-Navigation
+
+### Technische Verbesserungen
+
+* Externe JavaScript-Dateien statt Inline-Code für bessere Performance
+* Ultra-hohe z-index Werte für Debug-Konsole (9999999) zur Overlay-Kompatibilität
+* Enhanced Service-Detection mit Default-Status-Anzeige
+* Verbesserte Cookie-Parsing mit URL-Dekodierung und JSON-Formatierung
+* Optimierte Event-Handler für Debug-Panel-Funktionalität
+
+### Datenbankschema
+
+* Domain-Tabelle erweitert um `google_consent_mode_v2` Feld für domainspezifische GMv2-Aktivierung
+
+### Dateien hinzugefügt
+
+* `assets/google_consent_mode_v2.min.js`: Minifizierte Google Consent Mode v2 Implementierung
+* `assets/consent_debug.js`: Umfassende Debug-Konsole für Entwickler
+
+### Bugfixes
+
+* Debug-Panel zeigt nun aussagekräftige Informationen auch vor Consent-Erteilung
+* Verbesserte Fehlerbehandlung bei Service-Funktionsaufrufen
+* Z-Index-Konflikte mit Consent-Dialog behoben
+
 ## Version 4.3.1 - 17.04.2024
 
 **ACHTUNG:** In Version 4.3.0 wurde das Fragment, welches den Frontend-Code zusammenbaut (`consent_manager_box.php`),

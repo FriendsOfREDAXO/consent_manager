@@ -52,6 +52,12 @@ if ('delete' === $func) {
 
     if ('edit' === $func && 'consent_manager' !== $form->getSql()->getValue('uid')) {
         if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
+            // Google Consent Mode v2 Helper Fragment verwenden
+            $fragment = new rex_fragment();
+            $fragment->setVar('addon', $addon);
+            $googleHelperHtml = $fragment->parse('consent_manager_google_consent_helper.php');
+            $field = $form->addRawField($googleHelperHtml);
+            
             $field = $form->addTextAreaField('script');
             $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));
@@ -68,6 +74,12 @@ if ('delete' === $func) {
     }
     if ('add' === $func) {
         if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
+            // Google Consent Mode v2 Helper Fragment verwenden
+            $fragment = new rex_fragment();
+            $fragment->setVar('addon', $addon);
+            $googleHelperHtml = $fragment->parse('consent_manager_google_consent_helper.php');
+            $field = $form->addRawField($googleHelperHtml);
+            
             $field = $form->addTextAreaField('script');
             $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));

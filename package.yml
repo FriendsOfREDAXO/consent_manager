@@ -9,6 +9,9 @@ page:
   pjax: true
   icon: rex-icon fa fa-coffee
   subpages:
+    config:
+      title: "Settings"
+      icon: rex-icon fa-cog
     cookiegroup:
       title: "translate:consent_manager_cookiegroups"
     cookie:
@@ -17,14 +20,10 @@ page:
       title: "translate:consent_manager_texts"
     domain:
       title: "translate:consent_manager_domains"
-    config:
-      title: "translate:consent_manager_config"
     theme:
       title: "translate:consent_manager_theme"
     log:
       title: "translate:consent_manager_log"
-    setup:
-      title: "translate:consent_manager_setup"
     help:
       {
         title: "translate:consent_manager_help",
@@ -50,6 +49,7 @@ default_config:
   skip_consent: ''
   lifespan: 365
   theme: false
+  first_run_completed: false
 
 installer_ignore:
     - .github

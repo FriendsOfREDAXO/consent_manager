@@ -23,6 +23,24 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
     $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 }
 
+// Google Consent Mode v2 Integration - muss vor dem Consent Manager geladen werden
+$googleConsentModeOutput = '';
+
+// Debug Helper für Consent Manager (nur im Debug-Modus)
+if (rex::isDebugMode() || rex_request::get('debug_consent') === '1') {
+    $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
+    $googleConsentModeOutput .= '    <script src="' . $consentDebugUrl . '" defer></script>' . PHP_EOL;
+}
+
+if (!empty($consent_manager->domainInfo) && 
+    isset($consent_manager->domainInfo['google_consent_mode_enabled']) && 
+    $consent_manager->domainInfo['google_consent_mode_enabled'] == '1') {
+    
+    // Google Consent Mode v2 externe minifizierte Datei laden
+    $googleConsentModeScriptUrl = $addon->getAssetsUrl('google_consent_mode_v2.min.js');
+    $googleConsentModeOutput .= '    <script src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
+}
+
 // Consent bei Datenschutz und Impressum ausblenden
 if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->links['legal_notice'])) {
     if (rex_article::getCurrentId() === (int) $consent_manager->links['privacy_policy'] || rex_article::getCurrentId() === (int) $consent_manager->links['legal_notice']) {
@@ -63,6 +81,9 @@ $_params['r'] = $forceReload;
 $_params['t'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
 
 $consentparams['outputjs'] .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script" defer></script>' . PHP_EOL;
+
+// Ausgabe Google Consent Mode v2 (vor allem anderen)
+echo $googleConsentModeOutput;
 
 // Ausgabe CSS + JavaScript
 echo $consentparams['outputcss'];

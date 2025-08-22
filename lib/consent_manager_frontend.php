@@ -12,6 +12,7 @@ class consent_manager_frontend
     public $cookies = []; /** @phpstan-ignore-line */
     public $texts = []; /** @phpstan-ignore-line */
     public $domainName = ''; /** @phpstan-ignore-line */
+    public $domainInfo = []; /** @phpstan-ignore-line */
     public $links = []; /** @phpstan-ignore-line */
     public $scripts = []; /** @phpstan-ignore-line */
     public $scriptsUnselect = []; /** @phpstan-ignore-line */
@@ -66,6 +67,7 @@ class consent_manager_frontend
             return;
         }
         $this->domainName = $domain;
+        $this->domainInfo = $this->cache['domains'][$domain];
         $this->links['privacy_policy'] = $this->cache['domains'][$domain]['privacy_policy'];
         $this->links['legal_notice'] = $this->cache['domains'][$domain]['legal_notice'];
 

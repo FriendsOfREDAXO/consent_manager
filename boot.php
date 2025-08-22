@@ -25,6 +25,12 @@ if (rex::isBackend()) {
             if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)) {
                 rex_view::addCssFile($addon->getAssetsUrl('consent_manager_backend.css'));
                 rex_view::addJsFile($addon->getAssetsUrl('consent_manager_backend.js'));
+                
+                // Google Consent Mode Helper für Cookie-Seiten
+                $currentPage = rex_be_controller::getCurrentPagePart(2);
+                if ('cookie' === $currentPage) {
+                    rex_view::addJsFile($addon->getAssetsUrl('google_consent_helper.js'));
+                }
             }
         }
     });
