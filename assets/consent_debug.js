@@ -261,53 +261,168 @@
         const cookies = getCurrentDomainCookies();
         const consentCookie = cookies.find(cookie => cookie.name === 'consent_manager');
         
-        if (!consentCookie || !consentCookie.parsedValue) {
-            // Kein Cookie vorhanden - zeige Default-Status
+        // Google Consent Mode aus localStorage laden
+        let googleConsentMode = null;
+        try {
+            const storedConsent = localStorage.getItem('consentMode');
+            if (storedConsent) {
+                googleConsentMode = JSON.parse(storedConsent);
+            }
+        } catch (e) {
+            // localStorage nicht verfügbar oder defekt
+        }
+        
+        // Wenn Google Consent Mode vorhanden ist, verwende das als primäre Quelle
+        if (googleConsentMode) {
+            // Consent Manager Cookie-Daten hinzufügen falls vorhanden
+            let combinedConsents = { ...googleConsentMode };
+            
+            if (consentCookie && consentCookie.parsedValue && consentCookie.parsedValue.consents) {
+                const consentData = consentCookie.parsedValue;
+                
+                // Nur die wirklich akzeptierten Consent Manager Gruppen hinzufügen
+                if (Array.isArray(consentData.consents)) {
+                    consentData.consents.forEach(consentGroup => {
+                        combinedConsents[consentGroup] = 'granted';
+                    });
+                }
+                
+                return {
+                    status: 'combined',
+                    data: consentData,
+                    consents: combinedConsents,
+                    services: getServicesFromCombinedConsent(combinedConsents, consentData),
+                    version: `Consent Manager v${consentData.version || 'unbekannt'} + Google Consent Mode v2`,
+                    timestamp: consentData.consentTime || 'localStorage + Cookie',
+                    googleConsentMode: googleConsentMode
+                };
+            }
+            
+            // Nur Google Consent Mode
             return {
-                status: 'no_consent',
+                status: 'google_consent_only',
                 data: null,
-                consents: getDefaultConsentStatus(),
-                services: getDefaultServices(),
-                message: 'Noch kein Consent erteilt - Default-Werte angezeigt',
-                version: 'unbekannt',
-                timestamp: 'noch nicht gesetzt'
+                consents: googleConsentMode,
+                services: getServicesFromGoogleConsent(googleConsentMode),
+                message: 'Google Consent Mode aktiv',
+                version: 'Google Consent Mode v2',
+                timestamp: 'localStorage',
+                googleConsentMode: googleConsentMode
             };
         }
         
-        const consentData = consentCookie.parsedValue;
-        const consentStatus = {};
-        
-        // Consent-Gruppen analysieren
-        if (consentData.consents && Array.isArray(consentData.consents)) {
-            // Bekannte Consent-Gruppen
-            const knownGroups = [
-                'consent_manager',
-                'tags', 
-                'analytics',
-                'marketing',
-                'preferences',
-                'statistics',
-                'functional',
-                'necessary'
-            ];
+        // Nur Consent Manager Cookie vorhanden
+        if (consentCookie && consentCookie.parsedValue) {
+            const consentData = consentCookie.parsedValue;
+            const consentStatus = {};
             
-            knownGroups.forEach(group => {
-                if (consentData.consents.includes(group)) {
-                    consentStatus[group] = 'granted';
-                } else {
-                    consentStatus[group] = 'denied';
-                }
-            });
+            // Nur die akzeptierten Consent-Gruppen anzeigen
+            if (consentData.consents && Array.isArray(consentData.consents)) {
+                consentData.consents.forEach(consentGroup => {
+                    consentStatus[consentGroup] = 'granted';
+                });
+            }
+            
+            return {
+                status: 'consent_manager_only',
+                data: consentData,
+                consents: consentStatus,
+                services: getAcceptedServices(consentData),
+                version: consentData.version || 'unbekannt',
+                timestamp: consentData.consentTime || 'unbekannt'
+            };
         }
         
+        // Gar kein Consent vorhanden
         return {
-            status: 'found',
-            data: consentData,
-            consents: consentStatus,
-            services: getAcceptedServices(consentData),
-            version: consentData.version || 'unbekannt',
-            timestamp: consentData.consentTime || 'unbekannt'
+            status: 'no_consent',
+            data: null,
+            consents: getDefaultConsentStatus(),
+            services: getDefaultServices(),
+            message: 'Noch kein Consent erteilt - Default-Werte angezeigt',
+            version: 'unbekannt',
+            timestamp: 'noch nicht gesetzt'
         };
+    }
+    
+    // Services aus kombiniertem Consent ermitteln
+    function getServicesFromCombinedConsent(combinedConsents, consentData) {
+        const services = [];
+        
+        // Google Consent Mode Services
+        if (combinedConsents.analytics_storage === 'granted') {
+            services.push({ name: 'Google Analytics', group: 'Analytics', enabled: true, consentGroup: 'analytics_storage' });
+        }
+        if (combinedConsents.ad_storage === 'granted') {
+            services.push({ name: 'Google Ads Storage', group: 'Marketing', enabled: true, consentGroup: 'ad_storage' });
+        }
+        if (combinedConsents.ad_user_data === 'granted') {
+            services.push({ name: 'Google Ads User Data', group: 'Marketing', enabled: true, consentGroup: 'ad_user_data' });
+        }
+        if (combinedConsents.ad_personalization === 'granted') {
+            services.push({ name: 'Google Ads Personalisierung', group: 'Marketing', enabled: true, consentGroup: 'ad_personalization' });
+        }
+        if (combinedConsents.personalization_storage === 'granted') {
+            services.push({ name: 'Personalisierung', group: 'Präferenzen', enabled: true, consentGroup: 'personalization_storage' });
+        }
+        if (combinedConsents.functionality_storage === 'granted') {
+            services.push({ name: 'Funktionalität', group: 'Funktional', enabled: true, consentGroup: 'functionality_storage' });
+        }
+        if (combinedConsents.security_storage === 'granted') {
+            services.push({ name: 'Sicherheit', group: 'Notwendig', enabled: true, consentGroup: 'security_storage' });
+        }
+        
+        // Consent Manager Services
+        if (combinedConsents.tags === 'granted') {
+            services.push({ name: 'Tag Manager', group: 'Marketing', enabled: true, consentGroup: 'tags' });
+        }
+        if (combinedConsents.analytics === 'granted') {
+            services.push({ name: 'Analytics Tracking', group: 'Analytics', enabled: true, consentGroup: 'analytics' });
+        }
+        if (combinedConsents.marketing === 'granted') {
+            services.push({ name: 'Marketing Tools', group: 'Marketing', enabled: true, consentGroup: 'marketing' });
+        }
+        if (combinedConsents.functional === 'granted') {
+            services.push({ name: 'Funktionale Cookies', group: 'Funktional', enabled: true, consentGroup: 'functional' });
+        }
+        
+        // Immer aktiv
+        services.push({ name: 'Consent Manager', group: 'Notwendig', enabled: true, consentGroup: 'necessary' });
+        
+        return services;
+    }
+
+    // Services aus Google Consent Mode ermitteln
+    function getServicesFromGoogleConsent(googleConsentMode) {
+        const services = [];
+        
+        // Google Consent Mode Mappings
+        if (googleConsentMode.analytics_storage === 'granted') {
+            services.push({ name: 'Google Analytics', group: 'Analytics', enabled: true, consentGroup: 'analytics_storage' });
+        }
+        if (googleConsentMode.ad_storage === 'granted') {
+            services.push({ name: 'Google Ads Storage', group: 'Marketing', enabled: true, consentGroup: 'ad_storage' });
+        }
+        if (googleConsentMode.ad_user_data === 'granted') {
+            services.push({ name: 'Google Ads User Data', group: 'Marketing', enabled: true, consentGroup: 'ad_user_data' });
+        }
+        if (googleConsentMode.ad_personalization === 'granted') {
+            services.push({ name: 'Google Ads Personalisierung', group: 'Marketing', enabled: true, consentGroup: 'ad_personalization' });
+        }
+        if (googleConsentMode.personalization_storage === 'granted') {
+            services.push({ name: 'Personalisierung', group: 'Präferenzen', enabled: true, consentGroup: 'personalization_storage' });
+        }
+        if (googleConsentMode.functionality_storage === 'granted') {
+            services.push({ name: 'Funktionalität', group: 'Funktional', enabled: true, consentGroup: 'functionality_storage' });
+        }
+        if (googleConsentMode.security_storage === 'granted') {
+            services.push({ name: 'Sicherheit', group: 'Notwendig', enabled: true, consentGroup: 'security_storage' });
+        }
+        
+        // Immer aktiv
+        services.push({ name: 'Consent Manager', group: 'Notwendig', enabled: true, consentGroup: 'necessary' });
+        
+        return services;
     }
     
     // Default Consent Status (vor User-Entscheidung)
@@ -430,14 +545,25 @@
             // Status-Info hinzufügen
             if (consentManagerStatus.status === 'no_consent') {
                 statusHtml += '<div style="margin-bottom: 10px; padding: 8px; background: #fff3cd; border-radius: 4px; font-size: 11px; color: #856404;"><strong>ℹ️ Default-Status:</strong> Noch kein Consent erteilt</div>';
+            } else if (consentManagerStatus.status === 'google_consent_only') {
+                statusHtml += '<div style="margin-bottom: 10px; padding: 8px; background: #d4edda; border-radius: 4px; font-size: 11px; color: #155724;"><strong>🔄 Google Consent Mode:</strong> Nur Google Consent Mode aktiv</div>';
+            } else if (consentManagerStatus.status === 'combined') {
+                statusHtml += '<div style="margin-bottom: 10px; padding: 8px; background: #d1ecf1; border-radius: 4px; font-size: 11px; color: #0c5460;"><strong>🔄 Kombiniert:</strong> Consent Manager + Google Consent Mode</div>';
+            } else if (consentManagerStatus.status === 'consent_manager_only') {
+                statusHtml += '<div style="margin-bottom: 10px; padding: 8px; background: #e2e3e5; border-radius: 4px; font-size: 11px; color: #383d41;"><strong>📋 Consent Manager:</strong> Nur Consent Manager aktiv</div>';
             }
             
             statusHtml += Object.entries(consentManagerStatus.consents)
                 .map(([group, status]) => {
                     const statusClass = status === 'granted' ? 'consent-granted' : 
                                        status === 'denied' ? 'consent-denied' : 'consent-unknown';
+                    
+                    // Google Consent Mode Felder speziell markieren
+                    const isGoogleConsentField = ['ad_storage', 'ad_user_data', 'ad_personalization', 'analytics_storage', 'personalization_storage', 'functionality_storage', 'security_storage'].includes(group);
+                    const prefix = isGoogleConsentField ? '🔄 ' : '';
+                    
                     return `<div class="consent-status-item ${statusClass}">
-                        <span>${group}</span>
+                        <span>${prefix}${group}</span>
                         <span>${status.toUpperCase()}</span>
                     </div>`;
                 }).join('');
@@ -445,8 +571,13 @@
             // Zusätzliche Infos
             statusHtml += `<div style="margin-top: 10px; font-size: 10px; color: #6c757d;">
                 <div><strong>Version:</strong> ${consentManagerStatus.version}</div>
-                <div><strong>Zeitstempel:</strong> ${consentManagerStatus.timestamp}</div>
-            </div>`;
+                <div><strong>Zeitstempel:</strong> ${consentManagerStatus.timestamp}</div>`;
+            
+            if (consentManagerStatus.googleConsentMode) {
+                statusHtml += `<div><strong>Google Consent Mode:</strong> Aktiv (${Object.keys(consentManagerStatus.googleConsentMode).length} Felder)</div>`;
+            }
+            
+            statusHtml += '</div>';
         } else {
             statusHtml = `<div class="no-data">${consentManagerStatus.message}</div>`;
         }
