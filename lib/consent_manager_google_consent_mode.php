@@ -25,6 +25,7 @@ class consent_manager_google_consent_mode
     public static $serviceMappings = [
         'google-analytics' => ['analytics_storage'],
         'google-analytics-4' => ['analytics_storage'],
+        'google-tag-manager' => ['analytics_storage', 'ad_storage', 'ad_user_data', 'ad_personalization'],
         'google-ads' => ['ad_storage', 'ad_user_data', 'ad_personalization'],
         'google-adwords' => ['ad_storage', 'ad_user_data', 'ad_personalization'],
         'facebook-pixel' => ['ad_storage', 'ad_user_data', 'ad_personalization'],

@@ -184,12 +184,81 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 
 ### Google Consent Mode v2
 
-**Automatische Integration:**
-- GDPR-konforme Default-Einstellungen
+Der Consent Manager bietet **zwei Implementierungswege** für Google Consent Mode v2:
+
+#### 🤖 **Automatischer Weg (Empfohlen)**
+
+**Domain-Aktivierung:**
+- In **Domains** → Google Consent Mode v2 auf "Aktiviert" setzen
+- System erkennt automatisch Services und mappt sie zu Consent-Flags
+- Keine manuelle Programmierung erforderlich
+
+**Automatische Service-Mappings:**
+```
+Google Analytics     → analytics_storage
+Google Tag Manager   → analytics_storage, ad_storage, ad_user_data, ad_personalization
+Google Ads          → ad_storage, ad_user_data, ad_personalization  
+Facebook Pixel      → ad_storage, ad_user_data, ad_personalization
+YouTube             → ad_storage, personalization_storage
+Google Maps         → functionality_storage, personalization_storage
+Matomo/Hotjar       → analytics_storage
+```
+
+**Service-Schlüssel für automatische Erkennung:**
+Die automatische Erkennung funktioniert über den **Service-Schlüssel (UID)**. Verwende diese Schlüssel:
+
+| Service | Empfohlener Schlüssel | Alternative |
+|---------|---------------------|-------------|
+| **Google Analytics** | `google-analytics` | `analytics`, `ga` |
+| **Google Tag Manager** | `google-tag-manager` | `gtm`, `tag-manager` |
+| **Google Ads** | `google-ads` | `adwords`, `google-adwords` |
+| **Facebook Pixel** | `facebook-pixel` | `facebook`, `meta-pixel` |
+| **YouTube** | `youtube` | `yt` |
+| **Google Maps** | `google-maps` | `maps`, `gmaps` |
+| **Matomo** | `matomo` | `piwik` |
+| **Hotjar** | `hotjar` | - |
+
+**Beispiel Service-Anlage:**
+1. **Dienste** → **Service hinzufügen**
+2. **Schlüssel:** `google-tag-manager` ⭐
+3. **Dienstname:** `Google Tag Manager`
+4. **Scripts:** Dein GTM-Code
+5. **Gruppe zuweisen:** z.B. "Marketing"
+
+➡️ System erkennt automatisch "google-tag-manager" und mappt zu `analytics_storage`, `ad_storage`, etc.
+
+**Funktionsweise:**
+1. System generiert automatisch `gtag('consent', 'default', {...})` mit GDPR-konformen Defaults
+2. Bei Consent-Änderungen wird automatisch `gtag('consent', 'update', {...})` aufgerufen
+3. Services werden basierend auf UID/Namen automatisch erkannt und gemappt
+
+#### 🔧 **Manueller Weg (Experten)**
+
+**Eigene gtag-Integration in Service-Scripts:**
+```javascript
+<script>
+// Manuelles Google Consent Mode Setup
+gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'ad_storage': 'denied'
+});
+
+// Bei Consent-Änderung manuell updaten
+gtag('consent', 'update', {
+    'analytics_storage': 'granted'
+});
+</script>
+```
+
+#### 🛠️ **Technische Details**
+
+**GDPR-konforme Standard-Einstellungen:**
 - `analytics_storage: denied`
 - `ad_storage: denied` 
 - `ad_user_data: denied`
 - `ad_personalization: denied`
+- `functionality_storage: granted` (technisch notwendig)
+- `security_storage: granted` (technisch notwendig)
 
 **Debug-Konsole aktivieren:**
 ```
@@ -198,9 +267,16 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 
 **Debug-Informationen:**
 - Consent-Status (aktuell und Standard)
-- Service-Übersicht
+- Google Consent Mode Status
+- Service-Übersicht mit Mappings
 - Cookie-Analyse
 - localStorage-Inhalte
+
+**Vorteile automatischer Weg:**
+- ✅ Keine Programmierung erforderlich
+- ✅ Automatische Service-Erkennung
+- ✅ GDPR-konforme Defaults
+- ✅ Wartungsfreie Updates
 
 ### Beispiel-Modul für nachträgliche Abfrage
 
