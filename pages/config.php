@@ -292,7 +292,7 @@ echo '<div class="rex-addon-output">
                                 <div class="panel-body">
                                     <p>'.$addon->i18n('consent_manager_quickstart_step_domain_desc').'</p>
                                     <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/domain']).'" class="btn btn-sm btn-info">
-                                        <i class="rex-icon fa-globe"></i> Domain verwalten
+                                        <i class="rex-icon fa-globe"></i> '.$addon->i18n('consent_manager_quickstart_btn_domain').'
                                     </a>
                                 </div>
                             </div>
@@ -301,13 +301,13 @@ echo '<div class="rex-addon-output">
                             <div class="panel panel-warning">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
-                                        <span class="label label-warning">3</span> Cookie-Gruppen erstellen <small class="text-muted">(nach Import erledigt ✓)</small>
+                                        <span class="label label-warning">3</span> '.$addon->i18n('consent_manager_quickstart_step_cookiegroups').' <small class="text-muted">('.$addon->i18n('consent_manager_quickstart_status_after_import').')</small>
                                     </h5>
                                 </div>
                                 <div class="panel-body">
-                                    <p>Cookie-Gruppen wie "Technisch notwendig", "Marketing", "Analyse" anlegen.</p>
+                                    <p>'.$addon->i18n('consent_manager_quickstart_step_cookiegroups_desc').'</p>
                                     <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/cookiegroup']).'" class="btn btn-sm btn-warning">
-                                        <i class="rex-icon fa-folder"></i> Gruppen verwalten
+                                        <i class="rex-icon fa-folder"></i> '.$addon->i18n('consent_manager_quickstart_btn_cookiegroups').'
                                     </a>
                                 </div>
                             </div>
@@ -316,13 +316,13 @@ echo '<div class="rex-addon-output">
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
-                                        <span class="label label-primary">4</span> Services/Cookies definieren <small class="text-muted">(nach Import erledigt ✓)</small>
+                                        <span class="label label-primary">4</span> '.$addon->i18n('consent_manager_quickstart_step_services').' <small class="text-muted">('.$addon->i18n('consent_manager_quickstart_status_after_import').')</small>
                                     </h5>
                                 </div>
                                 <div class="panel-body">
-                                    <p>Konkrete Services wie Google Analytics, Facebook Pixel etc. konfigurieren.</p>
+                                    <p>'.$addon->i18n('consent_manager_quickstart_step_services_desc').'</p>
                                     <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/cookie']).'" class="btn btn-sm btn-warning">
-                                        <i class="rex-icon fa-cog"></i> Services verwalten
+                                        <i class="rex-icon fa-cog"></i> '.$addon->i18n('consent_manager_quickstart_btn_services').'
                                     </a>
                                 </div>
                             </div>
@@ -331,13 +331,13 @@ echo '<div class="rex-addon-output">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
-                                        <span class="label label-success">5</span> Texte anpassen <small class="text-muted">(nach Import erledigt ✓)</small>
+                                        <span class="label label-success">5</span> '.$addon->i18n('consent_manager_quickstart_step_texts').' <small class="text-muted">('.$addon->i18n('consent_manager_quickstart_status_after_import').')</small>
                                     </h5>
                                 </div>
                                 <div class="panel-body">
-                                    <p>Banner-Texte, Datenschutzerklärung und weitere Inhalte individualisieren.</p>
+                                    <p>'.$addon->i18n('consent_manager_quickstart_step_texts_desc').'</p>
                                     <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/text']).'" class="btn btn-sm btn-success">
-                                        <i class="rex-icon fa-edit"></i> Texte bearbeiten
+                                        <i class="rex-icon fa-edit"></i> '.$addon->i18n('consent_manager_quickstart_btn_texts').'
                                     </a>
                                 </div>
                             </div>
@@ -346,13 +346,13 @@ echo '<div class="rex-addon-output">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
-                                        <span class="label label-default">6</span> Design wählen <small class="text-warning">(immer erforderlich)</small>
+                                        <span class="label label-default">6</span> '.$addon->i18n('consent_manager_quickstart_step_theme').' <small class="text-warning">('.$addon->i18n('consent_manager_quickstart_status_required').')</small>
                                     </h5>
                                 </div>
                                 <div class="panel-body">
-                                    <p>Passende Darstellung für den Cookie-Banner wählen oder anpassen.</p>
+                                    <p>'.$addon->i18n('consent_manager_quickstart_step_theme_desc').'</p>
                                     <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/theme']).'" class="btn btn-sm btn-primary">
-                                        <i class="rex-icon fa-paint-brush"></i> Theme wählen
+                                        <i class="rex-icon fa-paint-brush"></i> '.$addon->i18n('consent_manager_quickstart_btn_theme').'
                                     </a>
                                 </div>
                             </div>

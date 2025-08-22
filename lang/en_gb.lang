@@ -205,4 +205,12 @@ consent_manager_quickstart_template_final_message = Done! After template integra
 consent_manager_quickstart_status_required = always required
 consent_manager_quickstart_status_final = final
 consent_manager_quickstart_status_recommended = recommended
+consent_manager_quickstart_status_after_import = completed after import ✓
+
+# Quickstart Button Labels
+consent_manager_quickstart_btn_domain = Manage Domains
+consent_manager_quickstart_btn_cookiegroups = Manage Groups
+consent_manager_quickstart_btn_services = Manage Services
+consent_manager_quickstart_btn_texts = Edit Texts
+consent_manager_quickstart_btn_theme = Choose Theme
 consent_manager_quickstart_status_done = done after import ✓

@@ -242,4 +242,12 @@ consent_manager_quickstart_template_final_message = Fertig! Nach der Template-Ei
 consent_manager_quickstart_status_required = immer erforderlich
 consent_manager_quickstart_status_final = final
 consent_manager_quickstart_status_recommended = empfohlen
+consent_manager_quickstart_status_after_import = nach Import erledigt ✓
+
+# Quickstart Button Labels
+consent_manager_quickstart_btn_domain = Domain verwalten
+consent_manager_quickstart_btn_cookiegroups = Gruppen verwalten
+consent_manager_quickstart_btn_services = Services verwalten
+consent_manager_quickstart_btn_texts = Texte bearbeiten
+consent_manager_quickstart_btn_theme = Theme wählen
 consent_manager_quickstart_status_done = nach Import erledigt ✓
