@@ -4,7 +4,6 @@
  */
 
 $(document).on('rex:ready pjax:complete', function() {
-    console.log('Google Consent Helper loaded (PJAX compatible)');
     
     // Service-Mappings
     var mappings = {
@@ -90,21 +89,9 @@ $(document).on('rex:ready pjax:complete', function() {
         return;
     }
     
-    // Debug: Alle verfügbaren Textareas loggen
-    console.log('Available textareas:');
-    $('textarea').each(function(index) {
-        var $this = $(this);
-        console.log(' - Textarea ' + index + ':', {
-            name: $this.attr('name'),
-            id: $this.attr('id'),
-            class: $this.attr('class')
-        });
-    });
-    
     // Event Listeners - mit Namespace für PJAX
     $(document).off('click.googlehelper').on('click.googlehelper', '#google-helper-toggle', function(e) {
         e.preventDefault();
-        console.log('Toggle helper clicked');
         
         var $panel = $('#google-consent-helper-content');
         var $button = $(this);
@@ -144,7 +131,6 @@ $(document).on('rex:ready pjax:complete', function() {
     // Consent Script generieren
     $(document).off('click.consent').on('click.consent', '#generate-consent-script', function() {
         var serviceType = $('#google-helper-service').val();
-        console.log('Generate consent for:', serviceType);
         
         if (!serviceType) {
             showMessage('Bitte Service-Typ auswählen', 'warning');
@@ -160,8 +146,6 @@ $(document).on('rex:ready pjax:complete', function() {
             // Fallback Selektoren
             $textarea = $("#rex-form-script, textarea[id*='script'], textarea[name='REX_INPUT_VALUE[script]']").first();
         }
-        
-        console.log('Found textarea:', $textarea.length, $textarea.attr('name') || $textarea.attr('id'));
         
         if ($textarea.length) {
             var currentContent = '';
@@ -190,7 +174,6 @@ $(document).on('rex:ready pjax:complete', function() {
             showMessage('Consent-Skript am Anfang des Feldes hinzugefügt!', 'success');
             showPreview(script);
         } else {
-            console.error('No script textarea found');
             showMessage('Script-Feld nicht gefunden. Bitte manuell aus Preview kopieren.', 'warning');
             showPreview(script);
         }
@@ -199,7 +182,6 @@ $(document).on('rex:ready pjax:complete', function() {
     // Revoke Script generieren
     $(document).off('click.revoke').on('click.revoke', '#generate-revoke-script', function() {
         var serviceType = $('#google-helper-service').val();
-        console.log('Generate revoke for:', serviceType);
         
         if (!serviceType) {
             showMessage('Bitte Service-Typ auswählen', 'warning');
@@ -215,8 +197,6 @@ $(document).on('rex:ready pjax:complete', function() {
             // Fallback Selektoren
             $textarea = $("#rex-form-script_unselect, textarea[id*='unselect'], textarea[name='REX_INPUT_VALUE[script_unselect]']").first();
         }
-        
-        console.log('Found unselect textarea:', $textarea.length, $textarea.attr('name') || $textarea.attr('id'));
         
         if ($textarea.length) {
             var currentContent = '';
@@ -245,7 +225,6 @@ $(document).on('rex:ready pjax:complete', function() {
             showMessage('Widerruf-Skript am Anfang des Feldes hinzugefügt!', 'success');
             showPreview(script);
         } else {
-            console.error('No script_unselect textarea found');
             showMessage('Script-Unselect-Feld nicht gefunden. Bitte manuell aus Preview kopieren.', 'warning');
             showPreview(script);
         }
@@ -266,8 +245,6 @@ $(document).on('rex:ready pjax:complete', function() {
     $('input[name="service_name"]').off('blur.autodetect').on('blur.autodetect', function() {
         var serviceName = $(this).val().toLowerCase().trim();
         if (!serviceName) return;
-        
-        console.log('Auto-detecting service:', serviceName);
         
         for (var type in mappings) {
             if (serviceName.includes(type.replace('-', '')) || 

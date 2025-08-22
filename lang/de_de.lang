@@ -213,3 +213,30 @@ consent_manager_service_viato_name = Viato Hotel-Buchungssystem
 
 consent_manager_service_matomo-self-hosted_desc = Datenschutzfreundliche Web-Analytik (selbst gehostet)
 consent_manager_service_viato_desc = Viato Hotel-Buchungswidget
+
+# Schnellstart-Anleitung
+consent_manager_quickstart_title = Consent-Manager Schnellstart-Anleitung
+consent_manager_quickstart_welcome = Diese Schritte helfen bei der Ersteinrichtung des Consent-Managers.
+consent_manager_quickstart_button = Schnellstart-Anleitung
+consent_manager_quickstart_import_hint = Nach dem Import brauchen Sie nur noch: <strong>Domain konfigurieren (Schritt 2)</strong> und <strong>Design anpassen (Schritt 6)</strong>.<br>Cookie-Gruppen, Services und Texte sind bereits vorkonfiguriert.
+consent_manager_quickstart_manual_config = Manuelle Konfiguration Schritt für Schritt (nur wenn Sie <u>nicht</u> importiert haben):
+consent_manager_quickstart_step_import = Standard-Setup importieren
+consent_manager_quickstart_step_import_desc = Importieren Sie eine vorkonfigurierte Setup-Datei mit Domain, Cookie-Gruppen, Services und Texten.
+consent_manager_quickstart_step_domain = Domain konfigurieren
+consent_manager_quickstart_step_domain_desc = Website-Domain hinzufügen und konfigurieren.
+consent_manager_quickstart_step_cookiegroups = Cookie-Gruppen erstellen
+consent_manager_quickstart_step_cookiegroups_desc = Cookie-Gruppen wie "Technisch notwendig", "Marketing", "Analyse" anlegen.
+consent_manager_quickstart_step_services = Services/Cookies definieren
+consent_manager_quickstart_step_services_desc = Konkrete Services wie Google Analytics, Facebook Pixel etc. konfigurieren.
+consent_manager_quickstart_step_texts = Texte anpassen
+consent_manager_quickstart_step_texts_desc = Banner-Texte, Datenschutzerklärung und weitere Inhalte individualisieren.
+consent_manager_quickstart_step_theme = Design wählen
+consent_manager_quickstart_step_theme_desc = Passende Darstellung für den Cookie-Banner wählen oder anpassen.
+consent_manager_quickstart_step_template = Template-Einbindung
+consent_manager_quickstart_step_template_desc = Abschließender Schritt: Consent-Manager in das Website-Template einbinden.
+consent_manager_quickstart_template_code_label = Code für Template:
+consent_manager_quickstart_template_code_info = Dieser Code sollte vor dem schließenden &lt;/body&gt;-Tag im Template platziert werden.
+consent_manager_quickstart_template_final_message = Fertig! Nach der Template-Einbindung ist der Consent-Manager vollständig einsatzbereit.
+consent_manager_quickstart_status_required = immer erforderlich
+consent_manager_quickstart_status_final = final
+consent_manager_quickstart_status_done = nach Import erledigt ✓

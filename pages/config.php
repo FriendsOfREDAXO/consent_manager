@@ -153,7 +153,7 @@ echo '<div class="rex-addon-output">
         <div class="col-md-12 text-right">
             <button type="button" class="btn btn-warning btn-lg" data-toggle="modal" data-target="#quickstart-modal" style="padding: 12px 25px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 6px;">
                 <i class="rex-icon fa-rocket" style="margin-right: 8px; font-size: 18px;"></i> 
-                <strong>Schnellstart-Anleitung</strong>
+                <strong>'.$addon->i18n('consent_manager_quickstart_button').'</strong>
             </button>
         </div>
     </div>
@@ -204,7 +204,7 @@ echo '<div class="rex-addon-output">
                 <div class="panel-body">
                     <p>'.$addon->i18n('consent_manager_export_info').'</p>
                     <div class="text-center">
-                        <a href="'.rex_url::currentBackendPage(['func' => 'export', rex_csrf_token::PARAM => $csrf->getUrlParams()['rex_csrf_token']]).'" 
+                        <a href="'.rex_url::currentBackendPage(['func' => 'export'] + $csrf->getUrlParams()).'" 
                            class="btn btn-success btn-sm">
                             <i class="rex-icon fa-download"></i> '.$addon->i18n('consent_manager_export_download').'
                         </a>
@@ -249,26 +249,24 @@ echo '<div class="rex-addon-output">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title">
-                    <i class="rex-icon fa-rocket"></i> Consent-Manager Schnellstart-Anleitung
+                    <i class="rex-icon fa-rocket"></i> '.$addon->i18n('consent_manager_quickstart_title').'
                 </h4>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                                                <div class="alert alert-info">
-                            <strong>Willkommen!</strong> Diese Schritte helfen bei der Ersteinrichtung des Consent-Managers.
-                        </div>
-                        
-                        <div class="panel-group" id="quickstart-accordion">
+                        <div class="alert alert-info">
+                            <strong>'.$addon->i18n('consent_manager_quickstart_welcome').'</strong>
+                        </div>                        <div class="panel-group" id="quickstart-accordion">
                             <!-- Schritt 1: Standard-Setup importieren (empfohlen) -->
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
-                                        <span class="label label-success">1</span> Standard-Setup importieren <small class="text-success">(empfohlen)</small>
+                                        <span class="label label-success">1</span> '.$addon->i18n('consent_manager_quickstart_step_import').' <small class="text-success">('.$addon->i18n('consent_manager_setup_import').')</small>
                                     </h5>
                                 </div>
                                 <div class="panel-body">
-                                    <p><strong>Schnellste Lösung:</strong> Importieren Sie eine vorkonfigurierte Setup-Datei mit Domain, Cookie-Gruppen, Services und Texten.</p>
+                                    <p><strong>'.$addon->i18n('consent_manager_quickstart_step_import_desc').'</strong></p>
                                     <div class="text-center">
                                         <a href="'.rex_url::currentBackendPage(['func' => 'setup']).'" 
                                            class="btn btn-success btn-lg" 
@@ -277,11 +275,10 @@ echo '<div class="rex-addon-output">
                                         </a>
                                     </div>
                                     <div class="alert alert-info" style="margin-top: 15px;">
-                                        <strong><i class="rex-icon fa-info-circle"></i> Wichtiger Hinweis:</strong><br>
-                                        Nach dem Import sind <strong>alle folgenden Schritte bereits erledigt</strong>! Sie brauchen dann nur noch das Design anzupassen (Schritt 6).
+                                        <strong><i class="rex-icon fa-info-circle"></i> '.$addon->i18n('consent_manager_quickstart_import_hint').'</strong>
                                     </div>
                                     <hr>
-                                    <p class="text-muted"><small><strong>Alternativ:</strong> Manuelle Konfiguration Schritt für Schritt (nur wenn Sie <u>nicht</u> importiert haben):</small></p>
+                                    <p class="text-muted"><small><strong>'.$addon->i18n('consent_manager_quickstart_manual_config').'</strong></small></p>
                                 </div>
                             </div>
                             
@@ -289,7 +286,7 @@ echo '<div class="rex-addon-output">
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
-                                        <span class="label label-info">2</span> Domain konfigurieren <small class="text-muted">(nach Import erledigt ✓)</small>
+                                        <span class="label label-info">2</span> Domain konfigurieren <small class="text-warning">(immer erforderlich)</small>
                                     </h5>
                                 </div>
                                 <div class="panel-body">
@@ -349,7 +346,7 @@ echo '<div class="rex-addon-output">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
-                                        <span class="label label-default">6</span> Design wählen <small class="text-success">(immer nötig)</small>
+                                        <span class="label label-default">6</span> Design wählen <small class="text-warning">(immer erforderlich)</small>
                                     </h5>
                                 </div>
                                 <div class="panel-body">
@@ -357,6 +354,28 @@ echo '<div class="rex-addon-output">
                                     <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/theme']).'" class="btn btn-sm btn-primary">
                                         <i class="rex-icon fa-paint-brush"></i> Theme wählen
                                     </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Schritt 7: Template-Einbindung -->
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">
+                                        <span class="label label-success">7</span> '.$addon->i18n('consent_manager_quickstart_step_template').' <small class="text-success">('.$addon->i18n('consent_manager_quickstart_status_final').')</small>
+                                    </h5>
+                                </div>
+                                <div class="panel-body">
+                                    <p><strong>'.$addon->i18n('consent_manager_quickstart_step_template_desc').'</strong></p>
+                                    <div class="well well-sm">
+                                        <p><strong>'.$addon->i18n('consent_manager_quickstart_template_code_label').'</strong></p>
+                                        <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; font-size: 12px;">&lt;?php echo REX_CONSENT_MANAGER[]; ?&gt;</pre>
+                                        <p class="help-block" style="margin-bottom: 0;">
+                                            <i class="fa fa-info-circle"></i> '.$addon->i18n('consent_manager_quickstart_template_code_info').'
+                                        </p>
+                                    </div>
+                                    <div class="alert alert-success" style="margin-bottom: 0;">
+                                        <i class="fa fa-check-circle"></i> <strong>'.$addon->i18n('consent_manager_quickstart_template_final_message').'</strong>
+                                    </div>
                                 </div>
                             </div>
                         </div>

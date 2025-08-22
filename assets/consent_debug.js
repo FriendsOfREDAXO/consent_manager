@@ -805,10 +805,7 @@
     }
     
     function initializeDebugHelper() {
-        console.log('🔍 Consent Debug Helper geladen');
-        console.log('Erstelle Debug-Button...');
         createDebugButton();
-        console.log('Debug-Button erstellt! Verwende auch: showConsentDebug(), hideConsentDebug()');
     }
     
 })();

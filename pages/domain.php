@@ -44,21 +44,6 @@ if ('delete' === $func) {
     $select->addOption('Deaktiviert', '0');
     $select->addOption('Aktiviert', '1');
     $field->setNotice('Aktiviert das Google Consent Mode v2 Skript automatisch für diese Domain. Das Skript wird vor dem Consent Manager geladen und setzt initial alle Consent-Flags auf "denied". Jeder Dienst muss dann selbst seine benötigten Flags per setConsent() aktivieren.');
-    
-    // Debug: Prüfen ob Feld in Datenbank existiert
-    if (rex::isDebugMode()) {
-        try {
-            $sql = rex_sql::factory();
-            $result = $sql->getArray("SHOW COLUMNS FROM `{$table}` LIKE 'google_consent_mode_enabled'");
-            if (empty($result)) {
-                echo rex_view::warning('DEBUG: Spalte google_consent_mode_enabled existiert nicht in Tabelle ' . $table);
-            } else {
-                echo rex_view::success('DEBUG: Spalte google_consent_mode_enabled gefunden: ' . $result[0]['Type']);
-            }
-        } catch (Exception $e) {
-            echo rex_view::error('DEBUG: Fehler beim Prüfen der Spalte: ' . $e->getMessage());
-        }
-    }
 
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
     $content = $form->get();
