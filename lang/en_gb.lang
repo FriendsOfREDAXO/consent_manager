@@ -70,6 +70,8 @@ consent_manager_import_json_successful = JSON configuration successfully importe
 consent_manager_import_json_error = Error importing JSON configuration
 consent_manager_import_json_invalid = Invalid JSON file
 consent_manager_import_json_no_file = No file selected
+consent_manager_import_json_invalid_extension = Only JSON files (.json) are allowed
+consent_manager_import_json_file_too_large = File too large (max. 2MB allowed)
 
 # First-Run Welcome Modal
 consent_manager_welcome_modal_title = Welcome to Consent Manager

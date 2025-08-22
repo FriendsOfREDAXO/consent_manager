@@ -148,9 +148,14 @@ function setConsent(consent) {
     localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(consentSettings));
 }
 
-// Expose functions globally
+// Expose functions globally in a single namespaced object
+window.GoogleConsentModeV2 = {
+    setConsent: setConsent,
+    fields: GOOGLE_CONSENT_V2_FIELDS,
+    events: GOOGLE_CONSENT_V2_FIELDS_EVENTS
+};
+
+// Keep backwards compatibility with old global function name
 window.setConsent = setConsent;
-window.GOOGLE_CONSENT_V2_FIELDS = GOOGLE_CONSENT_V2_FIELDS;
-window.GOOGLE_CONSENT_V2_FIELDS_EVENTS = GOOGLE_CONSENT_V2_FIELDS_EVENTS;
 
 console.log('Google Consent Mode v2 initialized');

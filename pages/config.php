@@ -61,10 +61,19 @@ if ('' !== $func && 'setup' !== $func) {
         } elseif ('import_json' === $func) {
             // JSON Import verarbeiten
             if (isset($_FILES['import_file']) && $_FILES['import_file']['error'] === UPLOAD_ERR_OK) {
-                $import_content = file_get_contents($_FILES['import_file']['tmp_name']);
-                $import_data = json_decode($import_content, true);
+                // Validate file extension (.json) and size (max 2MB)
+                $filename = $_FILES['import_file']['name'];
+                $filesize = $_FILES['import_file']['size'];
+                $max_filesize = 2 * 1024 * 1024; // 2MB
+                if (strtolower(pathinfo($filename, PATHINFO_EXTENSION)) !== 'json') {
+                    echo rex_view::error($addon->i18n('consent_manager_import_json_invalid_extension'));
+                } elseif ($filesize > $max_filesize) {
+                    echo rex_view::error($addon->i18n('consent_manager_import_json_file_too_large'));
+                } else {
+                    $import_content = file_get_contents($_FILES['import_file']['tmp_name']);
+                    $import_data = json_decode($import_content, true);
                 
-                if (json_last_error() === JSON_ERROR_NONE && is_array($import_data)) {
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($import_data)) {
                     try {
                         // Clear tables
                         $sql = rex_sql::factory();
