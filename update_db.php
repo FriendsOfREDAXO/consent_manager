@@ -1,7 +1,7 @@
 <?php
 /**
  * Database Update für Google Consent Mode v2
- * Dieses Skript stellt sicher, dass das google_consent_mode_enabled Feld existiert
+ * Dieses Skript stellt sicher, dass das Feld 'google_consent_mode_enabled' existiert
  */
 
 // Prüfen ob wir in REDAXO sind
