@@ -4,6 +4,18 @@ $addon = rex_addon::get('consent_manager');
 $addon->includeFile(__DIR__.'/install.php');
 $addon->setConfig('forceCache', true);
 
+// Add Google Consent Mode v2 columns to domain table
+rex_sql_table::get(rex::getTable('consent_manager_domain'))
+    ->ensureColumn(new rex_sql_column('google_consent_mode_enabled', 'tinyint(1)', false, '0'))
+    ->ensureColumn(new rex_sql_column('google_consent_mode_default_state', 'varchar(10)', false, 'denied'))
+    ->ensureColumn(new rex_sql_column('google_consent_mode_debug', 'tinyint(1)', false, '0'))
+    ->alter();
+
+// Add Google Consent Mode v2 mapping to cookie table
+rex_sql_table::get(rex::getTable('consent_manager_cookie'))
+    ->ensureColumn(new rex_sql_column('google_consent_mapping', 'text', true))
+    ->alter();
+
 // Copy scripts to every language
 if (count(rex_clang::getAllIds()) > 1) {
     $sql = \rex_sql::factory();

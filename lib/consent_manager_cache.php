@@ -72,6 +72,7 @@ class consent_manager_cache
         $db->select('*');
         $domains = $db->getArray();
         foreach ($domains as $v) {
+            // Include Google Consent Mode settings in domain data
             $this->domains[$v['id']] = $v;
         }
 
@@ -118,6 +119,12 @@ class consent_manager_cache
                 $cookie['definition'] = $defs;
                 $cookie['script'] = base64_encode($cookie['script']);
                 $cookie['script_unselect'] = base64_encode($cookie['script_unselect']);
+                
+                // Include Google Consent Mode mapping
+                if (!empty($cookie['google_consent_mapping'])) {
+                    $cookie['google_consent_mapping'] = json_decode($cookie['google_consent_mapping'], true);
+                }
+                
                 $this->cookies[$clangId][$uid] = $cookie; /** @phpstan-ignore-line */
             }
         }

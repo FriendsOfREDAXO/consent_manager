@@ -146,6 +146,15 @@ class consent_manager_frontend
 
         echo '/* --- Parameters --- */' . PHP_EOL;
         echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . consent_manager_util::hostname() . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", forcereload: ' . rex_get('r', 'int', 0) . ', hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . '};' . PHP_EOL . PHP_EOL;
+        
+        // Google Consent Mode v2 Integration
+        if (class_exists('consent_manager_google_consent_mode')) {
+            $googleConsentJs = consent_manager_google_consent_mode::generateJavaScript(consent_manager_util::hostname(), $clang);
+            if (!empty($googleConsentJs)) {
+                echo $googleConsentJs . PHP_EOL . PHP_EOL;
+            }
+        }
+        
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
         echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL; /** @phpstan-ignore-line */

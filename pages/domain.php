@@ -37,6 +37,24 @@ if ('delete' === $func) {
     $field->setLabel($addon->i18n('consent_manager_domain_legal_notice')); /** @phpstan-ignore-line */
     $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_legal_notic_empty_msg')); /** @phpstan-ignore-line */
 
+    // Google Consent Mode v2 Settings
+    $form->addFieldset($addon->i18n('consent_manager_google_consent_mode_legend'));
+    
+    $field = $form->addCheckboxField('google_consent_mode_enabled');
+    $field->addOption($addon->i18n('consent_manager_google_consent_mode_enabled'), '1');
+    $field->setNotice($addon->i18n('consent_manager_google_consent_mode_enabled_notice'));
+
+    $field = $form->addSelectField('google_consent_mode_default_state');
+    $field->setLabel($addon->i18n('consent_manager_google_consent_mode_default_state'));
+    $select = $field->getSelect();
+    $select->addOption('denied', 'denied');
+    $select->addOption('granted', 'granted');
+    $field->setNotice($addon->i18n('consent_manager_google_consent_mode_default_state_notice'));
+
+    $field = $form->addCheckboxField('google_consent_mode_debug');
+    $field->addOption($addon->i18n('consent_manager_google_consent_mode_debug'), '1');
+    $field->setNotice($addon->i18n('consent_manager_google_consent_mode_debug_notice'));
+
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
     $content = $form->get();
 

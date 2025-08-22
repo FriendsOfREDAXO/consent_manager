@@ -52,6 +52,30 @@ if ('delete' === $func) {
 
     if ('edit' === $func && 'consent_manager' !== $form->getSql()->getValue('uid')) {
         if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
+            // Google Consent Mode v2 Mapping
+            $form->addFieldset($addon->i18n('consent_manager_google_consent_mode_mapping_legend'));
+            
+            $field = $form->addRawField('
+                <div class="form-group">
+                    <label class="control-label col-sm-2">' . $addon->i18n('consent_manager_google_consent_mode_mapping') . '</label>
+                    <div class="col-sm-10">
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="google_consent_mapping[ad_storage]" value="1" ' . (strpos($form->getSql()->getValue('google_consent_mapping'), '"ad_storage":true') !== false ? 'checked' : '') . '> ad_storage <small>(' . $addon->i18n('consent_manager_google_consent_ad_storage_desc') . ')</small></label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="google_consent_mapping[ad_user_data]" value="1" ' . (strpos($form->getSql()->getValue('google_consent_mapping'), '"ad_user_data":true') !== false ? 'checked' : '') . '> ad_user_data <small>(' . $addon->i18n('consent_manager_google_consent_ad_user_data_desc') . ')</small></label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="google_consent_mapping[ad_personalization]" value="1" ' . (strpos($form->getSql()->getValue('google_consent_mapping'), '"ad_personalization":true') !== false ? 'checked' : '') . '> ad_personalization <small>(' . $addon->i18n('consent_manager_google_consent_ad_personalization_desc') . ')</small></label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="google_consent_mapping[analytics_storage]" value="1" ' . (strpos($form->getSql()->getValue('google_consent_mapping'), '"analytics_storage":true') !== false ? 'checked' : '') . '> analytics_storage <small>(' . $addon->i18n('consent_manager_google_consent_analytics_storage_desc') . ')</small></label>
+                        </div>
+                        <p class="help-block">' . $addon->i18n('consent_manager_google_consent_mode_mapping_notice') . '</p>
+                    </div>
+                </div>
+            ');
+
             $field = $form->addTextAreaField('script');
             $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));
@@ -84,6 +108,15 @@ if ('delete' === $func) {
     $field->setLabel($addon->i18n('consent_manager_cookie_placeholder_text'));
     $field = $form->addMediaField('placeholder_image');
     $field->setLabel($addon->i18n('consent_manager_cookie_placeholder_image'));
+    
+    // Handle Google Consent Mapping save
+    if (rex_post('save', 'boolean') || rex_post('apply', 'boolean')) {
+        $googleConsentMapping = rex_post('google_consent_mapping', 'array', []);
+        if (!empty($googleConsentMapping)) {
+            $mappingJson = json_encode($googleConsentMapping, JSON_UNESCAPED_SLASHES);
+            $form->addHiddenField('google_consent_mapping', $mappingJson);
+        }
+    }
 
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_cookie_edit') : $addon->i18n('consent_manager_cookie_add');
     $content = $form->get();

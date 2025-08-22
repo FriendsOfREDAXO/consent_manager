@@ -175,6 +175,28 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
 
         cookieData.consents = consents;
 
+        // Google Consent Mode v2 Integration
+        if (typeof window.consent_manager_integration !== 'undefined' && 
+            typeof window.consent_manager_integration.google_consent_mode_v2 === 'function') {
+            
+            // Create consent decisions object for Google Consent Mode
+            var consentDecisions = {};
+            consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+                var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+                var isConsented = el.checked || el.disabled || (toSave === 'all');
+                if (toSave === 'none' && !el.disabled) {
+                    isConsented = false;
+                }
+                
+                cookieUids.forEach(function (uid) {
+                    consentDecisions[uid] = isConsented;
+                });
+            });
+            
+            // Update Google Consent Mode
+            window.consent_manager_integration.google_consent_mode_v2(consentDecisions);
+        }
+
         cmCookieAPI.set('consent_manager', JSON.stringify(cookieData));
         if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {
             consent_manager_parameters.no_cookie_set = true;

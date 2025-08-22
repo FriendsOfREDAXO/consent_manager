@@ -117,3 +117,19 @@ consent_manager_cronjob_delete_days_notice = Lösche alle Einträge, die älter 
 consent_manager_cronjob_deleted = Es wurden {0} Einträge gelöscht
 consent_manager_cronjob_not_available = Consent-Manager AddOn ist nicht aktiviert
 consent_manager_cronjob_none_deleted = Es wurden keine Einträge gelöscht
+
+consent_manager_google_consent_mode_legend = Google Consent Mode v2 Einstellungen
+consent_manager_google_consent_mode_enabled = Google Consent Mode v2 aktivieren
+consent_manager_google_consent_mode_enabled_notice = Aktiviert die automatische Integration von Google Consent Mode v2 für diese Domain
+consent_manager_google_consent_mode_default_state = Standard-Zustand
+consent_manager_google_consent_mode_default_state_notice = Standard-Einstellung für Consent Flags wenn noch keine Einwilligung vorliegt (empfohlen: denied)
+consent_manager_google_consent_mode_debug = Debug-Modus aktivieren
+consent_manager_google_consent_mode_debug_notice = Zeigt einen Debug-Inspektor im Frontend zur Überprüfung der Consent Mode Funktionalität
+
+consent_manager_google_consent_mode_mapping_legend = Google Consent Mode v2 Mapping
+consent_manager_google_consent_mode_mapping = Consent Flags
+consent_manager_google_consent_mode_mapping_notice = Wählen Sie die Google Consent Flags aus, die bei Einwilligung für diesen Service gesetzt werden sollen
+consent_manager_google_consent_ad_storage_desc = Werbung - Ermöglicht die Speicherung für werbebezogene Zwecke
+consent_manager_google_consent_ad_user_data_desc = Nutzer-Daten für Werbung - Übermittlung von Nutzerdaten für Werbezwecke
+consent_manager_google_consent_ad_personalization_desc = Personalisierte Werbung - Zustimmung für personalisierte Werbeanzeigen
+consent_manager_google_consent_analytics_storage_desc = Statistik - Ermöglicht die Speicherung für Analysezwecke
