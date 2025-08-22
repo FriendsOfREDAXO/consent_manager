@@ -37,6 +37,11 @@ if ('delete' === $func) {
     $field->setLabel($addon->i18n('consent_manager_domain_legal_notice')); /** @phpstan-ignore-line */
     $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_legal_notic_empty_msg')); /** @phpstan-ignore-line */
 
+    // Google Consent Mode v2 Configuration
+    $field = $form->addCheckboxField('google_consent_mode_enabled');
+    $field->addOption('Google Consent Mode v2 aktivieren', 1);
+    $field->setNotice('Aktiviert das Google Consent Mode v2 Skript automatisch für diese Domain. Das Skript wird vor dem Consent Manager geladen und setzt initial alle Consent-Flags auf "denied". Jeder Dienst muss dann selbst seine benötigten Flags per setConsent() aktivieren.');
+
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
     $content = $form->get();
 

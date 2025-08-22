@@ -52,6 +52,85 @@ if ('delete' === $func) {
 
     if ('edit' === $func && 'consent_manager' !== $form->getSql()->getValue('uid')) {
         if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
+            // Google Consent Mode v2 Helper VOR den Script-Feldern
+            $googleHelperHtml = '';
+            $googleHelperHtml .= '<div id="google-consent-helper-panel" class="panel panel-info">';
+            $googleHelperHtml .= '<div class="panel-heading">';
+            $googleHelperHtml .= '<h4 class="panel-title">';
+            $googleHelperHtml .= '<i class="fa fa-google"></i> Google Consent Mode v2 Helper ';
+            $googleHelperHtml .= '<button type="button" id="google-helper-toggle" class="btn btn-xs btn-default pull-right">';
+            $googleHelperHtml .= '<i class="fa fa-chevron-down"></i> Helper einblenden';
+            $googleHelperHtml .= '</button>';
+            $googleHelperHtml .= '<div class="clearfix"></div>';
+            $googleHelperHtml .= '</h4>';
+            $googleHelperHtml .= '</div>';
+            
+            $googleHelperHtml .= '<div id="google-consent-helper-content" class="collapse">';
+            $googleHelperHtml .= '<div class="panel-body">';
+            
+            // Messages Container
+            $googleHelperHtml .= '<div id="google-helper-messages"></div>';
+            
+            $googleHelperHtml .= '<p class="help-block">';
+            $googleHelperHtml .= '<i class="fa fa-info-circle"></i> ';
+            $googleHelperHtml .= 'Automatische Generierung von <code>gtag("consent", "update", {...})</code> Skripten für bekannte Services.';
+            $googleHelperHtml .= '</p>';
+            
+            // Service Auswahl
+            $googleHelperHtml .= '<div class="form-group">';
+            $googleHelperHtml .= '<label for="google-helper-service"><i class="fa fa-cog"></i> Service-Typ:</label>';
+            $googleHelperHtml .= '<select id="google-helper-service" class="form-control">';
+            $googleHelperHtml .= '<option value="">-- Service auswählen --</option>';
+            $googleHelperHtml .= '<option value="analytics">Analytics (analytics_storage)</option>';
+            $googleHelperHtml .= '<option value="google-analytics">Google Analytics (analytics_storage)</option>';
+            $googleHelperHtml .= '<option value="google-analytics-4">Google Analytics 4 (analytics_storage)</option>';
+            $googleHelperHtml .= '<option value="matomo">Matomo (analytics_storage)</option>';
+            $googleHelperHtml .= '<option value="adwords">Google AdWords (ad_storage, ad_user_data, ad_personalization)</option>';
+            $googleHelperHtml .= '<option value="google-ads">Google Ads (ad_storage, ad_user_data, ad_personalization)</option>';
+            $googleHelperHtml .= '<option value="facebook-pixel">Facebook Pixel (ad_storage, ad_user_data, ad_personalization)</option>';
+            $googleHelperHtml .= '<option value="youtube">YouTube (ad_storage, personalization_storage)</option>';
+            $googleHelperHtml .= '<option value="google-maps">Google Maps (functionality_storage, personalization_storage)</option>';
+            $googleHelperHtml .= '</select>';
+            $googleHelperHtml .= '<small class="help-block">Wird automatisch basierend auf dem Service-Namen vorgeschlagen</small>';
+            $googleHelperHtml .= '</div>';
+            
+            // Buttons
+            $googleHelperHtml .= '<div class="form-group">';
+            $googleHelperHtml .= '<div class="btn-group btn-group-justified" role="group">';
+            $googleHelperHtml .= '<div class="btn-group" role="group">';
+            $googleHelperHtml .= '<button type="button" id="generate-consent-script" class="btn btn-success">';
+            $googleHelperHtml .= '<i class="fa fa-check"></i> Consent-Skript';
+            $googleHelperHtml .= '</button>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '<div class="btn-group" role="group">';
+            $googleHelperHtml .= '<button type="button" id="generate-revoke-script" class="btn btn-warning">';
+            $googleHelperHtml .= '<i class="fa fa-times"></i> Widerruf-Skript';
+            $googleHelperHtml .= '</button>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            
+            // Script Preview
+            $googleHelperHtml .= '<div id="script-preview" class="well well-sm" style="display:none;">';
+            $googleHelperHtml .= '<div class="form-group">';
+            $googleHelperHtml .= '<label><i class="fa fa-code"></i> Generiertes Skript:</label>';
+            $googleHelperHtml .= '<div class="input-group">';
+            $googleHelperHtml .= '<pre id="preview-content" style="background: #f8f8f8; padding: 10px; margin: 0; max-height: 150px; overflow-y: auto;"></pre>';
+            $googleHelperHtml .= '<div class="input-group-btn">';
+            $googleHelperHtml .= '<button type="button" id="copy-preview-script" class="btn btn-primary" title="In Zwischenablage kopieren">';
+            $googleHelperHtml .= '<i class="fa fa-copy"></i> Kopieren';
+            $googleHelperHtml .= '</button>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            
+            $field = $form->addRawField($googleHelperHtml);
+            
             $field = $form->addTextAreaField('script');
             $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));
@@ -68,6 +147,85 @@ if ('delete' === $func) {
     }
     if ('add' === $func) {
         if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
+            // Google Consent Mode v2 Helper VOR den Script-Feldern
+            $googleHelperHtml = '';
+            $googleHelperHtml .= '<div id="google-consent-helper-panel" class="panel panel-info">';
+            $googleHelperHtml .= '<div class="panel-heading">';
+            $googleHelperHtml .= '<h4 class="panel-title">';
+            $googleHelperHtml .= '<i class="fa fa-google"></i> Google Consent Mode v2 Helper ';
+            $googleHelperHtml .= '<button type="button" id="google-helper-toggle" class="btn btn-xs btn-default pull-right">';
+            $googleHelperHtml .= '<i class="fa fa-chevron-down"></i> Helper einblenden';
+            $googleHelperHtml .= '</button>';
+            $googleHelperHtml .= '<div class="clearfix"></div>';
+            $googleHelperHtml .= '</h4>';
+            $googleHelperHtml .= '</div>';
+            
+            $googleHelperHtml .= '<div id="google-consent-helper-content" class="collapse">';
+            $googleHelperHtml .= '<div class="panel-body">';
+            
+            // Messages Container
+            $googleHelperHtml .= '<div id="google-helper-messages"></div>';
+            
+            $googleHelperHtml .= '<p class="help-block">';
+            $googleHelperHtml .= '<i class="fa fa-info-circle"></i> ';
+            $googleHelperHtml .= 'Automatische Generierung von <code>gtag("consent", "update", {...})</code> Skripten für bekannte Services.';
+            $googleHelperHtml .= '</p>';
+            
+            // Service Auswahl
+            $googleHelperHtml .= '<div class="form-group">';
+            $googleHelperHtml .= '<label for="google-helper-service"><i class="fa fa-cog"></i> Service-Typ:</label>';
+            $googleHelperHtml .= '<select id="google-helper-service" class="form-control">';
+            $googleHelperHtml .= '<option value="">-- Service auswählen --</option>';
+            $googleHelperHtml .= '<option value="analytics">Analytics (analytics_storage)</option>';
+            $googleHelperHtml .= '<option value="google-analytics">Google Analytics (analytics_storage)</option>';
+            $googleHelperHtml .= '<option value="google-analytics-4">Google Analytics 4 (analytics_storage)</option>';
+            $googleHelperHtml .= '<option value="matomo">Matomo (analytics_storage)</option>';
+            $googleHelperHtml .= '<option value="adwords">Google AdWords (ad_storage, ad_user_data, ad_personalization)</option>';
+            $googleHelperHtml .= '<option value="google-ads">Google Ads (ad_storage, ad_user_data, ad_personalization)</option>';
+            $googleHelperHtml .= '<option value="facebook-pixel">Facebook Pixel (ad_storage, ad_user_data, ad_personalization)</option>';
+            $googleHelperHtml .= '<option value="youtube">YouTube (ad_storage, personalization_storage)</option>';
+            $googleHelperHtml .= '<option value="google-maps">Google Maps (functionality_storage, personalization_storage)</option>';
+            $googleHelperHtml .= '</select>';
+            $googleHelperHtml .= '<small class="help-block">Wird automatisch basierend auf dem Service-Namen vorgeschlagen</small>';
+            $googleHelperHtml .= '</div>';
+            
+            // Buttons
+            $googleHelperHtml .= '<div class="form-group">';
+            $googleHelperHtml .= '<div class="btn-group btn-group-justified" role="group">';
+            $googleHelperHtml .= '<div class="btn-group" role="group">';
+            $googleHelperHtml .= '<button type="button" id="generate-consent-script" class="btn btn-success">';
+            $googleHelperHtml .= '<i class="fa fa-check"></i> Consent-Skript';
+            $googleHelperHtml .= '</button>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '<div class="btn-group" role="group">';
+            $googleHelperHtml .= '<button type="button" id="generate-revoke-script" class="btn btn-warning">';
+            $googleHelperHtml .= '<i class="fa fa-times"></i> Widerruf-Skript';
+            $googleHelperHtml .= '</button>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            
+            // Script Preview
+            $googleHelperHtml .= '<div id="script-preview" class="well well-sm" style="display:none;">';
+            $googleHelperHtml .= '<div class="form-group">';
+            $googleHelperHtml .= '<label><i class="fa fa-code"></i> Generiertes Skript:</label>';
+            $googleHelperHtml .= '<div class="input-group">';
+            $googleHelperHtml .= '<pre id="preview-content" style="background: #f8f8f8; padding: 10px; margin: 0; max-height: 150px; overflow-y: auto;"></pre>';
+            $googleHelperHtml .= '<div class="input-group-btn">';
+            $googleHelperHtml .= '<button type="button" id="copy-preview-script" class="btn btn-primary" title="In Zwischenablage kopieren">';
+            $googleHelperHtml .= '<i class="fa fa-copy"></i> Kopieren';
+            $googleHelperHtml .= '</button>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            $googleHelperHtml .= '</div>';
+            
+            $field = $form->addRawField($googleHelperHtml);
+            
             $field = $form->addTextAreaField('script');
             $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));
