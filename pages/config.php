@@ -262,7 +262,7 @@ echo '<div class="rex-addon-output">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
-                                        <span class="label label-success">1</span> '.$addon->i18n('consent_manager_quickstart_step_import').' <small class="text-success">('.$addon->i18n('consent_manager_setup_import').')</small>
+                                        <span class="label label-success">1</span> '.$addon->i18n('consent_manager_quickstart_step_import').' <small class="text-success">('.$addon->i18n('consent_manager_quickstart_status_recommended').')</small>
                                     </h5>
                                 </div>
                                 <div class="panel-body">
@@ -286,11 +286,11 @@ echo '<div class="rex-addon-output">
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
-                                        <span class="label label-info">2</span> Domain konfigurieren <small class="text-warning">(immer erforderlich)</small>
+                                        <span class="label label-info">2</span> '.$addon->i18n('consent_manager_quickstart_step_domain').' <small class="text-warning">('.$addon->i18n('consent_manager_quickstart_status_required').')</small>
                                     </h5>
                                 </div>
                                 <div class="panel-body">
-                                    <p>Website-Domain hinzufügen und konfigurieren.</p>
+                                    <p>'.$addon->i18n('consent_manager_quickstart_step_domain_desc').'</p>
                                     <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/domain']).'" class="btn btn-sm btn-info">
                                         <i class="rex-icon fa-globe"></i> Domain verwalten
                                     </a>
