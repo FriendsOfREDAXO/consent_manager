@@ -36,6 +36,55 @@ let GOOGLE_CONSENT_V2_FIELDS_EVENTS = {
     }
 };
 
+/**
+ * Helper to bring in PHP's array_combine function
+ * @param {Array} keys
+ * @param {Array} values
+ * @returns {Object|false}
+ */
+function array_combine(keys, values) {
+    const newArray = {};
+    let i = 0;
+
+    if (
+        typeof keys !== 'object' ||
+        typeof values !== 'object' ||
+        typeof keys.length !== 'number' ||
+        typeof values.length !== 'number' ||
+        !keys.length ||
+        !values.length ||
+        keys.length !== values.length
+    ) {
+        return false;
+    }
+
+    for (i = 0; i < keys.length; i++) {
+        newArray[keys[i]] = values[i];
+    }
+
+    return newArray;
+}
+
+/**
+ * Helper to bring in PHP's array_fill function
+ * @param {number} startIndex
+ * @param {number} num
+ * @param {*} mixedVal
+ * @returns {Array}
+ */
+function array_fill(startIndex, num, mixedVal) {
+    let key;
+    const tmpArr = [];
+
+    if (!isNaN(startIndex) && !isNaN(num)) {
+        for (key = 0; key < num; key++) {
+            tmpArr[(key + startIndex)] = mixedVal;
+        }
+    }
+
+    return tmpArr;
+}
+
 // Get current settings from localStorage
 let consentStorage = localStorage.getItem(GOOGLE_CONSENT_V2_STORAGE_KEY);
 
@@ -97,55 +146,6 @@ function setConsent(consent) {
 
     gtag('consent', 'update', consentSettings);
     localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(consentSettings));
-}
-
-/**
- * Helper to bring in PHP's array_combine function
- * @param {Array} keys
- * @param {Array} values
- * @returns {Object|false}
- */
-function array_combine(keys, values) {
-    const newArray = {};
-    let i = 0;
-
-    if (
-        typeof keys !== 'object' ||
-        typeof values !== 'object' ||
-        typeof keys.length !== 'number' ||
-        typeof values.length !== 'number' ||
-        !keys.length ||
-        !values.length ||
-        keys.length !== values.length
-    ) {
-        return false;
-    }
-
-    for (i = 0; i < keys.length; i++) {
-        newArray[keys[i]] = values[i];
-    }
-
-    return newArray;
-}
-
-/**
- * Helper to bring in PHP's array_fill function
- * @param {number} startIndex
- * @param {number} num
- * @param {*} mixedVal
- * @returns {Array}
- */
-function array_fill(startIndex, num, mixedVal) {
-    let key;
-    const tmpArr = [];
-
-    if (!isNaN(startIndex) && !isNaN(num)) {
-        for (key = 0; key < num; key++) {
-            tmpArr[(key + startIndex)] = mixedVal;
-        }
-    }
-
-    return tmpArr;
 }
 
 // Expose functions globally

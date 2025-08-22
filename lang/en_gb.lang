@@ -86,3 +86,30 @@ consent_manager_cronjob_delete_days_notice = Delete all entries that are older t
 consent_manager_cronjob_deleted = {0} Entries were deleted
 consent_manager_cronjob_not_available = Consent-Manager AddOn is not installed
 consent_manager_cronjob_none_deleted = No entries were deleted
+
+# Google Consent Mode v2 Helper
+google_consent_helper_title = Google Consent Mode v2 Helper
+google_consent_helper_show = Show helper
+google_consent_helper_hide = Hide helper
+google_consent_helper_description = Automatic generation of <code>gtag("consent", "update", {...})</code> scripts for known services.
+google_consent_helper_service_type = Service type
+google_consent_helper_select_service = -- Select service --
+google_consent_helper_auto_detection = Will be automatically suggested based on the service name
+google_consent_helper_consent_script = Consent script
+google_consent_helper_revoke_script = Revoke script
+google_consent_helper_generated_script = Generated script
+google_consent_helper_copy_to_clipboard = Copy to clipboard
+google_consent_helper_copy = Copy
+
+# Google Consent Service Types
+google_consent_service_analytics = Analytics (analytics_storage)
+google_consent_service_google_analytics = Google Analytics (analytics_storage)
+google_consent_service_google_analytics_4 = Google Analytics 4 (analytics_storage)
+google_consent_service_google_tag_manager = Google Tag Manager
+google_consent_service_google_tag_manager_all = Google Tag Manager (All Permissions) (analytics_storage)
+google_consent_service_matomo = Matomo (analytics_storage)
+google_consent_service_adwords = Google AdWords (ad_storage, ad_user_data, ad_personalization)
+google_consent_service_google_ads = Google Ads (ad_storage, ad_user_data, ad_personalization)
+google_consent_service_facebook_pixel = Facebook Pixel (ad_storage, ad_user_data, ad_personalization)
+google_consent_service_youtube = YouTube (ad_storage, personalization_storage)
+google_consent_service_google_maps = Google Maps (functionality_storage, personalization_storage)

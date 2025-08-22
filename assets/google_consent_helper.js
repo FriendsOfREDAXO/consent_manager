@@ -17,6 +17,21 @@ $(document).on('rex:ready pjax:complete', function() {
         'google-analytics-4': {
             'analytics_storage': true
         },
+        'google-tag-manager': {
+            'analytics_storage': true,
+            'ad_storage': true,
+            'functionality_storage': true,
+            'personalization_storage': true
+        },
+        'google-tag-manager-all': {
+            'ad_storage': true,
+            'ad_user_data': true,
+            'ad_personalization': true,
+            'analytics_storage': true,
+            'functionality_storage': true,
+            'personalization_storage': true,
+            'security_storage': true
+        },
         'matomo': {
             'analytics_storage': true
         },
@@ -93,13 +108,33 @@ $(document).on('rex:ready pjax:complete', function() {
         
         $panel.collapse('toggle');
         
-        // Button-Text ändern
+        // Button-Text ändern - dynamisch basierend auf aktuellem Text
         $panel.on('show.bs.collapse', function() {
-            $button.html('<i class="fa fa-chevron-up"></i> Helper ausblenden');
+            var currentHtml = $button.html();
+            var newHtml = currentHtml.replace('fa-chevron-down', 'fa-chevron-up');
+            // Verschiedene Sprach-Varianten unterstützen
+            if (newHtml.includes('Helper einblenden')) {
+                newHtml = newHtml.replace('Helper einblenden', 'Helper ausblenden');
+            } else if (newHtml.includes('Show helper')) {
+                newHtml = newHtml.replace('Show helper', 'Hide helper');
+            } else if (newHtml.includes('Visa hjälparen')) {
+                newHtml = newHtml.replace('Visa hjälparen', 'Dölj hjälparen');
+            }
+            $button.html(newHtml);
         });
         
         $panel.on('hide.bs.collapse', function() {
-            $button.html('<i class="fa fa-chevron-down"></i> Helper einblenden');
+            var currentHtml = $button.html();
+            var newHtml = currentHtml.replace('fa-chevron-up', 'fa-chevron-down');
+            // Verschiedene Sprach-Varianten unterstützen
+            if (newHtml.includes('Helper ausblenden')) {
+                newHtml = newHtml.replace('Helper ausblenden', 'Helper einblenden');
+            } else if (newHtml.includes('Hide helper')) {
+                newHtml = newHtml.replace('Hide helper', 'Show helper');
+            } else if (newHtml.includes('Dölj hjälparen')) {
+                newHtml = newHtml.replace('Dölj hjälparen', 'Visa hjälparen');
+            }
+            $button.html(newHtml);
         });
     });
     
@@ -120,11 +155,7 @@ $(document).on('rex:ready pjax:complete', function() {
         
         if ($textarea.length === 0) {
             // Fallback Selektoren
-        // Robust textarea selection
-        var $textarea = findScriptTextarea();
-        
-        if ($textarea.length === 0) {
-            console.error('No script textarea found after all selectors');
+            $textarea = $("#rex-form-script, textarea[id*='script'], textarea[name='REX_INPUT_VALUE[script]']").first();
         }
         
         console.log('Found textarea:', $textarea.length, $textarea.attr('name') || $textarea.attr('id'));
@@ -240,6 +271,8 @@ $(document).on('rex:ready pjax:complete', function() {
                 serviceName.includes(type.replace('google-', '')) ||
                 (type === 'google-analytics' && /analytics|ga\d?/.test(serviceName)) ||
                 (type === 'google-ads' && /adwords|ads|google.*ad/.test(serviceName)) ||
+                (type === 'google-tag-manager' && /tag.*manager|gtm|tagmanager/.test(serviceName)) ||
+                (type === 'google-tag-manager-all' && /tag.*manager.*all|gtm.*all|tagmanager.*all|all.*gtm|all.*tag.*manager/.test(serviceName)) ||
                 (type === 'facebook-pixel' && /facebook.*pixel|fb.*pixel/.test(serviceName)) ||
                 (type === 'youtube' && /youtube|yt/.test(serviceName)) ||
                 (type === 'google-maps' && /maps|gmaps/.test(serviceName)) ||
