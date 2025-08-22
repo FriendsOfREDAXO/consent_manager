@@ -150,7 +150,9 @@ class consent_manager_google_consent_helper
         // Prüfen ob Service bereits existiert
         $sql->setQuery('SELECT pid FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE uid = ? AND clang_id = ?', [$cookieUid, $clangId]);
         
-        if ($sql->getRows() > 0) {
+        $sql->setQuery('SELECT COUNT(*) AS cnt FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE uid = ? AND clang_id = ?', [$cookieUid, $clangId]);
+        
+        if ($sql->getValue('cnt') > 0) {
             // Update bestehenden Service
             $sql->setWhere('uid = :uid AND clang_id = :clang_id', ['uid' => $cookieUid, 'clang_id' => $clangId]);
             $sql->setValue('google_consent_mapping', json_encode($mapping));
