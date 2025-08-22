@@ -201,7 +201,11 @@ consent_manager_quickstart_step_template = Template Integration
 consent_manager_quickstart_step_template_desc = Final step: Integrate the Consent Manager into the website template.
 consent_manager_quickstart_template_code_label = Template Code:
 consent_manager_quickstart_template_code_info = This code should be placed before the closing &lt;/body&gt; tag in the template.
-consent_manager_quickstart_template_final_message = Done! After template integration, the Consent Manager is fully operational.
+consent_manager_quickstart_template_final_message = Setup successful! Your Consent Manager is now ready to use.
+consent_manager_quickstart_privacy_settings_info = Test the functionality via:
+consent_manager_quickstart_privacy_settings_link = Privacy Settings
+
+# Import/Export
 consent_manager_quickstart_status_required = always required
 consent_manager_quickstart_status_final = final
 consent_manager_quickstart_status_recommended = recommended

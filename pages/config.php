@@ -4,46 +4,46 @@ $addon = rex_addon::get('consent_manager');
 
 $func = rex_request('func', 'string');
 
-// Import/Export Funktionalität
-// Spezialbehandlung für den Default-Import ohne CSRF-Check
+// Import/Export Functionality
+// Special handling for default import without CSRF check
 if ('setup' === $func) {
     $file = rex_path::addon('consent_manager').'setup/setup.sql';
     rex_sql_util::importDump($file);
     consent_manager_clang::addonJustInstalled();
     echo rex_view::success($addon->i18n('consent_manager_setup_import_successful'));
-    // Weiterleitung zur normalen Config-Seite ohne func Parameter
+    // Redirect to normal config page without func parameter
     echo '<script>setTimeout(function() { window.location.href = "'.rex_url::currentBackendPage(['page' => 'consent_manager/config']).'"; }, 2000);</script>';
 }
 
-// Für alle anderen Funktionen CSRF-Check
+// For all other functions CSRF check
 $csrf = rex_csrf_token::factory('consent_manager_config');
 if ('' !== $func && 'setup' !== $func) {
     if (!$csrf->isValid()) {
         echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
     } else {
         if ('export' === $func) {
-            // Output-Buffer leeren um sauberen JSON-Download zu ermöglichen
+            // Clear output buffer to enable clean JSON download
             while (ob_get_level()) {
                 ob_end_clean();
             }
             
-            // Export der aktuellen Konfiguration
+            // Export current configuration
             $export_data = [];
             
-            // Cookies/Services exportieren
+            // Export cookies/services
             $sql = rex_sql::factory();
             $sql->setQuery('SELECT * FROM '.rex::getTable('consent_manager_cookie').' ORDER BY id');
             $export_data['cookies'] = $sql->getArray();
             
-            // Cookie-Gruppen exportieren
+            // Export cookie groups
             $sql->setQuery('SELECT * FROM '.rex::getTable('consent_manager_cookiegroup').' ORDER BY prio, id');
             $export_data['cookiegroups'] = $sql->getArray();
             
-            // Texte exportieren
+            // Export texts
             $sql->setQuery('SELECT * FROM '.rex::getTable('consent_manager_text').' ORDER BY clang_id, id');
             $export_data['texts'] = $sql->getArray();
             
-            // Domains exportieren
+            // Export domains
             $sql->setQuery('SELECT * FROM '.rex::getTable('consent_manager_domain').' ORDER BY id');
             $export_data['domains'] = $sql->getArray();
             
@@ -66,14 +66,14 @@ if ('' !== $func && 'setup' !== $func) {
                 
                 if (json_last_error() === JSON_ERROR_NONE && is_array($import_data)) {
                     try {
-                        // Tabellen leeren
+                        // Clear tables
                         $sql = rex_sql::factory();
                         $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_cookie'));
                         $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_cookiegroup'));
                         $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_text'));
                         $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_domain'));
                         
-                        // Importierte Daten einfügen
+                        // Insert imported data
                         $tables = ['cookies', 'cookiegroups', 'texts', 'domains'];
                         $table_map = [
                             'cookies' => 'consent_manager_cookie',
@@ -258,7 +258,7 @@ echo '<div class="rex-addon-output">
                         <div class="alert alert-info">
                             <strong>'.$addon->i18n('consent_manager_quickstart_welcome').'</strong>
                         </div>                        <div class="panel-group" id="quickstart-accordion">
-                            <!-- Schritt 1: Standard-Setup importieren (empfohlen) -->
+                            <!-- Step 1: Import Standard Setup (recommended) -->
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
@@ -282,7 +282,7 @@ echo '<div class="rex-addon-output">
                                 </div>
                             </div>
                             
-                            <!-- Schritt 2: Domain konfigurieren -->
+                            <!-- Step 2: Configure Domain -->
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
@@ -297,7 +297,7 @@ echo '<div class="rex-addon-output">
                                 </div>
                             </div>
                             
-                            <!-- Schritt 3: Cookie-Gruppen erstellen -->
+                            <!-- Step 3: Create Cookie Groups -->
                             <div class="panel panel-warning">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
@@ -312,7 +312,7 @@ echo '<div class="rex-addon-output">
                                 </div>
                             </div>
                             
-                            <!-- Schritt 4: Services/Cookies definieren -->
+                            <!-- Step 4: Define Services/Cookies -->
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
@@ -327,7 +327,7 @@ echo '<div class="rex-addon-output">
                                 </div>
                             </div>
                             
-                            <!-- Schritt 5: Texte anpassen -->
+                            <!-- Step 5: Customize Texts -->
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
@@ -342,7 +342,7 @@ echo '<div class="rex-addon-output">
                                 </div>
                             </div>
                             
-                            <!-- Schritt 6: Design wählen -->
+                            <!-- Step 6: Choose Design -->
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
@@ -357,7 +357,7 @@ echo '<div class="rex-addon-output">
                                 </div>
                             </div>
                             
-                            <!-- Schritt 7: Template-Einbindung -->
+                            <!-- Step 7: Template Integration -->
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
@@ -375,6 +375,11 @@ echo '<div class="rex-addon-output">
                                     </div>
                                     <div class="alert alert-success" style="margin-bottom: 0;">
                                         <i class="fa fa-check-circle"></i> <strong>'.$addon->i18n('consent_manager_quickstart_template_final_message').'</strong>
+                                        <br><br>
+                                        <p style="margin-bottom: 0;">
+                                            <i class="fa fa-cog"></i> '.$addon->i18n('consent_manager_quickstart_privacy_settings_info').' 
+                                            <a class="consent_manager-show-box">'.$addon->i18n('consent_manager_quickstart_privacy_settings_link').'</a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
