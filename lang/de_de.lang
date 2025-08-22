@@ -133,3 +133,6 @@ consent_manager_google_consent_ad_storage_desc = Werbung - Ermöglicht die Speic
 consent_manager_google_consent_ad_user_data_desc = Nutzer-Daten für Werbung - Übermittlung von Nutzerdaten für Werbezwecke
 consent_manager_google_consent_ad_personalization_desc = Personalisierte Werbung - Zustimmung für personalisierte Werbeanzeigen
 consent_manager_google_consent_analytics_storage_desc = Statistik - Ermöglicht die Speicherung für Analysezwecke
+consent_manager_google_consent_functionality_storage_desc = Funktionalität - Speicherung für Website-Funktionalität
+consent_manager_google_consent_personalization_storage_desc = Personalisierung - Speicherung für Personalisierungszwecke
+consent_manager_google_consent_security_storage_desc = Sicherheit - Speicherung für Sicherheitszwecke

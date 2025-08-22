@@ -71,6 +71,15 @@ if ('delete' === $func) {
                         <div class="checkbox">
                             <label><input type="checkbox" name="google_consent_mapping[analytics_storage]" value="1" ' . (strpos($form->getSql()->getValue('google_consent_mapping'), '"analytics_storage":true') !== false ? 'checked' : '') . '> analytics_storage <small>(' . $addon->i18n('consent_manager_google_consent_analytics_storage_desc') . ')</small></label>
                         </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="google_consent_mapping[functionality_storage]" value="1" ' . (strpos($form->getSql()->getValue('google_consent_mapping'), '"functionality_storage":true') !== false ? 'checked' : '') . '> functionality_storage <small>(' . $addon->i18n('consent_manager_google_consent_functionality_storage_desc') . ')</small></label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="google_consent_mapping[personalization_storage]" value="1" ' . (strpos($form->getSql()->getValue('google_consent_mapping'), '"personalization_storage":true') !== false ? 'checked' : '') . '> personalization_storage <small>(' . $addon->i18n('consent_manager_google_consent_personalization_storage_desc') . ')</small></label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="google_consent_mapping[security_storage]" value="1" ' . (strpos($form->getSql()->getValue('google_consent_mapping'), '"security_storage":true') !== false ? 'checked' : '') . '> security_storage <small>(' . $addon->i18n('consent_manager_google_consent_security_storage_desc') . ')</small></label>
+                        </div>
                         <p class="help-block">' . $addon->i18n('consent_manager_google_consent_mode_mapping_notice') . '</p>
                     </div>
                 </div>

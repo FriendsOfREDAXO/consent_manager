@@ -86,3 +86,22 @@ consent_manager_cronjob_delete_days_notice = Delete all entries that are older t
 consent_manager_cronjob_deleted = {0} Entries were deleted
 consent_manager_cronjob_not_available = Consent-Manager AddOn is not installed
 consent_manager_cronjob_none_deleted = No entries were deleted
+
+consent_manager_google_consent_mode_legend = Google Consent Mode v2 Settings
+consent_manager_google_consent_mode_enabled = Enable Google Consent Mode v2
+consent_manager_google_consent_mode_enabled_notice = Activates automatic integration of Google Consent Mode v2 for this domain
+consent_manager_google_consent_mode_default_state = Default State
+consent_manager_google_consent_mode_default_state_notice = Default setting for consent flags when no consent has been given yet (recommended: denied)
+consent_manager_google_consent_mode_debug = Enable Debug Mode
+consent_manager_google_consent_mode_debug_notice = Shows a debug inspector in the frontend to verify Consent Mode functionality
+
+consent_manager_google_consent_mode_mapping_legend = Google Consent Mode v2 Mapping
+consent_manager_google_consent_mode_mapping = Consent Flags
+consent_manager_google_consent_mode_mapping_notice = Select the Google Consent flags that should be set when consent is given for this service
+consent_manager_google_consent_ad_storage_desc = Advertising - Enables storage for advertising purposes
+consent_manager_google_consent_ad_user_data_desc = User Data for Advertising - Transmission of user data for advertising purposes
+consent_manager_google_consent_ad_personalization_desc = Personalized Advertising - Consent for personalized advertisements
+consent_manager_google_consent_analytics_storage_desc = Analytics - Enables storage for analytics purposes
+consent_manager_google_consent_functionality_storage_desc = Functionality - Storage for website functionality
+consent_manager_google_consent_personalization_storage_desc = Personalization - Storage for personalization purposes
+consent_manager_google_consent_security_storage_desc = Security - Storage for security purposes

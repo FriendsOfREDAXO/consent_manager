@@ -86,3 +86,22 @@ consent_manager_cronjob_delete_days_notice = Ta bort alla poster som är äldre 
 consent_manager_cronjob_deleted = {0} poster raderades.
 consent_manager_cronjob_not_available = Consent-Manager AddOn är inte installerat
 consent_manager_cronjob_none_deleted = Inga poster har raderats.
+
+consent_manager_google_consent_mode_legend = Google Consent Mode v2 Inställningar
+consent_manager_google_consent_mode_enabled = Aktivera Google Consent Mode v2
+consent_manager_google_consent_mode_enabled_notice = Aktiverar automatisk integrering av Google Consent Mode v2 för denna domän
+consent_manager_google_consent_mode_default_state = Standardtillstånd
+consent_manager_google_consent_mode_default_state_notice = Standardinställning för medgivandemakrior när inget medgivande har givits än (rekommenderat: denied)
+consent_manager_google_consent_mode_debug = Aktivera Debug-läge
+consent_manager_google_consent_mode_debug_notice = Visar en debug-inspektor i frontend för att verifiera Consent Mode funktionalitet
+
+consent_manager_google_consent_mode_mapping_legend = Google Consent Mode v2 Mappning
+consent_manager_google_consent_mode_mapping = Medgivande Flaggor
+consent_manager_google_consent_mode_mapping_notice = Välj de Google Consent flaggor som ska sättas när medgivande ges för denna tjänst
+consent_manager_google_consent_ad_storage_desc = Reklam - Möjliggör lagring för reklamändamål
+consent_manager_google_consent_ad_user_data_desc = Användardata för reklam - Överföring av användardata för reklamändamål
+consent_manager_google_consent_ad_personalization_desc = Personaliserad reklam - Medgivande för personaliserade annonser
+consent_manager_google_consent_analytics_storage_desc = Analys - Möjliggör lagring för analysändamål
+consent_manager_google_consent_functionality_storage_desc = Funktionalitet - Lagring för webbplatsfunktionalitet
+consent_manager_google_consent_personalization_storage_desc = Personalisering - Lagring för personaliseringsändamål
+consent_manager_google_consent_security_storage_desc = Säkerhet - Lagring för säkerhetsändamål
