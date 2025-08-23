@@ -48,6 +48,7 @@ if (rex::isBackend()) {
     }
 
     rex_extension::register('REX_FORM_CONTROL_FIELDS', 'consent_manager_rex_form::removeDeleteButton');
+    rex_extension::register('REX_FORM_VALIDATE', 'consent_manager_rex_form::normalizeDomain');
     rex_extension::register('PAGES_PREPARED', 'consent_manager_clang::addLangNav');
     rex_extension::register('REX_FORM_SAVED', 'consent_manager_clang::formSaved');
     rex_extension::register('REX_FORM_SAVED', 'consent_manager_cache::write');

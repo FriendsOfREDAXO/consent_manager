@@ -109,6 +109,27 @@ class consent_manager_rex_form
     }
 
     /**
+     * Normalize domain to lowercase before saving
+     * @param rex_extension_point<rex_form> $ep
+     * @return void
+     * @api
+     */
+    public static function normalizeDomain(rex_extension_point $ep)
+    {
+        $form = $ep->getSubject();
+        if (rex::getTable('consent_manager_domain') === $form->getTableName()) {
+            $sql = $form->getSql();
+            if ($sql->hasValue('uid')) {
+                $currentDomain = $sql->getValue('uid');
+                $normalizedDomain = strtolower($currentDomain);
+                if ($currentDomain !== $normalizedDomain) {
+                    $sql->setValue('uid', $normalizedDomain);
+                }
+            }
+        }
+    }
+
+    /**
      * @param string $yaml
      * @return bool
      * @api

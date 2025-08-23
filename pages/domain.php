@@ -17,12 +17,6 @@ if ('delete' === $func) {
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
-    
-    // Normalize domain to lowercase if form was submitted
-    if (rex_post('uid', 'string') !== '') {
-        $_POST['uid'] = strtolower(rex_post('uid', 'string'));
-    }
-    
     $form = rex_form::factory($table, '', 'id = ' . $id, 'post', $formDebug);
     $form->addParam('id', $id);
     $form->addParam('sort', rex_request('sort', 'string', ''));
