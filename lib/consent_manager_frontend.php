@@ -60,6 +60,9 @@ class consent_manager_frontend
      */
     public function setDomain($domain)
     {
+        // Domain immer in Kleinbuchstaben normalisieren für den Lookup
+        $domain = strtolower($domain);
+        
         if (!isset($this->cache['domains'])) {
             return;
         }

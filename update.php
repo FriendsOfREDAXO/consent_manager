@@ -38,3 +38,11 @@ $sql = \rex_sql::factory();
 $sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_cookie` '
     .'SET uid = "consent_manager", definition = REPLACE(definition, "name: iwcc", "name: consent_manager") '
     .'WHERE uid = "iwcc"');
+
+// Normalisiere bestehende Domains zu Kleinbuchstaben (Fix für Issue #339)
+$sql = \rex_sql::factory();
+$sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_domain` SET domain = LOWER(domain) WHERE domain != LOWER(domain)');
+
+// Log normalisierte Domains
+$sql = \rex_sql::factory();  
+$sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_consent_log` SET domain = LOWER(domain) WHERE domain != LOWER(domain)');

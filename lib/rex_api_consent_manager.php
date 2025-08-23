@@ -33,7 +33,8 @@ class rex_api_consent_manager extends rex_api_function
             }
             $db = rex_sql::factory();
             $db->setTable(rex::getTable('consent_manager_consent_log'));
-            $db->setValue('domain', $domain);
+            // Domain in Kleinbuchstaben normalisieren beim Speichern ins Log
+            $db->setValue('domain', strtolower($domain));
             $db->setValue('consentid', $consentid);
             $db->setValue('consents', json_encode($consent_manager['consents']));
             $db->setValue('cachelogid', $consent_manager['cachelogid']);

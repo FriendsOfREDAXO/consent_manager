@@ -54,7 +54,8 @@ class consent_manager_util
     public static function hostname(): string
     {
         $dominfo = self::get_domaininfo('https://' . rex_request::server('HTTP_HOST'));
-        return $dominfo['domain'];
+        // Domain in Kleinbuchstaben zurückgeben für konsistente Verarbeitung
+        return strtolower($dominfo['domain']);
     }
 
     /**
@@ -86,9 +87,9 @@ class consent_manager_util
         return [
             'protocol' => $matches[1],
             'subdomain' => implode('.', $parts),
-            'domain' => $domain,
-            'host' => $host,
-            'tld' => $tld,
+            'domain' => strtolower($domain), // Domain immer in Kleinbuchstaben
+            'host' => strtolower($host),     // Host auch in Kleinbuchstaben
+            'tld' => strtolower($tld),       // TLD auch in Kleinbuchstaben
         ];
     }
 }
