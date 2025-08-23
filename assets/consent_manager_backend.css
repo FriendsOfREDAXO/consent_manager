@@ -1,1 +1,86 @@
 .consent_manager-rex-form-info{margin:-15px -15px 15px -15px;padding:5px 15px;background:#f09000;color:#fff}.consent_manager-rex-form-info i{margin-right:0.5em}.consent_manager-fake{opacity:0.6}.consent_manager-fake label{cursor:default}ul.navbar-nav li.active{font-weight:bold}legend>span{font-size:0.7em;font-weight:normal}p.theme_description span,p.theme_selected_description span{display:inline-block;width:160px}.cm_modal-overlay{position:fixed;box-sizing:border-box;top:0;left:0;width:100%;height:100%;background:rgba(0, 0, 0, 0.6);display:none;z-index:9999}.cm_modal-overlay.is-open{display:block}.cm_modal-iframe{border:0;background-color:#000;transform:scale(1, 1);width:100%;height:100%;opacity:0}.cm_modal-button-close{position:absolute;top:30px;right:30px;z-index:99999}div.thumbnail-container{width:calc(1440px * 0.20);height:calc(900px * 0.20);display:inline-block;overflow:hidden;position:relative;cursor:pointer}div.thumbnail{width:1440px;height:900px;position:relative;-ms-zoom:0.2;-moz-transform:scale(0.2);-moz-transform-origin:0 0;-o-transform:scale(0.2);-o-transform-origin:0 0;-webkit-transform:scale(0.2);-webkit-transform-origin:0 0}div.thumbnail:after{content:"";display:block;position:absolute;top:0;left:0;right:0;bottom:0}div.thumbnail iframe{border:0;width:1440px;height:900px;opacity:0;transition:all 300ms ease-in-out}
+
+/* Cookie Definition Builder Styles */
+.consent-manager-cookie-builder .table th small {
+    font-weight: normal;
+    font-style: italic;
+    color: #777;
+    display: block;
+    margin-top: 5px;
+}
+
+.consent-manager-cookie-builder .cookie-row:hover {
+    background-color: #f9f9f9;
+}
+
+.consent-manager-cookie-builder .cookie-row td {
+    vertical-align: middle;
+}
+
+.consent-manager-cookie-builder .btn-group-vertical .btn {
+    margin-bottom: 2px;
+    border-radius: 3px;
+}
+
+.consent-manager-cookie-builder .btn-group-vertical .btn:first-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.consent-manager-cookie-builder .yaml-preview pre {
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 12px;
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+}
+
+.consent-manager-cookie-builder .cookie-desc {
+    resize: vertical;
+    min-height: 50px;
+}
+
+.consent-manager-cookie-builder .panel-heading {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.consent-manager-cookie-builder .panel-heading h4 {
+    margin: 0;
+    font-size: 14px;
+    color: #495057;
+}
+
+.consent-manager-cookie-builder .panel-heading .rex-icon {
+    margin-right: 8px;
+    color: #6c757d;
+}
+
+.consent-manager-cookie-builder .table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.consent-manager-cookie-builder .table > thead > tr > th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+}
+
+.consent-manager-cookie-builder .form-control {
+    font-size: 13px;
+}
+
+.consent-manager-cookie-builder .cookie-name {
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+}
+
+@media (max-width: 768px) {
+    .consent-manager-cookie-builder .table-responsive {
+        font-size: 12px;
+    }
+    
+    .consent-manager-cookie-builder .btn-group-vertical .btn {
+        padding: 3px 6px;
+    }
+}

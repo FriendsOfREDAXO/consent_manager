@@ -68,6 +68,25 @@ consent_manager_import = Import
 consent_manager_import_info = Importiert eine zuvor exportierte JSON-Konfiguration.<br><b>VORSICHT - vorhandene Daten werden gelöscht.</b>
 consent_manager_import_file_label = JSON-Datei auswählen
 consent_manager_import_json = JSON importieren
+consent_manager_import_json_confirm = JSON-Datei importieren und vorhandene Daten löschen!?
+consent_manager_import_json_successful = JSON-Konfiguration erfolgreich importiert
+
+# Cookie Definition Builder
+consent_manager_cookie_definition_builder = Cookie-Definition Builder
+consent_manager_cookie_name = Cookie-Name
+consent_manager_cookie_name_help = z.B. _ga, PHPSESSID, consent_manager
+consent_manager_cookie_time = Speicherdauer
+consent_manager_cookie_time_help = z.B. 1 Jahr, Session, 30 Tage
+consent_manager_cookie_desc = Beschreibung
+consent_manager_cookie_desc_help = Zweck und Funktionsweise des Cookies
+consent_manager_cookie_desc_placeholder = Beschreibung des Cookies und dessen Verwendungszweck...
+consent_manager_cookie_actions = Aktionen
+consent_manager_cookie_add_row = Cookie-Zeile hinzufügen
+consent_manager_cookie_remove_row = Cookie-Zeile entfernen
+consent_manager_cookie_add_cookie = Cookie hinzufügen
+consent_manager_cookie_toggle_yaml = YAML-Code anzeigen
+consent_manager_cookie_hide_yaml = YAML-Code ausblenden
+consent_manager_cookie_yaml_preview = YAML-Vorschau
 consent_manager_import_confirm = JSON-Konfiguration importieren und vorhandene Daten löschen!?
 consent_manager_import_json_successful = JSON-Konfiguration erfolgreich importiert
 consent_manager_import_json_error = Fehler beim Import der JSON-Konfiguration
@@ -257,3 +276,19 @@ consent_manager_quickstart_btn_services = Services verwalten
 consent_manager_quickstart_btn_texts = Texte bearbeiten
 consent_manager_quickstart_btn_theme = Theme wählen
 consent_manager_quickstart_status_done = nach Import erledigt ✓
+
+# Setup Variants
+consent_manager_setup_minimal_title = Minimal Setup
+consent_manager_setup_minimal_desc = Nur technisch notwendige Cookies für DSGVO-Compliance. Perfekt für einfache Websites ohne Tracking.
+consent_manager_setup_minimal_button = Minimal Setup
+consent_manager_setup_minimal_confirm = Minimal Setup importieren?\n\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!
+
+consent_manager_setup_standard_title = Standard Setup
+consent_manager_setup_standard_desc = Umfassendes Setup mit Google Analytics, Facebook Pixel, YouTube, Google Maps und anderen wichtigen Services.
+consent_manager_setup_standard_button = Standard Setup
+consent_manager_setup_standard_confirm = Standard Setup importieren?\n\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!
+
+# Privacy Settings Link Code
+consent_manager_privacy_link_label = Privacy Settings Link
+consent_manager_privacy_link_desc = Fügen Sie diesen Link in Ihre Datenschutzerklärung oder Footer für nachträgliche Cookie-Einstellungen ein:
+consent_manager_privacy_link_code = HTML-Code für Privacy Settings Link

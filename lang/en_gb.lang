@@ -65,6 +65,25 @@ consent_manager_import = Import
 consent_manager_import_info = Imports a previously exported JSON configuration.<br><b>WARNING - existing data will be deleted.</b>
 consent_manager_import_file_label = Select JSON file
 consent_manager_import_json = Import JSON
+consent_manager_import_json_confirm = Import JSON file and delete existing data!?
+consent_manager_import_json_successful = JSON configuration imported successfully
+
+# Cookie Definition Builder
+consent_manager_cookie_definition_builder = Cookie Definition Builder
+consent_manager_cookie_name = Cookie Name
+consent_manager_cookie_name_help = e.g. _ga, PHPSESSID, consent_manager
+consent_manager_cookie_time = Lifetime
+consent_manager_cookie_time_help = e.g. 1 year, Session, 30 days
+consent_manager_cookie_desc = Description
+consent_manager_cookie_desc_help = Purpose and functionality of the cookie
+consent_manager_cookie_desc_placeholder = Description of the cookie and its purpose...
+consent_manager_cookie_actions = Actions
+consent_manager_cookie_add_row = Add cookie row
+consent_manager_cookie_remove_row = Remove cookie row
+consent_manager_cookie_add_cookie = Add cookie
+consent_manager_cookie_toggle_yaml = Show YAML code
+consent_manager_cookie_hide_yaml = Hide YAML code
+consent_manager_cookie_yaml_preview = YAML Preview
 consent_manager_import_confirm = Import JSON configuration and delete existing data!?
 consent_manager_import_json_successful = JSON configuration successfully imported
 consent_manager_import_json_error = Error importing JSON configuration
@@ -220,3 +239,19 @@ consent_manager_quickstart_btn_services = Manage Services
 consent_manager_quickstart_btn_texts = Edit Texts
 consent_manager_quickstart_btn_theme = Choose Theme
 consent_manager_quickstart_status_done = done after import ✓
+
+# Setup Variants for Quickstart Modal
+consent_manager_setup_minimal_title = Minimal Setup
+consent_manager_setup_minimal_desc = Basic configuration with essential services only (Google Analytics, Google Maps, YouTube)
+consent_manager_setup_minimal_button = Import Minimal Setup
+consent_manager_setup_minimal_confirm = Import minimal configuration and delete existing data?
+
+consent_manager_setup_standard_title = Complete Setup
+consent_manager_setup_standard_desc = Full configuration with all common services, texts and examples
+consent_manager_setup_standard_button = Import Complete Setup
+consent_manager_setup_standard_confirm = Import complete configuration and delete existing data?
+
+# Privacy Settings Link Code
+consent_manager_privacy_link_label = Privacy Settings Link
+consent_manager_privacy_link_desc = Add this link to your privacy policy or footer for subsequent cookie settings:
+consent_manager_privacy_link_code = HTML Code for Privacy Settings Link
