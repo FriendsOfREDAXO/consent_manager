@@ -117,30 +117,13 @@ Jeder externe Dienst (Analytics, Social Media, etc.) wird einzeln angelegt:
 
 **Schlüssel:** Interne Bezeichnung ohne Sonderzeichen
 **Dienstname:** Wird in der Consent-Box angezeigt
-**Cookie-Definitionen:** Benutzerfreundlicher **Cookie Definition Builder** oder YAML-Format
+**Cookie-Definitionen:** YAML-Format für Cookie-Details
 
-### Cookie Definition Builder
+### Cookie-Definitionen mit YAML
 
-Das AddOn bietet einen **benutzerfreundlichen Cookie Definition Builder**, der das manuelle YAML-Schreiben ersetzt:
+Das AddOn verwendet YAML-Format für die Definition von Cookie-Details:
 
-**Features:**
-- ✅ **Tabellarische Eingabe** von Cookie-Details
-- ✅ **Hinzufügen/Entfernen** von Cookie-Zeilen per Klick
-- ✅ **Automatische YAML-Generierung** im Hintergrund
-- ✅ **Live-Vorschau** des generierten YAML-Codes
-- ✅ **Intelligente Validierung** der Eingaben
-- ✅ **Responsive Design** für alle Bildschirmgrößen
-
-![Cookie Builder Interface](https://via.placeholder.com/800x400/f8f9fa/6c757d?text=Cookie+Definition+Builder)
-
-**Vorteile gegenüber YAML:**
-- 🚫 Keine Syntax-Fehler mehr
-- 🚫 Keine Einrückungsprobleme
-- 🚫 Kein manuelles Formatieren
-- ✅ Intuitive Bedienung wie eine Tabelle
-- ✅ Sofortige visuelle Rückmeldung
-
-**Beispiel Cookie-Definition (automatisch generiert):**
+**Beispiel Cookie-Definition:**
 ```yaml
 -
  name: _ga
@@ -469,28 +452,12 @@ Configuration → JSON-Datei hochladen → Import bestätigen
 
 ### Vorgefertigte Dienste
 
-Das Standard-Setup enthält essentieller Services für deutsche Websites:
+Das Standard-Setup enthält eine umfangreiche Sammlung mit **25 vorkonfigurierten Services** für moderne Websites, darunter gängige Dienste wie beispielsweise Google Analytics, Facebook Pixel, YouTube, Google Maps, Matomo, HubSpot, WhatsApp Business, LinkedIn, TikTok, Pinterest, Booking.com und viele weitere.
 
-**Analytics & Tracking:**
-- Google Analytics (Universal Analytics)
-- Google Analytics 4 (GA4)
-- Google Tag Manager
-- Matomo Analytics
-
-**Marketing & Werbung:**
-- Google Ads (AdWords)
-- Meta Pixel (Facebook Pixel)
-
-**Externe Medien:**
-- Google Maps
-- YouTube
-
-**Technisch notwendig:**
-- Consent Manager Cookie
-- PHP Session Cookie
+Die Services sind bereits strukturiert in Kategorien wie Analytics, Marketing, externe Medien, Kommunikation und technisch notwendige Dienste organisiert.
 
 ⚠️ **Wichtiger Hinweis:** Die Beispielkonfigurationen sind Vorlagen und müssen an die individuellen Anforderungen angepasst werden:
-- **API-Keys ersetzen:** Alle Platzhalter (z.B. `UA-XXXXXXXX-X`, `G-XXXXXXXXXX`, `GTM-XXXXXXX`) müssen durch echte IDs ersetzt werden
+- **API-Keys ersetzen:** Alle Platzhalter müssen durch echte IDs/Keys ersetzt werden
 - **Rechtliche Prüfung:** Cookie-Beschreibungen und Datenschutzlinks sollten von Datenschutzbeauftragten oder der Rechtsabteilung geprüft werden
 - **Aktualität:** Dienste-Definitionen entsprechen dem aktuellen Stand der Datenschutzbestimmungen
 
