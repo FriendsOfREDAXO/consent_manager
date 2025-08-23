@@ -28,14 +28,10 @@ if ('delete' === $func) {
     $field->setLabel($addon->i18n('consent_manager_domain'));
     $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_empty_msg'));
     $field->getValidator()->add('custom', $addon->i18n('consent_manager_domain_malformed_msg'), 'consent_manager_rex_form::validateHostname');
-    
-    // Domain vor dem Speichern in Kleinbuchstaben konvertieren
-    $form->addHandler('insert', function($form) {
-        $form->getSql()->setValue('uid', strtolower($form->getSql()->getValue('uid')));
+    $field->getValidator()->add('custom', 'Domain muss in Kleinbuchstaben eingegeben werden (z.B. "example.com" statt "Example.com")', function($value) {
+        return consent_manager_rex_form::validateLowercase($value);
     });
-    $form->addHandler('update', function($form) {
-        $form->getSql()->setValue('uid', strtolower($form->getSql()->getValue('uid')));
-    });
+    $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
 
     $field = $form->addLinkmapField('privacy_policy');
     $field->setLabel($addon->i18n('consent_manager_domain_privacy_policy')); /** @phpstan-ignore-line */
