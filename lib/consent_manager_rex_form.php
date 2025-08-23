@@ -101,14 +101,22 @@ class consent_manager_rex_form
      */
     public static function validateHostname($hostname)
     {
-        // Domain vor Validierung in Kleinbuchstaben normalisieren
-        $hostname = strtolower($hostname);
-        
         $host = parse_url('https://' . $hostname);
         if (isset($host['scheme']) && isset($host['host']) && !isset($host['path'])) {
             return filter_var($host['host'], FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
         }
         return false;
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     * @api
+     */
+    public static function validateLowercase($value)
+    {
+        // Prüft ob der Wert nur Kleinbuchstaben enthält
+        return $value === strtolower($value);
     }
 
     /**
