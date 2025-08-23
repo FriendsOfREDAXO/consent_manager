@@ -1,0 +1,421 @@
+{
+  "meta": {
+    "export_version": "1.1",
+    "export_date": "2025-01-23",
+    "addon_version": "2.8.0",
+    "description": "Erweiterte Services für Business-Websites (GA4, GTM, Social Media, etc.)",
+    "type": "extended_setup",
+    "language": "de"
+  },
+  "cookiegroups": [
+    {
+      "id": 1,
+      "prio": 1,
+      "uid": "required",
+      "clang_id": 1,
+      "domain": "",
+      "required": "|1|",
+      "name": "Notwendig",
+      "description": "Notwendige Cookies ermöglichen grundlegende Funktionen und sind für die einwandfreie Funktion der Website erforderlich.",
+      "cookie": "|consent_manager|phpsessid|",
+      "script": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 2,
+      "prio": 2,
+      "uid": "statistics",
+      "clang_id": 1,
+      "domain": "",
+      "required": null,
+      "name": "Statistik & Analyse",
+      "description": "Diese Cookies helfen uns zu verstehen, wie Besucher mit der Website interagieren, indem Informationen anonym gesammelt und ausgewertet werden. Dies ermöglicht es uns, die Website kontinuierlich zu verbessern.",
+      "cookie": "|google-analytics-4|matomo-self-hosted|hotjar|microsoft-clarity|",
+      "script": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 3,
+      "prio": 3,
+      "uid": "marketing",
+      "clang_id": 1,
+      "domain": "",
+      "required": null,
+      "name": "Marketing & Werbung",
+      "description": "Marketing-Cookies werden verwendet, um personalisierte Werbung anzuzeigen und die Wirksamkeit von Werbekampagnen zu messen. Diese Cookies verfolgen Besucher über Websites hinweg.",
+      "cookie": "|google-ads|facebook-pixel|linkedin-insight|tiktok-pixel|pinterest-tag|google-tag-manager|",
+      "script": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 4,
+      "prio": 4,
+      "uid": "external",
+      "clang_id": 1,
+      "domain": "",
+      "required": null,
+      "name": "Externe Medien & Inhalte",
+      "description": "Diese Cookies werden benötigt, um externe Inhalte wie Videos, Karten oder Social Media-Inhalte anzuzeigen. Ohne diese Cookies können solche Inhalte nicht dargestellt werden.",
+      "cookie": "|youtube|google-maps|vimeo|",
+      "script": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    }
+  ],
+  "cookies": [
+    {
+      "id": 1,
+      "clang_id": 1,
+      "uid": "consent_manager",
+      "service_name": "Datenschutz Cookie",
+      "provider": "Diese Website",
+      "provider_link_privacy": "",
+      "definition": "-\n name: consent_manager\n time: \"1 Jahr\"\n desc: \"Speichert Ihre Auswahl bzgl. der Cookies.\"",
+      "script": "",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 2,
+      "clang_id": 1,
+      "uid": "google-analytics-4",
+      "service_name": "Google Analytics 4 (GA4)",
+      "provider": "Google LLC",
+      "provider_link_privacy": "https://policies.google.com/privacy",
+      "definition": "-\n name: _ga\n time: \"2 Jahre\"\n desc: \"Wird verwendet, um Nutzer zu unterscheiden.\"\n-\n name: _ga_<container-id>\n time: \"2 Jahre\"\n desc: \"Wird verwendet, um den Sitzungsstatus zu erhalten.\"\n-\n name: _gid\n time: \"1 Tag\"\n desc: \"Wird verwendet, um Nutzer zu unterscheiden.\"\n-\n name: _gac_gb_<container-id>\n time: \"90 Tage\"\n desc: \"Enthält kampagnenbezogene Informationen für Google Ads.\"",
+      "script": "<!-- Google Analytics 4 (GA4) -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX\"></script>\r\n<script>\r\nwindow.dataLayer = window.dataLayer || [];\r\nfunction gtag(){dataLayer.push(arguments);}\r\ngtag('js', new Date());\r\ngtag('config', 'G-XXXXXXXXXX', {\r\n  'anonymize_ip': true,\r\n  'allow_google_signals': false,\r\n  'allow_ad_personalization_signals': false\r\n});\r\n</script>",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 3,
+      "clang_id": 1,
+      "uid": "google-tag-manager",
+      "service_name": "Google Tag Manager",
+      "provider": "Google LLC",
+      "provider_link_privacy": "https://policies.google.com/privacy",
+      "definition": "-\n name: _dc_gtm_<property-id>\n time: \"1 Minute\"\n desc: \"Wird verwendet, um die Ladezeiten anderer Skripte zu steuern.\"\n-\n name: _gat_gtag_<property-id>\n time: \"1 Minute\"\n desc: \"Wird verwendet, um die Anfragerate für Google Analytics zu begrenzen.\"",
+      "script": "<!-- Google Tag Manager -->\r\n<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\r\nnew Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\r\nj=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\r\n'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\r\n})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>\r\n<!-- End Google Tag Manager -->",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 4,
+      "clang_id": 1,
+      "uid": "matomo-self-hosted",
+      "service_name": "Matomo (Self-Hosted)",
+      "provider": "Matomo.org",
+      "provider_link_privacy": "https://matomo.org/privacy-policy/",
+      "definition": "-\n name: _pk_id\n time: \"13 Monate\"\n desc: \"Wird verwendet, um Benutzer zu identifizieren.\"\n-\n name: _pk_ses\n time: \"30 Minuten\"\n desc: \"Kurzer Session-Cookie.\"",
+      "script": "<!-- Matomo (Self-Hosted) -->\r\n<script type=\"text/javascript\">\r\n  var _paq = window._paq = window._paq || [];\r\n  _paq.push(['trackPageView']);\r\n  _paq.push(['enableLinkTracking']);\r\n  (function() {\r\n    var u=\"//YOUR-DOMAIN.COM/matomo/\";\r\n    _paq.push(['setTrackerUrl', u+'matomo.php']);\r\n    _paq.push(['setSiteId', '1']);\r\n    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\r\n    g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);\r\n  })();\r\n</script>",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 5,
+      "clang_id": 1,
+      "uid": "hotjar",
+      "service_name": "Hotjar",
+      "provider": "Hotjar Ltd.",
+      "provider_link_privacy": "https://www.hotjar.com/legal/policies/privacy/",
+      "definition": "-\n name: _hjSessionUser_<site_id>\n time: \"1 Jahr\"\n desc: \"Wird gesetzt, wenn ein Benutzer zum ersten Mal auf eine Seite mit dem Hotjar-Skript gelangt.\"",
+      "script": "<!-- Hotjar Tracking Code -->\r\n<script>\r\n    (function(h,o,t,j,a,r){\r\n        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};\r\n        h._hjSettings={hjid:YOUR_HJID,hjsv:6};\r\n        a=o.getElementsByTagName('head')[0];\r\n        r=o.createElement('script');r.async=1;\r\n        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;\r\n        a.appendChild(r);\r\n    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');\r\n</script>",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 6,
+      "clang_id": 1,
+      "uid": "microsoft-clarity",
+      "service_name": "Microsoft Clarity",
+      "provider": "Microsoft Corporation",
+      "provider_link_privacy": "https://privacy.microsoft.com/privacystatement",
+      "definition": "-\n name: _clck\n time: \"1 Jahr\"\n desc: \"Wird zur Verfolgung der Benutzerinteraktionen verwendet.\"",
+      "script": "<!-- Microsoft Clarity -->\r\n<script type=\"text/javascript\">\r\n    (function(c,l,a,r,i,t,y){\r\n        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};\r\n        t=l.createElement(r);t.async=1;t.src=\"https://www.clarity.ms/tag/\"+i;\r\n        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\r\n    })(window, document, \"clarity\", \"script\", \"YOUR_PROJECT_ID\");\r\n</script>",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 7,
+      "clang_id": 1,
+      "uid": "facebook-pixel",
+      "service_name": "Meta Pixel (Facebook Pixel)",
+      "provider": "Meta Platforms Inc.",
+      "provider_link_privacy": "https://www.facebook.com/privacy/policies/cookies/",
+      "definition": "-\n name: _fbp\n time: \"3 Monate\"\n desc: \"Wird genutzt, um eine Reihe von Werbeprodukten anzuzeigen, zum Beispiel Echtzeitgebote dritter Werbetreibender.\"",
+      "script": "<!-- Meta Pixel Code -->\r\n<script>\r\n!function(f,b,e,v,n,t,s)\r\n{if(f.fbq)return;n=f.fbq=function(){n.callMethod?\r\nn.callMethod.apply(n,arguments):n.queue.push(arguments)};\r\nif(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';\r\nn.queue=[];t=b.createElement(e);t.async=!0;\r\nt.src=v;s=b.getElementsByTagName(e)[0];\r\ns.parentNode.insertBefore(t,s)}(window, document,'script',\r\n'https://connect.facebook.net/en_US/fbevents.js');\r\nfbq('init', 'YOUR_PIXEL_ID');\r\nfbq('track', 'PageView');\r\n</script>",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 8,
+      "clang_id": 1,
+      "uid": "linkedin-insight",
+      "service_name": "LinkedIn Insight Tag",
+      "provider": "LinkedIn Corporation",
+      "provider_link_privacy": "https://www.linkedin.com/legal/privacy-policy",
+      "definition": "-\n name: li_gc\n time: \"179 Tage\"\n desc: \"Speichert die Zustimmungseinstellungen des Gastes.\"",
+      "script": "<!-- LinkedIn Insight Tag -->\r\n<script type=\"text/javascript\">\r\n_linkedin_partner_id = \"YOUR_PARTNER_ID\";\r\nwindow._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];\r\nwindow._linkedin_data_partner_ids.push(_linkedin_partner_id);\r\n</script><script type=\"text/javascript\">\r\n(function(l) {\r\nif (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};\r\nwindow.lintrk.q=[]}\r\nvar s = document.getElementsByTagName(\"script\")[0];\r\nvar b = document.createElement(\"script\");\r\nb.type = \"text/javascript\";b.async = true;\r\nb.src = \"https://snap.licdn.com/li.lms-analytics/insight.min.js\";\r\ns.parentNode.insertBefore(b, s);})(window.lintrk);\r\n</script>",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 9,
+      "clang_id": 1,
+      "uid": "phpsessid",
+      "service_name": "PHP Session",
+      "provider": "Diese Website",
+      "provider_link_privacy": "",
+      "definition": "-\n name: PHPSESSID\n time: \"Session\"\n desc: \"Die sog. Session-ID ist ein zufällig ausgewählter Schlüssel, der die Sessiondaten auf dem Server eindeutig identifiziert.\"",
+      "script": "",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 10,
+      "clang_id": 1,
+      "uid": "youtube",
+      "service_name": "YouTube (Google)",
+      "provider": "Google LLC",
+      "provider_link_privacy": "https://policies.google.com/privacy",
+      "definition": "-\n name: YSC\n time: \"Session\"\n desc: \"Registriert eine eindeutige ID, um Statistiken der Videos von YouTube, die der Benutzer gesehen hat, zu behalten.\"",
+      "script": "",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 11,
+      "clang_id": 1,
+      "uid": "google-maps",
+      "service_name": "Google Maps",
+      "provider": "Google LLC",
+      "provider_link_privacy": "https://policies.google.com/privacy",
+      "definition": "-\n name: NID\n time: \"6 Monate\"\n desc: \"Enthält eine eindeutige ID, mit der Google Ihre bevorzugten Einstellungen speichert.\"",
+      "script": "<script type=\"text/javascript\">\r\n// Beispiel für das Nachladen von Google Maps via Callback\r\nif ($('#deinGoogleMapsDivContainer').length > 0) {\r\n    var script = document.createElement('script');\r\n    script.type = 'text/javascript';\r\n    script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initGmaps';\r\n    document.head.appendChild(script);\r\n}\r\n</script>",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    },
+    {
+      "id": 12,
+      "clang_id": 1,
+      "uid": "vimeo",
+      "service_name": "Vimeo",
+      "provider": "Vimeo Inc.",
+      "provider_link_privacy": "https://vimeo.com/privacy",
+      "definition": "-\n name: vuid\n time: \"2 Jahre\"\n desc: \"Wird verwendet, um Benutzer zu identifizieren und Statistiken über die Nutzung des Players zu sammeln.\"",
+      "script": "<!-- Vimeo Video Embed -->\r\n<script type=\"text/javascript\">\r\nif (document.getElementById('vimeo-player-container')) {\r\n    var iframe = document.createElement('iframe');\r\n    iframe.src = 'https://player.vimeo.com/video/VIDEO_ID?dnt=1&title=0&byline=0&portrait=0';\r\n    iframe.width = '640';\r\n    iframe.height = '360';\r\n    iframe.frameBorder = '0';\r\n    iframe.allow = 'autoplay; fullscreen; picture-in-picture';\r\n    iframe.allowFullscreen = true;\r\n    document.getElementById('vimeo-player-container').appendChild(iframe);\r\n}\r\n</script>",
+      "script_unselect": "",
+      "placeholder_text": "",
+      "placeholder_image": "",
+      "createdate": "0000-00-00 00:00:00",
+      "updatedate": "0000-00-00 00:00:00"
+    }
+  ],
+  "texts": [
+    {
+      "id": 1,
+      "clang_id": 1,
+      "uid": "headline",
+      "text": "Cookie-Einstellungen"
+    },
+    {
+      "id": 2,
+      "clang_id": 1,
+      "uid": "description",
+      "text": "Wir nutzen Cookies und ähnliche Technologien, um unsere Website für Sie optimal zu gestalten und fortlaufend zu verbessern. Dabei verwenden wir auch Dienste von Drittanbietern für Analysen, Werbung und die Einbindung externer Inhalte. Mit einem Klick auf \"Alle akzeptieren\" stimmen Sie der Verwendung aller Cookies zu. Sie können Ihre Einstellungen jederzeit anpassen oder nur bestimmte Cookies zulassen."
+    },
+    {
+      "id": 3,
+      "clang_id": 1,
+      "uid": "toggle_details",
+      "text": "Details anzeigen/ausblenden"
+    },
+    {
+      "id": 4,
+      "clang_id": 1,
+      "uid": "provider",
+      "text": "Anbieter:"
+    },
+    {
+      "id": 5,
+      "clang_id": 1,
+      "uid": "link_privacy",
+      "text": "Datenschutzerklärung"
+    },
+    {
+      "id": 6,
+      "clang_id": 1,
+      "uid": "lifetime",
+      "text": "Speicherdauer:"
+    },
+    {
+      "id": 7,
+      "clang_id": 1,
+      "uid": "button_accept",
+      "text": "Auswahl bestätigen"
+    },
+    {
+      "id": 8,
+      "clang_id": 1,
+      "uid": "button_select_all",
+      "text": "Alle akzeptieren"
+    },
+    {
+      "id": 9,
+      "clang_id": 1,
+      "uid": "cookiename",
+      "text": "Cookie-Name:"
+    },
+    {
+      "id": 10,
+      "clang_id": 1,
+      "uid": "service",
+      "text": "Dienst:"
+    },
+    {
+      "id": 11,
+      "clang_id": 1,
+      "uid": "usage",
+      "text": "Zweck:"
+    },
+    {
+      "id": 12,
+      "clang_id": 1,
+      "uid": "category",
+      "text": "Kategorie:"
+    },
+    {
+      "id": 13,
+      "clang_id": 1,
+      "uid": "value",
+      "text": "Wert:"
+    },
+    {
+      "id": 14,
+      "clang_id": 1,
+      "uid": "missingdescription",
+      "text": "Keine weiteren Informationen verfügbar"
+    },
+    {
+      "id": 15,
+      "clang_id": 1,
+      "uid": "headline_usedcookies",
+      "text": "Aktuell verwendete Cookies"
+    },
+    {
+      "id": 16,
+      "clang_id": 1,
+      "uid": "headline_mayusedcookies",
+      "text": "Mögliche Cookies bei Zustimmung"
+    },
+    {
+      "id": 17,
+      "clang_id": 1,
+      "uid": "headline_currentconsent",
+      "text": "Ihre aktuelle Cookie-Einstellung"
+    },
+    {
+      "id": 18,
+      "clang_id": 1,
+      "uid": "headline_historyconsent",
+      "text": "Verlauf Ihrer Cookie-Einstellungen"
+    },
+    {
+      "id": 19,
+      "clang_id": 1,
+      "uid": "consent_date",
+      "text": "Datum der Einwilligung"
+    },
+    {
+      "id": 20,
+      "clang_id": 1,
+      "uid": "consent_id",
+      "text": "Einwilligungs-ID"
+    },
+    {
+      "id": 21,
+      "clang_id": 1,
+      "uid": "consent_consents",
+      "text": "Gewählte Kategorien"
+    },
+    {
+      "id": 22,
+      "clang_id": 1,
+      "uid": "edit_consent",
+      "text": "Cookie-Einstellungen ändern"
+    },
+    {
+      "id": 23,
+      "clang_id": 1,
+      "uid": "button_select_none",
+      "text": "Nur notwendige Cookies"
+    },
+    {
+      "id": 24,
+      "clang_id": 1,
+      "uid": "button_save_settings",
+      "text": "Einstellungen speichern"
+    },
+    {
+      "id": 25,
+      "clang_id": 1,
+      "uid": "privacy_policy_link",
+      "text": "Weitere Informationen in unserer Datenschutzerklärung"
+    },
+    {
+      "id": 26,
+      "clang_id": 1,
+      "uid": "imprint_link",
+      "text": "Impressum"
+    },
+    {
+      "id": 27,
+      "clang_id": 1,
+      "uid": "close_banner",
+      "text": "Banner schließen"
+    },
+    {
+      "id": 28,
+      "clang_id": 1,
+      "uid": "manage_cookies",
+      "text": "Cookies verwalten"
+    }
+  ],
+  "domains": []
+}

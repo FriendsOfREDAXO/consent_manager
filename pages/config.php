@@ -2,22 +2,95 @@
 
 $addon = rex_addon::get('consent_manager');
 
+// Ensure JSON setup class is loaded
+if (!class_exists('consent_manager_json_setup')) {
+    require_once __DIR__ . '/../lib/consent_manager_json_setup.php';
+}
+
 $func = rex_request('func', 'string');
 
 // Import/Export Functionality
-// Special handling for default import without CSRF check
-if ('setup' === $func) {
-    $file = rex_path::addon('consent_manager').'setup/setup.sql';
-    rex_sql_util::importDump($file);
-    consent_manager_clang::addonJustInstalled();
-    echo rex_view::success($addon->i18n('consent_manager_setup_import_successful'));
+if ('setup_minimal' === $func) {
+    // Import minimal setup (only necessary cookies)
+    $jsonSetupFile = rex_path::addon('consent_manager').'setup/minimal_setup.json';
+    
+    if (file_exists($jsonSetupFile)) {
+        $result = consent_manager_json_setup::importSetup($jsonSetupFile, true);
+        if ($result['success']) {
+            consent_manager_clang::addonJustInstalled();
+            echo rex_view::success('Minimales Setup erfolgreich importiert - nur technisch notwendige Cookies');
+        } else {
+            echo rex_view::error('Minimales Setup Import fehlgeschlagen: ' . $result['message']);
+        }
+    } else {
+        echo rex_view::error('Minimal setup file nicht gefunden: minimal_setup.json');
+    }
+    
     // Redirect to normal config page without func parameter
     echo '<script>setTimeout(function() { window.location.href = "'.rex_url::currentBackendPage(['page' => 'consent_manager/config']).'"; }, 2000);</script>';
+
+} elseif ('setup_standard' === $func) {
+    // Import standard setup (comprehensive setup with common services)
+    $jsonSetupFile = rex_path::addon('consent_manager').'setup/default_setup.json';
+    
+    if (file_exists($jsonSetupFile)) {
+        $result = consent_manager_json_setup::importSetup($jsonSetupFile, true);
+        if ($result['success']) {
+            consent_manager_clang::addonJustInstalled();
+            echo rex_view::success('Standard Setup erfolgreich importiert - alle wichtigen Services vorkonfiguriert');
+        } else {
+            echo rex_view::error('Standard Setup Import fehlgeschlagen: ' . $result['message']);
+        }
+    } else {
+        echo rex_view::error('Standard setup file nicht gefunden: default_setup.json');
+    }
+    
+    // Redirect to normal config page without func parameter
+    echo '<script>setTimeout(function() { window.location.href = "'.rex_url::currentBackendPage(['page' => 'consent_manager/config']).'"; }, 2000);</script>';
+
+} elseif ('setup_minimal_update' === $func) {
+    // Update with minimal setup (only add new, don't overwrite existing)
+    $jsonSetupFile = rex_path::addon('consent_manager').'setup/minimal_setup.json';
+    
+    if (file_exists($jsonSetupFile)) {
+        $result = consent_manager_json_setup::importSetup($jsonSetupFile, false, 'update');
+        if ($result['success']) {
+            consent_manager_clang::addonJustInstalled();
+            echo rex_view::success('Minimal Setup Update erfolgreich - nur neue Services hinzugefügt, bestehende unverändert');
+        } else {
+            echo rex_view::error('Minimal Setup Update fehlgeschlagen: ' . $result['message']);
+        }
+    } else {
+        echo rex_view::error('Minimal setup file nicht gefunden: minimal_setup.json');
+    }
+    
+    // Redirect to normal config page without func parameter
+    echo '<script>setTimeout(function() { window.location.href = "'.rex_url::currentBackendPage(['page' => 'consent_manager/config']).'"; }, 2000);</script>';
+
+} elseif ('setup_standard_update' === $func) {
+    // Update with standard setup (only add new, don't overwrite existing)
+    $jsonSetupFile = rex_path::addon('consent_manager').'setup/default_setup.json';
+    
+    if (file_exists($jsonSetupFile)) {
+        $result = consent_manager_json_setup::importSetup($jsonSetupFile, false, 'update');
+        if ($result['success']) {
+            consent_manager_clang::addonJustInstalled();
+            echo rex_view::success('Standard Setup Update erfolgreich - nur neue Services hinzugefügt, bestehende unverändert');
+        } else {
+            echo rex_view::error('Standard Setup Update fehlgeschlagen: ' . $result['message']);
+        }
+    } else {
+        echo rex_view::error('Standard setup file nicht gefunden: default_setup.json');
+    }
+    
+    // Redirect to normal config page without func parameter
+    echo '<script>setTimeout(function() { window.location.href = "'.rex_url::currentBackendPage(['page' => 'consent_manager/config']).'"; }, 2000);</script>';
+
 }
 
 // For all other functions CSRF check
 $csrf = rex_csrf_token::factory('consent_manager_config');
-if ('' !== $func && 'setup' !== $func) {
+if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_minimal_update', 'setup_standard_update'])) {
     if (!$csrf->isValid()) {
         echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
     } else {
@@ -61,28 +134,19 @@ if ('' !== $func && 'setup' !== $func) {
         } elseif ('import_json' === $func) {
             // JSON Import verarbeiten
             if (isset($_FILES['import_file']) && $_FILES['import_file']['error'] === UPLOAD_ERR_OK) {
-                // Validate file extension (.json) and size (max 2MB)
-                $filename = $_FILES['import_file']['name'];
-                $filesize = $_FILES['import_file']['size'];
-                $max_filesize = 2 * 1024 * 1024; // 2MB
-                if (strtolower(pathinfo($filename, PATHINFO_EXTENSION)) !== 'json') {
-                    echo rex_view::error($addon->i18n('consent_manager_import_json_invalid_extension'));
-                } elseif ($filesize > $max_filesize) {
-                    echo rex_view::error($addon->i18n('consent_manager_import_json_file_too_large'));
-                } else {
-                    $import_content = file_get_contents($_FILES['import_file']['tmp_name']);
-                    $import_data = json_decode($import_content, true);
+                $import_content = file_get_contents($_FILES['import_file']['tmp_name']);
+                $import_data = json_decode($import_content, true);
                 
-                    if (json_last_error() === JSON_ERROR_NONE && is_array($import_data)) {
+                if (json_last_error() === JSON_ERROR_NONE && is_array($import_data)) {
                     try {
-                        // Clear tables
+                        // Tabellen leeren
                         $sql = rex_sql::factory();
                         $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_cookie'));
                         $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_cookiegroup'));
                         $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_text'));
                         $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_domain'));
                         
-                        // Insert imported data
+                        // Importierte Daten einfügen
                         $tables = ['cookies', 'cookiegroups', 'texts', 'domains'];
                         $table_map = [
                             'cookies' => 'consent_manager_cookie',
@@ -155,7 +219,7 @@ $field = $form->addTextField('skip_consent');
 $field->setLabel($addon->i18n('consent_manager_config_token_label'));
 $field->setNotice($addon->i18n('consent_manager_config_token_notice'));
 
-// Layout mit optimierter Spaltenaufteilung (2/3 zu 1/3)
+// Layout mit vereinfachten Setup-Optionen
 echo '<div class="rex-addon-output">
     <!-- Schnellstart Button über beiden Panels -->
     <div class="row" style="margin-bottom: 20px;">
@@ -166,14 +230,14 @@ echo '<div class="rex-addon-output">
             </button>
         </div>
     </div>
-    
+
     <div class="row">
-        <!-- Linke Spalte: Einstellungen (2/3 Breite) -->
+        <!-- Linke Spalte: Einstellungen (8 Spalten) -->
         <div class="col-md-8">
             <div class="panel panel-edit">
                 <header class="panel-heading">
                     <div class="panel-title">
-                        <i class="rex-icon fa-cogs"></i> '.$addon->i18n('consent_manager_config_title').'
+                        <i class="rex-icon fa-cogs"></i> Consent-Manager Einstellungen
                     </div>
                 </header>
                 <div class="panel-body">
@@ -182,23 +246,58 @@ echo '<div class="rex-addon-output">
             </div>
         </div>
         
-        <!-- Rechte Spalte: Import/Export (1/3 Breite) -->
+        <!-- Rechte Spalte: Setup & Import/Export (4 Spalten) -->
         <div class="col-md-4">
-            <!-- Standard-Setup -->
-            <div class="panel panel-primary" style="margin-bottom: 15px;">
+            <!-- Schnellstart Panel -->
+            <div class="panel panel-primary" style="margin-bottom: 20px;">
                 <header class="panel-heading">
                     <div class="panel-title">
-                        <i class="rex-icon fa-download"></i> '.$addon->i18n('consent_manager_setup_headline').'
+                        <i class="rex-icon fa-rocket"></i> Schnellstart - Setup importieren
                     </div>
                 </header>
                 <div class="panel-body">
-                    <p>'.$addon->i18n('consent_manager_setup_info').'</p>
-                    <div class="text-center">
-                        <a href="'.rex_url::currentBackendPage(['func' => 'setup']).'" 
-                           class="btn btn-primary btn-sm" 
-                           data-confirm="'.$addon->i18n('consent_manager_setup_import_confirm').'">
-                            <i class="rex-icon fa-download"></i> '.$addon->i18n('consent_manager_setup_import').'
-                        </a>
+                    <p><strong>Wählen Sie ein Setup zum schnellen Start:</strong></p>
+                    
+                    <!-- Minimal Setup -->
+                    <div class="well" style="margin-bottom: 15px; padding: 15px;">
+                        <h5><i class="rex-icon fa-shield text-success"></i> <strong>Minimal Setup</strong></h5>
+                        <p style="margin-bottom: 12px; color: #666; font-size: 13px;">
+                            Nur technisch notwendige Cookies für DSGVO-Compliance. 
+                            Perfekt für einfache Websites ohne Tracking.
+                        </p>
+                        <div class="text-center">
+                            <a href="'.rex_url::currentBackendPage(['func' => 'setup_minimal']).'" 
+                               class="btn btn-success btn-sm" style="width: 48%; margin-right: 2%;"
+                               onclick="return confirm(\'Minimal Setup importieren?\\n\\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!\')">
+                                <i class="rex-icon fa-download"></i> Komplett laden
+                            </a>
+                            <a href="'.rex_url::currentBackendPage(['func' => 'setup_minimal_update']).'" 
+                               class="btn btn-outline btn-success btn-sm" style="width: 48%;"
+                               onclick="return confirm(\'Minimal Setup Update?\\n\\nNur neue Services werden hinzugefügt, bestehende bleiben unverändert.\')">
+                                <i class="rex-icon fa-plus"></i> Nur Neue
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Standard Setup -->
+                    <div class="well" style="margin-bottom: 0; padding: 15px;">
+                        <h5><i class="rex-icon fa-cog text-primary"></i> <strong>Standard Setup</strong></h5>
+                        <p style="margin-bottom: 12px; color: #666; font-size: 13px;">
+                            Umfassendes Setup mit Google Analytics, Facebook Pixel, YouTube, 
+                            Google Maps und anderen wichtigen Services.
+                        </p>
+                        <div class="text-center">
+                            <a href="'.rex_url::currentBackendPage(['func' => 'setup_standard']).'" 
+                               class="btn btn-primary btn-sm" style="width: 48%; margin-right: 2%;"
+                               onclick="return confirm(\'Standard Setup importieren?\\n\\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!\')">
+                                <i class="rex-icon fa-download"></i> Komplett laden
+                            </a>
+                            <a href="'.rex_url::currentBackendPage(['func' => 'setup_standard_update']).'" 
+                               class="btn btn-outline btn-primary btn-sm" style="width: 48%;"
+                               onclick="return confirm(\'Standard Setup Update?\\n\\nNur neue Services werden hinzugefügt, bestehende bleiben unverändert.\')">
+                                <i class="rex-icon fa-plus"></i> Nur Neue
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -207,15 +306,15 @@ echo '<div class="rex-addon-output">
             <div class="panel panel-success" style="margin-bottom: 15px;">
                 <header class="panel-heading">
                     <div class="panel-title">
-                        <i class="rex-icon fa-upload"></i> '.$addon->i18n('consent_manager_export_headline').'
+                        <i class="rex-icon fa-upload"></i> Konfiguration exportieren
                     </div>
                 </header>
                 <div class="panel-body">
-                    <p>'.$addon->i18n('consent_manager_export_info').'</p>
+                    <p>Exportieren Sie Ihre aktuelle Konfiguration als JSON-Datei zum Backup oder zur Übertragung.</p>
                     <div class="text-center">
                         <a href="'.rex_url::currentBackendPage(['func' => 'export'] + $csrf->getUrlParams()).'" 
                            class="btn btn-success btn-sm">
-                            <i class="rex-icon fa-download"></i> '.$addon->i18n('consent_manager_export_download').'
+                            <i class="rex-icon fa-download"></i> JSON exportieren
                         </a>
                     </div>
                 </div>
@@ -225,25 +324,62 @@ echo '<div class="rex-addon-output">
             <div class="panel panel-info">
                 <header class="panel-heading">
                     <div class="panel-title">
-                        <i class="rex-icon fa-file-code-o"></i> '.$addon->i18n('consent_manager_import_headline').'
+                        <i class="rex-icon fa-file-code-o"></i> JSON-Konfiguration importieren
                     </div>
                 </header>
                 <div class="panel-body">
-                    <p>'.$addon->i18n('consent_manager_import_info').'</p>
+                    <p>Importieren Sie eine zuvor exportierte JSON-Konfiguration.</p>
                     <form action="'.rex_url::currentBackendPage().'" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="func" value="import_json" />
                         '.rex_csrf_token::factory('consent_manager_config')->getHiddenField().'
                         <div class="form-group">
-                            <label for="import_file" class="sr-only">'.$addon->i18n('consent_manager_import_file_label').'</label>
                             <input type="file" class="form-control" id="import_file" name="import_file" accept=".json" required>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-info btn-sm">
-                                <i class="rex-icon fa-upload"></i> '.$addon->i18n('consent_manager_import_upload').'
+                                <i class="rex-icon fa-upload"></i> JSON importieren
                             </button>
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Nach dem Import - Nächste Schritte -->
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <h4><i class="rex-icon fa-info-circle"></i> Nach dem Setup Import:</h4>
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>1. Domain konfigurieren</strong><br>
+                        <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/domain']).'">
+                            <i class="rex-icon fa-globe"></i> Zu Domains
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>2. Services anpassen</strong><br>
+                        <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/cookie']).'">
+                            <i class="rex-icon fa-cog"></i> Zu Services
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>3. Texte anpassen</strong><br>
+                        <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/text']).'">
+                            <i class="rex-icon fa-edit"></i> Zu Texte
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>4. Design wählen</strong><br>
+                        <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/theme']).'">
+                            <i class="rex-icon fa-paint-brush"></i> Zu Themes
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <p><strong>Template-Code:</strong> <code>&lt;?php echo REX_CONSENT_MANAGER[]; ?&gt;</code> 
+                (vor dem schließenden &lt;/body&gt;-Tag einbinden)</p>
             </div>
         </div>
     </div>
@@ -266,8 +402,9 @@ echo '<div class="rex-addon-output">
                     <div class="col-md-12">
                         <div class="alert alert-info">
                             <strong>'.$addon->i18n('consent_manager_quickstart_welcome').'</strong>
-                        </div>                        <div class="panel-group" id="quickstart-accordion">
-                            <!-- Step 1: Import Standard Setup (recommended) -->
+                        </div>
+                        <div class="panel-group" id="quickstart-accordion">
+                            <!-- Step 1: Import Setup (recommended) -->
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">
@@ -276,18 +413,44 @@ echo '<div class="rex-addon-output">
                                 </div>
                                 <div class="panel-body">
                                     <p><strong>'.$addon->i18n('consent_manager_quickstart_step_import_desc').'</strong></p>
-                                    <div class="text-center">
-                                        <a href="'.rex_url::currentBackendPage(['func' => 'setup']).'" 
-                                           class="btn btn-success btn-lg" 
-                                           data-confirm="'.$addon->i18n('consent_manager_setup_import_confirm').'">
-                                            <i class="rex-icon fa-download"></i> '.$addon->i18n('consent_manager_setup_import').'
-                                        </a>
+                                    
+                                    <!-- Minimal und Standard Setup nebeneinander -->
+                                    <div class="row" style="margin-bottom: 15px;">
+                                        <div class="col-md-6">
+                                            <div class="well well-sm">
+                                                <h6><i class="rex-icon fa-shield text-success"></i> <strong>'.$addon->i18n('consent_manager_setup_minimal_title').'</strong></h6>
+                                                <p style="font-size: 12px; margin-bottom: 10px; color: #666;">
+                                                    '.$addon->i18n('consent_manager_setup_minimal_desc').'
+                                                </p>
+                                                <div class="text-center">
+                                                    <a href="'.rex_url::currentBackendPage(['func' => 'setup_minimal']).'" 
+                                                       class="btn btn-success btn-sm" style="width: 100%;"
+                                                       data-confirm="'.$addon->i18n('consent_manager_setup_minimal_confirm').'">
+                                                        <i class="rex-icon fa-download"></i> '.$addon->i18n('consent_manager_setup_minimal_button').'
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="well well-sm">
+                                                <h6><i class="rex-icon fa-cog text-primary"></i> <strong>'.$addon->i18n('consent_manager_setup_standard_title').'</strong></h6>
+                                                <p style="font-size: 12px; margin-bottom: 10px; color: #666;">
+                                                    '.$addon->i18n('consent_manager_setup_standard_desc').'
+                                                </p>
+                                                <div class="text-center">
+                                                    <a href="'.rex_url::currentBackendPage(['func' => 'setup_standard']).'" 
+                                                       class="btn btn-primary btn-sm" style="width: 100%;"
+                                                       data-confirm="'.$addon->i18n('consent_manager_setup_standard_confirm').'">
+                                                        <i class="rex-icon fa-download"></i> '.$addon->i18n('consent_manager_setup_standard_button').'
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="alert alert-info" style="margin-top: 15px;">
+                                    
+                                    <div class="alert alert-info" style="margin-bottom: 0;">
                                         <strong><i class="rex-icon fa-info-circle"></i> '.$addon->i18n('consent_manager_quickstart_import_hint').'</strong>
                                     </div>
-                                    <hr>
-                                    <p class="text-muted"><small><strong>'.$addon->i18n('consent_manager_quickstart_manual_config').'</strong></small></p>
                                 </div>
                             </div>
                             
@@ -330,7 +493,7 @@ echo '<div class="rex-addon-output">
                                 </div>
                                 <div class="panel-body">
                                     <p>'.$addon->i18n('consent_manager_quickstart_step_services_desc').'</p>
-                                    <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/cookie']).'" class="btn btn-sm btn-warning">
+                                    <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/cookie']).'" class="btn btn-sm btn-primary">
                                         <i class="rex-icon fa-cog"></i> '.$addon->i18n('consent_manager_quickstart_btn_services').'
                                     </a>
                                 </div>
@@ -360,7 +523,7 @@ echo '<div class="rex-addon-output">
                                 </div>
                                 <div class="panel-body">
                                     <p>'.$addon->i18n('consent_manager_quickstart_step_theme_desc').'</p>
-                                    <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/theme']).'" class="btn btn-sm btn-primary">
+                                    <a href="'.rex_url::currentBackendPage(['page' => 'consent_manager/theme']).'" class="btn btn-sm btn-default">
                                         <i class="rex-icon fa-paint-brush"></i> '.$addon->i18n('consent_manager_quickstart_btn_theme').'
                                     </a>
                                 </div>
@@ -381,6 +544,11 @@ echo '<div class="rex-addon-output">
                                         <p class="help-block" style="margin-bottom: 0;">
                                             <i class="fa fa-info-circle"></i> '.$addon->i18n('consent_manager_quickstart_template_code_info').'
                                         </p>
+                                    </div>
+                                    <div class="well well-sm" style="margin-top: 15px;">
+                                        <p><strong>'.$addon->i18n('consent_manager_privacy_link_label').'</strong></p>
+                                        <p class="help-block">'.$addon->i18n('consent_manager_privacy_link_desc').'</p>
+                                        <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; font-size: 11px;">&lt;a href="#" class="consent_manager-show-box"&gt;'.$addon->i18n('consent_manager_quickstart_privacy_settings_link').'&lt;/a&gt;</pre>
                                     </div>
                                     <div class="alert alert-success" style="margin-bottom: 0;">
                                         <i class="fa fa-check-circle"></i> <strong>'.$addon->i18n('consent_manager_quickstart_template_final_message').'</strong>

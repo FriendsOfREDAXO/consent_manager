@@ -220,3 +220,19 @@ consent_manager_quickstart_btn_services = Manage Services
 consent_manager_quickstart_btn_texts = Edit Texts
 consent_manager_quickstart_btn_theme = Choose Theme
 consent_manager_quickstart_status_done = done after import ✓
+
+# Setup Variants for Quickstart Modal
+consent_manager_setup_minimal_title = Minimal Setup
+consent_manager_setup_minimal_desc = Basic configuration with essential services only (Google Analytics, Google Maps, YouTube)
+consent_manager_setup_minimal_button = Import Minimal Setup
+consent_manager_setup_minimal_confirm = Import minimal configuration and delete existing data?
+
+consent_manager_setup_standard_title = Complete Setup
+consent_manager_setup_standard_desc = Full configuration with all common services, texts and examples
+consent_manager_setup_standard_button = Import Complete Setup
+consent_manager_setup_standard_confirm = Import complete configuration and delete existing data?
+
+# Privacy Settings Link Code
+consent_manager_privacy_link_label = Privacy Settings Link
+consent_manager_privacy_link_desc = Add this link to your privacy policy or footer for subsequent cookie settings:
+consent_manager_privacy_link_code = HTML Code for Privacy Settings Link

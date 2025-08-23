@@ -257,3 +257,19 @@ consent_manager_quickstart_btn_services = Services verwalten
 consent_manager_quickstart_btn_texts = Texte bearbeiten
 consent_manager_quickstart_btn_theme = Theme wählen
 consent_manager_quickstart_status_done = nach Import erledigt ✓
+
+# Setup Variants
+consent_manager_setup_minimal_title = Minimal Setup
+consent_manager_setup_minimal_desc = Nur technisch notwendige Cookies für DSGVO-Compliance. Perfekt für einfache Websites ohne Tracking.
+consent_manager_setup_minimal_button = Minimal Setup
+consent_manager_setup_minimal_confirm = Minimal Setup importieren?\n\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!
+
+consent_manager_setup_standard_title = Standard Setup
+consent_manager_setup_standard_desc = Umfassendes Setup mit Google Analytics, Facebook Pixel, YouTube, Google Maps und anderen wichtigen Services.
+consent_manager_setup_standard_button = Standard Setup
+consent_manager_setup_standard_confirm = Standard Setup importieren?\n\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!
+
+# Privacy Settings Link Code
+consent_manager_privacy_link_label = Privacy Settings Link
+consent_manager_privacy_link_desc = Fügen Sie diesen Link in Ihre Datenschutzerklärung oder Footer für nachträgliche Cookie-Einstellungen ein:
+consent_manager_privacy_link_code = HTML-Code für Privacy Settings Link
