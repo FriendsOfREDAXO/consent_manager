@@ -32,9 +32,13 @@ class consent_manager_util
         $db = rex_sql::factory();
         $db->setDebug(false);
 
-        // Check host
+        // Check host (normalize to lowercase for case-insensitive comparison)
+        $httpHost = rex_request::server('HTTP_HOST');
+        if (is_string($httpHost)) {
+            $httpHost = strtolower($httpHost);
+        }
         $db->prepareQuery('SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` = :uid');
-        $dbresult = $db->execute(['uid' => rex_request::server('HTTP_HOST')]);
+        $dbresult = $db->execute(['uid' => $httpHost]);
         if (1 === (int) $dbresult->getRows()) {
             $domain = $dbresult->getValue('id');
             // Check domain in cookie group
@@ -53,7 +57,11 @@ class consent_manager_util
      */
     public static function hostname(): string
     {
-        $dominfo = self::get_domaininfo('https://' . rex_request::server('HTTP_HOST'));
+        $httpHost = rex_request::server('HTTP_HOST');
+        if (is_string($httpHost)) {
+            $httpHost = strtolower($httpHost);
+        }
+        $dominfo = self::get_domaininfo('https://' . $httpHost);
         return $dominfo['domain'];
     }
 

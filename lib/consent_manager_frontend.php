@@ -63,6 +63,10 @@ class consent_manager_frontend
         if (!isset($this->cache['domains'])) {
             return;
         }
+        
+        // Normalize domain to lowercase for case-insensitive lookup
+        $domain = strtolower($domain);
+        
         if (!isset($this->cache['domains'][$domain])) {
             return;
         }

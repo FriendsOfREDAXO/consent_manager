@@ -171,7 +171,9 @@ class consent_manager_cache
             }
         }
         foreach ($this->domains as $v) {
-            $this->config['domains'][$v['uid']] = $v; /** @phpstan-ignore-line */
+            // Normalize domain key to lowercase for case-insensitive lookup
+            $domainKey = strtolower($v['uid']);
+            $this->config['domains'][$domainKey] = $v; /** @phpstan-ignore-line */
         }
         if (isset($this->texts[$clangId])) {
             $this->config['texts'][$clangId] = $this->texts[$clangId]; /** @phpstan-ignore-line */

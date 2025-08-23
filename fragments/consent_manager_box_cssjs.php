@@ -20,7 +20,7 @@ $consentparams['initially_hidden'] = 'false';
 
 $consent_manager = new consent_manager_frontend($forceCache);
 if (is_string(rex_request::server('HTTP_HOST'))) {
-    $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
+    $consent_manager->setDomain(strtolower(rex_request::server('HTTP_HOST')));
 }
 
 // Google Consent Mode v2 Integration - muss vor dem Consent Manager geladen werden
