@@ -68,6 +68,25 @@ consent_manager_import = Import
 consent_manager_import_info = Importiert eine zuvor exportierte JSON-Konfiguration.<br><b>VORSICHT - vorhandene Daten werden gelöscht.</b>
 consent_manager_import_file_label = JSON-Datei auswählen
 consent_manager_import_json = JSON importieren
+consent_manager_import_json_confirm = JSON-Datei importieren und vorhandene Daten löschen!?
+consent_manager_import_json_successful = JSON-Konfiguration erfolgreich importiert
+
+# Cookie Definition Builder
+consent_manager_cookie_definition_builder = Cookie-Definition Builder
+consent_manager_cookie_name = Cookie-Name
+consent_manager_cookie_name_help = z.B. _ga, PHPSESSID, consent_manager
+consent_manager_cookie_time = Speicherdauer
+consent_manager_cookie_time_help = z.B. 1 Jahr, Session, 30 Tage
+consent_manager_cookie_desc = Beschreibung
+consent_manager_cookie_desc_help = Zweck und Funktionsweise des Cookies
+consent_manager_cookie_desc_placeholder = Beschreibung des Cookies und dessen Verwendungszweck...
+consent_manager_cookie_actions = Aktionen
+consent_manager_cookie_add_row = Cookie-Zeile hinzufügen
+consent_manager_cookie_remove_row = Cookie-Zeile entfernen
+consent_manager_cookie_add_cookie = Cookie hinzufügen
+consent_manager_cookie_toggle_yaml = YAML-Code anzeigen
+consent_manager_cookie_hide_yaml = YAML-Code ausblenden
+consent_manager_cookie_yaml_preview = YAML-Vorschau
 consent_manager_import_confirm = JSON-Konfiguration importieren und vorhandene Daten löschen!?
 consent_manager_import_json_successful = JSON-Konfiguration erfolgreich importiert
 consent_manager_import_json_error = Fehler beim Import der JSON-Konfiguration

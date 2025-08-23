@@ -117,18 +117,39 @@ Jeder externe Dienst (Analytics, Social Media, etc.) wird einzeln angelegt:
 
 **Schlüssel:** Interne Bezeichnung ohne Sonderzeichen
 **Dienstname:** Wird in der Consent-Box angezeigt
-**Cookie-Definitionen:** YAML-Format für Cookie-Beschreibungen
+**Cookie-Definitionen:** Benutzerfreundlicher **Cookie Definition Builder** oder YAML-Format
 
-**Beispiel Cookie-Definition:**
+### Cookie Definition Builder
+
+Das AddOn bietet einen **benutzerfreundlichen Cookie Definition Builder**, der das manuelle YAML-Schreiben ersetzt:
+
+**Features:**
+- ✅ **Tabellarische Eingabe** von Cookie-Details
+- ✅ **Hinzufügen/Entfernen** von Cookie-Zeilen per Klick
+- ✅ **Automatische YAML-Generierung** im Hintergrund
+- ✅ **Live-Vorschau** des generierten YAML-Codes
+- ✅ **Intelligente Validierung** der Eingaben
+- ✅ **Responsive Design** für alle Bildschirmgrößen
+
+![Cookie Builder Interface](https://via.placeholder.com/800x400/f8f9fa/6c757d?text=Cookie+Definition+Builder)
+
+**Vorteile gegenüber YAML:**
+- 🚫 Keine Syntax-Fehler mehr
+- 🚫 Keine Einrückungsprobleme
+- 🚫 Kein manuelles Formatieren
+- ✅ Intuitive Bedienung wie eine Tabelle
+- ✅ Sofortige visuelle Rückmeldung
+
+**Beispiel Cookie-Definition (automatisch generiert):**
 ```yaml
 -
  name: _ga
- time: 2 Jahre
- desc: Speichert für jeden Besucher eine anonyme ID für die Zuordnung von Seitenaufrufen.
+ time: "2 Jahre"
+ desc: "Speichert für jeden Besucher eine anonyme ID für die Zuordnung von Seitenaufrufen."
 -
  name: _gat
- time: 1 Tag
- desc: Verhindert zu schnelle Datenübertragung an Analytics-Server.
+ time: "1 Tag"
+ desc: "Verhindert zu schnelle Datenübertragung an Analytics-Server."
 ```
 
 **JavaScript-Integration:**
@@ -448,60 +469,30 @@ Configuration → JSON-Datei hochladen → Import bestätigen
 
 ### Vorgefertigte Dienste
 
-Das Standard-Setup enthält Vorlagen für gängige Dienste und externe Inhalte:
+Das Standard-Setup enthält essentieller Services für deutsche Websites:
 
 **Analytics & Tracking:**
-- Google Analytics (Universal & GA4)
+- Google Analytics (Universal Analytics)
+- Google Analytics 4 (GA4)
 - Google Tag Manager
-- Matomo/Piwik
-- Adobe Analytics
-- Hotjar
-- Microsoft Clarity
+- Matomo Analytics
 
-**Maps & Geolocation:**
+**Marketing & Werbung:**
+- Google Ads (AdWords)
+- Meta Pixel (Facebook Pixel)
+
+**Externe Medien:**
 - Google Maps
-- OpenStreetMap
-- Mapbox
-
-**Video & Media:**
 - YouTube
-- Vimeo
-- Twitch
 
-**Social Media:**
-- Facebook (Pixel, Like-Button, Comments)
-- Instagram (Embeds)
-- Twitter/X (Tweets, Timeline)
-- LinkedIn (Insights)
-- TikTok (Pixel)
-- WhatsApp (Business Chat)
+**Technisch notwendig:**
+- Consent Manager Cookie
+- PHP Session Cookie
 
-**Marketing & Advertising:**
-- Google Ads
-- Facebook Ads
-- Microsoft Advertising (Bing)
-- Amazon DSP
-
-**Communication & Support:**
-- reCAPTCHA
-- Intercom
-- Zendesk Chat
-- Calendly
-
-**E-Commerce & Payment:**
-- PayPal
-- Stripe
-- Shopify
-- WooCommerce Tracking
-
-**Weitere Dienste:**
-- AddThis (Social Sharing)
-- Disqus (Comments)
-- Typeform
-- Mailchimp
-- Campaign Monitor
-
-⚠️ **Wichtiger Hinweis:** Die Beispielkonfigurationen sind Vorlagen und müssen an die individuellen Anforderungen und aktuellen Datenschutzbestimmungen angepasst werden.
+⚠️ **Wichtiger Hinweis:** Die Beispielkonfigurationen sind Vorlagen und müssen an die individuellen Anforderungen angepasst werden:
+- **API-Keys ersetzen:** Alle Platzhalter (z.B. `UA-XXXXXXXX-X`, `G-XXXXXXXXXX`, `GTM-XXXXXXX`) müssen durch echte IDs ersetzt werden
+- **Rechtliche Prüfung:** Cookie-Beschreibungen und Datenschutzlinks sollten von Datenschutzbeauftragten oder der Rechtsabteilung geprüft werden
+- **Aktualität:** Dienste-Definitionen entsprechen dem aktuellen Stand der Datenschutzbestimmungen
 
 ---
 

@@ -39,10 +39,33 @@ if ('delete' === $func) {
     }
     $field = $form->addTextField('service_name');
     $field->setLabel($addon->i18n('consent_manager_cookie_service_name'));
-    $field = $form->addTextAreaField('definition');
-    $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
-    $field->setLabel($addon->i18n('consent_manager_cookie_definition'));
-    $field->getValidator()->add('custom', $addon->i18n('consent_manager_cookie_malformed_yaml'), 'consent_manager_rex_form::validateYaml');
+    
+    // Cookie Definition Builder anstelle von YAML-Textfeld verwenden
+    if ('edit' === $func && 'consent_manager' !== $form->getSql()->getValue('uid')) {
+        // Verwende Cookie Definition Builder für normale Services
+        $fragment = new rex_fragment();
+        $fragment->setVar('addon', $addon);
+        $fragment->setVar('fieldName', 'definition');
+        $fragment->setVar('currentValue', $form->getSql()->getValue('definition'));
+        $fragment->setVar('uniqueId', 'cookie_builder_' . $pid);
+        $cookieBuilderHtml = $fragment->parse('consent_manager_cookie_definition_builder.php');
+        $field = $form->addRawField($cookieBuilderHtml);
+    } elseif ('add' === $func) {
+        // Verwende Cookie Definition Builder für neue Services
+        $fragment = new rex_fragment();
+        $fragment->setVar('addon', $addon);
+        $fragment->setVar('fieldName', 'definition');
+        $fragment->setVar('currentValue', '');
+        $fragment->setVar('uniqueId', 'cookie_builder_new');
+        $cookieBuilderHtml = $fragment->parse('consent_manager_cookie_definition_builder.php');
+        $field = $form->addRawField($cookieBuilderHtml);
+    } else {
+        // Fallback auf klassisches YAML-Feld für consent_manager Cookie
+        $field = $form->addTextAreaField('definition');
+        $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
+        $field->setLabel($addon->i18n('consent_manager_cookie_definition'));
+        $field->getValidator()->add('custom', $addon->i18n('consent_manager_cookie_malformed_yaml'), 'consent_manager_rex_form::validateYaml');
+    }
 
     $field = $form->addTextField('provider');
     $field->setLabel($addon->i18n('consent_manager_cookie_provider'));

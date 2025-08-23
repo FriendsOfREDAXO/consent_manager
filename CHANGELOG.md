@@ -30,6 +30,12 @@
   * Aufgeteilt in wiederverwendbare REDAXO-Fragmente
   * Klarere Trennung von Logik und Präsentation
   * Bessere Anpassbarkeit für Theme-Entwicklung
+* **Cookie Definition Builder**: Revolutionäre Benutzeroberfläche für Cookie-Verwaltung
+  * Ersetzt komplexe YAML-Syntax durch intuitive Tabellen-Eingabe
+  * Drag & Drop Interface mit "Cookie hinzufügen/entfernen" Buttons
+  * Automatische YAML-Generierung im Hintergrund
+  * Live-Vorschau des generierten Codes
+  * Eliminiert Syntax-Fehler und Formatierungsprobleme
 * **Verbesserte Frontend-Integration**: Optimierte Script-Verwaltung mit bedingtem Laden
 * **PJAX-Kompatibilität**: Debug-Konsole funktioniert mit AJAX-Navigation
 
