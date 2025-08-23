@@ -32,10 +32,16 @@ Das AddOn stellt eine DSGVO-konforme Lösung für die Einholung von Einverständ
 
 ## 🚀 Schnellstart
 
-### 1. Installation und Grundkonfiguration
+### 1. Installation und Setup-Assistent
 ```bash
 # AddOn über REDAXO Installer herunterladen und installieren
 ```
+
+**Quickstart-Assistent:** Beim ersten Aufruf der Konfiguration führt Sie ein **7-stufiger Assistent** durch das komplette Setup - von der Domain-Konfiguration bis zur Theme-Auswahl.
+
+**Setup-Varianten wählen:**
+- **Minimal:** Nur essentieller Service für datenschutz-minimale Websites  
+- **Standard:** Vollständige Service-Sammlung für umfassende Cookie-Verwaltung
 
 ### 2. Domain konfigurieren
 Unter **Domains** die Website-Domain hinterlegen (ohne Protokoll):
@@ -390,14 +396,59 @@ $consent_manager->setDomain($_SERVER['HTTP_HOST']);
 
 ## 📝 Setup und Import
 
-### Beispielkonfiguration importieren
+### Quickstart-Assistent für neue Nutzer
 
-Über **Setup** → **Beispielkonfiguration importieren**
-⚠️ **Achtung:** Überschreibt vorhandene Dienste und Gruppen!
+Beim ersten Aufruf der Konfiguration wird ein **7-stufiger Quickstart-Assistent** angezeigt:
+
+1. **Willkommen** - Übersicht über das Setup
+2. **Domain konfigurieren** - Website-Domain hinterlegen
+3. **Services wählen** - Zwischen Minimal- und Standard-Setup entscheiden
+4. **Gruppen** - Cookie-Gruppen verwalten
+5. **Texte** - Frontend-Texte anpassen
+6. **Design** - Theme auswählen
+7. **Testen** - Frontend-Integration testen
+
+**Mehrsprachig:** Der Assistent ist vollständig in Deutsch und Englisch verfügbar.
+
+### JSON-basiertes Setup-System
+
+Das neue **JSON-basierte Setup-System** ersetzt das alte SQL-Format und bietet:
+
+**Vorteile:**
+- ✅ Bessere Versionskontrolle und Nachvollziehbarkeit
+- ✅ Einfacher Export/Import von Konfigurationen
+- ✅ Strukturierte Datenhaltung
+- ✅ Flexible Anpassung an individuelle Bedürfnisse
+
+### Setup-Varianten
+
+**Minimal-Setup:** Grundkonfiguration mit nur essentiellem Service
+- Domain-Gruppe "Technisch notwendig"
+- Basic Consent Manager Service
+- Ideal für datenschutz-minimale Websites
+
+**Standard-Setup:** Vollständige Service-Sammlung (⚠️ **Überschreibt vorhandene Daten!**)
+- Alle gängigen Services vorkonfiguriert
+- Strukturierte Cookie-Gruppen
+- Ready-to-use für die meisten Websites
+
+### Konfiguration exportieren/importieren
+
+**Export der aktuellen Konfiguration:**
+```
+Configuration → Export aktuelle Konfiguration → JSON-Datei herunterladen
+```
+
+**Import einer JSON-Konfiguration:**
+```
+Configuration → JSON-Datei hochladen → Import bestätigen
+```
+
+⚠️ **Wichtiger Hinweis:** Import überschreibt **alle** bestehenden Domains, Cookie-Gruppen und Services!
 
 ### Vorgefertigte Dienste
 
-Das AddOn enthält Vorlagen für gängige Dienste und externe Inhalte:
+Das Standard-Setup enthält Vorlagen für gängige Dienste und externe Inhalte:
 
 **Analytics & Tracking:**
 - Google Analytics (Universal & GA4)
