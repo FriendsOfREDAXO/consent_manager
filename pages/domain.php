@@ -17,6 +17,12 @@ if ('delete' === $func) {
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
+    
+    // Normalize domain to lowercase if form was submitted
+    if (rex_post('uid', 'string') !== '') {
+        $_POST['uid'] = strtolower(rex_post('uid', 'string'));
+    }
+    
     $form = rex_form::factory($table, '', 'id = ' . $id, 'post', $formDebug);
     $form->addParam('id', $id);
     $form->addParam('sort', rex_request('sort', 'string', ''));
@@ -28,15 +34,6 @@ if ('delete' === $func) {
     $field->setLabel($addon->i18n('consent_manager_domain'));
     $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_empty_msg'));
     $field->getValidator()->add('custom', $addon->i18n('consent_manager_domain_malformed_msg'), 'consent_manager_rex_form::validateHostname');
-    
-    // Add preSaveAction to normalize domain to lowercase before saving
-    $form->addPreSaveAction(static function (rex_form $form) {
-        $sql = $form->getSql();
-        $uid = $sql->getValue('uid');
-        if (is_string($uid)) {
-            $sql->setValue('uid', strtolower($uid));
-        }
-    });
 
     $field = $form->addLinkmapField('privacy_policy');
     $field->setLabel($addon->i18n('consent_manager_domain_privacy_policy')); /** @phpstan-ignore-line */
