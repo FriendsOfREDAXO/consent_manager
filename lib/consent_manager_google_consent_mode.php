@@ -44,6 +44,9 @@ class consent_manager_google_consent_mode
      */
     public static function getDomainConfig(string $domain): array
     {
+        // Domain in Kleinbuchstaben normalisieren für den Lookup
+        $domain = strtolower($domain);
+        
         $sql = rex_sql::factory();
         $sql->setQuery(
             'SELECT google_consent_mode_enabled FROM ' . rex::getTable('consent_manager_domain') . ' WHERE domain = ?',
@@ -171,6 +174,9 @@ class consent_manager_google_consent_mode
      */
     public static function setDomainEnabled(string $domain, bool $enabled): bool
     {
+        // Domain in Kleinbuchstaben normalisieren für den Lookup
+        $domain = strtolower($domain);
+        
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_domain'));
         $sql->setWhere('domain = ?', [$domain]);

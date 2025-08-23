@@ -433,7 +433,12 @@ class consent_manager_json_setup
         
         foreach ($fieldMapping as $jsonField => $dbField) {
             if (isset($domain[$jsonField])) {
-                $sql->setValue($dbField, $domain[$jsonField]);
+                // Domain in Kleinbuchstaben normalisieren beim Import
+                $value = $domain[$jsonField];
+                if ($dbField === 'domain') {
+                    $value = strtolower($value);
+                }
+                $sql->setValue($dbField, $value);
             }
         }
         
