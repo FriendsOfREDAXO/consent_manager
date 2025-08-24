@@ -57,6 +57,22 @@ if (rex::isBackend()) {
 
     rex_extension::register('REX_FORM_CONTROL_FIELDS', 'consent_manager_rex_form::removeDeleteButton');
     rex_extension::register('PAGES_PREPARED', 'consent_manager_clang::addLangNav');
+    rex_extension::register('PAGES_PREPARED', function () {
+        // Debug-Indikator im Menü hinzufügen
+        if (rex_backend_login::hasSession() && null !== rex::getUser()) {
+            $sql = 'SELECT COUNT(*) as debug_count FROM ' . rex::getTable('consent_manager_domain') . ' WHERE google_consent_mode_debug = 1';
+            $result = rex_sql::factory()->getArray($sql);
+            $debug_count = (int) $result[0]['debug_count'];
+            
+            if ($debug_count > 0) {
+                $page = rex_be_controller::getPageObject('consent_manager');
+                if ($page) {
+                    $title = $page->getTitle();
+                    $page->setTitle($title . ' <i class="fa fa-bug" style="color: #f0ad4e; margin-left: 8px;" title="Debug-Modus aktiv"></i>');
+                }
+            }
+        }
+    });
     rex_extension::register('REX_FORM_SAVED', 'consent_manager_clang::formSaved');
     rex_extension::register('REX_FORM_SAVED', 'consent_manager_cache::write');
     rex_extension::register('CLANG_ADDED', 'consent_manager_clang::clangAdded');
@@ -79,6 +95,62 @@ if (rex::isFrontend()) {
             $consent_manager = new consent_manager_frontend(0);
             $consent_manager->outputJavascript();
             exit;
+        }
+    });
+
+    // Debug Helper für Consent Manager - nach PACKAGES_INCLUDED
+    rex_extension::register('PACKAGES_INCLUDED', static function () {
+        // Debug-Modus basierend auf Domain-Konfiguration aktivieren
+        $hasPermission = false;
+        
+        try {
+            // Backend-User mit Session (wie in Minibar)
+            $user = rex_backend_login::createUser();
+            if ($user) {
+                $hasPermission = true;
+            }
+        } catch (Exception $e) {
+            // Fallback: Debug-Modus oder lokale Umgebung
+            if (rex::isDebugMode() || 
+                in_array(rex_request::server('HTTP_HOST', 'string', ''), ['localhost', '127.0.0.1', 'klxm.de'])) {
+                $hasPermission = true;
+            }
+        }
+        
+        if ($hasPermission) {
+            // Domain-Konfiguration prüfen
+            $domain = rex_request::server('HTTP_HOST', 'string', '');
+            $domain = strtolower($domain); // Normalisierung wie im Frontend
+            
+            $sql = rex_sql::factory();
+            $sql->setQuery(
+                'SELECT google_consent_mode_debug FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
+                [$domain]
+            );
+            
+            $debugEnabled = false;
+            if ($sql->getRows() > 0) {
+                $debugEnabled = (bool) $sql->getValue('google_consent_mode_debug');
+            }
+            
+            // Debug nur aktivieren wenn in Domain-Konfiguration eingeschaltet
+            if ($debugEnabled) {
+                $addon = rex_addon::get('consent_manager');
+                $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
+                
+                try {
+                    $googleConsentModeConfig = consent_manager_google_consent_mode::getDomainConfig($domain);
+                    $debugScript = '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
+                } catch (Exception $e) {
+                    // Fallback ohne Domain-Config
+                    $debugScript = '<script>window.consentManagerDebugConfig = {};</script>' . PHP_EOL;
+                }
+                
+                $debugScript .= '<script src="' . $consentDebugUrl . '" defer></script>' . PHP_EOL;
+                
+                // Debug-Script global verfügbar machen
+                $GLOBALS['consent_manager_debug_script'] = $debugScript;
+            }
         }
     });
 }

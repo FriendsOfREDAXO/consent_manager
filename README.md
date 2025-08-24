@@ -9,12 +9,24 @@ Das AddOn stellt eine DSGVO-konforme Lösung für die Einholung von Einverständ
 **Kernfunktionen:**
 - Datenschutz-Opt-In-Banner für Dien## 🔍 Debug-Modus
 
+## 🔍 Debug-Modus
+
 **Consent-Debug-Panel:** Seit Version 4.4.0 verfügbar für Entwickler und Troubleshooting.
 
 **Aktivierung:**
-```
-?debug_consent=1
-```
+- **Domain-Konfiguration**: Debug-Modus in Domain-Einstellungen aktivieren
+- **Backend-Login erforderlich**: Nur für angemeldete Administrator sichtbar
+
+**Features:**
+- Live-Anzeige aller Cookie-Stati
+- Google Consent Mode Integration
+- LocalStorage-Übersicht
+- Service-Status-Monitor
+- Menü-Indikator mit <i class="fa fa-bug"></i> Symbol bei aktivem Debug-Modusg-Panel:** Seit Version 4.4.0 verfügbar für Entwickler und Troubleshooting.
+
+**Aktivierung:**
+- **Domain-Konfiguration**: In **Domains** → Debug-Modus auf "Aktiviert" setzen
+- **Backend-Login erforderlich**: Debug-Panel nur für angemeldete Backend-Benutzer sichtbar
 
 **Features:**
 - **🎯 Google Consent Mode v2 Status**: Zeigt aktiven Modus (Deaktiviert ❌ / Automatisch 🔄 / Manuell ⚙️)
@@ -23,8 +35,9 @@ Das AddOn stellt eine DSGVO-konforme Lösung für die Einholung von Einverständ
 - **Cookie-Analyse**: Strukturierte Darstellung aller Cookies mit JSON-Parsing
 - **LocalStorage-Übersicht**: Einblick in alle gespeicherten Consent-Daten
 - **Echtzeit-Updates**: Status ändert sich live bei Consent-Änderungen
+- **Menü-Indikator**: <i class="fa fa-bug"></i> Symbol im Backend-Menü bei aktivem Debug-Modus
 
-**Nur für eingeloggte Backend-Nutzer verfügbar** - aus Sicherheitsgründen nicht für normale Website-Besucher sichtbar.s
+**Sicherheit:** Debug-Panel ist aus Sicherheitsgründen nicht für normale Website-Besucher verfügbar.s
 - Flexible Gruppierung von Diensten
 - Nachträgliche Änderung der Einstellungen möglich
 - Vollständig anpassbare Texte und Designs
@@ -244,8 +257,10 @@ Google Consent Mode wird nicht verwendet - Standard GDPR-Verhalten ohne gtag-Int
 
 **Debug-Konsole für Entwickler:**
 ```
-?debug_consent=1
+Domain-Konfiguration → Debug-Modus "Aktiviert"
 ```
+- **Domain-Konfiguration**: Debug-Modus in Domain-Einstellungen aktivieren
+- **Backend-Login erforderlich**: Nur für angemeldete Administrator sichtbar
 
 **Automatische Service-Mappings:**
 ```
@@ -272,6 +287,32 @@ Die automatische Erkennung funktioniert über den **Service-Schlüssel (UID)**. 
 | **Matomo** | `matomo` | `piwik` |
 | **Hotjar** | `hotjar` | - |
 | **Microsoft Clarity** | `microsoft-clarity` | `clarity` |
+
+**🔧 Flexible UID-Struktur (Multidomain/Multilanguage):**
+
+Das Auto-Mapping funktioniert mit **Partial String Matching** - Suffixes sind erlaubt:
+
+✅ **Funktioniert perfekt:**
+```
+google-analytics        → Erkannt als Google Analytics
+google-analytics-shop   → Erkannt als Google Analytics  
+google-analytics-de     → Erkannt als Google Analytics
+facebook-pixel-checkout → Erkannt als Facebook Pixel
+matomo-staging          → Erkannt als Matomo
+youtube-embeds          → Erkannt als YouTube
+```
+
+❌ **Funktioniert NICHT:**
+```
+shop-google-analytics   → NICHT erkannt (Prefix stört)
+custom-analytics        → NICHT erkannt (fehlt "google-analytics")
+```
+
+**💡 Empfehlung für Multidomain/Multilanguage:**
+- `google-analytics-de`, `google-analytics-shop`, `google-analytics-en`
+- `facebook-pixel-landing`, `facebook-pixel-checkout`  
+- `matomo-domain1`, `matomo-domain2`
+- `youtube-videos-de`, `youtube-videos-en`
 
 **Beispiel Service-Anlage:**
 1. **Dienste** → **Service hinzufügen**
@@ -364,10 +405,10 @@ Zeigt alle gesetzten Cookies und die Einwilligungshistorie an.
 
 ### Debug-Modus aktivieren
 
-**Methoden:**
-- REDAXO Debug-Modus: `rex::isDebugMode()`
-- URL-Parameter: `?debug_consent=1`
-- Programmatisch über API
+**Aktivierung:**
+- **Domain-Konfiguration**: In **Domains** → Debug-Modus auf "Aktiviert" setzen
+- **REDAXO Debug-Modus**: `rex::isDebugMode()` (automatisch aktiv)
+- **Backend-Login erforderlich**: Nur für angemeldete Backend-Benutzer
 
 **Debug-Konsole zeigt:**
 - Consent-Status und Default-Werte

@@ -26,27 +26,10 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
 // Google Consent Mode v2 Integration - muss vor dem Consent Manager geladen werden
 $googleConsentModeOutput = '';
 
-// Debug Helper für Consent Manager
-
-if (rex::isFrontend()
-    && rex_request::get('debug_consent', 'int', 0) === 1
-    && (
-        // Backend-User mit Session (wie in Minibar)
-        rex_backend_login::createUser()
-        // ODER Debug-Modus aktiviert
-        || rex::isDebugMode()
-        // ODER lokale Entwicklungsumgebung (localhost/127.0.0.1)
-        || in_array(rex_request::server('HTTP_HOST', 'string', ''), ['localhost', '127.0.0.1', 'klxm.de'])
-    )
-) {
-    $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
-    
-    // Domain-Konfiguration für Debug-Konsole einbetten
-    $domain = rex_request::server('HTTP_HOST', 'string', '');
-    $googleConsentModeConfig = consent_manager_google_consent_mode::getDomainConfig($domain);
-    
-    $googleConsentModeOutput .= '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
-    $googleConsentModeOutput .= '<script src="' . $consentDebugUrl . '" defer</script>' . PHP_EOL;
+// Debug Helper für Consent Manager - wird in boot.php verarbeitet
+$debugScriptOutput = '';
+if (isset($GLOBALS['consent_manager_debug_script'])) {
+    $debugScriptOutput = $GLOBALS['consent_manager_debug_script'];
 }
 
 if (! empty($consent_manager->domainInfo) &&
@@ -101,6 +84,11 @@ $consentparams['outputjs'] .= '    <script src="' . rex_url::frontendController(
 
 // Ausgabe Google Consent Mode v2 (vor allem anderen)
 echo $googleConsentModeOutput;
+
+// Debug-Script anhängen falls gesetzt
+if (!empty($debugScriptOutput)) {
+    echo $debugScriptOutput;
+}
 
 // Ausgabe CSS + JavaScript
 echo $consentparams['outputcss'];
