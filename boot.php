@@ -100,57 +100,38 @@ if (rex::isFrontend()) {
 
     // Debug Helper für Consent Manager - nach PACKAGES_INCLUDED
     rex_extension::register('PACKAGES_INCLUDED', static function () {
-        // Debug-Modus basierend auf Domain-Konfiguration aktivieren
-        $hasPermission = false;
+        // Domain-Konfiguration prüfen (ohne User-Prüfung)
+        $domain = rex_request::server('HTTP_HOST', 'string', '');
+        $domain = strtolower($domain); // Normalisierung wie im Frontend
         
-        try {
-            // Backend-User mit Session (wie in Minibar)
-            $user = rex_backend_login::createUser();
-            if ($user) {
-                $hasPermission = true;
-            }
-        } catch (Exception $e) {
-            // Fallback: Debug-Modus oder lokale Umgebung
-            if (rex::isDebugMode() || 
-                in_array(rex_request::server('HTTP_HOST', 'string', ''), ['localhost', '127.0.0.1', 'klxm.de'])) {
-                $hasPermission = true;
-            }
+        $sql = rex_sql::factory();
+        $sql->setQuery(
+            'SELECT google_consent_mode_debug FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
+            [$domain]
+        );
+        
+        $debugEnabled = false;
+        if ($sql->getRows() > 0) {
+            $debugEnabled = (bool) $sql->getValue('google_consent_mode_debug');
         }
         
-        if ($hasPermission) {
-            // Domain-Konfiguration prüfen
-            $domain = rex_request::server('HTTP_HOST', 'string', '');
-            $domain = strtolower($domain); // Normalisierung wie im Frontend
+        // Debug aktivieren wenn in Domain-Konfiguration eingeschaltet
+        if ($debugEnabled) {
+            $addon = rex_addon::get('consent_manager');
+            $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
             
-            $sql = rex_sql::factory();
-            $sql->setQuery(
-                'SELECT google_consent_mode_debug FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
-                [$domain]
-            );
-            
-            $debugEnabled = false;
-            if ($sql->getRows() > 0) {
-                $debugEnabled = (bool) $sql->getValue('google_consent_mode_debug');
+            try {
+                $googleConsentModeConfig = consent_manager_google_consent_mode::getDomainConfig($domain);
+                $debugScript = '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
+            } catch (Exception $e) {
+                // Fallback ohne Domain-Config
+                $debugScript = '<script>window.consentManagerDebugConfig = {"mode": "unknown", "enabled": false};</script>' . PHP_EOL;
             }
             
-            // Debug nur aktivieren wenn in Domain-Konfiguration eingeschaltet
-            if ($debugEnabled) {
-                $addon = rex_addon::get('consent_manager');
-                $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
-                
-                try {
-                    $googleConsentModeConfig = consent_manager_google_consent_mode::getDomainConfig($domain);
-                    $debugScript = '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
-                } catch (Exception $e) {
-                    // Fallback ohne Domain-Config
-                    $debugScript = '<script>window.consentManagerDebugConfig = {};</script>' . PHP_EOL;
-                }
-                
-                $debugScript .= '<script src="' . $consentDebugUrl . '" defer></script>' . PHP_EOL;
-                
-                // Debug-Script global verfügbar machen
-                $GLOBALS['consent_manager_debug_script'] = $debugScript;
-            }
+            $debugScript .= '<script src="' . $consentDebugUrl . '"></script>' . PHP_EOL;
+            
+            // Debug-Script in rex_session speichern für Fragment-Zugriff
+            rex_set_session('consent_manager_debug_script', $debugScript);
         }
     });
 }
