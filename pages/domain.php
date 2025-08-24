@@ -43,11 +43,12 @@ if ('delete' === $func) {
 
     // Google Consent Mode v2 Configuration
     $field = $form->addSelectField('google_consent_mode_enabled');
-    $field->setLabel('Google Consent Mode v2');
+    $field->setLabel($addon->i18n('google_consent_mode_title'));
     $select = $field->getSelect();
-    $select->addOption('Deaktiviert', '0');
-    $select->addOption('Aktiviert', '1');
-    $field->setNotice('Aktiviert das Google Consent Mode v2 Skript automatisch für diese Domain. Das Skript wird vor dem Consent Manager geladen und setzt initial alle Consent-Flags auf "denied". Jeder Dienst muss dann selbst seine benötigten Flags per setConsent() aktivieren.');
+    $select->addOption($addon->i18n('google_consent_mode_disabled'), 'disabled');
+    $select->addOption($addon->i18n('google_consent_mode_auto'), 'auto');
+    $select->addOption($addon->i18n('google_consent_mode_manual'), 'manual');
+    $field->setNotice($addon->i18n('google_consent_mode_notice'));
 
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
     $content = $form->get();
