@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 4.4.0 - 22.08.2025
+## Version 4.4.0 - 24.08.2025
 
 ### Features
 
@@ -17,16 +17,20 @@
   * Google Consent Mode Status (falls aktiviert)
   * Aktivierung: URL-Parameter `?debug_consent=1`
   * Live-Refresh und strukturierte JSON-Anzeige
+  * Verbesserte Parameter-Behandlung (int statt string für debug_level)
 * **JSON-basiertes Setup-System**: Komplett überarbeitetes Import-/Export-System für Konfigurationsdaten
   * Ersetzte SQL-basierte Beispielkonfiguration durch flexibles JSON-Format
   * Zwei vorgefertigte Setup-Varianten: "Minimal" (nur essentieller Service) und "Standard" (vollständige Service-Sammlung)
   * Export bestehender Konfigurationen als JSON für Backup und Migration
   * Verbesserte Datenintegrität und einfachere Versionskontrolle
-* **Multilingualer Quickstart-Assistent**: 7-stufiger Setup-Wizard für neue Nutzer
-  * Integrierte Übersetzungen für Deutsch und Englisch
-  * Direkte Weiterleitung zu Setup-Import-Funktionen
-  * Benutzerfreundliche Schritt-für-Schritt-Anleitung
-  * Integrierte Verlinkung zu Datenschutzeinstellungen
+* **Revolutionärer Quickstart-Assistent**: Komplett neuer 7-stufiger Setup-Wizard mit Timeline-Design
+  * **Moderne Timeline-UI**: Ersetzt "grässliche" Panel-Darstellung durch elegante Timeline-Optik
+  * **Theme-Kompatibilität**: Vollständige Unterstützung für REDAXO Light- und Dark-Themes
+  * **Copy-to-Clipboard**: Integrierte Kopierfunktionalität für Template-Code und Privacy-Links
+  * **Externe CSS-Architektur**: CSS in separater Datei mit bedingtem Laden
+  * **Vollständige Internationalisierung**: Deutsche und englische Übersetzungen für alle UI-Elemente
+  * **Erweiterte Nutzerrechte**: Neue Berechtigung "editor" für Redakteure mit vollem Zugriff
+  * **Setup-Reorder**: Standard-Setup vor Minimal-Setup für bessere UX
 * **Fragment-basierte Architektur**: Verbesserte Code-Organisation und Wartbarkeit
   * Aufgeteilt in wiederverwendbare REDAXO-Fragmente
   * Klarere Trennung von Logik und Präsentation
@@ -39,15 +43,43 @@
   * Eliminiert Syntax-Fehler und Formatierungsprobleme
 * **Verbesserte Frontend-Integration**: Optimierte Script-Verwaltung mit bedingtem Laden
 
+### UI/UX Verbesserungen
+
+* **Timeline-Design**: Moderne Schritt-für-Schritt-Darstellung statt einfacher Panels
+* **REDAXO-Theme-Integration**: 
+  * Unterstützung für `.rex-theme-dark` und `.rex-theme-light` Klassen
+  * CSS-Custom-Properties für dynamische Farbgestaltung
+  * Media Query Support für `prefers-color-scheme`
+* **Copy-Funktionalität**: 
+  * Clipboard-Copy Web Component für Template-Code
+  * Ein-Klick-Kopieren für Privacy-Settings-Links
+  * Tooltip-Feedback für Nutzer
+* **Responsive Design**: Mobile-optimierte Timeline-Darstellung
+* **Accessibility**: Verbesserte Screenreader-Unterstützung
+
+### Internationalisierung
+
+* **Vollständige i18n-Implementation**: 
+  * 50+ neue Übersetzungsstrings für Quickstart-Modal
+  * 25+ neue Strings für Config-Seite
+  * Alle hardcodierten deutschen Texte durch i18n-Calls ersetzt
+  * Parameter-Platzhalter für dynamische Inhalte
+  * Formelle Ansprache statt "Du/Sie" Mix
+
 ### Technische Verbesserungen
 
-* Externe JavaScript-Dateien statt Inline-Code für bessere Performance
-* Ultra-hohe z-index Werte für Debug-Konsole (9999999) zur Overlay-Kompatibilität
-* Enhanced Service-Detection mit Default-Status-Anzeige
-* Verbesserte Cookie-Parsing mit URL-Dekodierung und JSON-Formatierung
-* Optimierte Event-Handler für Debug-Panel-Funktionalität
+* **Externe CSS-Dateien**: `consent_quickstart.css` mit bedingtem Laden nur wo benötigt
+* **Verbesserte Nutzerrechte**: `rex_perm::register('consent_manager[editor]')` für Redakteure
+* **Debug-Parameter-Optimierung**: Default-Wert 0 für debug_level Parameter
+* **JavaScript-Optimierung**: Externe Dateien statt Inline-Code für bessere Performance
+* **Enhanced Service-Detection**: Verbessertes Service-Detection mit Default-Status-Anzeige
+* **Cookie-Parsing**: Erweiterte Cookie-Analyse mit URL-Dekodierung und JSON-Formatierung
 
-### Datenbankschema
+### Benutzererfahrung
+
+* **Setup-Wizard-Reorder**: Standard-Setup als erste Option für bessere Nutzerführung
+* **Visuelles Feedback**: Statusanzeigen und Progress-Indikatoren
+* **Intuitive Navigation**: Klare Schrittabfolge mit visuellen Hinweisen
 
 * Domain-Tabelle erweitert um `google_consent_mode_v2` Feld für domainspezifische GMv2-Aktivierung
 

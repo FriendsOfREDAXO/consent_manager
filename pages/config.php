@@ -18,12 +18,12 @@ if ('setup_minimal' === $func) {
         $result = consent_manager_json_setup::importSetup($jsonSetupFile, true);
         if ($result['success']) {
             consent_manager_clang::addonJustInstalled();
-            echo rex_view::success('Minimales Setup erfolgreich importiert - nur technisch notwendige Cookies');
+            echo rex_view::success($addon->i18n('consent_manager_import_minimal_success'));
         } else {
-            echo rex_view::error('Minimales Setup Import fehlgeschlagen: ' . $result['message']);
+            echo rex_view::error($addon->i18n('consent_manager_import_minimal_error', $result['message']));
         }
     } else {
-        echo rex_view::error('Minimal setup file nicht gefunden: minimal_setup.json');
+        echo rex_view::error($addon->i18n('consent_manager_import_minimal_file_not_found'));
     }
     
     // Redirect to normal config page without func parameter
@@ -37,12 +37,12 @@ if ('setup_minimal' === $func) {
         $result = consent_manager_json_setup::importSetup($jsonSetupFile, true);
         if ($result['success']) {
             consent_manager_clang::addonJustInstalled();
-            echo rex_view::success('Standard Setup erfolgreich importiert - alle wichtigen Services vorkonfiguriert');
+            echo rex_view::success($addon->i18n('consent_manager_import_standard_success'));
         } else {
-            echo rex_view::error('Standard Setup Import fehlgeschlagen: ' . $result['message']);
+            echo rex_view::error($addon->i18n('consent_manager_import_standard_error', $result['message']));
         }
     } else {
-        echo rex_view::error('Standard setup file nicht gefunden: default_setup.json');
+        echo rex_view::error($addon->i18n('consent_manager_import_standard_file_not_found'));
     }
     
     // Redirect to normal config page without func parameter
@@ -56,12 +56,12 @@ if ('setup_minimal' === $func) {
         $result = consent_manager_json_setup::importSetup($jsonSetupFile, false, 'update');
         if ($result['success']) {
             consent_manager_clang::addonJustInstalled();
-            echo rex_view::success('Minimal Setup Update erfolgreich - nur neue Services hinzugefügt, bestehende unverändert');
+            echo rex_view::success($addon->i18n('consent_manager_import_minimal_update_success'));
         } else {
-            echo rex_view::error('Minimal Setup Update fehlgeschlagen: ' . $result['message']);
+            echo rex_view::error($addon->i18n('consent_manager_import_minimal_update_error', $result['message']));
         }
     } else {
-        echo rex_view::error('Minimal setup file nicht gefunden: minimal_setup.json');
+        echo rex_view::error($addon->i18n('consent_manager_import_minimal_file_not_found'));
     }
     
     // Redirect to normal config page without func parameter
@@ -75,12 +75,12 @@ if ('setup_minimal' === $func) {
         $result = consent_manager_json_setup::importSetup($jsonSetupFile, false, 'update');
         if ($result['success']) {
             consent_manager_clang::addonJustInstalled();
-            echo rex_view::success('Standard Setup Update erfolgreich - nur neue Services hinzugefügt, bestehende unverändert');
+            echo rex_view::success($addon->i18n('consent_manager_import_standard_update_success'));
         } else {
-            echo rex_view::error('Standard Setup Update fehlgeschlagen: ' . $result['message']);
+            echo rex_view::error($addon->i18n('consent_manager_import_standard_update_error', $result['message']));
         }
     } else {
-        echo rex_view::error('Standard setup file nicht gefunden: default_setup.json');
+        echo rex_view::error($addon->i18n('consent_manager_import_standard_file_not_found'));
     }
     
     // Redirect to normal config page without func parameter

@@ -30,6 +30,7 @@ consent_manager_cookiegroup_required = this group contains required services and
 consent_manager_cookiegroup_scripts = Scripts which will be loaded once consent is set
 consent_manager_cookiegroup_scripts_unselect = Scripts will be loaded once consent is withdrawn
 consent_manager_cookiegroup_scripts_notice = Enter scripts including <code><script>...</script></code>
+consent_manager_cookiegroup_nodomain_notice = No domain or services have been assigned yet! The consent box may not be displayed in the frontend.
 
 consent_manager_texts = Texts
 consent_manager_text = Text
@@ -124,22 +125,22 @@ consent_manager_config_css_desc = When set to active, frontend CSS will only be 
 consent_manager_config_css = Conditionally load frontend CSS as required
 consent_manager_config_owncss_desc = When set to active default frontend CSS for the consent box will not be loaded (consent_manager_frontend.css). <br>CSS styles for the consent box need to be present in custom (own) stylesheet.
 consent_manager_config_owncss = Use custom CSS
-consent_manager_config_hidebodyscrollbar =
-consent_manager_config_hidebodyscrollbar_desc =
+consent_manager_config_hidebodyscrollbar = Hide website scrollbar
+consent_manager_config_hidebodyscrollbar_desc = When activated, the website scrollbar will be hidden when the consent box is displayed. This prevents scrolling of the website in the background of the box. When the consent box is closed, the scrollbar will be displayed again.
 consent_manager_config_lifespan_label = Lifespan
 consent_manager_config_lifespan_notice = Lifespan of the settings cookie in days. Default: 365
-consent_manager_config_token_legend =
-consent_manager_config_token_label =
-consent_manager_config_token_notice =
+consent_manager_config_token_legend = Skip consent window
+consent_manager_config_token_label = Token
+consent_manager_config_token_notice = Pass this token as GET parameter skip_consent=MYTOKEN to skip the consent.
 
-consent_manager_log =
-consent_manager_thead_title =
-consent_manager_thead_id =
-consent_manager_thead_createdate =
-consent_manager_thead_domain =
-consent_manager_thead_consents =
-consent_manager_thead_cachelogid =
-consent_manager_thead_consentid =
+consent_manager_log = Consent Log
+consent_manager_thead_title = Consent Log
+consent_manager_thead_id = ID
+consent_manager_thead_createdate = Date
+consent_manager_thead_domain = Domain
+consent_manager_thead_consents = Consents
+consent_manager_thead_cachelogid = Cache Log ID
+consent_manager_thead_consentid = Consent ID
 
 consent_manager_cronjob_delete = Consent-Log: delete old entries
 consent_manager_cronjob_delete_days = Age in days
@@ -268,4 +269,46 @@ consent_manager_quickstart_status_required = Required
 consent_manager_quickstart_copy_button = Copy
 consent_manager_quickstart_copy_title = Copy code
 consent_manager_quickstart_recommended = Recommended
+
+# Config page strings
+consent_manager_config_settings_title = Consent Manager Settings
+consent_manager_config_quickstart_title = Quickstart - Import Setup
+consent_manager_config_choose_setup = Choose a setup for quick start:
+consent_manager_config_standard_setup_title = Standard Setup
+consent_manager_config_standard_setup_desc = Comprehensive setup with Google Analytics, Facebook Pixel, YouTube, Google Maps and other important services.
+consent_manager_config_minimal_setup_title = Minimal Setup
+consent_manager_config_minimal_setup_desc = Only technically necessary cookies for GDPR compliance. For experienced users who want to configure most settings themselves.
+consent_manager_config_load_complete = Load Complete
+consent_manager_config_load_new_only = New Only
+consent_manager_config_standard_confirm = Import Standard Setup?\n\nWARNING: All current settings will be overwritten!
+consent_manager_config_standard_update_confirm = Standard Setup Update?\n\nOnly new services will be added, existing ones remain unchanged.
+consent_manager_config_minimal_confirm = Import Minimal Setup?\n\nWARNING: All current settings will be overwritten!
+consent_manager_config_minimal_update_confirm = Minimal Setup Update?\n\nOnly new services will be added, existing ones remain unchanged.
+consent_manager_config_export_title = Export Configuration
+consent_manager_config_export_desc = Export your current configuration as JSON file for backup or transfer.
+consent_manager_config_export_button = Export JSON
+consent_manager_config_import_title = Import JSON Configuration
+consent_manager_config_import_desc = Import a previously exported JSON configuration.
+consent_manager_config_import_button = Import JSON
+consent_manager_config_after_import_title = After Setup Import:
+consent_manager_config_step_domains = 1. Configure Domain
+consent_manager_config_step_services = 2. Adjust Services
+consent_manager_config_step_texts = 3. Customize Texts
+consent_manager_config_step_theme = 4. Choose Design
+consent_manager_config_template_info = Template code: <code>&lt;?php echo REX_CONSENT_MANAGER[]; ?&gt;</code> (include before closing &lt;/body&gt; tag)
+
+# Quickstart modal additional
+consent_manager_setup_minimal_expert = For experienced users who want to configure most settings themselves.
+
+# Import messages
+consent_manager_import_minimal_success = Minimal setup successfully imported - only technically necessary cookies
+consent_manager_import_minimal_error = Minimal setup import failed: {0}
+consent_manager_import_minimal_file_not_found = Minimal setup file not found: minimal_setup.json
+consent_manager_import_standard_success = Standard setup successfully imported - all important services preconfigured
+consent_manager_import_standard_error = Standard setup import failed: {0}
+consent_manager_import_standard_file_not_found = Standard setup file not found: default_setup.json
+consent_manager_import_minimal_update_success = Minimal setup update successful - only new services added, existing unchanged
+consent_manager_import_minimal_update_error = Minimal setup update failed: {0}
+consent_manager_import_standard_update_success = Standard setup update successful - only new services added, existing unchanged
+consent_manager_import_standard_update_error = Standard setup update failed: {0}
 consent_manager_quickstart_status_final = Final

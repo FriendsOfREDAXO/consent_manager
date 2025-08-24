@@ -62,6 +62,14 @@ REX_CONSENT_MANAGER[forceCache=0 forceReload=0]
 ```
 
 ### 4. Cookie-Einstellungen nachträglich aufrufen
+
+**⚠️ Wichtiger Hinweis:** Stellen Sie sicher, dass Nutzer die Cookie-Einstellungen jederzeit wieder aufrufen können! Das ist rechtlich erforderlich und sollte gut sichtbar auf jeder Seite verfügbar sein.
+
+**Empfohlene Integration:**
+- **Footer-Link:** Platzieren Sie einen dauerhaften Link im Website-Footer
+- **Datenschutz-Seite:** Verlinken Sie aus der Datenschutzerklärung
+- **Barrierefreiheit:** Der Link sollte immer erreichbar sein
+
 **HTML-Link:**
 ```html
 <a class="consent_manager-show-box">Datenschutz-Einstellungen</a>
@@ -75,6 +83,17 @@ REX_CONSENT_MANAGER[forceCache=0 forceReload=0]
 **JavaScript-Aufruf:**
 ```javascript
 consent_manager_showBox();
+```
+
+**Beispiel Footer-Integration:**
+```html
+<footer>
+    <div class="footer-links">
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutz</a>
+        <a class="consent_manager-show-box">Cookie-Einstellungen</a>
+    </div>
+</footer>
 ```
 
 ### 5. Consent-Status abfragen

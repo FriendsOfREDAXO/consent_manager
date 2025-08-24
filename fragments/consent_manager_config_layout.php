@@ -26,7 +26,7 @@ $csrf = $this->getVar('csrf');
             <div class="panel panel-edit">
                 <header class="panel-heading">
                     <div class="panel-title">
-                        <i class="rex-icon fa-cogs"></i> Consent-Manager Einstellungen
+                        <i class="rex-icon fa-cogs"></i> <?= $addon->i18n('consent_manager_config_settings_title') ?>
                     </div>
                 </header>
                 <div class="panel-body">
@@ -45,50 +45,48 @@ $csrf = $this->getVar('csrf');
             <div class="panel panel-primary" style="margin-bottom: 20px;">
                 <header class="panel-heading">
                     <div class="panel-title">
-                        <i class="rex-icon fa-rocket"></i> Schnellstart - Setup importieren
+                        <i class="rex-icon fa-rocket"></i> <?= $addon->i18n('consent_manager_config_quickstart_title') ?>
                     </div>
                 </header>
                 <div class="panel-body">
-                    <p><strong>Wählen Sie ein Setup zum schnellen Start:</strong></p>
+                    <p><strong><?= $addon->i18n('consent_manager_config_choose_setup') ?></strong></p>
                     
                     <!-- Standard Setup -->
                     <div class="well" style="margin-bottom: 15px; padding: 15px;">
-                        <h5><i class="rex-icon fa-cog text-primary"></i> <strong>Standard Setup</strong></h5>
+                        <h5><i class="rex-icon fa-cog text-primary"></i> <strong><?= $addon->i18n('consent_manager_config_standard_setup_title') ?></strong></h5>
                         <p style="margin-bottom: 12px; color: #666; font-size: 13px;">
-                            Umfassendes Setup mit Google Analytics, Facebook Pixel, YouTube, 
-                            Google Maps und anderen wichtigen Services.
+                            <?= $addon->i18n('consent_manager_config_standard_setup_desc') ?>
                         </p>
                         <div class="text-center">
                             <a href="<?= rex_url::currentBackendPage(['func' => 'setup_standard']) ?>" 
                                class="btn btn-primary btn-sm" style="width: 48%; margin-right: 2%;"
-                               onclick="return confirm('Standard Setup importieren?\n\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!')">
-                                <i class="rex-icon fa-download"></i> Komplett laden
+                               onclick="return confirm('<?= $addon->i18n('consent_manager_config_standard_confirm') ?>')">
+                                <i class="rex-icon fa-download"></i> <?= $addon->i18n('consent_manager_config_load_complete') ?>
                             </a>
                             <a href="<?= rex_url::currentBackendPage(['func' => 'setup_standard_update']) ?>" 
                                class="btn btn-outline btn-primary btn-sm" style="width: 48%;"
-                               onclick="return confirm('Standard Setup Update?\n\nNur neue Services werden hinzugefügt, bestehende bleiben unverändert.')">
-                                <i class="rex-icon fa-plus"></i> Nur Neue
+                               onclick="return confirm('<?= $addon->i18n('consent_manager_config_standard_update_confirm') ?>')">
+                                <i class="rex-icon fa-plus"></i> <?= $addon->i18n('consent_manager_config_load_new_only') ?>
                             </a>
                         </div>
                     </div>
                     
                     <!-- Minimal Setup -->
                     <div class="well" style="margin-bottom: 0; padding: 15px;">
-                        <h5><i class="rex-icon fa-shield text-success"></i> <strong>Minimal Setup</strong></h5>
+                        <h5><i class="rex-icon fa-shield text-success"></i> <strong><?= $addon->i18n('consent_manager_config_minimal_setup_title') ?></strong></h5>
                         <p style="margin-bottom: 12px; color: #666; font-size: 13px;">
-                            Nur technisch notwendige Cookies für DSGVO-Compliance. 
-                            <strong>Für erfahrene Nutzer, die den Großteil der Konfiguration selbst vornehmen möchten.</strong>
+                            <?= $addon->i18n('consent_manager_config_minimal_setup_desc') ?>
                         </p>
                         <div class="text-center">
                             <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal']) ?>" 
                                class="btn btn-success btn-sm" style="width: 48%; margin-right: 2%;"
-                               onclick="return confirm('Minimal Setup importieren?\n\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!')">
-                                <i class="rex-icon fa-download"></i> Komplett laden
+                               onclick="return confirm('<?= $addon->i18n('consent_manager_config_minimal_confirm') ?>')">
+                                <i class="rex-icon fa-download"></i> <?= $addon->i18n('consent_manager_config_load_complete') ?>
                             </a>
                             <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal_update']) ?>" 
                                class="btn btn-outline btn-success btn-sm" style="width: 48%;"
-                               onclick="return confirm('Minimal Setup Update?\n\nNur neue Services werden hinzugefügt, bestehende bleiben unverändert.')">
-                                <i class="rex-icon fa-plus"></i> Nur Neue
+                               onclick="return confirm('<?= $addon->i18n('consent_manager_config_minimal_update_confirm') ?>')">
+                                <i class="rex-icon fa-plus"></i> <?= $addon->i18n('consent_manager_config_load_new_only') ?>
                             </a>
                         </div>
                     </div>
@@ -99,15 +97,15 @@ $csrf = $this->getVar('csrf');
             <div class="panel panel-success" style="margin-bottom: 15px;">
                 <header class="panel-heading">
                     <div class="panel-title">
-                        <i class="rex-icon fa-upload"></i> Konfiguration exportieren
+                        <i class="rex-icon fa-upload"></i> <?= $addon->i18n('consent_manager_config_export_title') ?>
                     </div>
                 </header>
                 <div class="panel-body">
-                    <p>Exportieren Sie Ihre aktuelle Konfiguration als JSON-Datei zum Backup oder zur Übertragung.</p>
+                    <p><?= $addon->i18n('consent_manager_config_export_desc') ?></p>
                     <div class="text-center">
                         <a href="<?= rex_url::currentBackendPage(['func' => 'export'] + $csrf->getUrlParams()) ?>" 
                            class="btn btn-success btn-sm">
-                            <i class="rex-icon fa-download"></i> JSON exportieren
+                            <i class="rex-icon fa-download"></i> <?= $addon->i18n('consent_manager_config_export_button') ?>
                         </a>
                     </div>
                 </div>
@@ -117,11 +115,11 @@ $csrf = $this->getVar('csrf');
             <div class="panel panel-info">
                 <header class="panel-heading">
                     <div class="panel-title">
-                        <i class="rex-icon fa-file-code-o"></i> JSON-Konfiguration importieren
+                        <i class="rex-icon fa-file-code-o"></i> <?= $addon->i18n('consent_manager_config_import_title') ?>
                     </div>
                 </header>
                 <div class="panel-body">
-                    <p>Importieren Sie eine zuvor exportierte JSON-Konfiguration.</p>
+                    <p><?= $addon->i18n('consent_manager_config_import_desc') ?></p>
                     <form action="<?= rex_url::currentBackendPage() ?>" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="func" value="import_json" />
                         <?= rex_csrf_token::factory('consent_manager_config')->getHiddenField() ?>
@@ -130,7 +128,7 @@ $csrf = $this->getVar('csrf');
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-info btn-sm">
-                                <i class="rex-icon fa-upload"></i> JSON importieren
+                                <i class="rex-icon fa-upload"></i> <?= $addon->i18n('consent_manager_config_import_button') ?>
                             </button>
                         </div>
                     </form>
@@ -143,36 +141,35 @@ $csrf = $this->getVar('csrf');
     <div class="row" style="margin-top: 30px;">
         <div class="col-md-12">
             <div class="alert alert-info">
-                <h4><i class="rex-icon fa-info-circle"></i> Nach dem Setup Import:</h4>
+                <h4><i class="rex-icon fa-info-circle"></i> <?= $addon->i18n('consent_manager_config_after_import_title') ?></h4>
                 <div class="row">
                     <div class="col-md-3">
-                        <strong>1. Domain konfigurieren</strong><br>
+                        <strong><?= $addon->i18n('consent_manager_config_step_domains') ?></strong><br>
                         <a href="<?= rex_url::currentBackendPage(['page' => 'consent_manager/domain']) ?>">
                             <i class="rex-icon fa-globe"></i> Zu Domains
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <strong>2. Services anpassen</strong><br>
+                        <strong><?= $addon->i18n('consent_manager_config_step_services') ?></strong><br>
                         <a href="<?= rex_url::currentBackendPage(['page' => 'consent_manager/cookie']) ?>">
                             <i class="rex-icon fa-cog"></i> Zu Services
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <strong>3. Texte anpassen</strong><br>
+                        <strong><?= $addon->i18n('consent_manager_config_step_texts') ?></strong><br>
                         <a href="<?= rex_url::currentBackendPage(['page' => 'consent_manager/text']) ?>">
                             <i class="rex-icon fa-edit"></i> Zu Texte
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <strong>4. Design wählen</strong><br>
+                        <strong><?= $addon->i18n('consent_manager_config_step_theme') ?></strong><br>
                         <a href="<?= rex_url::currentBackendPage(['page' => 'consent_manager/theme']) ?>">
                             <i class="rex-icon fa-paint-brush"></i> Zu Themes
                         </a>
                     </div>
                 </div>
                 <hr>
-                <p><strong>Template-Code:</strong> <code>&lt;?php echo REX_CONSENT_MANAGER[]; ?&gt;</code> 
-                (vor dem schließenden &lt;/body&gt;-Tag einbinden)</p>
+                <p><?= $addon->i18n('consent_manager_config_template_info') ?></p>
             </div>
         </div>
     </div>

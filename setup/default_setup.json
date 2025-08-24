@@ -467,7 +467,7 @@
       "id": 2,
       "clang_id": 1,
       "uid": "description",
-      "text": "Wir nutzen Cookies und ähnliche Technologien, um Ihnen die beste Erfahrung zu bieten. Mit einem Klick auf \"Alle akzeptieren\" stimmen Sie der Verwendung aller Cookies zu."
+      "text": "Diese Website verwendet Cookies und ähnliche Technologien, um Ihnen ein optimales Nutzererlebnis zu bieten. Dazu gehören auch externe Dienste, die in der nachfolgenden Übersicht aufgeführt sind. Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen oder ändern. Diesen Dialog können Sie jederzeit über einen Link im Footer der Website erneut aufrufen. Weitere Informationen finden Sie in unserer Datenschutzerklärung."
     },
     {
       "id": 3,
@@ -486,6 +486,96 @@
       "clang_id": 1,
       "uid": "button_select_none",
       "text": "Nur notwendige"
+    },
+    {
+      "id": 6,
+      "clang_id": 1,
+      "uid": "provider",
+      "text": "Anbieter:"
+    },
+    {
+      "id": 7,
+      "clang_id": 1,
+      "uid": "lifetime",
+      "text": "Speicherdauer:"
+    },
+    {
+      "id": 8,
+      "clang_id": 1,
+      "uid": "usage",
+      "text": "Zweck:"
+    },
+    {
+      "id": 9,
+      "clang_id": 1,
+      "uid": "cookiename",
+      "text": "Cookie-Name:"
+    },
+    {
+      "id": 10,
+      "clang_id": 1,
+      "uid": "service",
+      "text": "Dienst:"
+    },
+    {
+      "id": 11,
+      "clang_id": 1,
+      "uid": "category",
+      "text": "Kategorie:"
+    },
+    {
+      "id": 12,
+      "clang_id": 1,
+      "uid": "headline_usedcookies",
+      "text": "Verwendete Cookies"
+    },
+    {
+      "id": 13,
+      "clang_id": 1,
+      "uid": "privacy_policy_link",
+      "text": "Weitere Informationen finden Sie in unserer Datenschutzerklärung"
+    },
+    {
+      "id": 14,
+      "clang_id": 1,
+      "uid": "manage_cookies",
+      "text": "Cookie-Details anzeigen"
+    },
+    {
+      "id": 15,
+      "clang_id": 1,
+      "uid": "button_close",
+      "text": "Schließen"
+    },
+    {
+      "id": 16,
+      "clang_id": 1,
+      "uid": "button_details",
+      "text": "Details einblenden"
+    },
+    {
+      "id": 17,
+      "clang_id": 1,
+      "uid": "button_hide_details",
+      "text": "Details ausblenden"
+    },
+    {
+      "id": 18,
+      "clang_id": 1,
+      "uid": "button_save",
+      "text": "Einstellungen speichern"
+    },
+    {
+      "id": 19,
+      "clang_id": 1,
+      "uid": "button_individual",
+      "text": "Individuelle Auswahl"
+    },
+    {
+      "id": 20,
+      "clang_id": 1,
+      "uid": "button_back",
+      "text": "Zurück"
     }
   ],
   "domains": []

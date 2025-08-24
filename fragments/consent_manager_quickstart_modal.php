@@ -61,7 +61,7 @@ $addon = rex_addon::get('consent_manager');
                                 </div>
                                 <div class="quickstart-setup-option">
                                     <h6><?= $addon->i18n('consent_manager_setup_minimal_title') ?></h6>
-                                    <p><?= $addon->i18n('consent_manager_setup_minimal_desc') ?> <strong>Für erfahrene Nutzer, die den Großteil der Konfiguration selbst vornehmen möchten.</strong></p>
+                                    <p><?= $addon->i18n('consent_manager_setup_minimal_desc') ?> <strong><?= $addon->i18n('consent_manager_setup_minimal_expert') ?></strong></p>
                                     <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal']) ?>" 
                                        class="btn btn-primary btn-sm" 
                                        onclick="return confirm('<?= $addon->i18n('consent_manager_setup_minimal_confirm') ?>')">
