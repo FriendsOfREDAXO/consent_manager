@@ -29,9 +29,15 @@ $googleConsentModeOutput = '';
 // Debug Helper für Consent Manager
 
 if (rex::isFrontend()
-    && rex::getUser()
-    && rex_backend_login::hasSession()
     && rex_request::get('debug_consent', 'int', 0) === 1
+    && (
+        // Backend-User mit Session (wie in Minibar)
+        rex_backend_login::createUser()
+        // ODER Debug-Modus aktiviert
+        || rex::isDebugMode()
+        // ODER lokale Entwicklungsumgebung (localhost/127.0.0.1)
+        || in_array(rex_request::server('HTTP_HOST', 'string', ''), ['localhost', '127.0.0.1', 'klxm.de'])
+    )
 ) {
     $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
     
@@ -40,7 +46,7 @@ if (rex::isFrontend()
     $googleConsentModeConfig = consent_manager_google_consent_mode::getDomainConfig($domain);
     
     $googleConsentModeOutput .= '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
-    $googleConsentModeOutput .= '<script src="' . $consentDebugUrl . '" defer></script>' . PHP_EOL;
+    $googleConsentModeOutput .= '<script src="' . $consentDebugUrl . '" defer</script>' . PHP_EOL;
 }
 
 if (! empty($consent_manager->domainInfo) &&
