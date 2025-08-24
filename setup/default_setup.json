@@ -461,7 +461,7 @@
       "id": 1,
       "clang_id": 1,
       "uid": "headline",
-      "text": "Cookie-Einstellungen"
+      "text": "Datenschutz-Einstellungen"
     },
     {
       "id": 2,
@@ -479,7 +479,7 @@
       "id": 4,
       "clang_id": 1,
       "uid": "button_select_all",
-      "text": "Alle akzeptieren"
+      "text": "Alle auswählen"
     },
     {
       "id": 5,
@@ -497,7 +497,7 @@
       "id": 7,
       "clang_id": 1,
       "uid": "lifetime",
-      "text": "Speicherdauer:"
+      "text": "Laufzeit:"
     },
     {
       "id": 8,
@@ -526,26 +526,74 @@
     {
       "id": 12,
       "clang_id": 1,
-      "uid": "headline_usedcookies",
-      "text": "Verwendete Cookies"
+      "uid": "toggle_details",
+      "text": "Details anzeigen/ausblenden"
     },
     {
       "id": 13,
       "clang_id": 1,
-      "uid": "privacy_policy_link",
-      "text": "Weitere Informationen finden Sie in unserer Datenschutzerklärung"
+      "uid": "link_privacy",
+      "text": "Datenschutzerklärung"
     },
     {
       "id": 14,
       "clang_id": 1,
-      "uid": "manage_cookies",
-      "text": "Cookie-Details anzeigen"
+      "uid": "value",
+      "text": "Wert:"
     },
     {
       "id": 15,
       "clang_id": 1,
-      "uid": "button_close",
-      "text": "Schließen"
+      "uid": "missingdescription",
+      "text": "Keine Informationen vorhanden"
+    },
+    {
+      "id": 16,
+      "clang_id": 1,
+      "uid": "headline_usedcookies",
+      "text": "Aktuell verwendet diese Website folgende Cookies"
+    },
+    {
+      "id": 17,
+      "clang_id": 1,
+      "uid": "headline_mayusedcookies",
+      "text": "Cookies, die diese Website verwenden kann"
+    },
+    {
+      "id": 18,
+      "clang_id": 1,
+      "uid": "headline_currentconsent",
+      "text": "Ihre aktuelle Einwilligung"
+    },
+    {
+      "id": 19,
+      "clang_id": 1,
+      "uid": "headline_historyconsent",
+      "text": "Ihr Einwilligungs-Verlauf"
+    },
+    {
+      "id": 20,
+      "clang_id": 1,
+      "uid": "consent_date",
+      "text": "Einwilligungsdatum"
+    },
+    {
+      "id": 21,
+      "clang_id": 1,
+      "uid": "consent_id",
+      "text": "Einwilligungs-ID"
+    },
+    {
+      "id": 22,
+      "clang_id": 1,
+      "uid": "consent_consents",
+      "text": "Einwilligungen"
+    },
+    {
+      "id": 23,
+      "clang_id": 1,
+      "uid": "edit_consent",
+      "text": "Cookie Einstellungen bearbeiten"
     },
     {
       "id": 16,

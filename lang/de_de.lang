@@ -12,6 +12,31 @@ consent_manager_successfully_deleted = Datensatz gelöscht
 consent_manager_help = Hilfe
 consent_manager_changelog = Changelog
 
+# Frontend Text Keys (aus 4.3.0 Export)
+headline = Datenschutz-Einstellungen
+description = Unsere Website verwendet externe Dienste für verschiedene Zwecke, wie z.B. für Statistiken oder die Ausspielung von Multimedia. Durch Auswahl und Bestätigung der Dienste stimmen Sie der Übertragung von Daten an diese Dienste zu. Diese Dienste und auch diese Website setzen ggf. auch Cookies. Die Auswahl kann jederzeit geändert und widerrufen werden.
+toggle_details = Details anzeigen/ausblenden
+provider = Anbieter:
+link_privacy = Datenschutzerklärung
+lifetime = Laufzeit:
+button_accept = Auswahl bestätigen
+button_select_all = Alle auswählen
+cookiename = Cookie-Name:
+service = Service:
+usage = Verwendungszweck:
+category = Kategorie:
+value = Wert:
+missingdescription = Keine Informationen vorhanden
+headline_usedcookies = Aktuell verwendet diese Website folgende Cookies
+headline_mayusedcookies = Cookies, die diese Website verwenden kann
+headline_currentconsent = Ihre aktuelle Einwilligung
+headline_historyconsent = Ihr Einwilligungs-Verlauf
+consent_date = Einwilligungsdatum
+consent_id = Einwilligungs-ID
+consent_consents = Einwilligungen
+edit_consent = Cookie Einstellungen bearbeiten
+button_select_none = Nur notwendige
+
 consent_manager_cookies = Dienste
 consent_manager_cookie_add = Dienst erstellen
 consent_manager_cookie_edit = Dienst bearbeiten

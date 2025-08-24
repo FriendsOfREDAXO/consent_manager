@@ -11,7 +11,18 @@
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 
-let GOOGLE_CONSENT_V2_DEFAULT_STATE = 'denied'; // GDPR compliant default
+// GDPR-konforme Defaults - ALLE Services standardmäßig verweigert
+// Erst nach expliziter Zustimmung werden Services auf 'granted' gesetzt
+let GOOGLE_CONSENT_V2_DEFAULTS = {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied', 
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'personalization_storage': 'denied',
+    'functionality_storage': 'denied',    // Auch notwendige erst nach Consent
+    'security_storage': 'denied'          // Auch notwendige erst nach Consent
+};
+
 let GOOGLE_CONSENT_V2_STORAGE_KEY = 'consentMode';
 
 let GOOGLE_CONSENT_V2_FIELDS = [
@@ -89,27 +100,25 @@ function array_fill(startIndex, num, mixedVal) {
 let consentStorage = localStorage.getItem(GOOGLE_CONSENT_V2_STORAGE_KEY);
 
 if(consentStorage === null) {
-    // Initialize consent settings
-    let defaultSettings = array_combine(
-        GOOGLE_CONSENT_V2_FIELDS, 
-        array_fill(0, GOOGLE_CONSENT_V2_FIELDS.length, GOOGLE_CONSENT_V2_DEFAULT_STATE)
-    );
+    // Initialize consent settings mit korrekten Defaults
+    let defaultSettings = GOOGLE_CONSENT_V2_DEFAULTS;
 
-    if(defaultSettings !== false) {
-        gtag('consent', 'default', defaultSettings);
-        localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(defaultSettings));
-    }
+    gtag('consent', 'default', defaultSettings);
+    localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(defaultSettings));
 } else {
     // Check if array is consistent (if new entries appear in the future)
     let storedSettings = JSON.parse(consentStorage);
 
-    if(Object.keys(storedSettings).length !== GOOGLE_CONSENT_V2_FIELDS.length) {
-        GOOGLE_CONSENT_V2_FIELDS.forEach((field) => {
-            if (typeof storedSettings[field] == "undefined") {
-                storedSettings[field] = GOOGLE_CONSENT_V2_DEFAULT_STATE;
-            }
-        });
+    // Merge mit neuen Default-Werten falls neue Felder hinzukommen
+    let needsUpdate = false;
+    for (const [field, defaultValue] of Object.entries(GOOGLE_CONSENT_V2_DEFAULTS)) {
+        if (typeof storedSettings[field] === "undefined") {
+            storedSettings[field] = defaultValue;
+            needsUpdate = true;
+        }
+    }
 
+    if (needsUpdate) {
         gtag('consent', 'default', storedSettings);
         localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(storedSettings));
     } else {

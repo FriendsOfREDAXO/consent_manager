@@ -8,6 +8,7 @@ class consent_manager_google_consent_mode
 {
     /**
      * Standard Google Consent Mode v2 Flags mit GDPR-konformen Defaults
+     * ALLE Services standardmäßig verweigert - erst nach expliziter Zustimmung gewährt
      */
     public static $defaultConsentFlags = [
         'ad_storage' => 'denied',
@@ -15,8 +16,8 @@ class consent_manager_google_consent_mode
         'ad_personalization' => 'denied',
         'analytics_storage' => 'denied',
         'personalization_storage' => 'denied',
-        'functionality_storage' => 'granted',
-        'security_storage' => 'granted'
+        'functionality_storage' => 'denied',  // Auch notwendige erst nach Consent
+        'security_storage' => 'denied'        // Auch notwendige erst nach Consent
     ];
 
     /**
