@@ -176,6 +176,12 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
         cookieData.consents = consents;
 
         cmCookieAPI.set('consent_manager', JSON.stringify(cookieData));
+        
+        // Google Consent Mode v2 Update
+        if (typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
+            window.GoogleConsentModeV2.setConsent(consents);
+        }
+        
         if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {
             consent_manager_parameters.no_cookie_set = true;
             console.warn('Addon consent_manager: Es konnte kein Cookie für die Domain ' + document.domain + ' gesetzt werden!');
