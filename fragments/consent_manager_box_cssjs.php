@@ -26,10 +26,10 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
 // Google Consent Mode v2 Integration - muss vor dem Consent Manager geladen werden
 $googleConsentModeOutput = '';
 
-// Debug Helper für Consent Manager - wird in boot.php verarbeitet
+// Debug Helper für Consent Manager - aus Session holen
 $debugScriptOutput = '';
-if (isset($GLOBALS['consent_manager_debug_script'])) {
-    $debugScriptOutput = $GLOBALS['consent_manager_debug_script'];
+if (rex_session::get('consent_manager_debug_script')) {
+    $debugScriptOutput = rex_session::get('consent_manager_debug_script');
 }
 
 if (! empty($consent_manager->domainInfo) &&
