@@ -26,12 +26,6 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
 // Google Consent Mode v2 Integration - muss vor dem Consent Manager geladen werden
 $googleConsentModeOutput = '';
 
-// Debug Helper für Consent Manager - aus Session holen
-$debugScriptOutput = '';
-if (rex_session::get('consent_manager_debug_script')) {
-    $debugScriptOutput = rex_session::get('consent_manager_debug_script');
-}
-
 if (! empty($consent_manager->domainInfo) &&
     isset($consent_manager->domainInfo['google_consent_mode_enabled']) &&
     $consent_manager->domainInfo['google_consent_mode_enabled'] !== 'disabled') {
@@ -84,11 +78,6 @@ $consentparams['outputjs'] .= '    <script src="' . rex_url::frontendController(
 
 // Ausgabe Google Consent Mode v2 (vor allem anderen)
 echo $googleConsentModeOutput;
-
-// Debug-Script anhängen falls gesetzt
-if (!empty($debugScriptOutput)) {
-    echo $debugScriptOutput;
-}
 
 // Ausgabe CSS + JavaScript
 echo $consentparams['outputcss'];

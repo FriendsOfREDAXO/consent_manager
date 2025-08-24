@@ -98,11 +98,19 @@ if (rex::isFrontend()) {
         }
     });
 
-    // Debug Helper für Consent Manager - nach PACKAGES_INCLUDED
-    rex_extension::register('PACKAGES_INCLUDED', static function () {
-        // Domain-Konfiguration prüfen (ohne User-Prüfung)
+    // Debug Helper über OUTPUT_FILTER - einfach und zuverlässig
+    rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+        // User für Frontend initialisieren
+        rex_backend_login::createUser();
+        
+        // Nur für eingeloggte Backend-Benutzer
+        if (!rex_backend_login::hasSession() || null === rex::getUser()) {
+            return;
+        }
+        
+        // Domain-Konfiguration prüfen 
         $domain = rex_request::server('HTTP_HOST', 'string', '');
-        $domain = strtolower($domain); // Normalisierung wie im Frontend
+        $domain = strtolower($domain);
         
         $sql = rex_sql::factory();
         $sql->setQuery(
@@ -115,7 +123,7 @@ if (rex::isFrontend()) {
             $debugEnabled = (bool) $sql->getValue('google_consent_mode_debug');
         }
         
-        // Debug aktivieren wenn in Domain-Konfiguration eingeschaltet
+        // Debug-Script direkt in HTML einfügen
         if ($debugEnabled) {
             $addon = rex_addon::get('consent_manager');
             $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
@@ -124,14 +132,17 @@ if (rex::isFrontend()) {
                 $googleConsentModeConfig = consent_manager_google_consent_mode::getDomainConfig($domain);
                 $debugScript = '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
             } catch (Exception $e) {
-                // Fallback ohne Domain-Config
                 $debugScript = '<script>window.consentManagerDebugConfig = {"mode": "unknown", "enabled": false};</script>' . PHP_EOL;
             }
             
             $debugScript .= '<script src="' . $consentDebugUrl . '"></script>' . PHP_EOL;
             
-            // Debug-Script in rex_session speichern für Fragment-Zugriff
-            rex_set_session('consent_manager_debug_script', $debugScript);
+            // Debug-Script vor </head> einfügen
+            $content = $ep->getSubject();
+            if (is_string($content)) {
+                $content = str_replace('</head>', $debugScript . '</head>', $content);
+                $ep->setSubject($content);
+            }
         }
     });
 }
