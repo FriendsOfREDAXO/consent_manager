@@ -221,7 +221,7 @@ consent_manager_quickstart_step_theme_desc = Select or customize the appropriate
 consent_manager_quickstart_step_template = Template Integration
 consent_manager_quickstart_step_template_desc = Final step: Integrate the Consent Manager into the website template.
 consent_manager_quickstart_template_code_label = Template Code:
-consent_manager_quickstart_template_code_info = This code should be placed before the closing &lt;/body&gt; tag in the template.
+consent_manager_quickstart_template_code_info = This code should be placed before the closing </body> tag in the template.
 consent_manager_quickstart_template_final_message = Setup successful! Your Consent Manager is now ready to use.
 consent_manager_quickstart_privacy_settings_info = Test the functionality via:
 consent_manager_quickstart_privacy_settings_link = Privacy Settings
@@ -255,3 +255,17 @@ consent_manager_setup_standard_confirm = Import complete configuration and delet
 consent_manager_privacy_link_label = Privacy Settings Link
 consent_manager_privacy_link_desc = Add this link to your privacy policy or footer for subsequent cookie settings:
 consent_manager_privacy_link_code = HTML Code for Privacy Settings Link
+
+# User Permissions
+perm_general_consent_manager[texteditonly] = Consent Manager - Text editing only
+perm_general_consent_manager[editor] = Consent Manager - Full access for editors
+
+# Quickstart Modal Additional Texts
+consent_manager_quickstart_import_info = After import, basic configurations are available. The following steps are still required: adjust domain, integrate template code, and assign groups to domains.
+consent_manager_quickstart_manual_alternative = — or configure manually —
+consent_manager_quickstart_timeline_intro = Follow this timeline for perfect setup
+consent_manager_quickstart_status_required = Required
+consent_manager_quickstart_copy_button = Copy
+consent_manager_quickstart_copy_title = Copy code
+consent_manager_quickstart_recommended = Recommended
+consent_manager_quickstart_status_final = Final

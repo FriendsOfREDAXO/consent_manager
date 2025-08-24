@@ -5,8 +5,11 @@ $addon = rex_addon::get('consent_manager');
 // Nur im Backend
 if (rex::isBackend()) {
     rex_perm::register('consent_manager[texteditonly]');
+    rex_perm::register('consent_manager[editor]');
+    
     if (null !== rex::getUser()) {
-        if (!rex::getUser()->isAdmin() && rex::getUser()->hasPerm('consent_manager[texteditonly]')) {
+        // Eingeschränkter Zugriff für Nur-Text-Bearbeiter
+        if (!rex::getUser()->isAdmin() && rex::getUser()->hasPerm('consent_manager[texteditonly]') && !rex::getUser()->hasPerm('consent_manager[editor]')) {
             $page = (array) $addon->getProperty('page', []);
             if ([] !== $page) {
                 /** @var array<int, string> */
@@ -26,8 +29,13 @@ if (rex::isBackend()) {
                 rex_view::addCssFile($addon->getAssetsUrl('consent_manager_backend.css'));
                 rex_view::addJsFile($addon->getAssetsUrl('consent_manager_backend.js'));
                 
-                // Google Consent Mode Helper für Cookie-Seiten
+                // Quickstart Modal CSS für config-Seite
                 $currentPage = rex_be_controller::getCurrentPagePart(2);
+                if ('config' === $currentPage || '' === $currentPage) {
+                    rex_view::addCssFile($addon->getAssetsUrl('consent_quickstart.css'));
+                }
+                
+                // Google Consent Mode Helper für Cookie-Seiten
                 if ('cookie' === $currentPage) {
                     rex_view::addJsFile($addon->getAssetsUrl('google_consent_helper.js'));
                 }

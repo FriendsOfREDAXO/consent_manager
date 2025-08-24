@@ -2,306 +2,17 @@
 /**
  * Fragment: Consent Manager Quickstart Modal
  * Zeigt das 7-stufige Schnellstart-Setup Modal an
+ *                                <div class="quickstart-step-title">
+                                <?= $addon->i18n('consent_manager_quickstart_step_configuration') ?>
+                                <span class="text-muted" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_after_import') ?></span>
+                            </div>                     <div class="quickstart-step-title">
+                                <?= $addon->i18n('consent_manager_quickstart_step_providers') ?>
+                                <span class="text-muted" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_after_import') ?></span>
+                            </div>wird über boot.php geladen
  */
 
 $addon = rex_addon::get('consent_manager');
 ?>
-
-<style>
-.quickstart-timeline {
-    position: relative;
-    margin: 30px 0;
-    padding: 0;
-}
-
-.quickstart-timeline::after {
-    content: '';
-    position: absolute;
-    left: 30px;
-    top: 0;
-    height: 100%;
-    width: 2px;
-    background: linear-gradient(to bottom, #337ab7, #5bc0de, #5cb85c);
-}
-
-.quickstart-step {
-    position: relative;
-    margin-bottom: 30px;
-    padding-left: 80px;
-}
-
-.quickstart-step:last-child {
-    margin-bottom: 0;
-}
-
-.quickstart-step-icon {
-    position: absolute;
-    left: 18px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    z-index: 2;
-    background-color: #337ab7;
-}
-
-.quickstart-step-icon.setup { background-color: #337ab7; }
-.quickstart-step-icon.recommended { background-color: #5cb85c; }
-.quickstart-step-icon.required { background-color: #f0ad4e; }
-.quickstart-step-icon.optional { background-color: #5bc0de; }
-.quickstart-step-icon.final { background-color: #5cb85c; }
-
-.quickstart-step-content {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.quickstart-step-title {
-    margin-top: 0;
-    margin-bottom: 10px;
-    color: #337ab7;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.quickstart-step-desc {
-    margin-bottom: 10px;
-    color: #666;
-    line-height: 1.5;
-}
-
-.quickstart-setup-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 15px;
-}
-
-.quickstart-setup-option {
-    flex: 1;
-    min-width: 200px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 15px;
-    transition: all 0.3s ease;
-}
-
-.quickstart-setup-option:hover {
-    border-color: #337ab7;
-    box-shadow: 0 2px 8px rgba(51, 122, 183, 0.15);
-    transform: translateY(-2px);
-}
-
-.quickstart-setup-option h6 {
-    margin: 0 0 8px 0;
-    color: #337ab7;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.quickstart-setup-option p {
-    margin: 0;
-    color: #666;
-    font-size: 13px;
-}
-
-.quickstart-code-block {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-    padding: 12px;
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
-    margin: 10px 0;
-    color: #333;
-    white-space: pre-wrap;
-}
-
-.quickstart-welcome {
-    text-align: center;
-    padding: 30px 20px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 8px;
-    margin-bottom: 30px;
-    border: 1px solid #e9ecef;
-}
-
-.quickstart-welcome h4 {
-    margin: 0 0 15px 0;
-    color: #337ab7;
-    font-size: 24px;
-    font-weight: 300;
-}
-
-.quickstart-info-box {
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    border-left: 4px solid #ffc107;
-    padding: 12px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    color: #856404;
-}
-
-.quickstart-info-box strong {
-    color: #856404;
-}
-
-/* Dark Theme Support - Explicit dark theme */
-body.rex-theme-dark .quickstart-step-content {
-    background: #2c3e50;
-    border-color: #34495e;
-    color: rgba(255, 255, 255, 0.75);
-}
-
-body.rex-theme-dark .quickstart-step-title {
-    color: #409be4;
-}
-
-body.rex-theme-dark .quickstart-step-desc {
-    color: rgba(255, 255, 255, 0.65);
-}
-
-body.rex-theme-dark .quickstart-setup-option {
-    background: #34495e;
-    border-color: #4a5f7a;
-    color: rgba(255, 255, 255, 0.75);
-}
-
-body.rex-theme-dark .quickstart-setup-option:hover {
-    border-color: #409be4;
-    box-shadow: 0 2px 8px rgba(64, 155, 228, 0.2);
-}
-
-body.rex-theme-dark .quickstart-setup-option h6 {
-    color: #409be4;
-}
-
-body.rex-theme-dark .quickstart-setup-option p {
-    color: rgba(255, 255, 255, 0.65);
-}
-
-body.rex-theme-dark .quickstart-code-block {
-    background: #34495e;
-    border-color: #4a5f7a;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-body.rex-theme-dark .quickstart-welcome {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    border-color: #34495e;
-    color: rgba(255, 255, 255, 0.75);
-}
-
-body.rex-theme-dark .quickstart-welcome h4 {
-    color: #409be4;
-}
-
-body.rex-theme-dark .quickstart-info-box {
-    background: #5d4e37;
-    border-color: #8b7355;
-    border-left-color: #d4a574;
-    color: #f0e6d2;
-}
-
-body.rex-theme-dark .quickstart-info-box strong {
-    color: #f0e6d2;
-}
-
-/* Dark Theme Support - Automatic dark theme based on system preference */
-@media (prefers-color-scheme: dark) {
-    body:not(.rex-theme-light) .quickstart-step-content {
-        background: #2c3e50;
-        border-color: #34495e;
-        color: rgba(255, 255, 255, 0.75);
-    }
-    
-    body:not(.rex-theme-light) .quickstart-step-title {
-        color: #409be4;
-    }
-    
-    body:not(.rex-theme-light) .quickstart-step-desc {
-        color: rgba(255, 255, 255, 0.65);
-    }
-    
-    body:not(.rex-theme-light) .quickstart-setup-option {
-        background: #34495e;
-        border-color: #4a5f7a;
-        color: rgba(255, 255, 255, 0.75);
-    }
-    
-    body:not(.rex-theme-light) .quickstart-setup-option:hover {
-        border-color: #409be4;
-        box-shadow: 0 2px 8px rgba(64, 155, 228, 0.2);
-    }
-    
-    body:not(.rex-theme-light) .quickstart-setup-option h6 {
-        color: #409be4;
-    }
-    
-    body:not(.rex-theme-light) .quickstart-setup-option p {
-        color: rgba(255, 255, 255, 0.65);
-    }
-    
-    body:not(.rex-theme-light) .quickstart-code-block {
-        background: #34495e;
-        border-color: #4a5f7a;
-        color: rgba(255, 255, 255, 0.9);
-    }
-    
-    body:not(.rex-theme-light) .quickstart-welcome {
-        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-        border-color: #34495e;
-        color: rgba(255, 255, 255, 0.75);
-    }
-    
-    body:not(.rex-theme-light) .quickstart-welcome h4 {
-        color: #409be4;
-    }
-    
-    body:not(.rex-theme-light) .quickstart-info-box {
-        background: #5d4e37;
-        border-color: #8b7355;
-        border-left-color: #d4a574;
-        color: #f0e6d2;
-    }
-    
-    body:not(.rex-theme-light) .quickstart-info-box strong {
-        color: #f0e6d2;
-    }
-}
-
-@media (max-width: 768px) {
-    .quickstart-timeline::after {
-        left: 15px;
-    }
-    .quickstart-step {
-        padding-left: 50px;
-    }
-    .quickstart-step-icon {
-        left: 3px;
-        width: 20px;
-        height: 20px;
-        font-size: 10px;
-    }
-    .quickstart-setup-options {
-        flex-direction: column;
-    }
-    .quickstart-setup-option {
-        min-width: auto;
-    }
-}
-</style>
 
 <!-- Schnellstart Modal -->
 <div class="modal fade" id="quickstart-modal" tabindex="-1" role="dialog">
@@ -318,7 +29,7 @@ body.rex-theme-dark .quickstart-info-box strong {
             <div class="modal-body">
                 <div class="quickstart-welcome">
                     <h4><i class="fa fa-rocket"></i> <?= $addon->i18n('consent_manager_quickstart_welcome') ?></h4>
-                    <p>Folgen Sie dieser Timeline für eine perfekte Einrichtung</p>
+                    <p><?= $addon->i18n('consent_manager_quickstart_timeline_intro') ?></p>
                 </div>
 
                 <div class="quickstart-timeline">
@@ -328,26 +39,17 @@ body.rex-theme-dark .quickstart-info-box strong {
                         <div class="quickstart-step-content">
                             <div class="quickstart-step-title">
                                 <?= $addon->i18n('consent_manager_quickstart_step_import') ?>
-                                <span class="label label-success" style="font-size: 11px; margin-left: 8px;">Empfohlen</span>
+                                <span class="label label-success" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_recommended') ?></span>
                             </div>
                             <div class="quickstart-step-desc">
                                 <?= $addon->i18n('consent_manager_quickstart_step_import_desc') ?>
                             </div>
                             
                             <div class="quickstart-info-box">
-                                <strong>Nach dem Import sind grundlegende Konfigurationen vorhanden. Sie müssen noch: Domain anpassen, Template-Code einbinden und Gruppen den Domains zuordnen.</strong>
+                                <strong><?= $addon->i18n('consent_manager_quickstart_import_info') ?></strong>
                             </div>
                             
                             <div class="quickstart-setup-options">
-                                <div class="quickstart-setup-option">
-                                    <h6><?= $addon->i18n('consent_manager_setup_minimal_title') ?></h6>
-                                    <p><?= $addon->i18n('consent_manager_setup_minimal_desc') ?></p>
-                                    <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal']) ?>" 
-                                       class="btn btn-primary btn-sm" 
-                                       onclick="return confirm('<?= $addon->i18n('consent_manager_setup_minimal_confirm') ?>')">
-                                        <i class="rex-icon fa-download"></i> <?= $addon->i18n('consent_manager_setup_minimal_button') ?>
-                                    </a>
-                                </div>
                                 <div class="quickstart-setup-option">
                                     <h6><?= $addon->i18n('consent_manager_setup_standard_title') ?></h6>
                                     <p><?= $addon->i18n('consent_manager_setup_standard_desc') ?></p>
@@ -357,12 +59,21 @@ body.rex-theme-dark .quickstart-info-box strong {
                                         <i class="rex-icon fa-download"></i> <?= $addon->i18n('consent_manager_setup_standard_button') ?>
                                     </a>
                                 </div>
+                                <div class="quickstart-setup-option">
+                                    <h6><?= $addon->i18n('consent_manager_setup_minimal_title') ?></h6>
+                                    <p><?= $addon->i18n('consent_manager_setup_minimal_desc') ?> <strong>Für erfahrene Nutzer, die den Großteil der Konfiguration selbst vornehmen möchten.</strong></p>
+                                    <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal']) ?>" 
+                                       class="btn btn-primary btn-sm" 
+                                       onclick="return confirm('<?= $addon->i18n('consent_manager_setup_minimal_confirm') ?>')">
+                                        <i class="rex-icon fa-download"></i> <?= $addon->i18n('consent_manager_setup_minimal_button') ?>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div style="text-align: center; margin: 30px 0; color: #666; font-style: italic;">
-                        — oder konfigurieren Sie manuell —
+                        <?= $addon->i18n('consent_manager_quickstart_manual_alternative') ?>
                     </div>
 
                     <!-- Step 2: Domain Configuration -->
@@ -371,7 +82,7 @@ body.rex-theme-dark .quickstart-info-box strong {
                         <div class="quickstart-step-content">
                             <div class="quickstart-step-title">
                                 <?= $addon->i18n('consent_manager_quickstart_step_domain') ?>
-                                <span class="label label-warning" style="font-size: 11px; margin-left: 8px;">Erforderlich</span>
+                                <span class="label label-warning" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_required') ?></span>
                             </div>
                             <div class="quickstart-step-desc">
                                 <?= $addon->i18n('consent_manager_quickstart_step_domain_desc') ?>
@@ -388,7 +99,7 @@ body.rex-theme-dark .quickstart-info-box strong {
                         <div class="quickstart-step-content">
                             <div class="quickstart-step-title">
                                 <?= $addon->i18n('consent_manager_quickstart_step_cookiegroups') ?>
-                                <span class="text-muted" style="font-size: 11px; margin-left: 8px;">(nach Import)</span>
+                                <span class="text-muted" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_after_import') ?></span>
                             </div>
                             <div class="quickstart-step-desc">
                                 <?= $addon->i18n('consent_manager_quickstart_step_cookiegroups_desc') ?>
@@ -439,7 +150,7 @@ body.rex-theme-dark .quickstart-info-box strong {
                         <div class="quickstart-step-content">
                             <div class="quickstart-step-title">
                                 <?= $addon->i18n('consent_manager_quickstart_step_theme') ?>
-                                <span class="label label-warning" style="font-size: 11px; margin-left: 8px;">Erforderlich</span>
+                                <span class="label label-warning" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_required') ?></span>
                             </div>
                             <div class="quickstart-step-desc">
                                 <?= $addon->i18n('consent_manager_quickstart_step_theme_desc') ?>
@@ -456,7 +167,7 @@ body.rex-theme-dark .quickstart-info-box strong {
                         <div class="quickstart-step-content">
                             <div class="quickstart-step-title">
                                 <?= $addon->i18n('consent_manager_quickstart_step_template') ?>
-                                <span class="label label-success" style="font-size: 11px; margin-left: 8px;">Finale</span>
+                                <span class="label label-success" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_final') ?></span>
                             </div>
                             <div class="quickstart-step-desc">
                                 <strong><?= $addon->i18n('consent_manager_quickstart_step_template_desc') ?></strong>
@@ -464,7 +175,12 @@ body.rex-theme-dark .quickstart-info-box strong {
                             
                             <div>
                                 <h6><?= $addon->i18n('consent_manager_quickstart_template_code_label') ?></h6>
-                                <div class="quickstart-code-block">&lt;?php echo REX_CONSENT_MANAGER[]; ?&gt;</div>
+                                <div style="display: flex; align-items: flex-start; gap: 8px;">
+                                    <div class="quickstart-code-block" id="template-code-block" style="flex: 1; margin: 0;">&lt;?php echo REX_CONSENT_MANAGER[]; ?&gt;</div>
+                                    <clipboard-copy for="template-code-block" class="btn btn-xs btn-default" style="flex-shrink: 0; margin-top: 12px;" title="<?= $addon->i18n('consent_manager_quickstart_copy_title') ?>">
+                                        <i class="fa fa-copy"></i> <?= $addon->i18n('consent_manager_quickstart_copy_button') ?>
+                                    </clipboard-copy>
+                                </div>
                                 <p class="help-block">
                                     <i class="fa fa-info-circle"></i> <?= $addon->i18n('consent_manager_quickstart_template_code_info') ?>
                                 </p>
@@ -473,7 +189,12 @@ body.rex-theme-dark .quickstart-info-box strong {
                             <div style="margin-top: 20px;">
                                 <h6><?= $addon->i18n('consent_manager_privacy_link_label') ?></h6>
                                 <p class="help-block"><?= $addon->i18n('consent_manager_privacy_link_desc') ?></p>
-                                <div class="quickstart-code-block">&lt;a href="#" class="consent_manager-show-box"&gt;<?= $addon->i18n('consent_manager_quickstart_privacy_settings_link') ?>&lt;/a&gt;</div>
+                                <div style="display: flex; align-items: flex-start; gap: 8px;">
+                                    <div class="quickstart-code-block" id="privacy-code-block" style="flex: 1; margin: 0;">&lt;a href="#" class="consent_manager-show-box"&gt;<?= $addon->i18n('consent_manager_quickstart_privacy_settings_link') ?>&lt;/a&gt;</div>
+                                    <clipboard-copy for="privacy-code-block" class="btn btn-xs btn-default" style="flex-shrink: 0; margin-top: 12px;" title="<?= $addon->i18n('consent_manager_quickstart_copy_title') ?>">
+                                        <i class="fa fa-copy"></i> <?= $addon->i18n('consent_manager_quickstart_copy_button') ?>
+                                    </clipboard-copy>
+                                </div>
                             </div>
                             
                             <div class="quickstart-final-success" style="margin-top: 20px;">

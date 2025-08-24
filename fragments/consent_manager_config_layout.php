@@ -51,29 +51,8 @@ $csrf = $this->getVar('csrf');
                 <div class="panel-body">
                     <p><strong>Wählen Sie ein Setup zum schnellen Start:</strong></p>
                     
-                    <!-- Minimal Setup -->
-                    <div class="well" style="margin-bottom: 15px; padding: 15px;">
-                        <h5><i class="rex-icon fa-shield text-success"></i> <strong>Minimal Setup</strong></h5>
-                        <p style="margin-bottom: 12px; color: #666; font-size: 13px;">
-                            Nur technisch notwendige Cookies für DSGVO-Compliance. 
-                            Perfekt für einfache Websites ohne Tracking.
-                        </p>
-                        <div class="text-center">
-                            <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal']) ?>" 
-                               class="btn btn-success btn-sm" style="width: 48%; margin-right: 2%;"
-                               onclick="return confirm('Minimal Setup importieren?\n\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!')">
-                                <i class="rex-icon fa-download"></i> Komplett laden
-                            </a>
-                            <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal_update']) ?>" 
-                               class="btn btn-outline btn-success btn-sm" style="width: 48%;"
-                               onclick="return confirm('Minimal Setup Update?\n\nNur neue Services werden hinzugefügt, bestehende bleiben unverändert.')">
-                                <i class="rex-icon fa-plus"></i> Nur Neue
-                            </a>
-                        </div>
-                    </div>
-                    
                     <!-- Standard Setup -->
-                    <div class="well" style="margin-bottom: 0; padding: 15px;">
+                    <div class="well" style="margin-bottom: 15px; padding: 15px;">
                         <h5><i class="rex-icon fa-cog text-primary"></i> <strong>Standard Setup</strong></h5>
                         <p style="margin-bottom: 12px; color: #666; font-size: 13px;">
                             Umfassendes Setup mit Google Analytics, Facebook Pixel, YouTube, 
@@ -88,6 +67,27 @@ $csrf = $this->getVar('csrf');
                             <a href="<?= rex_url::currentBackendPage(['func' => 'setup_standard_update']) ?>" 
                                class="btn btn-outline btn-primary btn-sm" style="width: 48%;"
                                onclick="return confirm('Standard Setup Update?\n\nNur neue Services werden hinzugefügt, bestehende bleiben unverändert.')">
+                                <i class="rex-icon fa-plus"></i> Nur Neue
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Minimal Setup -->
+                    <div class="well" style="margin-bottom: 0; padding: 15px;">
+                        <h5><i class="rex-icon fa-shield text-success"></i> <strong>Minimal Setup</strong></h5>
+                        <p style="margin-bottom: 12px; color: #666; font-size: 13px;">
+                            Nur technisch notwendige Cookies für DSGVO-Compliance. 
+                            <strong>Für erfahrene Nutzer, die den Großteil der Konfiguration selbst vornehmen möchten.</strong>
+                        </p>
+                        <div class="text-center">
+                            <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal']) ?>" 
+                               class="btn btn-success btn-sm" style="width: 48%; margin-right: 2%;"
+                               onclick="return confirm('Minimal Setup importieren?\n\nACHTUNG: Alle aktuellen Einstellungen werden überschrieben!')">
+                                <i class="rex-icon fa-download"></i> Komplett laden
+                            </a>
+                            <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal_update']) ?>" 
+                               class="btn btn-outline btn-success btn-sm" style="width: 48%;"
+                               onclick="return confirm('Minimal Setup Update?\n\nNur neue Services werden hinzugefügt, bestehende bleiben unverändert.')">
                                 <i class="rex-icon fa-plus"></i> Nur Neue
                             </a>
                         </div>

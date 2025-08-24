@@ -353,11 +353,20 @@ Token in Einstellungen definieren und URL-Parameter verwenden:
 https://beispiel.de/seite.html?skip_consent=MEINTOKEN
 ```
 
-### Berechtigung für Redakteure
+### Berechtigungen für Redakteure
 
-Nur Text-Bearbeitung erlauben:
+**Vollzugriff für Redakteure:**
+- Recht `consent_manager[]` zuweisen
+- Zusätzlich `consent_manager[editor]` zuweisen
+- **Zugriff auf alle Funktionen** (Domains, Services, Gruppen, Texte, Konfiguration)
+
+**Nur Text-Bearbeitung erlauben:**
 - Recht `consent_manager[]` zuweisen
 - Zusätzlich `consent_manager[texteditonly]` zuweisen
+- **Nur Zugriff auf Texte** (eingeschränkter Modus)
+
+**Administratoren:**
+- Haben immer vollen Zugriff auf alle Funktionen
 
 ---
 

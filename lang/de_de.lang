@@ -258,7 +258,7 @@ consent_manager_quickstart_step_theme_desc = Passende Darstellung für den Cooki
 consent_manager_quickstart_step_template = Template-Einbindung
 consent_manager_quickstart_step_template_desc = Abschließender Schritt: Consent-Manager in das Website-Template einbinden.
 consent_manager_quickstart_template_code_label = Code für Template:
-consent_manager_quickstart_template_code_info = Dieser Code sollte vor dem schließenden &lt;/body&gt;-Tag im Template platziert werden.
+consent_manager_quickstart_template_code_info = Dieser Code sollte vor dem schließenden </body>-Tag im Template platziert werden.
 consent_manager_quickstart_template_final_message = Setup erfolgreich! Ihr Consent Manager ist jetzt einsatzbereit.
 consent_manager_quickstart_privacy_settings_info = Testen Sie die Funktion über:
 consent_manager_quickstart_privacy_settings_link = Datenschutz-Einstellungen
@@ -292,3 +292,17 @@ consent_manager_setup_standard_confirm = Standard Setup importieren?\n\nACHTUNG:
 consent_manager_privacy_link_label = Privacy Settings Link
 consent_manager_privacy_link_desc = Fügen Sie diesen Link in Ihre Datenschutzerklärung oder Footer für nachträgliche Cookie-Einstellungen ein:
 consent_manager_privacy_link_code = HTML-Code für Privacy Settings Link
+
+# User Permissions
+perm_general_consent_manager[texteditonly] = Consent Manager - Nur Texte bearbeiten
+perm_general_consent_manager[editor] = Consent Manager - Vollzugriff für Redakteure
+
+# Quickstart Modal Additional Texts
+consent_manager_quickstart_import_info = Nach dem Import sind grundlegende Konfigurationen vorhanden. Folgende Schritte sind noch erforderlich: Domain anpassen, Template-Code einbinden und Gruppen den Domains zuordnen.
+consent_manager_quickstart_manual_alternative = — oder manuell konfigurieren —
+consent_manager_quickstart_timeline_intro = Folgende Timeline für eine perfekte Einrichtung verwenden
+consent_manager_quickstart_status_required = Erforderlich
+consent_manager_quickstart_copy_button = Kopieren
+consent_manager_quickstart_copy_title = Code kopieren
+consent_manager_quickstart_recommended = Empfohlen
+consent_manager_quickstart_status_final = Abschluss
