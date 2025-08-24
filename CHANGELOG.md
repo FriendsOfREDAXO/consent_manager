@@ -4,16 +4,16 @@
 
 ### 🚀 Neue Features
 
-* **Google Consent Mode v2 Integration**: Vollständige Unterstützung für Google Consent Mode v2 mit flexiblem Auto-Mapping
-  * **Drei Modi**: Deaktiviert / Aktiviert (Auto-Mapping) / Aktiviert (Manuell)
+* **Google Consent Mode v2 Integration**: Vollständige Unterstützung für Google Consent Mode v2 mit flexiblem 3-Modi-System
+  * **Drei Modi**: Deaktiviert ❌ / Automatisch 🔄 (Auto-Mapping) / Manuell ⚙️
   * **Auto-Mapping**: Services werden automatisch erkannt (google-analytics, facebook-pixel, etc.) und entsprechende gtag('consent', 'update') Aufrufe generiert
   * **Manueller Modus**: Nur gtag('consent', 'default') wird gesetzt - gtag('consent', 'update') muss in Service-Scripts selbst implementiert werden
-  * **GDPR-konforme Default-Einstellungen**: Alle Consent-Modi standardmäßig auf 'denied' gesetzt
-  * **Domain-spezifische Konfiguration**: Separater Modus pro Domain
-  * **Service-Detection**: Automatische Erkennung von Services über UID-Mappings
-  * **Mehrsprachig**: Deutsche und englische Übersetzungen
+  * **GDPR-konforme Default-Einstellungen**: Alle Consent-Modi standardmäßig auf 'denied' gesetzt (auch functionality_storage und security_storage)
+  * **Domain-spezifische Konfiguration**: Separater Modus pro Domain mit UI-Select-Field
+  * **Service-Detection**: Automatische Erkennung von Services über UID-Mappings (12 vorkonfigurierte Services)
+  * **Debug-Konsole**: Live-Anzeige des aktiven Google Consent Mode Status mit Modus-Icon
 * **Revolutionärer Quickstart-Assistent**: Komplett neuer 7-stufiger Setup-Wizard mit modernem Timeline-Design
-  * **Timeline-UI**: Ersetzt "grässliche" Panel-Darstellung durch elegante Timeline-Optik mit Schritt-für-Schritt-Navigation
+  * **Timeline-UI**: Ersetzt "grässliche" Panel-Darstellung durch elegante Timeline-Optik mit Schritt-für-Schritt-Navigation (@lus)
   * **Theme-Kompatibilität**: Vollständige Unterstützung für REDAXO Light- und Dark-Themes mit CSS Custom Properties
   * **Copy-to-Clipboard**: Integrierte clipboard-copy Web Components für Template-Code und Privacy-Links
   * **Externe CSS-Architektur**: `consent_quickstart.css` mit bedingtem Laden nur wo benötigt
@@ -23,11 +23,13 @@
   * **Setup-Varianten**: "Minimal" (essentieller Service) und "Standard" (25 vorkonfigurierte Services)
   * **GDPR-konforme Beschreibungen**: Erweiterte Texte mit Hinweisen auf Widerrufsrecht und externe Dienste
   * **Export-Funktionalität**: Backup bestehender Konfigurationen als JSON
-* **Umfassende Debug-Konsole**: Entwickler-Tools zur Überwachung des Consent-Status
+* **Umfassende Debug-Konsole**: Entwickler-Tools zur Überwachung des Consent-Status (nur für Backend-User)
+  * **🎯 Google Consent Mode v2 Status**: Live-Anzeige des aktiven Modus (Deaktiviert ❌ / Automatisch 🔄 / Manuell ⚙️)
   * **Google Consent Mode Monitoring**: Live-Anzeige aller Consent-Flags (analytics_storage, ad_storage, etc.)
   * **Service-Status**: Detaillierte Übersicht über erkannte Services und deren Zuordnung
-  * **Cookie-Analyse**: Strukturierte Darstellung aller Cookies mit Parsing
+  * **Cookie-Analyse**: Strukturierte Darstellung aller Cookies mit JSON-Parsing
   * **localStorage-Monitoring**: Einblick in gespeicherte Consent-Daten
+  * **Echtzeit-Updates**: Status ändert sich live bei Consent-Änderungen
   * **Aktivierung**: URL-Parameter `?debug_consent=1`
 * **Cookie Definition Builder**: Intuitive Benutzeroberfläche für Cookie-Verwaltung
   * **Tabellen-Interface**: Drag & Drop mit "Cookie hinzufügen/entfernen" Buttons
@@ -61,7 +63,11 @@
 
 ### 🔧 Technische Verbesserungen
 
-* **Domain-Tabelle erweitert**: `google_consent_mode_enabled` als varchar für drei Modi ('disabled'/'auto'/'manual')
+* **Domain-Tabelle erweitert**: `google_consent_mode_enabled` als varchar(20) für drei Modi ('disabled'/'auto'/'manual')
+* **Google Consent Mode JavaScript-Integration**: 
+  * Konfiguration wird immer exportiert via `window.consentManagerGoogleConsentMode.getDomainConfig()`
+  * Debug-Konsole kann Domain-Konfiguration direkt aus PHP laden
+  * Korrekte WHERE-Bedingungen: `uid` statt `domain` für Datenbankzugriffe
 * **Externe CSS-Dateien**: `consent_quickstart.css` mit bedingtem Laden
 * **Erweiterte Nutzerrechte**: 
   * `consent_manager[editor]` für Redakteure mit Vollzugriff
@@ -70,12 +76,18 @@
   * Externe Dateien statt Inline-Code
   * Minifizierte Versionen für Performance
   * Auto-Mapping-Logik in separaten Modulen
-* **Service-Detection**: Verbesserte UID-basierte Erkennung für Auto-Mapping
+* **Service-Detection**: Verbesserte UID-basierte Erkennung für Auto-Mapping (12 vorkonfigurierte Service-Mappings)
 * **Update-Migration**: Automatische Migration bestehender boolean zu varchar Werte
+* **Fragment-Integration**: Google Consent Mode Script wird nur geladen wenn `!== 'disabled'`
 
 ### 🐛 Bugfixes
 
+* **Google Consent Mode Datenbankzugriffe**: SQL-Abfragen verwenden jetzt korrekt `WHERE uid =` statt `WHERE domain =`
+* **Fragment-Aktivierungsprüfung**: Google Consent Mode wird nur geladen wenn `!== 'disabled'` (nicht mehr `== '1'`)
 * **Google Consent Mode Defaults**: Korrigierte JavaScript-Defaults - alle Consent-Modi standardmäßig 'denied' (GDPR-konform)
+  * `functionality_storage` und `security_storage` ebenfalls auf 'denied' gesetzt (vorher automatisch 'granted')
+* **Debug-Konsole Status-Anzeige**: Zeigt nun korrekt den aktiven Google Consent Mode Modus aus Domain-Konfiguration
+* **Domain-Konfiguration Export**: JavaScript-Konfiguration wird immer verfügbar gemacht, auch für deaktivierte Modi  
 * **Debug-Modal**: Zeigt nun korrekte Consent-Status auch vor erster Zustimmung
 * **Setup-JSON-Kompatibilität**: Alle Text-UIDs entsprechen jetzt exakt der 4.3.0 CSV-Export-Struktur
 * **CSS-Loading**: Externes CSS wird nur geladen wenn Quickstart-Modal verwendet wird
