@@ -50,6 +50,14 @@ if ('delete' === $func) {
     $select->addOption($addon->i18n('google_consent_mode_manual'), 'manual');
     $field->setNotice($addon->i18n('google_consent_mode_notice'));
 
+    // Debug Mode Configuration
+    $field = $form->addSelectField('google_consent_mode_debug');
+    $field->setLabel('🔍 Debug-Modus');
+    $select = $field->getSelect();
+    $select->addOption('Deaktiviert', '0');
+    $select->addOption('Aktiviert', '1');
+    $field->setNotice('Debug-Panel im Frontend anzeigen. Zeigt Cookie-Status und Consent-Informationen für angemeldete Backend-Benutzer an.');
+
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
     $content = $form->get();
 
@@ -62,7 +70,7 @@ if ('delete' === $func) {
 echo $msg;
 if ($showlist) {
     $listDebug = false;
-    $sql = 'SELECT id, uid FROM ' . $table . ' ORDER BY uid ASC';
+    $sql = 'SELECT id, uid, google_consent_mode_debug FROM ' . $table . ' ORDER BY uid ASC';
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
@@ -72,6 +80,16 @@ if ($showlist) {
     $list->setColumnLabel('uid', $addon->i18n('consent_manager_domain'));
     $list->setColumnParams('uid', ['func' => 'edit', 'id' => '###id###']);
     $list->setColumnSortable('uid');
+
+    // Debug Status Spalte
+    $list->setColumnLabel('google_consent_mode_debug', '🔍 Debug');
+    $list->setColumnFormat('google_consent_mode_debug', 'custom', function ($params) {
+        $value = (int) $params['value'];
+        if ($value === 1) {
+            return '<span class="label label-success"><i class="fa fa-bug" style="color: #000; margin-right: 5px;"></i>Aktiv</span>';
+        }
+        return '<span class="label label-default"><i class="fa fa-bug" style="color: #000; margin-right: 5px;"></i>Deaktiviert</span>';
+    });
 
     $tdIcon = '<i class="fa fa-coffee"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
