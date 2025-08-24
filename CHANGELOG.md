@@ -12,25 +12,32 @@
   * **Domain-spezifische Konfiguration**: Separater Modus pro Domain mit UI-Select-Field
   * **Service-Detection**: Automatische Erkennung von Services über UID-Mappings (12 vorkonfigurierte Services)
   * **Debug-Konsole**: Live-Anzeige des aktiven Google Consent Mode Status mit Modus-Icon
-* **Quickstart-Assistent**: Komplett neue 7-stufige Setup-Hilfe mit modernem Timeline-Design
+* **Revolutionärer Quickstart-Assistent**: Komplett neuer 7-stufiger Setup-Wizard mit modernem Timeline-Design
   * **Timeline-UI**: Ersetzt "grässliche" Panel-Darstellung durch elegante Timeline-Optik mit Schritt-für-Schritt-Navigation (@lus)
   * **Theme-Kompatibilität**: Vollständige Unterstützung für REDAXO Light- und Dark-Themes mit CSS Custom Properties
   * **Copy-to-Clipboard**: Integrierte clipboard-copy Web Components für Template-Code und Privacy-Links
   * **Externe CSS-Architektur**: `consent_quickstart.css` mit bedingtem Laden nur wo benötigt
   * **Footer-Integration**: Hinweise auf dauerhafte Cookie-Einstellungen-Links im Footer
 * **JSON-basiertes Setup-System**: Komplett überarbeitetes Import-/Export-System für Konfigurationsdaten
-  * **Setup-Varianten**: "Minimal" (essentieller Service) und "Standard" (viele vorkonfigurierte Services)
+  * **4.3.0-Kompatibilität**: Alle 23 originalen Text-UIDs aus CSV-Export übernommen
+  * **Setup-Varianten**: "Minimal" (essentieller Service) und "Standard" (25 vorkonfigurierte Services)
   * **GDPR-konforme Beschreibungen**: Erweiterte Texte mit Hinweisen auf Widerrufsrecht und externe Dienste
   * **Export-Funktionalität**: Backup bestehender Konfigurationen als JSON
-* **Umfassende Debug-Konsole**: Entwickler-Tools zur Überwachung des Consent-Status (nur für Backend-User)
+* **Umfassende Debug-Konsole**: Entwickler-Tools zur Überwachung des Consent-Status (nur für eingeloggte Backend-User)
   * **🎯 Google Consent Mode v2 Status**: Live-Anzeige des aktiven Modus (Deaktiviert ❌ / Automatisch 🔄 / Manuell ⚙️)
   * **Google Consent Mode Monitoring**: Live-Anzeige aller Consent-Flags (analytics_storage, ad_storage, etc.)
   * **Service-Status**: Detaillierte Übersicht über erkannte Services und deren Zuordnung
   * **Cookie-Analyse**: Strukturierte Darstellung aller Cookies mit JSON-Parsing
   * **localStorage-Monitoring**: Einblick in gespeicherte Consent-Daten
   * **Echtzeit-Updates**: Status ändert sich live bei Consent-Änderungen
-  * **Aktivierung**: URL-Parameter `?debug_consent=1`
-
+  * **Domain-basierte Aktivierung**: Debug-Script wird über OUTPUT_FILTER direkt in HTML eingefügt (ersetzt URL-Parameter-System)
+  * **Backend-User-Berechtigung**: Nur eingeloggte Backend-Benutzer sehen Debug-Panel im Frontend
+  * **Menü-Indikator**: <i class="fa fa-bug"></i> Symbol im Backend-Menü bei aktivem Debug-Modus
+  * **Visuelle Statusanzeige**: Bug-Icons in Domain-Liste für Debug-Status
+* **Cookie Definition Builder**: Intuitive Benutzeroberfläche für Cookie-Verwaltung
+  * **Tabellen-Interface**: Drag & Drop mit "Cookie hinzufügen/entfernen" Buttons
+  * **YAML-Generator**: Automatische YAML-Generierung im Hintergrund
+  * **Syntax-Fehler-Elimination**: Kein manuelles YAML mehr erforderlich
 
 ### 🎨 UI/UX Verbesserungen
 
@@ -138,7 +145,6 @@
 
 * **Externe CSS-Dateien**: `consent_quickstart.css` mit bedingtem Laden nur wo benötigt
 * **Verbesserte Nutzerrechte**: `rex_perm::register('consent_manager[editor]')` für Redakteure
-* **Debug-Parameter-Optimierung**: Default-Wert 0 für debug_level Parameter
 * **JavaScript-Optimierung**: Externe Dateien statt Inline-Code für bessere Performance
 * **Enhanced Service-Detection**: Verbessertes Service-Detection mit Default-Status-Anzeige
 * **Cookie-Parsing**: Erweiterte Cookie-Analyse mit URL-Dekodierung und JSON-Formatierung
