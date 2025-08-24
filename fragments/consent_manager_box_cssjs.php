@@ -7,15 +7,15 @@ if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
     return;
 }
 
-$addon = rex_addon::get('consent_manager');
-$forceCache = $this->getVar('forceCache');
+$addon       = rex_addon::get('consent_manager');
+$forceCache  = $this->getVar('forceCache');
 $forceReload = $this->getVar('forceReload');
 
-$consentparams = [];
-$consentparams['article'] = rex_article::getCurrentId();
-$consentparams['outputcss'] = '';
-$consentparams['outputjs'] = '';
-$consentparams['lang'] = rex_clang::getCurrentId();
+$consentparams                     = [];
+$consentparams['article']          = rex_article::getCurrentId();
+$consentparams['outputcss']        = '';
+$consentparams['outputjs']         = '';
+$consentparams['lang']             = rex_clang::getCurrentId();
 $consentparams['initially_hidden'] = 'false';
 
 $consent_manager = new consent_manager_frontend($forceCache);
@@ -26,16 +26,21 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
 // Google Consent Mode v2 Integration - muss vor dem Consent Manager geladen werden
 $googleConsentModeOutput = '';
 
-// Debug Helper für Consent Manager (nur im Debug-Modus)
-if (rex::isDebugMode() || rex_request::get('debug_consent') === '1') {
+// Debug Helper für Consent Manager
+
+if (rex::isFrontend()
+    && rex::getUser()
+    && rex_backend_login::hasSession()
+    && rex_request::get('debug_consent', 'int', 0) === 1
+) {
     $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
-    $googleConsentModeOutput .= '    <script src="' . $consentDebugUrl . '" defer></script>' . PHP_EOL;
+    $googleConsentModeOutput .= '<script src="' . $consentDebugUrl . '" defer></script>' . PHP_EOL;
 }
 
-if (!empty($consent_manager->domainInfo) && 
-    isset($consent_manager->domainInfo['google_consent_mode_enabled']) && 
+if (! empty($consent_manager->domainInfo) &&
+    isset($consent_manager->domainInfo['google_consent_mode_enabled']) &&
     $consent_manager->domainInfo['google_consent_mode_enabled'] == '1') {
-    
+
     // Google Consent Mode v2 externe minifizierte Datei laden
     $googleConsentModeScriptUrl = $addon->getAssetsUrl('google_consent_mode_v2.min.js');
     $googleConsentModeOutput .= '    <script src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
@@ -69,16 +74,16 @@ if (false === $addon->getConfig('outputowncss', false)) {
 
 $consentparams['hidescrollbar'] = ('|1|' === $addon->getConfig('hidebodyscrollbar', false)) ? 'true' : 'false';
 
-$_params = [];
+$_params                             = [];
 $_params['consent_manager_outputjs'] = true;
-$_params['lang'] = $consentparams['lang'];
-$_params['a'] = $consentparams['article'];
-$_params['i'] = $consentparams['initially_hidden'];
-$_params['h'] = $consentparams['hidescrollbar'];
-$_params['cid'] = $consent_manager->cacheLogId;
-$_params['v'] = $consent_manager->version;
-$_params['r'] = $forceReload;
-$_params['t'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
+$_params['lang']                     = $consentparams['lang'];
+$_params['a']                        = $consentparams['article'];
+$_params['i']                        = $consentparams['initially_hidden'];
+$_params['h']                        = $consentparams['hidescrollbar'];
+$_params['cid']                      = $consent_manager->cacheLogId;
+$_params['v']                        = $consent_manager->version;
+$_params['r']                        = $forceReload;
+$_params['t']                        = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
 
 $consentparams['outputjs'] .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script" defer></script>' . PHP_EOL;
 
