@@ -256,6 +256,51 @@
         return cookies;
     }
     
+    // Google Consent Mode Status aus der Domain-Konfiguration ermitteln
+    function getGoogleConsentModeStatus() {
+        // Erste Priorität: Eingebettete Debug-Konfiguration (direkt von PHP)
+        if (window.consentManagerDebugConfig) {
+            const config = window.consentManagerDebugConfig;
+            return {
+                mode: config.mode || 'disabled',
+                autoMapping: config.auto_mapping || false,
+                status: 'configured'
+            };
+        }
+        
+        // Zweite Priorität: Google Consent Mode JavaScript verfügbar
+        if (window.consentManagerGoogleConsentMode && 
+            window.consentManagerGoogleConsentMode.getDomainConfig) {
+            const config = window.consentManagerGoogleConsentMode.getDomainConfig();
+            if (config && config.mode) {
+                return {
+                    mode: config.mode,
+                    autoMapping: config.auto_mapping || false,
+                    status: 'configured'
+                };
+            }
+        }
+        
+        // Fallback: Prüfen ob Google Consent Mode Skript vorhanden ist
+        const hasGoogleConsentMode = !!document.querySelector('script[src*="google-consent-mode"]') ||
+                                    !!window.gtag ||
+                                    !!window.dataLayer;
+        
+        if (hasGoogleConsentMode) {
+            return {
+                mode: 'unknown',
+                autoMapping: false,
+                status: 'detected'
+            };
+        }
+        
+        return {
+            mode: 'disabled',
+            autoMapping: false,
+            status: 'disabled'
+        };
+    }
+
     // Consent Status aus Consent Manager Cookie ermitteln
     function getConsentManagerStatus() {
         const cookies = getCurrentDomainCookies();
@@ -537,6 +582,43 @@
     function updatePanelContent() {
         if (!debugPanel) return;
         
+        // Google Consent Mode Status anzeigen
+        const googleConsentModeStatus = getGoogleConsentModeStatus();
+        let googleConsentModeHtml = '';
+        
+        if (googleConsentModeStatus.status === 'configured') {
+            const modeLabels = {
+                'disabled': 'Deaktiviert',
+                'auto': 'Automatisch (Auto-Mapping)',
+                'manual': 'Manuell'
+            };
+            const modeLabel = modeLabels[googleConsentModeStatus.mode] || googleConsentModeStatus.mode;
+            const modeIcon = googleConsentModeStatus.mode === 'disabled' ? '❌' : 
+                            googleConsentModeStatus.mode === 'auto' ? '🔄' : '⚙️';
+            
+            googleConsentModeHtml = `<div style="margin-bottom: 15px; padding: 10px; background: #e8f4fd; border-left: 4px solid #007bff; border-radius: 4px;">
+                <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #007bff;">🎯 Google Consent Mode v2 Status</h4>
+                <div style="font-size: 11px; color: #495057;">
+                    <div><strong>Modus:</strong> <span style="color: #007bff;">${modeIcon} ${modeLabel}</span></div>
+                    ${googleConsentModeStatus.autoMapping ? '<div><strong>Auto-Mapping:</strong> <span style="color: #28a745;">✅ Aktiv</span></div>' : ''}
+                </div>
+            </div>`;
+        } else if (googleConsentModeStatus.status === 'detected') {
+            googleConsentModeHtml = `<div style="margin-bottom: 15px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #856404;">🎯 Google Consent Mode v2 Status</h4>
+                <div style="font-size: 11px; color: #856404;">
+                    <div><strong>Status:</strong> ⚠️ Erkannt aber nicht konfiguriert</div>
+                </div>
+            </div>`;
+        } else {
+            googleConsentModeHtml = `<div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-left: 4px solid #6c757d; border-radius: 4px;">
+                <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #6c757d;">🎯 Google Consent Mode v2 Status</h4>
+                <div style="font-size: 11px; color: #6c757d;">
+                    <div><strong>Status:</strong> ❌ Deaktiviert</div>
+                </div>
+            </div>`;
+        }
+        
         // Consent Status
         const consentManagerStatus = getConsentManagerStatus();
         let statusHtml = '';
@@ -582,7 +664,7 @@
             statusHtml = `<div class="no-data">${consentManagerStatus.message}</div>`;
         }
         
-        document.getElementById('consent-status-content').innerHTML = statusHtml;
+        document.getElementById('consent-status-content').innerHTML = googleConsentModeHtml + statusHtml;
         
         // Services anzeigen - nur die mit Consent
         let servicesHtml = '';

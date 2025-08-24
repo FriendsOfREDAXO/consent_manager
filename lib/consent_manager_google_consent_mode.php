@@ -50,7 +50,7 @@ class consent_manager_google_consent_mode
         
         $sql = rex_sql::factory();
         $sql->setQuery(
-            'SELECT google_consent_mode_enabled FROM ' . rex::getTable('consent_manager_domain') . ' WHERE domain = ?',
+            'SELECT google_consent_mode_enabled FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
             [$domain]
         );
         
@@ -114,13 +114,22 @@ class consent_manager_google_consent_mode
     {
         $config = self::getDomainConfig($domain);
         
+        $js = "/* Google Consent Mode v2 - Auto-generated */\n";
+        
+        // Konfiguration für Debug-Zwecke exportieren
+        $js .= "window.consentManagerGoogleConsentMode = {\n";
+        $js .= "    getDomainConfig: function() {\n";
+        $js .= "        return " . json_encode($config, JSON_PRETTY_PRINT) . ";\n";
+        $js .= "    }\n";
+        $js .= "};\n\n";
+        
         if (!$config['enabled']) {
-            return '/* Google Consent Mode v2 nicht aktiviert für Domain: ' . $domain . ' */';
+            $js .= '/* Google Consent Mode v2 nicht aktiviert für Domain: ' . $domain . ' */';
+            return $js;
         }
 
         $defaultFlags = self::$defaultConsentFlags;
 
-        $js = "/* Google Consent Mode v2 - Auto-generated */\n";
         $js .= "window.dataLayer = window.dataLayer || [];\n";
         $js .= "function gtag(){dataLayer.push(arguments);}\n\n";
         
@@ -190,7 +199,7 @@ class consent_manager_google_consent_mode
         
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_domain'));
-        $sql->setWhere(['domain' => $domain]);
+        $sql->setWhere(['uid' => $domain]);
         $sql->setValue('google_consent_mode_enabled', $mode);
         
         try {

@@ -13,7 +13,7 @@
   * **Service-Detection**: Automatische Erkennung von Services über UID-Mappings
   * **Mehrsprachig**: Deutsche und englische Übersetzungen
 * **Revolutionärer Quickstart-Assistent**: Komplett neuer 7-stufiger Setup-Wizard mit modernem Timeline-Design
-  * **Timeline-UI**: Ersetzt "grässliche" Panel-Darstellung durch elegante Timeline-Optik mit Schritt-für-Schritt-Navigation
+  * **Timeline-UI**: Ersetzt "grässliche" Panel-Darstellung durch elegante Timeline-Optik mit Schritt-für-Schritt-Navigation (@lus)
   * **Theme-Kompatibilität**: Vollständige Unterstützung für REDAXO Light- und Dark-Themes mit CSS Custom Properties
   * **Copy-to-Clipboard**: Integrierte clipboard-copy Web Components für Template-Code und Privacy-Links
   * **Externe CSS-Architektur**: `consent_quickstart.css` mit bedingtem Laden nur wo benötigt

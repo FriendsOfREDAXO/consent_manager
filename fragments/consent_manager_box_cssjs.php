@@ -34,12 +34,18 @@ if (rex::isFrontend()
     && rex_request::get('debug_consent', 'int', 0) === 1
 ) {
     $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
+    
+    // Domain-Konfiguration für Debug-Konsole einbetten
+    $domain = rex_request::server('HTTP_HOST', 'string', '');
+    $googleConsentModeConfig = consent_manager_google_consent_mode::getDomainConfig($domain);
+    
+    $googleConsentModeOutput .= '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
     $googleConsentModeOutput .= '<script src="' . $consentDebugUrl . '" defer></script>' . PHP_EOL;
 }
 
 if (! empty($consent_manager->domainInfo) &&
     isset($consent_manager->domainInfo['google_consent_mode_enabled']) &&
-    $consent_manager->domainInfo['google_consent_mode_enabled'] == '1') {
+    $consent_manager->domainInfo['google_consent_mode_enabled'] !== 'disabled') {
 
     // Google Consent Mode v2 externe minifizierte Datei laden
     $googleConsentModeScriptUrl = $addon->getAssetsUrl('google_consent_mode_v2.min.js');
