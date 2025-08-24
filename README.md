@@ -288,6 +288,32 @@ Die automatische Erkennung funktioniert über den **Service-Schlüssel (UID)**. 
 | **Hotjar** | `hotjar` | - |
 | **Microsoft Clarity** | `microsoft-clarity` | `clarity` |
 
+**🔧 Flexible UID-Struktur (Multidomain/Multilanguage):**
+
+Das Auto-Mapping funktioniert mit **Partial String Matching** - Suffixes sind erlaubt:
+
+✅ **Funktioniert perfekt:**
+```
+google-analytics        → Erkannt als Google Analytics
+google-analytics-shop   → Erkannt als Google Analytics  
+google-analytics-de     → Erkannt als Google Analytics
+facebook-pixel-checkout → Erkannt als Facebook Pixel
+matomo-staging          → Erkannt als Matomo
+youtube-embeds          → Erkannt als YouTube
+```
+
+❌ **Funktioniert NICHT:**
+```
+shop-google-analytics   → NICHT erkannt (Prefix stört)
+custom-analytics        → NICHT erkannt (fehlt "google-analytics")
+```
+
+**💡 Empfehlung für Multidomain/Multilanguage:**
+- `google-analytics-de`, `google-analytics-shop`, `google-analytics-en`
+- `facebook-pixel-landing`, `facebook-pixel-checkout`  
+- `matomo-domain1`, `matomo-domain2`
+- `youtube-videos-de`, `youtube-videos-en`
+
 **Beispiel Service-Anlage:**
 1. **Dienste** → **Service hinzufügen**
 2. **Schlüssel:** `google-tag-manager` ⭐

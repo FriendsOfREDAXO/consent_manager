@@ -70,7 +70,7 @@ if ('delete' === $func) {
 echo $msg;
 if ($showlist) {
     $listDebug = false;
-    $sql = 'SELECT id, uid, google_consent_mode_debug FROM ' . $table . ' ORDER BY uid ASC';
+    $sql = 'SELECT id, uid, google_consent_mode_enabled, google_consent_mode_debug FROM ' . $table . ' ORDER BY uid ASC';
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
@@ -80,6 +80,22 @@ if ($showlist) {
     $list->setColumnLabel('uid', $addon->i18n('consent_manager_domain'));
     $list->setColumnParams('uid', ['func' => 'edit', 'id' => '###id###']);
     $list->setColumnSortable('uid');
+
+    // Google Consent Mode Status Spalte
+    $list->setColumnLabel('google_consent_mode_enabled', 'Google Consent Mode v2');
+    $list->setColumnFormat('google_consent_mode_enabled', 'custom', function ($params) use ($addon) {
+        $value = $params['value'];
+        switch ($value) {
+            case 'disabled':
+                return '<span class="label label-default">❌ ' . $addon->i18n('google_consent_mode_disabled') . '</span>';
+            case 'auto':
+                return '<span class="label label-success">🔄 ' . $addon->i18n('google_consent_mode_auto') . '</span>';
+            case 'manual':
+                return '<span class="label label-info">⚙️ ' . $addon->i18n('google_consent_mode_manual') . '</span>';
+            default:
+                return '<span class="label label-default">❌ ' . $addon->i18n('google_consent_mode_disabled') . '</span>';
+        }
+    });
 
     // Debug Status Spalte
     $list->setColumnLabel('google_consent_mode_debug', '🔍 Debug');
