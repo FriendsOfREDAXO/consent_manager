@@ -103,8 +103,8 @@ if (rex::isFrontend()) {
         // User für Frontend initialisieren
         rex_backend_login::createUser();
         
-        // Nur für Backend-Benutzer mit Frontend-Minibar
-        if (!rex::isFrontend() && !rex_backend_login::hasSession()) {
+        // Nur für eingeloggte Backend-Benutzer
+        if (!rex_backend_login::hasSession() || null === rex::getUser()) {
             return;
         }
         
