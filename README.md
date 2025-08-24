@@ -501,7 +501,24 @@ function loadExternalContent() {
 
 ---
 
-## 📄 Lizenz und Credits
+## � Debug-Modus
+
+**Consent-Debug-Panel:** Seit Version 4.4.0 verfügbar für Entwickler und Troubleshooting.
+
+**Aktivierung:**
+```
+?debug_consent=1
+```
+
+**Features:**
+- Live-Anzeige aller Cookie-Stati
+- Google Consent Mode Integration
+- LocalStorage-Übersicht
+- Service-Status-Monitor
+
+---
+
+## �📄 Lizenz und Credits
 
 ### Lizenz
 MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/LICENSE.md)

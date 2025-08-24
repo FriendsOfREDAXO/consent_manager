@@ -15,7 +15,8 @@
   * Cookie-Analyse mit detaillierter Aufschlüsselung
   * localStorage-Monitoring
   * Google Consent Mode Status (falls aktiviert)
-  * Aktivierbar über Debug-Modus oder `?debug_consent=1`
+  * Aktivierung: URL-Parameter `?debug_consent=1`
+  * Live-Refresh und strukturierte JSON-Anzeige
 * **JSON-basiertes Setup-System**: Komplett überarbeitetes Import-/Export-System für Konfigurationsdaten
   * Ersetzte SQL-basierte Beispielkonfiguration durch flexibles JSON-Format
   * Zwei vorgefertigte Setup-Varianten: "Minimal" (nur essentieller Service) und "Standard" (vollständige Service-Sammlung)
@@ -37,7 +38,6 @@
   * Live-Vorschau des generierten Codes
   * Eliminiert Syntax-Fehler und Formatierungsprobleme
 * **Verbesserte Frontend-Integration**: Optimierte Script-Verwaltung mit bedingtem Laden
-* **PJAX-Kompatibilität**: Debug-Konsole funktioniert mit AJAX-Navigation
 
 ### Technische Verbesserungen
 
