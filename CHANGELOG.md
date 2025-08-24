@@ -30,7 +30,9 @@
   * **Cookie-Analyse**: Strukturierte Darstellung aller Cookies mit JSON-Parsing
   * **localStorage-Monitoring**: Einblick in gespeicherte Consent-Daten
   * **Echtzeit-Updates**: Status ändert sich live bei Consent-Änderungen
-  * **Aktivierung**: URL-Parameter `?debug_consent=1`
+  * **Domain-basierte Aktivierung**: Debug-Modus per Domain-Konfiguration (ersetzt URL-Parameter)
+  * **Menü-Indikator**: <i class="fa fa-bug"></i> Symbol im Backend-Menü bei aktivem Debug-Modus
+  * **Visuelle Statusanzeige**: Bug-Icons in Domain-Liste für Debug-Status
 * **Cookie Definition Builder**: Intuitive Benutzeroberfläche für Cookie-Verwaltung
   * **Tabellen-Interface**: Drag & Drop mit "Cookie hinzufügen/entfernen" Buttons
   * **YAML-Generator**: Automatische YAML-Generierung im Hintergrund
@@ -142,10 +144,12 @@
 
 * **Externe CSS-Dateien**: `consent_quickstart.css` mit bedingtem Laden nur wo benötigt
 * **Verbesserte Nutzerrechte**: `rex_perm::register('consent_manager[editor]')` für Redakteure
-* **Debug-Parameter-Optimierung**: Default-Wert 0 für debug_level Parameter
+* **Domain-basierte Debug-Konfiguration**: Debug-Modus per Domain statt URL-Parameter für bessere Sicherheit
 * **JavaScript-Optimierung**: Externe Dateien statt Inline-Code für bessere Performance
 * **Enhanced Service-Detection**: Verbessertes Service-Detection mit Default-Status-Anzeige
 * **Cookie-Parsing**: Erweiterte Cookie-Analyse mit URL-Dekodierung und JSON-Formatierung
+* **Backend-Session-Authentifizierung**: Debug-Panel nur für angemeldete Backend-Benutzer
+* **Menü-Integration**: Visuelle Debug-Status-Indikatoren im Backend-Menü
 
 ### Benutzererfahrung
 
