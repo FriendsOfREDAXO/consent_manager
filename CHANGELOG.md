@@ -2,53 +2,113 @@
 
 ## Version 4.4.0 - 24.08.2025
 
-### Features
+### 🚀 Neue Features
 
-* **Google Consent Mode v2 Integration**: Vollständige Unterstützung für Google Consent Mode v2 mit automatischer gtag-Integration
-  * GDPR-konforme Default-Einstellungen (`analytics_storage: denied`, `ad_storage: denied`, `ad_user_data: denied`, `ad_personalization: denied`)
-  * Domain-spezifische Aktivierung über Backend-Einstellungen
-  * Automatische Weiterleitung der Consent-Entscheidungen an Google Analytics und Google Ads
-  * Externe minifizierte JavaScript-Dateien für optimierte Performance
-* **Umfassende Debug-Konsole**: Neue Entwickler-Tools zur Überwachung des Consent-Status
-  * Consent Status mit Default- und aktuellen Werten
-  * Service-Übersicht mit Aktivierungsstatus
-  * Cookie-Analyse mit detaillierter Aufschlüsselung
-  * localStorage-Monitoring
-  * Google Consent Mode Status (falls aktiviert)
-  * Aktivierung: URL-Parameter `?debug_consent=1`
-  * Live-Refresh und strukturierte JSON-Anzeige
-  * Verbesserte Parameter-Behandlung (int statt string für debug_level)
+* **Google Consent Mode v2 Integration**: Vollständige Unterstützung für Google Consent Mode v2 mit flexiblem Auto-Mapping
+  * **Drei Modi**: Deaktiviert / Aktiviert (Auto-Mapping) / Aktiviert (Manuell)
+  * **Auto-Mapping**: Services werden automatisch erkannt (google-analytics, facebook-pixel, etc.) und entsprechende gtag('consent', 'update') Aufrufe generiert
+  * **Manueller Modus**: Nur gtag('consent', 'default') wird gesetzt - gtag('consent', 'update') muss in Service-Scripts selbst implementiert werden
+  * **GDPR-konforme Default-Einstellungen**: Alle Consent-Modi standardmäßig auf 'denied' gesetzt
+  * **Domain-spezifische Konfiguration**: Separater Modus pro Domain
+  * **Service-Detection**: Automatische Erkennung von Services über UID-Mappings
+  * **Mehrsprachig**: Deutsche und englische Übersetzungen
+* **Revolutionärer Quickstart-Assistent**: Komplett neuer 7-stufiger Setup-Wizard mit modernem Timeline-Design
+  * **Timeline-UI**: Ersetzt "grässliche" Panel-Darstellung durch elegante Timeline-Optik mit Schritt-für-Schritt-Navigation
+  * **Theme-Kompatibilität**: Vollständige Unterstützung für REDAXO Light- und Dark-Themes mit CSS Custom Properties
+  * **Copy-to-Clipboard**: Integrierte clipboard-copy Web Components für Template-Code und Privacy-Links
+  * **Externe CSS-Architektur**: `consent_quickstart.css` mit bedingtem Laden nur wo benötigt
+  * **Footer-Integration**: Hinweise auf dauerhafte Cookie-Einstellungen-Links im Footer
 * **JSON-basiertes Setup-System**: Komplett überarbeitetes Import-/Export-System für Konfigurationsdaten
-  * Ersetzte SQL-basierte Beispielkonfiguration durch flexibles JSON-Format
-  * Zwei vorgefertigte Setup-Varianten: "Minimal" (nur essentieller Service) und "Standard" (vollständige Service-Sammlung)
-  * Export bestehender Konfigurationen als JSON für Backup und Migration
-  * Verbesserte Datenintegrität und einfachere Versionskontrolle
-* **Revolutionärer Quickstart-Assistent**: Komplett neuer 7-stufiger Setup-Wizard mit Timeline-Design
-  * **Moderne Timeline-UI**: Ersetzt "grässliche" Panel-Darstellung durch elegante Timeline-Optik
-  * **Theme-Kompatibilität**: Vollständige Unterstützung für REDAXO Light- und Dark-Themes
-  * **Copy-to-Clipboard**: Integrierte Kopierfunktionalität für Template-Code und Privacy-Links
-  * **Externe CSS-Architektur**: CSS in separater Datei mit bedingtem Laden
-  * **Vollständige Internationalisierung**: Deutsche und englische Übersetzungen für alle UI-Elemente
-  * **Erweiterte Nutzerrechte**: Neue Berechtigung "editor" für Redakteure mit vollem Zugriff
-  * **Setup-Reorder**: Standard-Setup vor Minimal-Setup für bessere UX
-* **Fragment-basierte Architektur**: Verbesserte Code-Organisation und Wartbarkeit
-  * Aufgeteilt in wiederverwendbare REDAXO-Fragmente
-  * Klarere Trennung von Logik und Präsentation
-  * Bessere Anpassbarkeit für Theme-Entwicklung
-* **Cookie Definition Builder**: Revolutionäre Benutzeroberfläche für Cookie-Verwaltung
-  * Ersetzt komplexe YAML-Syntax durch intuitive Tabellen-Eingabe
-  * Drag & Drop Interface mit "Cookie hinzufügen/entfernen" Buttons
-  * Automatische YAML-Generierung im Hintergrund
-  * Live-Vorschau des generierten Codes
-  * Eliminiert Syntax-Fehler und Formatierungsprobleme
-* **Verbesserte Frontend-Integration**: Optimierte Script-Verwaltung mit bedingtem Laden
+  * **4.3.0-Kompatibilität**: Alle 23 originalen Text-UIDs aus CSV-Export übernommen
+  * **Setup-Varianten**: "Minimal" (essentieller Service) und "Standard" (25 vorkonfigurierte Services)
+  * **GDPR-konforme Beschreibungen**: Erweiterte Texte mit Hinweisen auf Widerrufsrecht und externe Dienste
+  * **Export-Funktionalität**: Backup bestehender Konfigurationen als JSON
+* **Umfassende Debug-Konsole**: Entwickler-Tools zur Überwachung des Consent-Status
+  * **Google Consent Mode Monitoring**: Live-Anzeige aller Consent-Flags (analytics_storage, ad_storage, etc.)
+  * **Service-Status**: Detaillierte Übersicht über erkannte Services und deren Zuordnung
+  * **Cookie-Analyse**: Strukturierte Darstellung aller Cookies mit Parsing
+  * **localStorage-Monitoring**: Einblick in gespeicherte Consent-Daten
+  * **Aktivierung**: URL-Parameter `?debug_consent=1`
+* **Cookie Definition Builder**: Intuitive Benutzeroberfläche für Cookie-Verwaltung
+  * **Tabellen-Interface**: Drag & Drop mit "Cookie hinzufügen/entfernen" Buttons
+  * **YAML-Generator**: Automatische YAML-Generierung im Hintergrund
+  * **Syntax-Fehler-Elimination**: Kein manuelles YAML mehr erforderlich
 
-### UI/UX Verbesserungen
+### 🎨 UI/UX Verbesserungen
 
-* **Timeline-Design**: Moderne Schritt-für-Schritt-Darstellung statt einfacher Panels
+* **Timeline-Design**: Moderne 7-Schritte-Darstellung mit visuellen Verbindungen und Fortschrittsanzeige
 * **REDAXO-Theme-Integration**: 
-  * Unterstützung für `.rex-theme-dark` und `.rex-theme-light` Klassen
-  * CSS-Custom-Properties für dynamische Farbgestaltung
+  * `.rex-theme-dark` und `.rex-theme-light` CSS-Klassen
+  * CSS Custom Properties für dynamische Theme-Anpassung
+  * `prefers-color-scheme` Media Query Support
+* **Copy-Funktionalität**: 
+  * Ein-Klick-Kopieren für Template-Code und Privacy-Links
+  * Visuelle Success-Tooltips
+  * Clipboard-Copy Web Component Integration
+* **Responsive Design**: Mobile-optimierte Timeline-Darstellung mit Breakpoints
+* **Accessibility**: Verbesserte Screenreader-Unterstützung und Tastaturnavigation
+
+### 🌍 Internationalisierung
+
+* **Vollständige i18n-Implementation**: 
+  * **75+ neue Übersetzungsstrings** für alle UI-Komponenten
+  * **Quickstart-Modal**: Alle 7 Schritte komplett übersetzt
+  * **Config-Seite**: Alle Beschreibungen und Labels
+  * **Google Consent Mode**: Labels und Hilfstexte
+  * **Service-Beschreibungen**: Standardisierte Übersetzungen
+  * **Parameter-Platzhalter**: Dynamische Inhalte mit Parametern
+  * **Formelle Ansprache**: Konsistente "Sie"-Form
+
+### 🔧 Technische Verbesserungen
+
+* **Domain-Tabelle erweitert**: `google_consent_mode_enabled` als varchar für drei Modi ('disabled'/'auto'/'manual')
+* **Externe CSS-Dateien**: `consent_quickstart.css` mit bedingtem Laden
+* **Erweiterte Nutzerrechte**: 
+  * `consent_manager[editor]` für Redakteure mit Vollzugriff
+  * `consent_manager[texteditonly]` für eingeschränkten Textzugriff
+* **JavaScript-Optimierung**: 
+  * Externe Dateien statt Inline-Code
+  * Minifizierte Versionen für Performance
+  * Auto-Mapping-Logik in separaten Modulen
+* **Service-Detection**: Verbesserte UID-basierte Erkennung für Auto-Mapping
+* **Update-Migration**: Automatische Migration bestehender boolean zu varchar Werte
+
+### 🐛 Bugfixes
+
+* **Google Consent Mode Defaults**: Korrigierte JavaScript-Defaults - alle Consent-Modi standardmäßig 'denied' (GDPR-konform)
+* **Debug-Modal**: Zeigt nun korrekte Consent-Status auch vor erster Zustimmung
+* **Setup-JSON-Kompatibilität**: Alle Text-UIDs entsprechen jetzt exakt der 4.3.0 CSV-Export-Struktur
+* **CSS-Loading**: Externes CSS wird nur geladen wenn Quickstart-Modal verwendet wird
+* **Theme-Switching**: Dynamische Theme-Updates ohne Seiten-Reload
+* **Cookie-Parsing**: Verbesserte JSON-Dekodierung in Debug-Konsole
+* **Z-Index-Konflikte**: Timeline-Modal über anderen Elementen positioniert
+
+### ⚠️ Breaking Changes
+
+* **Domain-Tabelle**: `google_consent_mode_enabled` geändert von `tinyint(1)` zu `varchar(20)`
+  * Migration: `0` → `'disabled'`, `1` → `'auto'`
+  * Neue Option: `'manual'` für manuelles Google Consent Mode
+* **JavaScript-APIs**: Google Consent Mode Defaults geändert - alle auf 'denied'
+  * `functionality_storage` und `security_storage` nicht mehr automatisch 'granted'
+  * Services müssen explizit zugestimmt werden
+
+### 📁 Neue Dateien
+
+* `assets/consent_quickstart.css`: Externe Timeline-Styles mit Theme-Support
+* `assets/google_consent_mode_v2.js`: Überarbeitete GMv2-Implementation mit korrekten Defaults
+* `setup/minimal_setup.json`: Minimale Konfiguration mit 4.3.0-kompatiblen Text-UIDs
+* `setup/default_setup.json`: Standard-Konfiguration mit 25 vorkonfigurierten Services
+
+### 🗑️ Entfernte Features
+
+* Legacy SQL-basierte Setup-Beispiele entfernt zugunsten JSON-System
+* Inline-CSS aus Quickstart-Modal in externe Datei ausgelagert
+
+### 📄 Dokumentation
+
+* **README erweitert**: Footer-Integration-Hinweise für dauerhafte Cookie-Einstellungen-Links
+* **Setup-Beispiele**: Vollständige Anleitung für JSON-Import/Export
+* **Google Consent Mode**: Detaillierte Erklärung der drei Modi (disabled/auto/manual)n
   * Media Query Support für `prefers-color-scheme`
 * **Copy-Funktionalität**: 
   * Clipboard-Copy Web Component für Template-Code

@@ -4,13 +4,6 @@ $addon = rex_addon::get('consent_manager');
 $addon->includeFile(__DIR__.'/install.php');
 $addon->setConfig('forceCache', true);
 
-// Google Consent Mode v2 Feld hinzufügen falls nicht vorhanden (Update-Sicherheit)
-$table = rex::getTable('consent_manager_domain');
-if (rex_sql_table::get($table)->exists()) {
-    rex_sql_table::get($table)
-        ->ensureColumn(new rex_sql_column('google_consent_mode_enabled', 'tinyint(1)', true, '0'))
-        ->alter();
-}
 
 // Copy scripts to every language
 if (count(rex_clang::getAllIds()) > 1) {

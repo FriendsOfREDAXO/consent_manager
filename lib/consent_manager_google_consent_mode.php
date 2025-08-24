@@ -41,7 +41,7 @@ class consent_manager_google_consent_mode
      * Holt die Google Consent Mode Konfiguration für eine Domain
      * 
      * @param string $domain Die Domain
-     * @return array Konfiguration mit enabled, default_state etc.
+     * @return array Konfiguration mit enabled, auto_mapping, default_state etc.
      */
     public static function getDomainConfig(string $domain): array
     {
@@ -54,14 +54,16 @@ class consent_manager_google_consent_mode
             [$domain]
         );
         
+        $mode = 'disabled';
+        
         if ($sql->getRows() > 0) {
-            $enabled = (bool) $sql->getValue('google_consent_mode_enabled');
-        } else {
-            $enabled = false;
+            $mode = $sql->getValue('google_consent_mode_enabled') ?? 'disabled';
         }
 
         return [
-            'enabled' => $enabled,
+            'enabled' => $mode !== 'disabled',
+            'auto_mapping' => $mode === 'auto',
+            'mode' => $mode,
             'default_state' => 'denied', // GDPR-konform immer denied als Default
             'domain' => $domain,
             'flags' => self::$defaultConsentFlags
@@ -116,38 +118,44 @@ class consent_manager_google_consent_mode
             return '/* Google Consent Mode v2 nicht aktiviert für Domain: ' . $domain . ' */';
         }
 
-        $mappings = self::getCookieConsentMappings($clangId);
         $defaultFlags = self::$defaultConsentFlags;
 
         $js = "/* Google Consent Mode v2 - Auto-generated */\n";
         $js .= "window.dataLayer = window.dataLayer || [];\n";
         $js .= "function gtag(){dataLayer.push(arguments);}\n\n";
         
-        // Default consent (alles denied außer notwendige)
+        // Default consent (alles denied)
         $js .= "gtag('consent', 'default', " . json_encode($defaultFlags, JSON_PRETTY_PRINT) . ");\n\n";
         
-        // Consent Manager Integration
-        $js .= "// Integration mit Consent Manager\n";
-        $js .= "document.addEventListener('consent_manager-saved', function(e) {\n";
-        $js .= "    var consents = JSON.parse(e.originalEvent.detail);\n";
-        $js .= "    var updates = {};\n\n";
-        
-        // Mappings für Services generieren
-        foreach ($mappings as $serviceUid => $flags) {
-            $js .= "    // Service: $serviceUid\n";
-            $js .= "    if (consents.indexOf('$serviceUid') !== -1) {\n";
-            foreach ($flags as $flag) {
-                $js .= "        updates['$flag'] = 'granted';\n";
+        // Auto-Mapping nur aktivieren wenn gewünscht
+        if ($config['auto_mapping']) {
+            $mappings = self::getCookieConsentMappings($clangId);
+            
+            // Consent Manager Integration
+            $js .= "// Integration mit Consent Manager (Auto-Mapping aktiviert)\n";
+            $js .= "document.addEventListener('consent_manager-saved', function(e) {\n";
+            $js .= "    var consents = JSON.parse(e.originalEvent.detail);\n";
+            $js .= "    var updates = {};\n\n";
+            
+            // Mappings für Services generieren
+            foreach ($mappings as $serviceUid => $flags) {
+                $js .= "    // Service: $serviceUid\n";
+                $js .= "    if (consents.indexOf('$serviceUid') !== -1) {\n";
+                foreach ($flags as $flag) {
+                    $js .= "        updates['$flag'] = 'granted';\n";
+                }
+                $js .= "    }\n";
             }
+            
+            $js .= "\n    // Update consent wenn Änderungen vorhanden\n";
+            $js .= "    if (Object.keys(updates).length > 0) {\n";
+            $js .= "        gtag('consent', 'update', updates);\n";
+            $js .= "        console.log('Google Consent Mode updated (auto-mapping):', updates);\n";
             $js .= "    }\n";
+            $js .= "});\n\n";
+        } else {
+            $js .= "// Auto-Mapping deaktiviert - manuelles gtag('consent', 'update') in Service-Scripts erforderlich\n\n";
         }
-        
-        $js .= "\n    // Update consent wenn Änderungen vorhanden\n";
-        $js .= "    if (Object.keys(updates).length > 0) {\n";
-        $js .= "        gtag('consent', 'update', updates);\n";
-        $js .= "        console.log('Google Consent Mode updated:', updates);\n";
-        $js .= "    }\n";
-        $js .= "});\n\n";
         
         $js .= "console.log('Google Consent Mode v2 initialized for domain: $domain');";
         
@@ -167,21 +175,23 @@ class consent_manager_google_consent_mode
     }
 
     /**
-     * Setzt die Google Consent Mode Aktivierung für eine Domain
+     * Setzt den Google Consent Mode Status für eine Domain
      * 
      * @param string $domain Die Domain
-     * @param bool $enabled Aktivierung
-     * @return bool Erfolg der Operation
+     * @param string $mode Modus: 'disabled', 'auto', 'manual'
+     * @return bool True bei Erfolg
      */
-    public static function setDomainEnabled(string $domain, bool $enabled): bool
+    public static function setDomainEnabled(string $domain, string $mode): bool
     {
-        // Domain in Kleinbuchstaben normalisieren für den Lookup
-        $domain = strtolower($domain);
+        $validModes = ['disabled', 'auto', 'manual'];
+        if (!in_array($mode, $validModes)) {
+            return false;
+        }
         
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_domain'));
-        $sql->setWhere('domain = ?', [$domain]);
-        $sql->setValue('google_consent_mode_enabled', $enabled ? 1 : 0);
+        $sql->setWhere(['domain' => $domain]);
+        $sql->setValue('google_consent_mode_enabled', $mode);
         
         try {
             return $sql->update() > 0;
