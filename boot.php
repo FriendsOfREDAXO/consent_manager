@@ -100,6 +100,14 @@ if (rex::isFrontend()) {
 
     // Debug Helper über OUTPUT_FILTER - einfach und zuverlässig
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+        // User für Frontend initialisieren
+        rex_backend_login::createUser();
+        
+        // Nur für Backend-Benutzer mit Frontend-Minibar
+        if (!rex::isFrontend() && !rex_backend_login::hasSession()) {
+            return;
+        }
+        
         // Domain-Konfiguration prüfen 
         $domain = rex_request::server('HTTP_HOST', 'string', '');
         $domain = strtolower($domain);
