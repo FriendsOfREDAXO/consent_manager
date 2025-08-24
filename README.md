@@ -7,7 +7,24 @@
 Das AddOn stellt eine DSGVO-konforme Lösung für die Einholung von Einverständniserklärungen zu Cookies und externen Diensten bereit. Website-Besucher erhalten eine Consent-Box, in der einzelne Dienste-Gruppen akzeptiert oder abgelehnt werden können. Technisch notwendige Dienste bleiben dabei immer aktiv.
 
 **Kernfunktionen:**
-- Datenschutz-Opt-In-Banner für Dienste und Cookies
+- Datenschutz-Opt-In-Banner für Dien## 🔍 Debug-Modus
+
+**Consent-Debug-Panel:** Seit Version 4.4.0 verfügbar für Entwickler und Troubleshooting.
+
+**Aktivierung:**
+```
+?debug_consent=1
+```
+
+**Features:**
+- **🎯 Google Consent Mode v2 Status**: Zeigt aktiven Modus (Deaktiviert ❌ / Automatisch 🔄 / Manuell ⚙️)
+- **Live-Anzeige aller Consent-Stati**: analytics_storage, ad_storage, ad_user_data, etc.
+- **Service-Status-Monitor**: Welche Services sind aktiv und welchen Consent-Gruppen zugeordnet
+- **Cookie-Analyse**: Strukturierte Darstellung aller Cookies mit JSON-Parsing
+- **LocalStorage-Übersicht**: Einblick in alle gespeicherten Consent-Daten
+- **Echtzeit-Updates**: Status ändert sich live bei Consent-Änderungen
+
+**Nur für eingeloggte Backend-Nutzer verfügbar** - aus Sicherheitsgründen nicht für normale Website-Besucher sichtbar.s
 - Flexible Gruppierung von Diensten
 - Nachträgliche Änderung der Einstellungen möglich
 - Vollständig anpassbare Texte und Designs
@@ -213,14 +230,22 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 
 ### Google Consent Mode v2
 
-Der Consent Manager bietet **zwei Implementierungswege** für Google Consent Mode v2:
+Der Consent Manager bietet **drei Implementierungswege** für Google Consent Mode v2:
 
-#### 🤖 **Automatischer Weg (Empfohlen)**
+#### ❌ **Deaktiviert**
+Google Consent Mode wird nicht verwendet - Standard GDPR-Verhalten ohne gtag-Integration.
+
+#### 🤖 **Automatisch (Empfohlen)**
 
 **Domain-Aktivierung:**
-- In **Domains** → Google Consent Mode v2 auf "Aktiviert" setzen
+- In **Domains** → Google Consent Mode v2 auf "Automatisch (Auto-Mapping)" setzen
 - System erkennt automatisch Services und mappt sie zu Consent-Flags
 - Keine manuelle Programmierung erforderlich
+
+**Debug-Konsole für Entwickler:**
+```
+?debug_consent=1
+```
 
 **Automatische Service-Mappings:**
 ```
@@ -246,6 +271,7 @@ Die automatische Erkennung funktioniert über den **Service-Schlüssel (UID)**. 
 | **Google Maps** | `google-maps` | `maps`, `gmaps` |
 | **Matomo** | `matomo` | `piwik` |
 | **Hotjar** | `hotjar` | - |
+| **Microsoft Clarity** | `microsoft-clarity` | `clarity` |
 
 **Beispiel Service-Anlage:**
 1. **Dienste** → **Service hinzufügen**
@@ -257,22 +283,17 @@ Die automatische Erkennung funktioniert über den **Service-Schlüssel (UID)**. 
 ➡️ System erkennt automatisch "google-tag-manager" und mappt zu `analytics_storage`, `ad_storage`, etc.
 
 **Funktionsweise:**
-1. System generiert automatisch `gtag('consent', 'default', {...})` mit GDPR-konformen Defaults
+1. System generiert automatisch `gtag('consent', 'default', {...})` mit GDPR-konformen Defaults (alle 'denied')
 2. Bei Consent-Änderungen wird automatisch `gtag('consent', 'update', {...})` aufgerufen
 3. Services werden basierend auf UID/Namen automatisch erkannt und gemappt
 
-#### 🔧 **Manueller Weg (Experten)**
+#### ⚙️ **Manuell (Experten)**
 
 **Eigene gtag-Integration in Service-Scripts:**
 ```javascript
 <script>
-// Manuelles Google Consent Mode Setup
-gtag('consent', 'default', {
-    'analytics_storage': 'denied',
-    'ad_storage': 'denied'
-});
-
-// Bei Consent-Änderung manuell updaten
+// Google Consent Mode wird initialisiert, aber Service-Scripts müssen 
+// gtag('consent', 'update') selbst implementieren
 gtag('consent', 'update', {
     'analytics_storage': 'granted'
 });
@@ -286,26 +307,28 @@ gtag('consent', 'update', {
 - `ad_storage: denied` 
 - `ad_user_data: denied`
 - `ad_personalization: denied`
-- `functionality_storage: granted` (technisch notwendig)
-- `security_storage: granted` (technisch notwendig)
+- `functionality_storage: denied`
+- `security_storage: denied`
+- `personalization_storage: denied`
 
-**Debug-Konsole aktivieren:**
+**Debug-Konsole zeigt:**
+- **🎯 Google Consent Mode v2 Status**: Aktueller Modus (Deaktiviert/Automatisch/Manuell)
+- **Consent-Status**: Alle gtag-Flags mit aktuellen Werten
+- **Service-Übersicht**: Erkannte Services und deren Zuordnung
+- **Cookie-Analyse**: Detaillierte Cookie-Informationen
+- **localStorage**: Consent-Daten-Speicherung
+
+**Aktivierung Debug-Konsole:**
 ```
 ?debug_consent=1
 ```
 
-**Debug-Informationen:**
-- Consent-Status (aktuell und Standard)
-- Google Consent Mode Status
-- Service-Übersicht mit Mappings
-- Cookie-Analyse
-- localStorage-Inhalte
-
-**Vorteile automatischer Weg:**
+**Vorteile automatischer Modus:**
 - ✅ Keine Programmierung erforderlich
 - ✅ Automatische Service-Erkennung
 - ✅ GDPR-konforme Defaults
 - ✅ Wartungsfreie Updates
+- ✅ Debug-Konsole für Troubleshooting
 
 ### Beispiel-Modul für nachträgliche Abfrage
 
