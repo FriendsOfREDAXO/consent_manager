@@ -44,7 +44,7 @@ if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->
 
 // Consent ausblenden wenn keine Dienste konfiguriert sind
 if (0 === count($consent_manager->cookiegroups)) {
-    rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . consent_manager_util::hostname() . ')');
+    //rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . consent_manager_util::hostname() . ')');
     $consentparams['initially_hidden'] = 'true';
 }
 
