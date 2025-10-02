@@ -332,6 +332,31 @@ function mapConsentsToGoogleFlags(consents) {
 
     consents.forEach(function(uid) {
         var lowerUid = uid.toLowerCase();
+        console.log('Consent Manager: Mapping UID', uid, lowerUid);
+        
+        // Standard Consent Manager Gruppen
+        if (lowerUid === 'analytics') {
+            flags['analytics_storage'] = true;
+            console.log('Consent Manager: Mapped analytics to analytics_storage');
+        }
+        if (lowerUid === 'marketing') {
+            flags['ad_storage'] = true;
+            flags['ad_user_data'] = true;
+            flags['ad_personalization'] = true;
+            console.log('Consent Manager: Mapped marketing to ad_*');
+        }
+        if (lowerUid === 'functional') {
+            flags['functionality_storage'] = true;
+            console.log('Consent Manager: Mapped functional to functionality_storage');
+        }
+        if (lowerUid === 'preferences') {
+            flags['personalization_storage'] = true;
+            console.log('Consent Manager: Mapped preferences to personalization_storage');
+        }
+        if (lowerUid === 'necessary') {
+            flags['security_storage'] = true;
+            console.log('Consent Manager: Mapped necessary to security_storage');
+        }
         
         // Google Analytics
         if (lowerUid.includes('google-analytics') || lowerUid.includes('analytics') || lowerUid.includes('ga')) {
@@ -429,6 +454,7 @@ function mapConsentsToGoogleFlags(consents) {
         }
     });
 
+    console.log('Consent Manager: Final mapped flags', flags);
     return flags;
 }
 
