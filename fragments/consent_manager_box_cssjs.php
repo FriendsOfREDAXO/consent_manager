@@ -30,8 +30,12 @@ if (! empty($consent_manager->domainInfo) &&
     isset($consent_manager->domainInfo['google_consent_mode_enabled']) &&
     $consent_manager->domainInfo['google_consent_mode_enabled'] !== 'disabled') {
 
-    // Google Consent Mode v2 externe minifizierte Datei laden
-    $googleConsentModeScriptUrl = $addon->getAssetsUrl('google_consent_mode_v2.min.js');
+    // Google Consent Mode v2 externe Datei laden (minifiziert oder normal)
+    $googleConsentModeScriptFile = 'google_consent_mode_v2.min.js';
+    if (!file_exists($addon->getAssetsPath('google_consent_mode_v2.min.js'))) {
+        $googleConsentModeScriptFile = 'google_consent_mode_v2.js';
+    }
+    $googleConsentModeScriptUrl = $addon->getAssetsUrl($googleConsentModeScriptFile);
     $googleConsentModeOutput .= '    <script src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
     
     // Debug-Script laden wenn Debug-Modus aktiviert

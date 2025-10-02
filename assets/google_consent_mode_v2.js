@@ -136,7 +136,15 @@ if(localStorage.getItem('userId') != null) {
  * @param {Object} consent - Object with consent settings
  */
 function setConsent(consent) {
-    let consentSettings = JSON.parse(localStorage.getItem(GOOGLE_CONSENT_V2_STORAGE_KEY));
+    let consentStorage = localStorage.getItem(GOOGLE_CONSENT_V2_STORAGE_KEY);
+    let consentSettings;
+    
+    if (consentStorage === null) {
+        // Initialize with defaults if not exists
+        consentSettings = { ...GOOGLE_CONSENT_V2_DEFAULTS };
+    } else {
+        consentSettings = JSON.parse(consentStorage);
+    }
 
     for (const [key, value] of Object.entries(consentSettings)) {
         if (typeof consent[key] !== "undefined") {

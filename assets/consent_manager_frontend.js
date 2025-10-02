@@ -59,6 +59,12 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
         removeScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
     });
 
+    // on startup trigger Google Consent Mode v2 update if consents exist
+    if (consents.length > 0 && typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
+        var googleConsentFlags = mapConsentsToGoogleFlags(consents);
+        window.GoogleConsentModeV2.setConsent(googleConsentFlags);
+    }
+
     // on startup trigger unselect-scripts of disabled consents
     consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
         // array mit cookie uids
