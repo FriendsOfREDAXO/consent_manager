@@ -143,7 +143,7 @@ class consent_manager_google_consent_mode
             // Consent Manager Integration
             $js .= "// Integration mit Consent Manager (Auto-Mapping aktiviert)\n";
             $js .= "document.addEventListener('consent_manager-saved', function(e) {\n";
-            $js .= "    var consents = JSON.parse(e.originalEvent.detail);\n";
+            $js .= "    var consents = JSON.parse(e.detail);\n";
             $js .= "    var updates = {};\n\n";
             
             // Mappings für Services generieren
