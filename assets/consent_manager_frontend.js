@@ -62,7 +62,10 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
     // on startup trigger Google Consent Mode v2 update if consents exist
     if (consents.length > 0 && typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
         var googleConsentFlags = mapConsentsToGoogleFlags(consents);
+        console.log('Consent Manager: Auto-mapping Google Consent Mode flags', consents, googleConsentFlags);
         window.GoogleConsentModeV2.setConsent(googleConsentFlags);
+    } else {
+        console.log('Consent Manager: Auto-mapping skipped', {consents: consents, hasGCM: typeof window.GoogleConsentModeV2 !== 'undefined', hasSetConsent: typeof window.GoogleConsentModeV2?.setConsent === 'function'});
     }
 
     // on startup trigger unselect-scripts of disabled consents
@@ -186,7 +189,10 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
         // Google Consent Mode v2 Update
         if (typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
             var googleConsentFlags = mapConsentsToGoogleFlags(consents);
+            console.log('Consent Manager: Mapping consents to Google flags', consents, googleConsentFlags);
             window.GoogleConsentModeV2.setConsent(googleConsentFlags);
+        } else {
+            console.log('Consent Manager: Google Consent Mode not available for mapping');
         }
         
         if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {

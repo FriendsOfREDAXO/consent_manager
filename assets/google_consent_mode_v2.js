@@ -142,10 +142,14 @@ function setConsent(consent) {
     if (consentStorage === null) {
         // Initialize with defaults if not exists
         consentSettings = { ...GOOGLE_CONSENT_V2_DEFAULTS };
+        console.log('Google Consent Mode: Initializing with defaults', consentSettings);
     } else {
         consentSettings = JSON.parse(consentStorage);
+        console.log('Google Consent Mode: Loaded existing settings', consentSettings);
     }
 
+    console.log('Google Consent Mode: Updating with consent', consent);
+    
     for (const [key, value] of Object.entries(consentSettings)) {
         if (typeof consent[key] !== "undefined") {
             // Trigger event handlers if defined
@@ -161,6 +165,7 @@ function setConsent(consent) {
         }
     }
 
+    console.log('Google Consent Mode: Final settings', consentSettings);
     gtag('consent', 'update', consentSettings);
     localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(consentSettings));
 }
