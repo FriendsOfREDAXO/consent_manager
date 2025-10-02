@@ -33,6 +33,16 @@ if (! empty($consent_manager->domainInfo) &&
     // Google Consent Mode v2 externe minifizierte Datei laden
     $googleConsentModeScriptUrl = $addon->getAssetsUrl('google_consent_mode_v2.min.js');
     $googleConsentModeOutput .= '    <script src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
+    
+    // Auto-Mapping JavaScript generieren wenn aktiviert
+    $domain = rex_request::server('HTTP_HOST', 'string', '');
+    $clangId = rex_clang::getCurrentId();
+    $generatedJs = consent_manager_google_consent_mode::generateJavaScript($domain, $clangId);
+    
+    // Nur wenn JavaScript generiert wurde, als inline Script hinzufügen
+    if (!empty($generatedJs) && strpos($generatedJs, 'consent_manager-saved') !== false) {
+        $googleConsentModeOutput .= '    <script>' . PHP_EOL . $generatedJs . PHP_EOL . '    </script>' . PHP_EOL;
+    }
 }
 
 // Consent bei Datenschutz und Impressum ausblenden
