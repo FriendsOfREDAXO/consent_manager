@@ -680,17 +680,19 @@
             }
         }
         
-        // Problem 8: Mehrere Consent Scripts geladen
-        const consentScripts = document.querySelectorAll('script[src*="consent"]');
-        // Debug-Script nicht mitzählen
-        const actualConsentScripts = Array.from(consentScripts).filter(script => 
-            !script.src.includes('consent_debug.js')
-        );
-        if (actualConsentScripts.length > 2) {
+        // Problem 8: Mehrere Consent Manager Frontend Scripts geladen
+        const consentManagerScripts = document.querySelectorAll('script[src*="consent_manager_frontend"]');
+        // Zähle .js und .min.js als ein Script
+        const uniqueScripts = new Set();
+        consentManagerScripts.forEach(script => {
+            const baseName = script.src.replace(/\.min\.js$/, '.js');
+            uniqueScripts.add(baseName);
+        });
+        if (uniqueScripts.size > 1) {
             issues.push({
                 type: 'warning',
-                title: 'Mehrere Consent Scripts',
-                message: `${actualConsentScripts.length} Consent-Manager Scripts wurden geladen. Dies kann zu Konflikten führen.`,
+                title: 'Mehrere Consent Manager Scripts',
+                message: `${uniqueScripts.size} verschiedene Consent-Manager Frontend Scripts wurden geladen. Dies kann zu Konflikten führen.`,
                 solution: 'Überprüfen Sie die Template-Integration und entfernen Sie doppelte Einbindungen.'
             });
         }
