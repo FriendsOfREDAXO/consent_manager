@@ -70,24 +70,23 @@ class consent_manager_frontend
         // Zuerst exakte Domain suchen
         if (isset($this->cache['domains'][$domain])) {
             $this->domainName = $domain;
-            $this->domainInfo = $this->cache['domains'][$domain];
         } else {
             // Dann HTTP_HOST versuchen (für Fälle mit Port oder Subdomain)
             $httpHost = strtolower(rex_request::server('HTTP_HOST'));
             if (isset($this->cache['domains'][$httpHost])) {
                 $this->domainName = $httpHost;
-                $this->domainInfo = $this->cache['domains'][$httpHost];
             } else {
                 // Domain ohne Port versuchen
                 $httpHostNoPort = preg_replace('/:\d+$/', '', $httpHost);
                 if (isset($this->cache['domains'][$httpHostNoPort])) {
                     $this->domainName = $httpHostNoPort;
-                    $this->domainInfo = $this->cache['domains'][$httpHostNoPort];
                 } else {
                     return;
                 }
             }
         }
+        
+        $this->domainInfo = $this->cache['domains'][$this->domainName];
         $this->links['privacy_policy'] = $this->cache['domains'][$domain]['privacy_policy'];
         $this->links['legal_notice'] = $this->cache['domains'][$domain]['legal_notice'];
 
@@ -107,8 +106,8 @@ class consent_manager_frontend
                 }
             }
         }
-        if (isset($this->cache['domains'][$domain]['cookiegroups'])) {
-            foreach ($this->cache['domains'][$domain]['cookiegroups'] as $uid) {
+        if (isset($this->cache['domains'][$this->domainName]['cookiegroups'])) {
+            foreach ($this->cache['domains'][$this->domainName]['cookiegroups'] as $uid) {
                 $this->cookiegroups[$uid] = $this->cache['cookiegroups'][$clang][$uid];
             }
         }
