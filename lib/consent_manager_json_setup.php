@@ -222,6 +222,10 @@ class consent_manager_json_setup
             if ($mode === 'update' && $existingGroup) {
                 continue; // Skip existing groups in update mode
             } else {
+                // Adjust ID if it conflicts in update mode
+                if ($mode === 'update' && isset($group['id']) && self::idExistsInTable('consent_manager_cookiegroup', $group['id'])) {
+                    $group['id'] = self::getNextAvailableId('consent_manager_cookiegroup');
+                }
                 // Insert new group (replace mode or new group)
                 self::insertCookieGroup($group);
             }
@@ -243,6 +247,10 @@ class consent_manager_json_setup
             if ($mode === 'update' && $existingCookie) {
                 continue; // Skip existing cookies in update mode
             } else {
+                // Adjust ID if it conflicts in update mode
+                if ($mode === 'update' && isset($cookie['id']) && self::idExistsInTable('consent_manager_cookie', $cookie['id'])) {
+                    $cookie['id'] = self::getNextAvailableId('consent_manager_cookie');
+                }
                 // Insert new cookie (replace mode or new cookie)
                 self::insertCookie($cookie);
             }
@@ -264,6 +272,10 @@ class consent_manager_json_setup
             if ($mode === 'update' && $existingText) {
                 continue; // Skip existing texts in update mode
             } else {
+                // Adjust ID if it conflicts in update mode
+                if ($mode === 'update' && isset($text['id']) && self::idExistsInTable('consent_manager_text', $text['id'])) {
+                    $text['id'] = self::getNextAvailableId('consent_manager_text');
+                }
                 // Insert new text (replace mode or new text)
                 self::insertText($text);
             }
@@ -329,6 +341,7 @@ class consent_manager_json_setup
         $now = date('Y-m-d H:i:s');
         
         $fieldMapping = [
+            'id' => 'id',
             'clang_id' => 'clang_id',
             'domain' => 'domain',
             'uid' => 'uid',
@@ -355,6 +368,22 @@ class consent_manager_json_setup
         $sql->insert();
     }
 
+    // Helper methods
+    private static function idExistsInTable(string $table, int $id): bool
+    {
+        $sql = rex_sql::factory();
+        $sql->setQuery('SELECT COUNT(*) as count FROM ' . rex::getTable($table) . ' WHERE id = ?', [$id]);
+        return $sql->getValue('count') > 0;
+    }
+
+    private static function getNextAvailableId(string $table): int
+    {
+        $sql = rex_sql::factory();
+        $sql->setQuery('SELECT MAX(id) as max_id FROM ' . rex::getTable($table));
+        $maxId = (int) ($sql->getValue('max_id') ?? 0);
+        return $maxId + 1;
+    }
+
     private static function insertCookie(array $cookie): void
     {
         $sql = rex_sql::factory();
@@ -363,6 +392,7 @@ class consent_manager_json_setup
         $now = date('Y-m-d H:i:s');
         
         $fieldMapping = [
+            'id' => 'id',
             'clang_id' => 'clang_id',
             'uid' => 'uid',
             'service_name' => 'service_name',
@@ -398,6 +428,7 @@ class consent_manager_json_setup
         $now = date('Y-m-d H:i:s');
         
         $fieldMapping = [
+            'id' => 'id',
             'clang_id' => 'clang_id',
             'uid' => 'uid',
             'text' => 'text'
