@@ -22,6 +22,11 @@
                 </div>
             </div>
             <div id="consent-debug-content">
+                <div id="issues-section">
+                    <h4>⚠️ Probleme & Warnungen</h4>
+                    <div id="issues-content">Lade...</div>
+                </div>
+                
                 <div id="consent-status-section">
                     <h4>✅ Consent Status</h4>
                     <div id="consent-status-content">Lade...</div>
@@ -264,6 +269,10 @@
             return {
                 mode: config.mode || 'disabled',
                 autoMapping: config.auto_mapping || false,
+                debugEnabled: config.debug_enabled || false,
+                domain: config.domain || window.location.hostname,
+                cacheLogId: config.cache_log_id || null,
+                version: config.version || null,
                 status: 'configured'
             };
         }
@@ -276,6 +285,10 @@
                 return {
                     mode: config.mode,
                     autoMapping: config.auto_mapping || false,
+                    debugEnabled: false,
+                    domain: config.domain || window.location.hostname,
+                    cacheLogId: null,
+                    version: null,
                     status: 'configured'
                 };
             }
@@ -290,6 +303,10 @@
             return {
                 mode: 'unknown',
                 autoMapping: false,
+                debugEnabled: false,
+                domain: window.location.hostname,
+                cacheLogId: null,
+                version: null,
                 status: 'detected'
             };
         }
@@ -297,6 +314,10 @@
         return {
             mode: 'disabled',
             autoMapping: false,
+            debugEnabled: false,
+            domain: window.location.hostname,
+            cacheLogId: null,
+            version: null,
             status: 'disabled'
         };
     }
@@ -561,26 +582,126 @@
         return services;
     }
 
-    // LocalStorage Daten abrufen
-    function getLocalStorageData() {
-        const items = [];
+    // Probleme erkennen und Warnungen generieren
+    function detectIssues() {
+        const issues = [];
+        const googleConsentModeStatus = getGoogleConsentModeStatus();
+        const consentManagerStatus = getConsentManagerStatus();
         
-        try {
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const value = localStorage.getItem(key);
-                items.push({ key, value });
-            }
-        } catch (e) {
-            items.push({ key: 'Error', value: 'LocalStorage nicht zugänglich' });
+        // Problem 1: Google Consent Mode aktiviert aber Script nicht geladen
+        if (googleConsentModeStatus.mode !== 'disabled' && !window.GoogleConsentModeV2) {
+            issues.push({
+                type: 'error',
+                title: 'Google Consent Mode Script fehlt',
+                message: 'Google Consent Mode ist aktiviert, aber das erforderliche Script wurde nicht geladen.',
+                solution: 'Überprüfen Sie, ob das google_consent_mode_v2.min.js Script korrekt eingebunden ist.'
+            });
         }
         
-        return items;
+        // Problem 2: Auto-Mapping aktiviert aber keine Services konfiguriert
+        if (googleConsentModeStatus.autoMapping && consentManagerStatus.services && 
+            consentManagerStatus.services.filter(s => s.enabled).length === 0) {
+            issues.push({
+                type: 'warning',
+                title: 'Auto-Mapping ohne Services',
+                message: 'Auto-Mapping ist aktiviert, aber keine Services sind konfiguriert oder akzeptiert.',
+                solution: 'Konfigurieren Sie Services im Backend oder prüfen Sie die Consent-Gruppen.'
+            });
+        }
+        
+        // Problem 3: Consent Manager Cookie fehlt bei erteiltem Consent
+        if (consentManagerStatus.status !== 'no_consent' && !document.cookie.includes('consent_manager=')) {
+            issues.push({
+                type: 'warning',
+                title: 'Consent Cookie fehlt',
+                message: 'Consent wurde erteilt, aber das Consent-Manager Cookie ist nicht vorhanden.',
+                solution: 'Überprüfen Sie Cookie-Einstellungen und SameSite-Attribute.'
+            });
+        }
+        
+        // Problem 4: Google Consent Mode localStorage fehlt bei aktiviertem Modus
+        if (googleConsentModeStatus.mode !== 'disabled' && !localStorage.getItem('consentMode')) {
+            issues.push({
+                type: 'warning',
+                title: 'Google Consent Mode localStorage fehlt',
+                message: 'Google Consent Mode ist aktiviert, aber keine Daten in localStorage gefunden.',
+                solution: 'Stellen Sie sicher, dass localStorage verfügbar ist und das Script korrekt initialisiert wurde.'
+            });
+        }
+        
+        // Problem 5: Version Mismatch
+        if (googleConsentModeStatus.version && consentManagerStatus.version && 
+            googleConsentModeStatus.version !== consentManagerStatus.version) {
+            issues.push({
+                type: 'info',
+                title: 'Versionsunterschied',
+                message: `Consent Manager Version (${consentManagerStatus.version}) unterscheidet sich von Cache-Version (${googleConsentModeStatus.version}).`,
+                solution: 'Cache leeren oder Seite neu laden.'
+            });
+        }
+        
+        // Problem 7: Auto-Mapping aktiviert aber keine Google Consent Mode Updates
+        if (googleConsentModeStatus.autoMapping && consentManagerStatus.status !== 'no_consent') {
+            const googleConsentData = localStorage.getItem('consentMode');
+            if (googleConsentData) {
+                const googleConsent = JSON.parse(googleConsentData);
+                const hasGrantedFlags = Object.values(googleConsent).some(value => value === 'granted');
+                
+                if (!hasGrantedFlags) {
+                    issues.push({
+                        type: 'warning',
+                        title: 'Auto-Mapping ohne Effekt',
+                        message: 'Auto-Mapping ist aktiviert und Consent erteilt, aber keine Google Consent Flags wurden auf "granted" gesetzt.',
+                        solution: 'Überprüfen Sie die Service-UIDs (z.B. google-analytics) und die Mapping-Funktion.'
+                    });
+                }
+            }
+        }
+        
+        // Problem 8: Mehrere Consent Scripts geladen
+        const consentScripts = document.querySelectorAll('script[src*="consent"]');
+        if (consentScripts.length > 2) {
+            issues.push({
+                type: 'warning',
+                title: 'Mehrere Consent Scripts',
+                message: `${consentScripts.length} Consent-Manager Scripts wurden geladen. Dies kann zu Konflikten führen.`,
+                solution: 'Überprüfen Sie die Template-Integration und entfernen Sie doppelte Einbindungen.'
+            });
+        }
+        
+        return issues;
     }
     
     // Panel Inhalt aktualisieren
     function updatePanelContent() {
         if (!debugPanel) return;
+        
+        // Probleme erkennen
+        const issues = detectIssues();
+        let issuesHtml = '';
+        
+        if (issues.length > 0) {
+            issuesHtml = issues.map(issue => {
+                const icon = issue.type === 'error' ? '❌' : 
+                           issue.type === 'warning' ? '⚠️' : 'ℹ️';
+                const bgColor = issue.type === 'error' ? '#f8d7da' : 
+                              issue.type === 'warning' ? '#fff3cd' : '#d1ecf1';
+                const borderColor = issue.type === 'error' ? '#dc3545' : 
+                                  issue.type === 'warning' ? '#ffc107' : '#17a2b8';
+                const textColor = issue.type === 'error' ? '#721c24' : 
+                                issue.type === 'warning' ? '#856404' : '#0c5460';
+                
+                return `<div style="margin: 8px 0; padding: 12px; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 6px; font-size: 12px;">
+                    <div style="font-weight: bold; margin-bottom: 6px; color: ${textColor};">${icon} ${issue.title}</div>
+                    <div style="margin-bottom: 6px; color: ${textColor};">${issue.message}</div>
+                    <div style="font-size: 11px; color: #6c757d;"><strong>Lösung:</strong> ${issue.solution}</div>
+                </div>`;
+            }).join('');
+        } else {
+            issuesHtml = '<div style="padding: 15px; text-align: center; color: #28a745; font-style: italic; background: #d4edda; border-radius: 6px;">✅ Keine Probleme erkannt</div>';
+        }
+        
+        document.getElementById('issues-content').innerHTML = issuesHtml;
         
         // Google Consent Mode Status anzeigen
         const googleConsentModeStatus = getGoogleConsentModeStatus();
@@ -600,7 +721,10 @@
                 <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #007bff;">🎯 Google Consent Mode v2 Status</h4>
                 <div style="font-size: 11px; color: #495057;">
                     <div><strong>Modus:</strong> <span style="color: #007bff;">${modeIcon} ${modeLabel}</span></div>
-                    ${googleConsentModeStatus.autoMapping ? '<div><strong>Auto-Mapping:</strong> <span style="color: #28a745;">✅ Aktiv</span></div>' : ''}
+                    <div><strong>Domain:</strong> ${googleConsentModeStatus.domain}</div>
+                    ${googleConsentModeStatus.autoMapping ? '<div><strong>Auto-Mapping:</strong> <span style="color: #28a745;">✅ Aktiv</span></div>' : '<div><strong>Auto-Mapping:</strong> <span style="color: #6c757d;">❌ Inaktiv</span></div>'}
+                    ${googleConsentModeStatus.cacheLogId ? '<div><strong>Cache Log ID:</strong> ' + googleConsentModeStatus.cacheLogId + '</div>' : ''}
+                    ${googleConsentModeStatus.version ? '<div><strong>Version:</strong> ' + googleConsentModeStatus.version + '</div>' : ''}
                 </div>
             </div>`;
         } else if (googleConsentModeStatus.status === 'detected') {
@@ -608,6 +732,7 @@
                 <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #856404;">🎯 Google Consent Mode v2 Status</h4>
                 <div style="font-size: 11px; color: #856404;">
                     <div><strong>Status:</strong> ⚠️ Erkannt aber nicht konfiguriert</div>
+                    <div><strong>Domain:</strong> ${googleConsentModeStatus.domain}</div>
                 </div>
             </div>`;
         } else {
@@ -615,6 +740,7 @@
                 <h4 style="margin: 0 0 8px 0; font-size: 12px; color: #6c757d;">🎯 Google Consent Mode v2 Status</h4>
                 <div style="font-size: 11px; color: #6c757d;">
                     <div><strong>Status:</strong> ❌ Deaktiviert</div>
+                    <div><strong>Domain:</strong> ${googleConsentModeStatus.domain}</div>
                 </div>
             </div>`;
         }

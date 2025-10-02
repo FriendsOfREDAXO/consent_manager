@@ -34,15 +34,26 @@ if (! empty($consent_manager->domainInfo) &&
     $googleConsentModeScriptUrl = $addon->getAssetsUrl('google_consent_mode_v2.min.js');
     $googleConsentModeOutput .= '    <script src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
     
-    // Auto-Mapping JavaScript generieren wenn aktiviert
-    $domain = rex_request::server('HTTP_HOST', 'string', '');
-    $clangId = rex_clang::getCurrentId();
-    $generatedJs = consent_manager_google_consent_mode::generateJavaScript($domain, $clangId);
-    
-    // Nur wenn JavaScript generiert wurde, als inline Script hinzufügen
-    if (!empty($generatedJs) && strpos($generatedJs, 'consent_manager-saved') !== false) {
-        $googleConsentModeOutput .= '    <script>' . PHP_EOL . $generatedJs . PHP_EOL . '    </script>' . PHP_EOL;
+    // Debug-Script laden wenn Debug-Modus aktiviert
+    if (!empty($consent_manager->domainInfo['google_consent_mode_debug']) && 
+        $consent_manager->domainInfo['google_consent_mode_debug'] == 1) {
+        $debugScriptUrl = $addon->getAssetsUrl('consent_debug.js');
+        $googleConsentModeOutput .= '    <script src="' . $debugScriptUrl . '" defer></script>' . PHP_EOL;
+        
+        // Debug-Konfiguration für JavaScript verfügbar machen
+        $googleConsentModeOutput .= '    <script>' . PHP_EOL;
+        $googleConsentModeOutput .= '        window.consentManagerDebugConfig = ' . json_encode([
+            'mode' => $consent_manager->domainInfo['google_consent_mode_enabled'] ?? 'disabled',
+            'auto_mapping' => ($consent_manager->domainInfo['google_consent_mode_enabled'] ?? 'disabled') === 'auto',
+            'debug_enabled' => true,
+            'domain' => rex_request::server('HTTP_HOST'),
+            'cache_log_id' => $consent_manager->cacheLogId,
+            'version' => $consent_manager->version
+        ]) . ';' . PHP_EOL;
+        $googleConsentModeOutput .= '    </script>' . PHP_EOL;
     }
+    
+    // Auto-Mapping wird jetzt im Frontend-JS gehandhabt
 }
 
 // Consent bei Datenschutz und Impressum ausblenden

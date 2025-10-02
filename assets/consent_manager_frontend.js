@@ -179,7 +179,8 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
         
         // Google Consent Mode v2 Update
         if (typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
-            window.GoogleConsentModeV2.setConsent(consents);
+            var googleConsentFlags = mapConsentsToGoogleFlags(consents);
+            window.GoogleConsentModeV2.setConsent(googleConsentFlags);
         }
         
         if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {
@@ -272,6 +273,150 @@ const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/'
     }
 
 })();
+
+function consent_manager_showBox() {
+    var consents = [];
+    if (typeof cmCookieAPI.get('consent_manager') != 'undefined') {
+        cookieData = JSON.parse(cmCookieAPI.get('consent_manager'));
+        if (cookieData.hasOwnProperty('version')) {
+            consents = cookieData.consents;
+        }
+    }
+    consent_managerBox = document.getElementById('consent_manager-background');
+    consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+        var check = true,
+            cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+        cookieUids.forEach(function (uid) {
+            if (consents.indexOf(uid) === -1) {
+                check = false;
+            }
+        });
+        if (check) {
+            el.checked = true;
+        }
+    });
+    if (consent_manager_parameters.hidebodyscrollbar) {
+        document.querySelector('body').style.overflow = 'hidden';
+    }
+    document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+    var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
+    var firstFocusableEl = focusableEls[0];
+    consent_managerBox.focus();
+    if (firstFocusableEl) firstFocusableEl.focus();
+}
+
+function mapConsentsToGoogleFlags(consents) {
+    var flags = {
+        'ad_storage': false,
+        'ad_user_data': false,
+        'ad_personalization': false,
+        'analytics_storage': false,
+        'personalization_storage': false,
+        'functionality_storage': false,
+        'security_storage': false
+    };
+
+    consents.forEach(function(uid) {
+        var lowerUid = uid.toLowerCase();
+        
+        // Google Analytics
+        if (lowerUid.includes('google-analytics') || lowerUid.includes('analytics') || lowerUid.includes('ga')) {
+            flags['analytics_storage'] = true;
+        }
+        
+        // Google Tag Manager
+        if (lowerUid.includes('google-tag-manager') || lowerUid.includes('gtm') || lowerUid.includes('tag-manager')) {
+            flags['analytics_storage'] = true;
+            flags['ad_storage'] = true;
+            flags['ad_user_data'] = true;
+            flags['ad_personalization'] = true;
+        }
+        
+        // Google Ads
+        if (lowerUid.includes('google-ads') || lowerUid.includes('adwords') || lowerUid.includes('google-adwords')) {
+            flags['ad_storage'] = true;
+            flags['ad_user_data'] = true;
+            flags['ad_personalization'] = true;
+        }
+        
+        // Facebook Pixel
+        if (lowerUid.includes('facebook-pixel') || lowerUid.includes('facebook') || lowerUid.includes('meta-pixel')) {
+            flags['ad_storage'] = true;
+            flags['ad_user_data'] = true;
+            flags['ad_personalization'] = true;
+        }
+        
+        // YouTube
+        if (lowerUid.includes('youtube') || lowerUid.includes('yt')) {
+            flags['ad_storage'] = true;
+            flags['personalization_storage'] = true;
+        }
+        
+        // Google Maps
+        if (lowerUid.includes('google-maps') || lowerUid.includes('maps') || lowerUid.includes('gmaps')) {
+            flags['functionality_storage'] = true;
+            flags['personalization_storage'] = true;
+        }
+        
+        // Matomo
+        if (lowerUid.includes('matomo') || lowerUid.includes('piwik')) {
+            flags['analytics_storage'] = true;
+        }
+        
+        // Hotjar
+        if (lowerUid.includes('hotjar')) {
+            flags['analytics_storage'] = true;
+        }
+        
+        // Microsoft Clarity
+        if (lowerUid.includes('microsoft-clarity') || lowerUid.includes('clarity')) {
+            flags['analytics_storage'] = true;
+        }
+        
+        // LinkedIn
+        if (lowerUid.includes('linkedin')) {
+            flags['ad_storage'] = true;
+            flags['ad_user_data'] = true;
+            flags['ad_personalization'] = true;
+        }
+        
+        // TikTok
+        if (lowerUid.includes('tiktok')) {
+            flags['ad_storage'] = true;
+            flags['ad_user_data'] = true;
+            flags['ad_personalization'] = true;
+        }
+        
+        // Pinterest
+        if (lowerUid.includes('pinterest')) {
+            flags['ad_storage'] = true;
+            flags['ad_user_data'] = true;
+            flags['ad_personalization'] = true;
+        }
+        
+        // Booking.com
+        if (lowerUid.includes('booking')) {
+            flags['ad_storage'] = true;
+            flags['ad_user_data'] = true;
+            flags['ad_personalization'] = true;
+        }
+        
+        // HubSpot
+        if (lowerUid.includes('hubspot')) {
+            flags['analytics_storage'] = true;
+            flags['ad_storage'] = true;
+            flags['ad_user_data'] = true;
+            flags['ad_personalization'] = true;
+        }
+        
+        // WhatsApp Business
+        if (lowerUid.includes('whatsapp')) {
+            flags['functionality_storage'] = true;
+        }
+    });
+
+    return flags;
+}
 
 function consent_manager_showBox() {
     var consents = [];
