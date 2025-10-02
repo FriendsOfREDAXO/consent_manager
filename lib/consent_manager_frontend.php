@@ -61,16 +61,33 @@ class consent_manager_frontend
     public function setDomain($domain)
     {
         // Domain immer in Kleinbuchstaben normalisieren für den Lookup
-        $domain = strtolower($domain);
+        $domain = consent_manager_util::hostname();
         
         if (!isset($this->cache['domains'])) {
             return;
         }
-        if (!isset($this->cache['domains'][$domain])) {
-            return;
+        
+        // Zuerst exakte Domain suchen
+        if (isset($this->cache['domains'][$domain])) {
+            $this->domainName = $domain;
+            $this->domainInfo = $this->cache['domains'][$domain];
+        } else {
+            // Dann HTTP_HOST versuchen (für Fälle mit Port oder Subdomain)
+            $httpHost = strtolower(rex_request::server('HTTP_HOST'));
+            if (isset($this->cache['domains'][$httpHost])) {
+                $this->domainName = $httpHost;
+                $this->domainInfo = $this->cache['domains'][$httpHost];
+            } else {
+                // Domain ohne Port versuchen
+                $httpHostNoPort = preg_replace('/:\d+$/', '', $httpHost);
+                if (isset($this->cache['domains'][$httpHostNoPort])) {
+                    $this->domainName = $httpHostNoPort;
+                    $this->domainInfo = $this->cache['domains'][$httpHostNoPort];
+                } else {
+                    return;
+                }
+            }
         }
-        $this->domainName = $domain;
-        $this->domainInfo = $this->cache['domains'][$domain];
         $this->links['privacy_policy'] = $this->cache['domains'][$domain]['privacy_policy'];
         $this->links['legal_notice'] = $this->cache['domains'][$domain]['legal_notice'];
 
