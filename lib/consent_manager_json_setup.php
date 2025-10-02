@@ -288,15 +288,19 @@ class consent_manager_json_setup
     private static function importDomains(array $domains, string $mode = 'replace'): void
     {
         foreach ($domains as $domain) {
-            if (!isset($domain['domain'])) continue;
+            if (!isset($domain['uid'])) continue; // Domain table uses 'uid' not 'domain'
             
             // Check if domain already exists
-            $existingDomain = self::findExistingDomain($domain['domain']);
+            $existingDomain = self::findExistingDomain($domain['uid']);
             
             // Decide action based on mode
             if ($mode === 'update' && $existingDomain) {
                 continue; // Skip existing domains in update mode
             } else {
+                // Adjust ID if it conflicts in update mode
+                if ($mode === 'update' && isset($domain['id']) && self::idExistsInTable('consent_manager_domain', $domain['id'])) {
+                    $domain['id'] = self::getNextAvailableId('consent_manager_domain');
+                }
                 // Insert new domain (replace mode or new domain)
                 self::insertDomain($domain);
             }
@@ -325,10 +329,10 @@ class consent_manager_json_setup
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
 
-    private static function findExistingDomain(string $domain): ?array
+    private static function findExistingDomain(string $uid): ?array
     {
         $sql = rex_sql::factory();
-        $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_domain') . ' WHERE domain = ?', [$domain]);
+        $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?', [$uid]);
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
 
@@ -457,16 +461,20 @@ class consent_manager_json_setup
         $now = date('Y-m-d H:i:s');
         
         $fieldMapping = [
-            'domain' => 'domain',
+            'id' => 'id',
+            'uid' => 'uid',
             'privacy_policy' => 'privacy_policy',
-            'legal_notice' => 'legal_notice'
+            'legal_notice' => 'legal_notice',
+            'google_consent_mode_enabled' => 'google_consent_mode_enabled',
+            'google_consent_mode_config' => 'google_consent_mode_config',
+            'google_consent_mode_debug' => 'google_consent_mode_debug'
         ];
         
         foreach ($fieldMapping as $jsonField => $dbField) {
             if (isset($domain[$jsonField])) {
                 // Domain in Kleinbuchstaben normalisieren beim Import
                 $value = $domain[$jsonField];
-                if ($dbField === 'domain') {
+                if ($dbField === 'uid') {
                     $value = strtolower($value);
                 }
                 $sql->setValue($dbField, $value);
