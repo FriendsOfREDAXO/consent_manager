@@ -261,6 +261,28 @@
         return cookies;
     }
     
+    // LocalStorage Daten abrufen
+    function getLocalStorageData() {
+        const storageData = [];
+        
+        try {
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                
+                storageData.push({
+                    key: key,
+                    value: value
+                });
+            }
+        } catch (e) {
+            // localStorage nicht verfügbar
+            console.warn('LocalStorage nicht verfügbar:', e);
+        }
+        
+        return storageData;
+    }
+    
     // Google Consent Mode Status aus der Domain-Konfiguration ermitteln
     function getGoogleConsentModeStatus() {
         // Erste Priorität: Eingebettete Debug-Konfiguration (direkt von PHP)
@@ -660,11 +682,15 @@
         
         // Problem 8: Mehrere Consent Scripts geladen
         const consentScripts = document.querySelectorAll('script[src*="consent"]');
-        if (consentScripts.length > 2) {
+        // Debug-Script nicht mitzählen
+        const actualConsentScripts = Array.from(consentScripts).filter(script => 
+            !script.src.includes('consent_debug.js')
+        );
+        if (actualConsentScripts.length > 2) {
             issues.push({
                 type: 'warning',
                 title: 'Mehrere Consent Scripts',
-                message: `${consentScripts.length} Consent-Manager Scripts wurden geladen. Dies kann zu Konflikten führen.`,
+                message: `${actualConsentScripts.length} Consent-Manager Scripts wurden geladen. Dies kann zu Konflikten führen.`,
                 solution: 'Überprüfen Sie die Template-Integration und entfernen Sie doppelte Einbindungen.'
             });
         }

@@ -1,6 +1,18 @@
 const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', domain: consent_manager_parameters.domain, sameSite: 'Lax', secure: false });
 
-console.log('Consent Manager: Script loaded');
+if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
+    console.log('Consent Manager: Script loaded');
+}
+
+function debugLog(message, data) {
+    if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
+        if (data !== undefined) {
+            console.log('Consent Manager: ' + message, data);
+        } else {
+            console.log('Consent Manager: ' + message);
+        }
+    }
+}
 
 (function () {
     'use strict';
@@ -64,10 +76,10 @@ console.log('Consent Manager: Script loaded');
     // on startup trigger Google Consent Mode v2 update if consents exist
     if (consents.length > 0 && typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
         var googleConsentFlags = mapConsentsToGoogleFlags(consents);
-        console.log('Consent Manager: Auto-mapping Google Consent Mode flags', consents, googleConsentFlags);
+        debugLog('Auto-mapping Google Consent Mode flags', consents, googleConsentFlags);
         window.GoogleConsentModeV2.setConsent(googleConsentFlags);
     } else {
-        console.log('Consent Manager: Auto-mapping skipped', {consents: consents, hasGCM: typeof window.GoogleConsentModeV2 !== 'undefined', hasSetConsent: typeof window.GoogleConsentModeV2?.setConsent === 'function'});
+        debugLog('Auto-mapping skipped', {consents: consents, hasGCM: typeof window.GoogleConsentModeV2 !== 'undefined', hasSetConsent: typeof window.GoogleConsentModeV2?.setConsent === 'function'});
     }
 
     // on startup trigger unselect-scripts of disabled consents
@@ -191,10 +203,10 @@ console.log('Consent Manager: Script loaded');
         // Google Consent Mode v2 Update
         if (typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
             var googleConsentFlags = mapConsentsToGoogleFlags(consents);
-            console.log('Consent Manager: Mapping consents to Google flags', consents, googleConsentFlags);
+            debugLog('Mapping consents to Google flags', consents, googleConsentFlags);
             window.GoogleConsentModeV2.setConsent(googleConsentFlags);
         } else {
-            console.log('Consent Manager: Google Consent Mode not available for mapping');
+            debugLog('Google Consent Mode not available for mapping');
         }
         
         if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {
@@ -332,30 +344,30 @@ function mapConsentsToGoogleFlags(consents) {
 
     consents.forEach(function(uid) {
         var lowerUid = uid.toLowerCase();
-        console.log('Consent Manager: Mapping UID', uid, lowerUid);
+        debugLog('Mapping UID', uid, lowerUid);
         
         // Standard Consent Manager Gruppen
         if (lowerUid === 'analytics') {
             flags['analytics_storage'] = true;
-            console.log('Consent Manager: Mapped analytics to analytics_storage');
+            debugLog('Mapped analytics to analytics_storage');
         }
         if (lowerUid === 'marketing') {
             flags['ad_storage'] = true;
             flags['ad_user_data'] = true;
             flags['ad_personalization'] = true;
-            console.log('Consent Manager: Mapped marketing to ad_*');
+            debugLog('Mapped marketing to ad_*');
         }
         if (lowerUid === 'functional') {
             flags['functionality_storage'] = true;
-            console.log('Consent Manager: Mapped functional to functionality_storage');
+            debugLog('Mapped functional to functionality_storage');
         }
         if (lowerUid === 'preferences') {
             flags['personalization_storage'] = true;
-            console.log('Consent Manager: Mapped preferences to personalization_storage');
+            debugLog('Mapped preferences to personalization_storage');
         }
         if (lowerUid === 'necessary') {
             flags['security_storage'] = true;
-            console.log('Consent Manager: Mapped necessary to security_storage');
+            debugLog('Mapped necessary to security_storage');
         }
         
         // Google Analytics
@@ -454,7 +466,7 @@ function mapConsentsToGoogleFlags(consents) {
         }
     });
 
-    console.log('Consent Manager: Final mapped flags', flags);
+    debugLog('Final mapped flags', flags);
     return flags;
 }
 

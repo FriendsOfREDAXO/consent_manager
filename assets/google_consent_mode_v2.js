@@ -8,7 +8,19 @@
  * This is GDPR compliant - services must explicitly be granted consent.
  */
 
-console.log('Google Consent Mode v2: Script loaded');
+function debugLog(message, data) {
+    if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
+        if (data !== undefined) {
+            console.log('Google Consent Mode: ' + message, data);
+        } else {
+            console.log('Google Consent Mode: ' + message);
+        }
+    }
+}
+
+if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
+    console.log('Google Consent Mode v2: Script loaded');
+}
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -144,13 +156,13 @@ function setConsent(consent) {
     if (consentStorage === null) {
         // Initialize with defaults if not exists
         consentSettings = { ...GOOGLE_CONSENT_V2_DEFAULTS };
-        console.log('Google Consent Mode: Initializing with defaults', consentSettings);
+        debugLog('Initializing with defaults', consentSettings);
     } else {
         consentSettings = JSON.parse(consentStorage);
-        console.log('Google Consent Mode: Loaded existing settings', consentSettings);
+        debugLog('Loaded existing settings', consentSettings);
     }
 
-    console.log('Google Consent Mode: Updating with consent', consent);
+    debugLog('Updating with consent', consent);
     
     for (const [key, value] of Object.entries(consentSettings)) {
         if (typeof consent[key] !== "undefined") {
@@ -167,7 +179,7 @@ function setConsent(consent) {
         }
     }
 
-    console.log('Google Consent Mode: Final settings', consentSettings);
+    debugLog('Final settings', consentSettings);
     gtag('consent', 'update', consentSettings);
     localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(consentSettings));
 }
@@ -182,4 +194,6 @@ window.GoogleConsentModeV2 = {
 // Keep backwards compatibility with old global function name
 window.setConsent = setConsent;
 
-console.log('Google Consent Mode v2 initialized');
+if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
+    console.log('Google Consent Mode v2 initialized');
+}
