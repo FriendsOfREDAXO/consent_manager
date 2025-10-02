@@ -1,5 +1,7 @@
 const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', domain: consent_manager_parameters.domain, sameSite: 'Lax', secure: false });
 
+console.log('Consent Manager: Script loaded');
+
 (function () {
     'use strict';
     var show = 0,

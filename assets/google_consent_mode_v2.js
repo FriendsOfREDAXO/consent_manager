@@ -8,6 +8,8 @@
  * This is GDPR compliant - services must explicitly be granted consent.
  */
 
+console.log('Google Consent Mode v2: Script loaded');
+
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 
