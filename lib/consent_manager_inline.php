@@ -321,11 +321,24 @@ class consent_manager_inline
             
             getCookieData: function() {
                 var cookieValue = this.getCookie("consent_manager");
-                return cookieValue ? JSON.parse(cookieValue) : {
-                    consents: [],
-                    version: 4,
-                    cachelogid: Date.now()
-                };
+                if (!cookieValue) {
+                    return {
+                        consents: [],
+                        version: 4,
+                        cachelogid: Date.now()
+                    };
+                }
+                
+                try {
+                    return JSON.parse(cookieValue);
+                } catch (e) {
+                    console.warn("Consent Manager: Invalid cookie data, resetting");
+                    return {
+                        consents: [],
+                        version: 4,
+                        cachelogid: Date.now()
+                    };
+                }
             },
             
             setCookieData: function(data) {

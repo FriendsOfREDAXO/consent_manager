@@ -10,6 +10,7 @@ if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
 $addon       = rex_addon::get('consent_manager');
 $forceCache  = $this->getVar('forceCache');
 $forceReload = $this->getVar('forceReload');
+$inlineMode  = $this->getVar('inline', false);
 
 $consentparams                     = [];
 $consentparams['article']          = rex_article::getCurrentId();
@@ -75,6 +76,11 @@ if (0 === count($consent_manager->cookiegroups)) {
 
 // Consent bei Parameter skip_consent ausblenden
 if ('' !== rex_config::get('consent_manager', 'skip_consent') && rex_get('skip_consent') === rex_config::get('consent_manager', 'skip_consent')) {
+    $consentparams['initially_hidden'] = 'true';
+}
+
+// Consent bei inline=true Parameter ausblenden (nur Inline-Consent)
+if ($inlineMode === true || $inlineMode === 'true' || $inlineMode === '1') {
     $consentparams['initially_hidden'] = 'true';
 }
 
