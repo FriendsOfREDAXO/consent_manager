@@ -262,70 +262,101 @@ class consent_manager_inline
 window.consentManagerInline = {
     init: function() {
         var self = this;
+        console.log('ConsentManagerInline initialized');
         
-        // Event Listener für globale Consent Änderungen
-        document.addEventListener('consent_manager_consent_given', function(event) {
-            console.log('Global consent given, updating inline elements');
-            setTimeout(function() { self.updateAllPlaceholders(); }, 500);
+        // Alle möglichen Event-Listener für verschiedene Consent Manager Versionen
+        var eventNames = [
+            'consent_manager_consent_given',
+            'consent_manager_updated', 
+            'consent-manager-consent-given',
+            'consent-manager-updated',
+            'consentGiven',
+            'consentUpdated'
+        ];
+        
+        eventNames.forEach(function(eventName) {
+            document.addEventListener(eventName, function(event) {
+                console.log('Consent event detected: ' + eventName, event);
+                setTimeout(function() { self.updateAllPlaceholders(); }, 100);
+                setTimeout(function() { self.updateAllPlaceholders(); }, 1000);
+            });
         });
         
-        // Event Listener für Consent Manager Events
-        document.addEventListener('consent_manager_updated', function(event) {
-            console.log('Consent manager updated, checking inline elements');
-            setTimeout(function() { self.updateAllPlaceholders(); }, 500);
-        });
+        // Cookie-Änderungen überwachen
+        var lastCookieValue = self.getCookie('consent_manager');
+        setInterval(function() {
+            var currentCookieValue = self.getCookie('consent_manager');
+            if (currentCookieValue !== lastCookieValue) {
+                console.log('Cookie changed, updating placeholders');
+                lastCookieValue = currentCookieValue;
+                self.updateAllPlaceholders();
+            }
+        }, 1000);
         
-        // MutationObserver für DOM-Änderungen am Consent Manager
+        // MutationObserver für DOM-Änderungen
         if (typeof MutationObserver !== 'undefined') {
             var observer = new MutationObserver(function(mutations) {
+                var shouldUpdate = false;
                 mutations.forEach(function(mutation) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                        var target = mutation.target;
-                        if (target.classList && target.classList.contains('consent-manager-popup')) {
-                            if (target.style.display === 'none' || target.classList.contains('hidden')) {
-                                console.log('Consent popup closed, updating inline elements');
-                                setTimeout(function() { self.updateAllPlaceholders(); }, 1000);
-                            }
+                    var target = mutation.target;
+                    if (target.className && typeof target.className === 'string') {
+                        if (target.className.indexOf('consent') !== -1 || 
+                            target.className.indexOf('cookie') !== -1) {
+                            shouldUpdate = true;
                         }
                     }
                 });
+                if (shouldUpdate) {
+                    console.log('DOM mutation detected, updating placeholders');
+                    setTimeout(function() { self.updateAllPlaceholders(); }, 500);
+                }
             });
             
-            // Observer für alle Consent Manager Elemente starten
-            var consentElements = document.querySelectorAll('.consent-manager-popup, .consent-banner');
-            for (var i = 0; i < consentElements.length; i++) {
-                observer.observe(consentElements[i], { 
-                    attributes: true, 
-                    attributeFilter: ['style', 'class'] 
-                });
-            }
+            observer.observe(document.body, { 
+                attributes: true, 
+                childList: true, 
+                subtree: true,
+                attributeFilter: ['style', 'class', 'data-consent']
+            });
         }
         
-        // Fallback: Periodisch prüfen
-        setInterval(function() { self.updateAllPlaceholders(); }, 3000);
+        // Fallback: Regelmäßige Prüfung
+        setInterval(function() { 
+            self.updateAllPlaceholders(); 
+        }, 5000);
         
-        // Initial check
-        setTimeout(function() { self.updateAllPlaceholders(); }, 1000);
+        // Initial checks
+        setTimeout(function() { self.updateAllPlaceholders(); }, 500);
+        setTimeout(function() { self.updateAllPlaceholders(); }, 2000);
+        setTimeout(function() { self.updateAllPlaceholders(); }, 5000);
     },
     
     updateAllPlaceholders: function() {
         var placeholders = document.querySelectorAll('.consent-inline-placeholder[data-service]');
         var self = this;
         
-        if (placeholders.length === 0) return;
+        if (placeholders.length === 0) {
+            console.log('No inline placeholders found');
+            return;
+        }
         
-        console.log('Checking ' + placeholders.length + ' inline placeholders for updates');
+        console.log('=== Checking ' + placeholders.length + ' inline placeholders ===');
+        var cookieData = self.getCookieData();
+        console.log('Available consents:', cookieData.consents);
         
         for (var i = 0; i < placeholders.length; i++) {
             var placeholder = placeholders[i];
             var serviceKey = placeholder.getAttribute('data-service');
-            var cookieData = self.getCookieData();
+            console.log('Checking placeholder for service: ' + serviceKey);
             
             if (cookieData.consents && cookieData.consents.indexOf(serviceKey) !== -1) {
-                console.log('Consent found for ' + serviceKey + ', replacing placeholder');
+                console.log('✓ Consent found for ' + serviceKey + ', replacing placeholder');
                 self.loadContent(placeholder);
+            } else {
+                console.log('✗ No consent for ' + serviceKey + ' yet');
             }
         }
+        console.log('=== Update check complete ===');
     },
     
     accept: function(consentId, serviceKey, button) {
@@ -408,7 +439,10 @@ window.consentManagerInline = {
     
     getCookieData: function() {
         var cookieValue = this.getCookie(\"consent_manager\");
+        console.log('Raw cookie value:', cookieValue);
+        
         if (!cookieValue) {
+            console.log('No consent_manager cookie found');
             return {
                 consents: [],
                 version: 4,
@@ -416,16 +450,68 @@ window.consentManagerInline = {
             };
         }
         
+        // URL-Dekodierung falls nötig
         try {
-            return JSON.parse(cookieValue);
+            cookieValue = decodeURIComponent(cookieValue);
         } catch (e) {
-            console.warn(\"Consent Manager: Invalid cookie data, resetting\");
+            console.log('Cookie decoding failed, using raw value');
+        }
+        
+        try {
+            var data = JSON.parse(cookieValue);
+            console.log('Parsed cookie data:', data);
+            
+            // Verschiedene Cookie-Formate unterstützen
+            if (data.consents) {
+                return data;
+            } else if (Array.isArray(data)) {
+                // Altes Format: direkt Array
+                return {
+                    consents: data,
+                    version: 4,
+                    cachelogid: Date.now()
+                };
+            } else if (typeof data === 'object' && data.cookies) {
+                // Anderes Format mit 'cookies' Property
+                return {
+                    consents: data.cookies || [],
+                    version: data.version || 4,
+                    cachelogid: data.cachelogid || Date.now()
+                };
+            }
+        } catch (e) {
+            console.warn(\"Consent Manager: Invalid cookie JSON format:\", e, 'Raw:', cookieValue);
+        }
+        
+        // Fallback: String-basierte Suche nach Service-Keys
+        var serviceKeys = this.extractServiceKeysFromString(cookieValue);
+        if (serviceKeys.length > 0) {
+            console.log('Extracted service keys from string:', serviceKeys);
             return {
-                consents: [],
+                consents: serviceKeys,
                 version: 4,
                 cachelogid: Date.now()
             };
         }
+        
+        return {
+            consents: [],
+            version: 4,
+            cachelogid: Date.now()
+        };
+    },
+    
+    extractServiceKeysFromString: function(cookieString) {
+        var services = [];
+        var knownServices = ['youtube', 'vimeo', 'google-maps', 'facebook', 'twitter', 'instagram'];
+        
+        for (var i = 0; i < knownServices.length; i++) {
+            if (cookieString.indexOf(knownServices[i]) !== -1) {
+                services.push(knownServices[i]);
+            }
+        }
+        
+        return services;
     },
     
     setCookieData: function(data) {
