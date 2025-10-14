@@ -211,35 +211,34 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
         
         logConsent: function(consentId, serviceKey, action) {
-            fetch(window.location.href, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    'rex-api-call': 'consent_manager_inline_log',
-                    consent_id: consentId,
-                    service: serviceKey,
-                    action: action
-                })
-            }).catch(function(error) {
-                console.warn('Consent logging failed:', error);
-            });
+            // Globales Consent Manager Logging nutzen
+            var cookieData = this.getCookieData();
+            if (cookieData.consentid) {
+                var formData = new FormData();
+                formData.append('rex-api-call', 'consent_manager');
+                formData.append('domain', window.location.hostname);
+                formData.append('consentid', cookieData.consentid);
+                
+                fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData
+                }).catch(function(error) {
+                    console.warn('Consent logging failed:', error);
+                });
+            }
         },
         
         getCookieData: function() {
             var cookieValue = this.getCookie('consent_manager');
             
-            if (!cookieValue) {
-                return {
-                    consents: [],
-                    version: 4,
-                    cachelogid: Date.now()
-                };
-            }
-            
-            // URL-Dekodierung falls nötig
+        if (!cookieValue) {
+            return {
+                consents: [],
+                version: 4,
+                cachelogid: Date.now(),
+                consentid: this.generateConsentId()
+            };
+        }            // URL-Dekodierung falls nötig
             try {
                 cookieValue = decodeURIComponent(cookieValue);
             } catch (e) {
@@ -251,20 +250,26 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 
                 // Verschiedene Cookie-Formate unterstützen
                 if (data.consents) {
+                    // consentid hinzufügen falls nicht vorhanden
+                    if (!data.consentid) {
+                        data.consentid = this.generateConsentId();
+                    }
                     return data;
                 } else if (Array.isArray(data)) {
                     // Altes Format: direkt Array
                     return {
                         consents: data,
                         version: 4,
-                        cachelogid: Date.now()
+                        cachelogid: Date.now(),
+                        consentid: this.generateConsentId()
                     };
                 } else if (typeof data === 'object' && data.cookies) {
                     // Anderes Format mit 'cookies' Property
                     return {
                         consents: data.cookies || [],
                         version: data.version || 4,
-                        cachelogid: data.cachelogid || Date.now()
+                        cachelogid: data.cachelogid || Date.now(),
+                        consentid: data.consentid || this.generateConsentId()
                     };
                 }
             } catch (e) {
@@ -273,18 +278,18 @@ if (typeof window.consentManagerInline !== 'undefined') {
             
             // Fallback: String-basierte Suche nach Service-Keys
             var serviceKeys = this.extractServiceKeysFromString(cookieValue);
-            if (serviceKeys.length > 0) {
-                return {
-                    consents: serviceKeys,
-                    version: 4,
-                    cachelogid: Date.now()
-                };
-            }
-            
+        if (serviceKeys.length > 0) {
             return {
+                consents: serviceKeys,
+                version: 4,
+                cachelogid: Date.now(),
+                consentid: this.generateConsentId()
+            };
+        }            return {
                 consents: [],
                 version: 4,
-                cachelogid: Date.now()
+                cachelogid: Date.now(),
+                consentid: this.generateConsentId()
             };
         },
         
@@ -315,6 +320,10 @@ if (typeof window.consentManagerInline !== 'undefined') {
             var parts = value.split('; ' + name + '=');
             if (parts.length === 2) return parts.pop().split(';').shift();
             return null;
+        },
+        
+        generateConsentId: function() {
+            return 'inline_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
         }
     };
 
