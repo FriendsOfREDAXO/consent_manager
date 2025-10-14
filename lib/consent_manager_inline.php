@@ -67,12 +67,37 @@ class consent_manager_inline
     private static function getService($serviceKey)
     {
         $sql = rex_sql::factory();
-        $sql->setQuery('
-            SELECT c.*, cg.name as group_name, cg.required as group_required
-            FROM '.rex::getTable('consent_manager_cookie').' c
-            LEFT JOIN '.rex::getTable('consent_manager_cookiegroup').' cg ON c.cookiegroup_id = cg.id
-            WHERE c.uid = ? AND c.clang_id = ?
-        ', [$serviceKey, rex_clang::getCurrentId()]);
+        
+        // Erst prüfen welche Spalten verfügbar sind
+        try {
+            // Versuche moderne Struktur mit cookiegroup_id
+            $sql->setQuery('
+                SELECT c.*, cg.name as group_name, cg.required as group_required
+                FROM '.rex::getTable('consent_manager_cookie').' c
+                LEFT JOIN '.rex::getTable('consent_manager_cookiegroup').' cg ON c.cookiegroup_id = cg.id
+                WHERE c.uid = ? AND c.clang_id = ?
+            ', [$serviceKey, rex_clang::getCurrentId()]);
+        } catch (rex_sql_exception $e) {
+            // Fallback für ältere Struktur ohne cookiegroup_id
+            try {
+                $sql->setQuery('
+                    SELECT c.*, NULL as group_name, 0 as group_required
+                    FROM '.rex::getTable('consent_manager_cookie').' c
+                    WHERE c.uid = ? AND c.clang_id = ?
+                ', [$serviceKey, rex_clang::getCurrentId()]);
+            } catch (rex_sql_exception $e2) {
+                // Weitere Fallback-Versuche für verschiedene Consent Manager Versionen
+                try {
+                    $sql->setQuery('
+                        SELECT *, NULL as group_name, 0 as group_required
+                        FROM '.rex::getTable('consent_manager_cookie').'
+                        WHERE uid = ? AND clang_id = ?
+                    ', [$serviceKey, rex_clang::getCurrentId()]);
+                } catch (rex_sql_exception $e3) {
+                    return null;
+                }
+            }
+        }
 
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
