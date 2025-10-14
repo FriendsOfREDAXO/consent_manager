@@ -11,6 +11,9 @@
 
 class consent_manager_inline
 {
+    private static $cssOutputted = false;
+    private static $jsOutputted = false;
+    
     /**
      * Generiert Inline-Consent für externen Content
      * 
@@ -303,6 +306,11 @@ class consent_manager_inline
      */
     public static function getJavaScript()
     {
+        if (self::$jsOutputted) {
+            return '<!-- JavaScript bereits ausgegeben -->';
+        }
+        self::$jsOutputted = true;
+        
         return <<<'JAVASCRIPT'
 <script>
 // Verhindere doppelte Initialisierung
@@ -568,7 +576,7 @@ window.consentManagerInline = {
                 };
             }
         } catch (e) {
-            console.warn(\"Consent Manager: Invalid cookie JSON format:\", e, 'Raw:', cookieValue);
+            console.warn("Consent Manager: Invalid cookie JSON format:", e, 'Raw:', cookieValue);
         }
         
         // Fallback: String-basierte Suche nach Service-Keys
@@ -618,17 +626,15 @@ window.consentManagerInline = {
     }
 };
 
-if (document.readyState === \"loading\") {
-    document.addEventListener(\"DOMContentLoaded\", function() {
-        consentManagerInline.init();
-    });
-};
-
-// Auto-Init nur einmal ausführen
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { 
-        window.consentManagerInline.init(); 
-    });
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", function() {
+                consentManagerInline.init();
+            });
+        };// Auto-Init nur einmal ausführen
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", function() { 
+                window.consentManagerInline.init(); 
+            });
 } else {
     window.consentManagerInline.init();
 }
@@ -645,6 +651,10 @@ JAVASCRIPT;
      */
     public static function getCSS($useCustom = false, $customPath = '')
     {
+        if (self::$cssOutputted) {
+            return '<!-- CSS bereits ausgegeben -->';
+        }
+        self::$cssOutputted = true;
         // Prüfe auf eigenes CSS-Fragment oder -Datei
         if ($useCustom) {
             if (!empty($customPath) && file_exists($customPath)) {
