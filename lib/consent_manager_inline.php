@@ -623,7 +623,7 @@ if (document.readyState === 'loading') {
         
         .consent-inline-content {
             position: relative;
-            min-height: 200px;
+            min-height: 300px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -631,12 +631,13 @@ if (document.readyState === 'loading') {
         
         .consent-inline-thumbnail {
             width: 100%;
-            height: auto;
+            height: 100%;
             opacity: 0.3;
             position: absolute;
             top: 0;
             left: 0;
             object-fit: cover;
+            min-height: 300px;
         }
         
         .consent-inline-overlay {
@@ -647,6 +648,8 @@ if (document.readyState === 'loading') {
             border-radius: 8px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: auto;
         }
         
         .consent-inline-icon {
@@ -752,8 +755,17 @@ if (document.readyState === 'loading') {
         }
         
         @media (max-width: 768px) {
+            .consent-inline-content {
+                min-height: 250px;
+            }
+            
+            .consent-inline-thumbnail {
+                min-height: 250px;
+            }
+            
             .consent-inline-overlay {
-                padding: 1rem;
+                padding: 1.5rem;
+                max-width: 95%;
             }
             
             .consent-inline-actions {
