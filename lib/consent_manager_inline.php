@@ -154,7 +154,8 @@ class consent_manager_inline
 
         return self::renderPlaceholderHTML($serviceKey, $iframe, $options, $consentId, $service, [
             'thumbnail' => $thumbnail,
-            'icon' => '🎥',
+            'icon' => 'uk-icon:play-circle',
+            'icon_label' => 'YouTube Video',
             'service_name' => 'YouTube'
         ]);
     }
@@ -197,7 +198,8 @@ class consent_manager_inline
 
         return self::renderPlaceholderHTML($serviceKey, $iframe, $options, $consentId, $service, [
             'thumbnail' => null,
-            'icon' => '📍',
+            'icon' => 'uk-icon:location',
+            'icon_label' => 'Map Location',
             'service_name' => 'Google Maps'
         ]);
     }
@@ -209,7 +211,8 @@ class consent_manager_inline
     {
         return self::renderPlaceholderHTML($serviceKey, $content, $options, $consentId, $service, [
             'thumbnail' => $options['thumbnail'] !== 'auto' ? $options['thumbnail'] : null,
-            'icon' => '🔗',
+            'icon' => 'fa fa-external-link-alt',
+            'icon_label' => 'External Content',
             'service_name' => $service['service_name']
         ]);
     }
@@ -246,6 +249,9 @@ class consent_manager_inline
         $fragment->setVar('inline_privacy_notice', self::getButtonText('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.'));
         $fragment->setVar('inline_title_fallback', self::getButtonText('inline_title_fallback', 'Externes Medium'));
         $fragment->setVar('inline_privacy_link_text', self::getButtonText('inline_privacy_link_text', 'Datenschutzerklärung von'));
+        
+        // Icon-Konfiguration
+        $fragment->setVar('privacy_icon', $options['privacy_icon'] ?? 'uk-icon:shield');
         
         $result = $fragment->parse('consent_inline_placeholder.php');
         
@@ -646,6 +652,36 @@ if (document.readyState === 'loading') {
         .consent-inline-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
+            color: #6c757d;
+            line-height: 1;
+        }
+        
+        .consent-inline-icon i {
+            font-size: inherit;
+        }
+        
+        .consent-inline-icon [uk-icon] {
+            color: inherit;
+        }
+        
+        .consent-inline-privacy-link [uk-icon] {
+            margin-right: 0.3rem;
+        }
+        
+        .consent-inline-privacy-link i {
+            margin-right: 0.3rem;
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
         
         .consent-inline-title {

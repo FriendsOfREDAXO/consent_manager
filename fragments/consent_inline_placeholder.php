@@ -53,14 +53,37 @@ if (!empty($placeholderData['thumbnail'])) {
             
             <div class="consent-inline-overlay">
                 <div class="consent-inline-info">
-                    <div class="consent-inline-icon"><?= rex_escape($placeholderData['icon'] ?? '🎥') ?></div>
+                    <div class="consent-inline-icon">
+                        <?php 
+                        $iconClass = $placeholderData['icon'] ?? 'fa fa-play-circle';
+                        $iconLabel = $placeholderData['icon_label'] ?? 'Media Icon';
+                        if (strpos($iconClass, 'uk-icon:') === 0) {
+                            // UIkit Icon
+                            $ukIcon = str_replace('uk-icon:', '', $iconClass);
+                            echo '<span uk-icon="icon: ' . rex_escape($ukIcon) . '; ratio: 3" aria-label="' . rex_escape($iconLabel) . '"></span>';
+                        } else {
+                            // FontAwesome Icon
+                            echo '<i class="' . rex_escape($iconClass) . '" aria-hidden="true"></i>';
+                            echo '<span class="sr-only">' . rex_escape($iconLabel) . '</span>';
+                        }
+                        ?>
+                    </div>
                     <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $this->getVar('inline_title_fallback', 'Externes Medium')) ?></h4>
                     <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? $this->getVar('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.')) ?></p>
                     
                     <?php if (!empty($service['provider_link_privacy'])): ?>
                     <div class="consent-inline-privacy-link">
                         <a href="<?= rex_escape($service['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer">
-                            <span>🔒</span> <?= rex_escape($this->getVar('inline_privacy_link_text', 'Datenschutzerklärung von')) ?> <?= rex_escape($service['provider'] ?? $service['service_name'] ?? 'Anbieter') ?>
+                            <?php 
+                            $privacyIcon = $this->getVar('privacy_icon', 'fa fa-shield-alt');
+                            if (strpos($privacyIcon, 'uk-icon:') === 0) {
+                                $ukIcon = str_replace('uk-icon:', '', $privacyIcon);
+                                echo '<span uk-icon="icon: ' . rex_escape($ukIcon) . '" aria-hidden="true"></span>';
+                            } else {
+                                echo '<i class="' . rex_escape($privacyIcon) . '" aria-hidden="true"></i>';
+                            }
+                            ?>
+                            <?= rex_escape($this->getVar('inline_privacy_link_text', 'Datenschutzerklärung von')) ?> <?= rex_escape($service['provider'] ?? $service['service_name'] ?? 'Anbieter') ?>
                         </a>
                     </div>
                     <?php endif; ?>
