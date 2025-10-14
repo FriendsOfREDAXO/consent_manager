@@ -593,7 +593,159 @@ function loadExternalContent() {
 
 ---
 
-## � Debug-Modus
+## 🎯 Inline-Consent für einzelne Medien
+
+**Neu:** Consent nur bei Bedarf - perfekt für Seiten mit wenigen externen Inhalten.
+
+### 🚀 Schnellstart Inline-Consent
+
+**Problem:** Sie haben 400 Artikel, aber nur 2 brauchen YouTube-Videos. Normale Consent-Banner nerven alle Besucher, obwohl 99% nie Videos sehen.
+
+**Lösung:** Inline-Consent zeigt Platzhalter statt Videos. Consent-Dialog erscheint erst beim Klick auf "Video laden".
+
+### YouTube-Videos mit Inline-Consent
+
+```php
+<?php
+// Template/Modul - statt direktem iframe
+echo doConsent('youtube', 'dQw4w9WgXcQ', [
+    'title' => 'Rick Astley - Never Gonna Give You Up',
+    'width' => 560,
+    'height' => 315
+]);
+
+// Funktioniert auch mit kompletten URLs
+echo doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
+    'title' => 'Mein Video'
+]);
+?>
+```
+
+### Google Maps einbetten
+
+```php
+<?php
+echo doConsent('google-maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12...', [
+    'title' => 'Unsere Adresse',
+    'height' => 450
+]);
+?>
+```
+
+### Vimeo-Videos
+
+```php
+<?php
+echo doConsent('vimeo', '123456789', [
+    'title' => 'Mein Vimeo Video',
+    'width' => 640,
+    'height' => 360
+]);
+
+// Oder mit URL
+echo doConsent('vimeo', 'https://vimeo.com/123456789', [
+    'title' => 'Corporate Video'
+]);
+?>
+```
+
+### Custom iframes/Scripts
+
+```php
+<?php
+// Beliebige iframes
+echo doConsent('custom-iframe', '<iframe src="https://example.com/widget"></iframe>', [
+    'title' => 'External Widget',
+    'privacy_notice' => 'Dieses Widget setzt Cookies für Funktionalität.'
+]);
+
+// JavaScript-Code
+echo doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");</script>', [
+    'title' => 'Google Analytics',
+    'placeholder_text' => 'Analytics aktivieren'
+]);
+?>
+```
+
+### Template-Integration
+
+**CSS/JS einbinden (einmalig im Template):**
+```php
+<?php echo rex_view::content('consent_manager_inline_cssjs.php'); ?>
+```
+
+**Oder manuell:**
+```html
+<!-- Im <head>-Bereich -->
+<?php
+if (class_exists('consent_manager_inline')) {
+    echo consent_manager_inline::getCSS();
+    echo consent_manager_inline::getJavaScript();
+}
+?>
+```
+
+### Features der Inline-Lösung
+
+**✅ Vollständige Integration:**
+- Nutzt bestehende Service-Konfiguration
+- Automatisches Logging aller Consent-Aktionen  
+- "Cookie-Details"-Button öffnet gewohnte Detailansicht
+- Bereits erteilte Consents werden respektiert
+- DSGVO-konforme Dokumentation
+
+**✅ Smart Service Detection:**
+- YouTube: Automatische Thumbnail-Generierung
+- Vimeo: Professionelle Platzhalter
+- Google Maps: Karten-Icon und Hinweise
+- Generic: Universell für alle anderen Services
+
+**✅ User Experience:**
+- Responsive Design
+- Smooth Animations
+- Accessibility-konform
+- Mobile-optimiert
+
+**✅ Developer Experience:**
+- Ein `doConsent()` für alle Services
+- Auto-Erkennung von Video-IDs aus URLs
+- Flexible Optionen-Arrays
+- Debug-Modus verfügbar
+
+### Beispiel-Output
+
+Der Inline-Consent generiert ansprechende Platzhalter:
+
+```html
+<!-- YouTube-Platzhalter -->
+<div class="consent-inline-placeholder">
+    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" />
+    <div class="consent-inline-overlay">
+        <div class="consent-inline-icon">🎥</div>
+        <h4>Rick Astley - Never Gonna Give You Up</h4>
+        <p>Für YouTube werden Cookies benötigt.</p>
+        <button onclick="...">YouTube Video laden</button>
+        <button onclick="...">Cookie-Details</button>
+    </div>
+</div>
+```
+
+### Vorteile gegenüber globalem Consent
+
+| Global Consent | Inline Consent |
+|----------------|----------------|
+| ❌ Nervt alle Besucher | ✅ Nur bei tatsächlicher Nutzung |
+| ❌ "Consent Fatigue" | ✅ Kontextuell und verständlich |
+| ❌ Viele leere Zustimmungen | ✅ Bewusste Entscheidungen |
+| ❌ Komplexe Setup für 2 Videos | ✅ Einfache Integration |
+
+**Perfect für:**
+- Blogs mit gelegentlichen Videos
+- Corporate Sites mit einzelnen Maps
+- Landing Pages mit gezielten Embeds
+- Alle Seiten wo < 10% der Inhalte Consent brauchen
+
+## 🔍 Debug-Modus
 
 **Consent-Debug-Panel:** Seit Version 4.4.0 verfügbar für Entwickler und Troubleshooting.
 
@@ -607,6 +759,7 @@ function loadExternalContent() {
 - Google Consent Mode Integration
 - LocalStorage-Übersicht
 - Service-Status-Monitor
+- **Neu:** Inline-Consent-Tracking
 
 ---
 
