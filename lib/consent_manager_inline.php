@@ -465,7 +465,7 @@ window.consentManagerInline = {
                     detailsBtn.click();
                 }
                 
-                var serviceElements = document.querySelectorAll("[data-uid*='" + serviceKey + "']");
+                var serviceElements = document.querySelectorAll('[data-uid*="' + serviceKey + '"]');
                 if (serviceElements.length > 0) {
                     serviceElements[0].scrollIntoView({ behavior: "smooth", block: "center" });
                 }
@@ -482,13 +482,13 @@ window.consentManagerInline = {
             this.setCookieData(cookieData);
         }
         
-        document.dispatchEvent(new CustomEvent(\"consent-inline-accepted\", {
+        document.dispatchEvent(new CustomEvent("consent-inline-accepted", {
             detail: { service: serviceKey }
         }));
     },
     
     loadContent: function(container) {
-        var contentScript = container.querySelector(\".consent-content-data\");
+        var contentScript = container.querySelector(".consent-content-data");
         if (!contentScript) {
             console.error('No content script found in container');
             return;
@@ -496,11 +496,11 @@ window.consentManagerInline = {
         
         var code = contentScript.innerHTML;
         
-        var tempTextArea = document.createElement(\"textarea\");
+        var tempTextArea = document.createElement("textarea");
         tempTextArea.innerHTML = code;
         var decodedCode = tempTextArea.value;
         
-        var wrapper = document.createElement(\"div\");
+        var wrapper = document.createElement("div");
         wrapper.innerHTML = decodedCode;
         
         while (wrapper.firstChild) {
@@ -512,19 +512,19 @@ window.consentManagerInline = {
     
     logConsent: function(consentId, serviceKey, action) {
         fetch(window.location.href, {
-            method: \"POST\",
+            method: "POST",
             headers: {
-                \"Content-Type\": \"application/json\",
-                \"X-Requested-With\": \"XMLHttpRequest\"
+                "Content-Type": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
             },
             body: JSON.stringify({
-                \"rex-api-call\": \"consent_manager_inline_log\",
+                "rex-api-call": "consent_manager_inline_log",
                 consent_id: consentId,
                 service: serviceKey,
                 action: action
             })
         }).catch(function(error) {
-            console.warn(\"Consent logging failed:\", error);
+            console.warn("Consent logging failed:", error);
         });
     },
     
@@ -840,55 +840,16 @@ JAVASCRIPT;
             --consent-btn-min-width: 100px;
         }
         
-        .btn-consent-once {
-            --consent-btn-once-bg: #17a2b8;
-            --consent-btn-once-hover-bg: #138496;
-            --consent-btn-once-color: white;
-            
-            background: var(--consent-btn-once-bg);
-            color: var(--consent-btn-once-color);
-            border: none;
-            padding: var(--consent-btn-padding);
-            border-radius: var(--consent-btn-border-radius);
-            cursor: pointer;
-            font-size: var(--consent-btn-font-size);
-            transition: var(--consent-btn-transition);
-            min-width: var(--consent-btn-min-width);
-            text-align: center;
-        }
-        
-        .btn-consent-once:hover {
-            background: var(--consent-btn-once-hover-bg);
-        }
-        
-        .btn-consent-allow-all {
-            --consent-btn-allow-bg: #28a745;
-            --consent-btn-allow-hover-bg: #218838;
-            --consent-btn-allow-color: white;
-            
-            background: var(--consent-btn-allow-bg);
-            color: var(--consent-btn-allow-color);
-            border: none;
-            padding: var(--consent-btn-padding);
-            border-radius: var(--consent-btn-border-radius);
-            cursor: pointer;
-            font-size: var(--consent-btn-font-size);
-            transition: var(--consent-btn-transition);
-            min-width: var(--consent-btn-min-width);
-            text-align: center;
-        }
-        
-        .btn-consent-allow-all:hover {
-            background: var(--consent-btn-allow-hover-bg);
-        }
-        
+        /* Alle Buttons mit neutralen, identischen Farben */
+        .btn-consent-once,
+        .btn-consent-allow-all,
         .btn-consent-details {
-            --consent-btn-details-bg: #6c757d;
-            --consent-btn-details-hover-bg: #5a6268;
-            --consent-btn-details-color: white;
+            --consent-btn-neutral-bg: #6c757d;
+            --consent-btn-neutral-hover-bg: #5a6268;
+            --consent-btn-neutral-color: white;
             
-            background: var(--consent-btn-details-bg);
-            color: var(--consent-btn-details-color);
+            background: var(--consent-btn-neutral-bg);
+            color: var(--consent-btn-neutral-color);
             border: none;
             padding: var(--consent-btn-padding);
             border-radius: var(--consent-btn-border-radius);
@@ -899,8 +860,10 @@ JAVASCRIPT;
             text-align: center;
         }
         
+        .btn-consent-once:hover,
+        .btn-consent-allow-all:hover,
         .btn-consent-details:hover {
-            background: var(--consent-btn-details-hover-bg);
+            background: var(--consent-btn-neutral-hover-bg);
         }
         
         @media (max-width: 768px) {
