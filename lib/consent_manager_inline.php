@@ -261,15 +261,12 @@ class consent_manager_inline
         <script>
         window.consentManagerInline = {
             init: function() {
-                // Event-Listener für globale Consent-Änderungen
-                document.addEventListener('consent_manager_updated', this.handleGlobalConsentUpdate.bind(this));
-                
-                // Fallback: Periodisch prüfen (falls Events nicht funktionieren)
-                setInterval(this.checkForUpdates.bind(this), 1000);
+                var self = this;
+                // Fallback: Periodisch prüfen
+                setInterval(function() { self.updateAllPlaceholders(); }, 1000);
             },
             
             handleGlobalConsentUpdate: function(event) {
-                // Alle Platzhalter prüfen und ersetzen falls Consent erteilt wurde
                 this.updateAllPlaceholders();
             },
             
@@ -278,32 +275,27 @@ class consent_manager_inline
             },
             
             updateAllPlaceholders: function() {
-                var placeholders = document.querySelectorAll('.consent-inline-placeholder[data-service]');
+                var placeholders = document.querySelectorAll(\'.consent-inline-placeholder[data-service]\');
                 var self = this;
                 
-                placeholders.forEach(function(placeholder) {
-                    var serviceKey = placeholder.getAttribute('data-service');
+                for (var i = 0; i < placeholders.length; i++) {
+                    var placeholder = placeholders[i];
+                    var serviceKey = placeholder.getAttribute(\'data-service\');
                     var cookieData = self.getCookieData();
                     
-                    if (cookieData.consents && cookieData.consents.includes(serviceKey)) {
-                        // Consent wurde erteilt - Content laden
+                    if (cookieData.consents && cookieData.consents.indexOf(serviceKey) !== -1) {
                         self.loadContent(placeholder);
                     }
-                });
+                }
             },
             
             accept: function(consentId, serviceKey, button) {
-                var serviceName = button.closest(".consent-inline-placeholder").querySelector(".consent-inline-title").textContent;
+                var serviceName = button.closest(\'.consent-inline-placeholder\').querySelector(\'.consent-inline-title\').textContent;
                 
-                if (confirm("Cookies für " + serviceName + " akzeptieren?\\n\\nDadurch werden externe Inhalte geladen und Cookies gesetzt.")) {
-                    // Consent speichern
+                if (confirm(\'Cookies für \' + serviceName + \' akzeptieren?\\n\\nDadurch werden externe Inhalte geladen und Cookies gesetzt.\')) {
                     this.saveConsent(serviceKey);
-                    
-                    // Content laden
-                    this.loadContent(button.closest(".consent-inline-placeholder"));
-                    
-                    // Logging
-                    this.logConsent(consentId, serviceKey, "accepted");
+                    this.loadContent(button.closest(\'.consent-inline-placeholder\'));
+                    this.logConsent(consentId, serviceKey, \'accepted\');
                 }
             },
             
