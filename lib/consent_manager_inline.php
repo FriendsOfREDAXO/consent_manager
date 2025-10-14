@@ -123,12 +123,7 @@ class consent_manager_inline
                 $normalizedService[$key] = $value;
             }
             
-            // Debug: Service-Daten loggen
-            if (rex::isDebugMode() || true) {
-                error_log('Consent Manager Inline - Service loaded for: ' . $serviceKey);
-                error_log('Provider Link Privacy: ' . ($normalizedService['provider_link_privacy'] ?? 'NULL'));
-                error_log('Provider: ' . ($normalizedService['provider'] ?? 'NULL'));
-            }
+
             
             return $normalizedService;
         }

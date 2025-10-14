@@ -57,22 +57,10 @@ if (!empty($placeholderData['thumbnail'])) {
                     <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $this->getVar('inline_title_fallback', 'Externes Medium')) ?></h4>
                     <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? $this->getVar('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.')) ?></p>
                     
-                    <?php 
-                    // Temporäres Debug für Privacy Link Problem
-                    echo '<div style="background:#fff3cd;border:1px solid #ffeeba;padding:10px;margin:10px 0;font-size:12px;">';
-                    echo '<strong>DEBUG Service Data:</strong><br>';
-                    echo 'serviceKey: ' . htmlspecialchars($serviceKey) . '<br>';
-                    echo 'service array keys: ' . implode(', ', array_keys($service ?? [])) . '<br>';
-                    echo 'provider_link_privacy: ' . htmlspecialchars($service['provider_link_privacy'] ?? 'NOT SET') . '<br>';
-                    echo 'provider: ' . htmlspecialchars($service['provider'] ?? 'NOT SET') . '<br>';
-                    echo 'empty check result: ' . (empty($service['provider_link_privacy']) ? 'TRUE (empty)' : 'FALSE (not empty)') . '<br>';
-                    echo '</div>';
-                    ?>
-
                     <?php if (!empty($service['provider_link_privacy'])): ?>
                     <div class="consent-inline-privacy-link">
                         <a href="<?= rex_escape($service['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer">
-                            <span>🔒</span> <?= rex_escape($this->getVar('inline_privacy_link_text', 'Datenschutzerklärung')) ?>
+                            <span>🔒</span> <?= rex_escape($this->getVar('inline_privacy_link_text', 'Datenschutzerklärung von')) ?> <?= rex_escape($service['provider'] ?? $service['service_name'] ?? 'Anbieter') ?>
                         </a>
                     </div>
                     <?php endif; ?>
