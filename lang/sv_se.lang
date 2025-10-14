@@ -113,3 +113,13 @@ google_consent_service_google_ads = Google Ads (ad_storage, ad_user_data, ad_per
 google_consent_service_facebook_pixel = Facebook Pixel (ad_storage, ad_user_data, ad_personalization)
 google_consent_service_youtube = YouTube (ad_storage, personalization_storage)
 google_consent_service_google_maps = Google Maps (functionality_storage, personalization_storage)
+
+# Inline Consent Settings
+consent_manager_config_inline_only_mode = Använd endast Inline-Consent
+consent_manager_config_inline_only_mode_desc = Den globala consent-popup visas inte som standard. Consent begärs endast vid behov via doConsent().
+
+# Domain Inline Consent Settings
+consent_manager_domain_inline_only_mode = Inline-Only läge
+consent_manager_domain_inline_only_mode_disabled = Standard (med Popup)
+consent_manager_domain_inline_only_mode_enabled = Endast Inline-Consent
+consent_manager_domain_inline_only_mode_notice = Med "Endast Inline-Consent" undertrycks den globala consent-popup. Consent begärs endast vid behov via doConsent().
