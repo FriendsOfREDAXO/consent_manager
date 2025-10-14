@@ -62,8 +62,8 @@ if ('delete' === $func) {
     $field = $form->addSelectField('inline_only_mode');
     $field->setLabel($addon->i18n('consent_manager_domain_inline_only_mode'));
     $select = $field->getSelect();
-    $select->addOption($addon->i18n('consent_manager_domain_inline_only_mode_disabled'), '0');
-    $select->addOption($addon->i18n('consent_manager_domain_inline_only_mode_enabled'), '1');
+    $select->addOption($addon->i18n('consent_manager_domain_inline_only_mode_disabled'), 'disabled');
+    $select->addOption($addon->i18n('consent_manager_domain_inline_only_mode_enabled'), 'enabled');
     $field->setNotice($addon->i18n('consent_manager_domain_inline_only_mode_notice'));
 
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
@@ -118,8 +118,8 @@ if ($showlist) {
     // Inline-Only Mode Status Spalte
     $list->setColumnLabel('inline_only_mode', '📱 Inline-Only');
     $list->setColumnFormat('inline_only_mode', 'custom', function ($params) use ($addon) {
-        $value = (int) $params['value'];
-        if ($value === 1) {
+        $value = $params['value'];
+        if ($value === 'enabled') {
             return '<span class="label label-info"><i class="fa fa-hand-pointer-o" style="margin-right: 5px;"></i>' . $addon->i18n('consent_manager_domain_inline_only_mode_enabled') . '</span>';
         }
         return '<span class="label label-default"><i class="fa fa-window-maximize" style="margin-right: 5px;"></i>' . $addon->i18n('consent_manager_domain_inline_only_mode_disabled') . '</span>';

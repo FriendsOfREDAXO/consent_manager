@@ -80,7 +80,7 @@ if ($inlineParam === true) {
 // Andere Bedingungen nur prüfen wenn KEIN expliziter inline-Parameter gesetzt wurde
 if (!$explicitInlineParam) {
     // Consent ausblenden bei Domain-spezifischem Inline-Only Modus
-    if (isset($consent_manager->domainInfo['inline_only_mode']) && $consent_manager->domainInfo['inline_only_mode'] == '1') {
+    if (isset($consent_manager->domainInfo['inline_only_mode']) && $consent_manager->domainInfo['inline_only_mode'] === 'enabled') {
         $consentparams['initially_hidden'] = 'true';
     }
 
