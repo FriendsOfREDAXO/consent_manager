@@ -112,14 +112,25 @@ class consent_manager_inline
         if ($sql->getRows() > 0) {
             $service = $sql->getRow();
             
+            // Normalisiere Service-Daten: Entferne Tabellen-Prefixe
+            $normalizedService = [];
+            foreach ($service as $key => $value) {
+                // Entferne c. und andere Prefixe
+                $cleanKey = preg_replace('/^[a-zA-Z_]+\./', '', $key);
+                $normalizedService[$cleanKey] = $value;
+                
+                // Behalte auch Original-Key für Kompatibilität
+                $normalizedService[$key] = $value;
+            }
+            
             // Debug: Service-Daten loggen
             if (rex::isDebugMode() || true) {
                 error_log('Consent Manager Inline - Service loaded for: ' . $serviceKey);
-                error_log('Provider Link Privacy: ' . ($service['provider_link_privacy'] ?? 'NULL'));
-                error_log('Provider: ' . ($service['provider'] ?? 'NULL'));
+                error_log('Provider Link Privacy: ' . ($normalizedService['provider_link_privacy'] ?? 'NULL'));
+                error_log('Provider: ' . ($normalizedService['provider'] ?? 'NULL'));
             }
             
-            return $service;
+            return $normalizedService;
         }
         
         return null;
