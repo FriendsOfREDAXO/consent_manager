@@ -257,26 +257,64 @@ class consent_manager_inline
      */
     public static function getJavaScript()
     {
-        return <<<'HTML'
+        return "
 <script>
 window.consentManagerInline = {
     init: function() {
         var self = this;
+        
+        // Event Listener für globale Consent Änderungen
+        document.addEventListener('consent_manager_consent_given', function(event) {
+            console.log('Global consent given, updating inline elements');
+            setTimeout(function() { self.updateAllPlaceholders(); }, 500);
+        });
+        
+        // Event Listener für Consent Manager Events
+        document.addEventListener('consent_manager_updated', function(event) {
+            console.log('Consent manager updated, checking inline elements');
+            setTimeout(function() { self.updateAllPlaceholders(); }, 500);
+        });
+        
+        // MutationObserver für DOM-Änderungen am Consent Manager
+        if (typeof MutationObserver !== 'undefined') {
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        var target = mutation.target;
+                        if (target.classList && target.classList.contains('consent-manager-popup')) {
+                            if (target.style.display === 'none' || target.classList.contains('hidden')) {
+                                console.log('Consent popup closed, updating inline elements');
+                                setTimeout(function() { self.updateAllPlaceholders(); }, 1000);
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Observer für alle Consent Manager Elemente starten
+            var consentElements = document.querySelectorAll('.consent-manager-popup, .consent-banner');
+            for (var i = 0; i < consentElements.length; i++) {
+                observer.observe(consentElements[i], { 
+                    attributes: true, 
+                    attributeFilter: ['style', 'class'] 
+                });
+            }
+        }
+        
         // Fallback: Periodisch prüfen
-        setInterval(function() { self.updateAllPlaceholders(); }, 1000);
-    },
-    
-    handleGlobalConsentUpdate: function(event) {
-        this.updateAllPlaceholders();
-    },
-    
-    checkForUpdates: function() {
-        this.updateAllPlaceholders();
+        setInterval(function() { self.updateAllPlaceholders(); }, 3000);
+        
+        // Initial check
+        setTimeout(function() { self.updateAllPlaceholders(); }, 1000);
     },
     
     updateAllPlaceholders: function() {
         var placeholders = document.querySelectorAll('.consent-inline-placeholder[data-service]');
         var self = this;
+        
+        if (placeholders.length === 0) return;
+        
+        console.log('Checking ' + placeholders.length + ' inline placeholders for updates');
         
         for (var i = 0; i < placeholders.length; i++) {
             var placeholder = placeholders[i];
@@ -284,6 +322,7 @@ window.consentManagerInline = {
             var cookieData = self.getCookieData();
             
             if (cookieData.consents && cookieData.consents.indexOf(serviceKey) !== -1) {
+                console.log('Consent found for ' + serviceKey + ', replacing placeholder');
                 self.loadContent(placeholder);
             }
         }
@@ -292,7 +331,7 @@ window.consentManagerInline = {
     accept: function(consentId, serviceKey, button) {
         var serviceName = button.closest('.consent-inline-placeholder').querySelector('.consent-inline-title').textContent;
         
-        if (confirm('Cookies für ' + serviceName + ' akzeptieren?\n\nDadurch werden externe Inhalte geladen und Cookies gesetzt.')) {
+        if (confirm('Cookies für ' + serviceName + ' akzeptieren?\\n\\nDadurch werden externe Inhalte geladen und Cookies gesetzt.')) {
             this.saveConsent(serviceKey);
             this.loadContent(button.closest('.consent-inline-placeholder'));
             this.logConsent(consentId, serviceKey, 'accepted');
@@ -300,26 +339,22 @@ window.consentManagerInline = {
     },
     
     showDetails: function(serviceKey) {
-        // Consent Manager Box öffnen falls vorhanden
-        if (typeof consent_manager_showBox === "function") {
+        if (typeof consent_manager_showBox === \"function\") {
             consent_manager_showBox();
             
             setTimeout(function() {
-                // Details aufklappen
-                var detailsBtn = document.getElementById("consent_manager-toggle-details");
-                if (detailsBtn && !document.getElementById("consent_manager-detail").classList.contains("consent_manager-hidden")) {
+                var detailsBtn = document.getElementById(\"consent_manager-toggle-details\");
+                if (detailsBtn && !document.getElementById(\"consent_manager-detail\").classList.contains(\"consent_manager-hidden\")) {
                     detailsBtn.click();
                 }
                 
-                // Zum Service scrollen
-                var serviceElements = document.querySelectorAll("[data-uid*=\"" + serviceKey + "\"]");
+                var serviceElements = document.querySelectorAll(\"[data-uid*='\" + serviceKey + \"']\");
                 if (serviceElements.length > 0) {
-                    serviceElements[0].scrollIntoView({ behavior: "smooth", block: "center" });
+                    serviceElements[0].scrollIntoView({ behavior: \"smooth\", block: \"center\" });
                 }
             }, 300);
         } else {
-            // Fallback: Info-Dialog
-            alert("Weitere Cookie-Informationen finden Sie in unserer Datenschutzerklärung.");
+            alert(\"Weitere Cookie-Informationen finden Sie in unserer Datenschutzerklärung.\");
         }
     },
     
@@ -331,25 +366,21 @@ window.consentManagerInline = {
             this.setCookieData(cookieData);
         }
         
-        // Event für andere Scripts
-        document.dispatchEvent(new CustomEvent("consent-manager-inline-accepted", {
+        document.dispatchEvent(new CustomEvent(\"consent-inline-accepted\", {
             detail: { service: serviceKey }
         }));
     },
     
     loadContent: function(placeholder) {
-        var code = placeholder.querySelector("[data-consent-code]").innerHTML;
+        var code = placeholder.querySelector(\"[data-consent-code]\").innerHTML;
         
-        // HTML-Entitäten dekodieren
-        var tempTextArea = document.createElement("textarea");
+        var tempTextArea = document.createElement(\"textarea\");
         tempTextArea.innerHTML = code;
         var decodedCode = tempTextArea.value;
         
-        // Platzhalter durch den dekodierten HTML-Code ersetzen
-        var wrapper = document.createElement("div");
+        var wrapper = document.createElement(\"div\");
         wrapper.innerHTML = decodedCode;
         
-        // Alle Child-Nodes übertragen
         while (wrapper.firstChild) {
             placeholder.parentNode.insertBefore(wrapper.firstChild, placeholder);
         }
@@ -359,24 +390,24 @@ window.consentManagerInline = {
     
     logConsent: function(consentId, serviceKey, action) {
         fetch(window.location.href, {
-            method: "POST",
+            method: \"POST\",
             headers: {
-                "Content-Type": "application/json",
-                "X-Requested-With": "XMLHttpRequest"
+                \"Content-Type\": \"application/json\",
+                \"X-Requested-With\": \"XMLHttpRequest\"
             },
             body: JSON.stringify({
-                "rex-api-call": "consent_manager_inline_log",
+                \"rex-api-call\": \"consent_manager_inline_log\",
                 consent_id: consentId,
                 service: serviceKey,
                 action: action
             })
         }).catch(function(error) {
-            console.warn("Consent logging failed:", error);
+            console.warn(\"Consent logging failed:\", error);
         });
     },
     
     getCookieData: function() {
-        var cookieValue = this.getCookie("consent_manager");
+        var cookieValue = this.getCookie(\"consent_manager\");
         if (!cookieValue) {
             return {
                 consents: [],
@@ -388,7 +419,7 @@ window.consentManagerInline = {
         try {
             return JSON.parse(cookieValue);
         } catch (e) {
-            console.warn("Consent Manager: Invalid cookie data, resetting");
+            console.warn(\"Consent Manager: Invalid cookie data, resetting\");
             return {
                 consents: [],
                 version: 4,
@@ -399,31 +430,29 @@ window.consentManagerInline = {
     
     setCookieData: function(data) {
         var expires = new Date();
-        expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000)); // 1 Jahr
+        expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
         
-        document.cookie = "consent_manager=" + JSON.stringify(data) + 
-                         "; expires=" + expires.toUTCString() + 
-                         "; path=/; SameSite=Lax";
+        document.cookie = \"consent_manager=\" + JSON.stringify(data) + 
+                         \"; expires=\" + expires.toUTCString() + 
+                         \"; path=/; SameSite=Lax\";
     },
     
     getCookie: function(name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length === 2) return parts.pop().split(";").shift();
+        var value = \"; \" + document.cookie;
+        var parts = value.split(\"; \" + name + \"=\");
+        if (parts.length === 2) return parts.pop().split(\";\").shift();
         return null;
     }
 };
 
-// Automatische Initialisierung
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function() {
+if (document.readyState === \"loading\") {
+    document.addEventListener(\"DOMContentLoaded\", function() {
         consentManagerInline.init();
     });
 } else {
     consentManagerInline.init();
 }
-</script>
-HTML;
+</script>";
     }
 
     /**
