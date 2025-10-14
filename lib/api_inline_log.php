@@ -26,10 +26,6 @@ class rex_api_consent_manager_inline_log extends rex_api_function
             // Log in Consent Manager Tabelle schreiben
             $sql = rex_sql::factory();
             
-            // Prüfen ob Log-Tabelle existiert, falls nicht erstellen
-            if (!rex_sql_table::get(rex::getTable('consent_manager_consent_log'))->exists()) {
-                $this->createLogTable();
-            }
             
             $sql->setTable(rex::getTable('consent_manager_consent_log'));
             $sql->setValue('consent_id', $consentId);
