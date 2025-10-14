@@ -36,11 +36,7 @@ $sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_cookie` '
 $sql = \rex_sql::factory();  
 $sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_consent_log` SET domain = LOWER(domain) WHERE domain != LOWER(domain)');
 
-// Füge inline_only_mode Spalte zur Domain-Tabelle hinzu (falls nicht vorhanden)
-$sql = \rex_sql::factory();
-try {
-    $sql->setQuery('SELECT inline_only_mode FROM `'. rex::getTablePrefix() .'consent_manager_domain` LIMIT 1');
-} catch (rex_sql_exception $e) {
-    // Spalte existiert nicht, füge sie hinzu
-    $sql->setQuery('ALTER TABLE `'. rex::getTablePrefix() .'consent_manager_domain` ADD COLUMN `inline_only_mode` TINYINT(1) NOT NULL DEFAULT 0');
-}
+// Ensure inline_only_mode Spalte in Domain-Tabelle
+rex_sql_table::get(rex::getTable('consent_manager_domain'))
+    ->ensureColumn(new rex_sql_column('inline_only_mode', 'varchar(20)', true, 'disabled'))
+    ->ensure();
