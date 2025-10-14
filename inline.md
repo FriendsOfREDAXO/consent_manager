@@ -68,7 +68,10 @@ echo consent_manager_inline::doConsent('youtube', $videoId, [
     'privacy_notice' => 'Für die Anzeige werden YouTube-Cookies benötigt.',
     'width' => 800,
     'height' => 450,
-    'thumbnail' => 'auto' // oder direkte URL zu eigenem Bild
+    'thumbnail' => 'auto', // oder direkte URL zu eigenem Bild
+    'icon' => 'uk-icon:play-circle', // Haupt-Icon (FontAwesome oder UIkit)
+    'icon_label' => 'YouTube Video starten', // Barrierefreiheit
+    'privacy_icon' => 'fa fa-shield-alt' // Privacy-Link Icon
 ]);
 ?>
 ```
@@ -259,6 +262,45 @@ Das Standard-CSS kann überschrieben werden:
 }
 ```
 
+### Icon-Anpassung (FontAwesome & UIkit)
+
+Das System unterstützt sowohl **FontAwesome** als auch **UIkit Icons** mit voller Barrierefreiheit:
+
+```php
+<?php
+// FontAwesome Icons
+echo consent_manager_inline::doConsent('youtube', $videoId, [
+    'icon' => 'fab fa-youtube',
+    'icon_label' => 'YouTube Video',
+    'privacy_icon' => 'fa fa-shield-alt'
+]);
+
+// UIkit Icons
+echo consent_manager_inline::doConsent('youtube', $videoId, [
+    'icon' => 'uk-icon:play-circle',
+    'icon_label' => 'Video abspielen',
+    'privacy_icon' => 'uk-icon:shield'
+]);
+
+// Gemischte Nutzung möglich
+echo consent_manager_inline::doConsent('maps', $mapEmbed, [
+    'icon' => 'uk-icon:location',     // UIkit für Haupticon
+    'privacy_icon' => 'fa fa-lock'      // FontAwesome für Privacy
+]);
+?>
+```
+
+**Standard-Icons:**
+- **YouTube**: `uk-icon:play-circle`
+- **Google Maps**: `uk-icon:location` 
+- **Generic**: `fa fa-external-link-alt`
+- **Privacy Links**: `uk-icon:shield`
+
+**Barrierefreiheit:**
+- **FontAwesome**: `aria-hidden="true"` + versteckter Screen Reader Text
+- **UIkit**: `aria-label` für semantische Beschreibung
+- **Icon Labels**: Individuelle Beschreibungen per `icon_label`
+
 ---
 
 ## 🔒 Datenschutz-Features
@@ -353,6 +395,8 @@ rex::setProperty('debug', true);
 | `.consent-inline-accept` | Accept-Button (Event-Handler) |
 | `.consent-inline-details` | Details-Button |
 | `.consent-inline-privacy-link` | Privacy Policy Link Container |
+| `.consent-inline-icon` | Icon-Container (FontAwesome/UIkit) |
+| `.sr-only` | Screen Reader Text (Barrierefreiheit) |
 | `.consent-content-data` | Script-Tag mit Original-Content |
 | `.consent-inline-placeholder` | Platzhalter-Container |
 | `.consent-inline-overlay` | Overlay mit Buttons und Texten |
@@ -376,9 +420,10 @@ consentManagerInline.loadContent(containerElement);
 |----------|-----|--------------|
 | `serviceKey` | string | Service-UID (z.B. 'youtube') |
 | `consentId` | string | Eindeutige Consent-ID |
-| `options` | array | Konfigurationsoptionen |
-| `placeholderData` | array | Icon, Thumbnail, Service-Name |
+| `options` | array | Konfigurationsoptionen (icon, icon_label, privacy_icon) |
+| `placeholderData` | array | Icon, Icon-Label, Thumbnail, Service-Name |
 | `content` | string | Original-Content zum Laden |
+| `privacy_icon` | string | Icon für Privacy-Links (FontAwesome/UIkit) |
 
 ---
 
