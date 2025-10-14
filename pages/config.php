@@ -204,6 +204,12 @@ $field->setLabel($addon->i18n('consent_manager_config_hidebodyscrollbar'));
 $field->addOption($addon->i18n('consent_manager_config_hidebodyscrollbar'), 1);
 $field->setNotice($addon->i18n('consent_manager_config_hidebodyscrollbar_desc'));
 
+// Inline-Only Modus
+$field = $form->addCheckboxField('inline_only_mode');
+$field->setLabel($addon->i18n('consent_manager_config_inline_only_mode'));
+$field->addOption($addon->i18n('consent_manager_config_inline_only_mode'), 1);
+$field->setNotice($addon->i18n('consent_manager_config_inline_only_mode_desc'));
+
 // Cookie Lebensdauer
 $field = $form->addTextField('lifespan');
 $field->setLabel($addon->i18n('consent_manager_config_lifespan_label'));

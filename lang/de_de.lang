@@ -380,3 +380,13 @@ consent_manager_import_minimal_update_error = Minimal Setup Update fehlgeschlage
 consent_manager_import_standard_update_success = Standard Setup Update erfolgreich - nur neue Services hinzugefügt, bestehende unverändert
 consent_manager_import_standard_update_error = Standard Setup Update fehlgeschlagen: {0}
 consent_manager_quickstart_status_final = Abschluss
+
+# Inline Consent Einstellungen
+consent_manager_config_inline_only_mode = Nur Inline-Consent verwenden
+consent_manager_config_inline_only_mode_desc = Das globale Consent-Popup wird standardmäßig nicht angezeigt. Consent wird nur bei Bedarf über doConsent() abgefragt.
+
+# Domain Inline Consent Einstellungen
+consent_manager_domain_inline_only_mode = Inline-Only Modus
+consent_manager_domain_inline_only_mode_disabled = Standard (mit Popup)
+consent_manager_domain_inline_only_mode_enabled = Nur Inline-Consent
+consent_manager_domain_inline_only_mode_notice = Bei "Nur Inline-Consent" wird das globale Consent-Popup unterdrückt. Consent wird nur bei Bedarf über doConsent() abgefragt.

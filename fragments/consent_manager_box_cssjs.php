@@ -68,6 +68,28 @@ if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->
     }
 }
 
+// Prüfe explizite inline-Parameter
+$inlineParam = $this->getVar('inline');
+$explicitInlineParam = ($inlineParam === true || $inlineParam === false);
+
+// Consent ausblenden wenn inline-Modus aktiviert ist
+if ($inlineParam === true) {
+    $consentparams['initially_hidden'] = 'true';
+}
+
+// Andere Bedingungen nur prüfen wenn KEIN expliziter inline-Parameter gesetzt wurde
+if (!$explicitInlineParam) {
+    // Consent ausblenden bei Domain-spezifischem Inline-Only Modus
+    if (isset($consent_manager->domainInfo['inline_only_mode']) && $consent_manager->domainInfo['inline_only_mode'] == '1') {
+        $consentparams['initially_hidden'] = 'true';
+    }
+
+    // Consent standardmäßig ausblenden (nur Inline-Consent verwenden) - globale Einstellung
+    if (rex_config::get('consent_manager', 'inline_only_mode', false)) {
+        $consentparams['initially_hidden'] = 'true';
+    }
+}
+
 // Consent ausblenden wenn keine Dienste konfiguriert sind
 if (0 === count($consent_manager->cookiegroups)) {
     //rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . consent_manager_util::hostname() . ')');

@@ -36,7 +36,7 @@ if (!empty($videoId)) {
     }
     
     // Inline-Consent für Vimeo generieren
-    echo doConsent('vimeo', $videoId, $options);
+    echo consent_manager_inline::doConsent('vimeo', $videoId, $options);
     
 } else {
     // Backend-Preview falls keine Video-ID eingegeben

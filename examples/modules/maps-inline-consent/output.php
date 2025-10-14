@@ -21,7 +21,7 @@ if (!empty($embedUrl)) {
     }
     
     // Inline-Consent für Google Maps generieren
-    echo doConsent('google-maps', $embedUrl, [
+    echo consent_manager_inline::doConsent('google-maps', $embedUrl, [
         'title' => $mapsTitle,
         'height' => $mapsHeight,
         'width' => '100%',
