@@ -46,7 +46,8 @@ $inlineTexts = [
     'button_inline_details' => 'Alle Einstellungen',
     'inline_placeholder_text' => 'Inhalt laden',
     'inline_privacy_notice' => 'Für die Anzeige werden Cookies benötigt.',
-    'inline_title_fallback' => 'Externes Medium'
+    'inline_title_fallback' => 'Externes Medium',
+    'inline_privacy_link_text' => 'Datenschutzerklärung von'
 ];
 
 foreach ($inlineTexts as $uid => $defaultText) {

@@ -217,6 +217,7 @@ class consent_manager_inline
         $fragment->setVar('inline_placeholder_text', self::getButtonText('inline_placeholder_text', 'Inhalt laden'));
         $fragment->setVar('inline_privacy_notice', self::getButtonText('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.'));
         $fragment->setVar('inline_title_fallback', self::getButtonText('inline_title_fallback', 'Externes Medium'));
+        $fragment->setVar('inline_privacy_link_text', self::getButtonText('inline_privacy_link_text', 'Datenschutzerklärung von'));
         
         $result = $fragment->parse('consent_inline_placeholder.php');
         
@@ -267,8 +268,16 @@ class consent_manager_inline
     {
         return "
 <script>
+// Verhindere doppelte Initialisierung
+if (typeof window.consentManagerInline !== 'undefined') {
+    // JavaScript bereits geladen, nichts tun
+} else {
 window.consentManagerInline = {
+    initialized: false,
     init: function() {
+        if (this.initialized) return; // Bereits initialisiert
+        this.initialized = true;
+        
         var self = this;
         // Alle möglichen Event-Listener für verschiedene Consent Manager Versionen
         var eventNames = [
@@ -383,9 +392,11 @@ window.consentManagerInline = {
     },
     
     showDetails: function(serviceKey) {
+        // Consent Manager Box öffnen falls verfügbar
         if (typeof consent_manager_showBox === \"function\") {
             consent_manager_showBox();
             
+            // Nach kurzer Verzögerung Details aufklappen und zum Service scrollen
             setTimeout(function() {
                 var detailsBtn = document.getElementById(\"consent_manager-toggle-details\");
                 if (detailsBtn && !document.getElementById(\"consent_manager-detail\").classList.contains(\"consent_manager-hidden\")) {
@@ -397,9 +408,8 @@ window.consentManagerInline = {
                     serviceElements[0].scrollIntoView({ behavior: \"smooth\", block: \"center\" });
                 }
             }, 300);
-        } else {
-            alert(\"Weitere Cookie-Informationen finden Sie in unserer Datenschutzerklärung.\");
         }
+        // Kein Alert oder Fallback mehr - nur Consent Manager Box
     },
     
     saveConsent: function(serviceKey) {
@@ -550,8 +560,16 @@ if (document.readyState === \"loading\") {
     document.addEventListener(\"DOMContentLoaded\", function() {
         consentManagerInline.init();
     });
+};
+
+// Auto-Init nur einmal ausführen
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { 
+        window.consentManagerInline.init(); 
+    });
 } else {
-    consentManagerInline.init();
+    window.consentManagerInline.init();
+}
 }
 </script>";
     }
@@ -612,9 +630,27 @@ if (document.readyState === \"loading\") {
         }
         
         .consent-inline-notice {
-            margin: 0 0 1.5rem 0;
+            margin: 0 0 1rem 0;
             color: #6c757d;
             font-size: 0.9rem;
+        }
+        
+        .consent-inline-privacy-link {
+            margin: 0 0 1.5rem 0;
+        }
+        
+        .consent-inline-privacy-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .consent-inline-privacy-link a:hover {
+            color: #0056b3;
+            text-decoration: underline;
         }
         
         .consent-inline-actions {
