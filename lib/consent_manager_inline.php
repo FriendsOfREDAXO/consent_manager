@@ -319,8 +319,19 @@ class consent_manager_inline
      */
     private static function getButtonText($key, $fallback)
     {
-        $text = rex_i18n::msg('consent_manager_' . $key, $fallback);
-        return $text === 'consent_manager_' . $key ? $fallback : $text;
+        try {
+            $sql = rex_sql::factory();
+            $sql->setQuery('SELECT text FROM ' . rex::getTable('consent_manager_text') . ' WHERE uid = ? AND clang_id = ?', 
+                [$key, rex_clang::getCurrentId()]);
+            
+            if ($sql->getRows() > 0) {
+                return $sql->getValue('text');
+            }
+        } catch (rex_sql_exception $e) {
+            // Fallback falls Datenbankfehler
+        }
+        
+        return $fallback;
     }
 
     /**
