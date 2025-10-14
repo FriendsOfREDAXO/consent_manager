@@ -636,6 +636,11 @@ echo doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
 ?>
 ```
 
+**✅ Automatische Privacy Policy Links:**
+- Services mit hinterlegter `provider_link_privacy` zeigen automatisch den entsprechenden Datenschutz-Link
+- Format: "🔒 Datenschutzerklärung von [Anbieter]" (z.B. "🔒 Datenschutzerklärung von Google")
+- Link öffnet in neuem Tab/Fenster
+
 ### Google Maps einbetten
 
 ```php
@@ -709,6 +714,8 @@ if (class_exists('consent_manager_inline')) {
 - Bereits erteilte Consents werden respektiert
 - DSGVO-konforme Dokumentation
 - **Button-Texte anpassbar:** "Alle Einstellungen" kann über Texte-Verwaltung geändert werden (z.B. "Cookie-Einstellungen", "Datenschutz-Optionen", etc.)
+- **Privacy Policy Links:** Automatische Anzeige von Datenschutzerklärungen der Service-Anbieter
+- **Keine Confirm-Alerts:** Direkte Consent-Aktivierung ohne störende Browser-Dialoge
 
 **✅ Smart Service Detection:**
 - YouTube: Automatische Thumbnail-Generierung

@@ -22,6 +22,11 @@ Das **Inline Consent System** ermöglicht es, Consent nicht global für die gesa
 
 > **Hinweis**: Wenn der Inline-Only-Modus aktiviert ist, wird der globale Consent-Banner auf dieser Domain ausgeblendet!
 
+**✅ Neue Features seit v4.5.0:**
+- **Privacy Policy Links:** Automatische Anzeige von Datenschutzerklärungen (🔒 Datenschutzerklärung von [Anbieter])
+- **Keine Confirm-Alerts:** Benutzerfreundliche direkte Aktivierung ohne Browser-Dialoge
+- **Verbesserte Service-Erkennung:** Robuste SQL-Queries und Daten-Normalisierung
+
 ### 2. Services konfigurieren
 
 1. **Services anlegen**: `Consent Manager` → `Cookies` → Service anlegen (z.B. "youtube")
@@ -49,6 +54,7 @@ echo consent_manager_inline::doConsent('youtube', $videoId, [
     'height' => 315,
     'thumbnail' => 'auto' // Automatischer lokaler Cache
 ]);
+// ✅ Zeigt automatisch "🔒 Datenschutzerklärung von Google" wenn im Service konfiguriert
 ?>
 ```
 
@@ -320,17 +326,20 @@ Im Debug-Modus werden detaillierte Informationen ausgegeben:
 
 ```php
 <?php
-// Debug aktivieren (config.yml)
+// Debug aktivieren in REDAXO-Config
 rex::setProperty('debug', true);
 ?>
 ```
 
-Debug-Ausgaben enthalten:
-- Fragment-Variablen
+**Debug-Ausgaben enthalten:**
+- Fragment-Variablen (serviceKey, consentId, options, placeholderData)
+- Service-Daten aus Datenbank (provider_link_privacy, provider, etc.)
 - Cookie-Parsing-Ergebnisse  
-- Service-Erkennung
-- Event-Triggering
-- Update-Zyklen
+- Service-Erkennung und SQL-Query-Results
+- Event-Triggering und Update-Zyklen
+- Privacy Policy Link Generierung
+
+**Hinweis:** Debug-Ausgaben erscheinen nur bei `rex::isDebugMode() === true` und sind **nicht** permanent sichtbar.
 
 ---
 
@@ -343,7 +352,10 @@ Debug-Ausgaben enthalten:
 | `.consent-inline-container` | Haupt-Container |
 | `.consent-inline-accept` | Accept-Button (Event-Handler) |
 | `.consent-inline-details` | Details-Button |
+| `.consent-inline-privacy-link` | Privacy Policy Link Container |
 | `.consent-content-data` | Script-Tag mit Original-Content |
+| `.consent-inline-placeholder` | Platzhalter-Container |
+| `.consent-inline-overlay` | Overlay mit Buttons und Texten |
 
 ### JavaScript-API
 
