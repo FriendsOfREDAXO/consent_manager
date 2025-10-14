@@ -55,6 +55,28 @@ class consent_manager_frontend
     }
 
     /**
+     * @param int $forceCache
+     * @param int $forceReload
+     * @param string $fragmentFilename
+     * @param array $additionalVars
+     * @return string
+     * @api
+     */
+    public static function getFragmentWithVars($forceCache, $forceReload, $fragmentFilename, $additionalVars = [])
+    {
+        $fragment = new rex_fragment();
+        $fragment->setVar('forceCache', $forceCache);
+        $fragment->setVar('forceReload', $forceReload);
+        
+        // Zusätzliche Variablen setzen
+        foreach ($additionalVars as $key => $value) {
+            $fragment->setVar($key, $value);
+        }
+
+        return $fragment->parse($fragmentFilename);
+    }
+
+    /**
      * @param string $domain
      * @return void
      */

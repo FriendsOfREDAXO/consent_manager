@@ -215,7 +215,7 @@ class consent_manager_inline
             </div>
             
             <script type="text/plain" data-consent-code="'.$serviceKey.'">
-                '.htmlspecialchars($content).'
+                '.$content.'
             </script>
         </div>';
     }
@@ -291,13 +291,21 @@ class consent_manager_inline
             
             loadContent: function(placeholder) {
                 var code = placeholder.querySelector("[data-consent-code]").innerHTML;
-                var tempDiv = document.createElement("div");
-                tempDiv.innerHTML = code;
                 
-                // Platzhalter durch Content ersetzen
-                while (tempDiv.firstChild) {
-                    placeholder.parentNode.insertBefore(tempDiv.firstChild, placeholder);
+                // HTML-Entitäten dekodieren
+                var tempTextArea = document.createElement("textarea");
+                tempTextArea.innerHTML = code;
+                var decodedCode = tempTextArea.value;
+                
+                // Platzhalter durch den dekodierten HTML-Code ersetzen
+                var wrapper = document.createElement('div');
+                wrapper.innerHTML = decodedCode;
+                
+                // Alle Child-Nodes übertragen
+                while (wrapper.firstChild) {
+                    placeholder.parentNode.insertBefore(wrapper.firstChild, placeholder);
                 }
+                
                 placeholder.remove();
             },
             
