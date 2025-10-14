@@ -73,7 +73,10 @@ class consent_manager_inline
         try {
             // Versuche moderne Struktur mit cookiegroup_id
             $sql->setQuery('
-                SELECT c.*, cg.name as group_name, cg.required as group_required
+                SELECT c.pid, c.id, c.clang_id, c.uid, c.service_name, c.provider, c.provider_link_privacy, 
+                       c.definition, c.script, c.script_unselect, c.placeholder_text, c.placeholder_image,
+                       c.createuser, c.updateuser, c.createdate, c.updatedate,
+                       cg.name as group_name, cg.required as group_required
                 FROM '.rex::getTable('consent_manager_cookie').' c
                 LEFT JOIN '.rex::getTable('consent_manager_cookiegroup').' cg ON c.cookiegroup_id = cg.id
                 WHERE c.uid = ? AND c.clang_id = ?
@@ -82,7 +85,10 @@ class consent_manager_inline
             // Fallback für ältere Struktur ohne cookiegroup_id
             try {
                 $sql->setQuery('
-                    SELECT c.*, NULL as group_name, 0 as group_required
+                    SELECT c.pid, c.id, c.clang_id, c.uid, c.service_name, c.provider, c.provider_link_privacy, 
+                           c.definition, c.script, c.script_unselect, c.placeholder_text, c.placeholder_image,
+                           c.createuser, c.updateuser, c.createdate, c.updatedate,
+                           NULL as group_name, 0 as group_required
                     FROM '.rex::getTable('consent_manager_cookie').' c
                     WHERE c.uid = ? AND c.clang_id = ?
                 ', [$serviceKey, rex_clang::getCurrentId()]);
@@ -90,7 +96,10 @@ class consent_manager_inline
                 // Weitere Fallback-Versuche für verschiedene Consent Manager Versionen
                 try {
                     $sql->setQuery('
-                        SELECT *, NULL as group_name, 0 as group_required
+                        SELECT pid, id, clang_id, uid, service_name, provider, provider_link_privacy, 
+                               definition, script, script_unselect, placeholder_text, placeholder_image,
+                               createuser, updateuser, createdate, updatedate,
+                               NULL as group_name, 0 as group_required
                         FROM '.rex::getTable('consent_manager_cookie').'
                         WHERE uid = ? AND clang_id = ?
                     ', [$serviceKey, rex_clang::getCurrentId()]);
