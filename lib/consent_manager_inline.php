@@ -21,35 +21,22 @@ class consent_manager_inline
      */
     public static function doConsent($serviceKey, $content, $options = [])
     {
-        // Debug: Start
-        $debug = '<div style="background:#d4edda;border:1px solid #c3e6cb;padding:5px;margin:5px 0;">DEBUG START: serviceKey='.$serviceKey.'</div>';
-        
         // Service aus DB laden
         $service = self::getService($serviceKey);
         if (!$service) {
-            // Debug: Immer Fehlermeldung anzeigen (temporär)
-            return $debug . '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin:10px 0;">Consent Manager: Service "'.$serviceKey.'" nicht gefunden</div>';
+            if (rex::isDebugMode()) {
+                return '<div class="alert alert-warning">Consent Manager: Service "'.$serviceKey.'" nicht gefunden</div>';
+            }
+            return '<!-- Consent Manager: Service "'.$serviceKey.'" not found -->';
         }
-        
-        $debug .= '<div style="background:#d4edda;border:1px solid #c3e6cb;padding:5px;margin:5px 0;">DEBUG: Service gefunden</div>';
 
         // Bereits zugestimmt?
-        $hasConsent = false;
-        try {
-            $hasConsent = consent_manager_util::has_consent($serviceKey);
-            $debug .= '<div style="background:#d4edda;border:1px solid #c3e6cb;padding:5px;margin:5px 0;">DEBUG: has_consent=' . ($hasConsent ? 'true' : 'false') . '</div>';
-        } catch (Exception $e) {
-            $debug .= '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:5px;margin:5px 0;">DEBUG: has_consent ERROR: ' . $e->getMessage() . '</div>';
-            return $debug . $content; // Fallback
-        }
-        
-        if ($hasConsent) {
-            return $debug . self::renderContent($content, $options);
+        if (consent_manager_util::has_consent($serviceKey)) {
+            return self::renderContent($content, $options);
         }
 
         // Consent ID generieren
         $consentId = uniqid('consent_', true);
-        $debug .= '<div style="background:#d4edda;border:1px solid #c3e6cb;padding:5px;margin:5px 0;">DEBUG: consentId=' . $consentId . '</div>';
         
         // Standard-Optionen
         $options = array_merge([
@@ -273,6 +260,38 @@ class consent_manager_inline
         return '
         <script>
         window.consentManagerInline = {
+            init: function() {
+                // Event-Listener für globale Consent-Änderungen
+                document.addEventListener('consent_manager_updated', this.handleGlobalConsentUpdate.bind(this));
+                
+                // Fallback: Periodisch prüfen (falls Events nicht funktionieren)
+                setInterval(this.checkForUpdates.bind(this), 1000);
+            },
+            
+            handleGlobalConsentUpdate: function(event) {
+                // Alle Platzhalter prüfen und ersetzen falls Consent erteilt wurde
+                this.updateAllPlaceholders();
+            },
+            
+            checkForUpdates: function() {
+                this.updateAllPlaceholders();
+            },
+            
+            updateAllPlaceholders: function() {
+                var placeholders = document.querySelectorAll('.consent-inline-placeholder[data-service]');
+                var self = this;
+                
+                placeholders.forEach(function(placeholder) {
+                    var serviceKey = placeholder.getAttribute('data-service');
+                    var cookieData = self.getCookieData();
+                    
+                    if (cookieData.consents && cookieData.consents.includes(serviceKey)) {
+                        // Consent wurde erteilt - Content laden
+                        self.loadContent(placeholder);
+                    }
+                });
+            },
+            
             accept: function(consentId, serviceKey, button) {
                 var serviceName = button.closest(".consent-inline-placeholder").querySelector(".consent-inline-title").textContent;
                 
@@ -402,6 +421,15 @@ class consent_manager_inline
                 return null;
             }
         };
+        
+        // Automatische Initialisierung
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", function() {
+                consentManagerInline.init();
+            });
+        } else {
+            consentManagerInline.init();
+        }
         </script>';
     }
 
