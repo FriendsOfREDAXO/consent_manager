@@ -606,56 +606,99 @@ if (document.readyState === 'loading') {
     }
 
     /**
-     * CSS für Inline-Consent generieren
+     * CSS für Inline-Consent ausgeben
+     * 
+     * @param bool $useCustom Eigenes CSS verwenden (deaktiviert Standard-CSS)
+     * @param string $customPath Pfad zu eigenem CSS
      */
-    public static function getCSS()
+    public static function getCSS($useCustom = false, $customPath = '')
     {
+        // Prüfe auf eigenes CSS-Fragment oder -Datei
+        if ($useCustom) {
+            if (!empty($customPath) && file_exists($customPath)) {
+                return '<link rel="stylesheet" href="' . rex_escape($customPath) . '">';
+            }
+            
+            // Prüfe Fragment-Override
+            $customFragment = rex_path::frontend('templates/consent_inline_styles.css');
+            if (file_exists($customFragment)) {
+                return '<link rel="stylesheet" href="' . rex_url::frontend('templates/consent_inline_styles.css') . '">';
+            }
+            
+            // Kein eigenes CSS gefunden - verwende Standard
+        }
         return '
         <style>
         .consent-inline-placeholder {
+            /* CSS Custom Properties für individuelle Anpassung */
+            --consent-bg-color: #f8f9fa;
+            --consent-border-color: #dee2e6;
+            --consent-border-radius: 8px;
+            --consent-border-width: 2px;
+            --consent-margin: 1rem 0;
+            --consent-min-height: 300px;
+            
             position: relative;
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            border-radius: 8px;
+            background: var(--consent-bg-color);
+            border: var(--consent-border-width) dashed var(--consent-border-color);
+            border-radius: var(--consent-border-radius);
             overflow: hidden;
-            margin: 1rem 0;
+            margin: var(--consent-margin);
         }
         
         .consent-inline-content {
+            /* Content Layout Variablen */
+            --consent-content-min-height: var(--consent-min-height, 300px);
+            
             position: relative;
-            min-height: 300px;
+            min-height: var(--consent-content-min-height);
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
         .consent-inline-thumbnail {
+            /* Thumbnail Variablen */
+            --consent-thumbnail-opacity: 0.3;
+            
             width: 100%;
             height: 100%;
-            opacity: 0.3;
+            opacity: var(--consent-thumbnail-opacity);
             position: absolute;
             top: 0;
             left: 0;
             object-fit: cover;
-            min-height: 300px;
+            min-height: var(--consent-content-min-height);
         }
         
         .consent-inline-overlay {
+            /* Overlay Design Variablen */
+            --consent-overlay-bg: rgba(255, 255, 255, 0.95);
+            --consent-overlay-padding: 2rem;
+            --consent-overlay-border-radius: 8px;
+            --consent-overlay-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --consent-overlay-max-width: 90%;
+            
             position: relative;
             z-index: 2;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 8px;
+            background: var(--consent-overlay-bg);
+            padding: var(--consent-overlay-padding);
+            border-radius: var(--consent-overlay-border-radius);
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
+            box-shadow: var(--consent-overlay-shadow);
+            max-width: var(--consent-overlay-max-width);
             width: auto;
         }
         
         .consent-inline-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #6c757d;
+            /* Icon Variablen */
+            --consent-icon-size: 3rem;
+            --consent-icon-color: #6c757d;
+            --consent-icon-margin: 1rem;
+            
+            font-size: var(--consent-icon-size);
+            margin-bottom: var(--consent-icon-margin);
+            color: var(--consent-icon-color);
             line-height: 1;
         }
         
@@ -665,6 +708,30 @@ if (document.readyState === 'loading') {
         
         .consent-inline-icon [uk-icon] {
             color: inherit;
+        }
+        
+        .consent-inline-title {
+            /* Title Variablen */
+            --consent-title-size: 1.25rem;
+            --consent-title-color: inherit;
+            --consent-title-margin: 0 0 0.5rem 0;
+            --consent-title-weight: 600;
+            
+            margin: var(--consent-title-margin);
+            font-size: var(--consent-title-size);
+            font-weight: var(--consent-title-weight);
+            color: var(--consent-title-color);
+        }
+        
+        .consent-inline-notice {
+            /* Notice Text Variablen */
+            --consent-notice-color: #6c757d;
+            --consent-notice-size: 0.9rem;
+            --consent-notice-margin: 0 0 1rem 0;
+            
+            margin: var(--consent-notice-margin);
+            color: var(--consent-notice-color);
+            font-size: var(--consent-notice-size);
         }
         
         .consent-inline-privacy-link [uk-icon] {
@@ -725,47 +792,68 @@ if (document.readyState === 'loading') {
         }
         
         .btn-consent-accept {
-            background: #28a745;
-            color: white;
+            /* Accept Button Variablen */
+            --consent-btn-accept-bg: #28a745;
+            --consent-btn-accept-hover-bg: #218838;
+            --consent-btn-accept-color: white;
+            --consent-btn-padding: 0.5rem 1rem;
+            --consent-btn-border-radius: 4px;
+            --consent-btn-font-size: 0.9rem;
+            --consent-btn-transition: background-color 0.2s;
+            
+            background: var(--consent-btn-accept-bg);
+            color: var(--consent-btn-accept-color);
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: var(--consent-btn-padding);
+            border-radius: var(--consent-btn-border-radius);
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
+            font-size: var(--consent-btn-font-size);
+            transition: var(--consent-btn-transition);
         }
         
         .btn-consent-accept:hover {
-            background: #218838;
+            background: var(--consent-btn-accept-hover-bg);
         }
         
         .btn-consent-details {
-            background: #6c757d;
-            color: white;
+            /* Details Button Variablen */
+            --consent-btn-details-bg: #6c757d;
+            --consent-btn-details-hover-bg: #5a6268;
+            --consent-btn-details-color: white;
+            
+            background: var(--consent-btn-details-bg);
+            color: var(--consent-btn-details-color);
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: var(--consent-btn-padding);
+            border-radius: var(--consent-btn-border-radius);
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
+            font-size: var(--consent-btn-font-size);
+            transition: var(--consent-btn-transition);
         }
         
         .btn-consent-details:hover {
-            background: #5a6268;
+            background: var(--consent-btn-details-hover-bg);
         }
         
         @media (max-width: 768px) {
+            .consent-inline-placeholder {
+                /* Mobile Variablen */
+                --consent-min-height: 250px;
+                --consent-overlay-padding: 1.5rem;
+                --consent-overlay-max-width: 95%;
+            }
+            
             .consent-inline-content {
-                min-height: 250px;
+                min-height: var(--consent-min-height);
             }
             
             .consent-inline-thumbnail {
-                min-height: 250px;
+                min-height: var(--consent-min-height);
             }
             
             .consent-inline-overlay {
-                padding: 1.5rem;
-                max-width: 95%;
+                padding: var(--consent-overlay-padding);
+                max-width: var(--consent-overlay-max-width);
             }
             
             .consent-inline-actions {
