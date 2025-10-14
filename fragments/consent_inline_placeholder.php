@@ -28,6 +28,10 @@ if (rex::isDebugMode()) {
     echo 'options: ' . var_export($options, true) . '<br>';
     echo 'placeholderData: ' . var_export($placeholderData, true) . '<br>';
     echo 'content length: ' . strlen($content) . ' chars<br>';
+    echo '<strong>Service Debug:</strong><br>';
+    echo 'service provider_link_privacy: ' . var_export($service['provider_link_privacy'] ?? 'NOT SET', true) . '<br>';
+    echo 'service provider: ' . var_export($service['provider'] ?? 'NOT SET', true) . '<br>';
+    echo 'service complete: ' . var_export($service, true) . '<br>';
     echo '</div>';
 }
 
@@ -53,6 +57,15 @@ if (!empty($placeholderData['thumbnail'])) {
                     <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $this->getVar('inline_title_fallback', 'Externes Medium')) ?></h4>
                     <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? $this->getVar('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.')) ?></p>
                     
+                    <?php 
+                    // Temporärer Debug für Datenschutz-Link
+                    if (rex::isDebugMode() || true) {
+                        echo '<div style="background:yellow;padding:5px;font-size:11px;">';
+                        echo 'Debug provider_link_privacy: ' . var_export($service['provider_link_privacy'] ?? 'NULL', true) . '<br>';
+                        echo 'Empty check: ' . (empty($service['provider_link_privacy']) ? 'TRUE (empty)' : 'FALSE (not empty)') . '<br>';
+                        echo '</div>';
+                    }
+                    ?>
                     <?php if (!empty($service['provider_link_privacy'])): ?>
                     <p class="consent-inline-privacy-link">
                         <a href="<?= rex_escape($service['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer">

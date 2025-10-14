@@ -100,7 +100,20 @@ class consent_manager_inline
             }
         }
 
-        return $sql->getRows() > 0 ? $sql->getRow() : null;
+        if ($sql->getRows() > 0) {
+            $service = $sql->getRow();
+            
+            // Debug: Service-Daten loggen
+            if (rex::isDebugMode() || true) {
+                error_log('Consent Manager Inline - Service loaded for: ' . $serviceKey);
+                error_log('Provider Link Privacy: ' . ($service['provider_link_privacy'] ?? 'NULL'));
+                error_log('Provider: ' . ($service['provider'] ?? 'NULL'));
+            }
+            
+            return $service;
+        }
+        
+        return null;
     }
 
     /**
@@ -382,13 +395,10 @@ window.consentManagerInline = {
     
     accept: function(consentId, serviceKey, button) {
         var container = button.closest('.consent-inline-container');
-        var serviceName = container.querySelector('.consent-inline-title').textContent;
-        
-        if (confirm('Cookies für ' + serviceName + ' akzeptieren?\\n\\nDadurch werden externe Inhalte geladen und Cookies gesetzt.')) {
-            this.saveConsent(serviceKey);
-            this.loadContent(container);
-            this.logConsent(consentId, serviceKey, 'accepted');
-        }
+        // Consent direkt ohne Bestätigung setzen - User hat bereits bewusst geklickt
+        this.saveConsent(serviceKey);
+        this.loadContent(container);
+        this.logConsent(consentId, serviceKey, 'accepted');
     },
     
     showDetails: function(serviceKey) {
