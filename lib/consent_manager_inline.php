@@ -303,7 +303,7 @@ class consent_manager_inline
      */
     public static function getJavaScript()
     {
-        return "
+        return <<<'JAVASCRIPT'
 <script>
 // Verhindere doppelte Initialisierung
 if (typeof window.consentManagerInline !== 'undefined') {
@@ -633,7 +633,8 @@ if (document.readyState === 'loading') {
     window.consentManagerInline.init();
 }
 }
-</script>";
+</script>
+JAVASCRIPT;
     }
 
     /**

@@ -11,7 +11,42 @@ Das **Inline Consent System** ermöglicht es, Consent nicht global für die gesa
 
 ---
 
-## 🔧 Einrichtung
+## � Button-Optionen
+
+Das System bietet **flexible Button-Konfiguration** für verschiedene Anwendungsfälle:
+
+### **2-Button-Modus (Standard)**
+```php
+echo consent_manager_inline::doConsent('youtube', $videoId, [
+    'title' => 'Mein Video'
+]);
+```
+➡️ Zeigt: **"Einmal laden"** + **"Einstellungen"**
+
+### **3-Button-Modus (Erweitert)**
+```php
+echo consent_manager_inline::doConsent('youtube', $videoId, [
+    'title' => 'Mein Video',
+    'show_allow_all' => true
+]);
+```
+➡️ Zeigt: **"Einmal laden"** + **"Alle erlauben"** + **"Einstellungen"**
+
+### **Button-Verhalten**
+
+| Button | Aktion | Cookie-Verhalten |
+|--------|--------|-----------------|
+| **Einmal laden** | Lädt nur diesen einen Inhalt | ❌ Kein Cookie gesetzt |
+| **Alle erlauben** | Erlaubt alle Inhalte dieses Services | ✅ Service-Cookie wird gesetzt |
+| **Einstellungen** | Öffnet Consent-Manager-Box | ⚙️ Individuelle Konfiguration |
+
+**ℹ️ Wann welchen Modus verwenden?**
+- **2 Buttons**: Einfache Seiten, einzelne Videos
+- **3 Buttons**: Seiten mit vielen Videos/Inhalten desselben Services
+
+---
+
+## �🔧 Einrichtung
 
 ### 1. Domain-spezifischen Inline-Only-Modus aktivieren
 
@@ -46,29 +81,72 @@ Das **Inline Consent System** ermöglicht es, Consent nicht global für die gesa
 echo consent_manager_inline::getCSS();
 echo consent_manager_inline::getJavaScript();
 
-// Inline Consent für YouTube-Video
+// Inline Consent für YouTube-Video (2-Button-Modus)
 $videoId = 'dQw4w9WgXcQ'; // oder komplette URL
 echo consent_manager_inline::doConsent('youtube', $videoId, [
+    'title' => 'Rick Astley - Never Gonna Give You Up'
+]);
+
+// Mit 3-Button-Modus:
+echo consent_manager_inline::doConsent('youtube', $videoId, [
     'title' => 'Rick Astley - Never Gonna Give You Up',
-    'width' => 560,
-    'height' => 315,
-    'thumbnail' => 'auto' // Automatischer lokaler Cache
+    'show_allow_all' => true // Aktiviert "Alle erlauben" Button
 ]);
 // ✅ Zeigt automatisch "🔒 Datenschutzerklärung von Google" wenn im Service konfiguriert
 ?>
 ```
+
+---
+
+## 📱 Button-Konfiguration
+
+### **2-Button-Modus (Standard)**
+```php
+echo consent_manager_inline::doConsent('youtube', $videoId, [
+    'title' => 'Mein Video'
+]);
+```
+➡️ Zeigt: **"Einmal laden"** + **"Einstellungen"**
+
+### **3-Button-Modus (Erweitert)**
+```php
+echo consent_manager_inline::doConsent('youtube', $videoId, [
+    'title' => 'Mein Video',
+    'show_allow_all' => true
+]);
+```
+➡️ Zeigt: **"Einmal laden"** + **"Alle erlauben"** + **"Einstellungen"**
+
+### **Button-Verhalten**
+
+| Button | Aktion | Cookie-Verhalten |
+|--------|--------|--------------------|
+| **Einmal laden** | Lädt nur diesen einen Inhalt | ❌ Kein Cookie gesetzt |
+| **Alle erlauben** | Erlaubt alle Inhalte dieses Services | ✅ Service-Cookie wird gesetzt |
+| **Einstellungen** | Öffnet Consent-Manager-Box | ⚙️ Individuelle Konfiguration |
+
+**ℹ️ Wann welchen Modus verwenden?**
+- **2 Buttons**: Einfache Seiten, einzelne Videos
+- **3 Buttons**: Seiten mit vielen Videos/Inhalten desselben Services
+
+---
 
 ### Erweiterte Optionen
 
 ```php
 <?php
 echo consent_manager_inline::doConsent('youtube', $videoId, [
+    // Button-Konfiguration
+    'show_allow_all' => true, // 3-Button-Modus aktivieren
+    'placeholder_text' => 'Einmal laden', // Text für "Einmal laden" Button
+    
+    // Anzeige-Optionen
     'title' => 'Video-Titel',
-    'placeholder_text' => 'Video laden',
     'privacy_notice' => 'Für die Anzeige werden YouTube-Cookies benötigt.',
     'width' => 800,
     'height' => 450,
-    'show_allow_all' => true, // Optionaler "Alle erlauben" Button
+    
+    // Design & Icons
     'thumbnail' => 'auto', // oder direkte URL zu eigenem Bild
     'icon' => 'uk-icon:play-circle', // Haupt-Icon (FontAwesome oder UIkit)
     'icon_label' => 'YouTube Video starten', // Barrierefreiheit
@@ -76,6 +154,21 @@ echo consent_manager_inline::doConsent('youtube', $videoId, [
 ]);
 ?>
 ```
+
+#### **Alle verfügbaren Optionen**
+
+| Option | Typ | Standard | Beschreibung |
+|--------|-----|----------|-------------|
+| `show_allow_all` | bool | `false` | Zeigt zusätzlichen "Alle erlauben" Button |
+| `placeholder_text` | string | "Einmal laden" | Text des Haupt-Buttons |
+| `title` | string | "Externes Medium" | Überschrift des Platzhalters |
+| `privacy_notice` | string | "Für die Anzeige..." | Hinweistext unter dem Titel |
+| `thumbnail` | string | `auto` | Vorschaubild (auto = API, oder URL) |
+| `icon` | string | Service-spezifisch | FontAwesome/UIkit Icon-Klasse |
+| `icon_label` | string | Generiert | Alt-Text für Screenreader |
+| `privacy_icon` | string | `uk-icon:shield` | Icon für Privacy-Link |
+| `width` | int | Service-Standard | Breite des Inhalts |
+| `height` | int | Service-Standard | Höhe des Inhalts |
 
 ### Unterstützte Services
 
@@ -389,6 +482,34 @@ Für automatische Cache-Bereinigung:
 
 ---
 
+## 🌍 Internationalisierung (i18n)
+
+Alle Button-Texte und Meldungen werden über die **Texte-Verwaltung** verwaltet und sind vollständig mehrsprachig:
+
+### **Button-Texte anpassen**
+
+1. **Backend**: `Consent Manager` → `Texte`
+2. **Schlüssel bearbeiten**:
+   - `inline_placeholder_text`: "Einmal laden" Button
+   - `button_inline_allow_all`: "Alle erlauben" Button 
+   - `button_inline_details`: "Einstellungen" Button
+   - `inline_action_text`: Einleitungstext "Was möchten Sie tun?"
+3. **Für jede Sprache** anpassen
+
+### **Verfügbare Text-Schlüssel**
+
+| Schlüssel | Standard-Text | Beschreibung |
+|-----------|---------------|-------------|
+| `inline_placeholder_text` | "Einmal laden" | Haupt-Button (nur dieser Inhalt) |
+| `button_inline_allow_all` | "Alle erlauben" | Service-Button (alle Inhalte) |
+| `button_inline_details` | "Einstellungen" | Consent-Manager öffnen |
+| `inline_action_text` | "Was möchten Sie tun?" | Einleitungstext über Buttons |
+| `inline_privacy_notice` | "Für die Anzeige..." | Allgemeiner Hinweistext |
+| `inline_title_fallback` | "Externes Medium" | Standard-Titel falls nicht gesetzt |
+| `inline_privacy_link_text` | "Datenschutzerklärung von" | Privacy-Link Präfix |
+
+---
+
 ## 🚀 Erweiterte Features
 
 ### Automatische Platzhalter-Ersetzung
@@ -444,8 +565,11 @@ rex::setProperty('debug', true);
 | Klasse | Zweck |
 |--------|-------|
 | `.consent-inline-container` | Haupt-Container |
-| `.consent-inline-accept` | Accept-Button (Event-Handler) |
-| `.consent-inline-details` | Details-Button |
+| `.consent-inline-once` | "Einmal laden" Button (Event-Handler) |
+| `.consent-inline-allow-all` | "Alle erlauben" Button (Event-Handler) |
+| `.consent-inline-details` | "Einstellungen" Button |
+| `.consent-inline-actions` | Button-Container |
+| `.consent-inline-action-text` | Einleitungstext "Was möchten Sie tun?" |
 | `.consent-inline-privacy-link` | Privacy Policy Link Container |
 | `.consent-inline-icon` | Icon-Container (FontAwesome/UIkit) |
 | `.sr-only` | Screen Reader Text (Barrierefreiheit) |
@@ -472,9 +596,10 @@ consentManagerInline.loadContent(containerElement);
 |----------|-----|--------------|
 | `serviceKey` | string | Service-UID (z.B. 'youtube') |
 | `consentId` | string | Eindeutige Consent-ID |
-| `options` | array | Konfigurationsoptionen (icon, icon_label, privacy_icon) |
+| `options` | array | Konfigurationsoptionen (show_allow_all, icon, icon_label, privacy_icon) |
 | `placeholderData` | array | Icon, Icon-Label, Thumbnail, Service-Name |
 | `content` | string | Original-Content zum Laden |
+| `show_allow_all` | boolean | Steuert Anzeige des "Alle erlauben" Buttons |
 | `privacy_icon` | string | Icon für Privacy-Links (FontAwesome/UIkit) |
 
 ---
