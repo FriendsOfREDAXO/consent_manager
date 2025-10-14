@@ -115,11 +115,11 @@ google_consent_service_youtube = YouTube (ad_storage, personalization_storage)
 google_consent_service_google_maps = Google Maps (functionality_storage, personalization_storage)
 
 # Inline Consent Settings
-consent_manager_config_inline_only_mode = Använd endast Inline-Consent
-consent_manager_config_inline_only_mode_desc = Den globala consent-popup visas inte som standard. Consent begärs endast vid behov via doConsent().
+consent_manager_config_inline_only_mode = Använd endast inline-consent
+consent_manager_config_inline_only_mode_desc = Den globala medgivandedialogrutan visas inte som standard. Samtycke begärs endast vid behov via doConsent().
 
 # Domain Inline Consent Settings
-consent_manager_domain_inline_only_mode = Inline-Only läge
-consent_manager_domain_inline_only_mode_disabled = Standard (med Popup)
-consent_manager_domain_inline_only_mode_enabled = Endast Inline-Consent
-consent_manager_domain_inline_only_mode_notice = Med "Endast Inline-Consent" undertrycks den globala consent-popup. Consent begärs endast vid behov via doConsent().
+consent_manager_domain_inline_only_mode = Inline-only läge
+consent_manager_domain_inline_only_mode_disabled = Standard (med popup)
+consent_manager_domain_inline_only_mode_enabled = Endast inline-consent
+consent_manager_domain_inline_only_mode_notice = Med "Endast inline-consent" undertrycks den globala medgivandedialogrutan. Samtycke begärs endast vid behov via doConsent().
