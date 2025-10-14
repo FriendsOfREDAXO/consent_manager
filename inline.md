@@ -229,36 +229,87 @@ if (!empty($placeholderData['thumbnail'])) {
 </div>
 ```
 
-### CSS-Anpassung
+### CSS-Anpassung mit Custom Properties
 
-Das Standard-CSS kann überschrieben werden:
+Das System verwendet **CSS Custom Properties (Variablen)** für maximale Flexibilität:
+
+#### **Methode 1: CSS-Variablen überschreiben**
 
 ```css
-/* Eigene Styles für Inline-Consent */
-.consent-inline-container {
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    overflow: hidden;
+/* Einfache Anpassung über CSS-Variablen */
+.consent-inline-placeholder {
+    /* Design anpassen */
+    --consent-bg-color: #2c3e50; 
+    --consent-border-color: #3498db;
+    --consent-border-radius: 15px;
+    --consent-min-height: 400px;
+    
+    /* Overlay Design */
+    --consent-overlay-bg: rgba(52, 152, 219, 0.95);
+    --consent-overlay-border-radius: 15px;
+    --consent-overlay-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    
+    /* Button Colors */
+    --consent-btn-accept-bg: #e74c3c;
+    --consent-btn-accept-hover-bg: #c0392b;
+    --consent-btn-details-bg: #95a5a6;
+    
+    /* Typography */
+    --consent-icon-size: 4rem;
+    --consent-icon-color: #3498db;
+    --consent-title-size: 1.5rem;
+    --consent-notice-color: #ecf0f1;
 }
+```
 
-.consent-inline-overlay {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+#### **Methode 2: Komplett eigenes CSS**
+
+```php
+<?php
+// Standard-CSS deaktivieren und eigenes verwenden
+echo consent_manager_inline::getCSS(true, '/assets/my-consent-styles.css');
+
+// Oder Fragment im templates-Ordner: consent_inline_styles.css
+echo consent_manager_inline::getCSS(true);
+?>
+```
+
+#### **Verfügbare CSS-Variablen**
+
+| Variable | Standard | Beschreibung |
+|----------|----------|--------------|
+| `--consent-bg-color` | `#f8f9fa` | Container-Hintergrund |
+| `--consent-border-color` | `#dee2e6` | Rahmenfarbe |
+| `--consent-border-radius` | `8px` | Ecken-Rundung |
+| `--consent-min-height` | `300px` | Mindesthöhe (250px mobil) |
+| `--consent-overlay-bg` | `rgba(255,255,255,0.95)` | Overlay-Hintergrund |
+| `--consent-overlay-shadow` | `0 4px 6px rgba(0,0,0,0.1)` | Schatten |
+| `--consent-btn-accept-bg` | `#28a745` | Accept-Button Farbe |
+| `--consent-btn-details-bg` | `#6c757d` | Details-Button Farbe |
+| `--consent-icon-size` | `3rem` | Icon-Größe |
+| `--consent-icon-color` | `#6c757d` | Icon-Farbe |
+| `--consent-title-size` | `1.25rem` | Titel-Schriftgröße |
+
+#### **Theme-Beispiele**
+
+**Dark Theme:**
+```css
+.consent-inline-placeholder {
+    --consent-bg-color: #2c3e50;
+    --consent-overlay-bg: rgba(44, 62, 80, 0.95);
+    --consent-btn-accept-bg: #e74c3c;
+    --consent-icon-color: #ecf0f1;
+    --consent-notice-color: #bdc3c7;
 }
+```
 
-.consent-inline-accept {
-    background: #10b981;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.consent-inline-accept:hover {
-    background: #059669;
-    transform: translateY(-2px);
+**Corporate Theme:**
+```css
+.consent-inline-placeholder {
+    --consent-border-color: #your-brand-color;
+    --consent-btn-accept-bg: #your-brand-color;
+    --consent-overlay-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    --consent-border-radius: 0; /* Eckige Form */
 }
 ```
 
