@@ -298,7 +298,7 @@ class consent_manager_inline
                 var decodedCode = tempTextArea.value;
                 
                 // Platzhalter durch den dekodierten HTML-Code ersetzen
-                var wrapper = document.createElement('div');
+                var wrapper = document.createElement("div");
                 wrapper.innerHTML = decodedCode;
                 
                 // Alle Child-Nodes übertragen
