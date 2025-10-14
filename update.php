@@ -40,3 +40,26 @@ $sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_consent_log` 
 rex_sql_table::get(rex::getTable('consent_manager_domain'))
     ->ensureColumn(new rex_sql_column('inline_only_mode', 'varchar(20)', true, 'disabled'))
     ->ensure();
+
+// Neue Text-Keys für Inline-Consent-System hinzufügen
+$inlineTexts = [
+    'button_inline_details' => 'Alle Einstellungen',
+    'inline_placeholder_text' => 'Inhalt laden',
+    'inline_privacy_notice' => 'Für die Anzeige werden Cookies benötigt.',
+    'inline_title_fallback' => 'Externes Medium'
+];
+
+foreach ($inlineTexts as $uid => $defaultText) {
+    $sql = \rex_sql::factory();
+    $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = :uid', ['uid' => $uid]);
+    if (0 === (int) $sql->getValue('count')) {
+        foreach (rex_clang::getAllIds() as $lang) {
+            $sql = \rex_sql::factory();
+            $sql->setTable(rex::getTable('consent_manager_text'));
+            $sql->setValue('uid', $uid);
+            $sql->setValue('clang_id', $lang);
+            $sql->setValue('text', $defaultText);
+            $sql->insert();
+        }
+    }
+}

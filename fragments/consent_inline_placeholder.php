@@ -50,19 +50,19 @@ if (!empty($placeholderData['thumbnail'])) {
             <div class="consent-inline-overlay">
                 <div class="consent-inline-info">
                     <div class="consent-inline-icon"><?= rex_escape($placeholderData['icon'] ?? '🎥') ?></div>
-                    <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? 'Video laden') ?></h4>
-                    <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? 'Für die Anzeige werden Cookies benötigt.') ?></p>
+                    <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $this->getVar('inline_title_fallback', 'Externes Medium')) ?></h4>
+                    <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? $this->getVar('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.')) ?></p>
                     
                     <div class="consent-inline-actions">
                         <button type="button" class="btn btn-consent-accept consent-inline-accept" 
                                 data-consent-id="<?= rex_escape($consentId) ?>"
                                 data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-check"></i> <?= rex_escape($options['placeholder_text'] ?? 'Video laden') ?>
+                            <i class="fa fa-check"></i> <?= rex_escape($options['placeholder_text'] ?? $this->getVar('inline_placeholder_text', 'Inhalt laden')) ?>
                         </button>
                         
                         <button type="button" class="btn btn-consent-details consent-inline-details" 
                                 data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-info-circle"></i> Cookie-Details
+                            <i class="fa fa-info-circle"></i> <?= $this->getVar('button_inline_details_text', 'Alle Einstellungen') ?>
                         </button>
                     </div>
                 </div>

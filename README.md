@@ -603,6 +603,21 @@ function loadExternalContent() {
 
 **Lösung:** Inline-Consent zeigt Platzhalter statt Videos. Consent-Dialog erscheint erst beim Klick auf "Video laden".
 
+### ⚠️ Wichtige Funktionsweise des Inline-Modus
+
+**Medienspezifischer Consent:**
+- ✅ **Inline-Consent aktiviert NUR das angeklickte Medium**
+- ✅ Jedes Video/Embed wird **einzeln** freigeschaltet
+- ✅ **Keine globale Aktivierung** aller Services einer Gruppe
+- ✅ Maximaler Datenschutz durch minimale Consent-Erteilung
+
+**Beispiel:** Nutzer klickt "YouTube Video laden" → Nur dieses eine Video wird geladen, andere YouTube-Videos auf der Seite bleiben gesperrt.
+
+**Globale Aktivierung über "Alle Einstellungen":**
+- Der Button **"Alle Einstellungen"** (früher "Cookie-Details") öffnet das vollständige Consent Manager Fenster
+- Dort kann der Nutzer **alle Services einer Gruppe** global aktivieren
+- **Wichtig:** Button-Text ist über die **Texte-Verwaltung** vollständig anpassbar und übersetzbar
+
 ### YouTube-Videos mit Inline-Consent
 
 ```php
@@ -690,9 +705,10 @@ if (class_exists('consent_manager_inline')) {
 **✅ Vollständige Integration:**
 - Nutzt bestehende Service-Konfiguration
 - Automatisches Logging aller Consent-Aktionen  
-- "Cookie-Details"-Button öffnet gewohnte Detailansicht
+- **"Alle Einstellungen"-Button** öffnet vollständiges Consent Manager Fenster
 - Bereits erteilte Consents werden respektiert
 - DSGVO-konforme Dokumentation
+- **Button-Texte anpassbar:** "Alle Einstellungen" kann über Texte-Verwaltung geändert werden (z.B. "Cookie-Einstellungen", "Datenschutz-Optionen", etc.)
 
 **✅ Smart Service Detection:**
 - YouTube: Automatische Thumbnail-Generierung
@@ -705,6 +721,13 @@ if (class_exists('consent_manager_inline')) {
 - Smooth Animations
 - Accessibility-konform
 - Mobile-optimiert
+- **Vollständig übersetzbare Buttons** über REDAXO Texte-Verwaltung
+
+**✅ Mehrsprachigkeit:**
+- Alle Button-Texte über **Consent Manager → Texte** anpassbar
+- Automatische Sprachen-Synchronisation
+- Individuelle Anpassung pro Sprache möglich
+- Standard-Buttons: "Video laden", "Alle Einstellungen", "Datenschutz"
 
 **✅ Developer Experience:**
 - Ein `doConsent()` für alle Services

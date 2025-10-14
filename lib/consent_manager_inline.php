@@ -212,6 +212,12 @@ class consent_manager_inline
         $fragment->setVar('service', $service);
         $fragment->setVar('placeholderData', $placeholderData);
         
+        // Alle Button-Texte für Fragment hinzufügen
+        $fragment->setVar('button_inline_details_text', self::getButtonText('button_inline_details', 'Alle Einstellungen'));
+        $fragment->setVar('inline_placeholder_text', self::getButtonText('inline_placeholder_text', 'Inhalt laden'));
+        $fragment->setVar('inline_privacy_notice', self::getButtonText('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.'));
+        $fragment->setVar('inline_title_fallback', self::getButtonText('inline_title_fallback', 'Externes Medium'));
+        
         $result = $fragment->parse('consent_inline_placeholder.php');
         
         // Debug-Output voranstellen
@@ -264,8 +270,6 @@ class consent_manager_inline
 window.consentManagerInline = {
     init: function() {
         var self = this;
-        console.log('ConsentManagerInline initialized');
-        
         // Alle möglichen Event-Listener für verschiedene Consent Manager Versionen
         var eventNames = [
             'consent_manager_consent_given',
@@ -278,7 +282,6 @@ window.consentManagerInline = {
         
         eventNames.forEach(function(eventName) {
             document.addEventListener(eventName, function(event) {
-                console.log('Consent event detected: ' + eventName, event);
                 setTimeout(function() { self.updateAllPlaceholders(); }, 100);
                 setTimeout(function() { self.updateAllPlaceholders(); }, 1000);
             });
@@ -289,7 +292,6 @@ window.consentManagerInline = {
         setInterval(function() {
             var currentCookieValue = self.getCookie('consent_manager');
             if (currentCookieValue !== lastCookieValue) {
-                console.log('Cookie changed, updating placeholders');
                 lastCookieValue = currentCookieValue;
                 self.updateAllPlaceholders();
             }
@@ -309,7 +311,6 @@ window.consentManagerInline = {
                     }
                 });
                 if (shouldUpdate) {
-                    console.log('DOM mutation detected, updating placeholders');
                     setTimeout(function() { self.updateAllPlaceholders(); }, 500);
                 }
             });
@@ -355,27 +356,19 @@ window.consentManagerInline = {
         var self = this;
         
         if (containers.length === 0) {
-            console.log('No inline containers found');
             return;
         }
         
-        console.log('=== Checking ' + containers.length + ' inline containers ===');
         var cookieData = self.getCookieData();
-        console.log('Available consents:', cookieData.consents);
         
         for (var i = 0; i < containers.length; i++) {
             var container = containers[i];
             var serviceKey = container.getAttribute('data-service');
-            console.log('Checking container for service: ' + serviceKey);
             
             if (cookieData.consents && cookieData.consents.indexOf(serviceKey) !== -1) {
-                console.log('✓ Consent found for ' + serviceKey + ', replacing content');
                 self.loadContent(container);
-            } else {
-                console.log('✗ No consent for ' + serviceKey + ' yet');
             }
         }
-        console.log('=== Update check complete ===');
     },
     
     accept: function(consentId, serviceKey, button) {
@@ -464,11 +457,9 @@ window.consentManagerInline = {
     },
     
     getCookieData: function() {
-        var cookieValue = this.getCookie(\"consent_manager\");
-        console.log('Raw cookie value:', cookieValue);
+        var cookieValue = this.getCookie('consent_manager');
         
         if (!cookieValue) {
-            console.log('No consent_manager cookie found');
             return {
                 consents: [],
                 version: 4,
@@ -480,12 +471,11 @@ window.consentManagerInline = {
         try {
             cookieValue = decodeURIComponent(cookieValue);
         } catch (e) {
-            console.log('Cookie decoding failed, using raw value');
+            // Cookie decoding failed, using raw value
         }
         
         try {
             var data = JSON.parse(cookieValue);
-            console.log('Parsed cookie data:', data);
             
             // Verschiedene Cookie-Formate unterstützen
             if (data.consents) {
@@ -512,7 +502,6 @@ window.consentManagerInline = {
         // Fallback: String-basierte Suche nach Service-Keys
         var serviceKeys = this.extractServiceKeysFromString(cookieValue);
         if (serviceKeys.length > 0) {
-            console.log('Extracted service keys from string:', serviceKeys);
             return {
                 consents: serviceKeys,
                 version: 4,
@@ -675,6 +664,29 @@ if (document.readyState === \"loading\") {
             }
         }
         </style>';
+    }
+    
+    /**
+     * Button-Text aus der Texte-Verwaltung abrufen
+     * 
+     * @param string $textKey
+     * @param string $fallback
+     * @return string
+     */
+    private static function getButtonText($textKey, $fallback = '')
+    {
+        $clang = rex_clang::getCurrentId();
+        $sql = rex_sql::factory();
+        $sql->setQuery('SELECT text FROM ' . rex::getTable('consent_manager_text') . ' WHERE uid = :uid AND clang_id = :clang_id', [
+            'uid' => $textKey,
+            'clang_id' => $clang
+        ]);
+        
+        if ($sql->getRows() > 0) {
+            return $sql->getValue('text');
+        }
+        
+        return $fallback;
     }
 }
 
