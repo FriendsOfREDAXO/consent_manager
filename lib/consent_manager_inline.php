@@ -247,7 +247,7 @@ class consent_manager_inline
         // Alle Button-Texte für Fragment hinzufügen
         $fragment->setVar('button_inline_details_text', self::getButtonText('button_inline_details', 'Einstellungen'));
         $fragment->setVar('inline_placeholder_text', self::getButtonText('inline_placeholder_text', 'Einmal laden'));
-        $fragment->setVar('button_inline_allow_all', self::getButtonText('button_inline_allow_all', 'Alle erlauben'));
+        $fragment->setVar('button_inline_allow_all_text', self::getButtonText('button_inline_allow_all', 'Alle erlauben'));
         $fragment->setVar('inline_action_text', self::getButtonText('inline_action_text', 'Was möchten Sie tun?'));
         $fragment->setVar('show_allow_all', $options['show_allow_all'] ?? false);
         $fragment->setVar('inline_privacy_notice', self::getButtonText('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.'));

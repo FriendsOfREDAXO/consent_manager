@@ -99,13 +99,13 @@ if (!empty($placeholderData['thumbnail'])) {
                         <?php if ($this->getVar('show_allow_all', false)): ?>
                         <button type="button" class="btn btn-consent-allow-all consent-inline-allow-all" 
                                 data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-check-circle"></i> <?= $this->getVar('button_inline_allow_all', 'Alle erlauben') ?>
+                            <i class="fa fa-check-circle"></i> <?= rex_escape($this->getVar('button_inline_allow_all_text', 'Alle erlauben')) ?>
                         </button>
                         <?php endif; ?>
                         
                         <button type="button" class="btn btn-consent-details consent-inline-details" 
                                 data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-cog"></i> <?= $this->getVar('button_inline_details_text', 'Einstellungen') ?>
+                            <i class="fa fa-cog"></i> <?= rex_escape($this->getVar('button_inline_details_text', 'Einstellungen')) ?>
                         </button>
                     </div>
                 </div>

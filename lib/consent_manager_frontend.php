@@ -108,9 +108,14 @@ class consent_manager_frontend
             }
         }
         
+        // Zusätzliche Sicherheitsabfrage
+        if (!$this->domainName || !isset($this->cache['domains'][$this->domainName])) {
+            return;
+        }
+        
         $this->domainInfo = $this->cache['domains'][$this->domainName];
-        $this->links['privacy_policy'] = $this->cache['domains'][$domain]['privacy_policy'];
-        $this->links['legal_notice'] = $this->cache['domains'][$domain]['legal_notice'];
+        $this->links['privacy_policy'] = $this->cache['domains'][$this->domainName]['privacy_policy'];
+        $this->links['legal_notice'] = $this->cache['domains'][$this->domainName]['legal_notice'];
 
         $article = rex_article::getCurrentId();
         $clang = rex_request('lang', 'integer', 0);
