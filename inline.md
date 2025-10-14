@@ -68,6 +68,7 @@ echo consent_manager_inline::doConsent('youtube', $videoId, [
     'privacy_notice' => 'Für die Anzeige werden YouTube-Cookies benötigt.',
     'width' => 800,
     'height' => 450,
+    'show_allow_all' => true, // Optionaler "Alle erlauben" Button
     'thumbnail' => 'auto', // oder direkte URL zu eigenem Bild
     'icon' => 'uk-icon:play-circle', // Haupt-Icon (FontAwesome oder UIkit)
     'icon_label' => 'YouTube Video starten', // Barrierefreiheit

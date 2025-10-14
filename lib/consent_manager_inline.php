@@ -244,8 +244,11 @@ class consent_manager_inline
         $fragment->setVar('placeholderData', $placeholderData);
         
         // Alle Button-Texte für Fragment hinzufügen
-        $fragment->setVar('button_inline_details_text', self::getButtonText('button_inline_details', 'Alle Einstellungen'));
-        $fragment->setVar('inline_placeholder_text', self::getButtonText('inline_placeholder_text', 'Inhalt laden'));
+        $fragment->setVar('button_inline_details_text', self::getButtonText('button_inline_details', 'Einstellungen'));
+        $fragment->setVar('inline_placeholder_text', self::getButtonText('inline_placeholder_text', 'Einmal laden'));
+        $fragment->setVar('button_inline_allow_all', self::getButtonText('button_inline_allow_all', 'Alle erlauben'));
+        $fragment->setVar('inline_action_text', self::getButtonText('inline_action_text', 'Was möchten Sie tun?'));
+        $fragment->setVar('show_allow_all', $options['show_allow_all'] ?? false);
         $fragment->setVar('inline_privacy_notice', self::getButtonText('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.'));
         $fragment->setVar('inline_title_fallback', self::getButtonText('inline_title_fallback', 'Externes Medium'));
         $fragment->setVar('inline_privacy_link_text', self::getButtonText('inline_privacy_link_text', 'Datenschutzerklärung von'));
@@ -368,12 +371,18 @@ window.consentManagerInline = {
         
         // Event-Handler für Buttons
         document.addEventListener('click', function(e) {
-            if (e.target.matches('.consent-inline-accept')) {
+            if (e.target.matches('.consent-inline-once')) {
                 e.preventDefault();
                 var button = e.target;
                 var consentId = button.getAttribute('data-consent-id');
                 var serviceKey = button.getAttribute('data-service');
                 self.accept(consentId, serviceKey, button);
+            }
+            
+            if (e.target.matches('.consent-inline-allow-all')) {
+                e.preventDefault();
+                var serviceKey = e.target.getAttribute('data-service');
+                self.allowAllForService(serviceKey);
             }
             
             if (e.target.matches('.consent-inline-details')) {
@@ -422,21 +431,43 @@ window.consentManagerInline = {
         this.logConsent(consentId, serviceKey, 'accepted');
     },
     
+    allowAllForService: function(serviceKey) {
+        // Alle Platzhalter für diesen Service laden
+        var containers = document.querySelectorAll('.consent-inline-container[data-service="' + serviceKey + '"]');
+        var self = this;
+        
+        // Consent für Service setzen
+        self.saveConsent(serviceKey);
+        
+        // Alle Container dieses Services laden
+        for (var i = 0; i < containers.length; i++) {
+            self.loadContent(containers[i]);
+        }
+        
+        // Log für alle Container
+        for (var i = 0; i < containers.length; i++) {
+            var consentId = containers[i].getAttribute('data-consent-id');
+            if (consentId) {
+                self.logConsent(consentId, serviceKey, 'allowed_all');
+            }
+        }
+    },
+    
     showDetails: function(serviceKey) {
         // Consent Manager Box öffnen falls verfügbar
-        if (typeof consent_manager_showBox === \"function\") {
+        if (typeof consent_manager_showBox === "function") {
             consent_manager_showBox();
             
             // Nach kurzer Verzögerung Details aufklappen und zum Service scrollen
             setTimeout(function() {
-                var detailsBtn = document.getElementById(\"consent_manager-toggle-details\");
-                if (detailsBtn && !document.getElementById(\"consent_manager-detail\").classList.contains(\"consent_manager-hidden\")) {
+                var detailsBtn = document.getElementById("consent_manager-toggle-details");
+                if (detailsBtn && !document.getElementById("consent_manager-detail").classList.contains("consent_manager-hidden")) {
                     detailsBtn.click();
                 }
                 
-                var serviceElements = document.querySelectorAll(\"[data-uid*='\" + serviceKey + \"']\");
+                var serviceElements = document.querySelectorAll("[data-uid*='" + serviceKey + "']");
                 if (serviceElements.length > 0) {
-                    serviceElements[0].scrollIntoView({ behavior: \"smooth\", block: \"center\" });
+                    serviceElements[0].scrollIntoView({ behavior: "smooth", block: "center" });
                 }
             }, 300);
         }
@@ -784,39 +815,73 @@ if (document.readyState === 'loading') {
             text-decoration: underline;
         }
         
+        .consent-inline-action-text {
+            font-size: 0.9rem;
+            color: var(--consent-notice-color, #6c757d);
+            margin: 0.5rem 0 1rem 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        
         .consent-inline-actions {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
             justify-content: center;
             flex-wrap: wrap;
         }
         
-        .btn-consent-accept {
-            /* Accept Button Variablen */
-            --consent-btn-accept-bg: #28a745;
-            --consent-btn-accept-hover-bg: #218838;
-            --consent-btn-accept-color: white;
-            --consent-btn-padding: 0.5rem 1rem;
+        /* Basis Button Variablen */
+        .consent-inline-actions {
+            --consent-btn-padding: 0.6rem 0.8rem;
             --consent-btn-border-radius: 4px;
-            --consent-btn-font-size: 0.9rem;
-            --consent-btn-transition: background-color 0.2s;
+            --consent-btn-font-size: 0.85rem;
+            --consent-btn-transition: all 0.2s;
+            --consent-btn-min-width: 100px;
+        }
+        
+        .btn-consent-once {
+            --consent-btn-once-bg: #17a2b8;
+            --consent-btn-once-hover-bg: #138496;
+            --consent-btn-once-color: white;
             
-            background: var(--consent-btn-accept-bg);
-            color: var(--consent-btn-accept-color);
+            background: var(--consent-btn-once-bg);
+            color: var(--consent-btn-once-color);
             border: none;
             padding: var(--consent-btn-padding);
             border-radius: var(--consent-btn-border-radius);
             cursor: pointer;
             font-size: var(--consent-btn-font-size);
             transition: var(--consent-btn-transition);
+            min-width: var(--consent-btn-min-width);
+            text-align: center;
         }
         
-        .btn-consent-accept:hover {
-            background: var(--consent-btn-accept-hover-bg);
+        .btn-consent-once:hover {
+            background: var(--consent-btn-once-hover-bg);
+        }
+        
+        .btn-consent-allow-all {
+            --consent-btn-allow-bg: #28a745;
+            --consent-btn-allow-hover-bg: #218838;
+            --consent-btn-allow-color: white;
+            
+            background: var(--consent-btn-allow-bg);
+            color: var(--consent-btn-allow-color);
+            border: none;
+            padding: var(--consent-btn-padding);
+            border-radius: var(--consent-btn-border-radius);
+            cursor: pointer;
+            font-size: var(--consent-btn-font-size);
+            transition: var(--consent-btn-transition);
+            min-width: var(--consent-btn-min-width);
+            text-align: center;
+        }
+        
+        .btn-consent-allow-all:hover {
+            background: var(--consent-btn-allow-hover-bg);
         }
         
         .btn-consent-details {
-            /* Details Button Variablen */
             --consent-btn-details-bg: #6c757d;
             --consent-btn-details-hover-bg: #5a6268;
             --consent-btn-details-color: white;
@@ -829,6 +894,8 @@ if (document.readyState === 'loading') {
             cursor: pointer;
             font-size: var(--consent-btn-font-size);
             transition: var(--consent-btn-transition);
+            min-width: var(--consent-btn-min-width);
+            text-align: center;
         }
         
         .btn-consent-details:hover {
@@ -858,6 +925,12 @@ if (document.readyState === 'loading') {
             
             .consent-inline-actions {
                 flex-direction: column;
+                gap: 0.6rem;
+            }
+            
+            .consent-inline-actions button {
+                width: 100%;
+                min-width: auto;
             }
         }
         </style>';

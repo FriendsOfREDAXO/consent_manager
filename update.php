@@ -43,8 +43,10 @@ rex_sql_table::get(rex::getTable('consent_manager_domain'))
 
 // Neue Text-Keys für Inline-Consent-System hinzufügen
 $inlineTexts = [
-    'button_inline_details' => 'Alle Einstellungen',
-    'inline_placeholder_text' => 'Inhalt laden',
+    'button_inline_details' => 'Einstellungen',
+    'inline_placeholder_text' => 'Einmal laden',
+    'button_inline_allow_all' => 'Alle erlauben',
+    'inline_action_text' => 'Was möchten Sie tun?',
     'inline_privacy_notice' => 'Für die Anzeige werden Cookies benötigt.',
     'inline_title_fallback' => 'Externes Medium',
     'inline_privacy_link_text' => 'Datenschutzerklärung von'
