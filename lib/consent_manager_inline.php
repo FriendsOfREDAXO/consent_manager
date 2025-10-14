@@ -21,20 +21,35 @@ class consent_manager_inline
      */
     public static function doConsent($serviceKey, $content, $options = [])
     {
+        // Debug: Start
+        $debug = '<div style="background:#d4edda;border:1px solid #c3e6cb;padding:5px;margin:5px 0;">DEBUG START: serviceKey='.$serviceKey.'</div>';
+        
         // Service aus DB laden
         $service = self::getService($serviceKey);
         if (!$service) {
             // Debug: Immer Fehlermeldung anzeigen (temporär)
-            return '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin:10px 0;">Consent Manager: Service "'.$serviceKey.'" nicht gefunden</div>';
+            return $debug . '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin:10px 0;">Consent Manager: Service "'.$serviceKey.'" nicht gefunden</div>';
         }
+        
+        $debug .= '<div style="background:#d4edda;border:1px solid #c3e6cb;padding:5px;margin:5px 0;">DEBUG: Service gefunden</div>';
 
         // Bereits zugestimmt?
-        if (consent_manager_util::has_consent($serviceKey)) {
-            return self::renderContent($content, $options);
+        $hasConsent = false;
+        try {
+            $hasConsent = consent_manager_util::has_consent($serviceKey);
+            $debug .= '<div style="background:#d4edda;border:1px solid #c3e6cb;padding:5px;margin:5px 0;">DEBUG: has_consent=' . ($hasConsent ? 'true' : 'false') . '</div>';
+        } catch (Exception $e) {
+            $debug .= '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:5px;margin:5px 0;">DEBUG: has_consent ERROR: ' . $e->getMessage() . '</div>';
+            return $debug . $content; // Fallback
+        }
+        
+        if ($hasConsent) {
+            return $debug . self::renderContent($content, $options);
         }
 
         // Consent ID generieren
         $consentId = uniqid('consent_', true);
+        $debug .= '<div style="background:#d4edda;border:1px solid #c3e6cb;padding:5px;margin:5px 0;">DEBUG: consentId=' . $consentId . '</div>';
         
         // Standard-Optionen
         $options = array_merge([
