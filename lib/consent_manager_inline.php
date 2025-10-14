@@ -24,10 +24,8 @@ class consent_manager_inline
         // Service aus DB laden
         $service = self::getService($serviceKey);
         if (!$service) {
-            if (rex::isDebugMode()) {
-                return '<div class="alert alert-warning">Consent Manager: Service "'.$serviceKey.'" nicht gefunden</div>';
-            }
-            return '<!-- Consent Manager: Service "'.$serviceKey.'" not found -->';
+            // Debug: Immer Fehlermeldung anzeigen (temporär)
+            return '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin:10px 0;">Consent Manager: Service "'.$serviceKey.'" nicht gefunden</div>';
         }
 
         // Bereits zugestimmt?

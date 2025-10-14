@@ -20,21 +20,27 @@ if (!empty($videoId)) {
         echo consent_manager_inline::getCSS();
         echo consent_manager_inline::getJavaScript();
         
-        // Debug: Zeige alle verfügbaren Services
-        if (rex::isBackend()) {
-            $sql = rex_sql::factory();
-            try {
-                $sql->setQuery('SELECT uid, service_name FROM '.rex::getTable('consent_manager_cookie').' WHERE clang_id = ?', [rex_clang::getCurrentId()]);
-                echo '<div class="alert alert-info"><strong>Verfügbare Services:</strong><br>';
-                for ($i = 0; $i < $sql->getRows(); $i++) {
-                    echo '- ' . $sql->getValue('uid') . ' (' . $sql->getValue('service_name') . ')<br>';
-                    $sql->next();
-                }
-                echo '</div>';
-            } catch (Exception $e) {
-                echo '<div class="alert alert-danger"><strong>Debug:</strong> Datenbankfehler: ' . $e->getMessage() . '</div>';
+        // Debug: Zeige alle verfügbaren Services (temporär auch im Frontend)
+        $sql = rex_sql::factory();
+        try {
+            $sql->setQuery('SELECT uid, service_name FROM '.rex::getTable('consent_manager_cookie').' WHERE clang_id = ?', [rex_clang::getCurrentId()]);
+            echo '<div style="background:#d1ecf1;border:1px solid #bee5eb;padding:10px;margin:10px 0;"><strong>DEBUG - Verfügbare Services:</strong><br>';
+            for ($i = 0; $i < $sql->getRows(); $i++) {
+                echo '- ' . $sql->getValue('uid') . ' (' . $sql->getValue('service_name') . ')<br>';
+                $sql->next();
             }
+            echo '</div>';
+        } catch (Exception $e) {
+            echo '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin:10px 0;"><strong>DEBUG Datenbankfehler:</strong> ' . $e->getMessage() . '</div>';
         }
+        
+        // Debug: Mehr Details
+        echo '<div style="background:#e2e3e5;border:1px solid #d6d8db;padding:10px;margin:10px 0;"><strong>DEBUG Details:</strong><br>';
+        echo 'Service Key: youtube<br>';
+        echo 'Video ID: ' . htmlspecialchars($videoId) . '<br>';
+        echo 'Debug Mode: ' . (rex::isDebugMode() ? 'ON' : 'OFF') . '<br>';
+        echo 'Class exists: ' . (class_exists('consent_manager_inline') ? 'YES' : 'NO') . '<br>';
+        echo '</div>';
         
         // Debug: doConsent Ergebnis anzeigen
         $result = consent_manager_inline::doConsent('youtube', $videoId, [
@@ -44,11 +50,11 @@ if (!empty($videoId)) {
             'thumbnail' => 'auto'
         ]);
         
-        if (rex::isBackend()) {
-            echo '<div class="alert alert-warning"><strong>Debug doConsent Output:</strong><br>';
-            echo '<pre>' . htmlspecialchars(substr($result, 0, 500)) . (strlen($result) > 500 ? '...' : '') . '</pre>';
-            echo '</div>';
-        }
+        echo '<div style="background:#fff3cd;border:1px solid #ffeaa7;padding:10px;margin:10px 0;"><strong>DEBUG doConsent Output:</strong><br>';
+        echo 'Length: ' . strlen($result) . ' chars<br>';
+        echo 'Contains HTML: ' . (strpos($result, '<') !== false ? 'YES' : 'NO') . '<br>';
+        echo '<pre style="background:#f8f9fa;padding:10px;white-space:pre-wrap;">' . htmlspecialchars(substr($result, 0, 1000)) . (strlen($result) > 1000 ? '...' : '') . '</pre>';
+        echo '</div>';
         
         echo $result;
     } else {
