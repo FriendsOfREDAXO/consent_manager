@@ -34,12 +34,16 @@ if (!empty($videoId)) {
             echo '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin:10px 0;"><strong>DEBUG Datenbankfehler:</strong> ' . $e->getMessage() . '</div>';
         }
         
-        // Debug: Mehr Details
-        echo '<div style="background:#e2e3e5;border:1px solid #d6d8db;padding:10px;margin:10px 0;"><strong>DEBUG Details:</strong><br>';
+        // Debug: Cookie-Status prüfen
+        echo '<div style="background:#e2e3e5;border:1px solid #d6d8db;padding:10px;margin:10px 0;"><strong>DEBUG Cookie-Status:</strong><br>';
         echo 'Service Key: youtube<br>';
         echo 'Video ID: ' . htmlspecialchars($videoId) . '<br>';
-        echo 'Debug Mode: ' . (rex::isDebugMode() ? 'ON' : 'OFF') . '<br>';
-        echo 'Class exists: ' . (class_exists('consent_manager_inline') ? 'YES' : 'NO') . '<br>';
+        
+        // Cookie prüfen
+        $cookieData = json_decode($_COOKIE['consent_manager'] ?? '{}', true);
+        echo 'Cookie vorhanden: ' . (isset($_COOKIE['consent_manager']) ? 'YES' : 'NO') . '<br>';
+        echo 'Cookie Inhalt: ' . htmlspecialchars($_COOKIE['consent_manager'] ?? 'leer') . '<br>';
+        echo 'YouTube in consents: ' . (isset($cookieData['consents']) && in_array('youtube', $cookieData['consents']) ? 'YES' : 'NO') . '<br>';
         echo '</div>';
         
         // Debug: doConsent Ergebnis anzeigen

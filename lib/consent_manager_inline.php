@@ -238,6 +238,30 @@ class consent_manager_inline
      */
     private static function renderContent($content, $options)
     {
+        // Für YouTube URLs: In iframe umwandeln
+        if (strpos($content, 'youtube.com') !== false || strpos($content, 'youtu.be') !== false) {
+            preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $content, $matches);
+            $videoId = $matches[1] ?? '';
+            if ($videoId) {
+                return '<iframe width="'.($options['width'] ?: '560').'" height="'.($options['height'] ?: '315').'" 
+                        src="https://www.youtube.com/embed/'.$videoId.'" 
+                        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen></iframe>';
+            }
+        }
+        
+        // Für Vimeo URLs: In iframe umwandeln
+        if (strpos($content, 'vimeo.com') !== false) {
+            preg_match('/vimeo\.com\/(\d+)/', $content, $matches);
+            $videoId = $matches[1] ?? '';
+            if ($videoId) {
+                return '<iframe src="https://player.vimeo.com/video/'.$videoId.'" 
+                        width="'.($options['width'] ?: '640').'" height="'.($options['height'] ?: '360').'" 
+                        frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+            }
+        }
+        
+        // Für andere Inhalte: Direkt zurückgeben
         return $content;
     }
 
