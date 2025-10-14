@@ -39,10 +39,11 @@ class consent_manager_inline
         $consentId = uniqid('consent_', true);
         
         // Standard-Optionen
+        $serviceName = !empty($service['service_name']) ? $service['service_name'] : ucfirst($serviceKey);
         $options = array_merge([
-            'title' => $service['service_name'],
-            'placeholder_text' => $service['service_name'] . ' laden',
-            'privacy_notice' => 'Für ' . $service['service_name'] . ' werden Cookies benötigt.',
+            'title' => $serviceName,
+            'placeholder_text' => $serviceName . ' laden',
+            'privacy_notice' => 'Für die Anzeige von ' . $serviceName . ' werden Cookies benötigt.',
             'width' => 'auto',
             'height' => 'auto',
             'thumbnail' => 'auto',
