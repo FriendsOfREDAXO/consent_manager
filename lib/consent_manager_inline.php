@@ -114,8 +114,9 @@ class consent_manager_inline
             $videoId = $matches[1] ?? $videoId;
         }
 
+        // Thumbnail lokal cachen für Datenschutz
         $thumbnail = $options['thumbnail'] === 'auto' 
-            ? "https://img.youtube.com/vi/{$videoId}/maxresdefault.jpg"
+            ? consent_manager_thumbnail_cache::cacheYouTubeThumbnail($videoId)
             : $options['thumbnail'];
 
         $iframe = '<iframe width="'.($options['width'] ?: '560').'" height="'.($options['height'] ?: '315').'" 
@@ -141,12 +142,17 @@ class consent_manager_inline
             $videoId = $matches[1] ?? $videoId;
         }
 
+        // Thumbnail lokal cachen
+        $thumbnail = $options['thumbnail'] === 'auto' 
+            ? consent_manager_thumbnail_cache::cacheVimeoThumbnail($videoId)
+            : $options['thumbnail'];
+
         $iframe = '<iframe src="https://player.vimeo.com/video/'.$videoId.'" 
                    width="'.($options['width'] ?: '640').'" height="'.($options['height'] ?: '360').'" 
                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
 
         return self::renderPlaceholderHTML($serviceKey, $iframe, $options, $consentId, $service, [
-            'thumbnail' => $options['thumbnail'] !== 'auto' ? $options['thumbnail'] : null,
+            'thumbnail' => $thumbnail,
             'icon' => '🎬',
             'service_name' => 'Vimeo'
         ]);
@@ -185,40 +191,16 @@ class consent_manager_inline
      */
     private static function renderPlaceholderHTML($serviceKey, $content, $options, $consentId, $service, $placeholderData)
     {
-        $thumbnailHtml = '';
-        if ($placeholderData['thumbnail']) {
-            $thumbnailHtml = '<img src="'.$placeholderData['thumbnail'].'" alt="'.rex_escape($options['title']).'" class="consent-inline-thumbnail" />';
-        }
-
-        return '
-        <div class="consent-inline-placeholder" data-consent-id="'.$consentId.'" data-service="'.$serviceKey.'">
-            <div class="consent-inline-content">
-                '.$thumbnailHtml.'
-                <div class="consent-inline-overlay">
-                    <div class="consent-inline-info">
-                        <div class="consent-inline-icon">'.$placeholderData['icon'].'</div>
-                        <h4 class="consent-inline-title">'.rex_escape($options['title']).'</h4>
-                        <p class="consent-inline-notice">'.rex_escape($options['privacy_notice']).'</p>
-                        
-                        <div class="consent-inline-actions">
-                            <button type="button" class="btn btn-consent-accept" 
-                                    onclick="consentManagerInline.accept(\''.$consentId.'\', \''.$serviceKey.'\', this)">
-                                <i class="fa fa-check"></i> '.$options['placeholder_text'].'
-                            </button>
-                            
-                            <button type="button" class="btn btn-consent-details" 
-                                    onclick="consentManagerInline.showDetails(\''.$serviceKey.'\')">
-                                <i class="fa fa-info-circle"></i> Cookie-Details
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <script type="text/plain" data-consent-code="'.$serviceKey.'">
-                '.$content.'
-            </script>
-        </div>';
+        // Fragment verwenden für bessere Anpassbarkeit
+        $fragment = new rex_fragment();
+        $fragment->setVar('serviceKey', $serviceKey);
+        $fragment->setVar('content', $content);
+        $fragment->setVar('options', $options);
+        $fragment->setVar('consentId', $consentId);
+        $fragment->setVar('service', $service);
+        $fragment->setVar('placeholderData', $placeholderData);
+        
+        return $fragment->parse('consent_inline_placeholder.php');
     }
 
     /**
@@ -321,6 +303,23 @@ window.consentManagerInline = {
             });
         }
         
+        // Event-Handler für Buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('.consent-inline-accept')) {
+                e.preventDefault();
+                var button = e.target;
+                var consentId = button.getAttribute('data-consent-id');
+                var serviceKey = button.getAttribute('data-service');
+                self.accept(consentId, serviceKey, button);
+            }
+            
+            if (e.target.matches('.consent-inline-details')) {
+                e.preventDefault();
+                var serviceKey = e.target.getAttribute('data-service');
+                self.showDetails(serviceKey);
+            }
+        });
+        
         // Fallback: Regelmäßige Prüfung
         setInterval(function() { 
             self.updateAllPlaceholders(); 
@@ -333,26 +332,26 @@ window.consentManagerInline = {
     },
     
     updateAllPlaceholders: function() {
-        var placeholders = document.querySelectorAll('.consent-inline-placeholder[data-service]');
+        var containers = document.querySelectorAll('.consent-inline-container[data-service]');
         var self = this;
         
-        if (placeholders.length === 0) {
-            console.log('No inline placeholders found');
+        if (containers.length === 0) {
+            console.log('No inline containers found');
             return;
         }
         
-        console.log('=== Checking ' + placeholders.length + ' inline placeholders ===');
+        console.log('=== Checking ' + containers.length + ' inline containers ===');
         var cookieData = self.getCookieData();
         console.log('Available consents:', cookieData.consents);
         
-        for (var i = 0; i < placeholders.length; i++) {
-            var placeholder = placeholders[i];
-            var serviceKey = placeholder.getAttribute('data-service');
-            console.log('Checking placeholder for service: ' + serviceKey);
+        for (var i = 0; i < containers.length; i++) {
+            var container = containers[i];
+            var serviceKey = container.getAttribute('data-service');
+            console.log('Checking container for service: ' + serviceKey);
             
             if (cookieData.consents && cookieData.consents.indexOf(serviceKey) !== -1) {
-                console.log('✓ Consent found for ' + serviceKey + ', replacing placeholder');
-                self.loadContent(placeholder);
+                console.log('✓ Consent found for ' + serviceKey + ', replacing content');
+                self.loadContent(container);
             } else {
                 console.log('✗ No consent for ' + serviceKey + ' yet');
             }
@@ -361,11 +360,12 @@ window.consentManagerInline = {
     },
     
     accept: function(consentId, serviceKey, button) {
-        var serviceName = button.closest('.consent-inline-placeholder').querySelector('.consent-inline-title').textContent;
+        var container = button.closest('.consent-inline-container');
+        var serviceName = container.querySelector('.consent-inline-title').textContent;
         
         if (confirm('Cookies für ' + serviceName + ' akzeptieren?\\n\\nDadurch werden externe Inhalte geladen und Cookies gesetzt.')) {
             this.saveConsent(serviceKey);
-            this.loadContent(button.closest('.consent-inline-placeholder'));
+            this.loadContent(container);
             this.logConsent(consentId, serviceKey, 'accepted');
         }
     },
@@ -403,8 +403,14 @@ window.consentManagerInline = {
         }));
     },
     
-    loadContent: function(placeholder) {
-        var code = placeholder.querySelector(\"[data-consent-code]\").innerHTML;
+    loadContent: function(container) {
+        var contentScript = container.querySelector(\".consent-content-data\");
+        if (!contentScript) {
+            console.error('No content script found in container');
+            return;
+        }
+        
+        var code = contentScript.innerHTML;
         
         var tempTextArea = document.createElement(\"textarea\");
         tempTextArea.innerHTML = code;
@@ -414,10 +420,10 @@ window.consentManagerInline = {
         wrapper.innerHTML = decodedCode;
         
         while (wrapper.firstChild) {
-            placeholder.parentNode.insertBefore(wrapper.firstChild, placeholder);
+            container.parentNode.insertBefore(wrapper.firstChild, container);
         }
         
-        placeholder.remove();
+        container.remove();
     },
     
     logConsent: function(consentId, serviceKey, action) {
