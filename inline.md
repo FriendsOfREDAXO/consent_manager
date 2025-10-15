@@ -223,16 +223,16 @@ echo consent_manager_inline::doConsent('google-maps', $mapUrl, [
 
 ```php
 <?php
-// Spotify Playlist
-$spotifyEmbed = 'https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M';
+// Spotify Playlist - WICHTIG: Vollständiger iframe erforderlich!
+$spotifyEmbed = '<iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M" 
+                        width="100%" height="380" frameborder="0" 
+                        allow="encrypted-media"></iframe>';
 echo consent_manager_inline::doConsent('spotify', $spotifyEmbed, [
     'title' => 'Spotify Playlist',
-    'icon' => 'fab fa-spotify',
-    'width' => '100%',
-    'height' => 380
+    'icon' => 'fab fa-spotify'
 ]);
 
-// Twitter Embed
+// Twitter Embed - iframe erforderlich
 $twitterEmbed = '<iframe src="https://platform.twitter.com/embed/Tweet.html?id=1234567890" 
                         width="500" height="600" frameborder="0"></iframe>';
 echo consent_manager_inline::doConsent('twitter', $twitterEmbed, [
@@ -240,7 +240,7 @@ echo consent_manager_inline::doConsent('twitter', $twitterEmbed, [
     'icon' => 'fab fa-twitter'
 ]);
 
-// CodePen Embed
+// CodePen Embed - iframe erforderlich
 $codePenEmbed = '<iframe height="400" style="width: 100%;" 
     src="https://codepen.io/username/embed/xyz123" 
     frameborder="0" allowfullscreen></iframe>';
@@ -432,7 +432,9 @@ Das System erkennt automatisch bestimmte URL-Patterns und wandelt sie in Iframes
 | **YouTube** | `youtube.com`, `youtu.be` | ✅ Video-ID → Embed-Iframe |
 | **Vimeo** | `vimeo.com/123456` | ✅ Video-ID → Player-Iframe |
 | **Google Maps** | `google.com/maps/embed` | ✅ URL → Maps-Iframe |
-| **Andere URLs** | Beliebige URLs | ❌ Keine automatische Umwandlung |
+| **Alle anderen** | Spotify, Twitter, etc. | ❌ **Vollständiger iframe erforderlich!** |
+
+⚠️ **Wichtig:** Nur YouTube, Vimeo und Google Maps unterstützen automatische URL-Konvertierung. Für alle anderen Services muss der **komplette iframe-Code** übergeben werden!
 
 ### **Direkte HTML-Ausgabe**
 
@@ -440,15 +442,19 @@ Für alle anderen Content-Typen wird der übergebene HTML-Code direkt ausgegeben
 
 ```php
 <?php
-// Direkte Iframe-Einbindung
+// ✅ RICHTIG: Vollständiger iframe
 $iframe = '<iframe src="https://example.com/widget" width="100%" height="400"></iframe>';
 echo consent_manager_inline::doConsent('service-key', $iframe, [...]);
 
-// JavaScript-Code wird direkt eingefügt und ausgeführt
+// ❌ FALSCH: Nur URL (wird als Text ausgegeben)
+$url = 'https://example.com/widget';
+echo consent_manager_inline::doConsent('service-key', $url, [...]);
+
+// ✅ JavaScript-Code wird direkt eingefügt und ausgeführt
 $script = '<script>console.log("Hello World");</script>';
 echo consent_manager_inline::doConsent('service-key', $script, [...]);
 
-// Komplexe HTML-Strukturen
+// ✅ Komplexe HTML-Strukturen
 $widget = '<div class="widget">
     <h3>Externes Widget</h3>
     <iframe src="https://widget.example.com"></iframe>
