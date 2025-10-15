@@ -186,21 +186,86 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
      */
     private function makeHttpRequest(string $url): ?string
     {
+        // Zuerst cURL versuchen (oft zuverlässiger)
+        if (function_exists('curl_init')) {
+            return $this->downloadWithCurl($url);
+        }
+        
+        // Fallback zu file_get_contents
+        return $this->downloadWithFileGetContents($url);
+    }
+    
+    /**
+     * Download mit cURL
+     */
+    private function downloadWithCurl(string $url): ?string
+    {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 5,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_HTTPHEADER => [
+                'Accept: image/webp,image/apng,image/*,*/*;q=0.8',
+                'Accept-Language: de-DE,de;q=0.9,en;q=0.8',
+                'Cache-Control: no-cache',
+            ]
+        ]);
+        
+        $data = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+        
+        if ($data === false || !empty($error)) {
+            rex_logger::factory()->error('External thumbnail cURL error', [
+                'url' => $url,
+                'error' => $error,
+                'http_code' => $httpCode
+            ]);
+            return null;
+        }
+        
+        if ($httpCode !== 200) {
+            rex_logger::factory()->error('External thumbnail HTTP error', [
+                'url' => $url,
+                'http_code' => $httpCode
+            ]);
+            return null;
+        }
+        
+        return is_string($data) && !empty($data) ? $data : null;
+    }
+    
+    /**
+     * Download mit file_get_contents (Fallback)
+     */
+    private function downloadWithFileGetContents(string $url): ?string
+    {
         $context = stream_context_create([
             'http' => [
                 'method' => 'GET',
                 'timeout' => 30,
-                'user_agent' => 'Mozilla/5.0 (compatible; REDAXO Thumbnail Cache)',
+                'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
                 'follow_location' => true,
                 'max_redirects' => 5,
-                'ignore_errors' => true
+                'ignore_errors' => true,
+                'header' => [
+                    'Accept: image/webp,image/apng,image/*,*/*;q=0.8',
+                    'Accept-Language: de-DE,de;q=0.9,en;q=0.8',
+                    'Cache-Control: no-cache'
+                ]
             ]
         ]);
 
         try {
             $data = file_get_contents($url, false, $context);
             
-            // HTTP-Response-Header prüfen
             if (isset($http_response_header)) {
                 $responseCode = null;
                 foreach ($http_response_header as $header) {
@@ -210,9 +275,8 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                     }
                 }
                 
-                // Nur 200er Responses akzeptieren
                 if ($responseCode && $responseCode !== 200) {
-                    rex_logger::factory()->info('External thumbnail HTTP error', [
+                    rex_logger::factory()->error('External thumbnail HTTP error', [
                         'url' => $url,
                         'response_code' => $responseCode,
                         'headers' => $http_response_header
