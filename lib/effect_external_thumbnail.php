@@ -23,59 +23,106 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     public function execute()
     {
-        $filename = $this->media->getMediaFilename();
-        
-        // Parameter aus Dateiname parsen: service_videoid_hash.jpg
-        if (preg_match('/^([^_]+)_([^_]+)_([^\.]+)\.jpg$/', $filename, $matches)) {
-            $service = $matches[1];
-            $videoId = $matches[2];
-        } else {
-            // Fallback: Parameter aus Effect-Parametern
-            $service = $this->params['service'] ?? null;
-            $videoId = $this->params['video_id'] ?? null;
+        try {
+            $filename = $this->media->getMediaFilename();
             
-            if (empty($service) || empty($videoId)) {
-                throw new rex_exception('External thumbnail effect: Could not extract service and video_id from filename "' . $filename . '" or parameters');
+            // Parameter aus Dateiname parsen: service_videoid_hash.jpg
+            if (preg_match('/^([^_]+)_([^_]+)_([^\.]+)\.jpg$/', $filename, $matches)) {
+                $service = $matches[1];
+                $videoId = $matches[2];
+            } else {
+                // Fallback: Parameter aus Effect-Parametern
+                $service = $this->params['service'] ?? null;
+                $videoId = $this->params['video_id'] ?? null;
+                
+                if (empty($service) || empty($videoId)) {
+                    $this->createFallbackImage();
+                    return;
+                }
             }
-        }
 
-        if (!isset(self::SERVICES[$service])) {
-            throw new rex_exception('External thumbnail effect: Unsupported service "' . $service . '"');
-        }
-
-        $thumbnailUrl = $this->getThumbnailUrl($service, $videoId);
-        
-        if (!$thumbnailUrl) {
-            throw new rex_exception('External thumbnail effect: Could not determine thumbnail URL for service "' . $service . '" with video ID "' . $videoId . '"');
-        }
-
-        // Thumbnail herunterladen
-        $imageData = $this->downloadThumbnail($thumbnailUrl);
-        
-        if (!$imageData) {
-            // Fallback versuchen
-            if ($service === 'youtube' && isset(self::SERVICES[$service]['fallback_url'])) {
-                $fallbackUrl = sprintf(self::SERVICES[$service]['fallback_url'], $videoId);
-                $imageData = $this->downloadThumbnail($fallbackUrl);
+            if (!isset(self::SERVICES[$service])) {
+                $this->createFallbackImage();
+                return;
             }
+
+            $thumbnailUrl = $this->getThumbnailUrl($service, $videoId);
+            
+            if (!$thumbnailUrl) {
+                $this->createFallbackImage();
+                return;
+            }
+
+            // Thumbnail herunterladen
+            $imageData = $this->downloadThumbnail($thumbnailUrl);
             
             if (!$imageData) {
-                throw new rex_exception('External thumbnail effect: Could not download thumbnail from "' . $thumbnailUrl . '"');
+                // Fallback versuchen
+                if ($service === 'youtube' && isset(self::SERVICES[$service]['fallback_url'])) {
+                    $fallbackUrl = sprintf(self::SERVICES[$service]['fallback_url'], $videoId);
+                    $imageData = $this->downloadThumbnail($fallbackUrl);
+                }
+                
+                if (!$imageData) {
+                    $this->createFallbackImage();
+                    return;
+                }
             }
-        }
 
-        // Temporäre Datei erstellen
+            // Temporäre Datei erstellen
+            $tempFile = rex_path::addonCache('media_manager', 'external_thumbnails/' . $filename);
+            rex_dir::create(dirname($tempFile));
+            
+            if (false === file_put_contents($tempFile, $imageData)) {
+                $this->createFallbackImage();
+                return;
+            }
+
+            // Pfad auf die neue Datei setzen
+            $this->media->setMediaPath($tempFile);
+            
+            // Aufräumen nach Request
+            register_shutdown_function(static function() use ($tempFile) {
+                if (file_exists($tempFile)) {
+                    unlink($tempFile);
+                }
+            });
+            
+        } catch (Exception $e) {
+            // Bei jedem Fehler: Fallback-Bild erstellen
+            rex_logger::logException($e);
+            $this->createFallbackImage();
+        }
+    }
+
+    /**
+     * Erstellt ein Fallback-Bild wenn das Thumbnail nicht geladen werden kann
+     */
+    private function createFallbackImage(): void
+    {
+        // 480x360 graues Fallback-Bild mit Placeholder-Text
+        $image = imagecreate(480, 360);
+        $gray = imagecolorallocate($image, 200, 200, 200);
+        $darkgray = imagecolorallocate($image, 100, 100, 100);
+        
+        imagefill($image, 0, 0, $gray);
+        
+        // Text hinzufügen
+        $text = 'Video Thumbnail';
+        imagestring($image, 3, 180, 175, $text, $darkgray);
+        
+        // Als temporäre Datei speichern
+        $filename = $this->media->getMediaFilename();
         $tempFile = rex_path::addonCache('media_manager', 'external_thumbnails/' . $filename);
         rex_dir::create(dirname($tempFile));
         
-        if (false === file_put_contents($tempFile, $imageData)) {
-            throw new rex_exception('External thumbnail effect: Could not write thumbnail to temp file');
-        }
-
-        // Pfad auf die neue Datei setzen
+        imagejpeg($image, $tempFile, 80);
+        imagedestroy($image);
+        
+        // Pfad setzen
         $this->media->setMediaPath($tempFile);
         
-        // Aufräumen nach Request
+        // Aufräumen
         register_shutdown_function(static function() use ($tempFile) {
             if (file_exists($tempFile)) {
                 unlink($tempFile);
