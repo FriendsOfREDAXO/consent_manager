@@ -1,0 +1,196 @@
+<?php
+
+/**
+ * Mediamanager Effect für externe Thumbnail-URLs
+ * Lädt Thumbnails von YouTube, Vimeo etc. herunter und cached sie lokal
+ * 
+ * @package redaxo\consent-manager
+ */
+class rex_effect_external_thumbnail extends rex_effect_abstract
+{
+    private const SERVICES = [
+        'youtube' => [
+            'pattern' => '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/',
+            'thumbnail_url' => 'https://img.youtube.com/vi/%s/maxresdefault.jpg',
+            'fallback_url' => 'https://img.youtube.com/vi/%s/hqdefault.jpg'
+        ],
+        'vimeo' => [
+            'pattern' => '/(?:vimeo\.com\/)([0-9]+)/',
+            'thumbnail_url' => null, // Vimeo braucht API-Call
+            'api_url' => 'https://vimeo.com/api/v2/video/%s.json'
+        ]
+    ];
+
+    public function execute()
+    {
+        $filename = $this->media->getMediaFilename();
+        
+        // Parameter aus Dateiname parsen: service_videoid_hash.jpg
+        if (preg_match('/^([^_]+)_([^_]+)_([^\.]+)\.jpg$/', $filename, $matches)) {
+            $service = $matches[1];
+            $videoId = $matches[2];
+        } else {
+            // Fallback: Parameter aus Effect-Parametern
+            $service = $this->params['service'] ?? null;
+            $videoId = $this->params['video_id'] ?? null;
+            
+            if (empty($service) || empty($videoId)) {
+                throw new rex_exception('External thumbnail effect: Could not extract service and video_id from filename "' . $filename . '" or parameters');
+            }
+        }
+
+        if (!isset(self::SERVICES[$service])) {
+            throw new rex_exception('External thumbnail effect: Unsupported service "' . $service . '"');
+        }
+
+        $thumbnailUrl = $this->getThumbnailUrl($service, $videoId);
+        
+        if (!$thumbnailUrl) {
+            throw new rex_exception('External thumbnail effect: Could not determine thumbnail URL for service "' . $service . '" with video ID "' . $videoId . '"');
+        }
+
+        // Thumbnail herunterladen
+        $imageData = $this->downloadThumbnail($thumbnailUrl);
+        
+        if (!$imageData) {
+            // Fallback versuchen
+            if ($service === 'youtube' && isset(self::SERVICES[$service]['fallback_url'])) {
+                $fallbackUrl = sprintf(self::SERVICES[$service]['fallback_url'], $videoId);
+                $imageData = $this->downloadThumbnail($fallbackUrl);
+            }
+            
+            if (!$imageData) {
+                throw new rex_exception('External thumbnail effect: Could not download thumbnail from "' . $thumbnailUrl . '"');
+            }
+        }
+
+        // Temporäre Datei erstellen
+        $tempFile = rex_path::addonCache('media_manager', 'external_thumbnails/' . $filename);
+        rex_dir::create(dirname($tempFile));
+        
+        if (false === file_put_contents($tempFile, $imageData)) {
+            throw new rex_exception('External thumbnail effect: Could not write thumbnail to temp file');
+        }
+
+        // Pfad auf die neue Datei setzen
+        $this->media->setMediaPath($tempFile);
+        
+        // Aufräumen nach Request
+        register_shutdown_function(static function() use ($tempFile) {
+            if (file_exists($tempFile)) {
+                unlink($tempFile);
+            }
+        });
+    }
+
+    /**
+     * Thumbnail-URL für Service bestimmen
+     */
+    private function getThumbnailUrl(string $service, string $videoId): ?string
+    {
+        $config = self::SERVICES[$service];
+        
+        if ($service === 'youtube') {
+            return sprintf($config['thumbnail_url'], $videoId);
+        }
+        
+        if ($service === 'vimeo') {
+            // Vimeo API-Call
+            $apiUrl = sprintf($config['api_url'], $videoId);
+            $response = $this->makeHttpRequest($apiUrl);
+            
+            if ($response) {
+                $data = json_decode($response, true);
+                if (isset($data[0]['thumbnail_large'])) {
+                    return $data[0]['thumbnail_large'];
+                }
+            }
+            
+            return null;
+        }
+        
+        return null;
+    }
+
+    /**
+     * Thumbnail herunterladen
+     */
+    private function downloadThumbnail(string $url): ?string
+    {
+        return $this->makeHttpRequest($url);
+    }
+
+    /**
+     * HTTP-Request durchführen
+     */
+    private function makeHttpRequest(string $url): ?string
+    {
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'timeout' => 10,
+                'user_agent' => 'REDAXO Consent Manager Thumbnail Cache',
+                'follow_location' => true,
+                'max_redirects' => 3
+            ]
+        ]);
+
+        try {
+            $data = file_get_contents($url, false, $context);
+            return $data !== false ? $data : null;
+        } catch (Exception $e) {
+            rex_logger::logException($e);
+            return null;
+        }
+    }
+
+    public function getName()
+    {
+        return 'External Thumbnail';
+    }
+
+    public function getParams()
+    {
+        return [
+            [
+                'label' => 'Cache TTL (Stunden)',
+                'name' => 'cache_ttl',
+                'type' => 'int',
+                'default' => 168,
+                'notice' => 'Wie lange sollen Thumbnails gecacht werden? (Standard: 168h = 1 Woche)'
+            ]
+        ];
+    }
+
+    /**
+     * Video-ID aus URL extrahieren
+     */
+    public static function extractVideoId(string $url, string $service): ?string
+    {
+        if (!isset(self::SERVICES[$service])) {
+            return null;
+        }
+
+        $pattern = self::SERVICES[$service]['pattern'];
+        
+        if (preg_match($pattern, $url, $matches)) {
+            return $matches[1] ?? null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Service aus URL bestimmen
+     */
+    public static function detectService(string $url): ?string
+    {
+        foreach (self::SERVICES as $service => $config) {
+            if (preg_match($config['pattern'], $url)) {
+                return $service;
+            }
+        }
+
+        return null;
+    }
+}

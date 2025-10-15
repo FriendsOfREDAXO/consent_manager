@@ -161,6 +161,62 @@ foreach ($inlineTexts as $uid => $defaultText) {
     }
 }
 
+// Mediamanager-Type für Thumbnails erstellen (falls Media Manager verfügbar)
+if (rex_addon::get('media_manager')->isAvailable()) {
+    // Prüfe ob Type bereits existiert
+    $sql = rex_sql::factory();
+    $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', ['consent_manager_thumbnail']);
+    
+    if (!$sql->getRows()) {
+        // Media Manager Type erstellen (als normaler Type, nicht System)
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('media_manager_type'));
+        $sql->setValue('name', 'consent_manager_thumbnail');
+        $sql->setValue('description', 'Consent Manager External Thumbnails (YouTube, Vimeo)');
+        $sql->setValue('status', 0); // 0 = normaler Type, 1 = System-Type (nicht editierbar)
+        $sql->addGlobalCreateFields();
+        $sql->addGlobalUpdateFields();
+        $sql->insert();
+        
+        $typeId = $sql->getLastId();
+        
+        // Effect für externe Thumbnails hinzufügen
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('media_manager_type_effect'));
+        $sql->setValue('type_id', $typeId);
+        $sql->setValue('effect', 'external_thumbnail');
+        $sql->setValue('priority', 1);
+        $sql->setValue('parameters', json_encode([
+            'rex_effect_external_thumbnail' => [
+                'rex_effect_external_thumbnail_service' => 'youtube',
+                'rex_effect_external_thumbnail_video_id' => '',
+                'rex_effect_external_thumbnail_cache_ttl' => 168
+            ]
+        ]));
+        $sql->addGlobalCreateFields();
+        $sql->addGlobalUpdateFields();
+        $sql->insert();
+        
+        // Optional: Resize-Effect hinzufügen für einheitliche Größe
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('media_manager_type_effect'));
+        $sql->setValue('type_id', $typeId);
+        $sql->setValue('effect', 'resize');
+        $sql->setValue('priority', 2);
+        $sql->setValue('parameters', json_encode([
+            'rex_effect_resize' => [
+                'rex_effect_resize_width' => '480',
+                'rex_effect_resize_height' => '360',
+                'rex_effect_resize_style' => 'maximum',
+                'rex_effect_resize_allow_enlarge' => 'not_enlarge'
+            ]
+        ]));
+        $sql->addGlobalCreateFields();
+        $sql->addGlobalUpdateFields();
+        $sql->insert();
+    }
+}
+
 // Rewrite
 if (class_exists('consent_manager_cache')) {
     consent_manager_cache::forceWrite();

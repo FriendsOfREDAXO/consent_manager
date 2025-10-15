@@ -143,10 +143,16 @@ class consent_manager_inline
             $videoId = $matches[1] ?? $videoId;
         }
 
-        // Thumbnail lokal cachen für Datenschutz
-        $thumbnail = $options['thumbnail'] === 'auto' 
-            ? consent_manager_thumbnail_cache::cacheYouTubeThumbnail($videoId)
-            : $options['thumbnail'];
+        // Thumbnail über Mediamanager generieren (falls verfügbar)
+        $thumbnail = $options['thumbnail'];
+        if ($thumbnail === 'auto') {
+            if (class_exists('rex_consent_manager_thumbnail_mediamanager')) {
+                $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('youtube', $videoId, $options);
+            } else {
+                // Fallback zur direkten YouTube-URL
+                $thumbnail = 'https://img.youtube.com/vi/' . $videoId . '/maxresdefault.jpg';
+            }
+        }
 
         $iframe = '<iframe width="'.($options['width'] ?: '560').'" height="'.($options['height'] ?: '315').'" 
                    src="https://www.youtube.com/embed/'.$videoId.'" 
@@ -172,10 +178,21 @@ class consent_manager_inline
             $videoId = $matches[1] ?? $videoId;
         }
 
-        // Thumbnail lokal cachen
-        $thumbnail = $options['thumbnail'] === 'auto' 
-            ? consent_manager_thumbnail_cache::cacheVimeoThumbnail($videoId)
-            : $options['thumbnail'];
+        // Thumbnail über Mediamanager generieren (falls verfügbar)
+        $thumbnail = $options['thumbnail'];
+        if ($thumbnail === 'auto') {
+            if (class_exists('rex_consent_manager_thumbnail_mediamanager')) {
+                $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('vimeo', $videoId, $options);
+            } else {
+                // Fallback zu generischem Vimeo-Placeholder
+                $thumbnail = 'data:image/svg+xml;base64,' . base64_encode(
+                    '<svg width="640" height="360" xmlns="http://www.w3.org/2000/svg">' .
+                    '<rect width="100%" height="100%" fill="#1ab7ea"/>' .
+                    '<text x="50%" y="50%" fill="white" text-anchor="middle" dy=".3em" font-family="Arial" font-size="24">Vimeo Video</text>' .
+                    '</svg>'
+                );
+            }
+        }
 
         $iframe = '<iframe src="https://player.vimeo.com/video/'.$videoId.'" 
                    width="'.($options['width'] ?: '640').'" height="'.($options['height'] ?: '360').'" 

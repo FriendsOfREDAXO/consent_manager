@@ -158,6 +158,17 @@ if (rex::isFrontend() || rex::isBackend()) {
     }
 }
 
+// Mediamanager Effect für externe Thumbnails registrieren
+if (rex_addon::get('media_manager')->isAvailable()) {
+    // Effect-Klasse laden
+    if (!class_exists('rex_effect_external_thumbnail')) {
+        require_once __DIR__ . '/lib/effect_external_thumbnail.php';
+    }
+    
+    // Effect direkt registrieren wie Focuspoint
+    rex_media_manager::addEffect(rex_effect_external_thumbnail::class);
+}
+
 if (rex_addon::get('cronjob')->isAvailable() && !rex::isSafeMode()) {
     rex_cronjob_manager::registerType(rex_cronjob_log_delete::class);
 }
