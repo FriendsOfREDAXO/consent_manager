@@ -42,32 +42,46 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             }
 
             if (!isset(self::SERVICES[$service])) {
-                $this->createFallbackImage();
-                return;
+                throw new rex_exception('External thumbnail effect: Unsupported service "' . $service . '"');
             }
 
             $thumbnailUrl = $this->getThumbnailUrl($service, $videoId);
             
             if (!$thumbnailUrl) {
-                $this->createFallbackImage();
-                return;
+                throw new rex_exception('External thumbnail effect: Could not determine thumbnail URL for service "' . $service . '" with video ID "' . $videoId . '"');
             }
 
             // Thumbnail herunterladen
+            rex_logger::factory()->info('External thumbnail: Downloading', [
+                'service' => $service,
+                'video_id' => $videoId,
+                'url' => $thumbnailUrl
+            ]);
+            
             $imageData = $this->downloadThumbnail($thumbnailUrl);
             
             if (!$imageData) {
                 // Fallback versuchen
                 if ($service === 'youtube' && isset(self::SERVICES[$service]['fallback_url'])) {
                     $fallbackUrl = sprintf(self::SERVICES[$service]['fallback_url'], $videoId);
+                    rex_logger::factory()->info('External thumbnail: Trying fallback', [
+                        'fallback_url' => $fallbackUrl
+                    ]);
                     $imageData = $this->downloadThumbnail($fallbackUrl);
                 }
                 
                 if (!$imageData) {
-                    $this->createFallbackImage();
-                    return;
+                    rex_logger::factory()->error('External thumbnail: Download failed', [
+                        'primary_url' => $thumbnailUrl,
+                        'fallback_tried' => isset($fallbackUrl)
+                    ]);
+                    throw new rex_exception('External thumbnail effect: Could not download thumbnail from "' . $thumbnailUrl . '"');
                 }
             }
+            
+            rex_logger::factory()->info('External thumbnail: Download successful', [
+                'data_size' => strlen($imageData)
+            ]);
 
             // Temporäre Datei erstellen
             $tempFile = rex_path::addonCache('media_manager', 'external_thumbnails/' . $filename);
@@ -175,16 +189,39 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         $context = stream_context_create([
             'http' => [
                 'method' => 'GET',
-                'timeout' => 10,
-                'user_agent' => 'REDAXO Consent Manager Thumbnail Cache',
+                'timeout' => 30,
+                'user_agent' => 'Mozilla/5.0 (compatible; REDAXO Thumbnail Cache)',
                 'follow_location' => true,
-                'max_redirects' => 3
+                'max_redirects' => 5,
+                'ignore_errors' => true
             ]
         ]);
 
         try {
             $data = file_get_contents($url, false, $context);
-            return $data !== false ? $data : null;
+            
+            // HTTP-Response-Header prüfen
+            if (isset($http_response_header)) {
+                $responseCode = null;
+                foreach ($http_response_header as $header) {
+                    if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
+                        $responseCode = (int) $matches[1];
+                        break;
+                    }
+                }
+                
+                // Nur 200er Responses akzeptieren
+                if ($responseCode && $responseCode !== 200) {
+                    rex_logger::factory()->info('External thumbnail HTTP error', [
+                        'url' => $url,
+                        'response_code' => $responseCode,
+                        'headers' => $http_response_header
+                    ]);
+                    return null;
+                }
+            }
+            
+            return $data !== false && !empty($data) ? $data : null;
         } catch (Exception $e) {
             rex_logger::logException($e);
             return null;
