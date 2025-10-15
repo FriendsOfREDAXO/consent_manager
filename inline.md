@@ -179,94 +179,292 @@ echo consent_manager_inline::doConsent('youtube', $videoId, [
 | `google-maps` | Speziell | Google Maps Embed-Handler |
 | Andere | Generisch | Universeller Handler für beliebige externe Inhalte |
 
-### Beliebige iframes / Externe Inhalte
+---
 
-Für beliebige externe Inhalte (Twitter, Instagram, andere iframes):
+## 🎬 Unterstützte Content-Typen
+
+### **1. YouTube & Vimeo (Automatik)**
 
 ```php
 <?php
-// CSS/JS einbinden
-echo consent_manager_inline::getCSS();
-echo consent_manager_inline::getJavaScript();
-
-// Beispiel: OpenStreetMap Karte (Leaflet)
-$mapEmbed = '<div id="osm-map-' . uniqid() . '" style="height: 400px;"></div>
-<script>
-var map = L.map("osm-map-' . uniqid() . '").setView([52.5200, 13.4050], 13);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap contributors"
-}).addTo(map);
-L.marker([52.5200, 13.4050]).addTo(map)
-    .bindPopup("Berlin, Deutschland");
-</script>';
-
-echo consent_manager_inline::doConsent('openstreetmap', $mapEmbed, [
-    'title' => 'Interaktive Karte anzeigen',
-    'placeholder_text' => 'Karte laden',
-    'privacy_notice' => 'Die Karte lädt Daten von OpenStreetMap-Servern.',
-    'width' => '100%',
-    'height' => 400,
-    'icon' => 'fas fa-map', // FontAwesome Icon
-    'service_name' => 'OpenStreetMap',
-    'thumbnail' => '/assets/custom/map-berlin-preview.jpg'
+// YouTube - automatische Video-ID Erkennung + Thumbnail-Cache
+echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+    'title' => 'Rick Astley - Never Gonna Give You Up',
+    'width' => 560,
+    'height' => 315
 ]);
 
-// Beispiel: Google Maps iframe
-$mapsEmbed = '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d..."
-                    width="600" height="450" style="border:0;" 
-                    allowfullscreen="" loading="lazy"></iframe>';
-
-echo consent_manager_inline::doConsent('google-maps', $mapsEmbed, [
-    'title' => 'Karte von Berlin anzeigen',
-    'placeholder_text' => 'Karte laden',
-    'privacy_notice' => 'Für Google Maps werden Tracking-Cookies verwendet.',
-    'icon' => 'fas fa-map-marker-alt',
-    'service_name' => 'Google Maps',
-    'thumbnail' => '/assets/custom/map-preview.jpg' // Eigenes Vorschaubild
-]);
-
-// Beispiel: CodePen Embed
-$codePenEmbed = '<iframe height="400" style="width: 100%;" scrolling="no" 
-    title="CSS Animation Demo" 
-    src="https://codepen.io/username/embed/abcdef?height=400&theme-id=dark&default-tab=result" 
-    frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-</iframe>';
-
-echo consent_manager_inline::doConsent('codepen', $codePenEmbed, [
-    'title' => 'CSS Animation Demo',
-    'placeholder_text' => 'CodePen Demo laden', 
-    'privacy_notice' => 'CodePen kann Nutzungsdaten erfassen.',
-    'icon' => 'fab fa-codepen',
-    'service_name' => 'CodePen',
-    'width' => '100%',
-    'height' => 400,
-    'thumbnail' => '/assets/custom/codepen-preview.png'
-]);
-
-// Beispiel: Beliebiger iframe (z.B. externe Tools)
-$customIframe = '<iframe src="https://example.com/widget" 
-                         width="100%" height="300" frameborder="0"></iframe>';
-
-echo consent_manager_inline::doConsent('external-widget', $customIframe, [
-    'title' => 'Externes Widget laden',
-    'placeholder_text' => 'Widget aktivieren',
-    'privacy_notice' => 'Das externe Widget kann Daten übertragen.',
-    'icon' => 'fas fa-external-link-alt',
-    'service_name' => 'Externes Tool',
-    'thumbnail' => '/assets/custom/widget-preview.png'
+// Vimeo - automatische Video-ID Erkennung + Thumbnail-Cache
+echo consent_manager_inline::doConsent('vimeo', '123456789', [
+    'title' => 'Vimeo Video',
+    'width' => 640,
+    'height' => 360
 ]);
 ?>
 ```
 
-**Wichtige Punkte für beliebige Inhalte:**
+### **2. Google Maps (Automatik)**
 
-1. **Service-Konfiguration**: Für jeden externen Dienst muss ein Service im Backend angelegt werden
-2. **Consent-Verhalten**: Der `$serviceKey` muss mit der Service-UID übereinstimmen  
-3. **Flexible Inhalte**: Der zweite Parameter kann beliebiger HTML-Code sein
-4. **JavaScript-Integration**: Scripts und interaktive Inhalte werden korrekt geladen
-5. **Eigene Icons**: FontAwesome-Icons oder eigene Bilder als Platzhalter
-6. **Custom Thumbnails**: Eigene Vorschaubilder für bessere UX
-7. **Responsive Design**: Flexible Breiten mit `width: '100%'` möglich
+```php
+<?php
+// Google Maps Embed-URL wird automatisch in Iframe umgewandelt
+$mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3...';
+
+echo consent_manager_inline::doConsent('google-maps', $mapUrl, [
+    'title' => 'Unsere Filiale in Berlin',
+    'width' => '100%',
+    'height' => 450,
+    'privacy_notice' => 'Google Maps verwendet Cookies für Funktionalität und Personalisierung.'
+]);
+?>
+```
+
+### **3. Beliebige Iframes**
+
+```php
+<?php
+// Spotify Playlist
+$spotifyEmbed = 'https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M';
+echo consent_manager_inline::doConsent('spotify', $spotifyEmbed, [
+    'title' => 'Spotify Playlist',
+    'icon' => 'fab fa-spotify',
+    'width' => '100%',
+    'height' => 380
+]);
+
+// Twitter Embed
+$twitterEmbed = '<iframe src="https://platform.twitter.com/embed/Tweet.html?id=1234567890" 
+                        width="500" height="600" frameborder="0"></iframe>';
+echo consent_manager_inline::doConsent('twitter', $twitterEmbed, [
+    'title' => 'Twitter Tweet anzeigen',
+    'icon' => 'fab fa-twitter'
+]);
+
+// CodePen Embed
+$codePenEmbed = '<iframe height="400" style="width: 100%;" 
+    src="https://codepen.io/username/embed/xyz123" 
+    frameborder="0" allowfullscreen></iframe>';
+echo consent_manager_inline::doConsent('codepen', $codePenEmbed, [
+    'title' => 'CSS Animation Demo',
+    'icon' => 'fab fa-codepen'
+]);
+?>
+```
+
+### **4. JavaScript & Tracking Scripts**
+
+```php
+<?php
+// Google Analytics Tracking
+$analyticsScript = '<script>
+gtag("config", "GA_MEASUREMENT_ID", {
+  page_title: "Homepage",
+  page_location: "https://example.com/"
+});
+</script>';
+
+echo consent_manager_inline::doConsent('google-analytics', $analyticsScript, [
+    'title' => 'Analytics aktivieren',
+    'placeholder_text' => 'Tracking erlauben',
+    'privacy_notice' => 'Google Analytics erfasst anonymisierte Nutzungsdaten.',
+    'icon' => 'fas fa-chart-line'
+]);
+
+// Facebook Pixel
+$facebookPixel = '<script>
+fbq("track", "PageView");
+fbq("track", "ViewContent", {
+  content_type: "product",
+  content_ids: ["1234"]
+});
+</script>';
+
+echo consent_manager_inline::doConsent('facebook-pixel', $facebookPixel, [
+    'title' => 'Facebook Pixel aktivieren',
+    'placeholder_text' => 'Marketing-Tracking erlauben',
+    'icon' => 'fab fa-facebook'
+]);
+
+// Custom JavaScript Funktionen
+$customScript = '<script>
+// Eigene Tracking-Logik
+window.customTracker = {
+    init: function() {
+        console.log("Custom Tracker initialized");
+        this.trackPageView();
+    },
+    trackPageView: function() {
+        // Sende Daten an eigenen Server
+        fetch("/api/track", {
+            method: "POST",
+            body: JSON.stringify({
+                page: window.location.pathname,
+                timestamp: Date.now()
+            })
+        });
+    }
+};
+window.customTracker.init();
+</script>';
+
+echo consent_manager_inline::doConsent('custom-tracking', $customScript, [
+    'title' => 'Eigenes Tracking aktivieren',
+    'placeholder_text' => 'Tracking starten'
+]);
+?>
+```
+
+### **5. Interaktive Widgets & Tools**
+
+```php
+<?php
+// OpenStreetMap mit Leaflet
+$osmWidget = '<div id="osm-map-' . uniqid() . '" style="height: 400px;"></div>
+<script>
+var mapId = "osm-map-' . uniqid() . '";
+var map = L.map(mapId).setView([52.5200, 13.4050], 13);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors"
+}).addTo(map);
+L.marker([52.5200, 13.4050]).addTo(map)
+    .bindPopup("Berlin, Deutschland")
+    .openPopup();
+</script>';
+
+echo consent_manager_inline::doConsent('openstreetmap', $osmWidget, [
+    'title' => 'Interaktive Karte (OpenStreetMap)',
+    'privacy_notice' => 'Die Karte lädt Daten von OpenStreetMap-Servern.',
+    'icon' => 'fas fa-map'
+]);
+
+// Chat-Widget (z.B. Intercom, Zendesk)
+$chatWidget = '<script>
+window.Intercom("boot", {
+  app_id: "your_app_id",
+  name: "Besucher",
+  created_at: ' . time() . '
+});
+</script>';
+
+echo consent_manager_inline::doConsent('intercom-chat', $chatWidget, [
+    'title' => 'Live-Chat aktivieren',
+    'placeholder_text' => 'Chat starten',
+    'privacy_notice' => 'Der Live-Chat überträgt Daten an Intercom.',
+    'icon' => 'fas fa-comments'
+]);
+
+// Kalendar-Widget (Calendly, etc.)
+$calendarEmbed = '<iframe src="https://calendly.com/your-username/30min" 
+                         width="100%" height="600" frameborder="0"></iframe>';
+
+echo consent_manager_inline::doConsent('calendly', $calendarEmbed, [
+    'title' => 'Termin buchen',
+    'placeholder_text' => 'Kalender laden',
+    'privacy_notice' => 'Calendly kann persönliche Daten verarbeiten.',
+    'icon' => 'fas fa-calendar-alt'
+]);
+?>
+```
+
+### **6. E-Commerce & Payment Widgets**
+
+```php
+<?php
+// PayPal Button
+$paypalButton = '<div id="paypal-button-container"></div>
+<script>
+paypal.Buttons({
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: { value: "29.99" }
+            }]
+        });
+    },
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+            alert("Transaction completed by " + details.payer.name.given_name);
+        });
+    }
+}).render("#paypal-button-container");
+</script>';
+
+echo consent_manager_inline::doConsent('paypal', $paypalButton, [
+    'title' => 'PayPal Zahlung',
+    'placeholder_text' => 'PayPal laden',
+    'privacy_notice' => 'PayPal verarbeitet Zahlungsdaten.',
+    'icon' => 'fab fa-paypal'
+]);
+
+// Stripe Payment Form
+$stripeForm = '<form id="payment-form">
+  <div id="card-element">
+    <!-- Stripe Elements will create form elements here -->
+  </div>
+  <button id="submit-payment">Bezahlen</button>
+</form>
+<script>
+var stripe = Stripe("pk_test_...");
+var elements = stripe.elements();
+var cardElement = elements.create("card");
+cardElement.mount("#card-element");
+</script>';
+
+echo consent_manager_inline::doConsent('stripe', $stripeForm, [
+    'title' => 'Kreditkarten-Zahlung',
+    'placeholder_text' => 'Zahlungsformular laden',
+    'privacy_notice' => 'Stripe verarbeitet Kreditkarten-Daten sicher.',
+    'icon' => 'fab fa-stripe'
+]);
+?>
+```
+
+---
+
+## 🔧 **Content-Type Behandlung**
+
+### **Automatische URL-zu-Iframe Konvertierung**
+
+Das System erkennt automatisch bestimmte URL-Patterns und wandelt sie in Iframes um:
+
+| Content-Type | URL-Pattern | Automatische Konvertierung |
+|--------------|-------------|----------------------------|
+| **YouTube** | `youtube.com`, `youtu.be` | ✅ Video-ID → Embed-Iframe |
+| **Vimeo** | `vimeo.com/123456` | ✅ Video-ID → Player-Iframe |
+| **Google Maps** | `google.com/maps/embed` | ✅ URL → Maps-Iframe |
+| **Andere URLs** | Beliebige URLs | ❌ Keine automatische Umwandlung |
+
+### **Direkte HTML-Ausgabe**
+
+Für alle anderen Content-Typen wird der übergebene HTML-Code direkt ausgegeben:
+
+```php
+<?php
+// Direkte Iframe-Einbindung
+$iframe = '<iframe src="https://example.com/widget" width="100%" height="400"></iframe>';
+echo consent_manager_inline::doConsent('service-key', $iframe, [...]);
+
+// JavaScript-Code wird direkt eingefügt und ausgeführt
+$script = '<script>console.log("Hello World");</script>';
+echo consent_manager_inline::doConsent('service-key', $script, [...]);
+
+// Komplexe HTML-Strukturen
+$widget = '<div class="widget">
+    <h3>Externes Widget</h3>
+    <iframe src="https://widget.example.com"></iframe>
+    <script>initWidget();</script>
+</div>';
+echo consent_manager_inline::doConsent('service-key', $widget, [...]);
+?>
+```
+
+**Wichtige Punkte:**
+
+1. **Service-Registrierung erforderlich**: Jeder `serviceKey` muss im Consent Manager Backend angelegt sein
+2. **Consent-Verhalten**: Ohne Consent wird Platzhalter angezeigt, mit Consent wird Content geladen
+3. **JavaScript-Ausführung**: Scripts werden nach Consent automatisch ausgeführt
+4. **Flexible Integration**: Beliebige HTML-Strukturen und interaktive Widgets möglich
+5. **DSGVO-Konformität**: Externe Inhalte werden erst nach expliziter Zustimmung geladen
 
 ---
 
