@@ -295,6 +295,13 @@ class consent_manager_inline
             }
         }
         
+        // Für Google Maps Embed URLs: In iframe umwandeln
+        if (strpos($content, 'google.com/maps/embed') !== false) {
+            return '<iframe src="'.$content.'" 
+                    width="'.($options['width'] ?: '100%').'" height="'.($options['height'] ?: '450').'" 
+                    style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
+        }
+        
         // Für andere Inhalte: Direkt zurückgeben
         return $content;
     }
