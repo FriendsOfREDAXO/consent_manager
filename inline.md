@@ -176,7 +176,7 @@ Automatische Platzhalter-Aktualisierung via:
 - Fallback-Timer
 
 ### Debug-Modus
-`rex::setProperty('debug', true)` zeigt detaillierte Informationen zu Fragment-Variablen, Service-Daten und Cookie-Parsing.
+Zur Fehlersuche können Browser-Entwicklertools verwendet werden, um die generierten HTML-Strukturen und JavaScript-Events zu inspizieren. Die Service-Konfiguration und Cookie-Daten können über die REDAXO Backend-Logs eingesehen werden.
 
 ---
 
