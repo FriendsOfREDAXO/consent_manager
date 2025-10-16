@@ -238,7 +238,8 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 cachelogid: Date.now(),
                 consentid: this.generateConsentId()
             };
-        }            // URL-Dekodierung falls nötig
+        }
+            // URL-Dekodierung falls nötig
             try {
                 cookieValue = decodeURIComponent(cookieValue);
             } catch (e) {
