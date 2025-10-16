@@ -4,16 +4,235 @@
 
 Das **Inline-Consent-System** ermöglicht es, Inhalte von externen Diensten (YouTube, Vimeo, Google Maps, etc.) mit einem eleganten Platzhalter anzuzeigen und erst nach Consent zu laden.
 
-## 🚀 Grundlegende Verwendung
+**Neu:** Consent nur bei Bedarf - perfekt für Seiten mit wenigen externen Inhalten.
+
+---
+
+## 🚀 Schnellstart Inline-Consent
+
+### Problem und Lösung
+
+**Problem:** Sie haben 400 Artikel, aber nur 2 brauchen YouTube-Videos. Normale Consent-Banner nerven alle Besucher, obwohl 99% nie Videos sehen.
+
+**Lösung:** Inline-Consent zeigt Platzhalter statt Videos. Consent-Dialog erscheint erst beim Klick auf "Video laden".
+
+### ⚠️ Wichtige Funktionsweise des Inline-Modus
+
+**Medienspezifischer Consent:**
+- ✅ **Inline-Consent aktiviert NUR das angeklickte Medium**
+- ✅ Jedes Video/Embed wird **einzeln** freigeschaltet
+- ✅ **Keine globale Aktivierung** aller Services einer Gruppe
+- ✅ Maximaler Datenschutz durch minimale Consent-Erteilung
+
+**Beispiel:** Nutzer klickt "YouTube Video laden" → Nur dieses eine Video wird geladen, andere YouTube-Videos auf der Seite bleiben gesperrt.
+
+**Globale Aktivierung über "Alle Einstellungen":**
+- Der Button **"Alle Einstellungen"** (früher "Cookie-Details") öffnet das vollständige Consent Manager Fenster
+- Dort kann der Nutzer **alle Services einer Gruppe** global aktivieren
+- **Wichtig:** Button-Text ist über die **Texte-Verwaltung** vollständig anpassbar und übersetzbar
+
+---
+
+## 🎯 Grundlegende Verwendung
+
+### YouTube-Videos einbetten
 
 ```php
+<?php
+// Template/Modul - statt direktem iframe
+echo doConsent('youtube', 'dQw4w9WgXcQ', [
+    'title' => 'Rick Astley - Never Gonna Give You Up',
+    'width' => 560,
+    'height' => 315
+]);
+
+// Funktioniert auch mit kompletten URLs
+echo doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
+    'title' => 'Mein Video'
+]);
+
+// Mit custom Attributen (z.B. für UIkit, Bootstrap, etc.)
+echo doConsent('youtube', 'dQw4w9WgXcQ', [
+    'title' => 'Responsive YouTube Video',
+    'width' => 560,
+    'height' => 315,
+    'attributes' => [
+        'class' => 'uk-responsive-width',
+        'data-uk-video' => 'automute: true',
+        'data-uk-responsive' => '' // Leere Werte werden als boolean attributes gerendert
+    ]
+]);
+
+// Erweiterte Optionen
 echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Video laden',
     'placeholder_text' => 'Video abspielen',
     'privacy_notice' => 'Für YouTube werden Tracking-Cookies verwendet.',
     'show_allow_all' => true
 ]);
+?>
 ```
+
+**✅ Automatische Privacy Policy Links:**
+- Services mit hinterlegter `provider_link_privacy` zeigen automatisch den entsprechenden Datenschutz-Link
+- Format: "🔒 Datenschutzerklärung von [Anbieter]" (z.B. "🔒 Datenschutzerklärung von Google")
+- Link öffnet in neuem Tab/Fenster
+
+### Google Maps einbetten
+
+```php
+<?php
+echo doConsent('google-maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12...', [
+    'title' => 'Unsere Adresse',
+    'height' => 450
+]);
+?>
+```
+
+### Vimeo-Videos
+
+```php
+<?php
+echo doConsent('vimeo', '123456789', [
+    'title' => 'Mein Vimeo Video',
+    'width' => 640,
+    'height' => 360
+]);
+
+// Oder mit URL
+echo doConsent('vimeo', 'https://vimeo.com/123456789', [
+    'title' => 'Corporate Video'
+]);
+
+// Mit custom CSS Klassen und data-Attributen
+echo doConsent('vimeo', '123456789', [
+    'title' => 'Corporate Video',
+    'attributes' => [
+        'class' => 'responsive-video my-custom-class',
+        'data-video-id' => '123456789',
+        'data-analytics' => 'tracked'
+    ]
+]);
+?>
+```
+
+### Custom iframes/Scripts
+
+```php
+<?php
+// Beliebige iframes
+echo doConsent('custom-iframe', '<iframe src="https://example.com/widget"></iframe>', [
+    'title' => 'External Widget',
+    'privacy_notice' => 'Dieses Widget setzt Cookies für Funktionalität.'
+]);
+
+// JavaScript-Code
+echo doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");</script>', [
+    'title' => 'Google Analytics',
+    'placeholder_text' => 'Analytics aktivieren'
+]);
+?>
+```
+
+---
+
+## 🔌 Template-Integration
+
+### CSS/JS einbinden (einmalig im Template)
+
+```php
+<?php echo rex_view::content('consent_manager_inline_cssjs.php'); ?>
+```
+
+### Oder manuell:
+
+```html
+<!-- Im <head>-Bereich -->
+<?php
+if (class_exists('consent_manager_inline')) {
+    echo consent_manager_inline::getCSS();
+    echo consent_manager_inline::getJavaScript();
+}
+?>
+```
+
+---
+
+## ✨ Features der Inline-Lösung
+
+**✅ Vollständige Integration:**
+- Nutzt bestehende Service-Konfiguration
+- Automatisches Logging aller Consent-Aktionen  
+- **"Alle Einstellungen"-Button** öffnet vollständiges Consent Manager Fenster
+- Bereits erteilte Consents werden respektiert
+- DSGVO-konforme Dokumentation
+- **Button-Texte anpassbar:** "Alle Einstellungen" kann über Texte-Verwaltung geändert werden (z.B. "Cookie-Einstellungen", "Datenschutz-Optionen", etc.)
+- **Privacy Policy Links:** Automatische Anzeige von Datenschutzerklärungen der Service-Anbieter
+- **Keine Confirm-Alerts:** Direkte Consent-Aktivierung ohne störende Browser-Dialoge
+
+**✅ Smart Service Detection:**
+- YouTube: Automatische Thumbnail-Generierung
+- Vimeo: Professionelle Platzhalter
+- Google Maps: Karten-Icon und Hinweise
+- Generic: Universell für alle anderen Services
+
+**✅ User Experience:**
+- Responsive Design
+- Smooth Animations
+- Accessibility-konform
+- Mobile-optimiert
+- **Vollständig übersetzbare Buttons** über REDAXO Texte-Verwaltung
+
+**✅ Mehrsprachigkeit:**
+- Alle Button-Texte über **Consent Manager → Texte** anpassbar
+- Automatische Sprachen-Synchronisation
+- Individuelle Anpassung pro Sprache möglich
+- Standard-Buttons: "Video laden", "Alle Einstellungen", "Datenschutz"
+
+**✅ Developer Experience:**
+- Ein `doConsent()` für alle Services
+- Auto-Erkennung von Video-IDs aus URLs
+- Flexible Optionen-Arrays
+- Debug-Modus verfügbar
+
+---
+
+## 📄 Beispiel-Output
+
+Der Inline-Consent generiert ansprechende Platzhalter:
+
+```html
+<!-- YouTube-Platzhalter -->
+<div class="consent-inline-placeholder">
+    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" />
+    <div class="consent-inline-overlay">
+        <div class="consent-inline-icon">🎥</div>
+        <h4>Rick Astley - Never Gonna Give You Up</h4>
+        <p>Für YouTube werden Cookies benötigt.</p>
+        <button onclick="...">YouTube Video laden</button>
+        <button onclick="...">Cookie-Details</button>
+    </div>
+</div>
+```
+
+---
+
+## 🆚 Vorteile gegenüber globalem Consent
+
+| Global Consent | Inline Consent |
+|----------------|----------------|
+| ❌ Nervt alle Besucher | ✅ Nur bei tatsächlicher Nutzung |
+| ❌ "Consent Fatigue" | ✅ Kontextuell und verständlich |
+| ❌ Viele leere Zustimmungen | ✅ Bewusste Entscheidungen |
+| ❌ Komplexe Setup für 2 Videos | ✅ Einfache Integration |
+
+**Perfect für:**
+- Blogs mit gelegentlichen Videos
+- Corporate Sites mit einzelnen Maps
+- Landing Pages mit gezielten Embeds
+- Alle Seiten wo < 10% der Inhalte Consent brauchen
+
+---
 
 ## 🎨 CSS-Anpassungen
 
@@ -64,7 +283,9 @@ Das System verwendet **CSS Custom Properties** für maximale Flexibilität:
 }
 ```
 
-## 🎯 Service-spezifische Handler
+---
+
+## 🎯 Service-spezifische Handler und Optionen
 
 ### YouTube
 ```php
@@ -157,6 +378,14 @@ $options = [
     // 'thumbnail' => '/media/my-thumb.jpg',                  // Lokale Datei
     // 'thumbnail' => 'https://example.com/thumb.jpg',        // Externe URL
     // 'thumbnail' => rex_media_manager::getUrl('type', 'file.jpg'), // Mediamanager-URL
+    
+    // Custom Attribute für iframe/embed
+    'attributes' => [
+        'class' => 'my-custom-class',
+        'data-custom' => 'value',
+        'id' => 'unique-id',
+        'data-boolean' => '' // Leere Werte = boolean attributes (ohne ="")
+    ]
 ];
 ```
 
@@ -180,6 +409,8 @@ $options = [
 ];
 ```
 
+---
+
 ## 🎛️ Button-Texte anpassen
 
 Texte werden über die **REDAXO Texte-Verwaltung** konfiguriert:
@@ -195,6 +426,8 @@ Texte werden über die **REDAXO Texte-Verwaltung** konfiguriert:
 
 ### Mehrsprachigkeit
 Alle Texte sind automatisch mehrsprachig verfügbar und können pro Sprache angepasst werden.
+
+---
 
 ## 🌐 Domain-spezifische Konfiguration  
 

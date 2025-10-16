@@ -158,12 +158,16 @@ class consent_manager_inline
         $attributesString = '';
         if (isset($options['attributes']) && is_array($options['attributes'])) {
             foreach ($options['attributes'] as $key => $value) {
-                $attributesString .= ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+                if ($value === '') {
+                    $attributesString .= ' ' . rex_escape($key);
+                } else {
+                    $attributesString .= ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+                }
             }
         }
 
         $iframe = '<iframe width="'.($options['width'] ?: '560').'" height="'.($options['height'] ?: '315').'" 
-                   src="https://www.youtube.com/embed/'.$videoId.'" 
+                   src="https://www.youtube.com/embed/'.rex_escape($videoId).'" 
                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                    allowfullscreen'.$attributesString.'></iframe>';
 
@@ -206,11 +210,15 @@ class consent_manager_inline
         $attributesString = '';
         if (isset($options['attributes']) && is_array($options['attributes'])) {
             foreach ($options['attributes'] as $key => $value) {
-                $attributesString .= ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+                if ($value === '') {
+                    $attributesString .= ' ' . rex_escape($key);
+                } else {
+                    $attributesString .= ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+                }
             }
         }
 
-        $iframe = '<iframe src="https://player.vimeo.com/video/'.$videoId.'" 
+        $iframe = '<iframe src="https://player.vimeo.com/video/'.rex_escape($videoId).'" 
                    width="'.($options['width'] ?: '640').'" height="'.($options['height'] ?: '360').'" 
                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen'.$attributesString.'></iframe>';
 
@@ -226,7 +234,7 @@ class consent_manager_inline
      */
     private static function renderGoogleMapsPlaceholder($serviceKey, $embedUrl, $options, $consentId, $service)
     {
-        $iframe = '<iframe src="'.$embedUrl.'" 
+        $iframe = '<iframe src="'.rex_escape($embedUrl).'" 
                    width="'.($options['width'] ?: '100%').'" height="'.($options['height'] ?: '450').'" 
                    style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
 
@@ -292,7 +300,11 @@ class consent_manager_inline
         $attributesString = '';
         if (isset($options['attributes']) && is_array($options['attributes'])) {
             foreach ($options['attributes'] as $key => $value) {
-                $attributesString .= ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+                if ($value === '') {
+                    $attributesString .= ' ' . rex_escape($key);
+                } else {
+                    $attributesString .= ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+                }
             }
         }
 
@@ -302,7 +314,7 @@ class consent_manager_inline
             $videoId = $matches[1] ?? '';
             if ($videoId) {
                 return '<iframe width="'.($options['width'] ?: '560').'" height="'.($options['height'] ?: '315').'" 
-                        src="https://www.youtube.com/embed/'.$videoId.'" 
+                        src="https://www.youtube.com/embed/'.rex_escape($videoId).'" 
                         frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen'.$attributesString.'></iframe>';
             }
@@ -313,7 +325,7 @@ class consent_manager_inline
             preg_match('/vimeo\.com\/(\d+)/', $content, $matches);
             $videoId = $matches[1] ?? '';
             if ($videoId) {
-                return '<iframe src="https://player.vimeo.com/video/'.$videoId.'" 
+                return '<iframe src="https://player.vimeo.com/video/'.rex_escape($videoId).'" 
                         width="'.($options['width'] ?: '640').'" height="'.($options['height'] ?: '360').'" 
                         frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen'.$attributesString.'></iframe>';
             }
@@ -321,7 +333,7 @@ class consent_manager_inline
         
         // Für Google Maps Embed URLs: In iframe umwandeln
         if (strpos($content, 'google.com/maps/embed') !== false) {
-            return '<iframe src="'.$content.'" 
+            return '<iframe src="'.rex_escape($content).'" 
                     width="'.($options['width'] ?: '100%').'" height="'.($options['height'] ?: '450').'" 
                     style="border:0;" allowfullscreen="" loading="lazy"'.$attributesString.'></iframe>';
         }
