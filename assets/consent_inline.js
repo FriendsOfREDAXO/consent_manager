@@ -286,12 +286,13 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 cachelogid: Date.now(),
                 consentid: this.generateConsentId()
             };
-        }            return {
-                consents: [],
-                version: 4,
-                cachelogid: Date.now(),
-                consentid: this.generateConsentId()
-            };
+        }
+        return {
+            consents: [],
+            version: 4,
+            cachelogid: Date.now(),
+            consentid: this.generateConsentId()
+        };
         },
         
         extractServiceKeysFromString: function(cookieString) {
