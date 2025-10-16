@@ -19,21 +19,6 @@ $options = $this->getVar('options', []);
 $placeholderData = $this->getVar('placeholderData', []);
 $content = $this->getVar('content', '');
 
-// Debug: Variablen ausgeben (nur im Debug-Modus)
-if (rex::isDebugMode()) {
-    echo '<div style="background:#e2e3e5;border:1px solid #d6d8db;padding:10px;margin:10px 0;font-size:12px;">';
-    echo '<strong>Fragment Debug:</strong><br>';
-    echo 'serviceKey: ' . var_export($serviceKey, true) . '<br>';
-    echo 'consentId: ' . var_export($consentId, true) . '<br>';
-    echo 'options: ' . var_export($options, true) . '<br>';
-    echo 'placeholderData: ' . var_export($placeholderData, true) . '<br>';
-    echo 'content length: ' . strlen($content) . ' chars<br>';
-    echo '<strong>Service Debug:</strong><br>';
-    echo 'service provider_link_privacy: ' . var_export($service['provider_link_privacy'] ?? 'NOT SET', true) . '<br>';
-    echo 'service provider: ' . var_export($service['provider'] ?? 'NOT SET', true) . '<br>';
-    echo 'service complete: ' . var_export($service, true) . '<br>';
-    echo '</div>';
-}
 
 $thumbnailHtml = '';
 if (!empty($placeholderData['thumbnail'])) {
