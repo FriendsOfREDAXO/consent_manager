@@ -179,7 +179,7 @@ if (class_exists('consent_manager_inline')) {
 **✅ Vollständige Integration:**
 - Nutzt bestehende Service-Konfiguration
 - Automatisches Logging aller Consent-Aktionen  
-- **"Alle Einstellungen"-Button** öffnet vollständiges Consent Manager Fenster
+- **"Alle Einstellungen"-Button** öffnet das vollständige Consent-Manager-Fenster
 - Optional: **Drei-Button-Variante** (Einmal laden, Alle zulassen, Alle Einstellungen)
 - Bereits erteilte Consents werden respektiert
 - DSGVO-konforme Dokumentation
@@ -378,6 +378,40 @@ $thumbnailUrl = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('you
 // 4. Browser lädt NICHT direkt von YouTube = DSGVO-konform
 ```
 
+### Eigene Thumbnail-URLs übergeben (exakt erklärt)
+
+Je Element lässt sich ein individuelles Vorschaubild definieren. Unterstützt werden:
+
+- Externe URL: `'thumbnail' => 'https://example.com/thumb.jpg'`
+- Datei aus dem Medienpool (absoluter Pfad/URL): `'thumbnail' => '/media/thumb.jpg'`
+- Mediamanager-URL: `'thumbnail' => rex_media_manager::getUrl('type', 'file.jpg')`
+
+Beispiele:
+
+```php
+// 1) Externe Bild-URL (einfach, aber datenschutzrechtlich abwägen)
+echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+    'title' => 'Video laden',
+    'thumbnail' => 'https://cdn.example.com/previews/rick.jpg'
+]);
+
+// 2) Medienpool-Datei (lokal gehostet)
+echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+    'thumbnail' => '/media/video_previews/rick.jpg'
+]);
+
+// 3) Mediamanager (empfohlen): zentral skalieren/optimieren
+echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+    'thumbnail' => rex_media_manager::getUrl('consent_manager_thumbnail', 'rick.jpg')
+]);
+```
+
+Hinweise:
+
+- `'thumbnail' => 'auto'` nutzt – wo verfügbar (YouTube/Vimeo) – das automatische, lokale Caching via Mediamanager.
+- Externe Thumbnail-Quellen können sofort vom Browser geladen werden. Für maximale DSGVO-Konformität lieber lokale Dateien oder den Mediamanager verwenden.
+- Größe/Qualität zentral im Mediamanager-Type steuern (z. B. `consent_manager_thumbnail`).
+
 ## 🔧 Konfigurationsoptionen
 
 ### Basis-Optionen
@@ -425,6 +459,33 @@ $options = [
     'fade_in' => true
 ];
 ```
+
+## 🧾 Referenz: Optionen für `consent_manager_inline::doConsent()`
+
+Folgende Optionen werden im dritten Parameter (Array) unterstützt:
+
+| Option | Typ | Standard | Beschreibung | Beispiel |
+|---|---|---|---|---|
+| title | string | – (Text-Schlüssel `inline_title_fallback`) | Überschrift/Titel im Platzhalter. | `'title' => 'Mein Video'` |
+| placeholder_text | string | – (Text-Schlüssel `inline_placeholder_text`) | Text des Haupt-Buttons (z. B. „Einmal laden“). | `'placeholder_text' => 'Video abspielen'` |
+| privacy_notice | string | – (Text-Schlüssel `inline_privacy_notice`) | Kurzer Datenschutz-Hinweis im Overlay. | `'privacy_notice' => 'Für YouTube werden Cookies benötigt.'` |
+| show_allow_all | bool | false | Aktiviert die Drei-Button-Variante (Einmal laden, Alle zulassen, Alle Einstellungen). | `'show_allow_all' => true` |
+| width | int|string | – | Breite des Embeds/Platzhalters (z. B. 560 oder '100%'). | `'width' => 560` |
+| height | int|string | – | Höhe des Embeds/Platzhalters (z. B. 315 oder '360'). | `'height' => 315` |
+| thumbnail | string | automatisch/abhängig vom Service | Vorschaubild: `'auto'`, externe URL, Medienpool-Pfad oder Mediamanager-URL. | `'thumbnail' => 'auto'` |
+| attributes | array<string,string> | [] | Zusätzliche iframe-Attribute. Leere Werte werden als boolean attributes ohne `=""` gerendert. | `'attributes' => ['loading' => 'lazy', 'allowfullscreen' => '']` |
+| css_class | string | '' | Zusätzliche CSS-Klasse(n) für den Platzhalter-Container. | `'css_class' => 'consent-theme-minimal'` |
+| container_id | string | automatisch | Feste ID für den Container (nützlich für Tests oder direkte Referenzen). | `'container_id' => 'video-42'` |
+| auto_height | bool | – | Automatische Höhenanpassung (je nach Service/Theme). | `'auto_height' => true` |
+| responsive | bool | – | Aktiviert responsive Darstellung (service-/themeabhängig). | `'responsive' => true` |
+| fade_in | bool | – | Blend-Effekt beim Laden des Inhalts. | `'fade_in' => true` |
+| privacy_icon | string | – | Icon neben dem Datenschutzhinweis (UIkit, FontAwesome, Emoji). | `'privacy_icon' => '🛡️'` |
+
+Hinweise:
+
+- Texte wie „Alle Einstellungen“, „Einmal laden“ usw. kommen standardmäßig aus der REDAXO Texte-Verwaltung und können dort pro Sprache angepasst werden.
+- Für YouTube/Vimeo wird – sofern möglich – die Video-ID automatisch aus vollständigen URLs extrahiert.
+- Sicherheit: Übergebene IDs/URLs werden intern sicher verarbeitet. Für eigene iframes/scripts in `custom-service` keine unvalidierten Nutzerdaten durchreichen.
 
 ---
 
