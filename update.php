@@ -23,7 +23,9 @@ if (count(rex_clang::getAllIds()) > 1) {
     }
 
     // Write cache
-    consent_manager_cache::forceWrite();
+    if ($addon->isAvailable()) {
+        consent_manager_cache::forceWrite();
+    }
 }
 
 // Update legacy default cookie "iwcc" to "consent_manager"
@@ -33,5 +35,5 @@ $sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_cookie` '
     .'WHERE uid = "iwcc"');
 
 // Log normalisierte Domains zu Kleinbuchstaben (Fix für Issue #339)
-$sql = \rex_sql::factory();  
+$sql = \rex_sql::factory();
 $sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_consent_log` SET domain = LOWER(domain) WHERE domain != LOWER(domain)');
