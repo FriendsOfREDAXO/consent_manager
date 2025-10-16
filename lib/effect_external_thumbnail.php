@@ -208,8 +208,8 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             CURLOPT_MAXREDIRS => 5,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => true,
             CURLOPT_HTTPHEADER => [
                 'Accept: image/webp,image/apng,image/*,*/*;q=0.8',
                 'Accept-Language: de-DE,de;q=0.9,en;q=0.8',
