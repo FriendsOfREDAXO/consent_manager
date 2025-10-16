@@ -826,6 +826,7 @@ MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manag
 **Projekt-Leads:**
 - [Ingo Winter](https://github.com/IngoWinter)
 - [Andreas Eberhard](https://github.com/aeberhard)
+- [Thomas Skerbis](https://github.com/skerbis) 
 
 ### Credits
 **Contributors:** [Siehe GitHub](https://github.com/FriendsOfREDAXO/consent_manager/graphs/contributors)
