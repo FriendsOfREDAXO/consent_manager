@@ -20,47 +20,13 @@ if (!empty($videoId)) {
         echo consent_manager_inline::getCSS();
         echo consent_manager_inline::getJavaScript();
         
-        // Debug: Zeige alle verfügbaren Services (temporär auch im Frontend)
-        $sql = rex_sql::factory();
-        try {
-            $sql->setQuery('SELECT uid, service_name FROM '.rex::getTable('consent_manager_cookie').' WHERE clang_id = ?', [rex_clang::getCurrentId()]);
-            echo '<div style="background:#d1ecf1;border:1px solid #bee5eb;padding:10px;margin:10px 0;"><strong>DEBUG - Verfügbare Services:</strong><br>';
-            for ($i = 0; $i < $sql->getRows(); $i++) {
-                echo '- ' . $sql->getValue('uid') . ' (' . $sql->getValue('service_name') . ')<br>';
-                $sql->next();
-            }
-            echo '</div>';
-        } catch (Exception $e) {
-            echo '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin:10px 0;"><strong>DEBUG Datenbankfehler:</strong> ' . $e->getMessage() . '</div>';
-        }
-        
-        // Debug: Cookie-Status prüfen
-        echo '<div style="background:#e2e3e5;border:1px solid #d6d8db;padding:10px;margin:10px 0;"><strong>DEBUG Cookie-Status:</strong><br>';
-        echo 'Service Key: youtube<br>';
-        echo 'Video ID: ' . htmlspecialchars($videoId) . '<br>';
-        
-        // Cookie prüfen
-        $cookieData = json_decode($_COOKIE['consent_manager'] ?? '{}', true);
-        echo 'Cookie vorhanden: ' . (isset($_COOKIE['consent_manager']) ? 'YES' : 'NO') . '<br>';
-        echo 'Cookie Inhalt: ' . htmlspecialchars($_COOKIE['consent_manager'] ?? 'leer') . '<br>';
-        echo 'YouTube in consents: ' . (isset($cookieData['consents']) && in_array('youtube', $cookieData['consents']) ? 'YES' : 'NO') . '<br>';
-        echo '</div>';
-        
-        // Debug: doConsent Ergebnis anzeigen
-        $result = consent_manager_inline::doConsent('youtube', $videoId, [
+        // Inline-Consent für YouTube generieren
+        echo consent_manager_inline::doConsent('youtube', $videoId, [
             'title' => $videoTitle,
             'width' => $videoWidth,
             'height' => $videoHeight,
             'thumbnail' => 'auto'
         ]);
-        
-        echo '<div style="background:#fff3cd;border:1px solid #ffeaa7;padding:10px;margin:10px 0;"><strong>DEBUG doConsent Output:</strong><br>';
-        echo 'Length: ' . strlen($result) . ' chars<br>';
-        echo 'Contains HTML: ' . (strpos($result, '<') !== false ? 'YES' : 'NO') . '<br>';
-        echo '<pre style="background:#f8f9fa;padding:10px;white-space:pre-wrap;">' . htmlspecialchars(substr($result, 0, 1000)) . (strlen($result) > 1000 ? '...' : '') . '</pre>';
-        echo '</div>';
-        
-        echo $result;
     } else {
         echo '<div class="alert alert-danger">consent_manager_inline Klasse nicht gefunden!</div>';
     }

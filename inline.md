@@ -82,6 +82,25 @@ echo consent_manager_inline::doConsent('google-maps', 'https://www.google.com/ma
     'title' => 'Standort-Karte'
 ]);
 
+// ✅ YouTube mit UIkit Attributen
+echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+    'title' => 'Rick Astley Video',
+    'attributes' => [
+        'class' => 'uk-responsive-width',
+        'data-uk-responsive' => '',
+        'data-uk-video' => 'automute: true'
+    ]
+]);
+
+// ✅ Vimeo mit custom CSS Klasse
+echo consent_manager_inline::doConsent('vimeo', '123456789', [
+    'title' => 'Corporate Video',
+    'attributes' => [
+        'class' => 'responsive-video',
+        'data-video-analytics' => 'tracked'
+    ]
+]);
+
 // ✅ Iframes (vollständiger Code erforderlich)
 $spotify = '<iframe src="https://open.spotify.com/embed/playlist/..." 
                     width="100%" height="380" frameborder="0"></iframe>';
@@ -126,7 +145,15 @@ echo consent_manager_inline::doConsent('service-key', $content, [
     'thumbnail' => 'auto',                       // Vorschaubild (auto/URL)
     'icon' => 'fab fa-youtube',                  // FontAwesome/UIkit Icon
     'icon_label' => 'Video starten',             // Barrierefreiheit
-    'privacy_icon' => 'uk-icon:shield'           // Privacy-Link Icon
+    'privacy_icon' => 'uk-icon:shield',          // Privacy-Link Icon
+    
+    // Custom Attributes (YouTube/Vimeo)
+    'attributes' => [                            // Zusätzliche HTML-Attribute
+        'class' => 'my-video-class',
+        'data-uk-responsive' => '',
+        'data-uk-video' => 'automute: true',
+        'data-video-id' => '12345'
+    ]
 ]);
 ```
 
