@@ -633,6 +633,18 @@ echo doConsent('youtube', 'dQw4w9WgXcQ', [
 echo doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
     'title' => 'Mein Video'
 ]);
+
+// Mit custom Attributen (z.B. für UIkit, Bootstrap, etc.)
+echo doConsent('youtube', 'dQw4w9WgXcQ', [
+    'title' => 'Responsive YouTube Video',
+    'width' => 560,
+    'height' => 315,
+    'attributes' => [
+        'class' => 'uk-responsive-width',
+        'data-uk-video' => 'automute: true',
+        'data-uk-responsive' => ''
+    ]
+]);
 ?>
 ```
 
@@ -665,6 +677,16 @@ echo doConsent('vimeo', '123456789', [
 // Oder mit URL
 echo doConsent('vimeo', 'https://vimeo.com/123456789', [
     'title' => 'Corporate Video'
+]);
+
+// Mit custom CSS Klassen und data-Attributen
+echo doConsent('vimeo', '123456789', [
+    'title' => 'Corporate Video',
+    'attributes' => [
+        'class' => 'responsive-video my-custom-class',
+        'data-video-id' => '123456789',
+        'data-analytics' => 'tracked'
+    ]
 ]);
 ?>
 ```
