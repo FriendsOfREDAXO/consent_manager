@@ -58,6 +58,14 @@ if ('delete' === $func) {
     $select->addOption('Aktiviert', '1');
     $field->setNotice('Debug-Panel im Frontend anzeigen. Zeigt Cookie-Status und Consent-Informationen für angemeldete Backend-Benutzer an.');
 
+    // Inline-Only Mode Configuration
+    $field = $form->addSelectField('inline_only_mode');
+    $field->setLabel($addon->i18n('consent_manager_domain_inline_only_mode'));
+    $select = $field->getSelect();
+    $select->addOption($addon->i18n('consent_manager_domain_inline_only_mode_disabled'), '0');
+    $select->addOption($addon->i18n('consent_manager_domain_inline_only_mode_enabled'), '1');
+    $field->setNotice($addon->i18n('consent_manager_domain_inline_only_mode_notice'));
+
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
     $content = $form->get();
 
@@ -70,7 +78,7 @@ if ('delete' === $func) {
 echo $msg;
 if ($showlist) {
     $listDebug = false;
-    $sql = 'SELECT id, uid, google_consent_mode_enabled, google_consent_mode_debug FROM ' . $table . ' ORDER BY uid ASC';
+    $sql = 'SELECT id, uid, google_consent_mode_enabled, google_consent_mode_debug, inline_only_mode FROM ' . $table . ' ORDER BY uid ASC';
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
@@ -105,6 +113,16 @@ if ($showlist) {
             return '<span class="label label-success"><i class="fa fa-bug" style="color: #000; margin-right: 5px;"></i>Aktiv</span>';
         }
         return '<span class="label label-default"><i class="fa fa-bug" style="color: #000; margin-right: 5px;"></i>Deaktiviert</span>';
+    });
+
+    // Inline-Only Mode Status Spalte
+    $list->setColumnLabel('inline_only_mode', '📱 Inline-Only');
+    $list->setColumnFormat('inline_only_mode', 'custom', function ($params) use ($addon) {
+        $value = (int) $params['value'];
+        if ($value === 1) {
+            return '<span class="label label-info"><i class="fa fa-hand-pointer-o" style="margin-right: 5px;"></i>' . $addon->i18n('consent_manager_domain_inline_only_mode_enabled') . '</span>';
+        }
+        return '<span class="label label-default"><i class="fa fa-window-maximize" style="margin-right: 5px;"></i>' . $addon->i18n('consent_manager_domain_inline_only_mode_disabled') . '</span>';
     });
 
     $tdIcon = '<i class="fa fa-coffee"></i>';

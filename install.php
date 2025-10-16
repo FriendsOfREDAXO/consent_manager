@@ -71,6 +71,7 @@ rex_sql_table::get(rex::getTable('consent_manager_domain'))
     ->ensureColumn(new rex_sql_column('google_consent_mode_enabled', 'varchar(20)', true, 'disabled'))
     ->ensureColumn(new rex_sql_column('google_consent_mode_config', 'text'))
     ->ensureColumn(new rex_sql_column('google_consent_mode_debug', 'tinyint(1)', true, '0'))
+    ->ensureColumn(new rex_sql_column('inline_only_mode', 'varchar(20)', true, 'disabled'))
     ->ensureColumn(new rex_sql_column('createuser', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('updateuser', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('createdate', 'datetime'))
@@ -131,6 +132,88 @@ if (rex_version::compare($addon->getVersion(), '4.0', '<')) {
                 $sql->insert();
             }
         }
+    }
+}
+
+// Neue Text-Keys für Inline-Consent-System hinzufügen
+$inlineTexts = [
+    'button_inline_details' => 'Einstellungen',
+    'inline_placeholder_text' => 'Einmal laden',
+    'button_inline_allow_all' => 'Alle erlauben',
+    'inline_action_text' => 'Was möchten Sie tun?',
+    'inline_privacy_notice' => 'Für die Anzeige werden Cookies benötigt.',
+    'inline_title_fallback' => 'Externes Medium',
+    'inline_privacy_link_text' => 'Datenschutzerklärung von'
+];
+
+foreach ($inlineTexts as $uid => $defaultText) {
+    $sql = \rex_sql::factory();
+    $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = :uid', ['uid' => $uid]);
+    if (0 === (int) $sql->getValue('count')) {
+        foreach (rex_clang::getAllIds() as $lang) {
+            $sql = \rex_sql::factory();
+            $sql->setTable(rex::getTable('consent_manager_text'));
+            $sql->setValue('uid', $uid);
+            $sql->setValue('clang_id', $lang);
+            $sql->setValue('text', $defaultText);
+            $sql->insert();
+        }
+    }
+}
+
+// Mediamanager-Type für Thumbnails erstellen (falls Media Manager verfügbar)
+if (rex_addon::get('media_manager')->isAvailable()) {
+    // Prüfe ob Type bereits existiert
+    $sql = rex_sql::factory();
+    $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', ['consent_manager_thumbnail']);
+    
+    if (!$sql->getRows()) {
+        // Media Manager Type erstellen (als normaler Type, nicht System)
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('media_manager_type'));
+        $sql->setValue('name', 'consent_manager_thumbnail');
+        $sql->setValue('description', 'Consent Manager External Thumbnails (YouTube, Vimeo)');
+        $sql->setValue('status', 0); // 0 = normaler Type, 1 = System-Type (nicht editierbar)
+        $sql->addGlobalCreateFields();
+        $sql->addGlobalUpdateFields();
+        $sql->insert();
+        
+        $typeId = $sql->getLastId();
+        
+        // Effect für externe Thumbnails hinzufügen
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('media_manager_type_effect'));
+        $sql->setValue('type_id', $typeId);
+        $sql->setValue('effect', 'external_thumbnail');
+        $sql->setValue('priority', 1);
+        $sql->setValue('parameters', json_encode([
+            'rex_effect_external_thumbnail' => [
+                'rex_effect_external_thumbnail_service' => 'youtube',
+                'rex_effect_external_thumbnail_video_id' => '',
+                'rex_effect_external_thumbnail_cache_ttl' => 168
+            ]
+        ]));
+        $sql->addGlobalCreateFields();
+        $sql->addGlobalUpdateFields();
+        $sql->insert();
+        
+        // Optional: Resize-Effect hinzufügen für einheitliche Größe
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('media_manager_type_effect'));
+        $sql->setValue('type_id', $typeId);
+        $sql->setValue('effect', 'resize');
+        $sql->setValue('priority', 2);
+        $sql->setValue('parameters', json_encode([
+            'rex_effect_resize' => [
+                'rex_effect_resize_width' => '480',
+                'rex_effect_resize_height' => '360',
+                'rex_effect_resize_style' => 'maximum',
+                'rex_effect_resize_allow_enlarge' => 'not_enlarge'
+            ]
+        ]));
+        $sql->addGlobalCreateFields();
+        $sql->addGlobalUpdateFields();
+        $sql->insert();
     }
 }
 

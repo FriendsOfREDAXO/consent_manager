@@ -55,6 +55,28 @@ class consent_manager_frontend
     }
 
     /**
+     * @param int $forceCache
+     * @param int $forceReload
+     * @param string $fragmentFilename
+     * @param array $additionalVars
+     * @return string
+     * @api
+     */
+    public static function getFragmentWithVars($forceCache, $forceReload, $fragmentFilename, $additionalVars = [])
+    {
+        $fragment = new rex_fragment();
+        $fragment->setVar('forceCache', $forceCache);
+        $fragment->setVar('forceReload', $forceReload);
+        
+        // Zusätzliche Variablen setzen
+        foreach ($additionalVars as $key => $value) {
+            $fragment->setVar($key, $value);
+        }
+
+        return $fragment->parse($fragmentFilename);
+    }
+
+    /**
      * @param string $domain
      * @return void
      */
@@ -86,9 +108,14 @@ class consent_manager_frontend
             }
         }
         
+        // Zusätzliche Sicherheitsabfrage
+        if (!$this->domainName || !isset($this->cache['domains'][$this->domainName])) {
+            return;
+        }
+        
         $this->domainInfo = $this->cache['domains'][$this->domainName];
-        $this->links['privacy_policy'] = $this->cache['domains'][$domain]['privacy_policy'];
-        $this->links['legal_notice'] = $this->cache['domains'][$domain]['legal_notice'];
+        $this->links['privacy_policy'] = $this->cache['domains'][$this->domainName]['privacy_policy'];
+        $this->links['legal_notice'] = $this->cache['domains'][$this->domainName]['legal_notice'];
 
         $article = rex_article::getCurrentId();
         $clang = rex_request('lang', 'integer', 0);

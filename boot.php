@@ -147,6 +147,28 @@ if (rex::isFrontend()) {
     });
 }
 
+// Inline Consent Classes laden
+if (rex::isFrontend() || rex::isBackend()) {
+    // Autoload für Inline-Consent-Klassen sicherstellen
+    if (!class_exists('consent_manager_inline')) {
+        require_once __DIR__ . '/lib/consent_manager_inline.php';
+    }
+    if (!class_exists('rex_api_consent_manager_inline_log')) {
+        require_once __DIR__ . '/lib/api_inline_log.php';
+    }
+}
+
+// Mediamanager Effect für externe Thumbnails registrieren
+if (rex_addon::get('media_manager')->isAvailable()) {
+    // Effect-Klasse laden
+    if (!class_exists('rex_effect_external_thumbnail')) {
+        require_once __DIR__ . '/lib/effect_external_thumbnail.php';
+    }
+    
+    // Effect direkt registrieren wie Focuspoint
+    rex_media_manager::addEffect(rex_effect_external_thumbnail::class);
+}
+
 if (rex_addon::get('cronjob')->isAvailable() && !rex::isSafeMode()) {
     rex_cronjob_manager::registerType(rex_cronjob_log_delete::class);
 }

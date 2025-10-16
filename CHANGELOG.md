@@ -1,5 +1,34 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.5.0 - 14.10.2025
+
+### 🚀 Neue Features
+
+* **Inline Consent System**: Vollständig neues System für bedarfsgerechten Consent einzelner Medien/Services
+  * **Domain-spezifischer Inline-Only-Modus**: Pro Domain konfigurierbar - globaler Consent-Banner wird ausgeblendet
+  * **Datenschutz-konforme Thumbnails**: YouTube/Vimeo-Thumbnails werden lokal gecacht statt externe Requests
+  * **Fragment-basiertes Design**: Vollständig anpassbares Markup über `consent_inline_placeholder.php`
+  * **Automatische Platzhalter-Ersetzung**: Nach globaler Consent-Erteilung werden alle Inline-Elemente ohne Reload ersetzt
+  * **Multi-Event-Erkennung**: Robustes Event-System mit Cookie-Monitoring und MutationObserver
+  * **YouTube & Vimeo Integration**: Spezielle Handler mit automatischer Video-ID-Erkennung und Thumbnail-Caching
+  * **Thumbnail-Cache-System**: Lokale Speicherung externer Bilder mit automatischer Bereinigung via Cronjob
+  * **Service-spezifische Handler**: YouTube, Vimeo, Google Maps mit individueller Konfiguration
+  * **Erweiterte Debugging-Tools**: Umfassende Console-Logs und Debug-Ausgaben für Entwicklung
+
+### 🔧 Verbesserungen
+
+* **Modernisierte JavaScript-Architektur**: Event-Delegation statt onclick-Attribute
+* **Robuste Cookie-Erkennung**: Unterstützung verschiedener Cookie-Formate und URL-Dekodierung
+* **Erweiterte Service-Erkennung**: String-basierte Fallback-Erkennung bekannter Services
+* **Verbesserte Fehlerbehandlung**: Detaillierte Debug-Ausgaben und Fallback-Mechanismen
+
+### 🛠️ Technische Änderungen
+
+* **Neue Datenbankstruktur**: `inline_only_mode` Spalte in `consent_manager_domain` Tabelle
+* **Fragment-System**: Vollständig anpassbare Templates für Inline-Consent-UI
+* **Thumbnail-Cache-API**: `consent_manager_thumbnail_cache` Klasse mit SVG-Fallbacks
+* **Cronjob-Integration**: Automatische Cache-Bereinigung für Thumbnail-Dateien
+
 ## Version 4.4.0 - 24.08.2025
 
 ### 🚀 Neue Features
