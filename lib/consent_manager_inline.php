@@ -154,10 +154,18 @@ class consent_manager_inline
             }
         }
 
+        // Build attributes string from options
+        $attributesString = '';
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            foreach ($options['attributes'] as $key => $value) {
+                $attributesString .= ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+            }
+        }
+
         $iframe = '<iframe width="'.($options['width'] ?: '560').'" height="'.($options['height'] ?: '315').'" 
                    src="https://www.youtube.com/embed/'.$videoId.'" 
                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                   allowfullscreen></iframe>';
+                   allowfullscreen'.$attributesString.'></iframe>';
 
         return self::renderPlaceholderHTML($serviceKey, $iframe, $options, $consentId, $service, [
             'thumbnail' => $thumbnail,
@@ -194,9 +202,17 @@ class consent_manager_inline
             }
         }
 
+        // Build attributes string from options
+        $attributesString = '';
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            foreach ($options['attributes'] as $key => $value) {
+                $attributesString .= ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+            }
+        }
+
         $iframe = '<iframe src="https://player.vimeo.com/video/'.$videoId.'" 
                    width="'.($options['width'] ?: '640').'" height="'.($options['height'] ?: '360').'" 
-                   frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+                   frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen'.$attributesString.'></iframe>';
 
         return self::renderPlaceholderHTML($serviceKey, $iframe, $options, $consentId, $service, [
             'thumbnail' => $thumbnail,
@@ -240,18 +256,6 @@ class consent_manager_inline
      */
     private static function renderPlaceholderHTML($serviceKey, $content, $options, $consentId, $service, $placeholderData)
     {
-        // Debug im Debug-Modus
-        if (rex::isDebugMode()) {
-            $debug = '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin:10px 0;font-size:12px;">';
-            $debug .= '<strong>renderPlaceholderHTML Debug:</strong><br>';
-            $debug .= 'serviceKey: ' . var_export($serviceKey, true) . '<br>';
-            $debug .= 'consentId: ' . var_export($consentId, true) . '<br>';
-            $debug .= 'options: ' . var_export($options, true) . '<br>';
-            $debug .= 'placeholderData: ' . var_export($placeholderData, true) . '<br>';
-            $debug .= 'content length: ' . strlen($content) . ' chars<br>';
-            $debug .= '</div>';
-        }
-        
         // Fragment verwenden für bessere Anpassbarkeit
         $fragment = new rex_fragment();
         $fragment->setVar('serviceKey', $serviceKey);
@@ -276,11 +280,6 @@ class consent_manager_inline
         
         $result = $fragment->parse('consent_inline_placeholder.php');
         
-        // Debug-Output voranstellen
-        if (rex::isDebugMode() && isset($debug)) {
-            $result = $debug . $result;
-        }
-        
         return $result;
     }
 
@@ -289,6 +288,14 @@ class consent_manager_inline
      */
     private static function renderContent($content, $options)
     {
+        // Build attributes string from options
+        $attributesString = '';
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            foreach ($options['attributes'] as $key => $value) {
+                $attributesString .= ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+            }
+        }
+
         // Für YouTube URLs: In iframe umwandeln
         if (strpos($content, 'youtube.com') !== false || strpos($content, 'youtu.be') !== false) {
             preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $content, $matches);
@@ -297,7 +304,7 @@ class consent_manager_inline
                 return '<iframe width="'.($options['width'] ?: '560').'" height="'.($options['height'] ?: '315').'" 
                         src="https://www.youtube.com/embed/'.$videoId.'" 
                         frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen></iframe>';
+                        allowfullscreen'.$attributesString.'></iframe>';
             }
         }
         
@@ -308,7 +315,7 @@ class consent_manager_inline
             if ($videoId) {
                 return '<iframe src="https://player.vimeo.com/video/'.$videoId.'" 
                         width="'.($options['width'] ?: '640').'" height="'.($options['height'] ?: '360').'" 
-                        frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+                        frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen'.$attributesString.'></iframe>';
             }
         }
         
@@ -316,7 +323,7 @@ class consent_manager_inline
         if (strpos($content, 'google.com/maps/embed') !== false) {
             return '<iframe src="'.$content.'" 
                     width="'.($options['width'] ?: '100%').'" height="'.($options['height'] ?: '450').'" 
-                    style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
+                    style="border:0;" allowfullscreen="" loading="lazy"'.$attributesString.'></iframe>';
         }
         
         // Für andere Inhalte: Direkt zurückgeben
