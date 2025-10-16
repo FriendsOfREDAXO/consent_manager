@@ -57,7 +57,7 @@ rex_sql_table::get(rex::getTable('consent_manager_domain'))
         ];
 
         foreach ($buttonTexts as $key => $defaultValue) {
-            $sql->setWhere(['key' => $key]);
+            $sql->setWhere(['uid' => $key]);
             if (!$sql->select()->getRows()) {
                 $sql->setTable(rex::getTable('consent_manager_text'));
                 $sql->setValues([
