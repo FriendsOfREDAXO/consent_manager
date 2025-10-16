@@ -240,18 +240,6 @@ class consent_manager_inline
      */
     private static function renderPlaceholderHTML($serviceKey, $content, $options, $consentId, $service, $placeholderData)
     {
-        // Debug im Debug-Modus
-        if (rex::isDebugMode()) {
-            $debug = '<div style="background:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin:10px 0;font-size:12px;">';
-            $debug .= '<strong>renderPlaceholderHTML Debug:</strong><br>';
-            $debug .= 'serviceKey: ' . var_export($serviceKey, true) . '<br>';
-            $debug .= 'consentId: ' . var_export($consentId, true) . '<br>';
-            $debug .= 'options: ' . var_export($options, true) . '<br>';
-            $debug .= 'placeholderData: ' . var_export($placeholderData, true) . '<br>';
-            $debug .= 'content length: ' . strlen($content) . ' chars<br>';
-            $debug .= '</div>';
-        }
-        
         // Fragment verwenden für bessere Anpassbarkeit
         $fragment = new rex_fragment();
         $fragment->setVar('serviceKey', $serviceKey);
@@ -275,11 +263,6 @@ class consent_manager_inline
         $fragment->setVar('privacy_icon', $options['privacy_icon'] ?? 'uk-icon:shield');
         
         $result = $fragment->parse('consent_inline_placeholder.php');
-        
-        // Debug-Output voranstellen
-        if (rex::isDebugMode() && isset($debug)) {
-            $result = $debug . $result;
-        }
         
         return $result;
     }
