@@ -464,22 +464,89 @@ $options = [
 
 Folgende Optionen werden im dritten Parameter (Array) unterstützt:
 
-| Option | Typ | Standard | Beschreibung | Beispiel |
-|---|---|---|---|---|
-| title | string | – (Text-Schlüssel `inline_title_fallback`) | Überschrift/Titel im Platzhalter. | `'title' => 'Mein Video'` |
-| placeholder_text | string | – (Text-Schlüssel `inline_placeholder_text`) | Text des Haupt-Buttons (z. B. „Einmal laden“). | `'placeholder_text' => 'Video abspielen'` |
-| privacy_notice | string | – (Text-Schlüssel `inline_privacy_notice`) | Kurzer Datenschutz-Hinweis im Overlay. | `'privacy_notice' => 'Für YouTube werden Cookies benötigt.'` |
-| show_allow_all | bool | false | Aktiviert die Drei-Button-Variante (Einmal laden, Alle zulassen, Alle Einstellungen). | `'show_allow_all' => true` |
-| width | int|string | – | Breite des Embeds/Platzhalters (z. B. 560 oder '100%'). | `'width' => 560` |
-| height | int|string | – | Höhe des Embeds/Platzhalters (z. B. 315 oder '360'). | `'height' => 315` |
-| thumbnail | string | automatisch/abhängig vom Service | Vorschaubild: `'auto'`, externe URL, Medienpool-Pfad oder Mediamanager-URL. | `'thumbnail' => 'auto'` |
-| attributes | array<string,string> | [] | Zusätzliche iframe-Attribute. Leere Werte werden als boolean attributes ohne `=""` gerendert. | `'attributes' => ['loading' => 'lazy', 'allowfullscreen' => '']` |
-| css_class | string | '' | Zusätzliche CSS-Klasse(n) für den Platzhalter-Container. | `'css_class' => 'consent-theme-minimal'` |
-| container_id | string | automatisch | Feste ID für den Container (nützlich für Tests oder direkte Referenzen). | `'container_id' => 'video-42'` |
-| auto_height | bool | – | Automatische Höhenanpassung (je nach Service/Theme). | `'auto_height' => true` |
-| responsive | bool | – | Aktiviert responsive Darstellung (service-/themeabhängig). | `'responsive' => true` |
-| fade_in | bool | – | Blend-Effekt beim Laden des Inhalts. | `'fade_in' => true` |
-| privacy_icon | string | – | Icon neben dem Datenschutzhinweis (UIkit, FontAwesome, Emoji). | `'privacy_icon' => '🛡️'` |
+### title
+- Typ: string
+- Standard: Text-Schlüssel `inline_title_fallback`
+- Beschreibung: Überschrift/Titel im Platzhalter.
+- Beispiel: `'title' => 'Mein Video'`
+
+### placeholder_text
+- Typ: string
+- Standard: Text-Schlüssel `inline_placeholder_text`
+- Beschreibung: Text des Haupt-Buttons (z. B. „Einmal laden“).
+- Beispiel: `'placeholder_text' => 'Video abspielen'`
+
+### privacy_notice
+- Typ: string
+- Standard: Text-Schlüssel `inline_privacy_notice`
+- Beschreibung: Kurzer Datenschutz-Hinweis im Overlay.
+- Beispiel: `'privacy_notice' => 'Für YouTube werden Cookies benötigt.'`
+
+### show_allow_all
+- Typ: bool
+- Standard: `false`
+- Beschreibung: Aktiviert die Drei-Button-Variante (Einmal laden, Alle zulassen, Alle Einstellungen).
+- Beispiel: `'show_allow_all' => true`
+
+### width
+- Typ: int|string
+- Standard: –
+- Beschreibung: Breite des Embeds/Platzhalters (z. B. `560` oder `'100%'`).
+- Beispiel: `'width' => 560`
+
+### height
+- Typ: int|string
+- Standard: –
+- Beschreibung: Höhe des Embeds/Platzhalters (z. B. `315` oder `'360'`).
+- Beispiel: `'height' => 315`
+
+### thumbnail
+- Typ: string
+- Standard: automatisch/abhängig vom Service
+- Beschreibung: Vorschaubild-Quelle. Zulässig: `'auto'`, externe URL, Medienpool-Pfad oder Mediamanager-URL.
+- Beispiel: `'thumbnail' => 'auto'`
+
+### attributes
+- Typ: array<string,string>
+- Standard: `[]`
+- Beschreibung: Zusätzliche iframe-Attribute. Leere Werte werden als Boolean-Attribute ohne `=""` gerendert.
+- Beispiel: `'attributes' => ['loading' => 'lazy', 'allowfullscreen' => '']`
+
+### css_class
+- Typ: string
+- Standard: `''`
+- Beschreibung: Zusätzliche CSS-Klasse(n) für den Platzhalter-Container.
+- Beispiel: `'css_class' => 'consent-theme-minimal'`
+
+### container_id
+- Typ: string
+- Standard: automatisch
+- Beschreibung: Feste ID für den Container (nützlich für Tests oder direkte Referenzen).
+- Beispiel: `'container_id' => 'video-42'`
+
+### auto_height
+- Typ: bool
+- Standard: –
+- Beschreibung: Automatische Höhenanpassung (je nach Service/Theme).
+- Beispiel: `'auto_height' => true`
+
+### responsive
+- Typ: bool
+- Standard: –
+- Beschreibung: Aktiviert responsive Darstellung (service-/themeabhängig).
+- Beispiel: `'responsive' => true`
+
+### fade_in
+- Typ: bool
+- Standard: –
+- Beschreibung: Blend-Effekt beim Laden des Inhalts.
+- Beispiel: `'fade_in' => true`
+
+### privacy_icon
+- Typ: string
+- Standard: –
+- Beschreibung: Icon neben dem Datenschutzhinweis (UIkit, FontAwesome, Emoji).
+- Beispiel: `'privacy_icon' => '🛡️'`
 
 Hinweise:
 
