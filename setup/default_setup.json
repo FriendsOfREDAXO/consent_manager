@@ -625,6 +625,49 @@
       "uid": "button_back",
       "text": "Zurück"
     }
+    ,
+    {
+      "id": 21,
+      "clang_id": 1,
+      "uid": "inline_placeholder_text",
+      "text": "Einmal laden"
+    },
+    {
+      "id": 22,
+      "clang_id": 1,
+      "uid": "button_inline_details",
+      "text": "Einstellungen"
+    },
+    {
+      "id": 23,
+      "clang_id": 1,
+      "uid": "button_inline_allow_all",
+      "text": "Alle erlauben"
+    },
+    {
+      "id": 24,
+      "clang_id": 1,
+      "uid": "inline_action_text",
+      "text": "Was möchten Sie tun?"
+    },
+    {
+      "id": 25,
+      "clang_id": 1,
+      "uid": "inline_privacy_notice",
+      "text": "Für die Anzeige werden Cookies benötigt."
+    },
+    {
+      "id": 26,
+      "clang_id": 1,
+      "uid": "inline_title_fallback",
+      "text": "Externes Medium"
+    },
+    {
+      "id": 27,
+      "clang_id": 1,
+      "uid": "inline_privacy_link_text",
+      "text": "Datenschutzerklärung von"
+    }
   ],
   "domains": []
 }

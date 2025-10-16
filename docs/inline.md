@@ -4,7 +4,7 @@
 
 Das **Inline-Consent-System** ermöglicht es, Inhalte von externen Diensten (YouTube, Vimeo, Google Maps, etc.) mit einem eleganten Platzhalter anzuzeigen und erst nach Consent zu laden.
 
-**Neu:** Consent nur bei Bedarf - perfekt für Seiten mit wenigen externen Inhalten.
+ Consent nur bei Bedarf - perfekt für Seiten mit wenigen externen Inhalten.
 
 ---
 
@@ -12,9 +12,9 @@ Das **Inline-Consent-System** ermöglicht es, Inhalte von externen Diensten (You
 
 ### Problem und Lösung
 
-**Problem:** Sie haben 400 Artikel, aber nur 2 brauchen YouTube-Videos. Normale Consent-Banner nerven alle Besucher, obwohl 99% nie Videos sehen.
+**Problem:** 400 Artikel, aber nur 2 brauchen YouTube-Videos. Normale Consent-Banner nerven alle Besucher, obwohl 99% nie Videos sehen.
 
-**Lösung:** Inline-Consent zeigt Platzhalter statt Videos. Consent-Dialog erscheint erst beim Klick auf "Video laden".
+**Lösung:** Inline-Consent zeigt Platzhalter statt Videos. Der Consent-Dialog erscheint erst beim Klick auf "Video laden". (Keine Sorge: Rickrolls sind optional.)
 
 ### ⚠️ Wichtige Funktionsweise des Inline-Modus
 
@@ -24,12 +24,28 @@ Das **Inline-Consent-System** ermöglicht es, Inhalte von externen Diensten (You
 - ✅ **Keine globale Aktivierung** aller Services einer Gruppe
 - ✅ Maximaler Datenschutz durch minimale Consent-Erteilung
 
-**Beispiel:** Nutzer klickt "YouTube Video laden" → Nur dieses eine Video wird geladen, andere YouTube-Videos auf der Seite bleiben gesperrt.
+**Beispiel:** Klick auf "YouTube Video laden" → Nur dieses eine Video wird geladen, andere YouTube-Videos auf der Seite bleiben gesperrt.
 
 **Globale Aktivierung über "Alle Einstellungen":**
-- Der Button **"Alle Einstellungen"** (früher "Cookie-Details") öffnet das vollständige Consent Manager Fenster
-- Dort kann der Nutzer **alle Services einer Gruppe** global aktivieren
-- **Wichtig:** Button-Text ist über die **Texte-Verwaltung** vollständig anpassbar und übersetzbar
+- Der Button **"Alle Einstellungen"** (früher "Cookie-Details") öffnet das vollständige Consent-Manager-Fenster
+- Dort lassen sich **alle Services einer Gruppe** global aktivieren
+- **Hinweis:** Button-Texte sind über die **Texte-Verwaltung** vollständig anpassbar und übersetzbar
+
+Optional steht eine Drei-Button-Variante zur Verfügung:
+- "Einmal laden" (nur dieses Element)
+- "Alle zulassen" (alle Services der betroffenen Gruppe aktivieren)
+- "Alle Einstellungen" (vollständige Übersicht öffnen)
+
+Aktivierung im Code (pro Element):
+
+```php
+echo doConsent('youtube', 'VIDEO_ID_ODER_URL', [
+    'title' => 'Mein Video',
+    'show_allow_all' => true // Drei-Button-Variante einschalten
+]);
+```
+
+Hinweis: Der Button-Text wird über den Schlüssel `button_inline_allow_all` gesteuert (Texte-Verwaltung). Standard: „Alle zulassen“.
 
 ---
 
@@ -164,6 +180,7 @@ if (class_exists('consent_manager_inline')) {
 - Nutzt bestehende Service-Konfiguration
 - Automatisches Logging aller Consent-Aktionen  
 - **"Alle Einstellungen"-Button** öffnet vollständiges Consent Manager Fenster
+- Optional: **Drei-Button-Variante** (Einmal laden, Alle zulassen, Alle Einstellungen)
 - Bereits erteilte Consents werden respektiert
 - DSGVO-konforme Dokumentation
 - **Button-Texte anpassbar:** "Alle Einstellungen" kann über Texte-Verwaltung geändert werden (z.B. "Cookie-Einstellungen", "Datenschutz-Optionen", etc.)
@@ -226,7 +243,7 @@ Der Inline-Consent generiert ansprechende Platzhalter:
 | ❌ Viele leere Zustimmungen | ✅ Bewusste Entscheidungen |
 | ❌ Komplexe Setup für 2 Videos | ✅ Einfache Integration |
 
-**Perfect für:**
+**Perfekt für:**
 - Blogs mit gelegentlichen Videos
 - Corporate Sites mit einzelnen Maps
 - Landing Pages mit gezielten Embeds
@@ -369,7 +386,7 @@ $options = [
     'title' => 'Titel des Platzhalters',
     'placeholder_text' => 'Button-Text',
     'privacy_notice' => 'Datenschutz-Hinweis',
-    'show_allow_all' => true, // "Alle erlauben" Button
+    'show_allow_all' => true, // "Alle zulassen" Button
     'width' => '640',
     'height' => '360',
     
@@ -418,8 +435,8 @@ Texte werden über die **REDAXO Texte-Verwaltung** konfiguriert:
 ### Standard-Texte
 - `button_inline_details` → "Einstellungen"
 - `inline_placeholder_text` → "Einmal laden"  
-- `button_inline_allow_all` → "Alle erlauben"
-- `inline_action_text` → "Was möchten Sie tun?"
+- `button_inline_allow_all` → "Alle zulassen"
+- `inline_action_text` → "Aktion auswählen"
 - `inline_privacy_notice` → "Für die Anzeige werden Cookies benötigt."
 - `inline_title_fallback` → "Externes Medium"
 - `inline_privacy_link_text` → "Datenschutzerklärung von"
@@ -685,4 +702,3 @@ rex_consent_manager_thumbnail_mediamanager::clearCache();
 - ✅ **Skalierbar**: Eigene Types für verschiedene Anwendungsfälle
 - ✅ **Wartbar**: Standard REDAXO-Komponente, keine proprietäre Lösung
 
-**→ Professionelle Video-Thumbnail-Lösung für REDAXO! 🎯**
