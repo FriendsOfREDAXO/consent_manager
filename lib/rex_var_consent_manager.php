@@ -16,8 +16,8 @@ class rex_var_consent_manager extends rex_var
             // Für inline-Modus: verwende getFragmentWithVars mit inline=true
             return self::quote(
                 '<?= consent_manager_frontend::getFragmentWithVars('.
-                $forceCache.', '.
-                $forceReload.', '.
+                self::quote($forceCache).', '.
+                self::quote($forceReload).', '.
                 self::quote('consent_manager_box_cssjs.php').', '.
                 '["inline" => true]'.
                 ') ?>'
@@ -26,8 +26,8 @@ class rex_var_consent_manager extends rex_var
             // Standard-Modus: verwende ursprüngliche getFragment Methode
             return self::quote(
                 '<?= consent_manager_frontend::getFragment('.
-                $forceCache.', '.
-                $forceReload.', '.
+                self::quote($forceCache).', '.
+                self::quote($forceReload).', '.
                 self::quote('consent_manager_box_cssjs.php').
                 ') ?>'
             );
