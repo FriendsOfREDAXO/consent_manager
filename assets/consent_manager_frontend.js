@@ -128,6 +128,7 @@ function debugLog(message, data) {
                 document.querySelector('body').style.overflow = 'auto';
             }
             document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
+            document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'true');
             
             // Trigger close event (Issue #156)
             document.dispatchEvent(new CustomEvent('consent_manager-close'));
@@ -148,7 +149,7 @@ function debugLog(message, data) {
 
     if (document.getElementById('consent_manager-toggle-details')) {
         document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
-            if (event.key == 'Enter' || event.key == ' ') {
+            if (event.key == 'Enter') {
                 event.preventDefault();
                 document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
                 // Update aria-expanded
@@ -170,6 +171,7 @@ function debugLog(message, data) {
                     document.querySelector('body').style.overflow = 'auto';
                 }
                 consentBox.classList.add('consent_manager-hidden');
+                consentBox.setAttribute('aria-hidden', 'true');
                 // Trigger close event
                 document.dispatchEvent(new CustomEvent('consent_manager-close'));
             }
@@ -387,6 +389,7 @@ function debugLog(message, data) {
             document.querySelector('body').style.overflow = 'hidden';
         }
         document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+        document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'false');
         
         // Initialize aria-expanded for toggle button (A11y)
         var toggleBtn = document.getElementById('consent_manager-toggle-details');
@@ -613,6 +616,7 @@ function consent_manager_showBox() {
         document.querySelector('body').style.overflow = 'hidden';
     }
     document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+    document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'false');
     
     // Focus first interactive element (button) for better accessibility
     var focusableButtons = consent_managerBox.querySelectorAll('button.consent_manager-save-selection, button.consent_manager-accept-all, button.consent_manager-accept-none');

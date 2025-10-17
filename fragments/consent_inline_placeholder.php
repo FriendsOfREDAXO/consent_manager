@@ -53,9 +53,9 @@ if (!empty($placeholderData['thumbnail'])) {
                         }
                         ?>
                     </div>
-                    <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $this->getVar('inline_title_fallback', 'Externes Medium')) ?></h4>
-                    <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? $this->getVar('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.')) ?></p>
-                    <p class="consent-inline-action-text"><?= rex_escape($this->getVar('inline_action_text', 'Was möchten Sie tun?')) ?></p>
+                    <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $this->getVar('inline_title_fallback')) ?></h4>
+                    <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? $this->getVar('inline_privacy_notice')) ?></p>
+                    <p class="consent-inline-action-text"><?= rex_escape($this->getVar('inline_action_text')) ?></p>
                     
                     <?php if (!empty($service['provider_link_privacy'])): ?>
                     <div class="consent-inline-privacy-link">
@@ -69,7 +69,7 @@ if (!empty($placeholderData['thumbnail'])) {
                                 echo '<i class="' . rex_escape($privacyIcon) . '" aria-hidden="true"></i>';
                             }
                             ?>
-                            <?= rex_escape($this->getVar('inline_privacy_link_text', 'Datenschutzerklärung von')) ?> <?= rex_escape($service['provider'] ?? $service['service_name'] ?? 'Anbieter') ?>
+                            <?= rex_escape($this->getVar('inline_privacy_link_text')) ?> <?= rex_escape($service['provider'] ?? $service['service_name'] ?? 'Anbieter') ?>
                         </a>
                     </div>
                     <?php endif; ?>
@@ -78,19 +78,19 @@ if (!empty($placeholderData['thumbnail'])) {
                         <button type="button" class="btn btn-consent-once consent-inline-once" 
                                 data-consent-id="<?= rex_escape($consentId) ?>"
                                 data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-play"></i> <?= rex_escape($options['placeholder_text'] ?? $this->getVar('inline_placeholder_text', 'Einmal laden')) ?>
+                            <i class="fa fa-play"></i> <?= rex_escape($options['placeholder_text'] ?? $this->getVar('inline_placeholder_text')) ?>
                         </button>
                         
                         <?php if ($this->getVar('show_allow_all', false)): ?>
                         <button type="button" class="btn btn-consent-allow-all consent-inline-allow-all" 
-                                data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-check-circle"></i> <?= rex_escape($this->getVar('button_inline_allow_all_text', 'Alle erlauben')) ?>
+                                data-consent-id="<?= rex_escape($consentId) ?>">
+                            <i class="fa fa-check"></i> <?= rex_escape($this->getVar('button_inline_allow_all_text')) ?>
                         </button>
                         <?php endif; ?>
                         
-                        <button type="button" class="btn btn-consent-details consent-inline-details" 
-                                data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-cog"></i> <?= rex_escape($this->getVar('button_inline_details_text', 'Einstellungen')) ?>
+                                                <button type="button" class="btn btn-consent-details consent-inline-details" 
+                                onclick="consentManager.showBox()">
+                            <i class="fa fa-cog"></i> <?= rex_escape($this->getVar('button_inline_details_text')) ?>
                         </button>
                     </div>
                 </div>
