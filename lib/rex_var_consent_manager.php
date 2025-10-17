@@ -4,6 +4,10 @@ class rex_var_consent_manager extends rex_var
 {
     protected function getOutput()
     {
+        // Extrahiere forceCache und forceReload Parameter
+        $forceCache = $this->getArg('forceCache', 0, false);
+        $forceReload = $this->getArg('forceReload', 0, false);
+        
         // Prüfe ob inline Parameter gesetzt ist
         $inline = $this->getArg('inline', false, false);
         
@@ -11,8 +15,8 @@ class rex_var_consent_manager extends rex_var
             // Für inline-Modus: verwende getFragmentWithVars mit inline=true
             return self::quote(
                 '<?= consent_manager_frontend::getFragmentWithVars('.
-                self::quote($this->getContext() ? 1 : 0).', '.
-                self::quote($this->getContext() && !$this->hasArg('cache') ? 1 : 0).', '.
+                $forceCache.', '.
+                $forceReload.', '.
                 self::quote('consent_manager_box_cssjs.php').', '.
                 '["inline" => true]'.
                 ') ?>'
@@ -21,8 +25,8 @@ class rex_var_consent_manager extends rex_var
             // Standard-Modus: verwende ursprüngliche getFragment Methode
             return self::quote(
                 '<?= consent_manager_frontend::getFragment('.
-                self::quote($this->getContext() ? 1 : 0).', '.
-                self::quote($this->getContext() && !$this->hasArg('cache') ? 1 : 0).', '.
+                $forceCache.', '.
+                $forceReload.', '.
                 self::quote('consent_manager_box_cssjs.php').
                 ') ?>'
             );
