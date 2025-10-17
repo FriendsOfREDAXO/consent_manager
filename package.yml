@@ -22,6 +22,9 @@ page:
       title: "translate:consent_manager_domains"
     theme:
       title: "translate:consent_manager_theme"
+    theme_editor:
+      title: "Theme Editor"
+      icon: rex-icon fa-paint-brush
     log:
       title: "translate:consent_manager_log"
     help:

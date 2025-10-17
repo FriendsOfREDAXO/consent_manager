@@ -85,15 +85,43 @@ www.beispiel.de
 **PHP-Aufruf (empfohlen):**
 ```php
 <?php 
-// Standard-Integration
+// Standard-Integration (alles in einem)
 echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php'); 
 
+// Oder Komponenten einzeln laden (mehr Flexibilität):
+?>
+<style><?php echo consent_manager_frontend::getCSS(); ?></style>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    <?php echo consent_manager_frontend::getJS(); ?>
+</script>
+<?php echo consent_manager_frontend::getBox(); ?>
+
+<?php
 // Mit custom Fragment
 echo consent_manager_frontend::getFragment(0, 0, 'my_custom_box.php');
 
 // Mit Inline-Modus
 echo consent_manager_frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cssjs.php', ['inline' => true]);
 ?>
+```
+
+**Separate Ausgabe (Issue #282):**
+```php
+<?php
+// Nur CSS ausgeben
+echo consent_manager_frontend::getCSS();
+
+// Nur JavaScript ausgeben  
+echo consent_manager_frontend::getJS();
+
+// Nur Box-HTML ausgeben
+echo consent_manager_frontend::getBox();
+
+// Mit CSP-Nonce für Scripts
+?>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    <?php echo consent_manager_frontend::getJS(); ?>
+</script>
 ```
 
 **Verfügbare Parameter:**
@@ -194,6 +222,45 @@ Jeder externe Dienst (Analytics, Social Media, etc.) wird einzeln angelegt:
 **Dienstname:** Wird in der Consent-Box angezeigt
 **Cookie-Definitionen:** YAML-Format für Cookie-Details
 
+### Cookie-Einstellungen (SameSite & Secure)
+
+**Konfigurierbare Cookie-Sicherheit** (seit Version 4.5.0):
+
+Der Consent Manager unterstützt konfigurierbare Cookie-Einstellungen für maximale Sicherheit:
+
+**Standardwerte:**
+```yaml
+cookie_samesite: 'Lax'    # Standard für gute Kompatibilität
+cookie_secure: false      # false für HTTP-Seiten
+```
+
+**Empfohlene Werte für HTTPS-Seiten:**
+```yaml
+cookie_samesite: 'Strict' # Maximale Sicherheit
+cookie_secure: true       # Nur über HTTPS übertragen
+```
+
+**SameSite Optionen:**
+- `Strict`: Cookies werden nur bei direktem Besuch der Domain gesendet (höchste Sicherheit)
+- `Lax`: Cookies werden auch bei Top-Level-Navigation gesendet (Standard, guter Kompromiss)
+- `None`: Cookies werden immer gesendet (⚠️ erfordert `secure: true`)
+
+**Secure Flag:**
+- `true`: Cookie wird nur über HTTPS übertragen (empfohlen für Produktiv-Sites)
+- `false`: Cookie wird auch über HTTP übertragen (nur für Entwicklung)
+
+**Konfiguration in `package.yml`:**
+```yaml
+cookie_samesite: 'Strict'
+cookie_secure: true
+```
+
+**⚠️ Wichtig für Subdomains:**
+Seit Version 4.5.0 werden **keine Wildcard-Cookies** mehr gesetzt. Jede (Sub-)Domain erhält ihren eigenen Consent-Cookie. Dies ist DSGVO-konform, bedeutet aber:
+- `example.com` und `shop.example.com` sind separate Domains
+- Consent muss für jede Domain einzeln eingeholt werden
+- Cookie gilt nur für die exakte Domain, nicht für Subdomains
+
 ### Cookie-Definitionen mit YAML
 
 Das AddOn verwendet YAML-Format für die Definition von Cookie-Details:
@@ -241,6 +308,11 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/themes.png?raw=true)
 
+**Verfügbare Themes:**
+- Standard-Themes (Hell, Dunkel, Bottom Bar, Bottom Right)
+- Community-Themes (Olien Dark/Light, Skerbis Glass, XOrange)
+- **🆕 Accessibility Theme** (`consent_manager_frontend_a11y.css`) - Barrierefrei optimiert
+
 **Eigenes Theme erstellen:**
 1. Bestehendes Theme kopieren
 2. In `/project/consent_manager_themes/` ablegen
@@ -252,6 +324,67 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 ```
 /redaxo/index.php?page=consent_manager/theme&preview=project:consent_manager_frontend_mein_theme.scss
 ```
+
+### ♿ Barrierefreiheit (Accessibility)
+
+**Issue #326 - Optimierungen für Barrierefreiheit:**
+
+Das neue **A11y-Theme** (`consent_manager_frontend_a11y.css`) bietet umfassende Barrierefreiheit:
+
+**WCAG 2.1 AA Konformität:**
+- ✅ **Kontrastverhältnisse:** 4.5:1 für Text, 3:1 für UI-Komponenten
+- ✅ **Focus-Indikatoren:** 3px blaue Umrandung für alle interaktiven Elemente
+- ✅ **Touch-Targets:** Mindestens 44x44px für alle Buttons und Links
+- ✅ **Screen Reader:** Korrekte ARIA-Labels (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`)
+- ✅ **Tastatursteuerung:** Vollständige Navigation ohne Maus möglich
+- ✅ **Focus Trap:** Tab-Navigation bleibt innerhalb des Modals
+- ✅ **DSGVO-konform:** Alle 3 Buttons (ablehnen/auswählen/alle) visuell gleichwertig
+
+**Modales Verhalten (Issue #326):**
+- **Auto-Focus:** Beim Öffnen wird automatisch der erste Button fokussiert
+- **Focus Trap:** Tab/Shift+Tab bleiben innerhalb des Consent-Dialogs
+- **ESC funktioniert immer:** Schließt Dialog von jedem Element aus
+- **Tastatur-Zugänglichkeit:** Kein Entkommen nur mit Maus nötig
+
+**Tastatursteuerung:**
+```
+ESC             → Consent Box schließen (von überall im Dialog)
+Tab             → Vorwärts zwischen Elementen navigieren (bleibt im Dialog)
+Shift+Tab       → Rückwärts zwischen Elementen navigieren (bleibt im Dialog)
+Enter / Space   → Details ein-/ausklappen
+Enter           → Buttons aktivieren
+```
+
+**Theme-Varianten:**
+1. **Accessibility (WCAG 2.1 AA)** - Neutrales Grau, DSGVO-konforme Buttons
+2. **Accessibility Blue** - Blauer Akzent (#0066cc)
+3. **Accessibility Green** - Grüner Akzent (#025335)
+4. **Accessibility Compact** - Platzsparende Version, Grau
+5. **Accessibility Compact Blue** - Platzsparend mit blauem Akzent
+Enter / Space   → Details ein-/ausklappen (Issue #326)
+Enter           → Buttons aktivieren
+```
+
+**Implementierte Features:**
+- **ESC-Taste:** Schließt die Consent Box ohne durch alle Felder zu tabben
+- **Space-Taste:** Aktiviert den "Details anzeigen"-Button (zusätzlich zu Enter)
+- **aria-expanded:** Zeigt Screen Readern den Zustand des Details-Bereichs
+- **Reduzierte Bewegung:** Respektiert `prefers-reduced-motion` Einstellung
+- **Hoher Kontrast:** Unterstützt `prefers-contrast: high` Modus
+- **Focus-Management:** Automatischer Focus auf erste Checkbox beim Öffnen
+
+**Verwendung:**
+```php
+<!-- Im Backend: Theme auf "consent_manager_frontend_a11y.css" setzen -->
+<!-- Oder manuell: -->
+<link rel="stylesheet" href="/assets/addons/consent_manager/consent_manager_frontend_a11y.css">
+```
+
+**Zusätzliche Empfehlungen:**
+- Platzieren Sie den Cookie-Einstellungs-Link prominent im Footer
+- Verwenden Sie beschreibende Linktexte (z.B. "Cookie-Einstellungen" statt "Klick hier")
+- Testen Sie mit Screen Readern (NVDA, JAWS, VoiceOver)
+- Prüfen Sie Keyboard-Navigation regelmäßig
 
 ### Individuelles Design
 
@@ -462,6 +595,83 @@ Token in Einstellungen definieren und URL-Parameter verwenden:
 https://beispiel.de/seite.html?skip_consent=MEINTOKEN
 ```
 
+**CSP (Content Security Policy) Kompatibilität:**
+✅ **Gelöst ab Version 4.5.0:** Das Consent-Manager AddOn ist jetzt CSP-kompatibel!
+
+**Implementierte Lösung:**
+- **Automatische Nonce-Übergabe**: Nonce wird automatisch von `rex_response::getNonce()` geholt
+- **Keine manuelle Konfiguration nötig**: Funktioniert out-of-the-box
+- **Kein innerHTML mehr**: Scripts werden via `document.createElement()` und `textContent` eingefügt
+- **CSP-freundlich**: Kompatibel mit `script-src 'nonce-XXX'` Policies
+
+**CSP-Header Beispiel:**
+```
+Content-Security-Policy: script-src 'self' 'nonce-ZUFÄLLIGER_NONCE';
+```
+
+**Einfache Verwendung im Template:**
+```php
+<?php
+// Einfach aufrufen - Nonce wird automatisch verwendet!
+echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+?>
+```
+
+**Manuelle CSP-Header setzen (optional):**
+```php
+<?php
+// Nur wenn du eigene CSP-Header setzen möchtest
+$nonce = rex_response::getNonce();
+header("Content-Security-Policy: script-src 'self' 'nonce-{$nonce}'");
+
+echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+?>
+```
+
+**Externe Scripts bevorzugen:**
+Für maximale CSP-Kompatibilität externe Scripts mit `src` Attribut verwenden:
+```javascript
+// ✅ Empfohlen: Externe Script-Dateien
+<script src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+
+// ⚠️ Weniger CSP-freundlich: Inline-Scripts
+<script>
+  gtag('config', 'GA_MEASUREMENT_ID');
+</script>
+```
+
+**Hinweis zu Issue #320:**
+Das ursprünglich gemeldete Problem mit dynamischen Script-Injektionen ist behoben. Die Lösung verwendet:
+- `createElement()` statt `innerHTML`
+- `textContent` statt `innerHTML` für Script-Content
+- Automatische Nonce-Propagierung
+- Anhängen an `document.body` statt versteckte Container
+
+**Subdomain-Probleme und DSGVO-Konformität:**
+✅ **Gelöst ab Version 4.5.0:** Subdomain-spezifische Consent-Verwaltung (Issue #317)
+
+**Problem:**
+- Alte Versionen verwendeten Wildcard-Cookies (`.example.com`)
+- Consent von `example.com` galt fälschlicherweise auch für `shop.example.com`
+- **DSGVO-Verstoß**: Consent muss domain-spezifisch sein!
+
+**Lösung:**
+- **Domain-spezifische Cookies**: Jede (Sub-)Domain erhält eigenen Consent
+- **Keine Wildcard-Domains**: Cookie gilt nur für exakte Domain
+- **Korrekte Subdomain-Erkennung**: `shop.example.com` wird als vollständige Domain behandelt
+
+**Empfehlung für HTTPS-Seiten:**
+```php
+// In package.yml oder Einstellungen:
+cookie_samesite: 'Strict'  # Empfohlen für HTTPS
+cookie_secure: true        # Nur über HTTPS übertragen
+```
+
+**Wichtig für Multi-Domain-Setups:**
+- Jede Domain benötigt eigene Consent-Manager Konfiguration
+- `example.com` und `shop.example.com` sind DSGVO-rechtlich separate Websites
+- Consent muss für jede Domain einzeln eingeholt werden
+
 ### Berechtigungen für Redakteure
 
 **Vollzugriff für Redakteure:**
@@ -495,11 +705,65 @@ https://beispiel.de/seite.html?skip_consent=MEINTOKEN
 
 ### Event-Listener
 
+Der Consent Manager triggert mehrere JavaScript-Events für Custom-Integrationen:
+
+**Verf\u00fcgbare Events:**
+- `consent_manager-show` - Box wurde ge\u00f6ffnet
+- `consent_manager-close` - Box wurde geschlossen
+- `consent_manager-saved` - Consent wurde gespeichert (enth\u00e4lt Consent-Daten)
+
+**JavaScript Event-Listener:**
 ```javascript
-// Reagiert auf Consent-Änderungen
-$(document).on('consent_manager-saved', function(e) {
-    var consents = JSON.parse(e.originalEvent.detail);
+// Box wurde ge\u00f6ffnet
+document.addEventListener('consent_manager-show', function() {
+    console.log('Consent Box ge\u00f6ffnet');
+    // Custom Analytics-Tracking
+    // Custom Overlays/Animations
+});
+
+// Box wurde geschlossen
+document.addEventListener('consent_manager-close', function() {
+    console.log('Consent Box geschlossen');
+    // Cleanup-Aktionen
+});
+
+// Consent wurde gespeichert
+document.addEventListener('consent_manager-saved', function(e) {
+    var consents = JSON.parse(e.detail);
+    console.log('Gespeicherte Consents:', consents);
     // Verarbeitung der Consent-Daten
+    // z.B. Analytics, Tag Manager Updates
+});
+```
+
+**Praktische Beispiele:**
+
+```javascript
+// A/B-Testing: Tracking welche Nutzer Consent-Box sehen
+document.addEventListener('consent_manager-show', function() {
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'consent_box_shown');
+    }
+});
+
+// Custom Animation beim Schließen
+document.addEventListener('consent_manager-close', function() {
+    document.body.classList.add('consent-box-closed');
+});
+
+// Conditional Script Loading basierend auf Consent
+document.addEventListener('consent_manager-saved', function(e) {
+    var consents = JSON.parse(e.detail);
+    
+    if (consents.includes('google-analytics')) {
+        // Google Analytics wurde akzeptiert
+        console.log('Analytics aktiviert');
+    }
+    
+    if (consents.includes('marketing')) {
+        // Marketing-Cookies wurden akzeptiert
+        console.log('Marketing aktiviert');
+    }
 });
 ```
 
@@ -582,6 +846,92 @@ Die Services sind bereits strukturiert in Kategorien wie Analytics, Marketing, e
 ---
 
 ## 🛠️ Erweiterte Integration
+
+### API-Methoden (Issue #282)
+
+Seit Version 5.x stehen separate Methoden für CSS, JavaScript und Box-HTML zur Verfügung:
+
+**`consent_manager_frontend::getCSS()`**
+```php
+<?php
+// Gibt nur das CSS zurück
+$css = consent_manager_frontend::getCSS();
+echo '<style>' . $css . '</style>';
+?>
+```
+- **Return:** CSS-String mit Theme-Unterstützung
+- **Use Case:** Inline-CSS oder separate CSS-Datei generieren
+- **Performance:** Cached durch REDAXO
+
+**`consent_manager_frontend::getJS()`**
+```php
+<?php
+// Gibt JavaScript inkl. Parameter und Box-Template zurück
+$js = consent_manager_frontend::getJS();
+?>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    <?php echo $js; ?>
+</script>
+```
+- **Return:** Vollständiges JavaScript (js.cookie, polyfills, consent_manager_frontend.js)
+- **Enthält:** Parameter, Box-Template, Cookie-Expiration
+- **CSP:** Nonce-Attribut automatisch über `getNonceAttribute()` verfügbar
+- **Use Case:** Inline-JavaScript oder separate JS-Datei
+
+**`consent_manager_frontend::getBox()`**
+```php
+<?php
+// Gibt nur das Box-HTML zurück (ohne CSS/JS)
+echo consent_manager_frontend::getBox();
+?>
+```
+- **Return:** HTML der Consent-Box
+- **Use Case:** AJAX-Loading, Custom Integration, SPA-Frameworks
+- **Voraussetzung:** CSS und JS müssen separat geladen sein
+
+**`consent_manager_frontend::getNonceAttribute()`**
+```php
+<?php
+// CSP-Nonce-Attribut für Script-Tags
+?>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    // Ihr JavaScript-Code
+</script>
+```
+- **Return:** ` nonce="XXX"` oder leerer String
+- **CSP:** Automatische Integration mit REDAXO's CSP-Nonce
+- **Use Case:** Inline-Scripts mit Content Security Policy
+
+**Anwendungsbeispiele:**
+
+```php
+<?php
+// Beispiel 1: Alles inline im Template
+?>
+<style><?php echo consent_manager_frontend::getCSS(); ?></style>
+<?php echo consent_manager_frontend::getBox(); ?>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    <?php echo consent_manager_frontend::getJS(); ?>
+</script>
+
+<?php
+// Beispiel 2: JavaScript in separate Datei schreiben
+$jsFile = rex_path::assets('consent_manager_custom.js');
+rex_file::put($jsFile, consent_manager_frontend::getJS());
+?>
+<script src="<?php echo rex_url::assets('consent_manager_custom.js'); ?>"<?php echo consent_manager_frontend::getNonceAttribute(); ?>></script>
+
+<?php
+// Beispiel 3: Für AJAX/SPA nur Box-HTML zurückgeben
+if (rex_request::isAjaxRequest()) {
+    rex_response::sendJson([
+        'html' => consent_manager_frontend::getBox(),
+        'css' => consent_manager_frontend::getCSS()
+    ]);
+    exit;
+}
+?>
+```
 
 ### Conditional Loading mit PHP
 

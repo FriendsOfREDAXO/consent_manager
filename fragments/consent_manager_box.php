@@ -8,11 +8,11 @@ if (0 === count($consent_manager->texts)) {
     return;
 }
 if (null !== $consent_manager->cookiegroups): ?>
-        <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet>
-            <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" aria-modal="true" role="dialog" title="Cookie Consent">
+        <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
+            <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1">
                 <div class="consent_manager-wrapper-inner">
                     <div class="consent_manager-summary" id="consent_manager-summary">
-                        <p class="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></p>
+                        <p class="consent_manager-headline" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></p>
                         <p class="consent_manager-text"><?= nl2br($consent_manager->texts['description']) ?></p>
                         <div class="consent_manager-cookiegroups">
                             <?php
@@ -34,7 +34,7 @@ if (null !== $consent_manager->cookiegroups): ?>
                             ?>
                         </div>
                         <div class="consent_manager-show-details">
-                            <button id="consent_manager-toggle-details" class="icon-info-circled" aria-controls="consent_manager-detail" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></button>
+                            <button id="consent_manager-toggle-details" class="icon-info-circled" aria-controls="consent_manager-detail" aria-expanded="false" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></button>
                         </div>
                     </div>
 
@@ -127,13 +127,15 @@ foreach ($consent_manager->links as $v) {
                 </div>
             </div>
             <?php
-            // NOTE: For CSP-compatibility - Do no longer use inline styles like style="display: none"
-            // Use the given class name "consent_manager-script" in combination with css to hide an element instead (if needed)
+            // CSP-compatible script storage using data attributes
+            // Scripts are NOT injected via innerHTML but stored as data attributes
+            // and loaded via external script tags when consent is given
             foreach ($consent_manager->scripts as $uid => $script) {
-                echo '<div class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . $script . '"></div>';
+                // Store script as base64 in data attribute for JS to process
+                echo '<div class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . base64_encode($script) . '"></div>';
             }
             foreach ($consent_manager->scriptsUnselect as $uid => $script) {
-                echo '<div class="consent_manager-script" data-uid="script-unselect-' . $uid . '" data-script="' . $script . '"></div>';
+                echo '<div class="consent_manager-script" data-uid="script-unselect-' . $uid . '" data-script="' . base64_encode($script) . '"></div>';
             }
 			?>
         </div>

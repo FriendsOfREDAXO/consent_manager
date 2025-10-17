@@ -308,7 +308,7 @@ class consent_manager_inline
             }
         }
 
-        // Für YouTube URLs: In iframe umwandeln
+        // Für YouTube URLs oder Video-IDs: In iframe umwandeln
         if (strpos($content, 'youtube.com') !== false || strpos($content, 'youtu.be') !== false) {
             preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $content, $matches);
             $videoId = $matches[1] ?? '';
@@ -320,7 +320,17 @@ class consent_manager_inline
             }
         }
         
-        // Für Vimeo URLs: In iframe umwandeln
+        // Wenn content nur 11 Zeichen hat (YouTube Video-ID Format), als YouTube behandeln
+        if (strlen($content) === 11 && preg_match('/^[a-zA-Z0-9_-]{11}$/', $content)) {
+            $src = rex_escape($content);
+            $width = $options['width'] ?: '560';
+            $height = $options['height'] ?: '315';
+            return <<<HTML
+<iframe src="https://www.youtube.com/embed/{$src}" width="{$width}" height="{$height}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen{$attributesString}></iframe>
+HTML;
+        }
+        
+        // Für Vimeo URLs oder Video-IDs: In iframe umwandeln
         if (strpos($content, 'vimeo.com') !== false) {
             preg_match('/vimeo\.com\/(\d+)/', $content, $matches);
             $videoId = $matches[1] ?? '';
@@ -329,6 +339,16 @@ class consent_manager_inline
                         width="'.($options['width'] ?: '640').'" height="'.($options['height'] ?: '360').'" 
                         frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen'.$attributesString.'></iframe>';
             }
+        }
+        
+        // Wenn content nur Zahlen hat (Vimeo Video-ID Format), als Vimeo behandeln
+        if (preg_match('/^\d{6,}$/', $content)) {
+            $src = rex_escape($content);
+            $width = $options['width'] ?: '640';
+            $height = $options['height'] ?: '360';
+            return <<<HTML
+<iframe src="https://player.vimeo.com/video/{$src}" width="{$width}" height="{$height}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen{$attributesString}></iframe>
+HTML;
         }
         
         // Für Google Maps Embed URLs: In iframe umwandeln

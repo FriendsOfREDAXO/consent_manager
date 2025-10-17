@@ -50,6 +50,7 @@ class consent_manager_frontend
         $fragment = new rex_fragment();
         $fragment->setVar('forceCache', $forceCache);
         $fragment->setVar('forceReload', $forceReload);
+        $fragment->setVar('cspNonce', rex_response::getNonce());
 
         return $fragment->parse($fragmentFilename);
     }
@@ -67,6 +68,7 @@ class consent_manager_frontend
         $fragment = new rex_fragment();
         $fragment->setVar('forceCache', $forceCache);
         $fragment->setVar('forceReload', $forceReload);
+        $fragment->setVar('cspNonce', rex_response::getNonce());
         
         // Zusätzliche Variablen setzen
         foreach ($additionalVars as $key => $value) {
@@ -193,7 +195,20 @@ class consent_manager_frontend
         $boxtemplate = str_replace("\n", ' ', $boxtemplate);
 
         echo '/* --- Parameters --- */' . PHP_EOL;
-        echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . consent_manager_util::hostname() . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", forcereload: ' . rex_get('r', 'int', 0) . ', hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . '};' . PHP_EOL . PHP_EOL;
+        $consent_manager_parameters = [
+            'initially_hidden' => rex_get('i', 'string', 'false') === 'true',
+            'domain' => consent_manager_util::hostname(),
+            'consentid' => uniqid('', true),
+            'cachelogid' => rex_get('cid', 'string', ''),
+            'version' => rex_get('v', 'string', ''),
+            'fe_controller' => rex_url::frontend(),
+            'forcereload' => (int) rex_get('r', 'int', 0),
+            'hidebodyscrollbar' => rex_get('h', 'string', 'false') === 'true',
+            'cspNonce' => rex_response::getNonce(),
+            'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
+            'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
+        ];
+        echo 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES) . ';' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
         echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL; /** @phpstan-ignore-line */
@@ -237,4 +252,124 @@ class consent_manager_frontend
         }
         return '/*' . $_cssfilename . '*/ ' . $_csscontent;
     }
+
+    /**
+     * Get nonce attribute for script tags using REDAXO's CSP nonce
+     * 
+     * @return string
+     * @api
+     */
+    public static function getNonceAttribute(): string
+    {
+        $nonce = rex_response::getNonce();
+        return $nonce ? ' nonce="' . htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8') . '"' : '';
+    }
+
+    /**
+     * Get CSS output for consent manager
+     * Alias for getFrontendCss() for consistency with Issue #282
+     * 
+     * @return string CSS content
+     * @api
+     */
+    public static function getCSS(): string
+    {
+        return self::getFrontendCss();
+    }
+
+    /**
+     * Get JavaScript output for consent manager
+     * Returns complete JavaScript including parameters, box template and all required libraries
+     * 
+     * @return string JavaScript content
+     * @api
+     */
+    public static function getJS(): string
+    {
+        $addon = rex_addon::get('consent_manager');
+        $clang = rex_clang::getCurrentId();
+        
+        // Get box template
+        $boxtemplate = '';
+        ob_start();
+        echo self::getFragment(0, 0, 'consent_manager_box.php');
+        $boxtemplate = ob_get_contents();
+        ob_end_clean();
+        
+        if ('' === $boxtemplate) {
+            rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . consent_manager_util::hostname() . ')');
+        }
+        
+        // Process with sprog if available
+        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable()) {
+            /** @phpstan-ignore-next-line */
+            $boxtemplate = sprogdown($boxtemplate, $clang);
+        }
+        
+        // Escape for JavaScript
+        $boxtemplate = str_replace("'", "\\'", $boxtemplate);
+        $boxtemplate = str_replace("\r", '', $boxtemplate);
+        $boxtemplate = str_replace("\n", ' ', $boxtemplate);
+        
+        $output = '';
+        
+        // Parameters
+        $output .= '/* --- Parameters --- */' . PHP_EOL;
+        $consent_manager_parameters = [
+            'initially_hidden' => false,
+            'domain' => consent_manager_util::hostname(),
+            'consentid' => uniqid('', true),
+            'cachelogid' => '',
+            'version' => $addon->getVersion(),
+            'fe_controller' => rex_url::frontend(),
+            'forcereload' => 0,
+            'hidebodyscrollbar' => false,
+            'cspNonce' => rex_response::getNonce(),
+            'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
+            'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
+        ];
+        $output .= 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES) . ';' . PHP_EOL . PHP_EOL;
+        
+        // Box template
+        $output .= '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
+        $output .= 'var consent_manager_box_template = \'';
+        $output .= $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
+        
+        // Cookie expiration
+        $lifespan = $addon->getConfig('lifespan', 365);
+        if ('' === $lifespan) {
+            $lifespan = 365;
+        }
+        $output .= 'const cmCookieExpires = ' . $lifespan . ';' . PHP_EOL . PHP_EOL;
+        
+        // JavaScript files
+        $filenames = [];
+        $filenames[] = 'js.cookie.min.js';
+        $filenames[] = 'consent_manager_polyfills.js';
+        if (file_exists($addon->getAssetsPath('consent_manager_frontend.min.js'))) {
+            $filenames[] = 'consent_manager_frontend.min.js';
+        } else {
+            $filenames[] = 'consent_manager_frontend.js';
+        }
+        
+        foreach ($filenames as $filename) {
+            $output .= '/* --- ' . rex_url::base('assets/addons/consent_manager/') . $filename . ' --- */' . PHP_EOL;
+            $output .= rex_file::get(rex_path::addonAssets('consent_manager', $filename)) . PHP_EOL . PHP_EOL;
+        }
+        
+        return $output;
+    }
+
+    /**
+     * Get HTML output for consent manager box
+     * Returns only the box HTML without CSS or JavaScript
+     * 
+     * @return string HTML content
+     * @api
+     */
+    public static function getBox(): string
+    {
+        return self::getFragment(0, 0, 'consent_manager_box.php');
+    }
 }
+

@@ -48,13 +48,18 @@ class consent_manager_util
     }
 
     /**
-     * Hostname without subdomain and port.
+     * Hostname WITH subdomain (DSGVO-konform).
+     * Returns full hostname including subdomain to ensure consent is domain-specific.
+     * Issue #317: Subdomain consent must be separate from main domain consent.
      * @api
      */
     public static function hostname(): string
     {
         $dominfo = self::get_domaininfo('https://' . rex_request::server('HTTP_HOST'));
-        // Domain in Kleinbuchstaben zurückgeben für konsistente Verarbeitung
+        // Return full hostname including subdomain (DSGVO requirement)
+        if ($dominfo['subdomain']) {
+            return strtolower($dominfo['subdomain'] . '.' . $dominfo['domain']);
+        }
         return strtolower($dominfo['domain']);
     }
 

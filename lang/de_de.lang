@@ -390,3 +390,6 @@ consent_manager_domain_inline_only_mode = Inline-Only Modus
 consent_manager_domain_inline_only_mode_disabled = Standard (mit Popup)
 consent_manager_domain_inline_only_mode_enabled = Nur Inline-Consent
 consent_manager_domain_inline_only_mode_notice = Bei "Nur Inline-Consent" wird das globale Consent-Popup unterdrückt. Consent wird nur bei Bedarf über doConsent() abgefragt.
+
+# Theme Editor
+theme_editor_saved = Theme "{0}" wurde erfolgreich erstellt und gespeichert!
