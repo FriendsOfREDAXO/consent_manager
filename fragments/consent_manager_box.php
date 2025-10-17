@@ -127,13 +127,15 @@ foreach ($consent_manager->links as $v) {
                 </div>
             </div>
             <?php
-            // NOTE: For CSP-compatibility - Do no longer use inline styles like style="display: none"
-            // Use the given class name "consent_manager-script" in combination with css to hide an element instead (if needed)
+            // CSP-compatible script storage using data attributes
+            // Scripts are NOT injected via innerHTML but stored as data attributes
+            // and loaded via external script tags when consent is given
             foreach ($consent_manager->scripts as $uid => $script) {
-                echo '<div class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . $script . '"></div>';
+                // Store script as base64 in data attribute for JS to process
+                echo '<div class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . base64_encode($script) . '"></div>';
             }
             foreach ($consent_manager->scriptsUnselect as $uid => $script) {
-                echo '<div class="consent_manager-script" data-uid="script-unselect-' . $uid . '" data-script="' . $script . '"></div>';
+                echo '<div class="consent_manager-script" data-uid="script-unselect-' . $uid . '" data-script="' . base64_encode($script) . '"></div>';
             }
 			?>
         </div>

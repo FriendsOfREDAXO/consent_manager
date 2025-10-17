@@ -50,6 +50,7 @@ class consent_manager_frontend
         $fragment = new rex_fragment();
         $fragment->setVar('forceCache', $forceCache);
         $fragment->setVar('forceReload', $forceReload);
+        $fragment->setVar('cspNonce', rex_response::getNonce());
 
         return $fragment->parse($fragmentFilename);
     }
@@ -67,6 +68,7 @@ class consent_manager_frontend
         $fragment = new rex_fragment();
         $fragment->setVar('forceCache', $forceCache);
         $fragment->setVar('forceReload', $forceReload);
+        $fragment->setVar('cspNonce', rex_response::getNonce());
         
         // Zusätzliche Variablen setzen
         foreach ($additionalVars as $key => $value) {
@@ -193,7 +195,7 @@ class consent_manager_frontend
         $boxtemplate = str_replace("\n", ' ', $boxtemplate);
 
         echo '/* --- Parameters --- */' . PHP_EOL;
-        echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . consent_manager_util::hostname() . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", forcereload: ' . rex_get('r', 'int', 0) . ', hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . '};' . PHP_EOL . PHP_EOL;
+        echo 'var consent_manager_parameters = {initially_hidden: ' . rex_get('i', 'string', 'false') . ', domain: "' . consent_manager_util::hostname() . '", consentid: "' . uniqid('', true) . '", cachelogid: "' . rex_get('cid', 'string', '') . '", version: "' . rex_get('v', 'string', '') . '", fe_controller: "' . rex_url::frontend() . '", forcereload: ' . rex_get('r', 'int', 0) . ', hidebodyscrollbar: ' . rex_get('h', 'string', 'false') . ', cspNonce: "' . rex_response::getNonce() . '", cookieSameSite: "' . $addon->getConfig('cookie_samesite', 'Lax') . '", cookieSecure: ' . ($addon->getConfig('cookie_secure', false) ? 'true' : 'false') . '};' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
         echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL; /** @phpstan-ignore-line */
@@ -237,4 +239,17 @@ class consent_manager_frontend
         }
         return '/*' . $_cssfilename . '*/ ' . $_csscontent;
     }
+
+    /**
+     * Get nonce attribute for script tags using REDAXO's CSP nonce
+     * 
+     * @return string
+     * @api
+     */
+    public static function getNonceAttribute(): string
+    {
+        $nonce = rex_response::getNonce();
+        return $nonce ? ' nonce="' . htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8') . '"' : '';
+    }
 }
+

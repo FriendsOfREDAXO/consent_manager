@@ -1,4 +1,9 @@
-const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', domain: consent_manager_parameters.domain, sameSite: 'Lax', secure: false });
+// Issue #317: Remove domain parameter to prevent wildcard cookies (.example.com)
+// Cookies must be domain-specific for GDPR compliance
+// Cookie settings are now configurable via backend
+const cmCookieSameSite = consent_manager_parameters.cookieSameSite || 'Lax';
+const cmCookieSecure = consent_manager_parameters.cookieSecure || false;
+const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', sameSite: cmCookieSameSite, secure: cmCookieSecure });
 
 if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
     console.log('Consent Manager: Script loaded');
@@ -123,6 +128,10 @@ function debugLog(message, data) {
                 document.querySelector('body').style.overflow = 'auto';
             }
             document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
+            
+            // Trigger close event (Issue #156)
+            document.dispatchEvent(new CustomEvent('consent_manager-close'));
+            
             return false;
         });
     });
@@ -250,20 +259,46 @@ function debugLog(message, data) {
     }
 
     function addScript(el) {
-        var scriptDom;
         if (!el) {
             return;
         }
         if (!el.children.length) {
-            scriptDom = new DOMParser().parseFromString(window.atob(el.getAttribute('data-script')), 'text/html');
+            var scriptContent = window.atob(el.getAttribute('data-script'));
+            var scriptDom = new DOMParser().parseFromString(scriptContent, 'text/html');
+            
+            // Get nonce from consent_manager_parameters (passed from PHP)
+            var nonce = consent_manager_parameters.cspNonce || null;
+            
+            // CSP-compatible: Create script elements properly
             for (var i = 0; i < scriptDom.scripts.length; i++) {
+                var originalScript = scriptDom.scripts[i];
                 var scriptNode = document.createElement('script');
-                if (scriptDom.scripts[i].src) {
-                    scriptNode.src = scriptDom.scripts[i].src;
-                } else {
-                    scriptNode.innerHTML = scriptDom.scripts[i].innerHTML;
+                
+                // Apply nonce if available
+                if (nonce) {
+                    scriptNode.setAttribute('nonce', nonce);
                 }
-                el.appendChild(scriptNode);
+                
+                // Copy other attributes
+                for (var j = 0; j < originalScript.attributes.length; j++) {
+                    var attr = originalScript.attributes[j];
+                    if (attr.name !== 'nonce') { // Don't override nonce
+                        scriptNode.setAttribute(attr.name, attr.value);
+                    }
+                }
+                
+                // Set src or inline content
+                if (originalScript.src) {
+                    scriptNode.src = originalScript.src;
+                } else {
+                    scriptNode.textContent = originalScript.textContent;
+                }
+                
+                // Append to document body
+                document.body.appendChild(scriptNode);
+                
+                // Keep reference in container for cleanup
+                el.appendChild(document.createTextNode('script-loaded-' + i));
             }
         }
     }
@@ -296,6 +331,9 @@ function debugLog(message, data) {
         var firstFocusableEl = focusableEls[0];
         consent_managerBox.focus();
         if (firstFocusableEl) firstFocusableEl.focus();
+        
+        // Trigger show event (Issue #156)
+        document.dispatchEvent(new CustomEvent('consent_manager-show'));
     }
 
 })();
