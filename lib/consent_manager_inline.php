@@ -41,16 +41,18 @@ class consent_manager_inline
         // Consent ID generieren
         $consentId = uniqid('consent_', true);
         
-        // Standard-Optionen
+        // Standard-Optionen (nur wenn nicht explizit übergeben)
         $serviceName = !empty($service['service_name']) ? $service['service_name'] : ucfirst($serviceKey);
-        $options = array_merge([
+        $defaultOptions = [
             'title' => $serviceName,
             'placeholder_text' => $serviceName . ' laden',
-            'privacy_notice' => 'Für die Anzeige von ' . $serviceName . ' werden Cookies benötigt.',
             'width' => 'auto',
             'height' => 'auto',
             'thumbnail' => 'auto',
-        ], $options);
+        ];
+        
+        // Optionen mergen, aber nur defaults setzen wenn nicht bereits vorhanden
+        $options = array_merge($defaultOptions, $options);
 
         // Spezielle Handler für bekannte Services
         switch (strtolower($serviceKey)) {
