@@ -27,14 +27,14 @@
     100% { opacity: 1; }
 }
 
-/* Background overlay with improved contrast */
+/* Background overlay - transparent for non-blocking view */
 div.consent_manager-background {
     position: fixed;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.75); /* Darker overlay for better contrast */
+    background: transparent;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -47,10 +47,12 @@ div.consent_manager-background {
     box-sizing: border-box;
     animation: fadeIn 0.2s;
     outline: 0;
+    pointer-events: none;
 }
 
 /* Main wrapper with high contrast border */
 div.consent_manager-wrapper {
+    pointer-events: auto;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 16px; /* Larger base font for readability */
     line-height: 1.6em; /* Increased line-height for better readability */
