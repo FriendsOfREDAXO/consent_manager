@@ -165,6 +165,7 @@ function debugLog(message, data) {
             var consentBox = document.getElementById('consent_manager-background');
             if (consentBox && !consentBox.classList.contains('consent_manager-hidden')) {
                 event.preventDefault();
+                event.stopPropagation();
                 if (consent_manager_parameters.hidebodyscrollbar) {
                     document.querySelector('body').style.overflow = 'auto';
                 }
@@ -173,7 +174,7 @@ function debugLog(message, data) {
                 document.dispatchEvent(new CustomEvent('consent_manager-close'));
             }
         }
-    });
+    }, true); // Use capture phase for priority
 
     // Focus Trap: Keep focus within modal dialog (Issue #326)
     document.addEventListener('keydown', function(event) {
@@ -182,8 +183,14 @@ function debugLog(message, data) {
             return;
         }
 
+        // Check if focus is actually inside the consent box
+        var wrapper = document.getElementById('consent_manager-wrapper');
+        if (!wrapper || !wrapper.contains(document.activeElement)) {
+            return;
+        }
+
         if (event.key === 'Tab') {
-            var focusableElements = consentBox.querySelectorAll(
+            var focusableElements = wrapper.querySelectorAll(
                 'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
             );
             var focusableArray = Array.from(focusableElements);
@@ -194,17 +201,19 @@ function debugLog(message, data) {
                 // Shift + Tab: Wenn auf erstem Element, springe zu letztem
                 if (document.activeElement === firstFocusable) {
                     event.preventDefault();
+                    event.stopPropagation();
                     lastFocusable.focus();
                 }
             } else {
                 // Tab: Wenn auf letztem Element, springe zu erstem
                 if (document.activeElement === lastFocusable) {
                     event.preventDefault();
+                    event.stopPropagation();
                     firstFocusable.focus();
                 }
             }
         }
-    });
+    }, true); // Use capture phase for priority
 
     document.querySelectorAll('.consent_manager-show-box, .consent_manager-show-box-reload').forEach(function (el) {
         el.addEventListener('click', function () {

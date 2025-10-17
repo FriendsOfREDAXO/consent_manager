@@ -47,7 +47,7 @@ div.consent_manager-background {
     top: 0;
     right: 0;
     bottom: 0;
-    background: $overlay-background;
+    background: transparent;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -60,6 +60,11 @@ div.consent_manager-background {
     box-sizing: border-box;
     animation: fadeIn 0.2s;
     outline: 0;
+    pointer-events: none;
+}
+
+div.consent_manager-wrapper {
+    pointer-events: auto;
 }
 
 div.consent_manager-wrapper {
