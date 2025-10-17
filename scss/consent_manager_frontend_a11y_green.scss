@@ -1,51 +1,33 @@
 /*
-Theme: {"name": "Accessibility (WCAG 2.1 AA)", "description": "Barrierefreies Theme mit WCAG 2.1 AA Konformität, optimierten Kontrasten, großen Touch-Targets und vollständiger Tastatursteuerung (ESC/Space)", "type": "light", "style": "Popup zentriert, Accessibility-optimiert", "autor": "@skerbis"}
+Theme: {"name": "Accessibility Green (WCAG 2.1 AA)", "description": "Barrierefreies Theme mit grünem Akzent (#025335) - DSGVO-konforme Buttons (gleichwertig), WCAG 2.1 AA Kontraste, große Touch-Targets, ESC/Space-Tastatur-Support", "type": "light", "style": "Popup zentriert, Accessibility-optimiert, Grüner Akzent", "autor": "@skerbis"}
 */
 
-/**
- * Consent Manager - Accessibility Optimized Theme
- * 
- * Features:
- * - WCAG 2.1 AA compliant contrast ratios (4.5:1 for text, 3:1 for UI components)
- * - Clear focus indicators with 3px outline
- * - Larger touch targets (min 44x44px)
- * - Reduced motion support
- * - Screen reader optimizations
- * - Keyboard navigation improvements (ESC, Space, Enter, Tab)
- * - High contrast mode support
- * 
- * Issue #326 - Barrierefreiheit / Tastatursteuerung
- */
-
-/* Variables */
 $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-size: 16px;
 $line-height: 1.6em;
 
 $overlay-background: rgba(0, 0, 0, 0.75);
-
 $consent_manager-background: #ffffff;
 $consent_manager-border: #1a1a1a;
 $text-color: #1a1a1a;
 
-$focus-color: #0066cc;
-$focus-shadow: rgba(0, 102, 204, 0.2);
+$accent-color: #025335;
+$accent-hover: #013d28;
+$button-bg: #025335;
+$button-hover: #013d28;
 
-$button-primary-bg: #0066cc;
-$button-primary-hover: #0052a3;
-$button-secondary-bg: #1a1a1a;
-$button-secondary-hover: #000000;
+$focus-color: #025335;
+$focus-shadow: rgba(2, 83, 53, 0.2);
 
-$link-color: #0066cc;
-$link-hover-color: #0052a3;
-$link-hover-bg: #e6f3ff;
+$link-color: #025335;
+$link-hover-color: #013d28;
+$link-hover-bg: #e6f7f0;
 
-$cookie-title-bg: #e6e6e6;
+$cookie-title-bg: #e6f7f0;
 $cookie-desc-bg: #f9f9f9;
-$cookie-border: #e6e6e6;
-$cookie-accent: #0066cc;
+$cookie-border: #025335;
+$cookie-accent: #025335;
 
-/* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
@@ -59,7 +41,6 @@ $cookie-accent: #0066cc;
     100% { opacity: 1; }
 }
 
-/* Background overlay with improved contrast */
 div.consent_manager-background {
     position: fixed;
     left: 0;
@@ -81,13 +62,12 @@ div.consent_manager-background {
     outline: 0;
 }
 
-/* Main wrapper with high contrast border */
 div.consent_manager-wrapper {
     font-family: $font-family;
     font-size: $font-size;
     line-height: $line-height;
     background: $consent_manager-background;
-    border: 3px solid $consent_manager-border;
+    border: 3px solid $accent-color;
     color: $text-color;
     position: relative;
     width: 100%;
@@ -96,7 +76,7 @@ div.consent_manager-wrapper {
     overflow-y: auto;
     box-sizing: border-box;
     animation: fadeIn 0.4s;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 40px rgba(2, 83, 53, 0.3);
 }
 
 div.consent_manager-wrapper-inner {
@@ -112,7 +92,6 @@ div.consent_manager-script {
     display: none;
 }
 
-/* Close button with accessible styling */
 .consent_manager-close-box {
     position: absolute;
     cursor: pointer;
@@ -144,7 +123,6 @@ div.consent_manager-script {
     }
 }
 
-/* Focus styles for all interactive elements */
 button:focus,
 a:focus,
 input:focus,
@@ -154,7 +132,6 @@ input:focus,
     box-shadow: 0 0 0 3px $focus-shadow !important;
 }
 
-/* Visible focus even in high contrast mode */
 @media (prefers-contrast: high) {
     button:focus,
     a:focus,
@@ -165,7 +142,6 @@ input:focus,
     }
 }
 
-/* Headlines with proper contrast */
 div.consent_manager-wrapper .consent_manager-headline {
     margin: 0 0 1em 0;
     font-weight: bold;
@@ -179,7 +155,6 @@ div.consent_manager-wrapper p.consent_manager-text {
     color: $text-color;
 }
 
-/* Cookie group checkboxes with improved accessibility */
 div.consent_manager-cookiegroups {
     margin: 0 0 1.5em 0;
 }
@@ -205,7 +180,7 @@ div.consent_manager-cookiegroups label {
     transition: background-color 0.2s ease;
 
     &:hover {
-        background-color: #f5f5f5;
+        background-color: $link-hover-bg;
     }
 
     &:focus-within {
@@ -219,7 +194,6 @@ div.consent_manager-cookiegroups label {
     }
 }
 
-/* Checkbox styling with better visibility */
 div.consent_manager-cookiegroups label > input[type="checkbox"] {
     width: 24px;
     height: 24px;
@@ -235,7 +209,6 @@ div.consent_manager-cookiegroups label > input[type="checkbox"] {
     cursor: not-allowed;
 }
 
-/* Details toggle button with improved accessibility */
 div.consent_manager-show-details {
     padding: 0 0 1.5em 0;
 
@@ -261,7 +234,6 @@ div.consent_manager-show-details {
             transform: translateY(-2px);
         }
 
-        /* Add visual indicator for expanded state */
         &[aria-expanded="true"]::after {
             content: " ▼";
             margin-left: 8px;
@@ -274,13 +246,13 @@ div.consent_manager-show-details {
     }
 }
 
-/* Action buttons with WCAG compliant styling - DSGVO: Alle Buttons gleichwertig */
+/* DSGVO: Alle Buttons gleichwertig */
 button.consent_manager-save-selection,
 button.consent_manager-accept-all,
 button.consent_manager-accept-none {
     transition: 0.2s ease all;
-    background: $button-secondary-bg;
-    border: 2px solid $button-secondary-bg;
+    background: $button-bg;
+    border: 2px solid $button-bg;
     color: #ffffff;
     padding: 12px 24px;
     border-radius: 4px;
@@ -301,13 +273,12 @@ button.consent_manager-accept-all:hover,
 button.consent_manager-accept-all:focus,
 button.consent_manager-accept-none:hover,
 button.consent_manager-accept-none:focus {
-    background: $button-secondary-hover;
-    border-color: $button-secondary-hover;
+    background: $button-hover;
+    border-color: $button-hover;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(2, 83, 53, 0.3);
 }
 
-/* Site links with accessible styling */
 div.consent_manager-sitelinks {
     margin: 1.5em 0 0 0;
 
@@ -333,7 +304,6 @@ div.consent_manager-sitelinks {
     }
 }
 
-/* Detail section with improved readability */
 div.consent_manager-wrapper div.consent_manager-detail {
     margin-bottom: 3em;
 
@@ -381,7 +351,6 @@ div.consent_manager-wrapper div.consent_manager-detail {
     }
 }
 
-/* Responsive design with maintained touch targets */
 @media only screen and (min-width: 600px) {
     div.consent_manager-cookiegroups {
         padding: 1em 0 0 0;
@@ -430,14 +399,12 @@ div.consent_manager-wrapper div.consent_manager-detail {
     }
 }
 
-/* Print styles */
 @media print {
     div.consent_manager-background {
         display: none !important;
     }
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
     div.consent_manager-wrapper {
         border-width: 4px;
@@ -456,7 +423,6 @@ div.consent_manager-wrapper div.consent_manager-detail {
     }
 }
 
-/* Screen reader only text */
 .sr-only {
     position: absolute;
     width: 1px;

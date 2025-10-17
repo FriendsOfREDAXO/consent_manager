@@ -335,13 +335,32 @@ Das neue **A11y-Theme** (`consent_manager_frontend_a11y.css`) bietet umfassende 
 - ✅ **Kontrastverhältnisse:** 4.5:1 für Text, 3:1 für UI-Komponenten
 - ✅ **Focus-Indikatoren:** 3px blaue Umrandung für alle interaktiven Elemente
 - ✅ **Touch-Targets:** Mindestens 44x44px für alle Buttons und Links
-- ✅ **Screen Reader:** Korrekte ARIA-Labels und semantische HTML-Struktur
+- ✅ **Screen Reader:** Korrekte ARIA-Labels (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`)
 - ✅ **Tastatursteuerung:** Vollständige Navigation ohne Maus möglich
+- ✅ **Focus Trap:** Tab-Navigation bleibt innerhalb des Modals
+- ✅ **DSGVO-konform:** Alle 3 Buttons (ablehnen/auswählen/alle) visuell gleichwertig
+
+**Modales Verhalten (Issue #326):**
+- **Auto-Focus:** Beim Öffnen wird automatisch der erste Button fokussiert
+- **Focus Trap:** Tab/Shift+Tab bleiben innerhalb des Consent-Dialogs
+- **ESC funktioniert immer:** Schließt Dialog von jedem Element aus
+- **Tastatur-Zugänglichkeit:** Kein Entkommen nur mit Maus nötig
 
 **Tastatursteuerung:**
 ```
-ESC             → Consent Box schließen (Issue #326)
-Tab             → Zwischen Elementen navigieren
+ESC             → Consent Box schließen (von überall im Dialog)
+Tab             → Vorwärts zwischen Elementen navigieren (bleibt im Dialog)
+Shift+Tab       → Rückwärts zwischen Elementen navigieren (bleibt im Dialog)
+Enter / Space   → Details ein-/ausklappen
+Enter           → Buttons aktivieren
+```
+
+**Theme-Varianten:**
+1. **Accessibility (WCAG 2.1 AA)** - Neutrales Grau, DSGVO-konforme Buttons
+2. **Accessibility Blue** - Blauer Akzent (#0066cc)
+3. **Accessibility Green** - Grüner Akzent (#025335)
+4. **Accessibility Compact** - Platzsparende Version, Grau
+5. **Accessibility Compact Blue** - Platzsparend mit blauem Akzent
 Enter / Space   → Details ein-/ausklappen (Issue #326)
 Enter           → Buttons aktivieren
 ```

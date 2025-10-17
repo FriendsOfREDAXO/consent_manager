@@ -1,51 +1,33 @@
 /*
-Theme: {"name": "Accessibility (WCAG 2.1 AA)", "description": "Barrierefreies Theme mit WCAG 2.1 AA Konformität, optimierten Kontrasten, großen Touch-Targets und vollständiger Tastatursteuerung (ESC/Space)", "type": "light", "style": "Popup zentriert, Accessibility-optimiert", "autor": "@skerbis"}
+Theme: {"name": "Accessibility Compact Blue (WCAG 2.1 AA)", "description": "Barrierefreies Kompakt-Theme mit blauem Akzent - DSGVO-konforme Buttons (gleichwertig), WCAG 2.1 AA Kontraste, große Touch-Targets, ESC/Space-Tastatur-Support, kompaktere Abstände", "type": "light", "style": "Popup zentriert, Accessibility-optimiert, Kompakt, Blauer Akzent", "autor": "@skerbis"}
 */
 
-/**
- * Consent Manager - Accessibility Optimized Theme
- * 
- * Features:
- * - WCAG 2.1 AA compliant contrast ratios (4.5:1 for text, 3:1 for UI components)
- * - Clear focus indicators with 3px outline
- * - Larger touch targets (min 44x44px)
- * - Reduced motion support
- * - Screen reader optimizations
- * - Keyboard navigation improvements (ESC, Space, Enter, Tab)
- * - High contrast mode support
- * 
- * Issue #326 - Barrierefreiheit / Tastatursteuerung
- */
-
-/* Variables */
 $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-$font-size: 16px;
-$line-height: 1.6em;
+$font-size: 15px;
+$line-height: 1.5em;
 
 $overlay-background: rgba(0, 0, 0, 0.75);
-
 $consent_manager-background: #ffffff;
 $consent_manager-border: #1a1a1a;
 $text-color: #1a1a1a;
 
+$accent-color: #0066cc;
+$accent-hover: #0052a3;
+$button-bg: #0066cc;
+$button-hover: #0052a3;
+
 $focus-color: #0066cc;
 $focus-shadow: rgba(0, 102, 204, 0.2);
-
-$button-primary-bg: #0066cc;
-$button-primary-hover: #0052a3;
-$button-secondary-bg: #1a1a1a;
-$button-secondary-hover: #000000;
 
 $link-color: #0066cc;
 $link-hover-color: #0052a3;
 $link-hover-bg: #e6f3ff;
 
-$cookie-title-bg: #e6e6e6;
-$cookie-desc-bg: #f9f9f9;
-$cookie-border: #e6e6e6;
+$cookie-title-bg: #e6f3ff;
+$cookie-desc-bg: #fafafa;
+$cookie-border: #0066cc;
 $cookie-accent: #0066cc;
 
-/* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
@@ -59,7 +41,6 @@ $cookie-accent: #0066cc;
     100% { opacity: 1; }
 }
 
-/* Background overlay with improved contrast */
 div.consent_manager-background {
     position: fixed;
     left: 0;
@@ -71,7 +52,7 @@ div.consent_manager-background {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1em;
+    padding: 0.75em;
     z-index: 999999;
     height: 100%;
     width: 100%;
@@ -81,26 +62,25 @@ div.consent_manager-background {
     outline: 0;
 }
 
-/* Main wrapper with high contrast border */
 div.consent_manager-wrapper {
     font-family: $font-family;
     font-size: $font-size;
     line-height: $line-height;
     background: $consent_manager-background;
-    border: 3px solid $consent_manager-border;
+    border: 2px solid $accent-color;
     color: $text-color;
     position: relative;
     width: 100%;
-    max-width: 65em;
+    max-width: 55em;
     max-height: 95vh;
     overflow-y: auto;
     box-sizing: border-box;
     animation: fadeIn 0.4s;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 30px rgba(0, 102, 204, 0.3);
 }
 
 div.consent_manager-wrapper-inner {
-    padding: 2.5em;
+    padding: 1.5em;
     position: relative;
 }
 
@@ -112,12 +92,11 @@ div.consent_manager-script {
     display: none;
 }
 
-/* Close button with accessible styling */
 .consent_manager-close-box {
     position: absolute;
     cursor: pointer;
-    right: 1.5em;
-    top: 1em;
+    right: 1em;
+    top: 0.75em;
     display: block;
     border-radius: 4px !important;
     border: 2px solid $consent_manager-border;
@@ -127,7 +106,7 @@ div.consent_manager-script {
     background-color: $consent_manager-background;
     color: $text-color;
     font-family: Arial, sans-serif;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bold;
     padding: 0;
     margin: 0;
@@ -144,7 +123,6 @@ div.consent_manager-script {
     }
 }
 
-/* Focus styles for all interactive elements */
 button:focus,
 a:focus,
 input:focus,
@@ -154,7 +132,6 @@ input:focus,
     box-shadow: 0 0 0 3px $focus-shadow !important;
 }
 
-/* Visible focus even in high contrast mode */
 @media (prefers-contrast: high) {
     button:focus,
     a:focus,
@@ -165,27 +142,25 @@ input:focus,
     }
 }
 
-/* Headlines with proper contrast */
 div.consent_manager-wrapper .consent_manager-headline {
-    margin: 0 0 1em 0;
+    margin: 0 0 0.75em 0;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
     color: $text-color;
-    line-height: 1.4;
+    line-height: 1.3;
 }
 
 div.consent_manager-wrapper p.consent_manager-text {
-    margin: 0 0 1.5em 0;
+    margin: 0 0 1em 0;
     color: $text-color;
 }
 
-/* Cookie group checkboxes with improved accessibility */
 div.consent_manager-cookiegroups {
-    margin: 0 0 1.5em 0;
+    margin: 0 0 1em 0;
 }
 
 div.consent_manager-cookiegroup-checkbox {
-    margin-bottom: 1.5em;
+    margin-bottom: 1em;
     min-height: 44px;
     display: flex;
     align-items: center;
@@ -194,18 +169,18 @@ div.consent_manager-cookiegroup-checkbox {
 div.consent_manager-cookiegroups label {
     position: relative;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 15px;
     color: $text-color;
     cursor: pointer;
     display: flex;
     align-items: center;
     min-height: 44px;
-    padding: 8px;
+    padding: 6px;
     border-radius: 4px;
     transition: background-color 0.2s ease;
 
     &:hover {
-        background-color: #f5f5f5;
+        background-color: $link-hover-bg;
     }
 
     &:focus-within {
@@ -219,11 +194,10 @@ div.consent_manager-cookiegroups label {
     }
 }
 
-/* Checkbox styling with better visibility */
 div.consent_manager-cookiegroups label > input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    margin: 0 12px 0 4px;
+    width: 22px;
+    height: 22px;
+    margin: 0 10px 0 4px;
     cursor: pointer;
     border: 2px solid $text-color;
     flex-shrink: 0;
@@ -235,22 +209,21 @@ div.consent_manager-cookiegroups label > input[type="checkbox"] {
     cursor: not-allowed;
 }
 
-/* Details toggle button with improved accessibility */
 div.consent_manager-show-details {
-    padding: 0 0 1.5em 0;
+    padding: 0 0 1em 0;
 
     button {
         display: inline-flex;
         align-items: center;
-        line-height: 1.5;
+        line-height: 1.4;
         min-height: 44px;
-        padding: 8px 16px;
+        padding: 8px 14px;
         cursor: pointer;
         color: $link-color;
         background-color: transparent;
         border: 2px solid $link-color;
         border-radius: 4px;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         transition: 0.2s ease all;
 
@@ -261,38 +234,37 @@ div.consent_manager-show-details {
             transform: translateY(-2px);
         }
 
-        /* Add visual indicator for expanded state */
         &[aria-expanded="true"]::after {
             content: " ▼";
-            margin-left: 8px;
+            margin-left: 6px;
         }
 
         &[aria-expanded="false"]::after {
             content: " ▶";
-            margin-left: 8px;
+            margin-left: 6px;
         }
     }
 }
 
-/* Action buttons with WCAG compliant styling - DSGVO: Alle Buttons gleichwertig */
+/* DSGVO: Alle Buttons gleichwertig */
 button.consent_manager-save-selection,
 button.consent_manager-accept-all,
 button.consent_manager-accept-none {
     transition: 0.2s ease all;
-    background: $button-secondary-bg;
-    border: 2px solid $button-secondary-bg;
+    background: $button-bg;
+    border: 2px solid $button-bg;
     color: #ffffff;
-    padding: 12px 24px;
+    padding: 10px 20px;
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     text-align: center;
     display: block;
-    min-height: 48px;
+    min-height: 44px;
     width: 100%;
-    margin-bottom: 1em;
+    margin-bottom: 0.75em;
     cursor: pointer;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 button.consent_manager-save-selection:hover,
@@ -301,26 +273,25 @@ button.consent_manager-accept-all:hover,
 button.consent_manager-accept-all:focus,
 button.consent_manager-accept-none:hover,
 button.consent_manager-accept-none:focus {
-    background: $button-secondary-hover;
-    border-color: $button-secondary-hover;
+    background: $button-hover;
+    border-color: $button-hover;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);
 }
 
-/* Site links with accessible styling */
 div.consent_manager-sitelinks {
-    margin: 1.5em 0 0 0;
+    margin: 1em 0 0 0;
 
     a {
         display: inline-block;
-        margin: 0.5em 1.5em 0.5em 0;
+        margin: 0.4em 1em 0.4em 0;
         color: $link-color;
         text-decoration: underline;
-        text-underline-offset: 3px;
+        text-underline-offset: 2px;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
-        padding: 4px 8px;
+        padding: 3px 6px;
         border-radius: 4px;
         transition: 0.2s ease all;
 
@@ -333,9 +304,8 @@ div.consent_manager-sitelinks {
     }
 }
 
-/* Detail section with improved readability */
 div.consent_manager-wrapper div.consent_manager-detail {
-    margin-bottom: 3em;
+    margin-bottom: 2em;
 
     a {
         color: $link-color;
@@ -353,38 +323,40 @@ div.consent_manager-wrapper div.consent_manager-detail {
     div.consent_manager-cookiegroup-title {
         color: $text-color;
         background-color: $cookie-title-bg;
-        padding: 12px 16px;
-        margin: 1.5em 0 0 0;
+        padding: 10px 14px;
+        margin: 1em 0 0 0;
         font-weight: bold;
-        border-left: 4px solid $cookie-accent;
+        font-size: 15px;
+        border-left: 3px solid $cookie-accent;
     }
 
     div.consent_manager-cookiegroup-description {
-        border-left: 4px solid $cookie-border;
-        padding: 12px 16px;
+        border-left: 3px solid $cookie-border;
+        padding: 10px 14px;
         background: $cookie-desc-bg;
         color: $text-color;
+        font-size: 14px;
     }
 
     div.consent_manager-cookie {
-        margin-top: 3px;
-        border-left: 4px solid $cookie-border;
-        padding: 12px 16px;
+        margin-top: 2px;
+        border-left: 3px solid $cookie-border;
+        padding: 10px 14px;
         background: $cookie-desc-bg;
         color: $text-color;
+        font-size: 14px;
 
         span {
             display: block;
-            margin-top: 0.75em;
-            line-height: 1.6;
+            margin-top: 0.5em;
+            line-height: 1.5;
         }
     }
 }
 
-/* Responsive design with maintained touch targets */
 @media only screen and (min-width: 600px) {
     div.consent_manager-cookiegroups {
-        padding: 1em 0 0 0;
+        padding: 0.75em 0 0 0;
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
@@ -392,20 +364,20 @@ div.consent_manager-wrapper div.consent_manager-detail {
     }
 
     div.consent_manager-cookiegroup-checkbox {
-        margin-left: 1.5em;
-        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-bottom: 0.75em;
     }
 
     div.consent_manager-show-details {
         text-align: right;
-        padding: 1.5em 0 1.5em 0;
+        padding: 1em 0 1em 0;
     }
 
     div.consent_manager-buttons {
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
     }
 
     button.consent_manager-save-selection,
@@ -414,7 +386,7 @@ div.consent_manager-wrapper div.consent_manager-detail {
         display: inline-block;
         margin: 0;
         width: auto;
-        min-width: 150px;
+        min-width: 140px;
     }
 
     div.consent_manager-sitelinks {
@@ -426,21 +398,19 @@ div.consent_manager-wrapper div.consent_manager-detail {
         justify-content: space-between;
         align-items: center;
         flex-direction: row-reverse;
-        gap: 24px;
+        gap: 20px;
     }
 }
 
-/* Print styles */
 @media print {
     div.consent_manager-background {
         display: none !important;
     }
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
     div.consent_manager-wrapper {
-        border-width: 4px;
+        border-width: 3px;
     }
     
     button,
@@ -456,7 +426,6 @@ div.consent_manager-wrapper div.consent_manager-detail {
     }
 }
 
-/* Screen reader only text */
 .sr-only {
     position: absolute;
     width: 1px;

@@ -175,6 +175,37 @@ function debugLog(message, data) {
         }
     });
 
+    // Focus Trap: Keep focus within modal dialog (Issue #326)
+    document.addEventListener('keydown', function(event) {
+        var consentBox = document.getElementById('consent_manager-background');
+        if (!consentBox || consentBox.classList.contains('consent_manager-hidden')) {
+            return;
+        }
+
+        if (event.key === 'Tab') {
+            var focusableElements = consentBox.querySelectorAll(
+                'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+            );
+            var focusableArray = Array.from(focusableElements);
+            var firstFocusable = focusableArray[0];
+            var lastFocusable = focusableArray[focusableArray.length - 1];
+
+            if (event.shiftKey) {
+                // Shift + Tab: Wenn auf erstem Element, springe zu letztem
+                if (document.activeElement === firstFocusable) {
+                    event.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else {
+                // Tab: Wenn auf letztem Element, springe zu erstem
+                if (document.activeElement === lastFocusable) {
+                    event.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        }
+    });
+
     document.querySelectorAll('.consent_manager-show-box, .consent_manager-show-box-reload').forEach(function (el) {
         el.addEventListener('click', function () {
             showBox();
@@ -354,10 +385,23 @@ function debugLog(message, data) {
             toggleBtn.setAttribute('aria-expanded', 'false');
         }
         
-        var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
-        var firstFocusableEl = focusableEls[0];
-        consent_managerBox.focus();
-        if (firstFocusableEl) firstFocusableEl.focus();
+        // Focus first interactive element (button) for better accessibility
+        var focusableButtons = consent_managerBox.querySelectorAll('button.consent_manager-save-selection, button.consent_manager-accept-all, button.consent_manager-accept-none');
+        var firstButton = focusableButtons[0];
+        
+        // Fallback to checkboxes if no buttons found
+        if (!firstButton) {
+            var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');
+            firstButton = focusableEls[0];
+        }
+        
+        // Set focus to first interactive element
+        if (firstButton) {
+            // Use setTimeout to ensure DOM is ready
+            setTimeout(function() {
+                firstButton.focus();
+            }, 100);
+        }
         
         // Trigger show event (Issue #156)
         document.dispatchEvent(new CustomEvent('consent_manager-show'));
@@ -560,10 +604,23 @@ function consent_manager_showBox() {
         document.querySelector('body').style.overflow = 'hidden';
     }
     document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-    var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
-    var firstFocusableEl = focusableEls[0];
-    consent_managerBox.focus();
-    if (firstFocusableEl) firstFocusableEl.focus();
+    
+    // Focus first interactive element (button) for better accessibility
+    var focusableButtons = consent_managerBox.querySelectorAll('button.consent_manager-save-selection, button.consent_manager-accept-all, button.consent_manager-accept-none');
+    var firstButton = focusableButtons[0];
+    
+    // Fallback to checkboxes if no buttons found
+    if (!firstButton) {
+        var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');
+        firstButton = focusableEls[0];
+    }
+    
+    // Set focus to first interactive element
+    if (firstButton) {
+        setTimeout(function() {
+            firstButton.focus();
+        }, 100);
+    }
 }
 
 function consent_manager_hasconsent(id) {
