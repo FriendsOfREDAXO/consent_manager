@@ -327,15 +327,19 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 
 ### ♿ Barrierefreiheit (Accessibility)
 
-**Issue #326 - Optimierungen für Barrierefreiheit:**
+**Issues #326, #304 - Optimierungen für Barrierefreiheit:**
 
-Das neue **A11y-Theme** (`consent_manager_frontend_a11y.css`) bietet umfassende Barrierefreiheit:
+Das neue **A11y-Theme** (`consent_manager_frontend_a11y.scss`) bietet umfassende Barrierefreiheit:
 
 **WCAG 2.1 AA Konformität:**
 - ✅ **Kontrastverhältnisse:** 4.5:1 für Text, 3:1 für UI-Komponenten
 - ✅ **Focus-Indikatoren:** 3px blaue Umrandung für alle interaktiven Elemente
 - ✅ **Touch-Targets:** Mindestens 44x44px für alle Buttons und Links
-- ✅ **Screen Reader:** Korrekte ARIA-Labels (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`)
+- ✅ **Screen Reader:** Korrekte ARIA-Attribute (Issue #304)
+  - `role="dialog"` nur auf consent_manager-wrapper
+  - `aria-modal="true"` für modalen Dialog
+  - `aria-labelledby` verknüpft mit Überschrift
+  - `aria-hidden` dynamisch bei Öffnen/Schließen
 - ✅ **Tastatursteuerung:** Vollständige Navigation ohne Maus möglich
 - ✅ **Focus Trap:** Tab-Navigation bleibt innerhalb des Modals
 - ✅ **DSGVO-konform:** Alle 3 Buttons (ablehnen/auswählen/alle) visuell gleichwertig
@@ -345,6 +349,7 @@ Das neue **A11y-Theme** (`consent_manager_frontend_a11y.css`) bietet umfassende 
 - **Focus Trap:** Tab/Shift+Tab bleiben innerhalb des Consent-Dialogs
 - **ESC funktioniert immer:** Schließt Dialog von jedem Element aus
 - **Tastatur-Zugänglichkeit:** Kein Entkommen nur mit Maus nötig
+- **ARIA-Management:** Hintergrund-Container ist für Screen Reader unsichtbar (Issue #304)
 
 **Tastatursteuerung:**
 ```
