@@ -266,6 +266,8 @@ class consent_manager_inline
      */
     private static function renderPlaceholderHTML($serviceKey, $content, $options, $consentId, $service, $placeholderData)
     {
+        $debug = rex::isDebugMode();
+        
         // Fragment verwenden für bessere Anpassbarkeit
         $fragment = new rex_fragment();
         $fragment->setVar('serviceKey', $serviceKey);
@@ -275,15 +277,25 @@ class consent_manager_inline
         $fragment->setVar('service', $service);
         $fragment->setVar('placeholderData', $placeholderData);
         
+        if ($debug) {
+            echo "<!-- DEBUG renderPlaceholderHTML: serviceKey=$serviceKey -->\n";
+            echo "<!-- DEBUG options: " . print_r($options, true) . " -->\n";
+        }
+        
         // Alle Button-Texte für Fragment hinzufügen
         $fragment->setVar('button_inline_details_text', self::getButtonText('button_inline_details', 'Einstellungen'));
         $fragment->setVar('inline_placeholder_text', self::getButtonText('inline_placeholder_text', 'Einmal laden'));
         $fragment->setVar('button_inline_allow_all_text', self::getButtonText('button_inline_allow_all', 'Alle erlauben'));
         $fragment->setVar('inline_action_text', self::getButtonText('inline_action_text', 'Was möchten Sie tun?'));
         $fragment->setVar('show_allow_all', $options['show_allow_all'] ?? false);
-        $fragment->setVar('inline_privacy_notice', self::getButtonText('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.'));
+        $privacyNotice = self::getButtonText('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.');
+        $fragment->setVar('inline_privacy_notice', $privacyNotice);
         $fragment->setVar('inline_title_fallback', self::getButtonText('inline_title_fallback', 'Externes Medium'));
         $fragment->setVar('inline_privacy_link_text', self::getButtonText('inline_privacy_link_text', 'Datenschutzerklärung von'));
+        
+        if ($debug) {
+            echo "<!-- DEBUG inline_privacy_notice from DB: $privacyNotice -->\n";
+        }
         
         // Icon-Konfiguration
         $fragment->setVar('privacy_icon', $options['privacy_icon'] ?? 'uk-icon:shield');
@@ -384,16 +396,28 @@ HTML;
      */
     private static function getButtonText($key, $fallback)
     {
+        $debug = rex::isDebugMode();
+        
         try {
             $sql = rex_sql::factory();
             $sql->setQuery('SELECT text FROM ' . rex::getTable('consent_manager_text') . ' WHERE uid = ? AND clang_id = ?', 
                 [$key, rex_clang::getCurrentId()]);
             
             if ($sql->getRows() > 0) {
-                return $sql->getValue('text');
+                $value = $sql->getValue('text');
+                if ($debug) {
+                    echo "<!-- DEBUG getButtonText: key=$key, clang=" . rex_clang::getCurrentId() . ", value=$value -->\n";
+                }
+                return $value;
+            } else {
+                if ($debug) {
+                    echo "<!-- DEBUG getButtonText: key=$key NOT FOUND in DB, using fallback=$fallback -->\n";
+                }
             }
         } catch (rex_sql_exception $e) {
-            // Fallback falls Datenbankfehler
+            if ($debug) {
+                echo "<!-- DEBUG getButtonText: key=$key, SQL ERROR: " . $e->getMessage() . " -->\n";
+            }
         }
         
         return $fallback;

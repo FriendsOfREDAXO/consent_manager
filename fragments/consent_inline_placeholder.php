@@ -29,6 +29,13 @@ $button_inline_details_text = $this->getVar('button_inline_details_text', 'Einst
 $button_inline_allow_all_text = $this->getVar('button_inline_allow_all_text', 'Alle erlauben');
 $show_allow_all = $this->getVar('show_allow_all', false);
 
+if (rex::isDebugMode()) {
+    echo "<!-- DEBUG Fragment Variables: -->\n";
+    echo "<!-- inline_privacy_notice: $inline_privacy_notice -->\n";
+    echo "<!-- options[privacy_notice]: " . ($options['privacy_notice'] ?? 'NOT SET') . " -->\n";
+    echo "<!-- Final value: " . ($options['privacy_notice'] ?? $inline_privacy_notice) . " -->\n";
+}
+
 
 $thumbnailHtml = '';
 if (!empty($placeholderData['thumbnail'])) {
