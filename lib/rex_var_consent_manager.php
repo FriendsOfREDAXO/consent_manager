@@ -5,8 +5,8 @@ class rex_var_consent_manager extends rex_var
     protected function getOutput()
     {
         // Extrahiere forceCache und forceReload Parameter
-        $forceCache = $this->getArg('forceCache', 0, false);
-        $forceReload = $this->getArg('forceReload', 0, false);
+        $forceCache = (int) $this->getArg('forceCache', 0, false);
+        $forceReload = (int) $this->getArg('forceReload', 0, false);
         
         // Prüfe ob inline Parameter gesetzt ist
         $inline = $this->getArg('inline', false, false);
