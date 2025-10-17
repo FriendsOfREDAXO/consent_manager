@@ -45,7 +45,6 @@ class consent_manager_inline
         $serviceName = !empty($service['service_name']) ? $service['service_name'] : ucfirst($serviceKey);
         $defaultOptions = [
             'title' => $serviceName,
-            'placeholder_text' => $serviceName . ' laden',
             'width' => 'auto',
             'height' => 'auto',
             'thumbnail' => 'auto',
