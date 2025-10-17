@@ -4,7 +4,8 @@ class rex_var_consent_manager extends rex_var
 {
     protected function getOutput()
     {
-        // Extrahiere forceCache und forceReload Parameter
+        // Extrahiere forceCache und forceReload Parameter mit int-Casting für Sicherheit
+        // (verhindert Code-Injection und stellt sicher, dass nur numerische Werte verwendet werden)
         $forceCache = (int) $this->getArg('forceCache', 0, false);
         $forceReload = (int) $this->getArg('forceReload', 0, false);
         
