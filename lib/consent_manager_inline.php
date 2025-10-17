@@ -322,10 +322,12 @@ class consent_manager_inline
         
         // Wenn content nur 11 Zeichen hat (YouTube Video-ID Format), als YouTube behandeln
         if (strlen($content) === 11 && preg_match('/^[a-zA-Z0-9_-]{11}$/', $content)) {
-            return '<iframe width="'.($options['width'] ?: '560').'" height="'.($options['height'] ?: '315').'" 
-                    src="https://www.youtube.com/embed/'.rex_escape($content).'" 
-                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen'.$attributesString.'></iframe>';
+            $src = rex_escape($content);
+            $width = $options['width'] ?: '560';
+            $height = $options['height'] ?: '315';
+            return <<<HTML
+<iframe src="https://www.youtube.com/embed/{$src}" width="{$width}" height="{$height}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen{$attributesString}></iframe>
+HTML;
         }
         
         // Für Vimeo URLs oder Video-IDs: In iframe umwandeln
@@ -341,9 +343,12 @@ class consent_manager_inline
         
         // Wenn content nur Zahlen hat (Vimeo Video-ID Format), als Vimeo behandeln
         if (preg_match('/^\d{6,}$/', $content)) {
-            return '<iframe src="https://player.vimeo.com/video/'.rex_escape($content).'" 
-                    width="'.($options['width'] ?: '640').'" height="'.($options['height'] ?: '360').'" 
-                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen'.$attributesString.'></iframe>';
+            $src = rex_escape($content);
+            $width = $options['width'] ?: '640';
+            $height = $options['height'] ?: '360';
+            return <<<HTML
+<iframe src="https://player.vimeo.com/video/{$src}" width="{$width}" height="{$height}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen{$attributesString}></iframe>
+HTML;
         }
         
         // Für Google Maps Embed URLs: In iframe umwandeln

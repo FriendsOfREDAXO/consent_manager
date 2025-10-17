@@ -139,18 +139,41 @@ function debugLog(message, data) {
     if (document.getElementById('consent_manager-toggle-details')) {
         document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
             document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+            // Update aria-expanded for accessibility
+            var isExpanded = !document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden');
+            this.setAttribute('aria-expanded', isExpanded);
             return false;
         });
     }
 
     if (document.getElementById('consent_manager-toggle-details')) {
         document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
-            if (event.key == 'Enter') {
+            if (event.key == 'Enter' || event.key == ' ') {
+                event.preventDefault();
                 document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+                // Update aria-expanded
+                var isExpanded = !document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden');
+                this.setAttribute('aria-expanded', isExpanded);
                 return false;
             }
         });
     }
+
+    // ESC key to close consent box (Issue #326)
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' || event.key === 'Esc') {
+            var consentBox = document.getElementById('consent_manager-background');
+            if (consentBox && !consentBox.classList.contains('consent_manager-hidden')) {
+                event.preventDefault();
+                if (consent_manager_parameters.hidebodyscrollbar) {
+                    document.querySelector('body').style.overflow = 'auto';
+                }
+                consentBox.classList.add('consent_manager-hidden');
+                // Trigger close event
+                document.dispatchEvent(new CustomEvent('consent_manager-close'));
+            }
+        }
+    });
 
     document.querySelectorAll('.consent_manager-show-box, .consent_manager-show-box-reload').forEach(function (el) {
         el.addEventListener('click', function () {
@@ -296,9 +319,6 @@ function debugLog(message, data) {
                 
                 // Append to document body
                 document.body.appendChild(scriptNode);
-                
-                // Keep reference in container for cleanup
-                el.appendChild(document.createTextNode('script-loaded-' + i));
             }
         }
     }
@@ -327,6 +347,13 @@ function debugLog(message, data) {
             document.querySelector('body').style.overflow = 'hidden';
         }
         document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
+        
+        // Initialize aria-expanded for toggle button (A11y)
+        var toggleBtn = document.getElementById('consent_manager-toggle-details');
+        if (toggleBtn) {
+            toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+        
         var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
         var firstFocusableEl = focusableEls[0];
         consent_managerBox.focus();

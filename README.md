@@ -85,15 +85,43 @@ www.beispiel.de
 **PHP-Aufruf (empfohlen):**
 ```php
 <?php 
-// Standard-Integration
+// Standard-Integration (alles in einem)
 echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php'); 
 
+// Oder Komponenten einzeln laden (mehr Flexibilität):
+?>
+<style><?php echo consent_manager_frontend::getCSS(); ?></style>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    <?php echo consent_manager_frontend::getJS(); ?>
+</script>
+<?php echo consent_manager_frontend::getBox(); ?>
+
+<?php
 // Mit custom Fragment
 echo consent_manager_frontend::getFragment(0, 0, 'my_custom_box.php');
 
 // Mit Inline-Modus
 echo consent_manager_frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cssjs.php', ['inline' => true]);
 ?>
+```
+
+**Separate Ausgabe (Issue #282):**
+```php
+<?php
+// Nur CSS ausgeben
+echo consent_manager_frontend::getCSS();
+
+// Nur JavaScript ausgeben  
+echo consent_manager_frontend::getJS();
+
+// Nur Box-HTML ausgeben
+echo consent_manager_frontend::getBox();
+
+// Mit CSP-Nonce für Scripts
+?>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    <?php echo consent_manager_frontend::getJS(); ?>
+</script>
 ```
 
 **Verfügbare Parameter:**
@@ -280,6 +308,11 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/themes.png?raw=true)
 
+**Verfügbare Themes:**
+- Standard-Themes (Hell, Dunkel, Bottom Bar, Bottom Right)
+- Community-Themes (Olien Dark/Light, Skerbis Glass, XOrange)
+- **🆕 Accessibility Theme** (`consent_manager_frontend_a11y.css`) - Barrierefrei optimiert
+
 **Eigenes Theme erstellen:**
 1. Bestehendes Theme kopieren
 2. In `/project/consent_manager_themes/` ablegen
@@ -291,6 +324,48 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 ```
 /redaxo/index.php?page=consent_manager/theme&preview=project:consent_manager_frontend_mein_theme.scss
 ```
+
+### ♿ Barrierefreiheit (Accessibility)
+
+**Issue #326 - Optimierungen für Barrierefreiheit:**
+
+Das neue **A11y-Theme** (`consent_manager_frontend_a11y.css`) bietet umfassende Barrierefreiheit:
+
+**WCAG 2.1 AA Konformität:**
+- ✅ **Kontrastverhältnisse:** 4.5:1 für Text, 3:1 für UI-Komponenten
+- ✅ **Focus-Indikatoren:** 3px blaue Umrandung für alle interaktiven Elemente
+- ✅ **Touch-Targets:** Mindestens 44x44px für alle Buttons und Links
+- ✅ **Screen Reader:** Korrekte ARIA-Labels und semantische HTML-Struktur
+- ✅ **Tastatursteuerung:** Vollständige Navigation ohne Maus möglich
+
+**Tastatursteuerung:**
+```
+ESC             → Consent Box schließen (Issue #326)
+Tab             → Zwischen Elementen navigieren
+Enter / Space   → Details ein-/ausklappen (Issue #326)
+Enter           → Buttons aktivieren
+```
+
+**Implementierte Features:**
+- **ESC-Taste:** Schließt die Consent Box ohne durch alle Felder zu tabben
+- **Space-Taste:** Aktiviert den "Details anzeigen"-Button (zusätzlich zu Enter)
+- **aria-expanded:** Zeigt Screen Readern den Zustand des Details-Bereichs
+- **Reduzierte Bewegung:** Respektiert `prefers-reduced-motion` Einstellung
+- **Hoher Kontrast:** Unterstützt `prefers-contrast: high` Modus
+- **Focus-Management:** Automatischer Focus auf erste Checkbox beim Öffnen
+
+**Verwendung:**
+```php
+<!-- Im Backend: Theme auf "consent_manager_frontend_a11y.css" setzen -->
+<!-- Oder manuell: -->
+<link rel="stylesheet" href="/assets/addons/consent_manager/consent_manager_frontend_a11y.css">
+```
+
+**Zusätzliche Empfehlungen:**
+- Platzieren Sie den Cookie-Einstellungs-Link prominent im Footer
+- Verwenden Sie beschreibende Linktexte (z.B. "Cookie-Einstellungen" statt "Klick hier")
+- Testen Sie mit Screen Readern (NVDA, JAWS, VoiceOver)
+- Prüfen Sie Keyboard-Navigation regelmäßig
 
 ### Individuelles Design
 
@@ -752,6 +827,92 @@ Die Services sind bereits strukturiert in Kategorien wie Analytics, Marketing, e
 ---
 
 ## 🛠️ Erweiterte Integration
+
+### API-Methoden (Issue #282)
+
+Seit Version 5.x stehen separate Methoden für CSS, JavaScript und Box-HTML zur Verfügung:
+
+**`consent_manager_frontend::getCSS()`**
+```php
+<?php
+// Gibt nur das CSS zurück
+$css = consent_manager_frontend::getCSS();
+echo '<style>' . $css . '</style>';
+?>
+```
+- **Return:** CSS-String mit Theme-Unterstützung
+- **Use Case:** Inline-CSS oder separate CSS-Datei generieren
+- **Performance:** Cached durch REDAXO
+
+**`consent_manager_frontend::getJS()`**
+```php
+<?php
+// Gibt JavaScript inkl. Parameter und Box-Template zurück
+$js = consent_manager_frontend::getJS();
+?>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    <?php echo $js; ?>
+</script>
+```
+- **Return:** Vollständiges JavaScript (js.cookie, polyfills, consent_manager_frontend.js)
+- **Enthält:** Parameter, Box-Template, Cookie-Expiration
+- **CSP:** Nonce-Attribut automatisch über `getNonceAttribute()` verfügbar
+- **Use Case:** Inline-JavaScript oder separate JS-Datei
+
+**`consent_manager_frontend::getBox()`**
+```php
+<?php
+// Gibt nur das Box-HTML zurück (ohne CSS/JS)
+echo consent_manager_frontend::getBox();
+?>
+```
+- **Return:** HTML der Consent-Box
+- **Use Case:** AJAX-Loading, Custom Integration, SPA-Frameworks
+- **Voraussetzung:** CSS und JS müssen separat geladen sein
+
+**`consent_manager_frontend::getNonceAttribute()`**
+```php
+<?php
+// CSP-Nonce-Attribut für Script-Tags
+?>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    // Ihr JavaScript-Code
+</script>
+```
+- **Return:** ` nonce="XXX"` oder leerer String
+- **CSP:** Automatische Integration mit REDAXO's CSP-Nonce
+- **Use Case:** Inline-Scripts mit Content Security Policy
+
+**Anwendungsbeispiele:**
+
+```php
+<?php
+// Beispiel 1: Alles inline im Template
+?>
+<style><?php echo consent_manager_frontend::getCSS(); ?></style>
+<?php echo consent_manager_frontend::getBox(); ?>
+<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+    <?php echo consent_manager_frontend::getJS(); ?>
+</script>
+
+<?php
+// Beispiel 2: JavaScript in separate Datei schreiben
+$jsFile = rex_path::assets('consent_manager_custom.js');
+rex_file::put($jsFile, consent_manager_frontend::getJS());
+?>
+<script src="<?php echo rex_url::assets('consent_manager_custom.js'); ?>"<?php echo consent_manager_frontend::getNonceAttribute(); ?>></script>
+
+<?php
+// Beispiel 3: Für AJAX/SPA nur Box-HTML zurückgeben
+if (rex_request::isAjaxRequest()) {
+    rex_response::sendJson([
+        'html' => consent_manager_frontend::getBox(),
+        'css' => consent_manager_frontend::getCSS()
+    ]);
+    exit;
+}
+?>
+```
 
 ### Conditional Loading mit PHP
 

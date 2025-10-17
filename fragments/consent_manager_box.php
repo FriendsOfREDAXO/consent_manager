@@ -34,7 +34,7 @@ if (null !== $consent_manager->cookiegroups): ?>
                             ?>
                         </div>
                         <div class="consent_manager-show-details">
-                            <button id="consent_manager-toggle-details" class="icon-info-circled" aria-controls="consent_manager-detail" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></button>
+                            <button id="consent_manager-toggle-details" class="icon-info-circled" aria-controls="consent_manager-detail" aria-expanded="false" tabindex="0"><?= $consent_manager->texts['toggle_details'] ?></button>
                         </div>
                     </div>
 
