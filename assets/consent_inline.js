@@ -104,7 +104,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
         
         updateAllPlaceholders: function() {
-            var containers = document.querySelectorAll('.consent-inline-container[data-service]');
+            var containers = document.querySelectorAll('.consent-inline-container[data-service]:not([data-loaded])');
             var self = this;
             
             if (containers.length === 0) {
@@ -188,6 +188,9 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
         
         loadContent: function(container) {
+            // Markiere als geladen damit nicht erneut verarbeitet
+            container.setAttribute('data-loaded', 'true');
+            
             var contentScript = container.querySelector('.consent-content-data');
             if (!contentScript) {
                 console.error('No content script found in container');
@@ -203,10 +206,12 @@ if (typeof window.consentManagerInline !== 'undefined') {
             var wrapper = document.createElement('div');
             wrapper.innerHTML = decodedCode;
             
+            // Inhalte vor Container einfügen
             while (wrapper.firstChild) {
                 container.parentNode.insertBefore(wrapper.firstChild, container);
             }
             
+            // Container jetzt entfernen
             container.remove();
         },
         
