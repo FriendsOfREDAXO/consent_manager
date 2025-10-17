@@ -81,15 +81,41 @@ www.beispiel.de
 ```
 
 ### 3. Template-Integration
-**Grundcode für Templates:**
+
+**PHP-Aufruf (empfohlen):**
 ```php
-REX_CONSENT_MANAGER[forceCache=0 forceReload=0]
+<?php 
+// Standard-Integration
+echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php'); 
+
+// Mit custom Fragment
+echo consent_manager_frontend::getFragment(0, 0, 'my_custom_box.php');
+
+// Mit Inline-Modus
+echo consent_manager_frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cssjs.php', ['inline' => true]);
+?>
 ```
 
-**PHP-Ausgabe:**
+**Verfügbare Parameter:**
+
+| Parameter | Standard | Beschreibung |
+|-----------|----------|--------------|
+| `forceCache` | `0` im Frontend, `1` im Backend | Cache-Steuerung: `0` = Cache verwenden, `1` = Cache neu generieren |
+| `forceReload` | `0` wenn `cache` Parameter gesetzt, sonst `1` | Reload-Steuerung der Consent-Box |
+| `fragment` | `consent_manager_box_cssjs.php` | Custom Fragment-Template-Datei |
+| `vars` (Array) | `[]` | Zusätzliche Variablen (z.B. `['inline' => true]`) |
+
+**REX_CONSENT_MANAGER Variable (alternativ):**
 ```php
-<?php echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php'); ?>
+REX_CONSENT_MANAGER[]
+REX_CONSENT_MANAGER[forceCache=0 forceReload=0]
+REX_CONSENT_MANAGER[inline=true]
+REX_CONSENT_MANAGER[fragment=my_custom_box.php]
 ```
+
+**Platzierung:**
+- Im `<head>`-Bereich oder vor `</body>` (empfohlen für Performance)
+- Für Inline-Consent-Modus: `['inline' => true]` als Parameter übergeben
 
 ### 4. Cookie-Einstellungen nachträglich aufrufen
 
