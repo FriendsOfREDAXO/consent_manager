@@ -1227,6 +1227,6 @@ MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manag
 
 **Issue melden:** [GitHub Issues](https://github.com/FriendsOfREDAXO/consent_manager/issues)
 
-**Contributions:** Pull Requests sind willkommen - besonders eigene Themes mit Screenshot oder Demo-Link!
+**Contributions:** Pull Requests sind willkommen - besonders eigene Themes mit Screenshot oder Demo-Link! Bitte beachte unsere [Beitragsrichtlinien](CONTRIBUTING.md) für Commit-Messages und Best Practices.
 
 **Community:** Tipps und Tricks können direkt in die README eingefügt oder als Issue eingereicht werden.
