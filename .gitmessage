@@ -1,0 +1,52 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+
+# Type sollte eines sein von:
+# feat:     Neue Funktionalität
+# fix:      Bugfix
+# docs:     Dokumentation
+# style:    Formatierung, fehlende Semikolons, etc; kein Code-Änderung
+# refactor: Code-Refactoring ohne neue Features oder Bugfixes
+# test:     Hinzufügen fehlender Tests
+# chore:    Build-Process, Auxiliary Tools, Libraries wie Dokumentations-Generator
+# perf:     Performance-Verbesserung
+# ci:       CI/CD Änderungen
+# build:    Build-System Änderungen
+# revert:   Revert eines vorherigen Commits
+
+# Scope (optional): betroffener Bereich
+# - frontend, backend, theme, inline, a11y, api, config, etc.
+
+# Subject: max 50 Zeichen, Imperativ ("Add" nicht "Added")
+# - Erste Zeile sollte beschreiben WAS der Commit macht
+# - Beginne mit Großbuchstaben, kein Punkt am Ende
+
+# Body (optional): detaillierte Erklärung WIE und WARUM
+# - Trennung durch Leerzeile nach Subject
+# - Jede Zeile max 72 Zeichen
+# - Erkläre WAS geändert wurde und WARUM
+
+# Footer (optional): referenziere Issues und Breaking Changes
+# - Fixes #123
+# - Closes #456
+# - BREAKING CHANGE: <beschreibung>
+
+# Beispiele:
+# feat(theme): Fügt A11y Theme Editor hinzu
+# 
+# Ermöglicht visuelle Anpassung von Accessibility-Themes
+# mit Farbauswahl und Live-Vorschau. Themes werden automatisch
+# in project/consent_manager_themes/ gespeichert.
+#
+# Fixes #326
+
+# fix(inline): Behebt Button-Attribute in Placeholder
+#
+# - "Alle erlauben" Button verwendet data-service statt data-consent-id
+# - Einstellungen-Button verwendet data-service statt onclick
+# - Icon zurück zu fa-check-circle für Konsistenz
+#
+# Closes #386
