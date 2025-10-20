@@ -1,6 +1,6 @@
 # Makefile für Git-Setup und Commit-Validierung
 
-.PHONY: setup-git lint-commits check-branch clean-branches
+.PHONY: setup-git lint-commits check-branch clean-branches examples theme-compile help
 
 # Git-Template und Hooks einrichten
 setup-git:
@@ -51,3 +51,25 @@ examples:
 	@echo "test: Fügt Unit-Tests für Theme-System hinzu"
 	@echo "chore: Update dependencies to latest versions"
 	@echo "perf(inline): Optimiert Thumbnail-Cache Performance"
+
+# Kompiliere SCSS Themes 
+theme-compile:
+	@echo "🎨 Kompiliere SCSS Themes..."
+	@if command -v sass >/dev/null 2>&1; then \
+		sass scss:assets --style compressed; \
+		echo "✅ Themes kompiliert"; \
+	else \
+		echo "❌ sass nicht installiert. Installiere mit: npm install -g sass"; \
+	fi
+
+# Hilfe anzeigen
+help:
+	@echo "📋 Verfügbare Make-Commands:"
+	@echo ""
+	@echo "make setup-git      🛠️  Git-Template und Hooks einrichten"
+	@echo "make lint-commits   🔍 Letzte 10 Commits auf Format prüfen"
+	@echo "make check-branch   📋 Git Status und Branch-Info anzeigen"
+	@echo "make clean-branches 🧹 Bereinige merged Branches"
+	@echo "make theme-compile  🎨 SCSS Themes kompilieren"
+	@echo "make examples       📝 Zeige Beispiel-Commits"
+	@echo "make help           ❓ Diese Hilfe anzeigen"
