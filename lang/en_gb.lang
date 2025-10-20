@@ -302,7 +302,7 @@ consent_manager_config_step_domains = 1. Configure Domain
 consent_manager_config_step_services = 2. Adjust Services
 consent_manager_config_step_texts = 3. Customize Texts
 consent_manager_config_step_theme = 4. Choose Design
-consent_manager_config_template_info = Template code: <code><?php echo REX_CONSENT_MANAGER[]; ?></code> (include before closing </body> tag)
+consent_manager_config_template_info = Template code: <code>REX_CONSENT_MANAGER</code> (include before closing <code>body</code> tag)
 
 # Quickstart modal additional
 consent_manager_setup_minimal_expert = For experienced users who want to configure most settings themselves.
