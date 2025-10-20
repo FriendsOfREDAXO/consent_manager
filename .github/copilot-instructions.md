@@ -78,36 +78,55 @@ Scopes: theme, inline, a11y, frontend, backend, config
 
 ### Theme Development
 ```bash
-# Compile SCSS themes
-make theme-compile
-
-# Watch for changes
-sass --watch scss:assets
-
-# Theme preview
+# Test theme preview (automatic compilation)
 /redaxo/index.php?page=consent_manager/theme&preview=theme_name
+
+# SCSS is automatically compiled when theme is selected in backend
+# No manual sass-watch or compilation needed
 ```
 
-### Git Workflow
+### Setup Files and UIDs
+**Important:** New text UIDs must be added to ALL setup files:
+- `setup/minimal_setup.json` - Basic setup with essential services
+- `setup/default_setup.json` - Standard setup with 25+ preconfigured services  
+- `setup/business_setup.json` - Business-oriented services
+- `setup/contribution_template.json` - Template for community contributions
+
+**When adding new text UIDs:**
+1. Add new UID to all 4 setup files
+2. Number `id` sequentially per file
+3. Use same `uid` and `text` in all files
+4. Follow JSON structure (see existing entries)
+
+### Git Workflow & Commits
 ```bash
-# Setup development environment
+# Setup development environment (one-time)
 make setup-git
 
-# Check commits quality
-make lint-commits
+# Commit messages: ALWAYS use Conventional Commits format
+git commit  # (without -m) opens template with examples
 
-# Create feature branch
-git checkout -b feat/new-feature
+# Good commit examples for this project:
+feat(inline): Add new inline consent functionality
+fix(theme): Fix SCSS compilation for A11y themes  
+docs(setup): Add new text UID to all setup files
+style(a11y): Improve contrast values for WCAG 2.1 AA
+refactor(frontend): Extract event delegation to separate function
+chore(i18n): Update German translations
 
-# Theme editor available at
-/redaxo/index.php?page=consent_manager/theme_editor
+# Pull Requests: 
+# - Description must explain WHAT and WHY
+# - For setup changes: mention all affected files
+# - For theme changes: document accessibility tests
+# - Take Copilot reviews seriously and fix them
 ```
 
 ### Testing
 - **Frontend:** Test in multiple browsers, check accessibility
 - **Backend:** Test in REDAXO backend with different user permissions  
 - **Inline System:** Test with YouTube/Vimeo embeds
-- **Themes:** Verify all theme variants in preview
+- **Themes:** Verify all theme variants in preview (automatic compilation)
+- **Setup Files:** JSON validation with `make lint-commits`
 
 ## Key Features & Systems
 
@@ -181,11 +200,16 @@ consentManagerDebug.show();
 3. Test with inline consent system
 4. Add service-specific handlers if needed
 
-### Text Management
-- All texts stored in database with UID system
-- Backend interface for editing
-- Export/import via JSON setup files
-- Fallback to English if translation missing
+### Text Management & Setup Files
+- **Text UIDs**: All texts stored in database with UID system
+- **Backend interface**: For editing individual texts
+- **Setup Files**: JSON-based export/import system
+  - `setup/minimal_setup.json` - Basic setup (2 services, 30 text UIDs)
+  - `setup/default_setup.json` - Standard setup (25+ services, 27 text UIDs) 
+  - `setup/business_setup.json` - Business-focused services
+  - `setup/contribution_template.json` - Template for community contributions
+- **New Text UIDs**: Must be added to ALL setup files with consistent structure
+- **Fallback**: English if German translation missing
 
 ## Important Notes
 
@@ -193,9 +217,11 @@ consentManagerDebug.show();
 - **Use `rex_escape()`** for ALL user output to prevent XSS
 - **Follow REDAXO patterns** - don't reinvent existing functionality  
 - **Test themes** in both light and dark modes
-- **Validate SCSS** before committing theme changes
 - **Check browser compatibility** for JavaScript features
 - **Document breaking changes** in CHANGELOG.md
+- **Setup Files**: When adding new text UIDs, update ALL 4 setup JSON files
+- **SCSS Auto-Compilation**: Themes compile automatically when selected in backend
+- **GitHub Copilot Reviews**: Address all review comments in PRs before merging
 
 ## Debugging
 
@@ -215,10 +241,12 @@ consentManagerDebug.show();
 
 1. **Fragments:** May need updates for new features
 2. **JavaScript:** Check browser compatibility  
-3. **SCSS:** Verify compilation and accessibility
+3. **SCSS:** Auto-compiles when theme selected, no manual compilation needed
 4. **Database:** Check migrations in `install.php`
 5. **i18n:** Update language files for new strings
-6. **CHANGELOG.md:** Document all changes
-7. **README.md:** Update if public API changes
+6. **Setup Files:** Add new text UIDs to ALL 4 JSON files (minimal, default, business, contribution_template)
+7. **CHANGELOG.md:** Document all changes
+8. **README.md:** Update if public API changes
+9. **Pull Requests:** Address all GitHub Copilot review comments
 
 Trust these instructions and refer to existing code patterns before exploring. The codebase follows consistent REDAXO conventions throughout.
