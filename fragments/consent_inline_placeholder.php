@@ -95,19 +95,19 @@ if (!empty($placeholderData['thumbnail'])) {
                         <button type="button" class="btn btn-consent-once consent-inline-once" 
                                 data-consent-id="<?= rex_escape($consentId) ?>"
                                 data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-play"></i> <?= rex_escape($options['placeholder_text'] ?? $inline_placeholder_text) ?>
+                            <i class="fa fa-play" aria-hidden="true"></i> <?= rex_escape($options['placeholder_text'] ?? $inline_placeholder_text) ?>
                         </button>
                         
                         <?php if ($show_allow_all): ?>
                         <button type="button" class="btn btn-consent-allow-all consent-inline-allow-all" 
                                 data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-check-circle"></i> <?= rex_escape($button_inline_allow_all_text) ?>
+                            <i class="fa fa-check-circle" aria-hidden="true"></i> <?= rex_escape($button_inline_allow_all_text) ?>
                         </button>
                         <?php endif; ?>
                         
                         <button type="button" class="btn btn-consent-details consent-inline-details" 
                                 data-service="<?= rex_escape($serviceKey) ?>">
-                            <i class="fa fa-cog"></i> <?= rex_escape($button_inline_details_text) ?>
+                            <i class="fa fa-cog" aria-hidden="true"></i> <?= rex_escape($button_inline_details_text) ?>
                         </button>
                     </div>
                 </div>
