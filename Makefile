@@ -10,7 +10,7 @@ setup-git:
 	@echo "💡 Verwende 'git commit' (ohne -m) für Template"
 	@echo ""
 	@echo "🔧 Optional: Git-Hook für Validierung:"
-	@echo "   cp .github/git-hooks-examples.md .git/hooks/commit-msg"
+	@echo "   cp .github/hooks/commit-msg .git/hooks/commit-msg"
 	@echo "   chmod +x .git/hooks/commit-msg"
 
 # Letzte Commits auf Format prüfen
