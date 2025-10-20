@@ -105,8 +105,8 @@ if (!empty($placeholderData['thumbnail'])) {
                         </button>
                         <?php endif; ?>
                         
-                        <button type="button" class="btn btn-consent-details consent-inline-details" 
-                                data-service="<?= rex_escape($serviceKey) ?>">
+                        <button type="button" class="btn btn-consent-details consent-inline-details"
+                                 data-service="<?= rex_escape($serviceKey) ?>">
                             <i class="fa fa-cog" aria-hidden="true"></i> <?= rex_escape($button_inline_details_text) ?>
                         </button>
                     </div>

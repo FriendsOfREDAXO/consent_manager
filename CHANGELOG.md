@@ -24,11 +24,11 @@
 
 * **♿ Barrierefreiheit (Issue #326)**: Umfassende Accessibility-Optimierungen
   * **5 neue A11y-Themes**: Accessibility, Blue, Green, Compact, Compact Blue
-  * **WCAG 2.1 AA Konformität**: 4.5:1 Kontraste für Text, 3:1 für UI-Komponenten
-  * **Erweiterte Tastatursteuerung**: ESC (Dialog schließen), Space (Details toggle), Tab-Navigation
+   * **WCAG 2.1 AA Konformität**: 4.5:1 Kontraste für Text, 3:1 für UI-Komponenten
+   * **Erweiterte Tastatursteuerung**: ESC (Dialog schließen), Space (Details toggle), Tab-Navigation
    * **Fokus-Management**: 3px blaue Fokus-Indikatoren, automatischer Fokus auf erste Checkbox
-  * **Touch-Targets**: Mindestens 44x44px für alle interaktiven Elemente
-  * **Screen Reader Support**: Korrekte ARIA-Attribute (`role="dialog"`, `aria-modal="true"`)
+   * **Touch-Targets**: Mindestens 44x44px für alle interaktiven Elemente
+   * **Screen Reader Support**: Korrekte ARIA-Attribute (`role="dialog"`, `aria-modal="true"`)
    * **Reduced Motion**: Respektiert `prefers-reduced-motion` und `prefers-contrast: more`
   * **High Contrast Mode**: Spezielle Styles für hohen Kontrast-Modus
 
