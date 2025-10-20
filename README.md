@@ -1196,7 +1196,7 @@ Der Inline-Consent generiert ansprechende Platzhalter:
 
 ---
 
-## �📄 Lizenz und Credits
+## 📄 Lizenz und Credits
 
 ### Lizenz
 MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/LICENSE.md)
