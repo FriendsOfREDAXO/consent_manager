@@ -15,6 +15,23 @@
   * **Service-spezifische Handler**: YouTube, Vimeo, Google Maps mit individueller Konfiguration
   * **Erweiterte Debugging-Tools**: Umfassende Console-Logs und Debug-Ausgaben für Entwicklung
 
+* **🎨 A11y Theme Editor**: Visueller Editor für barrierefreie Themes
+  * **Drag & Drop Interface**: Intuitive Farbauswahl mit Color-Picker und Live-Vorschau
+  * **Basis-Theme-Varianten**: Normal und Compact als Ausgangspunkt für eigene Themes
+  * **Custom Theme Export**: Automatische Speicherung in `project/consent_manager_themes/`
+  * **SCSS-Generierung**: Vollautomatische SCSS-Erstellung mit Accessibility-Features
+  * **Live-Kompilierung**: Themes werden automatisch kompiliert und in Theme-Auswahl verfügbar
+
+* **♿ Barrierefreiheit (Issue #326)**: Umfassende Accessibility-Optimierungen
+  * **5 neue A11y-Themes**: Accessibility, Blue, Green, Compact, Compact Blue
+  * **WCAG 2.1 AA Konformität**: 4.5:1 Kontraste für Text, 3:1 für UI-Komponenten
+  * **Erweiterte Tastatursteuerung**: ESC (Dialog schließen), Space (Details toggle), Tab-Navigation
+  * **Focus-Management**: 3px blaue Focus-Indikatoren, automatischer Focus auf erste Checkbox
+  * **Touch-Targets**: Mindestens 44x44px für alle interaktiven Elemente
+  * **Screen Reader Support**: Korrekte ARIA-Attribute (`role="dialog"`, `aria-modal="true"`)
+  * **Reduced Motion**: Respektiert `prefers-reduced-motion` und `prefers-contrast: high`
+  * **High Contrast Mode**: Spezielle Styles für hohen Kontrast-Modus
+
 ### 🔧 Verbesserungen
 
 * **Modernisierte JavaScript-Architektur**: Event-Delegation statt onclick-Attribute
@@ -22,12 +39,31 @@
 * **Erweiterte Service-Erkennung**: String-basierte Fallback-Erkennung bekannter Services
 * **Verbesserte Fehlerbehandlung**: Detaillierte Debug-Ausgaben und Fallback-Mechanismen
 
+### 🐛 Bugfixes
+
+* **Inline-Consent Button-Attribute**: Behebt GitHub Copilot Review-Feedback aus PR #386
+  * "Alle erlauben" Button verwendet jetzt `data-service` statt `data-consent-id` für service-weite Consent-Logik
+  * Einstellungen-Button verwendet `data-service` statt hardcodiertes `onclick` für bessere Event-Delegation
+  * Icon für "Alle erlauben" Button zurück zu `fa-check-circle` für bessere visuelle Konsistenz
+
 ### 🛠️ Technische Änderungen
 
 * **Neue Datenbankstruktur**: `inline_only_mode` Spalte in `consent_manager_domain` Tabelle
 * **Fragment-System**: Vollständig anpassbare Templates für Inline-Consent-UI
 * **Thumbnail-Cache-API**: `consent_manager_thumbnail_cache` Klasse mit SVG-Fallbacks
 * **Cronjob-Integration**: Automatische Cache-Bereinigung für Thumbnail-Dateien
+* **Theme-Compiler-System**: Automatische SCSS-Kompilierung und Asset-Generierung
+* **A11y-Framework**: Basis-Framework für barrierefreie Theme-Entwicklung
+* **Project-Addon-Integration**: Eigene Themes in `project/consent_manager_themes/` Ordner
+
+### 📁 Neue Dateien
+
+* `pages/theme_editor.php`: Visueller Theme-Editor für A11y-Themes
+* `scss/consent_manager_frontend_a11y*.scss`: 5 neue Accessibility-Themes
+* `assets/consent_manager_frontend_a11y.css`: Kompiliertes A11y-CSS
+* `lib/consent_manager_thumbnail_cache.php`: Thumbnail-Cache-Management
+* `fragments/consent_inline_placeholder.php`: Inline-Consent-Template
+* `inline.md`: Vollständige Dokumentation für Inline-Consent-System
 
 ## Version 4.4.0 - 24.08.2025
 

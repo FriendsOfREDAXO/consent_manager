@@ -100,13 +100,13 @@ if (!empty($placeholderData['thumbnail'])) {
                         
                         <?php if ($show_allow_all): ?>
                         <button type="button" class="btn btn-consent-allow-all consent-inline-allow-all" 
-                                data-consent-id="<?= rex_escape($consentId) ?>">
-                            <i class="fa fa-check"></i> <?= rex_escape($button_inline_allow_all_text) ?>
+                                data-service="<?= rex_escape($serviceKey) ?>">
+                            <i class="fa fa-check-circle"></i> <?= rex_escape($button_inline_allow_all_text) ?>
                         </button>
                         <?php endif; ?>
                         
-                                                <button type="button" class="btn btn-consent-details consent-inline-details" 
-                                onclick="consentManager.showBox()">
+                        <button type="button" class="btn btn-consent-details consent-inline-details" 
+                                data-service="<?= rex_escape($serviceKey) ?>">
                             <i class="fa fa-cog"></i> <?= rex_escape($button_inline_details_text) ?>
                         </button>
                     </div>
