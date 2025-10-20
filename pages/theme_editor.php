@@ -7,6 +7,12 @@
 
 $addon = rex_addon::get('consent_manager');
 
+// Check if project addon is available and installed
+if (!rex_addon::get('project')->isAvailable()) {
+    echo rex_view::error($addon->i18n('theme_editor_project_addon_required'));
+    return;
+}
+
 $csrfToken = rex_csrf_token::factory('consent_manager_theme_editor');
 
 // Theme bases
@@ -59,7 +65,7 @@ if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
     $scssContent = generateA11yThemeScss($themeBase, $themeName, $themeDescription, $colors);
     
     // Save to project addon
-    if (rex_addon::exists('project')) {
+    if (rex_addon::get('project')->isAvailable()) {
         $projectAddon = rex_addon::get('project');
         $themesDir = $projectAddon->getPath('consent_manager_themes/');
         

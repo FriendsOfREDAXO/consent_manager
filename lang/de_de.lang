@@ -403,3 +403,4 @@ consent_manager_button_inline_allow_all_text_info = Inline Placeholder: Button "
 
 # Theme Editor
 theme_editor_saved = Theme "{0}" wurde erfolgreich erstellt und gespeichert!
+theme_editor_project_addon_required = Der Theme-Editor benötigt das installierte "project" AddOn, um eigene Themes zu speichern. Bitte installiere das project AddOn über den Installer.
