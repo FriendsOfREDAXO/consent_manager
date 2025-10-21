@@ -1,13 +1,24 @@
 <?php
 
-use FriendsOfRedaxo\ConsentManager\Cache;
+namespace FriendsOfRedaxo\ConsentManager;
+
+use consent_manager_util;
+use rex_addon;
+use rex_clang;
+use rex_file;
+use rex_fragment;
+use rex_logger;
+use rex_request;
+use rex_response;
+use rex_url;
+use rex_path;
 use rex_article;
 
 /**
  * @api
  */
 
-class consent_manager_frontend
+class Frontend
 {
     public $cookiegroups = []; /** @phpstan-ignore-line */
     public $cookies = []; /** @phpstan-ignore-line */

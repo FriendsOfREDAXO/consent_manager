@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Frontend;
+
 if (0 === rex_article::getCurrentId()) {
     return;
 }
@@ -19,7 +21,7 @@ $consentparams['outputjs']         = '';
 $consentparams['lang']             = rex_clang::getCurrentId();
 $consentparams['initially_hidden'] = 'false';
 
-$consent_manager = new consent_manager_frontend($forceCache);
+$consent_manager = new Frontend($forceCache);
 if (is_string(rex_request::server('HTTP_HOST'))) {
     $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 }
@@ -108,7 +110,7 @@ if ($inlineMode === true || $inlineMode === 'true' || $inlineMode === '1') {
 
 // Standard-CSS ausgeben
 if (false === $addon->getConfig('outputowncss', false)) {
-    $_csscontent = consent_manager_frontend::getFrontendCss();
+    $_csscontent = Frontend::getFrontendCss();
     if ('' !== $_csscontent) {
         $consentparams['outputcss'] .= '    <style>' . trim($_csscontent) . '</style>' . PHP_EOL;
     }

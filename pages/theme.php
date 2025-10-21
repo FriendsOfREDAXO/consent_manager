@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Frontend;
+
 $addon = rex_addon::get('consent_manager');
 
 $preview = rex_request('preview', 'string', '');
@@ -17,7 +19,7 @@ if ('' !== $preview) {
     $theme_options = $cmtheme->getThemeInformation();
     if (count($theme_options) > 0) {
         $cmstyle = $cmtheme->getCompiledStyle();
-        $cmbox = consent_manager_frontend::getFragment(0, 0, 'consent_manager_box.php');
+        $cmbox = Frontend::getFragment(0, 0, 'consent_manager_box.php');
     } else {
         $cmstyle = '';
         $cmbox = rex_view::error($addon->i18n('error_css_notfound', $preview));

@@ -8,12 +8,13 @@
  * @package redaxo\consent-manager
  */
 
+use FriendsOfRedaxo\ConsentManager\Frontend;
 use FriendsOfRedaxo\ConsentManager\InlineConsent;
 
 $addon = rex_addon::get('consent_manager');
 
 // Nur laden wenn Domain konfiguriert ist
-$consent_manager = new consent_manager_frontend(0);
+$consent_manager = new Frontend(0);
 if (is_string(rex_request::server('HTTP_HOST'))) {
     $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 }

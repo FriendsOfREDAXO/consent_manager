@@ -1,5 +1,8 @@
 <?php
-$consent_manager = new consent_manager_frontend(0);
+
+use FriendsOfRedaxo\ConsentManager\Frontend;
+
+$consent_manager = new Frontend(0);
 if (is_string(rex_request::server('HTTP_HOST'))) {
     $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 }

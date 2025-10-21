@@ -1,6 +1,8 @@
 <?php
 
-$consent_manager = new consent_manager_frontend($this->getVar('forceCache'));
+use FriendsOfRedaxo\ConsentManager\Frontend;
+
+$consent_manager = new Frontend($this->getVar('forceCache'));
 if (is_string(rex_request::server('HTTP_HOST'))) {
     $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 }
