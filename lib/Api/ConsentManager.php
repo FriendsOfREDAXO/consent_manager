@@ -1,6 +1,13 @@
 <?php
 
-class rex_api_consent_manager extends rex_api_function
+namespace FriendsOfRedaxo\ConsentManager\Api;
+
+use rex;
+use rex_api_function;
+use rex_request;
+use rex_sql;
+
+class ConsentManager extends rex_api_function
 {
     protected $published = true;
 

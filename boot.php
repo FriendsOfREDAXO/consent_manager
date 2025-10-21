@@ -159,6 +159,10 @@ if (rex::isFrontend() || rex::isBackend()) {
     rex_api_function::register('consent_manager_inline_log', FriendsOfRedaxo\ConsentManager\Api\InlineLog::class);
 }
 
+/** REVIEW: gehört der Aufruf hier hin oder in das vorhergehende IF? */
+/** Muss die PHP-Datei mit `require_once` wie zuvor vorgeladen werden? */
+rex_api_function::register('consent_manager', FriendsOfRedaxo\ConsentManager\Api\ConsentManager::class);
+
 // Mediamanager Effect für externe Thumbnails registrieren
 if (rex_addon::get('media_manager')->isAvailable()) {
     // Effect-Klasse laden

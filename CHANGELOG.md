@@ -5,7 +5,8 @@
 * **Namespace FriendsOfRedaxo\ConsentManager**
   * Datei und Klassennamne von `rex_api_consent_manager_inline_log` geändert in `...\Api\InlineLog`
     Externer API-Name `consent_manager_inline_log` beibehalten
-  * 
+  * Datei und Klassenname von `rex_api_consent_manager` geändert in `...\Api\ConsentManager`
+    Externer API-Name `consent_manager` beibehalten
 
 ## Version 4.5.0 - 14.10.2025
 
