@@ -10,6 +10,7 @@
   * Datei und Klassenname von `consent_manager_clang` geändert in `...\CLang`
   * Datei und Klassenname von `consent_manager_inline` geändert in `...\InlineConsent`
   * Datei und Klassenname von `consent_manager_config`geändert in `...\Config`
+  * Datei und Klassenname von `consent_manager_cache`geändert in `...\Cache`
 
 ## Version 4.5.0 - 14.10.2025
 

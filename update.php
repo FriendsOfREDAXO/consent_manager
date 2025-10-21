@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Cache;
+
 $addon = rex_addon::get('consent_manager');
 $addon->includeFile(__DIR__.'/install.php');
 $addon->setConfig('forceCache', true);
@@ -24,7 +26,7 @@ if (count(rex_clang::getAllIds()) > 1) {
 
     // Write cache
     if ($addon->isAvailable()) {
-        consent_manager_cache::forceWrite();
+        Cache::forceWrite();
     }
 }
 

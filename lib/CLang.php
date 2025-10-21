@@ -2,7 +2,6 @@
 
 namespace FriendsOfRedaxo\ConsentManager;
 
-use consent_manager_cache;
 use rex;
 use rex_be_controller;
 use rex_be_page;
@@ -33,7 +32,7 @@ class CLang
             $db->setWhere('id = :id', ['id' => $v['id']]);
             $db->delete();
         }
-        consent_manager_cache::forceWrite();
+        Cache::forceWrite();
         return $msg;
     }
 
@@ -196,7 +195,7 @@ class CLang
         foreach (Config::getTables(true) as $table) {
             $deleteLang = rex_sql::factory();
             $deleteLang->setQuery('DELETE FROM ' . $table . ' WHERE clang_id=?', [$ep->getParam('clang')->getId()]); /** @phpstan-ignore-line */
-            consent_manager_cache::forceWrite();
+            Cache::forceWrite();
         }
     }
 
@@ -256,6 +255,6 @@ class CLang
     public static function clangAdded(rex_extension_point $ep)
     {
         self::addClang($ep->getParam('clang')->getId()); /** @phpstan-ignore-line */
-        consent_manager_cache::forceWrite();
+        Cache::forceWrite();
     }
 }

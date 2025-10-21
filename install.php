@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Cache;
+
 $addon = rex_addon::get('consent_manager');
 
 $justinstalled = true;
@@ -218,8 +220,9 @@ if (rex_addon::get('media_manager')->isAvailable()) {
 }
 
 // Rewrite
-if (class_exists('consent_manager_cache')) {
-    consent_manager_cache::forceWrite();
+/** FIXME: Beim Update wird die alte Klasse genommen? oder doch die neue? Könnte ein Problem werden. */
+if (class_exists(Cache::class)) {
+    Cache::forceWrite();
 }
 
 // Delete Template cache

@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Cache;
+
 /**
  * Consent Manager JSON Setup Handler
  * 
@@ -57,8 +59,8 @@ class consent_manager_json_setup
                 $sql->setQuery('COMMIT');
 
                 // Force cache rebuild
-                if (class_exists('consent_manager_cache')) {
-                    consent_manager_cache::forceWrite();
+                if (class_exists(Cache::class)) {
+                    Cache::forceWrite();
                 }
 
                 return [

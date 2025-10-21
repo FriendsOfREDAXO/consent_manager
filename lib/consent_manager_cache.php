@@ -1,8 +1,18 @@
 <?php
 
-use FriendsOfRedaxo\ConsentManager\Config;
+namespace FriendsOfRedaxo\ConsentManager;
 
-class consent_manager_cache
+use rex;
+use rex_addon;
+use rex_clang;
+use rex_extension_point;
+use rex_file;
+use rex_i18n;
+use rex_logger;
+use rex_sql;
+use rex_string;
+
+class Cache
 {
     /** @var array<mixed> */
     private $domains = [];

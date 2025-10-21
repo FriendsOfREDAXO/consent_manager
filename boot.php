@@ -2,6 +2,7 @@
 
 use FriendsOfRedaxo\ConsentManager\Api\ConsentManager;
 use FriendsOfRedaxo\ConsentManager\Api\InlineLog;
+use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\InlineConsent;
 
@@ -79,7 +80,7 @@ if (rex::isBackend()) {
         }
     });
     rex_extension::register('REX_FORM_SAVED', CLang::formSaved(...));
-    rex_extension::register('REX_FORM_SAVED', 'consent_manager_cache::write');
+    rex_extension::register('REX_FORM_SAVED', Cache::write(...));
     rex_extension::register('CLANG_ADDED', CLang::clangAdded(...));
     rex_extension::register('CLANG_DELETED', CLang::clangDeleted(...));
 
@@ -89,7 +90,7 @@ if (rex::isBackend()) {
     }
     if (true === $addon->getConfig('forceCache')) {
         $addon->setConfig('forceCache', false);
-        consent_manager_cache::forceWrite();
+        Cache::forceWrite();
     }
 }
 

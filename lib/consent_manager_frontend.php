@@ -1,5 +1,6 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Cache;
 use rex_article;
 
 /**
@@ -27,12 +28,12 @@ class consent_manager_frontend
     public function __construct($forceWrite = 0)
     {
         if (1 === $forceWrite) {
-            consent_manager_cache::forceWrite();
+            Cache::forceWrite();
         }
-        $this->cache = consent_manager_cache::read();
+        $this->cache = Cache::read();
         if ([] === $this->cache || ([] !== $this->cache && rex_addon::get('consent_manager')->getVersion() !== $this->cache['majorVersion'])) { /** @phpstan-ignore-line */
-            consent_manager_cache::forceWrite();
-            $this->cache = consent_manager_cache::read();
+            Cache::forceWrite();
+            $this->cache = Cache::read();
         }
         $this->cacheLogId = $this->cache['cacheLogId']; /** @phpstan-ignore-line */
         $this->version = $this->cache['majorVersion']; /** @phpstan-ignore-line */
