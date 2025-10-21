@@ -116,7 +116,7 @@ if (!empty($placeholderData['thumbnail'])) {
         
         <script type="text/plain" class="consent-content-data" 
                 data-consent-code="<?= rex_escape($serviceKey) ?>">
-            <?= $content ?>
+<?= $content ?>
         </script>
     </div>
 </div>

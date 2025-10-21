@@ -68,8 +68,8 @@ if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->
     }
 }
 
-// Prüfe explizite inline-Parameter
-$inlineParam = $this->getVar('inline');
+// Prüfe explizite inline-Parameter (default: false wenn nicht gesetzt)
+$inlineParam = $this->getVar('inline', false);
 $explicitInlineParam = ($inlineParam === true || $inlineParam === false);
 
 // Consent ausblenden wenn inline-Modus aktiviert ist

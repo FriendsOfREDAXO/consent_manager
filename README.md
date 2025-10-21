@@ -82,6 +82,10 @@ www.beispiel.de
 
 ### 3. Template-Integration
 
+**Wichtig:** Assets müssen im Template eingebunden werden, damit der Consent Manager und die Inline-Blocker funktionieren!
+
+#### 🔧 Standard Integration (Consent Manager Box)
+
 **PHP-Aufruf (empfohlen):**
 ```php
 <?php 
@@ -105,23 +109,101 @@ echo consent_manager_frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cs
 ?>
 ```
 
-**Separate Ausgabe (Issue #282):**
+#### 🎯 Inline-Consent Assets (CKE5 oEmbed & manuelle Blocker)
+
+**Für Inline-Blocker (YouTube, Vimeo, Google Maps, etc.) müssen zusätzliche Assets geladen werden:**
+
 ```php
-<?php
-// Nur CSS ausgeben
-echo consent_manager_frontend::getCSS();
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title><?= rex_article::getCurrent()->getName() ?></title>
+    
+    <!-- Consent Manager Inline CSS (für Blocker-Platzhalter) -->
+    <link rel="stylesheet" href="<?= rex_url::addonAssets('consent_manager', 'consent_inline.css') ?>">
+    
+    <!-- Optional: Vidstack CSS (nur wenn Vidstack installiert) -->
+    <?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
+        <link rel="stylesheet" href="<?= rex_url::addonAssets('vidstack', 'vidstack.css') ?>">
+    <?php endif; ?>
+</head>
+<body>
+    <?php
+    // Hauptinhalt mit automatischer oEmbed-Umwandlung
+    echo rex_article::getCurrent()->getArticle();
+    ?>
+    
+    <!-- Consent Manager Inline JavaScript (WICHTIG für Button-Funktionalität!) -->
+    <script defer src="<?= rex_url::addonAssets('consent_manager', 'consent_inline.js') ?>"></script>
+    
+    <!-- Optional: Vidstack JavaScript (nur wenn Vidstack installiert) -->
+    <?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
+        <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack.js') ?>"></script>
+        <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack_helper.js') ?>"></script>
+    <?php endif; ?>
+</body>
+</html>
+```
 
-// Nur JavaScript ausgeben  
-echo consent_manager_frontend::getJS();
+**Was wird benötigt:**
 
-// Nur Box-HTML ausgeben
-echo consent_manager_frontend::getBox();
+| Asset | Wofür? | Zwingend? |
+|-------|--------|-----------|
+| `consent_inline.css` | Styling der Inline-Blocker (Thumbnails, Buttons, Overlay) | ✅ Ja |
+| `consent_inline.js` | Button-Funktionalität ("Einmal laden", "Einstellungen") | ✅ Ja |
+| `vidstack.css` | Styling für Vidstack Player (nur bei `player_mode: vidstack`) | Optional |
+| `vidstack.js` | Vidstack Player Funktionalität | Optional |
 
-// Mit CSP-Nonce für Scripts
-?>
-<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
-    <?php echo consent_manager_frontend::getJS(); ?>
-</script>
+**⚠️ Ohne diese Assets:**
+- Inline-Blocker werden **nicht korrekt dargestellt**
+- Buttons **funktionieren nicht** ("Einmal laden" macht nichts)
+- Videos **laden nicht** nach Consent-Klick
+- CKE5 oEmbed-Tags werden **nicht umgewandelt**
+
+#### 📋 Komplett-Beispiel Template
+
+```php
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= rex_article::getCurrent()->getName() ?></title>
+    
+    <!-- Consent Manager Inline CSS -->
+    <link rel="stylesheet" href="<?= rex_url::addonAssets('consent_manager', 'consent_inline.css') ?>">
+    
+    <!-- Optional: Vidstack CSS -->
+    <?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
+        <link rel="stylesheet" href="<?= rex_url::addonAssets('vidstack', 'vidstack.css') ?>">
+    <?php endif; ?>
+    
+    <!-- Dein eigenes CSS -->
+    <link rel="stylesheet" href="<?= rex_url::base('assets/css/styles.css') ?>">
+</head>
+<body>
+    <?php
+    // Consent Manager Box (globales Cookie-Banner)
+    echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+    
+    // Hauptinhalt mit automatischer oEmbed-Umwandlung
+    echo rex_article::getCurrent()->getArticle();
+    ?>
+    
+    <!-- Consent Manager Inline JavaScript (für Blocker-Buttons) -->
+    <script defer src="<?= rex_url::addonAssets('consent_manager', 'consent_inline.js') ?>"></script>
+    
+    <!-- Optional: Vidstack JavaScript -->
+    <?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
+        <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack.js') ?>"></script>
+        <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack_helper.js') ?>"></script>
+    <?php endif; ?>
+    
+    <!-- Dein eigenes JavaScript -->
+    <script defer src="<?= rex_url::base('assets/js/scripts.js') ?>"></script>
+</body>
+</html>
 ```
 
 **Verfügbare Parameter:**
@@ -983,6 +1065,91 @@ function loadExternalContent() {
 **Problem:** Sie haben 400 Artikel, aber nur 2 brauchen YouTube-Videos. Normale Consent-Banner nerven alle Besucher, obwohl 99% nie Videos sehen.
 
 **Lösung:** Inline-Consent zeigt Platzhalter statt Videos. Consent-Dialog erscheint erst beim Klick auf "Video laden".
+
+### 📋 Voraussetzungen
+
+**Template-Integration ZWINGEND erforderlich:**
+
+Die folgenden Assets **müssen** im Template eingebunden sein, damit Inline-Blocker funktionieren:
+
+```php
+<!-- Im <head> -->
+<link rel="stylesheet" href="<?= rex_url::addonAssets('consent_manager', 'consent_inline.css') ?>">
+
+<!-- Vor </body> -->
+<script defer src="<?= rex_url::addonAssets('consent_manager', 'consent_inline.js') ?>"></script>
+```
+
+**Optional für Vidstack Player (moderne Video-Wiedergabe):**
+
+```php
+<!-- Im <head> -->
+<?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
+    <link rel="stylesheet" href="<?= rex_url::addonAssets('vidstack', 'vidstack.css') ?>">
+<?php endif; ?>
+
+<!-- Vor </body> -->
+<?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
+    <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack.js') ?>"></script>
+    <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack_helper.js') ?>"></script>
+<?php endif; ?>
+```
+
+**⚠️ Ohne diese Assets funktionieren:**
+- ❌ **Buttons nicht** ("Einmal laden", "Einstellungen")
+- ❌ **Videos laden nicht** nach Consent
+- ❌ **CKE5 oEmbed nicht** automatisch umgewandelt
+- ❌ **Styling fehlt** (keine Thumbnails, kein Overlay)
+
+### 🎬 CKE5 oEmbed Integration (automatisch!)
+
+**Automatische Umwandlung von oEmbed-Tags:**
+
+```html
+<!-- Redakteur fügt in CKE5 ein: -->
+<oembed url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"></oembed>
+
+<!-- Frontend zeigt automatisch: -->
+<!-- ┌─────────────────────────────────┐ -->
+<!-- │ 📺 Video-Thumbnail               │ -->
+<!-- │ YouTube Video                    │ -->
+<!-- │ Für Anzeige werden Cookies...   │ -->
+<!-- │ [Einmal laden] [Einstellungen]  │ -->
+<!-- └─────────────────────────────────┘ -->
+```
+
+**Unterstützte Plattformen:**
+- ✅ YouTube (alle URL-Formate)
+- ✅ Vimeo (alle URL-Formate)
+
+**Services konfigurieren:**
+
+Backend → Consent Manager → Dienste:
+
+1. **YouTube Service:**
+   - UID: `youtube`
+   - Service-Name: YouTube
+   - Datenschutz: `https://policies.google.com/privacy`
+
+2. **Vimeo Service:**
+   - UID: `vimeo`
+   - Service-Name: Vimeo
+   - Datenschutz: `https://vimeo.com/privacy`
+
+**Player-Modi (Backend → Domains):**
+
+| Modus | Beschreibung |
+|-------|-------------|
+| `auto` | Vidstack wenn verfügbar, sonst native iframe (Standard) |
+| `vidstack` | Immer Vidstack Player (moderne UI, Accessibility) |
+| `native` | Immer Standard YouTube/Vimeo iframe |
+
+**Vorteile Vidstack Player:**
+- ✅ Moderne, anpassbare Player-UI
+- ✅ Kleinere Dateigröße als YouTube iframe
+- ✅ Vollständige Accessibility (WCAG 2.1)
+- ✅ Touch-optimiert
+- ✅ Konsistente UI über alle Plattformen
 
 ### ⚠️ Wichtige Funktionsweise des Inline-Modus
 

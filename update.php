@@ -44,3 +44,11 @@ $sql->setQuery('UPDATE `'. rex::getTablePrefix() .'consent_manager_consent_log` 
 rex_sql_table::get(rex::getTable('consent_manager_domain'))
     ->ensureColumn(new rex_sql_column('inline_only_mode', 'varchar(20)', true, 'disabled'))
     ->ensure();
+
+// Ensure oembed_enabled Spalte in Domain-Tabelle (default: 0 = deaktiviert beim Update)
+rex_sql_table::get(rex::getTable('consent_manager_domain'))
+    ->ensureColumn(new rex_sql_column('oembed_enabled', 'tinyint(1)', true, '0'))
+    ->ensureColumn(new rex_sql_column('oembed_video_width', 'int(10) unsigned', true, '640'))
+    ->ensureColumn(new rex_sql_column('oembed_video_height', 'int(10) unsigned', true, '360'))
+    ->ensureColumn(new rex_sql_column('oembed_show_allow_all', 'tinyint(1)', true, '0'))
+    ->ensure();

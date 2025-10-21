@@ -188,31 +188,46 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
         
         loadContent: function(container) {
+            console.log('🎬 loadContent called for container:', container);
+            
             // Markiere als geladen damit nicht erneut verarbeitet
             container.setAttribute('data-loaded', 'true');
             
             var contentScript = container.querySelector('.consent-content-data');
             if (!contentScript) {
-                console.error('No content script found in container');
+                console.error('❌ No content script found in container');
                 return;
             }
             
+            console.log('📜 Content script found:', contentScript);
+            
             var code = contentScript.innerHTML;
+            console.log('📝 Raw code:', code.substring(0, 100));
             
             var tempTextArea = document.createElement('textarea');
             tempTextArea.innerHTML = code;
             var decodedCode = tempTextArea.value;
             
+            console.log('🔓 Decoded code:', decodedCode.substring(0, 100));
+            
             var wrapper = document.createElement('div');
             wrapper.innerHTML = decodedCode;
             
+            console.log('📦 Wrapper children:', wrapper.children.length, wrapper.children);
+            
             // Inhalte vor Container einfügen
+            var insertedCount = 0;
             while (wrapper.firstChild) {
+                console.log('➡️ Inserting child:', wrapper.firstChild);
                 container.parentNode.insertBefore(wrapper.firstChild, container);
+                insertedCount++;
             }
+            
+            console.log('✅ Inserted ' + insertedCount + ' elements');
             
             // Container jetzt entfernen
             container.remove();
+            console.log('🗑️ Container removed');
         },
         
         logConsent: function(consentId, serviceKey, action) {
