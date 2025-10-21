@@ -109,7 +109,7 @@ class consent_manager_oembed_parser
         ];
 
         // Inline-Blocker generieren
-        return consent_manager_inline::doConsent($serviceKey, $url, $options);
+        return InlineConsent::doConsent($serviceKey, $url, $options);
     }
 
     /**
@@ -295,6 +295,6 @@ class consent_manager_oembed_parser
      */
     private static function generateNativeEmbed(string $serviceKey, string $url, array $options): string
     {
-        return consent_manager_inline::doConsent($serviceKey, $url, $options);
+        return InlineConsent::doConsent($serviceKey, $url, $options);
     }
 }
