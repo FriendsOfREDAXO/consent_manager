@@ -155,29 +155,14 @@ if (rex::isFrontend()) {
 
 // Inline Consent Classes laden
 if (rex::isFrontend() || rex::isBackend()) {
-    // Autoload für Inline-Consent-Klassen sicherstellen
-    /** REVIEW: Muss die PHP-Datei mit `require_once` wirklich vorgeladen werden? */
-    if (!class_exists(InlineConsent::class)) {
-        require_once __DIR__ . '/lib/InlineConsent.php';
-    }
-    if (!class_exists(InlineLog::class)) {
-        require_once __DIR__ . '/lib/Api/InlineLog.php';
-    }
     rex_api_function::register('consent_manager_inline_log', InlineLog::class);
 }
 
-/** REVIEW: gehört der Aufruf hier hin oder in das vorhergehende IF? */
-/** REVIEW: Muss die PHP-Datei mit `require_once` wie zuvor vorgeladen werden? */
 rex_api_function::register('consent_manager', ConsentManager::class);
 
 // Mediamanager Effect für externe Thumbnails registrieren
 if (rex_addon::get('media_manager')->isAvailable()) {
-    // Effect-Klasse laden
-    if (!class_exists('rex_effect_external_thumbnail')) {
-        require_once __DIR__ . '/lib/effect_external_thumbnail.php';
-    }
-
-    // Effect direkt registrieren wie Focuspoint
+   // Effect direkt registrieren
     rex_media_manager::addEffect(rex_effect_external_thumbnail::class);
 }
 
