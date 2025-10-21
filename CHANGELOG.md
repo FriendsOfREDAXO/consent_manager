@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version x.y.z - xx.yy.2025
+
+* **Namespace FriendsOfRedaxo\ConsentManager**
+  * Datei und Klassennamne von `rex_api_consent_manager_inline_log` geändert in `ApiInlineLog`
+  * 
+
 ## Version 4.5.0 - 14.10.2025
 
 ### 🚀 Neue Features

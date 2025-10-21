@@ -1,23 +1,39 @@
 <?php
 
 /**
- * API für Consent Manager Inline Logging
- * 
- * @package redaxo\consent-manager
+ * API für Consent Manager Inline Logging.
+ *
+ * @package FriendsOfRedaxo\ConsentManager
  */
 
-class rex_api_consent_manager_inline_log extends rex_api_function
+namespace FriendsOfRedaxo\ConsentManager;
+
+use Exception;
+use rex;
+use rex_api_function;
+use rex_api_result;
+use rex_request;
+use rex_sql;
+use rex_sql_column;
+use rex_sql_index;
+use rex_sql_table;
+
+use const FILTER_FLAG_IPV4;
+use const FILTER_FLAG_IPV6;
+use const FILTER_VALIDATE_IP;
+
+class ApiInlineLog extends rex_api_function
 {
     protected $published = true;
 
     public function execute()
     {
         $inputData = json_decode(file_get_contents('php://input'), true);
-        
+
         $consentId = $inputData['consent_id'] ?? '';
         $service = $inputData['service'] ?? '';
         $action = $inputData['action'] ?? '';
-        
+
         if (empty($consentId) || empty($service) || empty($action)) {
             return new rex_api_result(false, ['error' => 'Missing required parameters']);
         }
@@ -25,8 +41,7 @@ class rex_api_consent_manager_inline_log extends rex_api_function
         try {
             // Log in Consent Manager Tabelle schreiben
             $sql = rex_sql::factory();
-            
-            
+
             $sql->setTable(rex::getTable('consent_manager_consent_log'));
             $sql->setValue('consent_id', $consentId);
             $sql->setValue('service', $service);
@@ -40,19 +55,18 @@ class rex_api_consent_manager_inline_log extends rex_api_function
             $sql->insert();
 
             return new rex_api_result(true, ['status' => 'logged']);
-            
         } catch (Exception $e) {
             return new rex_api_result(false, ['error' => $e->getMessage()]);
         }
     }
 
     /**
-     * Client IP ermitteln (DSGVO-konform anonymisiert)
+     * Client IP ermitteln (DSGVO-konform anonymisiert).
      */
     private function getClientIP()
     {
         $ip = rex_request::server('REMOTE_ADDR', 'string', '');
-        
+
         // IP anonymisieren für DSGVO-Konformität
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             // IPv4: letztes Oktett entfernen
@@ -61,12 +75,14 @@ class rex_api_consent_manager_inline_log extends rex_api_function
             // IPv6: letzte 64 Bit entfernen
             $ip = preg_replace('/:[0-9a-f]{1,4}:[0-9a-f]{1,4}:[0-9a-f]{1,4}:[0-9a-f]{1,4}$/i', ':0:0:0:0', $ip);
         }
-        
+
         return $ip;
     }
 
     /**
-     * Log-Tabelle erstellen falls nicht vorhanden
+     * Log-Tabelle erstellen falls nicht vorhanden.
+     *
+     * REVIEW: Wo wird diese Funktion aufgerufen. Innerhalb des Addons kommt sie nirgend vor. Via install.php wird eine etwas anders strukturierte Tabelle angelegt.
      */
     private function createLogTable()
     {
