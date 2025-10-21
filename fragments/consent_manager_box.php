@@ -130,12 +130,14 @@ foreach ($consent_manager->links as $v) {
             // CSP-compatible script storage using data attributes
             // Scripts are NOT injected via innerHTML but stored as data attributes
             // and loaded via external script tags when consent is given
+            // NOTE: Scripts are ALREADY base64-encoded in the cache (see consent_manager_cache.php line 120-121)
+            // DO NOT encode again here or you'll get double-encoding!
             foreach ($consent_manager->scripts as $uid => $script) {
-                // Store script as base64 in data attribute for JS to process
-                echo '<div class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . base64_encode($script) . '"></div>';
+                // Script is already base64-encoded from cache
+                echo '<div class="consent_manager-script" data-uid="script-' . $uid . '" data-script="' . $script . '"></div>';
             }
             foreach ($consent_manager->scriptsUnselect as $uid => $script) {
-                echo '<div class="consent_manager-script" data-uid="script-unselect-' . $uid . '" data-script="' . base64_encode($script) . '"></div>';
+                echo '<div class="consent_manager-script" data-uid="script-unselect-' . $uid . '" data-script="' . $script . '"></div>';
             }
 			?>
         </div>
