@@ -8,6 +8,8 @@
  * @package redaxo\consent-manager
  */
 
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
 $addon = rex_addon::get('consent_manager');
 
 // Nur laden wenn Domain konfiguriert ist
@@ -18,6 +20,6 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
 
 // CSS und JavaScript nur ausgeben wenn Domain konfiguriert
 if (!empty($consent_manager->domainName)) {
-    echo consent_manager_inline::getCSS();
-    echo consent_manager_inline::getJavaScript();
+    echo InlineConsent::getCSS();
+    echo InlineConsent::getJavaScript();
 }

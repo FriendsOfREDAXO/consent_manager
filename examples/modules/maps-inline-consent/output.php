@@ -6,6 +6,8 @@
  * Ausgabe-Teil des Moduls
  */
 
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
 // Werte aus dem Eingabeformular
 $embedUrl = trim('REX_VALUE[1]');
 $mapsTitle = 'REX_VALUE[2]' ?: 'Google Maps';
@@ -15,13 +17,13 @@ $mapsHeight = (int) 'REX_VALUE[3]' ?: 450;
 if (!empty($embedUrl)) {
     
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
-    if (class_exists('consent_manager_inline')) {
-        echo consent_manager_inline::getCSS();
-        echo consent_manager_inline::getJavaScript();
+    if (class_exists(InlineConsent::class)) {
+        echo InlineConsent::getCSS();
+        echo InlineConsent::getJavaScript();
     }
     
     // Inline-Consent für Google Maps generieren
-    echo consent_manager_inline::doConsent('google-maps', $embedUrl, [
+    echo InlineConsent::doConsent('google-maps', $embedUrl, [
         'title' => $mapsTitle,
         'height' => $mapsHeight,
         'width' => '100%',

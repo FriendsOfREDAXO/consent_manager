@@ -3,11 +3,11 @@
 /**
  * API für Consent Manager Inline Logging.
  *
+
  * @package FriendsOfRedaxo\ConsentManager
  */
 
 namespace FriendsOfRedaxo\ConsentManager\Api;
-
 use Exception;
 use rex;
 use rex_api_function;

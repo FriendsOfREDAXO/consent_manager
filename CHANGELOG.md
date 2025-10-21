@@ -7,6 +7,8 @@
     Externer API-Name `consent_manager_inline_log` beibehalten
   * Datei und Klassenname von `rex_api_consent_manager` geändert in `...\Api\ConsentManager`
     Externer API-Name `consent_manager` beibehalten
+  * Datei und Klassenname von `consent_manager_clang` geändert in `CLang`
+  * Datei und Klassenname von `consent_manager_inline` geändert in `InlineConsent`
 
 ## Version 4.5.0 - 14.10.2025
 

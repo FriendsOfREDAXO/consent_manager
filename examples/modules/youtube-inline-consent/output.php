@@ -6,6 +6,8 @@
  * Ausgabe-Teil des Moduls
  */
 
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
 // Werte aus dem Eingabeformular
 $videoId = 'REX_VALUE[1]';
 $videoTitle = 'REX_VALUE[2]' ?: 'YouTube Video';
@@ -16,19 +18,19 @@ $videoHeight = (int) 'REX_VALUE[4]' ?: 315;
 if (!empty($videoId)) {
     
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
-    if (class_exists('consent_manager_inline')) {
-        echo consent_manager_inline::getCSS();
-        echo consent_manager_inline::getJavaScript();
+    if (class_exists(InlineConsent::class)) {
+        echo InlineConsent::getCSS();
+        echo InlineConsent::getJavaScript();
         
         // Inline-Consent für YouTube generieren
-        echo consent_manager_inline::doConsent('youtube', $videoId, [
+        echo InlineConsent::doConsent('youtube', $videoId, [
             'title' => $videoTitle,
             'width' => $videoWidth,
             'height' => $videoHeight,
             'thumbnail' => 'auto'
         ]);
     } else {
-        echo '<div class="alert alert-danger">consent_manager_inline Klasse nicht gefunden!</div>';
+        echo '<div class="alert alert-danger">InlineConsent-Klasse nicht gefunden!</div>';
     }
     
 } else {

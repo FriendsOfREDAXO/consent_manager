@@ -6,6 +6,10 @@
  * Ausgabe-Teil des Moduls
  */
 
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
+use function FriendsOfRedaxo\ConsentManager\doConsent;
+
 // Werte aus dem Eingabeformular
 $serviceKey = trim('REX_VALUE[1]');
 $embedCode = trim('REX_VALUE[2]');
@@ -17,9 +21,9 @@ $privacyNotice = 'REX_VALUE[5]' ?: 'Für diesen Inhalt werden Cookies benötigt.
 if (!empty($serviceKey) && !empty($embedCode)) {
     
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
-    if (class_exists('consent_manager_inline')) {
-        echo consent_manager_inline::getCSS();
-        echo consent_manager_inline::getJavaScript();
+    if (class_exists(InlineConsent::class)) {
+        echo InlineConsent::getCSS();
+        echo InlineConsent::getJavaScript();
     }
     
     // Inline-Consent für Custom Content generieren

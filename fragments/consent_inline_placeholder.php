@@ -19,7 +19,7 @@ $options = $this->getVar('options', []);
 $placeholderData = $this->getVar('placeholderData', []);
 $content = $this->getVar('content', '');
 
-// Text-Variablen aus Fragment abrufen (von consent_manager_inline::getButtonText())
+// Text-Variablen aus Fragment abrufen (von FriendsOfRedaxo\ConsentManager\InlineConsent::getButtonText())
 $inline_title_fallback = $this->getVar('inline_title_fallback', 'Externes Medium');
 $inline_privacy_notice = $this->getVar('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.');
 $inline_action_text = $this->getVar('inline_action_text', 'Was möchten Sie tun?');

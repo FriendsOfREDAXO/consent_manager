@@ -6,6 +6,8 @@
  * Ausgabe-Teil des Moduls
  */
 
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
 // Werte aus dem Eingabeformular
 $videoId = 'REX_VALUE[1]';
 $videoTitle = 'REX_VALUE[2]' ?: 'Vimeo Video';
@@ -17,9 +19,9 @@ $customThumbnail = 'REX_VALUE[5]';
 if (!empty($videoId)) {
     
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
-    if (class_exists('consent_manager_inline')) {
-        echo consent_manager_inline::getCSS();
-        echo consent_manager_inline::getJavaScript();
+    if (class_exists(InlineConsent::class)) {
+        echo InlineConsent::getCSS();
+        echo InlineConsent::getJavaScript();
     }
     
     // Optionen für Vimeo
@@ -36,7 +38,7 @@ if (!empty($videoId)) {
     }
     
     // Inline-Consent für Vimeo generieren
-    echo consent_manager_inline::doConsent('vimeo', $videoId, $options);
+    echo InlineConsent::doConsent('vimeo', $videoId, $options);
     
 } else {
     // Backend-Preview falls keine Video-ID eingegeben

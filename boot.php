@@ -3,6 +3,7 @@
 use FriendsOfRedaxo\ConsentManager\Api\ConsentManager;
 use FriendsOfRedaxo\ConsentManager\Api\InlineLog;
 use FriendsOfRedaxo\ConsentManager\CLang;
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -154,8 +155,9 @@ if (rex::isFrontend()) {
 // Inline Consent Classes laden
 if (rex::isFrontend() || rex::isBackend()) {
     // Autoload für Inline-Consent-Klassen sicherstellen
-    if (!class_exists('consent_manager_inline')) {
-        require_once __DIR__ . '/lib/consent_manager_inline.php';
+    /** REVIEW: Muss die PHP-Datei mit `require_once` wirklich vorgeladen werden? */
+    if (!class_exists(InlineConsent::class)) {
+        require_once __DIR__ . '/lib/InlineConsent.php';
     }
     if (!class_exists(InlineLog::class)) {
         require_once __DIR__ . '/lib/Api/InlineLog.php';
@@ -164,7 +166,7 @@ if (rex::isFrontend() || rex::isBackend()) {
 }
 
 /** REVIEW: gehört der Aufruf hier hin oder in das vorhergehende IF? */
-/** Muss die PHP-Datei mit `require_once` wie zuvor vorgeladen werden? */
+/** REVIEW: Muss die PHP-Datei mit `require_once` wie zuvor vorgeladen werden? */
 rex_api_function::register('consent_manager', ConsentManager::class);
 
 // Mediamanager Effect für externe Thumbnails registrieren

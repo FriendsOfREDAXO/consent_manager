@@ -5,11 +5,20 @@
  * 
  * Ermöglicht Consent nur bei Bedarf für einzelne Medien/Services
  * 
- * @package redaxo\consent-manager
+ * @package FriendsOfRedaxo\ConsentManager
  * @author Friends Of REDAXO
  */
 
-class consent_manager_inline
+namespace FriendsOfRedaxo\ConsentManager;
+
+use rex;
+use rex_clang;
+use rex_fragment;
+use rex_sql;
+use rex_sql_exception;
+use rex_url;
+
+class InlineConsent
 {
     private static $cssOutputted = false;
     private static $jsOutputted = false;
@@ -34,7 +43,7 @@ class consent_manager_inline
         }
 
         // Bereits zugestimmt?
-        if (consent_manager_util::has_consent($serviceKey)) {
+        if (\consent_manager_util::has_consent($serviceKey)) {
             return self::renderContent($content, $options);
         }
 
@@ -148,7 +157,7 @@ class consent_manager_inline
         $thumbnail = $options['thumbnail'];
         if ($thumbnail === 'auto') {
             if (class_exists('rex_consent_manager_thumbnail_mediamanager')) {
-                $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('youtube', $videoId, $options);
+                $thumbnail = \rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('youtube', $videoId, $options);
             } else {
                 // Fallback zur direkten YouTube-URL
                 $thumbnail = 'https://img.youtube.com/vi/' . $videoId . '/maxresdefault.jpg';
@@ -195,7 +204,7 @@ class consent_manager_inline
         $thumbnail = $options['thumbnail'];
         if ($thumbnail === 'auto') {
             if (class_exists('rex_consent_manager_thumbnail_mediamanager')) {
-                $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('vimeo', $videoId, $options);
+                $thumbnail = \rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('vimeo', $videoId, $options);
             } else {
                 // Fallback zu generischem Vimeo-Placeholder
                 $thumbnail = 'data:image/svg+xml;base64,' . base64_encode(
@@ -443,5 +452,5 @@ HTML;
  */
 function doConsent($serviceKey, $content, $options = [])
 {
-    return consent_manager_inline::doConsent($serviceKey, $content, $options);
+    return InlineConsent::doConsent($serviceKey, $content, $options);
 }

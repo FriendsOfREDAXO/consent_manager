@@ -1101,9 +1101,10 @@ echo doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");
 ```html
 <!-- Im <head>-Bereich -->
 <?php
-if (class_exists('consent_manager_inline')) {
-    echo consent_manager_inline::getCSS();
-    echo consent_manager_inline::getJavaScript();
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+if (class_exists(InlineConsent::class)) {
+    echo InlineConsent::getCSS();
+    echo InlineConsent::getJavaScript();
 }
 ?>
 ```
