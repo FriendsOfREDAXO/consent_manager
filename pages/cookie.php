@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\CLang;
+
 $addon = rex_addon::get('consent_manager');
 
 $showlist = true;
@@ -10,7 +12,7 @@ $clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart
 $table = rex::getTable('consent_manager_cookie');
 $msg = '';
 if ('delete' === $func) {
-    $msg = consent_manager_clang::deleteCookie($pid);
+    $msg = CLang::deleteCookie($pid);
     consent_manager_cache::forceWrite();
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;

@@ -1,6 +1,20 @@
 <?php
 
-class consent_manager_clang
+namespace FriendsOfRedaxo\ConsentManager;
+
+use consent_manager_cache;
+use consent_manager_config;
+use rex;
+use rex_be_controller;
+use rex_be_page;
+use rex_clang;
+use rex_extension_point;
+use rex_i18n;
+use rex_path;
+use rex_sql;
+use rex_view;
+
+class CLang
 {
     /**
      * @param string $table

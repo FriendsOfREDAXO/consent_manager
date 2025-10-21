@@ -1,12 +1,16 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Api\ConsentManager;
+use FriendsOfRedaxo\ConsentManager\Api\InlineLog;
+use FriendsOfRedaxo\ConsentManager\CLang;
+
 $addon = rex_addon::get('consent_manager');
 
 // Nur im Backend
 if (rex::isBackend()) {
     rex_perm::register('consent_manager[texteditonly]');
     rex_perm::register('consent_manager[editor]');
-    
+
     if (null !== rex::getUser()) {
         // Eingeschränkter Zugriff für Nur-Text-Bearbeiter
         if (!rex::getUser()->isAdmin() && rex::getUser()->hasPerm('consent_manager[texteditonly]') && !rex::getUser()->hasPerm('consent_manager[editor]')) {
@@ -28,13 +32,13 @@ if (rex::isBackend()) {
             if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)) {
                 rex_view::addCssFile($addon->getAssetsUrl('consent_manager_backend.css'));
                 rex_view::addJsFile($addon->getAssetsUrl('consent_manager_backend.js'));
-                
+
                 // Quickstart Modal CSS für config-Seite
                 $currentPage = rex_be_controller::getCurrentPagePart(2);
                 if ('config' === $currentPage || '' === $currentPage) {
                     rex_view::addCssFile($addon->getAssetsUrl('consent_quickstart.css'));
                 }
-                
+
                 // Google Consent Mode Helper für Cookie-Seiten
                 if ('cookie' === $currentPage) {
                     rex_view::addJsFile($addon->getAssetsUrl('google_consent_helper.js'));
@@ -56,14 +60,14 @@ if (rex::isBackend()) {
     }
 
     rex_extension::register('REX_FORM_CONTROL_FIELDS', 'consent_manager_rex_form::removeDeleteButton');
-    rex_extension::register('PAGES_PREPARED', 'consent_manager_clang::addLangNav');
-    rex_extension::register('PAGES_PREPARED', function () {
+    rex_extension::register('PAGES_PREPARED', CLang::addLangNav(...));
+    rex_extension::register('PAGES_PREPARED', static function () {
         // Debug-Indikator im Menü hinzufügen
         if (rex_backend_login::hasSession() && null !== rex::getUser()) {
             $sql = 'SELECT COUNT(*) as debug_count FROM ' . rex::getTable('consent_manager_domain') . ' WHERE google_consent_mode_debug = 1';
             $result = rex_sql::factory()->getArray($sql);
             $debug_count = (int) $result[0]['debug_count'];
-            
+
             if ($debug_count > 0) {
                 $page = rex_be_controller::getPageObject('consent_manager');
                 if ($page) {
@@ -73,14 +77,14 @@ if (rex::isBackend()) {
             }
         }
     });
-    rex_extension::register('REX_FORM_SAVED', 'consent_manager_clang::formSaved');
+    rex_extension::register('REX_FORM_SAVED', CLang::formSaved(...));
     rex_extension::register('REX_FORM_SAVED', 'consent_manager_cache::write');
-    rex_extension::register('CLANG_ADDED', 'consent_manager_clang::clangAdded');
-    rex_extension::register('CLANG_DELETED', 'consent_manager_clang::clangDeleted');
+    rex_extension::register('CLANG_ADDED', CLang::clangAdded(...));
+    rex_extension::register('CLANG_DELETED', CLang::clangDeleted(...));
 
     if ('consent_manager' === rex_be_controller::getCurrentPagePart(1) && true === $addon->getConfig('justInstalled')) {
         $addon->setConfig('justInstalled', false);
-        consent_manager_clang::addonJustInstalled();
+        CLang::addonJustInstalled();
     }
     if (true === $addon->getConfig('forceCache')) {
         $addon->setConfig('forceCache', false);
@@ -102,41 +106,41 @@ if (rex::isFrontend()) {
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
         // User für Frontend initialisieren
         rex_backend_login::createUser();
-        
+
         // Nur für eingeloggte Backend-Benutzer
         if (!rex_backend_login::hasSession() || null === rex::getUser()) {
             return;
         }
-        
-        // Domain-Konfiguration prüfen 
+
+        // Domain-Konfiguration prüfen
         $domain = rex_request::server('HTTP_HOST', 'string', '');
         $domain = strtolower($domain);
-        
+
         $sql = rex_sql::factory();
         $sql->setQuery(
             'SELECT google_consent_mode_debug FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
-            [$domain]
+            [$domain],
         );
-        
+
         $debugEnabled = false;
         if ($sql->getRows() > 0) {
             $debugEnabled = (bool) $sql->getValue('google_consent_mode_debug');
         }
-        
+
         // Debug-Script direkt in HTML einfügen
         if ($debugEnabled) {
             $addon = rex_addon::get('consent_manager');
             $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
-            
+
             try {
                 $googleConsentModeConfig = consent_manager_google_consent_mode::getDomainConfig($domain);
                 $debugScript = '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
             } catch (Exception $e) {
                 $debugScript = '<script>window.consentManagerDebugConfig = {"mode": "unknown", "enabled": false};</script>' . PHP_EOL;
             }
-            
+
             $debugScript .= '<script src="' . $consentDebugUrl . '"></script>' . PHP_EOL;
-            
+
             // Debug-Script vor </head> einfügen
             $content = $ep->getSubject();
             if (is_string($content)) {
@@ -153,15 +157,15 @@ if (rex::isFrontend() || rex::isBackend()) {
     if (!class_exists('consent_manager_inline')) {
         require_once __DIR__ . '/lib/consent_manager_inline.php';
     }
-    if (!class_exists(FriendsOfRedaxo\ConsentManager\Api\InlineLog::class)) {
+    if (!class_exists(InlineLog::class)) {
         require_once __DIR__ . '/lib/Api/InlineLog.php';
     }
-    rex_api_function::register('consent_manager_inline_log', FriendsOfRedaxo\ConsentManager\Api\InlineLog::class);
+    rex_api_function::register('consent_manager_inline_log', InlineLog::class);
 }
 
 /** REVIEW: gehört der Aufruf hier hin oder in das vorhergehende IF? */
 /** Muss die PHP-Datei mit `require_once` wie zuvor vorgeladen werden? */
-rex_api_function::register('consent_manager', FriendsOfRedaxo\ConsentManager\Api\ConsentManager::class);
+rex_api_function::register('consent_manager', ConsentManager::class);
 
 // Mediamanager Effect für externe Thumbnails registrieren
 if (rex_addon::get('media_manager')->isAvailable()) {
@@ -169,7 +173,7 @@ if (rex_addon::get('media_manager')->isAvailable()) {
     if (!class_exists('rex_effect_external_thumbnail')) {
         require_once __DIR__ . '/lib/effect_external_thumbnail.php';
     }
-    
+
     // Effect direkt registrieren wie Focuspoint
     rex_media_manager::addEffect(rex_effect_external_thumbnail::class);
 }

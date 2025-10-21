@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\CLang;
+
 $addon = rex_addon::get('consent_manager');
 
 $showlist = true;
@@ -9,7 +11,7 @@ $csrf = rex_csrf_token::factory('consent_manager_text');
 $clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3) ?? '');
 $table = rex::getTable('consent_manager_text');
 if ('delete' === $func) {
-    consent_manager_clang::deleteDataset($table, $pid);
+    CLang::deleteDataset($table, $pid);
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;

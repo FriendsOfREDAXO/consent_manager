@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\CLang;
+
 $addon = rex_addon::get('consent_manager');
 
 // Ensure JSON setup class is loaded
@@ -17,7 +19,7 @@ if ('setup_minimal' === $func) {
     if (file_exists($jsonSetupFile)) {
         $result = consent_manager_json_setup::importSetup($jsonSetupFile, true);
         if ($result['success']) {
-            consent_manager_clang::addonJustInstalled();
+            CLang::addonJustInstalled();
             echo rex_view::success($addon->i18n('consent_manager_import_minimal_success'));
         } else {
             echo rex_view::error($addon->i18n('consent_manager_import_minimal_error', $result['message']));
@@ -36,7 +38,7 @@ if ('setup_minimal' === $func) {
     if (file_exists($jsonSetupFile)) {
         $result = consent_manager_json_setup::importSetup($jsonSetupFile, true);
         if ($result['success']) {
-            consent_manager_clang::addonJustInstalled();
+            CLang::addonJustInstalled();
             echo rex_view::success($addon->i18n('consent_manager_import_standard_success'));
         } else {
             echo rex_view::error($addon->i18n('consent_manager_import_standard_error', $result['message']));
@@ -55,7 +57,7 @@ if ('setup_minimal' === $func) {
     if (file_exists($jsonSetupFile)) {
         $result = consent_manager_json_setup::importSetup($jsonSetupFile, false, 'update');
         if ($result['success']) {
-            consent_manager_clang::addonJustInstalled();
+            CLang::addonJustInstalled();
             echo rex_view::success($addon->i18n('consent_manager_import_minimal_update_success'));
         } else {
             echo rex_view::error($addon->i18n('consent_manager_import_minimal_update_error', $result['message']));
@@ -74,7 +76,7 @@ if ('setup_minimal' === $func) {
     if (file_exists($jsonSetupFile)) {
         $result = consent_manager_json_setup::importSetup($jsonSetupFile, false, 'update');
         if ($result['success']) {
-            consent_manager_clang::addonJustInstalled();
+            CLang::addonJustInstalled();
             echo rex_view::success($addon->i18n('consent_manager_import_standard_update_success'));
         } else {
             echo rex_view::error($addon->i18n('consent_manager_import_standard_update_error', $result['message']));
