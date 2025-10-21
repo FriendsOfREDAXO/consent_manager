@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\CLang;
+use FriendsOfRedaxo\ConsentManager\Config;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -91,7 +92,7 @@ if ('setup_minimal' === $func) {
 }
 
 // For all other functions CSRF check
-$csrf = rex_csrf_token::factory('consent_manager_config');
+$csrf = rex_csrf_token::factory(Config::class);
 if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_minimal_update', 'setup_standard_update'])) {
     if (!$csrf->isValid()) {
         echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));

@@ -1,6 +1,10 @@
 <?php
 
-class consent_manager_config
+namespace FriendsOfRedaxo\ConsentManager;
+
+use rex;
+
+class Config
 {
     /**
      * get consent_manager tables.
@@ -11,7 +15,8 @@ class consent_manager_config
     public static function getTables($multilangOnly = false)
     {
         $tables = [];
-        foreach (consent_manager_config::getKeys() as $key) {
+        /** TODO: self oder static statt Config */
+        foreach (Config::getKeys() as $key) {
             if ($multilangOnly && 'domain' === $key) {
                 continue;
             }

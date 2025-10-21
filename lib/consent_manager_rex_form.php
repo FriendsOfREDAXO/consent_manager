@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Config;
+
 class consent_manager_rex_form
 {
     /**
@@ -78,7 +80,7 @@ class consent_manager_rex_form
     public static function removeDeleteButton(rex_extension_point $ep)
     {
         $formTable = $ep->getParams()['form']->getTableName();
-        if (in_array($formTable, consent_manager_config::getTables(), true)) {
+        if (in_array($formTable, Config::getTables(), true)) {
             $subject = $ep->getSubject();
             $subject['delete'] = ''; /** @phpstan-ignore-line */
             $ep->setSubject($subject);

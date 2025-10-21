@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Config;
+
 class consent_manager_cache
 {
     /** @var array<mixed> */
@@ -27,7 +29,7 @@ class consent_manager_cache
     public static function write(rex_extension_point $ep)
     {
         $form = $ep->getParams()['form'];
-        if (!in_array($form->getTableName(), consent_manager_config::getTables(), true)) {
+        if (!in_array($form->getTableName(), Config::getTables(), true)) {
             return true;
         }
         $cache = new self();

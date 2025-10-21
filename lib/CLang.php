@@ -3,7 +3,6 @@
 namespace FriendsOfRedaxo\ConsentManager;
 
 use consent_manager_cache;
-use consent_manager_config;
 use rex;
 use rex_be_controller;
 use rex_be_page;
@@ -70,7 +69,7 @@ class CLang
     public static function addLangNav(rex_extension_point $ep)
     {
         if (rex::isBackend() && null !== rex::getUser()) {
-            foreach (consent_manager_config::getKeys() as $key) {
+            foreach (Config::getKeys() as $key) {
                 if ('domain' === $key) {
                     continue;
                 }
@@ -102,7 +101,7 @@ class CLang
     {
         $form = $ep->getParams()['form'];
         $params = $ep->getParams();
-        if (!in_array($form->getTableName(), consent_manager_config::getTables(true), true)) {
+        if (!in_array($form->getTableName(), Config::getTables(true), true)) {
             return true;
         }
         if (!$form->isEditMode()) {
@@ -194,7 +193,7 @@ class CLang
      */
     public static function clangDeleted(rex_extension_point $ep)
     {
-        foreach (consent_manager_config::getTables(true) as $table) {
+        foreach (Config::getTables(true) as $table) {
             $deleteLang = rex_sql::factory();
             $deleteLang->setQuery('DELETE FROM ' . $table . ' WHERE clang_id=?', [$ep->getParam('clang')->getId()]); /** @phpstan-ignore-line */
             consent_manager_cache::forceWrite();
@@ -225,7 +224,7 @@ class CLang
      */
     private static function addClang($clangId)
     {
-        foreach (consent_manager_config::getTables(true) as $table) {
+        foreach (Config::getTables(true) as $table) {
             $firstLang = rex_sql::factory();
             $firstLang->setTable($table);
             $firstLang->setWhere('clang_id='.rex_clang::getStartId());
