@@ -73,9 +73,17 @@ function debugLog(message, data) {
     }
 
     // on startup trigger scripts of enabled consents
+    debugLog('Startup: Triggering scripts for enabled consents', consents);
     consents.forEach(function (uid) {
-        addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
-        removeScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
+        debugLog('Startup: Processing consent UID', uid);
+        var scriptElement = consent_managerBox.querySelector('[data-uid="script-' + uid + '"]');
+        var unselectElement = consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]');
+        debugLog('Startup: Elements found', {
+            scriptElement: !!scriptElement,
+            unselectElement: !!unselectElement
+        });
+        addScript(scriptElement);
+        removeScript(unselectElement);
     });
 
     // on startup trigger Google Consent Mode v2 update if consents exist
@@ -225,6 +233,7 @@ function debugLog(message, data) {
     });
 
     function saveConsent(toSave) {
+        debugLog('saveConsent: Start', toSave);
         consents = [];
         cookieData = {
             consents: [],
@@ -238,12 +247,22 @@ function debugLog(message, data) {
                 // array mit cookie uids
                 var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
                 if (el.checked || toSave === 'all') {
+                    debugLog('saveConsent: Consent erteilt für', cookieUids);
                     cookieUids.forEach(function (uid) {
                         consents.push(uid);
-                        addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
-                        removeScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
+                        debugLog('saveConsent: Führe Script aus für UID', uid);
+                        var scriptElement = consent_managerBox.querySelector('[data-uid="script-' + uid + '"]');
+                        var unselectElement = consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]');
+                        debugLog('saveConsent: Elements gefunden', {
+                            scriptElement: !!scriptElement,
+                            unselectElement: !!unselectElement,
+                            hasDataScript: scriptElement ? !!scriptElement.getAttribute('data-script') : false
+                        });
+                        addScript(scriptElement);
+                        removeScript(unselectElement);
                     });
                 } else {
+                    debugLog('saveConsent: Consent verweigert für', cookieUids);
                     cookieUids.forEach(function (uid) {
                         removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
                         addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
@@ -251,6 +270,7 @@ function debugLog(message, data) {
                 }
             });
         } else {
+            debugLog('saveConsent: Keine Consents (none)');
             consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
                 // array mit cookie uids
                 var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
@@ -271,6 +291,7 @@ function debugLog(message, data) {
         }
 
         cookieData.consents = consents;
+        debugLog('saveConsent: Finale Consents', consents);
 
         cmCookieAPI.set('consent_manager', JSON.stringify(cookieData));
         
@@ -325,11 +346,44 @@ function debugLog(message, data) {
 
     function addScript(el) {
         if (!el) {
+            debugLog('addScript: Element ist null/undefined');
             return;
         }
+        
+        debugLog('addScript: Processing element', el);
+        
         if (!el.children.length) {
-            var scriptContent = window.atob(el.getAttribute('data-script'));
+            var encodedScript = el.getAttribute('data-script');
+            debugLog('addScript: Encoded script data', {
+                length: encodedScript ? encodedScript.length : 0,
+                preview: encodedScript ? encodedScript.substring(0, 50) + '...' : 'empty'
+            });
+            
+            if (!encodedScript) {
+                debugLog('addScript: Kein data-script Attribut gefunden');
+                return;
+            }
+            
+            var scriptContent = '';
+            try {
+                scriptContent = window.atob(encodedScript);
+                debugLog('addScript: Script erfolgreich dekodiert', {
+                    length: scriptContent.length,
+                    preview: scriptContent.substring(0, 100)
+                });
+            } catch (e) {
+                console.error('addScript: Fehler beim Base64-Dekodieren', e);
+                debugLog('addScript: Base64-Dekodierung fehlgeschlagen', e);
+                return;
+            }
+            
+            if (!scriptContent) {
+                debugLog('addScript: Script-Inhalt ist leer nach Dekodierung');
+                return;
+            }
+            
             var scriptDom = new DOMParser().parseFromString(scriptContent, 'text/html');
+            debugLog('addScript: DOM geparst, Scripts gefunden:', scriptDom.scripts.length);
             
             // Get nonce from consent_manager_parameters (passed from PHP)
             var nonce = consent_manager_parameters.cspNonce || null;
@@ -339,9 +393,18 @@ function debugLog(message, data) {
                 var originalScript = scriptDom.scripts[i];
                 var scriptNode = document.createElement('script');
                 
+                debugLog('addScript: Processing script #' + (i + 1), {
+                    hasSrc: !!originalScript.src,
+                    src: originalScript.src || 'inline',
+                    hasContent: !!originalScript.textContent,
+                    contentLength: originalScript.textContent ? originalScript.textContent.length : 0,
+                    attributes: originalScript.attributes.length
+                });
+                
                 // Apply nonce if available
                 if (nonce) {
                     scriptNode.setAttribute('nonce', nonce);
+                    debugLog('addScript: Nonce gesetzt', nonce);
                 }
                 
                 // Copy other attributes
@@ -349,19 +412,33 @@ function debugLog(message, data) {
                     var attr = originalScript.attributes[j];
                     if (attr.name !== 'nonce') { // Don't override nonce
                         scriptNode.setAttribute(attr.name, attr.value);
+                        debugLog('addScript: Attribut kopiert', {name: attr.name, value: attr.value});
                     }
                 }
                 
                 // Set src or inline content
                 if (originalScript.src) {
                     scriptNode.src = originalScript.src;
+                    debugLog('addScript: External script wird geladen', originalScript.src);
                 } else {
                     scriptNode.textContent = originalScript.textContent;
+                    debugLog('addScript: Inline script gesetzt', {
+                        contentLength: originalScript.textContent.length,
+                        preview: originalScript.textContent.substring(0, 100)
+                    });
                 }
                 
                 // Append to document body
-                document.body.appendChild(scriptNode);
+                try {
+                    document.body.appendChild(scriptNode);
+                    debugLog('addScript: Script erfolgreich zum DOM hinzugefügt');
+                } catch (e) {
+                    console.error('addScript: Fehler beim Hinzufügen des Scripts', e);
+                    debugLog('addScript: Fehler beim appendChild', e);
+                }
             }
+        } else {
+            debugLog('addScript: Element hat bereits children, wird übersprungen');
         }
     }
 
