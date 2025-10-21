@@ -6,7 +6,7 @@
  * @package FriendsOfRedaxo\ConsentManager
  */
 
-namespace FriendsOfRedaxo\ConsentManager;
+namespace FriendsOfRedaxo\ConsentManager\Api;
 
 use Exception;
 use rex;
@@ -22,7 +22,7 @@ use const FILTER_FLAG_IPV4;
 use const FILTER_FLAG_IPV6;
 use const FILTER_VALIDATE_IP;
 
-class ApiInlineLog extends rex_api_function
+class InlineLog extends rex_api_function
 {
     protected $published = true;
 

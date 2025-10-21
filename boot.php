@@ -153,10 +153,10 @@ if (rex::isFrontend() || rex::isBackend()) {
     if (!class_exists('consent_manager_inline')) {
         require_once __DIR__ . '/lib/consent_manager_inline.php';
     }
-    if (!class_exists(FriendsOfRedaxo\ConsentManager\ApiInlineLog::class)) {
-        require_once __DIR__ . '/lib/ApiInlineLog.php';
+    if (!class_exists(FriendsOfRedaxo\ConsentManager\Api\InlineLog::class)) {
+        require_once __DIR__ . '/lib/Api/InlineLog.php';
     }
-    rex_api_function::register('consent_manager_inline_log', FriendsOfRedaxo\ConsentManager\ApiInlineLog::class);
+    rex_api_function::register('consent_manager_inline_log', FriendsOfRedaxo\ConsentManager\Api\InlineLog::class);
 }
 
 // Mediamanager Effect für externe Thumbnails registrieren
