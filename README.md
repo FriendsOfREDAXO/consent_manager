@@ -275,7 +275,7 @@ if (consent_manager_hasconsent('youtube')) {
 **PHP:**
 ```php
 <?php
-if (consent_manager_util::has_consent('youtube')) {
+if (FriendsOfRedaxo\ConsentManager\Utility::has_consent('youtube')) {
     // YouTube wurde akzeptiert
 }
 ?>
@@ -860,7 +860,7 @@ document.addEventListener('consent_manager-saved', function(e) {
 
 ```php
 // Consent-Status prüfen
-consent_manager_util::has_consent('service_key');
+FriendsOfRedaxo\ConsentManager\Utility::has_consent('service_key');
 
 // Frontend-Instanz erstellen
 $consent_manager = new FriendsOfRedaxo\ConsentManager\Frontend();

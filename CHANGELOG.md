@@ -14,6 +14,8 @@
   * Datei und Klassenname von `consent_manager_frontend` geändert in `...\Frontend`
   * Datei und Klassenname von `consent_manager_rex_form` eändert in `...\RexFormSupport`
   * Datei und Klassenname von `consent_manager_rex_list` geändert in `...\RexListSupport`
+  * Datei und Klassenname von `consent_manager_util` geändert in `...\Utility`
+
 
 ## Version 4.5.0 - 14.10.2025
 

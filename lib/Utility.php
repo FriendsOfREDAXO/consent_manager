@@ -1,6 +1,18 @@
 <?php
 
-class consent_manager_util
+namespace FriendsOfRedaxo\ConsentManager;
+
+use rex;
+use rex_clang;
+use rex_request;
+use rex_sql;
+
+use function count;
+use function is_array;
+use function is_string;
+use function strlen;
+
+class Utility
 {
     /**
      * Check consent for cookieUid.

@@ -1,49 +1,51 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Utility;
+
 /**
- * Google Consent Mode v2 Helper für einfachere Konfiguration
+ * Google Consent Mode v2 Helper für einfachere Konfiguration.
  * @api
  */
 class consent_manager_google_consent_helper
 {
     /**
-     * Vordefinierte Service-Templates für häufig verwendete Dienste
+     * Vordefinierte Service-Templates für häufig verwendete Dienste.
      */
-    const SERVICE_TEMPLATES = [
+    public const SERVICE_TEMPLATES = [
         'google-analytics' => [
             'name' => 'Google Analytics',
             'flags' => ['analytics_storage'],
-            'description' => 'Webanalyse-Tool von Google'
+            'description' => 'Webanalyse-Tool von Google',
         ],
         'google-ads' => [
             'name' => 'Google Ads / AdWords',
             'flags' => ['ad_storage', 'ad_user_data', 'ad_personalization'],
-            'description' => 'Online-Werbeplattform von Google'
+            'description' => 'Online-Werbeplattform von Google',
         ],
         'google-tag-manager' => [
             'name' => 'Google Tag Manager',
             'flags' => ['analytics_storage'],
-            'description' => 'Tag-Management-System von Google'
+            'description' => 'Tag-Management-System von Google',
         ],
         'facebook-pixel' => [
             'name' => 'Facebook Pixel',
             'flags' => ['ad_storage', 'ad_user_data', 'ad_personalization'],
-            'description' => 'Tracking-Tool für Facebook-Werbung'
+            'description' => 'Tracking-Tool für Facebook-Werbung',
         ],
         'youtube' => [
             'name' => 'YouTube Videos',
             'flags' => ['functionality_storage'],
-            'description' => 'Eingebettete YouTube-Videos'
+            'description' => 'Eingebettete YouTube-Videos',
         ],
         'matomo' => [
             'name' => 'Matomo Analytics',
             'flags' => ['analytics_storage'],
-            'description' => 'Open-Source Webanalyse-Tool'
-        ]
+            'description' => 'Open-Source Webanalyse-Tool',
+        ],
     ];
 
     /**
-     * Automatische Generierung der setConsent() Scripte basierend auf Mappings
+     * Automatische Generierung der setConsent() Scripte basierend auf Mappings.
      * @param array $googleConsentMapping
      * @return array ['consent_script', 'revoke_script']
      */
@@ -75,13 +77,12 @@ class consent_manager_google_consent_helper
 
         return [
             'consent_script' => $consentScript,
-            'revoke_script' => $revokeScript
+            'revoke_script' => $revokeScript,
         ];
     }
 
     /**
-     * Basis-Script für notwendige Speicherung (immer erlauben)
-     * @return string
+     * Basis-Script für notwendige Speicherung (immer erlauben).
      */
     public static function getNecessaryStorageScript(): string
     {
@@ -89,7 +90,7 @@ class consent_manager_google_consent_helper
     }
 
     /**
-     * Validierung der Domain-Konfiguration
+     * Validierung der Domain-Konfiguration.
      * @param string $domain
      * @return array ['valid' => bool, 'messages' => array]
      */
@@ -112,7 +113,7 @@ class consent_manager_google_consent_helper
         }
 
         // DSGVO-Empfehlung prüfen
-        if ($config['default_state'] !== 'denied') {
+        if ('denied' !== $config['default_state']) {
             $messages[] = 'Warnung: Standard-Zustand ist nicht "denied" - empfohlen für DSGVO-Konformität.';
         }
 
@@ -120,11 +121,10 @@ class consent_manager_google_consent_helper
     }
 
     /**
-     * Quick-Setup für häufig verwendete Services
+     * Quick-Setup für häufig verwendete Services.
      * @param string $serviceKey
      * @param string $cookieUid
      * @param int $clangId
-     * @return bool
      */
     public static function quickSetupService($serviceKey, $cookieUid, $clangId = 1): bool
     {
@@ -133,7 +133,7 @@ class consent_manager_google_consent_helper
         }
 
         $template = self::SERVICE_TEMPLATES[$serviceKey];
-        
+
         // Google Consent Mapping erstellen
         $mapping = [];
         foreach ($template['flags'] as $flag) {
@@ -146,12 +146,12 @@ class consent_manager_google_consent_helper
         // Service in Datenbank speichern/aktualisieren
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_cookie'));
-        
+
         // Prüfen ob Service bereits existiert
         $sql->setQuery('SELECT pid FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE uid = ? AND clang_id = ?', [$cookieUid, $clangId]);
-        
+
         $sql->setQuery('SELECT COUNT(*) AS cnt FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE uid = ? AND clang_id = ?', [$cookieUid, $clangId]);
-        
+
         if ($sql->getValue('cnt') > 0) {
             // Update bestehenden Service
             $sql->setWhere('uid = :uid AND clang_id = :clang_id', ['uid' => $cookieUid, 'clang_id' => $clangId]);
@@ -175,14 +175,13 @@ class consent_manager_google_consent_helper
     }
 
     /**
-     * Debug-Informationen für Entwickler
+     * Debug-Informationen für Entwickler.
      * @param string $domain
-     * @return array
      */
     public static function getDebugInfo($domain = null): array
     {
         if (null === $domain) {
-            $domain = consent_manager_util::hostname();
+            $domain = Utility::hostname();
         }
 
         $config = consent_manager_google_consent_mode::getDomainConfig($domain);
@@ -195,14 +194,13 @@ class consent_manager_google_consent_helper
             'mappings' => $mappings,
             'validation' => $validation,
             'javascript_size' => strlen(consent_manager_google_consent_mode::generateJavaScript($domain, 1)),
-            'available_templates' => array_keys(self::SERVICE_TEMPLATES)
+            'available_templates' => array_keys(self::SERVICE_TEMPLATES),
         ];
     }
 
     /**
-     * Exportiert die aktuelle Konfiguration als JSON
+     * Exportiert die aktuelle Konfiguration als JSON.
      * @param string $domain
-     * @return string
      */
     public static function exportConfiguration($domain = null): string
     {

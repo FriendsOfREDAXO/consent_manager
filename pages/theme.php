@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
+use FriendsOfRedaxo\ConsentManager\Utility;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -175,7 +176,7 @@ if ('|1|' === $addon->getConfig('outputowncss', false)) {
 }
 
 // check Konfiguration
-if (false === consent_manager_util::consentConfigured()) {
+if (false === Utility::consentConfigured()) {
     echo rex_view::warning($addon->i18n('consent_manager_cookiegroup_nodomain_notice'));
 }
 
