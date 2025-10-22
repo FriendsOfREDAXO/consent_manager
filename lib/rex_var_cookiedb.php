@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * NOTE: rex_var-Klassen können nicht im Namespace eines Addons liegen.
+ */
+
 class rex_var_cookiedb extends rex_var
 {
     protected function getOutput()
