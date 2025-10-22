@@ -1,27 +1,37 @@
 <?php
 
+namespace FriendsOfRedaxo\ConsentManager;
+
+use Exception;
+use rex;
+use rex_sql;
+
+use function in_array;
+
+use const JSON_PRETTY_PRINT;
+
 /**
  * Google Consent Mode v2 Implementation
- * Handles domain configuration and JavaScript generation for Google Consent Mode
+ * Handles domain configuration and JavaScript generation for Google Consent Mode.
  */
-class consent_manager_google_consent_mode
+class GoogleConsentMode
 {
     /**
      * Standard Google Consent Mode v2 Flags mit GDPR-konformen Defaults
-     * ALLE Services standardmäßig verweigert - erst nach expliziter Zustimmung gewährt
+     * ALLE Services standardmäßig verweigert - erst nach expliziter Zustimmung gewährt.
      */
     public static $defaultConsentFlags = [
         'ad_storage' => 'denied',
-        'ad_user_data' => 'denied', 
+        'ad_user_data' => 'denied',
         'ad_personalization' => 'denied',
         'analytics_storage' => 'denied',
         'personalization_storage' => 'denied',
         'functionality_storage' => 'denied',  // Auch notwendige erst nach Consent
-        'security_storage' => 'denied'        // Auch notwendige erst nach Consent
+        'security_storage' => 'denied',        // Auch notwendige erst nach Consent
     ];
 
     /**
-     * Service zu Consent-Flag Mappings
+     * Service zu Consent-Flag Mappings.
      */
     public static $serviceMappings = [
         'google-analytics' => ['analytics_storage'],
@@ -34,66 +44,66 @@ class consent_manager_google_consent_mode
         'google-maps' => ['functionality_storage', 'personalization_storage'],
         'matomo' => ['analytics_storage'],
         'hotjar' => ['analytics_storage'],
-        'microsoft-clarity' => ['analytics_storage']
+        'microsoft-clarity' => ['analytics_storage'],
     ];
 
     /**
-     * Holt die Google Consent Mode Konfiguration für eine Domain
-     * 
+     * Holt die Google Consent Mode Konfiguration für eine Domain.
+     *
      * @param string $domain Die Domain
-     * @return array Konfiguration mit enabled, auto_mapping, default_state etc.
+     * @return array konfiguration mit enabled, auto_mapping, default_state etc
      */
     public static function getDomainConfig(string $domain): array
     {
         // Domain in Kleinbuchstaben normalisieren für den Lookup
         $domain = strtolower($domain);
-        
+
         $sql = rex_sql::factory();
         $sql->setQuery(
             'SELECT google_consent_mode_enabled FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
-            [$domain]
+            [$domain],
         );
-        
+
         $mode = 'disabled';
-        
+
         if ($sql->getRows() > 0) {
             $mode = $sql->getValue('google_consent_mode_enabled') ?? 'disabled';
         }
 
         return [
-            'enabled' => $mode !== 'disabled',
-            'auto_mapping' => $mode === 'auto',
+            'enabled' => 'disabled' !== $mode,
+            'auto_mapping' => 'auto' === $mode,
             'mode' => $mode,
             'default_state' => 'denied', // GDPR-konform immer denied als Default
             'domain' => $domain,
-            'flags' => self::$defaultConsentFlags
+            'flags' => self::$defaultConsentFlags,
         ];
     }
 
     /**
-     * Holt Cookie-zu-Consent Mappings für eine Sprache
-     * 
+     * Holt Cookie-zu-Consent Mappings für eine Sprache.
+     *
      * @param int $clangId Die Sprach-ID
      * @return array Array mit Service-UIDs und deren Consent-Flags
      */
     public static function getCookieConsentMappings(int $clangId): array
     {
         $mappings = [];
-        
+
         // Hole alle Services/Cookies
         $sql = rex_sql::factory();
         $sql->setQuery(
             'SELECT uid, service_name FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE clang_id = ?',
-            [$clangId]
+            [$clangId],
         );
-        
+
         foreach ($sql->getArray() as $service) {
             $uid = $service['uid'];
-            
+
             // Suche nach bekannten Service-Mappings
             foreach (self::$serviceMappings as $serviceKey => $flags) {
-                if (strpos($uid, $serviceKey) !== false || 
-                    stripos($service['service_name'], str_replace('-', ' ', $serviceKey)) !== false) {
+                if (str_contains($uid, $serviceKey)
+                    || false !== stripos($service['service_name'], str_replace('-', ' ', $serviceKey))) {
                     $mappings[$uid] = $flags;
                     break;
                 }
@@ -104,25 +114,25 @@ class consent_manager_google_consent_mode
     }
 
     /**
-     * Generiert das JavaScript für Google Consent Mode v2
-     * 
+     * Generiert das JavaScript für Google Consent Mode v2.
+     *
      * @param string $domain Die Domain
-     * @param int $clangId Die Sprach-ID  
+     * @param int $clangId Die Sprach-ID
      * @return string Das generierte JavaScript
      */
     public static function generateJavaScript(string $domain, int $clangId): string
     {
         $config = self::getDomainConfig($domain);
-        
+
         $js = "/* Google Consent Mode v2 - Auto-generated */\n";
-        
+
         // Konfiguration für Debug-Zwecke exportieren
         $js .= "window.consentManagerGoogleConsentMode = {\n";
         $js .= "    getDomainConfig: function() {\n";
-        $js .= "        return " . json_encode($config, JSON_PRETTY_PRINT) . ";\n";
+        $js .= '        return ' . json_encode($config, JSON_PRETTY_PRINT) . ";\n";
         $js .= "    }\n";
         $js .= "};\n\n";
-        
+
         if (!$config['enabled']) {
             $js .= '/* Google Consent Mode v2 nicht aktiviert für Domain: ' . $domain . ' */';
             return $js;
@@ -132,20 +142,20 @@ class consent_manager_google_consent_mode
 
         $js .= "window.dataLayer = window.dataLayer || [];\n";
         $js .= "function gtag(){dataLayer.push(arguments);}\n\n";
-        
+
         // Default consent (alles denied)
         $js .= "gtag('consent', 'default', " . json_encode($defaultFlags, JSON_PRETTY_PRINT) . ");\n\n";
-        
+
         // Auto-Mapping nur aktivieren wenn gewünscht
         if ($config['auto_mapping']) {
             $mappings = self::getCookieConsentMappings($clangId);
-            
+
             // Consent Manager Integration
             $js .= "// Integration mit Consent Manager (Auto-Mapping aktiviert)\n";
             $js .= "document.addEventListener('consent_manager-saved', function(e) {\n";
             $js .= "    var consents = JSON.parse(e.detail);\n";
             $js .= "    var updates = {};\n\n";
-            
+
             // Mappings für Services generieren
             foreach ($mappings as $serviceUid => $flags) {
                 $js .= "    // Service: $serviceUid\n";
@@ -155,7 +165,7 @@ class consent_manager_google_consent_mode
                 }
                 $js .= "    }\n";
             }
-            
+
             $js .= "\n    // Update consent wenn Änderungen vorhanden\n";
             $js .= "    if (Object.keys(updates).length > 0) {\n";
             $js .= "        gtag('consent', 'update', updates);\n";
@@ -165,15 +175,15 @@ class consent_manager_google_consent_mode
         } else {
             $js .= "// Auto-Mapping deaktiviert - manuelles gtag('consent', 'update') in Service-Scripts erforderlich\n\n";
         }
-        
+
         $js .= "console.log('Google Consent Mode v2 initialized for domain: $domain');";
-        
+
         return $js;
     }
 
     /**
-     * Prüft ob Google Consent Mode für eine Domain aktiviert ist
-     * 
+     * Prüft ob Google Consent Mode für eine Domain aktiviert ist.
+     *
      * @param string $domain Die zu prüfende Domain
      * @return bool True wenn aktiviert
      */
@@ -184,8 +194,8 @@ class consent_manager_google_consent_mode
     }
 
     /**
-     * Setzt den Google Consent Mode Status für eine Domain
-     * 
+     * Setzt den Google Consent Mode Status für eine Domain.
+     *
      * @param string $domain Die Domain
      * @param string $mode Modus: 'disabled', 'auto', 'manual'
      * @return bool True bei Erfolg
@@ -196,12 +206,12 @@ class consent_manager_google_consent_mode
         if (!in_array($mode, $validModes)) {
             return false;
         }
-        
+
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_domain'));
         $sql->setWhere(['uid' => $domain]);
         $sql->setValue('google_consent_mode_enabled', $mode);
-        
+
         try {
             return $sql->update() > 0;
         } catch (Exception $e) {
@@ -210,8 +220,8 @@ class consent_manager_google_consent_mode
     }
 
     /**
-     * Holt alle verfügbaren Service-Mappings
-     * 
+     * Holt alle verfügbaren Service-Mappings.
+     *
      * @return array Service-Mappings
      */
     public static function getAllServiceMappings(): array
@@ -220,8 +230,8 @@ class consent_manager_google_consent_mode
     }
 
     /**
-     * Fügt ein neues Service-Mapping hinzu
-     * 
+     * Fügt ein neues Service-Mapping hinzu.
+     *
      * @param string $serviceKey Service-Schlüssel
      * @param array $consentFlags Array mit Consent-Flags
      */

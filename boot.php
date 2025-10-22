@@ -5,7 +5,7 @@ use FriendsOfRedaxo\ConsentManager\Api\InlineLog;
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\Frontend;
-use FriendsOfRedaxo\ConsentManager\InlineConsent;
+use FriendsOfRedaxo\ConsentManager\GoogleConsentMode;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $addon = rex_addon::get('consent_manager');
@@ -137,7 +137,7 @@ if (rex::isFrontend()) {
             $consentDebugUrl = $addon->getAssetsUrl('consent_debug.js');
 
             try {
-                $googleConsentModeConfig = consent_manager_google_consent_mode::getDomainConfig($domain);
+                $googleConsentModeConfig = GoogleConsentMode::getDomainConfig($domain);
                 $debugScript = '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
             } catch (Exception $e) {
                 $debugScript = '<script>window.consentManagerDebugConfig = {"mode": "unknown", "enabled": false};</script>' . PHP_EOL;
@@ -170,7 +170,7 @@ if (rex::isFrontend() && rex_addon::exists('cke5') && rex_addon::get('cke5')->is
 
 // Mediamanager Effect für externe Thumbnails registrieren
 if (rex_addon::get('media_manager')->isAvailable()) {
-   // Effect direkt registrieren
+    // Effect direkt registrieren
     rex_media_manager::addEffect(rex_effect_external_thumbnail::class);
 }
 
