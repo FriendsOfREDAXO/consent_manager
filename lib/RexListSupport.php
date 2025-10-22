@@ -1,6 +1,11 @@
 <?php
 
-class consent_manager_rex_list
+namespace FriendsOfRedaxo\ConsentManager;
+
+use rex;
+use rex_sql;
+
+class RexListSupport
 {
     /**
      * format domains.

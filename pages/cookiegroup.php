@@ -2,6 +2,7 @@
 
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
+use FriendsOfRedaxo\ConsentManager\RexListSupport;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -134,9 +135,9 @@ if ($showlist) {
     $list->removeColumn('pid');
     $list->setColumnLabel('domain', $addon->i18n('consent_manager_domain'));
     $list->setColumnSortable('domain');
-    $list->setColumnFormat('domain', 'custom', 'consent_manager_rex_list::formatDomain');
+    $list->setColumnFormat('domain', 'custom', RexListSupport::formatDomain(...));
     $list->setColumnLabel('cookie', $addon->i18n('consent_manager_cookies'));
-    $list->setColumnFormat('cookie', 'custom', 'consent_manager_rex_list::formatCookie');
+    $list->setColumnFormat('cookie', 'custom', RexListSupport::formatCookie(...));
     $list->setColumnLabel('uid', $addon->i18n('consent_manager_uid'));
     $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
     $list->setColumnSortable('uid');
