@@ -6,6 +6,7 @@ use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\Frontend;
 use FriendsOfRedaxo\ConsentManager\InlineConsent;
+use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -62,7 +63,7 @@ if (rex::isBackend()) {
         });
     }
 
-    rex_extension::register('REX_FORM_CONTROL_FIELDS', 'consent_manager_rex_form::removeDeleteButton');
+    rex_extension::register('REX_FORM_CONTROL_FIELDS', RexFormSupport::removeDeleteButton(...));
     rex_extension::register('PAGES_PREPARED', CLang::addLangNav(...));
     rex_extension::register('PAGES_PREPARED', static function () {
         // Debug-Indikator im Menü hinzufügen

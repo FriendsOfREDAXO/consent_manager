@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\CLang;
+use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -23,7 +24,7 @@ if ('delete' === $func) {
     $form->addParam('start', rex_request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
     $form->addHiddenField('clang_id', $clang_id);
-    consent_manager_rex_form::getId($form, $table);
+    RexFormSupport::getId($form, $table);
 
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('consent_manager_domain'));
@@ -52,8 +53,8 @@ if ('delete' === $func) {
         $field->setLabel($addon->i18n('prio'));
         $field->setLabelField('uid');
     } else {
-        $form->addRawField(consent_manager_rex_form::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
-        $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', [[$form->getSql()->getValue('required'), $addon->i18n('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
+        $form->addRawField(RexFormSupport::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
+        $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), $addon->i18n('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
 
         $checkboxes = [];
         $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('domain')));
@@ -62,7 +63,7 @@ if ('delete' === $func) {
             $checkboxes[] = [$checked, $v['uid']];
         }
         if (count($checkboxes) > 0) {
-            $form->addRawField(consent_manager_rex_form::getFakeCheckbox($addon->i18n('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
+            $form->addRawField(RexFormSupport::getFakeCheckbox($addon->i18n('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
     $field = $form->addTextField('name');
@@ -99,7 +100,7 @@ if ('delete' === $func) {
                 $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
                 $checkboxes[] = [$checked, $v['uid']];
             }
-            $form->addRawField(consent_manager_rex_form::getFakeCheckbox($addon->i18n('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
+            $form->addRawField(RexFormSupport::getFakeCheckbox($addon->i18n('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
 

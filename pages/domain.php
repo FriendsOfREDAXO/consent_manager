@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\RexFormSupport;
+
 $addon = rex_addon::get('consent_manager');
 
 $showlist = true;
@@ -27,9 +29,9 @@ if ('delete' === $func) {
     $field = $form->addTextField('uid');
     $field->setLabel($addon->i18n('consent_manager_domain'));
     $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_empty_msg'));
-    $field->getValidator()->add('custom', $addon->i18n('consent_manager_domain_malformed_msg'), 'consent_manager_rex_form::validateHostname');
+    $field->getValidator()->add('custom', $addon->i18n('consent_manager_domain_malformed_msg'), RexFormSupport::validateHostname(...));
     $field->getValidator()->add('custom', 'Domain muss in Kleinbuchstaben eingegeben werden (z.B. "example.com" statt "Example.com")', function($value) {
-        return consent_manager_rex_form::validateLowercase($value);
+        return RexFormSupport::validateLowercase($value);
     });
     $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
 

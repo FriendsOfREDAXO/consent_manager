@@ -2,6 +2,7 @@
 
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
+use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -25,11 +26,11 @@ if ('delete' === $func) {
     $form->addParam('start', rex_request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
     $form->addHiddenField('clang_id', $clang_id);
-    consent_manager_rex_form::getId($form, $table);
+    RexFormSupport::getId($form, $table);
 
     if ('edit' === $func && 'consent_manager' === $form->getSql()->getValue('uid')) {
-        $form->addRawField(consent_manager_rex_form::showInfo($addon->i18n('consent_manager_cookie_consent_manager_info')));
-        $form->addRawField(consent_manager_rex_form::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
+        $form->addRawField(RexFormSupport::showInfo($addon->i18n('consent_manager_cookie_consent_manager_info')));
+        $form->addRawField(RexFormSupport::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
     } else {
         if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
             $field = $form->addTextField('uid');
@@ -37,7 +38,7 @@ if ('delete' === $func) {
             $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_uid_empty_msg'));
             $field->getValidator()->add('match', $addon->i18n('consent_manager_uid_malformed_msg'), '/^[a-z0-9-_]+$/');
         } else {
-            $form->addRawField(consent_manager_rex_form::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
+            $form->addRawField(RexFormSupport::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
         }
     }
     $field = $form->addTextField('service_name');
@@ -45,7 +46,7 @@ if ('delete' === $func) {
     $field = $form->addTextAreaField('definition');
     $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
     $field->setLabel($addon->i18n('consent_manager_cookie_definition'));
-    $field->getValidator()->add('custom', $addon->i18n('consent_manager_cookie_malformed_yaml'), 'consent_manager_rex_form::validateYaml');
+    $field->getValidator()->add('custom', $addon->i18n('consent_manager_cookie_malformed_yaml'), 'RexFormSupport::validateYaml');
 
     $field = $form->addTextField('provider');
     $field->setLabel($addon->i18n('consent_manager_cookie_provider'));
@@ -71,8 +72,8 @@ if ('delete' === $func) {
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts_unselect'));
             $field->setNotice($addon->i18n('consent_manager_cookiegroup_scripts_notice'));
         } else {
-            $form->addRawField(consent_manager_rex_form::getFakeTextarea($addon->i18n('consent_manager_cookiegroup_scripts'), $form->getSql()->getValue('script')));
-            $form->addRawField(consent_manager_rex_form::getFakeTextarea($addon->i18n('consent_manager_cookiegroup_scripts_unselect'), $form->getSql()->getValue('script_unselect')));
+            $form->addRawField(RexFormSupport::getFakeTextarea($addon->i18n('consent_manager_cookiegroup_scripts'), $form->getSql()->getValue('script')));
+            $form->addRawField(RexFormSupport::getFakeTextarea($addon->i18n('consent_manager_cookiegroup_scripts_unselect'), $form->getSql()->getValue('script_unselect')));
         }
     }
     if ('add' === $func) {

@@ -12,6 +12,7 @@
   * Datei und Klassenname von `consent_manager_config`geändert in `...\Config`
   * Datei und Klassenname von `consent_manager_cache`geändert in `...\Cache`
   * Datei und Klassenname von `consent_manager_frontend`geändert in `...\Frontend`
+  * Datei und Klassenname von `consent_manager_rex_form`geändert in `...\RexFormSupport`
 
 ## Version 4.5.0 - 14.10.2025
 
