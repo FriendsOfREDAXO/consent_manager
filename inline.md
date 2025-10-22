@@ -370,7 +370,7 @@ Im **Mediamanager → Types → consent_manager_thumbnail** können Benutzer all
 ### 🔧 Funktionsweise
 ```php
 // Automatisches Thumbnail-Caching
-$thumbnailUrl = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('youtube', 'dQw4w9WgXcQ');
+$thumbnailUrl = FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager::getThumbnailUrl('youtube', 'dQw4w9WgXcQ');
 // → https://example.com/media/consent_manager_thumbnail/youtube_dQw4w9WgXcQ_b279b658.jpg
 
 // 1. Effect lädt Thumbnail von YouTube/Vimeo herunter
@@ -711,14 +711,16 @@ Das Thumbnail-System kann **unabhängig vom Inline-Consent** für eigene Projekt
 ### 🚀 Schnellstart
 
 ```php
+use FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager;
+
 // Einfachste Verwendung - aus Video-URL direkt Thumbnail generieren
-$thumbnailUrl = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrlFromVideoUrl(
+$thumbnailUrl = ThumbnailMediaManager::getThumbnailUrlFromVideoUrl(
     'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 );
 echo '<img src="' . $thumbnailUrl . '" alt="YouTube Thumbnail" />';
 
 // Oder mit Service + Video-ID
-$thumbnailUrl = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('youtube', 'dQw4w9WgXcQ');
+$thumbnailUrl = ThumbnailMediaManager::getThumbnailUrl('youtube', 'dQw4w9WgXcQ');
 ```
 
 ### 🎯 Praktische Anwendungsbeispiele
@@ -728,7 +730,7 @@ $thumbnailUrl = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('you
 <?php
 // Helper-Funktion für Templates
 function getVideoThumbnail($videoUrl) {
-    return rex_consent_manager_thumbnail_mediamanager::getThumbnailUrlFromVideoUrl($videoUrl);
+    return FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager::getThumbnailUrlFromVideoUrl($videoUrl);
 }
 
 // Video-Liste
@@ -787,7 +789,7 @@ $sql->insert();
 ```php
 // In YForm TableManager oder MForm
 <?php if ($video_url = $this->getValue('video_url')): ?>
-    <?php $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrlFromVideoUrl($video_url); ?>
+    <?php $thumbnail = FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager::getThumbnailUrlFromVideoUrl($video_url); ?>
     <div class="video-preview">
         <img src="<?= $thumbnail ?>" alt="Video" />
         <a href="<?= $video_url ?>" class="play-button">▶ Abspielen</a>
@@ -803,7 +805,7 @@ public static function getVideoThumbnailColumn($params)
     $videoUrl = $params['value'];
     if (!$videoUrl) return '';
     
-    $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrlFromVideoUrl($videoUrl);
+    $thumbnail = FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager::getThumbnailUrlFromVideoUrl($videoUrl);
     if (!$thumbnail) return '';
     
     return '<img src="' . $thumbnail . '" style="max-width: 80px; height: auto;" />';
@@ -813,15 +815,17 @@ public static function getVideoThumbnailColumn($params)
 ### 🔄 Cache-Management
 
 ```php
+use FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager;
+
 // Cache-Informationen abrufen
-$cacheInfo = rex_consent_manager_thumbnail_mediamanager::getCacheSize();
+$cacheInfo = ThumbnailMediaManager::getCacheSize();
 echo "Gecachte Thumbnails: {$cacheInfo['files']}, Größe: " . rex_formatter::bytes($cacheInfo['size']);
 
 // Cache für bestimmten Service löschen
-rex_consent_manager_thumbnail_mediamanager::clearCache('youtube');
+ThumbnailMediaManager::clearCache('youtube');
 
 // Kompletten Thumbnail-Cache löschen
-rex_consent_manager_thumbnail_mediamanager::clearCache();
+ThumbnailMediaManager::clearCache();
 ```
 
 ### 💡 Vorteile der Mediamanager-Integration

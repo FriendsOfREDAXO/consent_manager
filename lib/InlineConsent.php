@@ -13,7 +13,6 @@ namespace FriendsOfRedaxo\ConsentManager;
 
 use rex;
 use rex_clang;
-use rex_consent_manager_thumbnail_mediamanager;
 use rex_fragment;
 use rex_sql;
 use rex_sql_exception;
@@ -160,8 +159,9 @@ class InlineConsent
         // Thumbnail über Mediamanager generieren (falls verfügbar)
         $thumbnail = $options['thumbnail'];
         if ('auto' === $thumbnail) {
-            if (class_exists('rex_consent_manager_thumbnail_mediamanager')) {
-                $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('youtube', $videoId, $options);
+            /** REVIEW: die Abfrage ist verm. überflüssig. Klassen sind verfügbar */
+            if (class_exists(ThumbnailMediaManager::class)) {
+                $thumbnail = ThumbnailMediaManager::getThumbnailUrl('youtube', $videoId, $options);
             } else {
                 // Fallback zur direkten YouTube-URL
                 $thumbnail = 'https://img.youtube.com/vi/' . $videoId . '/maxresdefault.jpg';
@@ -207,8 +207,9 @@ class InlineConsent
         // Thumbnail über Mediamanager generieren (falls verfügbar)
         $thumbnail = $options['thumbnail'];
         if ('auto' === $thumbnail) {
-            if (class_exists('rex_consent_manager_thumbnail_mediamanager')) {
-                $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('vimeo', $videoId, $options);
+            /** REVIEW: die Abfrage ist verm. überflüssig. Klassen sind verfügbar */
+            if (class_exists(ThumbnailMediaManager::class)) {
+                $thumbnail = ThumbnailMediaManager::getThumbnailUrl('vimeo', $videoId, $options);
             } else {
                 // Fallback zu generischem Vimeo-Placeholder
                 $thumbnail = 'data:image/svg+xml;base64,' . base64_encode(

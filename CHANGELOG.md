@@ -20,6 +20,7 @@
   * Datei und Klassenname von `consent_manager_oembed_parser` geändert in `...\OEmbedParser`
   * Datei und Klassenname von `consent_manager_theme` geändert in `...\Theme`
   * Datei und Klassenname von `consent_manager_thumbnail_cache` geändert in `...\ThumbnailCache`
+  * Datei und Klassenname von `rex_consent_manager_thumbnail_mediamanager` geändert in `...\ThumbnailMediaManager`
 * **consent_manager_google_consent_helper:** Datei und Klasse entfernt; nicht mehr in Benutzung 
 
 
