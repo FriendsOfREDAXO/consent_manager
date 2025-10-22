@@ -6,6 +6,7 @@ use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\Frontend;
 use FriendsOfRedaxo\ConsentManager\GoogleConsentMode;
+use FriendsOfRedaxo\ConsentManager\OEmbedParser;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $addon = rex_addon::get('consent_manager');
@@ -165,7 +166,7 @@ rex_api_function::register('consent_manager', ConsentManager::class);
 // CKE5 oEmbed Parser automatisch im Frontend registrieren - nur wenn CKE5 verfügbar ist
 if (rex::isFrontend() && rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {
     // Automatisch registrieren für alle Domains
-    consent_manager_oembed_parser::register();
+    OEmbedParser::register();
 }
 
 // Mediamanager Effect für externe Thumbnails registrieren
