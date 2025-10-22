@@ -18,6 +18,7 @@
   * Datei und Klassenname von `consent_manager_google_consent_mode` geändert in `...\GoogleConsentMode`
   * Datei und Klassenname von `consent_manager_json_setup` geändert in `...\JsonSetup`
   * Datei und Klassenname von `consent_manager_oembed_parser` geändert in `...\OEmbedParser`
+  * Datei und Klassenname von `consent_manager_theme` geändert in `...\Theme`
 * **consent_manager_google_consent_helper:** Datei und Klasse entfernt; nicht mehr in Benutzung 
 
 

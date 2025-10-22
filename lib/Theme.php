@@ -1,10 +1,18 @@
 <?php
 
+namespace FriendsOfRedaxo\ConsentManager;
+
+use rex_addon;
+use rex_dir;
+use rex_file;
+use rex_path;
+use rex_scss_compiler;
+
 /**
  * @api
  */
 
-class consent_manager_theme
+class Theme
 {
     public string $theme = '';
 
@@ -53,7 +61,7 @@ class consent_manager_theme
             $theme = $this->getTheme();
         }
 
-        if (0 === strpos($theme, 'project:')) {
+        if (str_starts_with($theme, 'project:')) {
             $addon = rex_addon::get('project');
             if (!file_exists($addon->getPath('consent_manager_themes/' . str_replace('project:', '', $theme)))) {
                 return false;
@@ -62,7 +70,7 @@ class consent_manager_theme
             $themefile = str_replace('project:', '', $theme);
             $tempfile = rex_path::addonCache('consent_manager', $themefile . '_preview.css');
             $this->compileScss($addon->getPath('consent_manager_themes/' . $themefile), $tempfile);
-            $css = trim(strval(rex_file::get($tempfile)));
+            $css = trim((string) rex_file::get($tempfile));
             rex_file::delete($tempfile);
         } else {
             $addon = rex_addon::get('consent_manager');
@@ -72,7 +80,7 @@ class consent_manager_theme
             $themefile = $theme;
             $tempfile = rex_path::addonCache('consent_manager', $theme . '_preview.css');
             $this->compileScss($addon->getPath('scss/' . $themefile), $tempfile);
-            $css = trim(strval(rex_file::get($tempfile)));
+            $css = trim((string) rex_file::get($tempfile));
             rex_file::delete($tempfile);
         }
 
@@ -105,7 +113,7 @@ class consent_manager_theme
      */
     public static function generateThemeAssets(string $theme): void
     {
-        if (0 === strpos($theme, 'project:')) {
+        if (str_starts_with($theme, 'project:')) {
             $addon = rex_addon::get('project');
             $source = $addon->getPath('consent_manager_themes/' . str_replace('project:', '', $theme));
             $addon = rex_addon::get('consent_manager');
@@ -128,7 +136,7 @@ class consent_manager_theme
         if ('' === $theme) {
             $theme = $this->getTheme();
         }
-        if (0 === strpos($theme, 'project:')) {
+        if (str_starts_with($theme, 'project:')) {
             $addon = rex_addon::get('project');
             $themefile = rex_file::get($addon->getPath('consent_manager_themes/' . str_replace('project:', '', $theme)));
         } else {

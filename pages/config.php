@@ -3,6 +3,7 @@
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\Config;
 use FriendsOfRedaxo\ConsentManager\JsonSetup;
+use FriendsOfRedaxo\ConsentManager\Theme;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -238,6 +239,6 @@ $modalFragment = new rex_fragment();
 echo $modalFragment->parse('consent_manager_quickstart_modal.php');
 
 if ('' !== rex_post('_csrf_token', 'string', '')) {
-    consent_manager_theme::generateDefaultAssets();
-    consent_manager_theme::copyAllAssets();
+    Theme::generateDefaultAssets();
+    Theme::copyAllAssets();
 }
