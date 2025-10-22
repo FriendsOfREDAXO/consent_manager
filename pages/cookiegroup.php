@@ -1,6 +1,9 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\CLang;
+use FriendsOfRedaxo\ConsentManager\RexFormSupport;
+use FriendsOfRedaxo\ConsentManager\RexListSupport;
+use FriendsOfRedaxo\ConsentManager\Utility;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -16,14 +19,14 @@ if ('delete' === $func) {
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
-    $form = rex_form::factory($table, '', 'pid = '.$pid, 'post', $formDebug);
+    $form = rex_form::factory($table, '', 'pid = ' . $pid, 'post', $formDebug);
     $form->addParam('pid', $pid);
     $form->addParam('sort', rex_request('sort', 'string', ''));
     $form->addParam('sorttype', rex_request('sorttype', 'string', ''));
     $form->addParam('start', rex_request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
     $form->addHiddenField('clang_id', $clang_id);
-    consent_manager_rex_form::getId($form, $table);
+    RexFormSupport::getId($form, $table);
 
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('consent_manager_domain'));
@@ -48,12 +51,12 @@ if ('delete' === $func) {
         }
 
         $field = $form->addPrioField('prio');
-        $field->setWhereCondition('clang_id = '.$clang_id);
+        $field->setWhereCondition('clang_id = ' . $clang_id);
         $field->setLabel($addon->i18n('prio'));
         $field->setLabelField('uid');
     } else {
-        $form->addRawField(consent_manager_rex_form::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
-        $form->addRawField(consent_manager_rex_form::getFakeCheckbox('', [[$form->getSql()->getValue('required'), $addon->i18n('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
+        $form->addRawField(RexFormSupport::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
+        $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), $addon->i18n('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
 
         $checkboxes = [];
         $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('domain')));
@@ -62,7 +65,7 @@ if ('delete' === $func) {
             $checkboxes[] = [$checked, $v['uid']];
         }
         if (count($checkboxes) > 0) {
-            $form->addRawField(consent_manager_rex_form::getFakeCheckbox($addon->i18n('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
+            $form->addRawField(RexFormSupport::getFakeCheckbox($addon->i18n('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
     $field = $form->addTextField('name');
@@ -75,7 +78,7 @@ if ('delete' === $func) {
 
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('consent_manager_cookie'));
-    $db->setWhere('clang_id = '.$clang_id.' AND uid != "consent_manager" ORDER BY uid ASC');
+    $db->setWhere('clang_id = ' . $clang_id . ' AND uid != "consent_manager" ORDER BY uid ASC');
     $db->select('DISTINCT uid');
     $cookies = $db->getArray();
 
@@ -99,7 +102,7 @@ if ('delete' === $func) {
                 $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
                 $checkboxes[] = [$checked, $v['uid']];
             }
-            $form->addRawField(consent_manager_rex_form::getFakeCheckbox($addon->i18n('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
+            $form->addRawField(RexFormSupport::getFakeCheckbox($addon->i18n('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
 
@@ -115,15 +118,15 @@ if ('delete' === $func) {
 echo $msg;
 
 if ($showlist) {
-    if (false === consent_manager_util::consentConfigured()) {
+    if (false === Utility::consentConfigured()) {
         echo rex_view::warning($addon->i18n('consent_manager_cookiegroup_nodomain_notice'));
     }
 
     $listDebug = false;
     $qry = '
     SELECT pid,uid,name,domain,cookie
-    FROM '.$table.'
-    WHERE clang_id = '.$clang_id.'
+    FROM ' . $table . '
+    WHERE clang_id = ' . $clang_id . '
     ORDER BY prio';
 
     $list = rex_list::factory($qry, 100, '', $listDebug);
@@ -133,9 +136,9 @@ if ($showlist) {
     $list->removeColumn('pid');
     $list->setColumnLabel('domain', $addon->i18n('consent_manager_domain'));
     $list->setColumnSortable('domain');
-    $list->setColumnFormat('domain', 'custom', 'consent_manager_rex_list::formatDomain');
+    $list->setColumnFormat('domain', 'custom', RexListSupport::formatDomain(...));
     $list->setColumnLabel('cookie', $addon->i18n('consent_manager_cookies'));
-    $list->setColumnFormat('cookie', 'custom', 'consent_manager_rex_list::formatCookie');
+    $list->setColumnFormat('cookie', 'custom', RexListSupport::formatCookie(...));
     $list->setColumnLabel('uid', $addon->i18n('consent_manager_uid'));
     $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
     $list->setColumnSortable('uid');
@@ -143,18 +146,18 @@ if ($showlist) {
     $list->setColumnSortable('name');
 
     $tdIcon = '<i class="fa fa-coffee"></i>';
-    $thIcon = '<a href="'.$list->getUrl(['func' => 'add']).'"'.rex::getAccesskey(rex_i18n::msg('add'), 'add').'><i class="rex-icon rex-icon-add"></i></a>';
+    $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'pid' => '###pid###']);
 
-    $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> '.rex_i18n::msg('edit'));
+    $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('function'), ['pid' => '###pid###', 'func' => 'edit', 'start' => rex_request('start', 'string')]);
 
-    $list->addColumn(rex_i18n::msg('delete'), '<i class="rex-icon rex-icon-delete"></i> '.rex_i18n::msg('delete'));
+    $list->addColumn(rex_i18n::msg('delete'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete'), ['', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('delete'), ['pid' => '###pid###', 'func' => 'delete'] + $csrf->getUrlParams());
-    $list->addLinkAttribute(rex_i18n::msg('delete'), 'onclick', 'return confirm(\' ###uid### '.rex_i18n::msg('delete').' ?\')');
+    $list->addLinkAttribute(rex_i18n::msg('delete'), 'onclick', 'return confirm(\' ###uid### ' . rex_i18n::msg('delete') . ' ?\')');
 
     $content = $list->get();
 

@@ -24,7 +24,7 @@ class rex_var_consent_manager extends rex_var
         
         if ($inline) {
             // Inline-Modus: getFragmentWithVars mit inline=true
-            return 'consent_manager_frontend::getFragmentWithVars(' 
+            return '\\FriendsOfRedaxo\\ConsentManager\\Frontend::getFragmentWithVars(' 
                 . $forceCache . ', ' 
                 . $forceReload . ', ' 
                 . self::quote($fragmentFile) . ', '
@@ -32,7 +32,7 @@ class rex_var_consent_manager extends rex_var
                 . ')';
         } else {
             // Standard-Modus: getFragment
-            return 'consent_manager_frontend::getFragment(' 
+            return '\\FriendsOfRedaxo\\ConsentManager\\Frontend::getFragment(' 
                 . $forceCache . ', ' 
                 . $forceReload . ', ' 
                 . self::quote($fragmentFile)

@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\CLang;
+use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -22,9 +23,9 @@ if ('delete' === $func) {
     $form->addParam('start', rex_request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
     $form->addHiddenField('clang_id', $clang_id);
-    consent_manager_rex_form::getId($form, $table);
+    RexFormSupport::getId($form, $table);
 
-    $form->addRawField(consent_manager_rex_form::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
+    $form->addRawField(RexFormSupport::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
     $form->addHiddenField('uid', $form->getSql()->getValue('uid'));
     $field = $form->addTextAreaField('text');
     $field->setLabel($addon->i18n('consent_manager_text'));

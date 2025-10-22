@@ -9,8 +9,13 @@
     Externer API-Name `consent_manager` beibehalten
   * Datei und Klassenname von `consent_manager_clang` geändert in `...\CLang`
   * Datei und Klassenname von `consent_manager_inline` geändert in `...\InlineConsent`
-  * Datei und Klassenname von `consent_manager_config`geändert in `...\Config`
-  * Datei und Klassenname von `consent_manager_cache`geändert in `...\Cache`
+  * Datei und Klassenname von `consent_manager_config` geändert in `...\Config`
+  * Datei und Klassenname von `consent_manager_cache` geändert in `...\Cache`
+  * Datei und Klassenname von `consent_manager_frontend` geändert in `...\Frontend`
+  * Datei und Klassenname von `consent_manager_rex_form` eändert in `...\RexFormSupport`
+  * Datei und Klassenname von `consent_manager_rex_list` geändert in `...\RexListSupport`
+  * Datei und Klassenname von `consent_manager_util` geändert in `...\Utility`
+
 
 ## Version 4.5.0 - 14.10.2025
 

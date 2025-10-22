@@ -1,8 +1,19 @@
 <?php
 
-use FriendsOfRedaxo\ConsentManager\Config;
+namespace FriendsOfRedaxo\ConsentManager;
 
-class consent_manager_rex_form
+use rex_extension_point;
+use rex_form;
+use rex_sql;
+use rex_string;
+use rex_yaml_parse_exception;
+
+use function in_array;
+
+use const FILTER_FLAG_HOSTNAME;
+use const FILTER_VALIDATE_DOMAIN;
+
+class RexFormSupport
 {
     /**
      * @param string $label

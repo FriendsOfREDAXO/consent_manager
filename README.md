@@ -89,23 +89,25 @@ www.beispiel.de
 **PHP-Aufruf (empfohlen):**
 ```php
 <?php 
+use FriendsOfRedaxo\ConsentManager\Frontend;
+
 // Standard-Integration (alles in einem)
-echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php'); 
+echo Frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php'); 
 
 // Oder Komponenten einzeln laden (mehr Flexibilität):
 ?>
-<style><?php echo consent_manager_frontend::getCSS(); ?></style>
-<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
-    <?php echo consent_manager_frontend::getJS(); ?>
+<style><?php echo Frontend::getCSS(); ?></style>
+<script<?php echo Frontend::getNonceAttribute(); ?>>
+    <?php echo Frontend::getJS(); ?>
 </script>
-<?php echo consent_manager_frontend::getBox(); ?>
+<?php echo Frontend::getBox(); ?>
 
 <?php
 // Mit custom Fragment
-echo consent_manager_frontend::getFragment(0, 0, 'my_custom_box.php');
+echo Frontend::getFragment(0, 0, 'my_custom_box.php');
 
 // Mit Inline-Modus
-echo consent_manager_frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cssjs.php', ['inline' => true]);
+echo Frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cssjs.php', ['inline' => true]);
 ?>
 ```
 
@@ -185,7 +187,7 @@ echo consent_manager_frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cs
 <body>
     <?php
     // Consent Manager Box (globales Cookie-Banner)
-    echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+    echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
     
     // Hauptinhalt mit automatischer oEmbed-Umwandlung
     echo rex_article::getCurrent()->getArticle();
@@ -273,7 +275,7 @@ if (consent_manager_hasconsent('youtube')) {
 **PHP:**
 ```php
 <?php
-if (consent_manager_util::has_consent('youtube')) {
+if (FriendsOfRedaxo\ConsentManager\Utility::has_consent('youtube')) {
     // YouTube wurde akzeptiert
 }
 ?>
@@ -700,7 +702,7 @@ Content-Security-Policy: script-src 'self' 'nonce-ZUFÄLLIGER_NONCE';
 ```php
 <?php
 // Einfach aufrufen - Nonce wird automatisch verwendet!
-echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
 ?>
 ```
 
@@ -711,7 +713,7 @@ echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php'
 $nonce = rex_response::getNonce();
 header("Content-Security-Policy: script-src 'self' 'nonce-{$nonce}'");
 
-echo consent_manager_frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
 ?>
 ```
 
@@ -858,10 +860,10 @@ document.addEventListener('consent_manager-saved', function(e) {
 
 ```php
 // Consent-Status prüfen
-consent_manager_util::has_consent('service_key');
+FriendsOfRedaxo\ConsentManager\Utility::has_consent('service_key');
 
 // Frontend-Instanz erstellen
-$consent_manager = new consent_manager_frontend();
+$consent_manager = new FriendsOfRedaxo\ConsentManager\Frontend();
 $consent_manager->setDomain($_SERVER['HTTP_HOST']);
 ```
 
@@ -938,11 +940,11 @@ Die Services sind bereits strukturiert in Kategorien wie Analytics, Marketing, e
 
 Seit Version 5.x stehen separate Methoden für CSS, JavaScript und Box-HTML zur Verfügung:
 
-**`consent_manager_frontend::getCSS()`**
+**`Frontend::getCSS()`**
 ```php
 <?php
 // Gibt nur das CSS zurück
-$css = consent_manager_frontend::getCSS();
+$css = FriendsOfRedaxo\ConsentManager\Frontend::getCSS();
 echo '<style>' . $css . '</style>';
 ?>
 ```
@@ -950,13 +952,13 @@ echo '<style>' . $css . '</style>';
 - **Use Case:** Inline-CSS oder separate CSS-Datei generieren
 - **Performance:** Cached durch REDAXO
 
-**`consent_manager_frontend::getJS()`**
+**`Frontend::getJS()`**
 ```php
 <?php
 // Gibt JavaScript inkl. Parameter und Box-Template zurück
-$js = consent_manager_frontend::getJS();
+$js = FriendsOfRedaxo\ConsentManager\Frontend::getJS();
 ?>
-<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+<script<?php echo FriendsOfRedaxo\ConsentManager\Frontend::getNonceAttribute(); ?>>
     <?php echo $js; ?>
 </script>
 ```
@@ -965,23 +967,23 @@ $js = consent_manager_frontend::getJS();
 - **CSP:** Nonce-Attribut automatisch über `getNonceAttribute()` verfügbar
 - **Use Case:** Inline-JavaScript oder separate JS-Datei
 
-**`consent_manager_frontend::getBox()`**
+**`Frontend::getBox()`**
 ```php
 <?php
 // Gibt nur das Box-HTML zurück (ohne CSS/JS)
-echo consent_manager_frontend::getBox();
+echo FriendsOfRedaxo\ConsentManager\Frontend::getBox();
 ?>
 ```
 - **Return:** HTML der Consent-Box
 - **Use Case:** AJAX-Loading, Custom Integration, SPA-Frameworks
 - **Voraussetzung:** CSS und JS müssen separat geladen sein
 
-**`consent_manager_frontend::getNonceAttribute()`**
+**`Frontend::getNonceAttribute()`**
 ```php
 <?php
 // CSP-Nonce-Attribut für Script-Tags
 ?>
-<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
+<script<?php echo FriendsOfRedaxo\ConsentManager\Frontend::getNonceAttribute(); ?>>
     // Ihr JavaScript-Code
 </script>
 ```
@@ -993,27 +995,29 @@ echo consent_manager_frontend::getBox();
 
 ```php
 <?php
+use FriendsOfRedaxo\ConsentManager\Frontend;
+
 // Beispiel 1: Alles inline im Template
 ?>
-<style><?php echo consent_manager_frontend::getCSS(); ?></style>
-<?php echo consent_manager_frontend::getBox(); ?>
-<script<?php echo consent_manager_frontend::getNonceAttribute(); ?>>
-    <?php echo consent_manager_frontend::getJS(); ?>
+<style><?php echo Frontend::getCSS(); ?></style>
+<?php echo Frontend::getBox(); ?>
+<script<?php echo Frontend::getNonceAttribute(); ?>>
+    <?php echo Frontend::getJS(); ?>
 </script>
 
 <?php
 // Beispiel 2: JavaScript in separate Datei schreiben
 $jsFile = rex_path::assets('consent_manager_custom.js');
-rex_file::put($jsFile, consent_manager_frontend::getJS());
+rex_file::put($jsFile, Frontend::getJS());
 ?>
-<script src="<?php echo rex_url::assets('consent_manager_custom.js'); ?>"<?php echo consent_manager_frontend::getNonceAttribute(); ?>></script>
+<script src="<?php echo rex_url::assets('consent_manager_custom.js'); ?>"<?php echo Frontend::getNonceAttribute(); ?>></script>
 
 <?php
 // Beispiel 3: Für AJAX/SPA nur Box-HTML zurückgeben
 if (rex_request::isAjaxRequest()) {
     rex_response::sendJson([
-        'html' => consent_manager_frontend::getBox(),
-        'css' => consent_manager_frontend::getCSS()
+        'html' => Frontend::getBox(),
+        'css' => Frontend::getCSS()
     ]);
     exit;
 }
