@@ -1,18 +1,31 @@
 <?php
 
-use FriendsOfRedaxo\ConsentManager\Cache;
+namespace FriendsOfRedaxo\ConsentManager;
+
+use Exception;
+use rex;
+use rex_addon;
+use rex_i18n;
+use rex_path;
+use rex_sql;
+
+use function in_array;
+use function is_array;
+
+use const JSON_ERROR_NONE;
+use const PATHINFO_FILENAME;
 
 /**
- * Consent Manager JSON Setup Handler
- * 
+ * Consent Manager JSON Setup Handler.
+ *
  * Handles import/export and setup functionality for JSON-based configurations
  * Replaces SQL-based setup for better maintainability and community contributions
  */
-class consent_manager_json_setup
+class JsonSetup
 {
     /**
-     * Import JSON setup configuration
-     * 
+     * Import JSON setup configuration.
+     *
      * @param string $jsonFile Path to JSON setup file
      * @param bool $clearExisting Clear existing data before import
      * @param string $mode Import mode: 'replace' (default), 'update' (only add new)
@@ -26,12 +39,12 @@ class consent_manager_json_setup
             }
 
             $jsonContent = file_get_contents($jsonFile);
-            if ($jsonContent === false) {
+            if (false === $jsonContent) {
                 return ['success' => false, 'message' => 'Could not read JSON setup file'];
             }
 
             $setupData = json_decode($jsonContent, true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
+            if (JSON_ERROR_NONE !== json_last_error()) {
                 return ['success' => false, 'message' => 'Invalid JSON format: ' . json_last_error_msg()];
             }
 
@@ -45,7 +58,7 @@ class consent_manager_json_setup
 
             try {
                 // Handle different import modes
-                if ($mode === 'replace' && $clearExisting) {
+                if ('replace' === $mode && $clearExisting) {
                     self::clearExistingData();
                 }
 
@@ -64,43 +77,41 @@ class consent_manager_json_setup
                 }
 
                 return [
-                    'success' => true, 
+                    'success' => true,
                     'message' => 'JSON setup imported successfully',
-                    'meta' => $setupData['meta'] ?? []
+                    'meta' => $setupData['meta'] ?? [],
                 ];
-
             } catch (Exception $e) {
                 // Rollback on error
                 $sql->setQuery('ROLLBACK');
                 throw $e;
             }
-
         } catch (Exception $e) {
             return [
-                'success' => false, 
-                'message' => 'Import failed: ' . $e->getMessage()
+                'success' => false,
+                'message' => 'Import failed: ' . $e->getMessage(),
             ];
         }
     }
 
     /**
-     * Export current configuration as JSON
+     * Export current configuration as JSON.
      */
     public static function exportSetup(bool $includeMetadata = true): array
     {
         $addon = rex_addon::get('consent_manager');
-        
+
         $exportData = [];
-        
+
         if ($includeMetadata) {
             $exportData['meta'] = [
                 'export_version' => '1.1',
                 'export_date' => date('Y-m-d H:i:s'),
                 'addon_version' => $addon->getVersion(),
-                'language' => rex_i18n::getLocale()
+                'language' => rex_i18n::getLocale(),
             ];
         }
-        
+
         // Export Cookie Groups
         $sql = rex_sql::factory();
         $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookiegroup') . ' ORDER BY prio, id');
@@ -110,7 +121,7 @@ class consent_manager_json_setup
             $sql->next();
         }
         $exportData['cookiegroups'] = $cookiegroups;
-        
+
         // Export Cookies/Services
         $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookie') . ' ORDER BY id');
         $cookies = [];
@@ -119,7 +130,7 @@ class consent_manager_json_setup
             $sql->next();
         }
         $exportData['cookies'] = $cookies;
-        
+
         // Export Texts
         $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_text') . ' ORDER BY clang_id, id');
         $texts = [];
@@ -128,7 +139,7 @@ class consent_manager_json_setup
             $sql->next();
         }
         $exportData['texts'] = $texts;
-        
+
         // Export Domains
         $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_domain') . ' ORDER BY id');
         $domains = [];
@@ -137,45 +148,47 @@ class consent_manager_json_setup
             $sql->next();
         }
         $exportData['domains'] = $domains;
-        
+
         return $exportData;
     }
 
     /**
-     * Get available setup templates
+     * Get available setup templates.
      */
     public static function getAvailableSetups(): array
     {
         $setups = [];
         $setupDir = rex_path::addon('consent_manager') . 'setup/';
-        
+
         if (!is_dir($setupDir)) {
             return $setups;
         }
-        
+
         $files = glob($setupDir . '*.json');
         foreach ($files as $file) {
             $filename = basename($file);
-            
+
             // Skip certain files
             if (in_array($filename, ['contribution_template.json', 'example_export.json'])) {
                 continue;
             }
-            
+
             $jsonContent = file_get_contents($file);
-            if ($jsonContent === false) continue;
-            
-            $setupData = json_decode($jsonContent, true);
-            if (json_last_error() !== JSON_ERROR_NONE || !is_array($setupData)) {
+            if (false === $jsonContent) {
                 continue;
             }
-            
+
+            $setupData = json_decode($jsonContent, true);
+            if (JSON_ERROR_NONE !== json_last_error() || !is_array($setupData)) {
+                continue;
+            }
+
             $setup = [
                 'file' => $filename,
                 'name' => $filename,
-                'meta' => $setupData['meta'] ?? []
+                'meta' => $setupData['meta'] ?? [],
             ];
-            
+
             // Generate a nice name from the filename or meta
             if (isset($setupData['meta']['description'])) {
                 $setup['name'] = pathinfo($filename, PATHINFO_FILENAME);
@@ -183,129 +196,133 @@ class consent_manager_json_setup
                 $setup['name'] = str_replace(['_', '-'], ' ', pathinfo($filename, PATHINFO_FILENAME));
                 $setup['name'] = ucfirst($setup['name']);
             }
-            
+
             $setups[] = $setup;
         }
-        
+
         return $setups;
     }
 
     /**
-     * Clear all existing data from consent manager tables
+     * Clear all existing data from consent manager tables.
      */
     private static function clearExistingData(): void
     {
         $sql = rex_sql::factory();
-        
+
         $tables = [
             'consent_manager_cookie',
-            'consent_manager_cookiegroup', 
+            'consent_manager_cookiegroup',
             'consent_manager_text',
-            'consent_manager_domain'
+            'consent_manager_domain',
         ];
-        
+
         foreach ($tables as $table) {
             $sql->setQuery('DELETE FROM ' . rex::getTable($table));
         }
     }
 
     /**
-     * Import cookie groups with mode support
+     * Import cookie groups with mode support.
      */
     private static function importCookieGroups(array $cookiegroups, string $mode = 'replace'): void
     {
         foreach ($cookiegroups as $group) {
-            if (!isset($group['uid'])) continue;
-            
+            if (!isset($group['uid'])) {
+                continue;
+            }
+
             // Check if group already exists
             $existingGroup = self::findExistingCookieGroup($group['uid']);
-            
+
             // Decide action based on mode
-            if ($mode === 'update' && $existingGroup) {
+            if ('update' === $mode && $existingGroup) {
                 continue; // Skip existing groups in update mode
-            } else {
-                // Adjust ID if it conflicts in update mode
-                if ($mode === 'update' && isset($group['id']) && self::idExistsInTable('consent_manager_cookiegroup', $group['id'])) {
-                    $group['id'] = self::getNextAvailableId('consent_manager_cookiegroup');
-                }
-                // Insert new group (replace mode or new group)
-                self::insertCookieGroup($group);
             }
+            // Adjust ID if it conflicts in update mode
+            if ('update' === $mode && isset($group['id']) && self::idExistsInTable('consent_manager_cookiegroup', $group['id'])) {
+                $group['id'] = self::getNextAvailableId('consent_manager_cookiegroup');
+            }
+            // Insert new group (replace mode or new group)
+            self::insertCookieGroup($group);
         }
     }
 
     /**
-     * Import cookies/services with mode support
+     * Import cookies/services with mode support.
      */
     private static function importCookies(array $cookies, string $mode = 'replace'): void
     {
         foreach ($cookies as $cookie) {
-            if (!isset($cookie['uid'])) continue;
-            
+            if (!isset($cookie['uid'])) {
+                continue;
+            }
+
             // Check if cookie already exists
             $existingCookie = self::findExistingCookie($cookie['uid']);
-            
-            // Decide action based on mode  
-            if ($mode === 'update' && $existingCookie) {
+
+            // Decide action based on mode
+            if ('update' === $mode && $existingCookie) {
                 continue; // Skip existing cookies in update mode
-            } else {
-                // Adjust ID if it conflicts in update mode
-                if ($mode === 'update' && isset($cookie['id']) && self::idExistsInTable('consent_manager_cookie', $cookie['id'])) {
-                    $cookie['id'] = self::getNextAvailableId('consent_manager_cookie');
-                }
-                // Insert new cookie (replace mode or new cookie)
-                self::insertCookie($cookie);
             }
+            // Adjust ID if it conflicts in update mode
+            if ('update' === $mode && isset($cookie['id']) && self::idExistsInTable('consent_manager_cookie', $cookie['id'])) {
+                $cookie['id'] = self::getNextAvailableId('consent_manager_cookie');
+            }
+            // Insert new cookie (replace mode or new cookie)
+            self::insertCookie($cookie);
         }
     }
 
     /**
-     * Import texts with mode support
+     * Import texts with mode support.
      */
     private static function importTexts(array $texts, string $mode = 'replace'): void
     {
         foreach ($texts as $text) {
-            if (!isset($text['uid'])) continue;
-            
+            if (!isset($text['uid'])) {
+                continue;
+            }
+
             // Check if text already exists
             $existingText = self::findExistingText($text['uid'], $text['clang_id'] ?? 1);
-            
+
             // Decide action based on mode
-            if ($mode === 'update' && $existingText) {
+            if ('update' === $mode && $existingText) {
                 continue; // Skip existing texts in update mode
-            } else {
-                // Adjust ID if it conflicts in update mode
-                if ($mode === 'update' && isset($text['id']) && self::idExistsInTable('consent_manager_text', $text['id'])) {
-                    $text['id'] = self::getNextAvailableId('consent_manager_text');
-                }
-                // Insert new text (replace mode or new text)
-                self::insertText($text);
             }
+            // Adjust ID if it conflicts in update mode
+            if ('update' === $mode && isset($text['id']) && self::idExistsInTable('consent_manager_text', $text['id'])) {
+                $text['id'] = self::getNextAvailableId('consent_manager_text');
+            }
+            // Insert new text (replace mode or new text)
+            self::insertText($text);
         }
     }
 
     /**
-     * Import domains with mode support
+     * Import domains with mode support.
      */
     private static function importDomains(array $domains, string $mode = 'replace'): void
     {
         foreach ($domains as $domain) {
-            if (!isset($domain['uid'])) continue; // Domain table uses 'uid' not 'domain'
-            
+            if (!isset($domain['uid'])) {
+                continue;
+            } // Domain table uses 'uid' not 'domain'
+
             // Check if domain already exists
             $existingDomain = self::findExistingDomain($domain['uid']);
-            
+
             // Decide action based on mode
-            if ($mode === 'update' && $existingDomain) {
+            if ('update' === $mode && $existingDomain) {
                 continue; // Skip existing domains in update mode
-            } else {
-                // Adjust ID if it conflicts in update mode
-                if ($mode === 'update' && isset($domain['id']) && self::idExistsInTable('consent_manager_domain', $domain['id'])) {
-                    $domain['id'] = self::getNextAvailableId('consent_manager_domain');
-                }
-                // Insert new domain (replace mode or new domain)
-                self::insertDomain($domain);
             }
+            // Adjust ID if it conflicts in update mode
+            if ('update' === $mode && isset($domain['id']) && self::idExistsInTable('consent_manager_domain', $domain['id'])) {
+                $domain['id'] = self::getNextAvailableId('consent_manager_domain');
+            }
+            // Insert new domain (replace mode or new domain)
+            self::insertDomain($domain);
         }
     }
 
@@ -343,34 +360,34 @@ class consent_manager_json_setup
     {
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_cookiegroup'));
-        
+
         $now = date('Y-m-d H:i:s');
-        
+
         $fieldMapping = [
             'id' => 'id',
             'clang_id' => 'clang_id',
             'domain' => 'domain',
             'uid' => 'uid',
-            'prio' => 'prio', 
+            'prio' => 'prio',
             'required' => 'required',
             'name' => 'name',
             'description' => 'description',
             'cookie' => 'cookie',
-            'script' => 'script'
+            'script' => 'script',
         ];
-        
+
         foreach ($fieldMapping as $jsonField => $dbField) {
             if (isset($group[$jsonField])) {
                 $sql->setValue($dbField, $group[$jsonField]);
             }
         }
-        
-        $createDate = (isset($group['createdate']) && $group['createdate'] !== '0000-00-00 00:00:00') ? $group['createdate'] : $now;
-        $updateDate = (isset($group['updatedate']) && $group['updatedate'] !== '0000-00-00 00:00:00') ? $group['updatedate'] : $now;
-        
+
+        $createDate = (isset($group['createdate']) && '0000-00-00 00:00:00' !== $group['createdate']) ? $group['createdate'] : $now;
+        $updateDate = (isset($group['updatedate']) && '0000-00-00 00:00:00' !== $group['updatedate']) ? $group['updatedate'] : $now;
+
         $sql->setValue('createdate', $createDate);
         $sql->setValue('updatedate', $updateDate);
-        
+
         $sql->insert();
     }
 
@@ -394,9 +411,9 @@ class consent_manager_json_setup
     {
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_cookie'));
-        
+
         $now = date('Y-m-d H:i:s');
-        
+
         $fieldMapping = [
             'id' => 'id',
             'clang_id' => 'clang_id',
@@ -408,21 +425,21 @@ class consent_manager_json_setup
             'script' => 'script',
             'script_unselect' => 'script_unselect',
             'placeholder_text' => 'placeholder_text',
-            'placeholder_image' => 'placeholder_image'
+            'placeholder_image' => 'placeholder_image',
         ];
-        
+
         foreach ($fieldMapping as $jsonField => $dbField) {
             if (isset($cookie[$jsonField])) {
                 $sql->setValue($dbField, $cookie[$jsonField]);
             }
         }
-        
-        $createDate = (isset($cookie['createdate']) && $cookie['createdate'] !== '0000-00-00 00:00:00') ? $cookie['createdate'] : $now;
-        $updateDate = (isset($cookie['updatedate']) && $cookie['updatedate'] !== '0000-00-00 00:00:00') ? $cookie['updatedate'] : $now;
-        
+
+        $createDate = (isset($cookie['createdate']) && '0000-00-00 00:00:00' !== $cookie['createdate']) ? $cookie['createdate'] : $now;
+        $updateDate = (isset($cookie['updatedate']) && '0000-00-00 00:00:00' !== $cookie['updatedate']) ? $cookie['updatedate'] : $now;
+
         $sql->setValue('createdate', $createDate);
         $sql->setValue('updatedate', $updateDate);
-        
+
         $sql->insert();
     }
 
@@ -430,28 +447,28 @@ class consent_manager_json_setup
     {
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_text'));
-        
+
         $now = date('Y-m-d H:i:s');
-        
+
         $fieldMapping = [
             'id' => 'id',
             'clang_id' => 'clang_id',
             'uid' => 'uid',
-            'text' => 'text'
+            'text' => 'text',
         ];
-        
+
         foreach ($fieldMapping as $jsonField => $dbField) {
             if (isset($text[$jsonField])) {
                 $sql->setValue($dbField, $text[$jsonField]);
             }
         }
-        
-        $createDate = (isset($text['createdate']) && $text['createdate'] !== '0000-00-00 00:00:00') ? $text['createdate'] : $now;
-        $updateDate = (isset($text['updatedate']) && $text['updatedate'] !== '0000-00-00 00:00:00') ? $text['updatedate'] : $now;
-        
+
+        $createDate = (isset($text['createdate']) && '0000-00-00 00:00:00' !== $text['createdate']) ? $text['createdate'] : $now;
+        $updateDate = (isset($text['updatedate']) && '0000-00-00 00:00:00' !== $text['updatedate']) ? $text['updatedate'] : $now;
+
         $sql->setValue('createdate', $createDate);
         $sql->setValue('updatedate', $updateDate);
-        
+
         $sql->insert();
     }
 
@@ -459,9 +476,9 @@ class consent_manager_json_setup
     {
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_domain'));
-        
+
         $now = date('Y-m-d H:i:s');
-        
+
         $fieldMapping = [
             'id' => 'id',
             'uid' => 'uid',
@@ -469,26 +486,26 @@ class consent_manager_json_setup
             'legal_notice' => 'legal_notice',
             'google_consent_mode_enabled' => 'google_consent_mode_enabled',
             'google_consent_mode_config' => 'google_consent_mode_config',
-            'google_consent_mode_debug' => 'google_consent_mode_debug'
+            'google_consent_mode_debug' => 'google_consent_mode_debug',
         ];
-        
+
         foreach ($fieldMapping as $jsonField => $dbField) {
             if (isset($domain[$jsonField])) {
                 // Domain in Kleinbuchstaben normalisieren beim Import
                 $value = $domain[$jsonField];
-                if ($dbField === 'uid') {
+                if ('uid' === $dbField) {
                     $value = strtolower($value);
                 }
                 $sql->setValue($dbField, $value);
             }
         }
-        
-        $createDate = (isset($domain['createdate']) && $domain['createdate'] !== '0000-00-00 00:00:00') ? $domain['createdate'] : $now;
-        $updateDate = (isset($domain['updatedate']) && $domain['updatedate'] !== '0000-00-00 00:00:00') ? $domain['updatedate'] : $now;
-        
+
+        $createDate = (isset($domain['createdate']) && '0000-00-00 00:00:00' !== $domain['createdate']) ? $domain['createdate'] : $now;
+        $updateDate = (isset($domain['updatedate']) && '0000-00-00 00:00:00' !== $domain['updatedate']) ? $domain['updatedate'] : $now;
+
         $sql->setValue('createdate', $createDate);
         $sql->setValue('updatedate', $updateDate);
-        
+
         $sql->insert();
     }
 }

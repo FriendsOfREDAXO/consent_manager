@@ -2,12 +2,14 @@
 
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\Config;
+use FriendsOfRedaxo\ConsentManager\JsonSetup;
 
 $addon = rex_addon::get('consent_manager');
 
+/** REVIEW: Der Code ist m.E. überflüssig. Die Klassen SIND verfügbar */
 // Ensure JSON setup class is loaded
-if (!class_exists('consent_manager_json_setup')) {
-    require_once __DIR__ . '/../lib/consent_manager_json_setup.php';
+if (!class_exists(JsonSetup::class)) {
+    require_once __DIR__ . '/../lib/JsonSetup.php';
 }
 
 $func = rex_request('func', 'string');
@@ -15,10 +17,10 @@ $func = rex_request('func', 'string');
 // Import/Export Functionality
 if ('setup_minimal' === $func) {
     // Import minimal setup (only necessary cookies)
-    $jsonSetupFile = rex_path::addon('consent_manager').'setup/minimal_setup.json';
-    
+    $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/minimal_setup.json';
+
     if (file_exists($jsonSetupFile)) {
-        $result = consent_manager_json_setup::importSetup($jsonSetupFile, true);
+        $result = JsonSetup::importSetup($jsonSetupFile, true);
         if ($result['success']) {
             CLang::addonJustInstalled();
             echo rex_view::success($addon->i18n('consent_manager_import_minimal_success'));
@@ -28,16 +30,15 @@ if ('setup_minimal' === $func) {
     } else {
         echo rex_view::error($addon->i18n('consent_manager_import_minimal_file_not_found'));
     }
-    
-    // Redirect to normal config page without func parameter
-    echo '<script>setTimeout(function() { window.location.href = "'.rex_url::currentBackendPage(['page' => 'consent_manager/config']).'"; }, 2000);</script>';
 
+    // Redirect to normal config page without func parameter
+    echo '<script>setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
 } elseif ('setup_standard' === $func) {
     // Import standard setup (comprehensive setup with common services)
-    $jsonSetupFile = rex_path::addon('consent_manager').'setup/default_setup.json';
-    
+    $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/default_setup.json';
+
     if (file_exists($jsonSetupFile)) {
-        $result = consent_manager_json_setup::importSetup($jsonSetupFile, true);
+        $result = JsonSetup::importSetup($jsonSetupFile, true);
         if ($result['success']) {
             CLang::addonJustInstalled();
             echo rex_view::success($addon->i18n('consent_manager_import_standard_success'));
@@ -47,16 +48,15 @@ if ('setup_minimal' === $func) {
     } else {
         echo rex_view::error($addon->i18n('consent_manager_import_standard_file_not_found'));
     }
-    
-    // Redirect to normal config page without func parameter
-    echo '<script>setTimeout(function() { window.location.href = "'.rex_url::currentBackendPage(['page' => 'consent_manager/config']).'"; }, 2000);</script>';
 
+    // Redirect to normal config page without func parameter
+    echo '<script>setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
 } elseif ('setup_minimal_update' === $func) {
     // Update with minimal setup (only add new, don't overwrite existing)
-    $jsonSetupFile = rex_path::addon('consent_manager').'setup/minimal_setup.json';
-    
+    $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/minimal_setup.json';
+
     if (file_exists($jsonSetupFile)) {
-        $result = consent_manager_json_setup::importSetup($jsonSetupFile, false, 'update');
+        $result = JsonSetup::importSetup($jsonSetupFile, false, 'update');
         if ($result['success']) {
             CLang::addonJustInstalled();
             echo rex_view::success($addon->i18n('consent_manager_import_minimal_update_success'));
@@ -66,16 +66,15 @@ if ('setup_minimal' === $func) {
     } else {
         echo rex_view::error($addon->i18n('consent_manager_import_minimal_file_not_found'));
     }
-    
-    // Redirect to normal config page without func parameter
-    echo '<script>setTimeout(function() { window.location.href = "'.rex_url::currentBackendPage(['page' => 'consent_manager/config']).'"; }, 2000);</script>';
 
+    // Redirect to normal config page without func parameter
+    echo '<script>setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
 } elseif ('setup_standard_update' === $func) {
     // Update with standard setup (only add new, don't overwrite existing)
-    $jsonSetupFile = rex_path::addon('consent_manager').'setup/default_setup.json';
-    
+    $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/default_setup.json';
+
     if (file_exists($jsonSetupFile)) {
-        $result = consent_manager_json_setup::importSetup($jsonSetupFile, false, 'update');
+        $result = JsonSetup::importSetup($jsonSetupFile, false, 'update');
         if ($result['success']) {
             CLang::addonJustInstalled();
             echo rex_view::success($addon->i18n('consent_manager_import_standard_update_success'));
@@ -85,10 +84,9 @@ if ('setup_minimal' === $func) {
     } else {
         echo rex_view::error($addon->i18n('consent_manager_import_standard_file_not_found'));
     }
-    
-    // Redirect to normal config page without func parameter
-    echo '<script>setTimeout(function() { window.location.href = "'.rex_url::currentBackendPage(['page' => 'consent_manager/config']).'"; }, 2000);</script>';
 
+    // Redirect to normal config page without func parameter
+    echo '<script>setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
 }
 
 // For all other functions CSRF check
@@ -102,62 +100,62 @@ if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_
             while (ob_get_level()) {
                 ob_end_clean();
             }
-            
+
             // Export current configuration
             $export_data = [];
-            
+
             // Export cookies/services
             $sql = rex_sql::factory();
-            $sql->setQuery('SELECT * FROM '.rex::getTable('consent_manager_cookie').' ORDER BY id');
+            $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookie') . ' ORDER BY id');
             $export_data['cookies'] = $sql->getArray();
-            
+
             // Export cookie groups
-            $sql->setQuery('SELECT * FROM '.rex::getTable('consent_manager_cookiegroup').' ORDER BY prio, id');
+            $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookiegroup') . ' ORDER BY prio, id');
             $export_data['cookiegroups'] = $sql->getArray();
-            
+
             // Export texts
-            $sql->setQuery('SELECT * FROM '.rex::getTable('consent_manager_text').' ORDER BY clang_id, id');
+            $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_text') . ' ORDER BY clang_id, id');
             $export_data['texts'] = $sql->getArray();
-            
+
             // Export domains
-            $sql->setQuery('SELECT * FROM '.rex::getTable('consent_manager_domain').' ORDER BY id');
+            $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_domain') . ' ORDER BY id');
             $export_data['domains'] = $sql->getArray();
-            
+
             // JSON Export erstellen
             $json_export = json_encode($export_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-            
+
             // Headers für Download
             header('Content-Type: application/json');
-            header('Content-Disposition: attachment; filename="consent_manager_export_'.date('Y-m-d_H-i-s').'.json"');
+            header('Content-Disposition: attachment; filename="consent_manager_export_' . date('Y-m-d_H-i-s') . '.json"');
             header('Content-Length: ' . strlen($json_export));
-            
+
             echo $json_export;
             exit;
-            
-        } elseif ('import_json' === $func) {
+        }
+        if ('import_json' === $func) {
             // JSON Import verarbeiten
-            if (isset($_FILES['import_file']) && $_FILES['import_file']['error'] === UPLOAD_ERR_OK) {
+            if (isset($_FILES['import_file']) && UPLOAD_ERR_OK === $_FILES['import_file']['error']) {
                 $import_content = file_get_contents($_FILES['import_file']['tmp_name']);
                 $import_data = json_decode($import_content, true);
-                
-                if (json_last_error() === JSON_ERROR_NONE && is_array($import_data)) {
+
+                if (JSON_ERROR_NONE === json_last_error() && is_array($import_data)) {
                     try {
                         // Tabellen leeren
                         $sql = rex_sql::factory();
-                        $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_cookie'));
-                        $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_cookiegroup'));
-                        $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_text'));
-                        $sql->setQuery('DELETE FROM '.rex::getTable('consent_manager_domain'));
-                        
+                        $sql->setQuery('DELETE FROM ' . rex::getTable('consent_manager_cookie'));
+                        $sql->setQuery('DELETE FROM ' . rex::getTable('consent_manager_cookiegroup'));
+                        $sql->setQuery('DELETE FROM ' . rex::getTable('consent_manager_text'));
+                        $sql->setQuery('DELETE FROM ' . rex::getTable('consent_manager_domain'));
+
                         // Importierte Daten einfügen
                         $tables = ['cookies', 'cookiegroups', 'texts', 'domains'];
                         $table_map = [
                             'cookies' => 'consent_manager_cookie',
                             'cookiegroups' => 'consent_manager_cookiegroup',
                             'texts' => 'consent_manager_text',
-                            'domains' => 'consent_manager_domain'
+                            'domains' => 'consent_manager_domain',
                         ];
-                        
+
                         foreach ($tables as $table_key) {
                             if (isset($import_data[$table_key]) && is_array($import_data[$table_key])) {
                                 $table_name = rex::getTable($table_map[$table_key]);
@@ -171,7 +169,7 @@ if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_
                                 }
                             }
                         }
-                        
+
                         echo rex_view::success($addon->i18n('consent_manager_import_json_successful'));
                     } catch (rex_sql_exception $e) {
                         echo rex_view::error($addon->i18n('consent_manager_import_json_error') . ': ' . $e->getMessage());
@@ -188,11 +186,11 @@ if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_
 
 // Import/Export UI und Settings Layout
 $sql = rex_sql::factory();
-$sql->setQuery('SELECT COUNT(*) as count FROM '.rex::getTable('consent_manager_cookie'));
+$sql->setQuery('SELECT COUNT(*) as count FROM ' . rex::getTable('consent_manager_cookie'));
 $cookie_count = $sql->getValue('count');
 
 // Settings Form erstellen mit verbesserter Struktur
-$form = rex_config_form::factory(strval($addon->getPackageId()));
+$form = rex_config_form::factory((string) $addon->getPackageId());
 $form->addFieldset($addon->i18n('consent_manager_config_legend'));
 
 // CSS Output Einstellung

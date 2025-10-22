@@ -16,6 +16,7 @@
   * Datei und Klassenname von `consent_manager_rex_list` geändert in `...\RexListSupport`
   * Datei und Klassenname von `consent_manager_util` geändert in `...\Utility`
   * Datei und Klassenname von `consent_manager_google_consent_mode` geändert in `...\GoogleConsentMode`
+  * Datei und Klassenname von `consent_manager_json_setup` geändert in `...\JsonSetup`
 * **consent_manager_google_consent_helper:** Datei und Klasse entfernt; nicht mehr in Benutzung 
 
 
