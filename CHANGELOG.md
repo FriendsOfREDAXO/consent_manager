@@ -1,8 +1,11 @@
 # REDAXO consent_manager - Changelog
 
-## Version x.y.z - xx.yy.2025
+## Version 5.0.0 - xx.yy.2025
 
 * **Namespace FriendsOfRedaxo\ConsentManager**
+
+  Für eine Übergangszeit und um die Umstellung eigenen PHP-Codes auf Namespace-Klassen zu erleichtern,
+  stehen die alten Klassennamen weiterhin zur Verfügung, tragen jedoch einen deprecated-Vermerk.
   * Datei und Klassennamne von `rex_api_consent_manager_inline_log` geändert in `...\Api\InlineLog`.  
     Externer API-Name `consent_manager_inline_log` beibehalten
   * Datei und Klassenname von `rex_api_consent_manager` geändert in `...\Api\ConsentManager`.  
