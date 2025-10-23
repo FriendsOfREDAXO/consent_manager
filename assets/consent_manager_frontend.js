@@ -331,16 +331,31 @@ function debugLog(message, data) {
 
     function deleteCookies() {
         var domain = consent_manager_parameters.domain;
+        var hostname = window.location.hostname;
+        
         for (var key in cmCookieAPI.get()) {
-            cmCookieAPI.remove(encodeURIComponent(key));
-            cmCookieAPI.remove(encodeURIComponent(key), { 'domain': domain });
-            cmCookieAPI.remove(encodeURIComponent(key), { 'path': '/' });
-            cmCookieAPI.remove(encodeURIComponent(key), { 'domain': domain, 'path': '/' });
-            cmCookieAPI.remove(encodeURIComponent(key), { 'domain': ('.' + domain) });
-            cmCookieAPI.remove(encodeURIComponent(key), { 'domain': ('.' + domain), 'path': '/' });
-            Cookies.remove(encodeURIComponent(key), { 'domain': window.location.hostname });
-            Cookies.remove(encodeURIComponent(key), { 'path': '/' });
-            Cookies.remove(encodeURIComponent(key), { 'domain': window.location.hostname, 'path': '/' });
+            var cookieName = encodeURIComponent(key);
+            
+            // Versuche alle möglichen Domain/Path Kombinationen für Alt-Cookies
+            // 1. Ohne Domain (aktuelle Domain)
+            Cookies.remove(cookieName);
+            Cookies.remove(cookieName, { 'path': '/' });
+            
+            // 2. Mit exakter Domain aus Config
+            Cookies.remove(cookieName, { 'domain': domain });
+            Cookies.remove(cookieName, { 'domain': domain, 'path': '/' });
+            
+            // 3. Mit Wildcard-Domain (Alt-Cookies vor Issue #317)
+            Cookies.remove(cookieName, { 'domain': ('.' + domain) });
+            Cookies.remove(cookieName, { 'domain': ('.' + domain), 'path': '/' });
+            
+            // 4. Mit aktuellem Hostname (falls abweichend von Config)
+            if (hostname !== domain) {
+                Cookies.remove(cookieName, { 'domain': hostname });
+                Cookies.remove(cookieName, { 'domain': hostname, 'path': '/' });
+                Cookies.remove(cookieName, { 'domain': ('.' + hostname) });
+                Cookies.remove(cookieName, { 'domain': ('.' + hostname), 'path': '/' });
+            }
         }
     }
 
