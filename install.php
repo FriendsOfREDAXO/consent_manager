@@ -223,6 +223,20 @@ if (rex_addon::get('media_manager')->isAvailable()) {
     }
 }
 
+/**
+ * Mit der Umstellung auf Namespace wurde auch die Cronjob-Klasse "rex_cronjob_log_delete" umbenannt in 
+ * "FriendsOfRedaxo\ConsentManager\Cronjob\LogDelete". Damit bestehende Cronjobs nach dem Update weiterhin funktionieren,
+ * muss der Cronjob-Typ in der Tabelle rex_cronjob auf den neuen Wert inkl. Namespace geändert werden.
+ */
+if(rex_addon::get('cronjob')->isAvailable()) {
+    $sql = rex_sql::factory();
+    $sql->setTable(rex::getTable('cronjob'));
+    $sql->setValue('type', 'FriendsOfRedaxo\\ConsentManager\\Cronjob\\LogDelete');
+    $sql->setWhere('type like :old', [':old' => 'rex_cronjob_log_delete']);
+    $sql->addGlobalUpdateFields();
+    $sql->update();
+}
+
 // Rewrite
 /** FIXME: Beim Update wird die alte Klasse genommen? oder doch die neue? Könnte ein Problem werden. */
 if (class_exists(Cache::class)) {

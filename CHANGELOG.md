@@ -3,9 +3,9 @@
 ## Version x.y.z - xx.yy.2025
 
 * **Namespace FriendsOfRedaxo\ConsentManager**
-  * Datei und Klassennamne von `rex_api_consent_manager_inline_log` geändert in `...\Api\InlineLog`
+  * Datei und Klassennamne von `rex_api_consent_manager_inline_log` geändert in `...\Api\InlineLog`.  
     Externer API-Name `consent_manager_inline_log` beibehalten
-  * Datei und Klassenname von `rex_api_consent_manager` geändert in `...\Api\ConsentManager`
+  * Datei und Klassenname von `rex_api_consent_manager` geändert in `...\Api\ConsentManager`.  
     Externer API-Name `consent_manager` beibehalten
   * Datei und Klassenname von `consent_manager_clang` geändert in `...\CLang`
   * Datei und Klassenname von `consent_manager_inline` geändert in `...\InlineConsent`
@@ -22,8 +22,11 @@
   * Datei und Klassenname von `consent_manager_thumbnail_cache` geändert in `...\ThumbnailCache`
   * Datei und Klassenname von `rex_consent_manager_thumbnail_mediamanager` geändert in `...\ThumbnailMediaManager`
   * Datei und Klassenname von `rex_consent_manager_command_log_delete` geändert in `...\Command\LogDelete`
+  * Datei und Klassenname von `rex_cronjob_log_delete` geändert in `...\Cronjob\LogDelete`.  
+    (Unterverzeichnis `l ib/Cronjob` für dieCronjob-Klassen eingerichtet)
 * **consent_manager_google_consent_helper:** Datei und Klasse entfernt; nicht mehr in Benutzung 
 * **Command log-delete:** aktiviert und verfügbar (in package.yml registriert)
+* **Cronjob LogDelete (ex. rex_cronjob_log_delete):** vorhandene Cronjobs werden automatisch auf den neuen Namen inkl. Namespace geändert.
 
 ## Version 4.5.0 - 14.10.2025
 

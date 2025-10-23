@@ -4,6 +4,7 @@ use FriendsOfRedaxo\ConsentManager\Api\ConsentManager;
 use FriendsOfRedaxo\ConsentManager\Api\InlineLog;
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
+use FriendsOfRedaxo\ConsentManager\Cronjob\LogDelete;
 use FriendsOfRedaxo\ConsentManager\Frontend;
 use FriendsOfRedaxo\ConsentManager\GoogleConsentMode;
 use FriendsOfRedaxo\ConsentManager\OEmbedParser;
@@ -176,5 +177,5 @@ if (rex_addon::get('media_manager')->isAvailable()) {
 }
 
 if (rex_addon::get('cronjob')->isAvailable() && !rex::isSafeMode()) {
-    rex_cronjob_manager::registerType(rex_cronjob_log_delete::class);
+    rex_cronjob_manager::registerType(LogDelete::class);
 }
