@@ -23,10 +23,12 @@
   * Datei und Klassenname von `rex_consent_manager_thumbnail_mediamanager` geändert in `...\ThumbnailMediaManager`
   * Datei und Klassenname von `rex_consent_manager_command_log_delete` geändert in `...\Command\LogDelete`
   * Datei und Klassenname von `rex_cronjob_log_delete` geändert in `...\Cronjob\LogDelete`.  
-    (Unterverzeichnis `l ib/Cronjob` für dieCronjob-Klassen eingerichtet)
+    (Unterverzeichnis `lib/Cronjob` für die Cronjob-Klassen eingerichtet)
+  * Datei und Klassenname von `rex_cronjob_consent_manager_thumbnail_cleanup` geändert in `...\Cronjob\ThumbnailCleanup`
 * **consent_manager_google_consent_helper:** Datei und Klasse entfernt; nicht mehr in Benutzung 
 * **Command log-delete:** aktiviert und verfügbar (in package.yml registriert)
 * **Cronjob LogDelete (ex. rex_cronjob_log_delete):** vorhandene Cronjobs werden automatisch auf den neuen Namen inkl. Namespace geändert.
+* **Cronjob ThumbnailCleanup:** Ab dieser Version aktiviert und verfügbar.
 
 ## Version 4.5.0 - 14.10.2025
 

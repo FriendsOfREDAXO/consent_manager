@@ -5,6 +5,7 @@ use FriendsOfRedaxo\ConsentManager\Api\InlineLog;
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\Cronjob\LogDelete;
+use FriendsOfRedaxo\ConsentManager\Cronjob\ThumbnailCleanup;
 use FriendsOfRedaxo\ConsentManager\Frontend;
 use FriendsOfRedaxo\ConsentManager\GoogleConsentMode;
 use FriendsOfRedaxo\ConsentManager\OEmbedParser;
@@ -176,6 +177,8 @@ if (rex_addon::get('media_manager')->isAvailable()) {
     rex_media_manager::addEffect(rex_effect_external_thumbnail::class);
 }
 
+// Cronjobs registrieren
 if (rex_addon::get('cronjob')->isAvailable() && !rex::isSafeMode()) {
     rex_cronjob_manager::registerType(LogDelete::class);
+    rex_cronjob_manager::registerType(ThumbnailCleanup::class);
 }

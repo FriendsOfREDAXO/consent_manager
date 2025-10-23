@@ -1,11 +1,15 @@
 <?php
 
+namespace FriendsOfRedaxo\ConsentManager\Cronjob;
+
+use Exception;
 use FriendsOfRedaxo\ConsentManager\ThumbnailCache;
+use rex_cronjob;
 
 /**
  * Cronjob für Consent Manager Thumbnail Cache Bereinigung.
  */
-class rex_cronjob_consent_manager_thumbnail_cleanup extends rex_cronjob
+class ThumbnailCleanup extends rex_cronjob
 {
     public function execute()
     {
