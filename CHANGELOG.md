@@ -6,6 +6,8 @@
 
   Für eine Übergangszeit und um die Umstellung eigenen PHP-Codes auf Namespace-Klassen zu erleichtern,
   stehen die alten Klassennamen weiterhin zur Verfügung, tragen jedoch einen deprecated-Vermerk.
+
+  In der Liste der geänderten Funktionen steht `...` als Abkürzung für `FriendsOfRedaxo\ConsentManager`
   * Datei und Klassennamne von `rex_api_consent_manager_inline_log` geändert in `...\Api\InlineLog`.  
     Externer API-Name `consent_manager_inline_log` beibehalten
   * Datei und Klassenname von `rex_api_consent_manager` geändert in `...\Api\ConsentManager`.  
@@ -28,6 +30,7 @@
   * Datei und Klassenname von `rex_cronjob_log_delete` geändert in `...\Cronjob\LogDelete`.  
     (Unterverzeichnis `lib/Cronjob` für die Cronjob-Klassen eingerichtet)
   * Datei und Klassenname von `rex_cronjob_consent_manager_thumbnail_cleanup` geändert in `...\Cronjob\ThumbnailCleanup`
+  * Shorthand-Funktion `doConsent` aus InlineConsent.php in eine eigene Datei doConsent.php verschoben.
 * **consent_manager_google_consent_helper:** Datei und Klasse entfernt; nicht mehr in Benutzung 
 * **Command log-delete:** aktiviert und verfügbar (in package.yml registriert)
 * **Cronjob LogDelete (ex. rex_cronjob_log_delete):** vorhandene Cronjobs werden automatisch auf den neuen Namen inkl. Namespace geändert.
