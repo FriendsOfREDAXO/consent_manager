@@ -66,6 +66,31 @@ if ('delete' === $func) {
     $select->addOption($addon->i18n('consent_manager_domain_inline_only_mode_enabled'), '1');
     $field->setNotice($addon->i18n('consent_manager_domain_inline_only_mode_notice'));
 
+    // oEmbed / CKE5 Video Configuration - nur anzeigen wenn CKE5 verfügbar ist
+    if (rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {
+        $field = $form->addSelectField('oembed_enabled');
+        $field->setLabel('🎬 CKE5 oEmbed Integration');
+        $select = $field->getSelect();
+        $select->addOption('Aktiviert (automatische Umwandlung)', '1');
+        $select->addOption('Deaktiviert (keine automatische Umwandlung)', '0');
+        $field->setNotice('Legt fest, ob CKE5 oEmbed-Tags (YouTube, Vimeo) automatisch in Consent-Blocker umgewandelt werden.');
+
+        $field = $form->addTextField('oembed_video_width');
+        $field->setLabel('📐 oEmbed Video-Breite (px)');
+        $field->setNotice('Standard-Breite für CKE5 oEmbed-Videos (Default: 640)');
+
+        $field = $form->addTextField('oembed_video_height');
+        $field->setLabel('📏 oEmbed Video-Höhe (px)');
+        $field->setNotice('Standard-Höhe für CKE5 oEmbed-Videos (Default: 360)');
+
+        $field = $form->addSelectField('oembed_show_allow_all');
+        $field->setLabel('🔘 oEmbed Drei-Button-Variante');
+        $select = $field->getSelect();
+        $select->addOption('Zwei Buttons (Einmal laden, Alle Einstellungen)', '0');
+        $select->addOption('Drei Buttons (Einmal laden, Alle zulassen, Alle Einstellungen)', '1');
+        $field->setNotice('Drei-Button-Variante zeigt zusätzlich "Alle zulassen" Button zum sofortigen Freischalten aller Services einer Gruppe.');
+    }
+
     $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
     $content = $form->get();
 
@@ -78,7 +103,10 @@ if ('delete' === $func) {
 echo $msg;
 if ($showlist) {
     $listDebug = false;
-    $sql = 'SELECT id, uid, google_consent_mode_enabled, google_consent_mode_debug, inline_only_mode FROM ' . $table . ' ORDER BY uid ASC';
+    
+    // oembed_enabled nur laden wenn CKE5 verfügbar ist
+    $oembedColumn = (rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) ? ', oembed_enabled' : '';
+    $sql = 'SELECT id, uid, google_consent_mode_enabled, google_consent_mode_debug, inline_only_mode' . $oembedColumn . ' FROM ' . $table . ' ORDER BY uid ASC';
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
@@ -124,6 +152,18 @@ if ($showlist) {
         }
         return '<span class="label label-default"><i class="fa fa-window-maximize" style="margin-right: 5px;"></i>' . $addon->i18n('consent_manager_domain_inline_only_mode_disabled') . '</span>';
     });
+
+    // oEmbed Status Spalte - nur anzeigen wenn CKE5 verfügbar ist
+    if (rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {
+        $list->setColumnLabel('oembed_enabled', '🎬 oEmbed');
+        $list->setColumnFormat('oembed_enabled', 'custom', function ($params) {
+            $value = (int) ($params['value'] ?? 1); // Default: aktiviert
+            if ($value === 1) {
+                return '<span class="label label-success">✅ Aktiv</span>';
+            }
+            return '<span class="label label-default">🚫 Deaktiviert</span>';
+        });
+    }
 
     $tdIcon = '<i class="fa fa-coffee"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
