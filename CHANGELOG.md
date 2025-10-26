@@ -45,7 +45,7 @@
 
 ### 📁 Neue Dateien
 
-* `Namespace-Guide.md`: inweise zur Umstellung eigenen Codes auf Namespace-Klassen
+* `Namespace-Guide.md`: Hinweise zur Umstellung eigenen Codes auf Namespace-Klassen
 * `lib/deprecated`: Verzeichnis mit Hilfsklassen (alter Klassenname) für die reibungslose Umstellung auf Namespace-Klassen
 
 
