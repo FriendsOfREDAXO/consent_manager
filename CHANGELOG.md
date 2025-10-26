@@ -24,7 +24,7 @@
   * Datei und Klassenname von `consent_manager_config` geändert in `...\Config`
   * Datei und Klassenname von `consent_manager_cache` geändert in `...\Cache`
   * Datei und Klassenname von `consent_manager_frontend` geändert in `...\Frontend`
-  * Datei und Klassenname von `consent_manager_rex_form` eändert in `...\RexFormSupport`
+  * Datei und Klassenname von `consent_manager_rex_form` geändert in `...\RexFormSupport`
   * Datei und Klassenname von `consent_manager_rex_list` geändert in `...\RexListSupport`
   * Datei und Klassenname von `consent_manager_util` geändert in `...\Utility`
   * Datei und Klassenname von `consent_manager_google_consent_mode` geändert in `...\GoogleConsentMode`
