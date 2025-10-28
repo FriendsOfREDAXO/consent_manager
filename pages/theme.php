@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
+use FriendsOfRedaxo\ConsentManager\Theme;
 use FriendsOfRedaxo\ConsentManager\Utility;
 
 $addon = rex_addon::get('consent_manager');
@@ -16,7 +17,7 @@ if ('' !== $preview) {
     $backgrounds = (array) glob($addon->getAssetsPath('*.jpg'));
     $backgroundimage = basename((string) $backgrounds[array_rand($backgrounds)]);
 
-    $cmtheme = new static($preview);
+    $cmtheme = new Theme($preview);
     $theme_options = $cmtheme->getThemeInformation();
     if (count($theme_options) > 0) {
         $cmstyle = $cmtheme->getCompiledStyle();
@@ -197,15 +198,15 @@ if ('1' === rex_post('formsubmit', 'string')) {
 if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
     echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
 } elseif ('1' === rex_post('formsubmit', 'string')) {
-    $cmtheme = new static();
+    $cmtheme = new Theme();
     $theme_options = $cmtheme->getThemeInformation($theme);
     if (0 === count($theme_options)) {
         echo rex_view::error($addon->i18n('config_invalid_theme'));
     } else {
         $addon->setConfig('theme', $theme);
         echo rex_view::success($addon->i18n('config_saved'));
-        static::generateThemeAssets($theme);
-        static::copyAllAssets();
+        Theme::generateThemeAssets($theme);
+        Theme::copyAllAssets();
     }
 }
 
@@ -218,7 +219,7 @@ natsort($themes);
 if (count($themes) > 0) {
     echo '<h2>' . $addon->i18n('themes_addon') . '</h2>';
     echo '<p>' . $addon->i18n('themes_addon_info') . '</p>';
-    $cmtheme = new static();
+    $cmtheme = new Theme();
     foreach ($themes as $themefile) {
         $output = '';
         $content = '';
@@ -315,7 +316,7 @@ if (true === rex_addon::exists('project')) {
     if (count($themes) > 0) {
         echo '<h2>' . $addon->i18n('themes_project_addon') . '</h2>';
         echo '<p>' . $addon->i18n('themes_project_addon_info') . '</p>';
-        $cmtheme = new static();
+        $cmtheme = new Theme();
         foreach ($themes as $themefile) {
             $output = '';
             $content = '';
