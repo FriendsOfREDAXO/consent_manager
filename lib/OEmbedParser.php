@@ -19,6 +19,7 @@ use rex_addon;
 use rex_clang;
 use rex_extension;
 use rex_extension_point;
+use rex_request;
 use rex_sql;
 use rex_sql_exception;
 
@@ -58,8 +59,8 @@ class OEmbedParser
     public static function parse(string $content, ?string $domain = null): string
     {
         // Domain ermitteln falls nicht übergeben
-        if ($domain === null && isset($_SERVER['HTTP_HOST'])) {
-            $domain = $_SERVER['HTTP_HOST'];
+        if ($domain === null) {
+            $domain = rex_request::server('HTTP_HOST','string',$domain);
         }
         
         // Domain-Config laden

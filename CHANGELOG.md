@@ -41,7 +41,8 @@
 * **consent_manager_google_consent_helper:** Datei und Klasse entfernt; nicht mehr in Benutzung 
 * **Cronjob LogDelete (ex. rex_cronjob_log_delete):** vorhandene Cronjobs in Tabelle `rex_cronjob`  werden automatisch auf den neuen Namen inkl. Namespace geändert.
 * **Namespace-Guide.md:** Hinweise zur Umstellung eigenen Codes auf Namespace-Klassen
-* **`lib/deprecated`**: Verzeichnis mit Hilfsklassen (alter Klassenname) für die reibungslose Umstellung auf Namespace-Klassen
+* **`lib/deprecated`:** Verzeichnis mit Hilfsklassen (alter Klassenname) für die reibungslose Umstellung auf Namespace-Klassen
+* **Globale Variablen:** Direkten Zugriff durch `rex_request::...` ersetzt
 
 ### 📁 Neue Dateien
 

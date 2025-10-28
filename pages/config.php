@@ -135,8 +135,9 @@ if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_
         }
         if ('import_json' === $func) {
             // JSON Import verarbeiten
-            if (isset($_FILES['import_file']) && UPLOAD_ERR_OK === $_FILES['import_file']['error']) {
-                $import_content = file_get_contents($_FILES['import_file']['tmp_name']);
+            $importFile = rex_request::files('import_file', 'array', []);
+            if (0 < count($importFile) && UPLOAD_ERR_OK === $importFile['error']) {
+                $import_content = file_get_contents($importFiles['tmp_name']);
                 $import_data = json_decode($import_content, true);
 
                 if (JSON_ERROR_NONE === json_last_error() && is_array($import_data)) {
