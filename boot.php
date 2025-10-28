@@ -171,6 +171,17 @@ if (rex::isFrontend() && rex_addon::exists('cke5') && rex_addon::get('cke5')->is
     OEmbedParser::register();
 }
 
+// CKE5 oEmbed Parser automatisch im Frontend registrieren - nur wenn CKE5 verfügbar ist
+if (rex::isFrontend() && rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {
+    // oEmbed Parser Klasse laden
+    if (!class_exists('consent_manager_oembed_parser')) {
+        require_once __DIR__ . '/lib/consent_manager_oembed_parser.php';
+    }
+    
+    // Automatisch registrieren für alle Domains
+    consent_manager_oembed_parser::register();
+}
+
 // Mediamanager Effect für externe Thumbnails registrieren
 if (rex_addon::get('media_manager')->isAvailable()) {
     // Effect direkt registrieren
