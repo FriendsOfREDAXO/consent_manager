@@ -179,7 +179,7 @@ if (rex::isFrontend() && rex_addon::exists('cke5') && rex_addon::get('cke5')->is
     }
     
     // Automatisch registrieren für alle Domains
-    consent_manager_oembed_parser::register();
+    OEmbedParser::register();
 }
 
 // Mediamanager Effect für externe Thumbnails registrieren

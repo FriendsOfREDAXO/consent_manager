@@ -46,7 +46,7 @@ if ('delete' === $func) {
     $field = $form->addTextAreaField('definition');
     $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
     $field->setLabel($addon->i18n('consent_manager_cookie_definition'));
-    $field->getValidator()->add('custom', $addon->i18n('consent_manager_cookie_malformed_yaml'), 'RexFormSupport::validateYaml');
+    $field->getValidator()->add('custom', $addon->i18n('consent_manager_cookie_malformed_yaml'), RexFormSupport::validateYaml(...));
 
     $field = $form->addTextField('provider');
     $field->setLabel($addon->i18n('consent_manager_cookie_provider'));

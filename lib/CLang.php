@@ -7,10 +7,14 @@ use rex_be_controller;
 use rex_be_page;
 use rex_clang;
 use rex_extension_point;
+use rex_form;
 use rex_i18n;
 use rex_path;
 use rex_sql;
 use rex_view;
+
+use function count;
+use function in_array;
 
 class CLang
 {
@@ -226,7 +230,7 @@ class CLang
         foreach (Config::getTables(true) as $table) {
             $firstLang = rex_sql::factory();
             $firstLang->setTable($table);
-            $firstLang->setWhere('clang_id='.rex_clang::getStartId());
+            $firstLang->setWhere('clang_id=' . rex_clang::getStartId());
             $firstLang->select();
             $fields = $firstLang->getFieldnames();
 
