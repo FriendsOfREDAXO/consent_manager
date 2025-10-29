@@ -1,7 +1,6 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\Api\ConsentManager;
-use FriendsOfRedaxo\ConsentManager\Api\InlineLog;
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\Cronjob\LogDelete;
@@ -156,11 +155,6 @@ if (rex::isFrontend()) {
             }
         }
     });
-}
-
-// Inline Consent Classes laden
-if (rex::isFrontend() || rex::isBackend()) {
-    rex_api_function::register('consent_manager_inline_log', InlineLog::class);
 }
 
 rex_api_function::register('consent_manager', ConsentManager::class);
