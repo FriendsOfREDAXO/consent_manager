@@ -21,7 +21,6 @@ Mit Version 5.0.0 des Consent Managers wurden alle Klassen und Funktionen in den
 | consent_manager_thumbnail_cache               | FriendsOfRedaxo\ConsentManager         | ThumbnailCache        |
 | consent_manager_util                          | FriendsOfRedaxo\ConsentManager         | Utility               |
 | consent_manager_google_consent_mode           | FriendsOfRedaxo\ConsentManager         | GoogleConsentMode     |
-| rex_api_consent_manager_inline_log            | FriendsOfRedaxo\ConsentManager\Api     | InlineLog             |
 | rex_api_consent_manager                       | FriendsOfRedaxo\ConsentManager\Api     | ConsentManager        |
 | rex_consent_manager_command_log_delete        | FriendsOfRedaxo\ConsentManager\Command | LogDelete             |
 | rex_consent_manager_thumbnail_mediamanager    | FriendsOfRedaxo\ConsentManager         | ThumbnailMediaManager |
