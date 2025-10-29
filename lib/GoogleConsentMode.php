@@ -213,7 +213,8 @@ class GoogleConsentMode
         $sql->setValue('google_consent_mode_enabled', $mode);
 
         try {
-            return $sql->update() > 0;
+            $sql->update();
+            return true;
         } catch (Exception $e) {
             return false;
         }
