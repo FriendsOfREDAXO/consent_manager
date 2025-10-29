@@ -7,12 +7,6 @@ use FriendsOfRedaxo\ConsentManager\Theme;
 
 $addon = rex_addon::get('consent_manager');
 
-/** REVIEW: Der Code ist m.E. überflüssig. Die Klassen SIND verfügbar */
-// Ensure JSON setup class is loaded
-if (!class_exists(JsonSetup::class)) {
-    require_once __DIR__ . '/../lib/JsonSetup.php';
-}
-
 $func = rex_request('func', 'string');
 
 // Import/Export Functionality

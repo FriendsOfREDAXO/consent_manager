@@ -265,9 +265,9 @@ class OEmbedParser
      */
     private static function generateVidstackEmbed(string $url, array $options): string
     {
-        // Prüfe ob Vidstack verfügbar ist (neue Version 1.7.2+)
-        if (!class_exists(Video::class)) {
-            return '<!-- Vidstack Player nicht verfügbar -->';
+        // Prüfe ob Vidstack Addon verfügbar ist
+        if (!rex_addon::exists('vidstack') || !rex_addon::get('vidstack')->isAvailable()) {
+            return '<!-- Vidstack Addon nicht verfügbar -->';
         }
         
         try {
