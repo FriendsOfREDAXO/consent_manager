@@ -8,17 +8,18 @@
 
 use FriendsOfRedaxo\ConsentManager\InlineConsent;
 
-use function FriendsOfRedaxo\ConsentManager\doConsent;
-
 // Werte aus dem Eingabeformular
 $serviceKey = trim('REX_VALUE[1]');
 $embedCode = trim('REX_VALUE[2]');
-$contentTitle = 'REX_VALUE[3]' ?: 'External Content';
-$buttonText = 'REX_VALUE[4]' ?: 'Content laden';
-$privacyNotice = 'REX_VALUE[5]' ?: 'Für diesen Inhalt werden Cookies benötigt.';
+$contentTitle = trim('REX_VALUE[3]');
+$contentTitle = '' !== $contentTitle ? $contentTitle : 'External Content';
+$buttonText = trim('REX_VALUE[4]');
+$buttonText = '' !== $buttonText ? $buttonText : 'Content laden';
+$privacyNotice = trim('REX_VALUE[5]');
+$privacyNotice = '' !== $privacyNotice ? $privacyNotice : 'Für diesen Inhalt werden Cookies benötigt.';
 
 // Nur ausgeben wenn Service-Key und Code vorhanden
-if (!empty($serviceKey) && !empty($embedCode)) {
+if ('' < $serviceKey && '' < $embedCode) {
     
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
     if (class_exists(InlineConsent::class)) {
@@ -27,7 +28,7 @@ if (!empty($serviceKey) && !empty($embedCode)) {
     }
     
     // Inline-Consent für Custom Content generieren
-    echo doConsent($serviceKey, $embedCode, [
+    echo InlineConsent::doConsent($serviceKey, $embedCode, [
         'title' => $contentTitle,
         'placeholder_text' => $buttonText,
         'privacy_notice' => $privacyNotice
@@ -40,9 +41,9 @@ if (!empty($serviceKey) && !empty($embedCode)) {
         echo '<i class="fa fa-code"></i> ';
         echo '<strong>Custom Inline-Consent:</strong> ';
         
-        if (empty($serviceKey)) {
+        if ('' === $serviceKey) {
             echo 'Bitte Service-Schlüssel eingeben.';
-        } elseif (empty($embedCode)) {
+        } elseif ('' === $embedCode) {
             echo 'Bitte Embed-Code eingeben.';
         }
         

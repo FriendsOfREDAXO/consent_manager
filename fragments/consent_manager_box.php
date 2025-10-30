@@ -89,7 +89,7 @@ if (null !== $consent_manager->cookiegroups): ?>
                                                 echo '<span class="consent_manager-cookie-description">' . $consent_manager->texts['lifetime'] . ' ' . $def['cookie_lifetime'] . '</span>';
                                                 echo '<span class="consent_manager-cookie-provider">' . $consent_manager->texts['provider'] . ' ' . $cookie['provider'] . '</span>';
 
-                                                if(!in_array($cookProvider, $expressionsAry)) {
+                                                if(!in_array($cookProvider, $expressionsAry, true)) {
                                                 	$linkTarget = 'target="_blank"';
 													$linkRel	= 'rel="noopener noreferrer nofollow"';
                                                 }

@@ -11,6 +11,7 @@
  * - content: Original-Content der geladen werden soll
  */
 
+/** @var rex_fragment $this  */
 // Variablen aus Fragment abrufen
 $serviceKey = $this->getVar('serviceKey', '');
 $consentId = $this->getVar('consentId', ''); 
@@ -27,7 +28,7 @@ $inline_placeholder_text = $this->getVar('inline_placeholder_text', 'Einmal lade
 $inline_privacy_link_text = $this->getVar('inline_privacy_link_text', 'Datenschutzerklärung von');
 $button_inline_details_text = $this->getVar('button_inline_details_text', 'Einstellungen');
 $button_inline_allow_all_text = $this->getVar('button_inline_allow_all_text', 'Alle erlauben');
-$show_allow_all = $this->getVar('show_allow_all', false);
+$show_allow_all = $this->getVar('show_allow_all', false) !== false;
 
 if (rex::isDebugMode()) {
     echo "<!-- DEBUG Fragment Variables: -->\n";
@@ -38,7 +39,7 @@ if (rex::isDebugMode()) {
 
 
 $thumbnailHtml = '';
-if (!empty($placeholderData['thumbnail'])) {
+if (isset($placeholderData['thumbnail']) && '' !== $placeholderData['thumbnail']) {
     $thumbnailHtml = '<img src="' . rex_escape($placeholderData['thumbnail']) . '" 
                            alt="' . rex_escape($options['title'] ?? 'Video') . '" 
                            class="consent-inline-thumbnail" 
@@ -74,7 +75,7 @@ if (!empty($placeholderData['thumbnail'])) {
                     <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? $inline_privacy_notice) ?></p>
                     <p class="consent-inline-action-text"><?= rex_escape($inline_action_text) ?></p>
                     
-                    <?php if (!empty($service['provider_link_privacy'])): ?>
+                    <?php if (isset($service['provider_link_privacy']) && '' !== $service['provider_link_privacy']): ?>
                     <div class="consent-inline-privacy-link">
                         <a href="<?= rex_escape($service['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer">
                             <?php 

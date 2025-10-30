@@ -20,7 +20,8 @@ class ThumbnailMediaManager
 {
     /**
      * Generiert Thumbnail-URL über Mediamanager.
-     *
+     * 
+     * @api
      * @param string $service Service-Name (youtube, vimeo)
      * @param string $videoId Video-ID
      * @param array $options Zusätzliche Optionen
@@ -50,6 +51,8 @@ class ThumbnailMediaManager
 
     /**
      * Prüft ob Thumbnail bereits gecacht ist.
+     * 
+     * @api
      */
     public static function isThumbnailCached(string $service, string $videoId): bool
     {
@@ -69,6 +72,8 @@ class ThumbnailMediaManager
 
     /**
      * Cache-Größe ermitteln.
+     * 
+     * @api
      */
     public static function getCacheSize(): array
     {
@@ -97,6 +102,8 @@ class ThumbnailMediaManager
 
     /**
      * Cache bereinigen.
+     * 
+     * @api
      */
     public static function clearCache(?string $service = null): int
     {
@@ -118,6 +125,8 @@ class ThumbnailMediaManager
 
     /**
      * Service aus URL erkennen.
+     * 
+     * @api
      */
     public static function detectServiceFromUrl(string $url): ?array
     {
@@ -142,6 +151,8 @@ class ThumbnailMediaManager
 
     /**
      * Thumbnail für Platzhalter generieren.
+     * 
+     * @api
      */
     public static function generatePlaceholderThumbnail(string $service, string $videoId, array $options = []): string
     {
@@ -157,7 +168,8 @@ class ThumbnailMediaManager
 
     /**
      * Thumbnail-URL direkt aus Video-URL generieren.
-     *
+     * 
+     * @api
      * @param string $videoUrl YouTube oder Vimeo URL
      * @param array $options Zusätzliche Optionen
      * @return string|null Thumbnail-URL oder null bei ungültiger URL

@@ -25,7 +25,8 @@ class JsonSetup
 {
     /**
      * Import JSON setup configuration.
-     *
+     * 
+     * @api
      * @param string $jsonFile Path to JSON setup file
      * @param bool $clearExisting Clear existing data before import
      * @param string $mode Import mode: 'replace' (default), 'update' (only add new)
@@ -96,6 +97,8 @@ class JsonSetup
 
     /**
      * Export current configuration as JSON.
+     * 
+     * @api
      */
     public static function exportSetup(bool $includeMetadata = true): array
     {
@@ -154,6 +157,8 @@ class JsonSetup
 
     /**
      * Get available setup templates.
+     * 
+     * @api
      */
     public static function getAvailableSetups(): array
     {

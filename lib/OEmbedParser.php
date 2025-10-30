@@ -30,6 +30,7 @@ class OEmbedParser
     /**
      * Register oEmbed parser as OUTPUT_FILTER extension.
      * 
+     * @api
      * @param string|null $domain Optional: Nur für spezifische Domain registrieren
      */
     public static function register(?string $domain = null): void
@@ -52,6 +53,7 @@ class OEmbedParser
     /**
      * Parse oEmbed tags and replace with Consent Manager Inline Blocker.
      * 
+     * @api
      * @param string $content HTML content
      * @param string|null $domain Domain für Player-Konfiguration
      * @return string Processed content
@@ -83,6 +85,7 @@ class OEmbedParser
     /**
      * Process single oEmbed URL.
      * 
+     * @api
      * @param string $url Video URL (YouTube, Vimeo)
      * @param string|null $domain Domain für Konfiguration
      * @return string HTML output (Inline Blocker)
@@ -130,6 +133,7 @@ class OEmbedParser
     /**
      * Plattform aus URL erkennen.
      * 
+     * @api
      * @param string $url Video URL
      * @return array|null ['service' => string, 'id' => string, 'platform' => string]
      */
@@ -161,6 +165,7 @@ class OEmbedParser
     /**
      * Service-Existenz prüfen.
      * 
+     * @api
      * @param string $serviceKey Service UID
      * @return bool
      */
@@ -183,6 +188,7 @@ class OEmbedParser
     /**
      * Domain-spezifische Konfiguration laden.
      * 
+     * @api
      * @param string $domain Domain-Name
      * @return array Konfiguration
      */
@@ -233,6 +239,7 @@ class OEmbedParser
     /**
      * Domain-spezifische Konfiguration setzen.
      * 
+     * @api
      * @param string $domain Domain-Name
      * @param array $config Konfiguration
      */
@@ -259,15 +266,16 @@ class OEmbedParser
     /**
      * Vidstack-Player Embed generieren (wenn Vidstack verfügbar und gewünscht).
      * 
+     * @api
      * @param string $url Video URL
      * @param array $options Player-Optionen
      * @return string HTML
      */
     private static function generateVidstackEmbed(string $url, array $options): string
     {
-        // Prüfe ob Vidstack Addon verfügbar ist
+                // Prüfe ob Vidstack Addon verfügbar ist
         if (!rex_addon::exists('vidstack') || !rex_addon::get('vidstack')->isAvailable()) {
-            return '<!-- Vidstack Addon nicht verfügbar -->';
+            return '<!-- Vidstack Player nicht verfügbar -->';
         }
         
         try {
@@ -303,6 +311,7 @@ class OEmbedParser
     /**
      * Native Inline-Blocker Embed generieren.
      * 
+     * @api
      * @param string $serviceKey Service UID
      * @param string $url Video URL
      * @param array $options Optionen

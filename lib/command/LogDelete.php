@@ -22,15 +22,22 @@ class LogDelete extends rex_console_command
         $io = $this->getStyle($input, $output);
         $io->title('consent_manager log_delete');
 
-        /** TODO: auf Einzelfunktionen ändern */
-        rex_sql::factory()->setQuery('DELETE FROM ' . rex::getTable('consent_manager_consent_log') . ' WHERE createdate < DATE_SUB(NOW(), INTERVAL 2 DAYS)');
-        $noDeleted = rex_sql::factory()->getRows();
+        /**
+         * alt und von Rexstan moniert (SQL-Syntax-Error near "'DAYS)' at line 1" ): 
+         *  rex_sql::factory()->setQuery('DELETE FROM ' . rex::getTable('consent_manager_consent_log') . ' WHERE createdate < DATE_SUB(NOW(), INTERVAL 2 DAYS)');
+         *  $noDeleted = rex_sql::factory()->getRows();
+         */
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('consent_manager_consent_log'));
+        $sql->setWhere('createdate < DATE_SUB(NOW(), INTERVAL 2 DAYS)');
+        $sql->delete();
+        $noDeleted = $sql->getRows();
 
         if ($noDeleted > 0) {
-            echo $io->success(rex_i18n::rawMsg('consent_manager_cronjob_deleted', $noDeleted));
+            $io->success(rex_i18n::rawMsg('consent_manager_cronjob_deleted', $noDeleted));
             return 0;
         }
-        echo $io->error(rex_i18n::rawMsg('consent_manager_cronjob_delete_error'));
+        $io->error(rex_i18n::rawMsg('consent_manager_cronjob_delete_error'));
 
         return 1;
     }

@@ -9,13 +9,16 @@
 use FriendsOfRedaxo\ConsentManager\InlineConsent;
 
 // Werte aus dem Eingabeformular
-$videoId = 'REX_VALUE[1]';
-$videoTitle = 'REX_VALUE[2]' ?: 'YouTube Video';
-$videoWidth = (int) 'REX_VALUE[3]' ?: 560;
-$videoHeight = (int) 'REX_VALUE[4]' ?: 315;
+$videoId = trim('REX_VALUE[1]');
+$videoTitle = trim('REX_VALUE[2]');
+$videoTitle = '' !== $videoTitle ? $videoTitle : 'YouTube Video';
+$videoWidth = trim('REX_VALUE[3]');
+$videoWidth = '' !== $videoWidth ? (int) $videoWidth : 560;
+$videoHeight = trim('REX_VALUE[4]');
+$videoHeight = '' !== $videoHeight ? (int) $videoHeight : 315;
 
 // Nur ausgeben wenn Video-ID vorhanden
-if (!empty($videoId)) {
+if ('' < $videoId) {
     
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
     if (class_exists(InlineConsent::class)) {

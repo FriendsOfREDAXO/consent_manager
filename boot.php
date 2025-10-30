@@ -72,11 +72,11 @@ if (rex::isBackend()) {
         if (rex_backend_login::hasSession() && null !== rex::getUser()) {
             $sql = 'SELECT COUNT(*) as debug_count FROM ' . rex::getTable('consent_manager_domain') . ' WHERE google_consent_mode_debug = 1';
             $result = rex_sql::factory()->getArray($sql);
-            $debug_count = (int) $result[0]['debug_count'];
+            $debug_count = $result[0]['debug_count'];
 
             if ($debug_count > 0) {
                 $page = rex_be_controller::getPageObject('consent_manager');
-                if ($page) {
+                if (null !== $page) {
                     $title = $page->getTitle();
                     $page->setTitle($title . ' <i class="fa fa-bug" style="color: #f0ad4e; margin-left: 8px;" title="Debug-Modus aktiv"></i>');
                 }

@@ -23,6 +23,10 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         ],
     ];
 
+    /**
+     * @api
+     * @return void 
+     */
     public function execute()
     {
         try {
@@ -210,7 +214,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             CURLOPT_TIMEOUT => 30,
             CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_SSL_VERIFYHOST => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_HTTPHEADER => [
                 'Accept: image/webp,image/apng,image/*,*/*;q=0.8',
                 'Accept-Language: de-DE,de;q=0.9,en;q=0.8',
@@ -267,23 +271,25 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         try {
             $data = file_get_contents($url, false, $context);
 
-            if (isset($http_response_header)) {
-                $responseCode = null;
-                foreach ($http_response_header as $header) {
-                    if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
-                        $responseCode = (int) $matches[1];
-                        break;
-                    }
+            /**
+             * @var array<int, string> $http_response_header materializes out of thin air
+             */
+            
+            $responseCode = null;
+            foreach ($http_response_header as $header) {
+                if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
+                    $responseCode = (int) $matches[1];
+                    break;
                 }
+            }
 
-                if ($responseCode && 200 !== $responseCode) {
-                    rex_logger::factory()->error('External thumbnail HTTP error', [
-                        'url' => $url,
-                        'response_code' => $responseCode,
-                        'headers' => $http_response_header,
-                    ]);
-                    return null;
-                }
+            if ($responseCode && 200 !== $responseCode) {
+                rex_logger::factory()->error('External thumbnail HTTP error', [
+                    'url' => $url,
+                    'response_code' => $responseCode,
+                    'headers' => $http_response_header,
+                ]);
+                return null;
             }
 
             return false !== $data && !empty($data) ? $data : null;
@@ -293,11 +299,18 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         }
     }
 
+    /**
+     * @api
+     * @return string 
+     */
     public function getName()
     {
         return 'External Thumbnail';
     }
 
+    /**
+     * @api
+     */
     public function getParams()
     {
         return [
@@ -313,6 +326,8 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * Video-ID aus URL extrahieren.
+     * 
+     * @api
      */
     public static function extractVideoId(string $url, string $service): ?string
     {
@@ -322,8 +337,8 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
         $pattern = self::SERVICES[$service]['pattern'];
 
-        if (preg_match($pattern, $url, $matches)) {
-            return $matches[1] ?? null;
+        if (1 === preg_match($pattern, $url, $matches)) {
+            return $matches[1];
         }
 
         return null;
@@ -331,6 +346,8 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * Service aus URL bestimmen.
+     * 
+     * @api
      */
     public static function detectService(string $url): ?string
     {

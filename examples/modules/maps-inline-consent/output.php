@@ -10,11 +10,13 @@ use FriendsOfRedaxo\ConsentManager\InlineConsent;
 
 // Werte aus dem Eingabeformular
 $embedUrl = trim('REX_VALUE[1]');
-$mapsTitle = 'REX_VALUE[2]' ?: 'Google Maps';
-$mapsHeight = (int) 'REX_VALUE[3]' ?: 450;
+$mapsTitle = trim('REX_VALUE[2]');
+$mapsTitle = '' !== $mapsTitle ? $mapsTitle : 'Google Maps';
+$mapsHeight = trim('REX_VALUE[3]');
+$mapsHeight = '' === $mapsHeight ? (int) $mapsHeight : 450;
 
 // Nur ausgeben wenn Embed-URL vorhanden
-if (!empty($embedUrl)) {
+if ('' < $embedUrl) {
     
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
     if (class_exists(InlineConsent::class)) {

@@ -19,6 +19,8 @@ class GoogleConsentMode
     /**
      * Standard Google Consent Mode v2 Flags mit GDPR-konformen Defaults
      * ALLE Services standardmäßig verweigert - erst nach expliziter Zustimmung gewährt.
+     * 
+     * @api
      */
     public static $defaultConsentFlags = [
         'ad_storage' => 'denied',
@@ -32,6 +34,8 @@ class GoogleConsentMode
 
     /**
      * Service zu Consent-Flag Mappings.
+     * 
+     * @api
      */
     public static $serviceMappings = [
         'google-analytics' => ['analytics_storage'],
@@ -50,6 +54,7 @@ class GoogleConsentMode
     /**
      * Holt die Google Consent Mode Konfiguration für eine Domain.
      *
+     * @api
      * @param string $domain Die Domain
      * @return array konfiguration mit enabled, auto_mapping, default_state etc
      */
@@ -82,7 +87,8 @@ class GoogleConsentMode
 
     /**
      * Holt Cookie-zu-Consent Mappings für eine Sprache.
-     *
+     * 
+     * @api
      * @param int $clangId Die Sprach-ID
      * @return array Array mit Service-UIDs und deren Consent-Flags
      */
@@ -115,7 +121,8 @@ class GoogleConsentMode
 
     /**
      * Generiert das JavaScript für Google Consent Mode v2.
-     *
+     * 
+     * @api
      * @param string $domain Die Domain
      * @param int $clangId Die Sprach-ID
      * @return string Das generierte JavaScript
@@ -183,7 +190,8 @@ class GoogleConsentMode
 
     /**
      * Prüft ob Google Consent Mode für eine Domain aktiviert ist.
-     *
+     * 
+     * @api
      * @param string $domain Die zu prüfende Domain
      * @return bool True wenn aktiviert
      */
@@ -195,7 +203,8 @@ class GoogleConsentMode
 
     /**
      * Setzt den Google Consent Mode Status für eine Domain.
-     *
+     * 
+     * @api
      * @param string $domain Die Domain
      * @param string $mode Modus: 'disabled', 'auto', 'manual'
      * @return bool True bei Erfolg
@@ -222,7 +231,8 @@ class GoogleConsentMode
 
     /**
      * Holt alle verfügbaren Service-Mappings.
-     *
+     * 
+     * @api
      * @return array Service-Mappings
      */
     public static function getAllServiceMappings(): array
@@ -232,7 +242,8 @@ class GoogleConsentMode
 
     /**
      * Fügt ein neues Service-Mapping hinzu.
-     *
+     * 
+     * @api
      * @param string $serviceKey Service-Schlüssel
      * @param array $consentFlags Array mit Consent-Flags
      */

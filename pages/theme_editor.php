@@ -67,7 +67,11 @@ if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
     $scssContent = generateA11yThemeScss($themeBase, $themeName, $themeDescription, $colors);
 
     // Save to project addon
-    if (rex_addon::get('project')->isAvailable()) {
+    /**
+     * REXSTAN: If condition is always true.
+     * NOTE: Nein, Project ist eben nicht immer installiert.
+     */
+    if (rex_addon::get('project')->isAvailable()) { // @phpstan-ignore-line
         $projectAddon = rex_addon::get('project');
         $themesDir = $projectAddon->getPath('consent_manager_themes/');
 
