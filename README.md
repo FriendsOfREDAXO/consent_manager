@@ -92,7 +92,7 @@ www.beispiel.de
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
 // Standard-Integration (alles in einem)
-echo Frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php'); 
+echo Frontend::getFragment(0, 0, 'ConsentManager/consent_manager_box_cssjs.php'); 
 
 // Oder Komponenten einzeln laden (mehr Flexibilität):
 ?>
@@ -107,7 +107,7 @@ echo Frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
 echo Frontend::getFragment(0, 0, 'my_custom_box.php');
 
 // Mit Inline-Modus
-echo Frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cssjs.php', ['inline' => true]);
+echo Frontend::getFragmentWithVars(0, 0, 'ConsentManager/consent_manager_box_cssjs.php', ['inline' => true]);
 ?>
 ```
 
@@ -187,7 +187,7 @@ echo Frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cssjs.php', ['inli
 <body>
     <?php
     // Consent Manager Box (globales Cookie-Banner)
-    echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+    echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'ConsentManager/consent_manager_box_cssjs.php');
     
     // Hauptinhalt mit automatischer oEmbed-Umwandlung
     echo rex_article::getCurrent()->getArticle();
@@ -214,7 +214,7 @@ echo Frontend::getFragmentWithVars(0, 0, 'consent_manager_box_cssjs.php', ['inli
 |-----------|----------|--------------|
 | `forceCache` | `0` im Frontend, `1` im Backend | Cache-Steuerung: `0` = Cache verwenden, `1` = Cache neu generieren |
 | `forceReload` | `0` wenn `cache` Parameter gesetzt, sonst `1` | Reload-Steuerung der Consent-Box |
-| `fragment` | `consent_manager_box_cssjs.php` | Custom Fragment-Template-Datei |
+| `fragment` | `ConsentManager/consent_manager_box_cssjs.php` | Custom Fragment-Template-Datei |
 | `vars` (Array) | `[]` | Zusätzliche Variablen (z.B. `['inline' => true]`) |
 
 **REX_CONSENT_MANAGER Variable (alternativ):**
@@ -478,8 +478,8 @@ Enter           → Buttons aktivieren
 ### Individuelles Design
 
 **Fragment anpassen:**
-- Standard: `/redaxo/src/addons/consent_manager/fragments/consent_manager_box.php`
-- Eigenes Fragment: `/theme/private/fragments/consent_manager_box.php`
+- Standard: `/redaxo/src/addons/consent_manager/fragments/ConsentManager/consent_manager_box.php`
+- Eigenes Fragment: `/theme/private/fragments/ConsentManager/consent_manager_box.php`
 
 **CSS-Ausgabe steuern:**
 - Standardmäßig wird `consent_manager_frontend.css` ausgegeben
@@ -702,7 +702,7 @@ Content-Security-Policy: script-src 'self' 'nonce-ZUFÄLLIGER_NONCE';
 ```php
 <?php
 // Einfach aufrufen - Nonce wird automatisch verwendet!
-echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'ConsentManager/consent_manager_box_cssjs.php');
 ?>
 ```
 
@@ -713,7 +713,7 @@ echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'consent_manager
 $nonce = rex_response::getNonce();
 header("Content-Security-Policy: script-src 'self' 'nonce-{$nonce}'");
 
-echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'consent_manager_box_cssjs.php');
+echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'ConsentManager/consent_manager_box_cssjs.php');
 ?>
 ```
 

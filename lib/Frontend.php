@@ -201,7 +201,7 @@ class Frontend
         // header('Expires: ' . date('D, j M Y', strtotime('+1 week')) . ' 00:00:00 GMT');
         $boxtemplate = '';
         ob_start();
-        echo self::getFragment(0, 0, 'consent_manager_box.php');
+        echo self::getFragment(0, 0, 'ConsentManager/consent_manager_box.php');
         $boxtemplate = ob_get_contents();
         ob_end_clean();
         if ('' === $boxtemplate) {
@@ -312,7 +312,7 @@ class Frontend
         // Get box template
         $boxtemplate = '';
         ob_start();
-        echo self::getFragment(0, 0, 'consent_manager_box.php');
+        echo self::getFragment(0, 0, 'ConsentManager/consent_manager_box.php');
         $boxtemplate = ob_get_contents();
         ob_end_clean();
 
@@ -389,6 +389,6 @@ class Frontend
      */
     public static function getBox(): string
     {
-        return self::getFragment(0, 0, 'consent_manager_box.php');
+        return self::getFragment(0, 0, 'ConsentManager/consent_manager_box.php');
     }
 }

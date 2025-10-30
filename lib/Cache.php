@@ -146,7 +146,7 @@ class Cache
                 $cookie_uids = [];
                 $cookiegroup = (array) $cookiegroup;
                 if (is_string($cookiegroup['cookie'])) {
-                    foreach (array_filter(explode('|', $cookiegroup['cookie'])) as $cookieUid) {
+                    foreach (array_filter(explode('|', $cookiegroup['cookie']), strlen(...)) as $cookieUid) {
                         if (isset($this->cookies[$clangId][$cookieUid])) { /** @phpstan-ignore-line */
                             $cookie_uids[] = $cookieUid;
                         }
@@ -156,7 +156,7 @@ class Cache
                     $cookie_uids[] = 'consent_manager';
                 }
                 $this->cookiegroups[$clangId][$uid]['cookie_uids'] = array_merge(array_filter(array_unique($cookie_uids))); /** @phpstan-ignore-line */
-                $domainIds = array_filter(explode('|', $cookiegroup['domain']));
+                $domainIds = array_filter(explode('|', $cookiegroup['domain']), strlen(...)); //@phpstan-ignore-line
                 foreach ($domainIds as $domainId) {
                     if (isset($this->domains[$domainId])) {
                         $this->domains[$domainId]['cookiegroups'][] = $uid; /** @phpstan-ignore-line */
@@ -192,6 +192,7 @@ class Cache
     }
 
     /**
+     * @api
      * @return void
      */
     public static function forceWrite()
@@ -201,6 +202,7 @@ class Cache
     }
 
     /**
+     * @api
      * @return array<int, string>
      */
     public static function read()

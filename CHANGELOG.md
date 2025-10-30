@@ -43,6 +43,7 @@
 * **Namespace-Guide.md:** Hinweise zur Umstellung eigenen Codes auf Namespace-Klassen
 * **`lib/deprecated`:** Verzeichnis mit Hilfsklassen (alter Klassenname) für die reibungslose Umstellung auf Namespace-Klassen
 * **Globale Variablen:** Direkten Zugriff durch `rex_request::...` ersetzt
+* **Fragmente:** Die Fragmente sind in ein Addon-spezifisches Unterverzeichnis `fragments/ConsentManager` verschoben. Alle interen Aufrufe sind angepasst (`$fragment->parse('ConsentManager/fragment.php')). Doku angepasst.
 
 ### 📁 Neue Dateien
 

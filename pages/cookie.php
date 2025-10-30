@@ -59,7 +59,7 @@ if ('delete' === $func) {
             // Google Consent Mode v2 Helper Fragment verwenden
             $fragment = new rex_fragment();
             $fragment->setVar('addon', $addon);
-            $googleHelperHtml = $fragment->parse('consent_manager_google_consent_helper.php');
+            $googleHelperHtml = $fragment->parse('ConsentManager/consent_manager_google_consent_helper.php');
             $field = $form->addRawField($googleHelperHtml);
             
             $field = $form->addTextAreaField('script');
@@ -81,7 +81,7 @@ if ('delete' === $func) {
             // Google Consent Mode v2 Helper Fragment verwenden
             $fragment = new rex_fragment();
             $fragment->setVar('addon', $addon);
-            $googleHelperHtml = $fragment->parse('consent_manager_google_consent_helper.php');
+            $googleHelperHtml = $fragment->parse('ConsentManager/consent_manager_google_consent_helper.php');
             $field = $form->addRawField($googleHelperHtml);
             
             $field = $form->addTextAreaField('script');
