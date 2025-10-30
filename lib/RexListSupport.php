@@ -16,7 +16,8 @@ class RexListSupport
      */
     public static function formatDomain($params)
     {
-        $ids = array_filter(explode('|', $params['value']));
+        $ids = array_map(trim(...), explode('|', $params['value']));
+        $ids = array_filter($ids, strlen(...)); //@phpstan-ignore-line
         if ([] !== $ids) {
             $domains = [];
             $db = rex_sql::factory();
@@ -41,7 +42,8 @@ class RexListSupport
     public static function formatCookie($params)
     {
         if (isset($params['value'])) {
-            $uids = array_filter(explode('|', $params['value']));
+            $uids = array_map(trim(...), explode('|', $params['value']));
+            $uids = array_filter($uids, strlen(...)); //@phpstan-ignore-line));
             if ([] !== $uids) {
                 return implode('<br>', $uids);
             }

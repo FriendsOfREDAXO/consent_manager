@@ -38,7 +38,7 @@ class ThumbnailMediaManager
         $sql = rex_sql::factory();
         $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', ['consent_manager_thumbnail']);
 
-        if (!$sql->getRows()) {
+        if (0 < $sql->getRows()) {
             return null;
         }
 
@@ -84,18 +84,17 @@ class ThumbnailMediaManager
         }
 
         $files = glob($cachePath . '*.jpg');
+        $files = false === $files ? [] : $files;
         $totalSize = 0;
 
-        if ($files) {
-            foreach ($files as $file) {
-                if (is_file($file)) {
-                    $totalSize += filesize($file);
-                }
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                $totalSize += filesize($file);
             }
         }
 
         return [
-            'files' => count($files ?: []),
+            'files' => count($files),
             'size' => $totalSize,
         ];
     }
@@ -107,7 +106,7 @@ class ThumbnailMediaManager
      */
     public static function clearCache(?string $service = null): int
     {
-        if ($service) {
+        if (null !== $service && '' !== $service) {
             // Nur bestimmten Service löschen
             return rex_media_manager::deleteCache($service . '_*', 'consent_manager_thumbnail');
         }
@@ -158,7 +157,7 @@ class ThumbnailMediaManager
     {
         $thumbnailUrl = self::getThumbnailUrl($service, $videoId, $options);
 
-        if (!$thumbnailUrl) {
+        if (null === $thumbnailUrl || '' === $thumbnailUrl) {
             // Fallback zu direkter URL
             return self::getDirectThumbnailUrl($service, $videoId);
         }
@@ -178,7 +177,7 @@ class ThumbnailMediaManager
     {
         $serviceInfo = self::detectServiceFromUrl($videoUrl);
 
-        if (!$serviceInfo) {
+        if (!is_array($serviceInfo)) {
             return null;
         }
 

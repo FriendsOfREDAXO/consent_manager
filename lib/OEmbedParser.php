@@ -94,7 +94,7 @@ class OEmbedParser
     {
         // Plattform erkennen
         $platform = self::detectPlatform($url);
-        if (!$platform) {
+        if (null === $platform) {
             // Unbekannte Plattform - Original zurückgeben oder Fehler
             if (rex::isDebugMode()) {
                 return '<!-- Consent Manager oEmbed: Unsupported platform for URL: ' . htmlspecialchars($url) . ' -->';
@@ -179,7 +179,7 @@ class OEmbedParser
                 WHERE uid = ? AND clang_id = ?
             ', [$serviceKey, rex_clang::getCurrentId()]);
             
-            return (int) $sql->getValue('count') > 0;
+            return $sql->getValue('count') > 0;
         } catch (rex_sql_exception $e) {
             return false;
         }

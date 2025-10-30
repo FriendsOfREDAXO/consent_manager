@@ -29,7 +29,7 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
 // Google Consent Mode v2 Integration - muss vor dem Consent Manager geladen werden
 $googleConsentModeOutput = '';
 
-if (!empty($consent_manager->domainInfo)
+if (0 < count($consent_manager->domainInfo)
     && isset($consent_manager->domainInfo['google_consent_mode_enabled'])
     && 'disabled' !== $consent_manager->domainInfo['google_consent_mode_enabled']) {
     // Google Consent Mode v2 externe Datei laden (minifiziert oder normal)
@@ -41,8 +41,8 @@ if (!empty($consent_manager->domainInfo)
     $googleConsentModeOutput .= '    <script src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
 
     // Debug-Script laden wenn Debug-Modus aktiviert
-    if (!empty($consent_manager->domainInfo['google_consent_mode_debug'])
-        && 1 == $consent_manager->domainInfo['google_consent_mode_debug']) {
+    if (isset($consent_manager->domainInfo['google_consent_mode_debug'])
+        && 1 === $consent_manager->domainInfo['google_consent_mode_debug']) {
         $debugScriptUrl = $addon->getAssetsUrl('consent_debug.js');
         $googleConsentModeOutput .= '    <script src="' . $debugScriptUrl . '" defer></script>' . PHP_EOL;
 
@@ -81,12 +81,12 @@ if (true === $inlineParam) {
 // Andere Bedingungen nur prüfen wenn KEIN expliziter inline-Parameter gesetzt wurde
 if (!$explicitInlineParam) {
     // Consent ausblenden bei Domain-spezifischem Inline-Only Modus
-    if (isset($consent_manager->domainInfo['inline_only_mode']) && '1' == $consent_manager->domainInfo['inline_only_mode']) {
+    if (isset($consent_manager->domainInfo['inline_only_mode']) && '1' === $consent_manager->domainInfo['inline_only_mode']) {
         $consentparams['initially_hidden'] = 'true';
     }
 
     // Consent standardmäßig ausblenden (nur Inline-Consent verwenden) - globale Einstellung
-    if (rex_config::get('consent_manager', 'inline_only_mode', false)) {
+    if ((bool) rex_config::get('consent_manager', 'inline_only_mode', false)) {
         $consentparams['initially_hidden'] = 'true';
     }
 }

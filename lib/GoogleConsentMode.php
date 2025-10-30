@@ -212,7 +212,7 @@ class GoogleConsentMode
     public static function setDomainEnabled(string $domain, string $mode): bool
     {
         $validModes = ['disabled', 'auto', 'manual'];
-        if (!in_array($mode, $validModes)) {
+        if (!in_array($mode, $validModes, true)) {
             return false;
         }
 

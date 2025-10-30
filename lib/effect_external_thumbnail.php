@@ -41,7 +41,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                 $service = $this->params['service'] ?? null;
                 $videoId = $this->params['video_id'] ?? null;
 
-                if (empty($service) || empty($videoId)) {
+                if (null === $service || null === $videoId || '' === $service || '' === $videoId) {
                     $this->createFallbackImage();
                     return;
                 }
@@ -53,7 +53,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
             $thumbnailUrl = $this->getThumbnailUrl($service, $videoId);
 
-            if (!$thumbnailUrl) {
+            if (null === $thumbnailUrl || '' === $thumbnailUrl) {
                 throw new rex_exception('External thumbnail effect: Could not determine thumbnail URL for service "' . $service . '" with video ID "' . $videoId . '"');
             }
 
@@ -66,7 +66,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
             $imageData = $this->downloadThumbnail($thumbnailUrl);
 
-            if (!$imageData) {
+            if (null === $imageData || '' === $imageData) {
                 // Fallback versuchen
                 if ('youtube' === $service && isset(self::SERVICES[$service]['fallback_url'])) {
                     $fallbackUrl = sprintf(self::SERVICES[$service]['fallback_url'], $videoId);
@@ -76,7 +76,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                     $imageData = $this->downloadThumbnail($fallbackUrl);
                 }
 
-                if (!$imageData) {
+                if (null === $imageData || '' === $imageData) {
                     rex_logger::factory()->error('External thumbnail: Download failed', [
                         'primary_url' => $thumbnailUrl,
                         'fallback_tried' => isset($fallbackUrl),
@@ -165,7 +165,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             $apiUrl = sprintf($config['api_url'], $videoId);
             $response = $this->makeHttpRequest($apiUrl);
 
-            if ($response) {
+            if (null !== $response && '' !== $response) {
                 $data = json_decode($response, true);
                 if (isset($data[0]['thumbnail_large'])) {
                     return $data[0]['thumbnail_large'];
@@ -227,7 +227,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         $error = curl_error($ch);
         curl_close($ch);
 
-        if (false === $data || !empty($error)) {
+        if (false === $data || '' < $error) {
             rex_logger::factory()->error('External thumbnail cURL error', [
                 'url' => $url,
                 'error' => $error,
@@ -244,7 +244,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             return null;
         }
 
-        return is_string($data) && !empty($data) ? $data : null;
+        return is_string($data) && '' < $data ? $data : null;
     }
 
     /**
@@ -283,7 +283,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                 }
             }
 
-            if ($responseCode && 200 !== $responseCode) {
+            if (null !== $responseCode && 200 !== $responseCode) {
                 rex_logger::factory()->error('External thumbnail HTTP error', [
                     'url' => $url,
                     'response_code' => $responseCode,
@@ -292,7 +292,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                 return null;
             }
 
-            return false !== $data && !empty($data) ? $data : null;
+            return false !== $data && '' < $data ? $data : null;
         } catch (Exception $e) {
             rex_logger::logException($e);
             return null;

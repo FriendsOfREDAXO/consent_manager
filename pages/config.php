@@ -86,13 +86,13 @@ if ('setup_minimal' === $func) {
 
 // For all other functions CSRF check
 $csrf = rex_csrf_token::factory(Config::class);
-if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_minimal_update', 'setup_standard_update'])) {
+if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_minimal_update', 'setup_standard_update'], true)) {
     if (!$csrf->isValid()) {
         echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
     } else {
         if ('export' === $func) {
             // Clear output buffer to enable clean JSON download
-            while (ob_get_level()) {
+            while (0 < ob_get_level()) {
                 ob_end_clean();
             }
 

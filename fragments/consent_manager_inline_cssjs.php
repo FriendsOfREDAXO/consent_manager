@@ -20,7 +20,7 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
 }
 
 // CSS und JavaScript nur ausgeben wenn Domain konfiguriert
-if (!empty($consent_manager->domainName)) {
+if ('' < $consent_manager->domainName) {
     echo InlineConsent::getCSS();
     echo InlineConsent::getJavaScript();
 }

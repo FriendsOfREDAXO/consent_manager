@@ -155,7 +155,7 @@ $inlineTexts = [
 foreach ($inlineTexts as $uid => $defaultText) {
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = :uid', ['uid' => $uid]);
-    if (0 === (int) $sql->getValue('count')) {
+    if (0 === $sql->getValue('count')) {
         foreach (rex_clang::getAllIds() as $lang) {
             $sql = \rex_sql::factory();
             $sql->setTable(rex::getTable('consent_manager_text'));
@@ -173,7 +173,7 @@ if (rex_addon::get('media_manager')->isAvailable()) {
     $sql = rex_sql::factory();
     $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', ['consent_manager_thumbnail']);
     
-    if (!$sql->getRows()) {
+    if (0 === $sql->getRows()) {
         // Media Manager Type erstellen (als normaler Type, nicht System)
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('media_manager_type'));

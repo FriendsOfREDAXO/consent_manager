@@ -174,7 +174,7 @@ class JsonSetup
             $filename = basename($file);
 
             // Skip certain files
-            if (in_array($filename, ['contribution_template.json', 'example_export.json'])) {
+            if (in_array($filename, ['contribution_template.json', 'example_export.json'], true)) {
                 continue;
             }
 
@@ -241,7 +241,7 @@ class JsonSetup
             $existingGroup = self::findExistingCookieGroup($group['uid']);
 
             // Decide action based on mode
-            if ('update' === $mode && $existingGroup) {
+            if ('update' === $mode && is_array($existingGroup)) {
                 continue; // Skip existing groups in update mode
             }
             // Adjust ID if it conflicts in update mode
@@ -267,7 +267,7 @@ class JsonSetup
             $existingCookie = self::findExistingCookie($cookie['uid']);
 
             // Decide action based on mode
-            if ('update' === $mode && $existingCookie) {
+            if ('update' === $mode && is_array($existingCookie)) {
                 continue; // Skip existing cookies in update mode
             }
             // Adjust ID if it conflicts in update mode
@@ -293,7 +293,7 @@ class JsonSetup
             $existingText = self::findExistingText($text['uid'], $text['clang_id'] ?? 1);
 
             // Decide action based on mode
-            if ('update' === $mode && $existingText) {
+            if ('update' === $mode && is_array($existingText)) {
                 continue; // Skip existing texts in update mode
             }
             // Adjust ID if it conflicts in update mode
@@ -319,7 +319,7 @@ class JsonSetup
             $existingDomain = self::findExistingDomain($domain['uid']);
 
             // Decide action based on mode
-            if ('update' === $mode && $existingDomain) {
+            if ('update' === $mode && is_array($existingDomain)) {
                 continue; // Skip existing domains in update mode
             }
             // Adjust ID if it conflicts in update mode

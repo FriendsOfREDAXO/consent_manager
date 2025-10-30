@@ -47,7 +47,7 @@ class Utility
         // Check host
         $db->prepareQuery('SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` = :uid');
         $dbresult = $db->execute(['uid' => rex_request::server('HTTP_HOST')]);
-        if (1 === (int) $dbresult->getRows()) {
+        if (1 === $dbresult->getRows()) {
             $domain = $dbresult->getValue('id');
             // Check domain in cookie group
             $db->prepareQuery('SELECT count(*) as `count` FROM `' . rex::getTable('consent_manager_cookiegroup') . '` WHERE `domain` LIKE :domain AND `clang_id` = :clang AND `cookie` != \'\'');
@@ -69,7 +69,7 @@ class Utility
     {
         $dominfo = self::get_domaininfo('https://' . rex_request::server('HTTP_HOST'));
         // Return full hostname including subdomain (DSGVO requirement)
-        if ($dominfo['subdomain']) {
+        if ('' < $dominfo['subdomain']) {
             return strtolower($dominfo['subdomain'] . '.' . $dominfo['domain']);
         }
         return strtolower($dominfo['domain']);

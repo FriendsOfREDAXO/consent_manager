@@ -129,7 +129,7 @@ class Frontend
         }
 
         // Zusätzliche Sicherheitsabfrage
-        if (!$this->domainName || !isset($this->cache['domains'][$this->domainName])) {
+        if ('' === $this->domainName || !isset($this->cache['domains'][$this->domainName])) {
             return;
         }
 
@@ -168,8 +168,11 @@ class Frontend
                     }
                 }
             }
-            $this->scripts = array_filter($this->scripts);
-            $this->scriptsUnselect = array_filter($this->scriptsUnselect);
+
+            $this->scripts = array_map(trim(...), $this->scripts);
+            $this->scripts = array_filter($this->scripts, strlen(...)); //@phpstan-ignore-line
+            $this->scriptsUnselect = array_map(trim(...), $this->scriptsUnselect);
+            $this->scriptsUnselect = array_filter($this->scriptsUnselect, strlen(...)); //@phpstan-ignore-line
         }
         if (isset($this->cache['texts'][$clang])) {
             $this->texts = $this->cache['texts'][$clang];
@@ -220,7 +223,7 @@ class Frontend
             'cachelogid' => rex_get('cid', 'string', ''),
             'version' => rex_get('v', 'string', ''),
             'fe_controller' => rex_url::frontend(),
-            'forcereload' => (int) rex_get('r', 'int', 0),
+            'forcereload' => rex_get('r', 'int', 0),
             'hidebodyscrollbar' => 'true' === rex_get('h', 'string', 'false'),
             'cspNonce' => rex_response::getNonce(),
             'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
@@ -279,7 +282,7 @@ class Frontend
     public static function getNonceAttribute(): string
     {
         $nonce = rex_response::getNonce();
-        return $nonce ? ' nonce="' . htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8') . '"' : '';
+        return ' nonce="' . htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8') . '"';
     }
 
     /**

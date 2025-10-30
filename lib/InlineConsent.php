@@ -29,6 +29,7 @@ class InlineConsent
     /**
      * Generiert Inline-Consent für externen Content.
      *
+     * @api
      * @param string $serviceKey Service-Schlüssel aus Consent Manager
      * @param string $content Original Content (iframe, script, etc.)
      * @param array $options Zusätzliche Optionen
@@ -38,7 +39,7 @@ class InlineConsent
     {
         // Service aus DB laden
         $service = self::getService($serviceKey);
-        if (!$service) {
+        if (null === $service) {
             if (rex::isDebugMode()) {
                 return '<div class="alert alert-warning">Consent Manager: Service "' . $serviceKey . '" nicht gefunden</div>';
             }
@@ -54,7 +55,7 @@ class InlineConsent
         $consentId = uniqid('consent_', true);
 
         // Standard-Optionen (nur wenn nicht explizit übergeben)
-        $serviceName = !empty($service['service_name']) ? $service['service_name'] : ucfirst($serviceKey);
+        $serviceName = isset($service['service_name']) && '' < $service['service_name'] ? $service['service_name'] : ucfirst($serviceKey);
         $defaultOptions = [
             'title' => $serviceName,
             'width' => 'auto',
@@ -81,7 +82,7 @@ class InlineConsent
     /**
      * Service aus Datenbank laden.
      */
-    private static function getService($serviceKey)
+    private static function getService($serviceKey): ?array
     {
         $sql = rex_sql::factory();
 
@@ -346,6 +347,8 @@ class InlineConsent
 
     /**
      * JavaScript für Inline-Consent generieren.
+     * 
+     * @api
      */
     public static function getJavaScript()
     {
@@ -392,6 +395,8 @@ class InlineConsent
 
     /**
      * CSS für Inline-Consent generieren.
+     * 
+     * @api
      */
     public static function getCSS()
     {
