@@ -42,7 +42,7 @@ class ThumbnailCache
 
     /**
      * YouTube Thumbnail cachen.
-     * 
+     *
      * @api
      */
     public static function cacheYouTubeThumbnail($videoId)
@@ -91,7 +91,7 @@ class ThumbnailCache
 
     /**
      * Vimeo Thumbnail cachen.
-     * 
+     *
      * @api
      */
     public static function cacheVimeoThumbnail($videoId)
@@ -209,7 +209,7 @@ class ThumbnailCache
 
     /**
      * Cache aufräumen (alte Dateien löschen).
-     * 
+     *
      * @api
      */
     public static function cleanupCache($maxAge = 2592000) // 30 Tage

@@ -1,8 +1,8 @@
 <?php
 /**
  * Fragment für Google Consent Mode v2 Helper
- * Generiert die HTML-Struktur für den Helper-Panel
- * 
+ * Generiert die HTML-Struktur für den Helper-Panel.
+ *
  * @var rex_addon $addon
  */
 

@@ -7,11 +7,17 @@ use rex_api_function;
 use rex_request;
 use rex_sql;
 
+use function count;
+use function is_string;
+
 class ConsentManager extends rex_api_function
 {
     protected $published = true;
 
-    public function execute()
+    /**
+     * @return never
+     */
+    public function execute(): void
     {
         $domain = rex_post('domain', 'string', false);
         $consentid = rex_post('consentid', 'string', false);

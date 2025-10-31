@@ -23,7 +23,7 @@ class LogDelete extends rex_console_command
         $io->title('consent_manager log_delete');
 
         /**
-         * alt und von Rexstan moniert (SQL-Syntax-Error near "'DAYS)' at line 1" ): 
+         * alt und von Rexstan moniert (SQL-Syntax-Error near "'DAYS)' at line 1" ):
          *  rex_sql::factory()->setQuery('DELETE FROM ' . rex::getTable('consent_manager_consent_log') . ' WHERE createdate < DATE_SUB(NOW(), INTERVAL 2 DAYS)');
          *  $noDeleted = rex_sql::factory()->getRows();
          */

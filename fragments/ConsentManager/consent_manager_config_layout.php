@@ -1,7 +1,7 @@
 <?php
 /**
  * Fragment: Consent Manager Config Layout
- * Hauptlayout für die Konfigurationsseite
+ * Hauptlayout für die Konfigurationsseite.
  */
 
 $addon = $this->getVar('addon');
@@ -34,7 +34,7 @@ $csrf = $this->getVar('csrf');
                         <?= $form->get() ?>
                     <?php else: ?>
                         <p>Form konnte nicht geladen werden.</p>
-                    <?php endif; ?>
+                    <?php endif ?>
                 </div>
             </div>
         </div>

@@ -347,7 +347,7 @@ class InlineConsent
 
     /**
      * JavaScript für Inline-Consent generieren.
-     * 
+     *
      * @api
      */
     public static function getJavaScript()
@@ -395,7 +395,7 @@ class InlineConsent
 
     /**
      * CSS für Inline-Consent generieren.
-     * 
+     *
      * @api
      */
     public static function getCSS()

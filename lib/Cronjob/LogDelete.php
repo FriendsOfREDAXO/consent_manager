@@ -14,10 +14,9 @@ class LogDelete extends rex_cronjob
     public function execute()
     {
         if (rex_addon::get('consent_manager')->isAvailable()) {
-
             try {
                 /** TODO: Umstellen auf nur rex_sql-Funktionen */
-                $sql = rex_sql::factory()->setQuery('DELETE FROM ' . rex::getTable('consent_manager_consent_log') . ' WHERE createdate < DATE_SUB(NOW(), INTERVAL ' . (int) trim($this->getParam('days')) .' DAY)');
+                $sql = rex_sql::factory()->setQuery('DELETE FROM ' . rex::getTable('consent_manager_consent_log') . ' WHERE createdate < DATE_SUB(NOW(), INTERVAL ' . (int) trim($this->getParam('days')) . ' DAY)');
                 $noDeleted = $sql->getRows();
 
                 if ($noDeleted > 0) {

@@ -17,7 +17,7 @@ class RexListSupport
     public static function formatDomain($params)
     {
         $ids = array_map(trim(...), explode('|', $params['value']));
-        $ids = array_filter($ids, strlen(...)); //@phpstan-ignore-line
+        $ids = array_filter($ids, strlen(...)); // @phpstan-ignore-line
         if ([] !== $ids) {
             $domains = [];
             $db = rex_sql::factory();
@@ -43,7 +43,7 @@ class RexListSupport
     {
         if (isset($params['value'])) {
             $uids = array_map(trim(...), explode('|', $params['value']));
-            $uids = array_filter($uids, strlen(...)); //@phpstan-ignore-line));
+            $uids = array_filter($uids, strlen(...)); // @phpstan-ignore-line));
             if ([] !== $uids) {
                 return implode('<br>', $uids);
             }

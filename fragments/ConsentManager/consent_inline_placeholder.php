@@ -1,7 +1,7 @@
 <?php
 /**
- * Fragment für Inline-Consent Platzhalter
- * 
+ * Fragment für Inline-Consent Platzhalter.
+ *
  * Verfügbare Variablen (via $this->getVar()):
  * - serviceKey: Service-Schlüssel (z.B. 'youtube')
  * - consentId: Eindeutige Consent-ID
@@ -11,10 +11,10 @@
  * - content: Original-Content der geladen werden soll
  */
 
-/** @var rex_fragment $this  */
+/** @var rex_fragment $this */
 // Variablen aus Fragment abrufen
 $serviceKey = $this->getVar('serviceKey', '');
-$consentId = $this->getVar('consentId', ''); 
+$consentId = $this->getVar('consentId', '');
 $service = $this->getVar('service', []);
 $options = $this->getVar('options', []);
 $placeholderData = $this->getVar('placeholderData', []);
@@ -28,15 +28,14 @@ $inline_placeholder_text = $this->getVar('inline_placeholder_text', 'Einmal lade
 $inline_privacy_link_text = $this->getVar('inline_privacy_link_text', 'Datenschutzerklärung von');
 $button_inline_details_text = $this->getVar('button_inline_details_text', 'Einstellungen');
 $button_inline_allow_all_text = $this->getVar('button_inline_allow_all_text', 'Alle erlauben');
-$show_allow_all = $this->getVar('show_allow_all', false) !== false;
+$show_allow_all = false !== $this->getVar('show_allow_all', false);
 
 if (rex::isDebugMode()) {
     echo "<!-- DEBUG Fragment Variables: -->\n";
     echo "<!-- inline_privacy_notice: $inline_privacy_notice -->\n";
-    echo "<!-- options[privacy_notice]: " . ($options['privacy_notice'] ?? 'NOT SET') . " -->\n";
-    echo "<!-- Final value: " . ($options['privacy_notice'] ?? $inline_privacy_notice) . " -->\n";
+    echo '<!-- options[privacy_notice]: ' . ($options['privacy_notice'] ?? 'NOT SET') . " -->\n";
+    echo '<!-- Final value: ' . ($options['privacy_notice'] ?? $inline_privacy_notice) . " -->\n";
 }
-
 
 $thumbnailHtml = '';
 if (isset($placeholderData['thumbnail']) && '' !== $placeholderData['thumbnail']) {
@@ -57,10 +56,10 @@ if (isset($placeholderData['thumbnail']) && '' !== $placeholderData['thumbnail']
             <div class="consent-inline-overlay">
                 <div class="consent-inline-info">
                     <div class="consent-inline-icon">
-                        <?php 
+                        <?php
                         $iconClass = $placeholderData['icon'] ?? 'fa fa-play-circle';
                         $iconLabel = $placeholderData['icon_label'] ?? 'Media Icon';
-                        if (strpos($iconClass, 'uk-icon:') === 0) {
+                        if (str_starts_with($iconClass, 'uk-icon:')) {
                             // UIkit Icon
                             $ukIcon = str_replace('uk-icon:', '', $iconClass);
                             echo '<span uk-icon="icon: ' . rex_escape($ukIcon) . '; ratio: 3" aria-label="' . rex_escape($iconLabel) . '"></span>';
@@ -78,9 +77,9 @@ if (isset($placeholderData['thumbnail']) && '' !== $placeholderData['thumbnail']
                     <?php if (isset($service['provider_link_privacy']) && '' !== $service['provider_link_privacy']): ?>
                     <div class="consent-inline-privacy-link">
                         <a href="<?= rex_escape($service['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer">
-                            <?php 
+                            <?php
                             $privacyIcon = $this->getVar('privacy_icon', 'fa fa-shield-alt');
-                            if (strpos($privacyIcon, 'uk-icon:') === 0) {
+                            if (str_starts_with($privacyIcon, 'uk-icon:')) {
                                 $ukIcon = str_replace('uk-icon:', '', $privacyIcon);
                                 echo '<span uk-icon="icon: ' . rex_escape($ukIcon) . '" aria-hidden="true"></span>';
                             } else {
@@ -90,7 +89,7 @@ if (isset($placeholderData['thumbnail']) && '' !== $placeholderData['thumbnail']
                             <?= rex_escape($inline_privacy_link_text) ?> <?= rex_escape($service['provider'] ?? $service['service_name'] ?? 'Anbieter') ?>
                         </a>
                     </div>
-                    <?php endif; ?>
+                    <?php endif ?>
                     
                     <div class="consent-inline-actions">
                         <button type="button" class="btn btn-consent-once consent-inline-once" 
@@ -104,7 +103,7 @@ if (isset($placeholderData['thumbnail']) && '' !== $placeholderData['thumbnail']
                                 data-service="<?= rex_escape($serviceKey) ?>">
                             <i class="fa fa-check-circle" aria-hidden="true"></i> <?= rex_escape($button_inline_allow_all_text) ?>
                         </button>
-                        <?php endif; ?>
+                        <?php endif ?>
                         
                         <button type="button" class="btn btn-consent-details consent-inline-details"
                                  data-service="<?= rex_escape($serviceKey) ?>">

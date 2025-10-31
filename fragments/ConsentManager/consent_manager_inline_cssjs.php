@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Consent Manager Inline Consent Fragment
- * 
+ * Consent Manager Inline Consent Fragment.
+ *
  * Fragment für CSS/JS Integration der Inline-Consent-Funktion
- * 
+ *
  * @package redaxo\consent-manager
  */
 

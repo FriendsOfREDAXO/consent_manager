@@ -12,6 +12,9 @@ use rex_logger;
 use rex_sql;
 use rex_string;
 
+use function in_array;
+use function is_string;
+
 class Cache
 {
     /** @var array<mixed> */
@@ -156,7 +159,7 @@ class Cache
                     $cookie_uids[] = 'consent_manager';
                 }
                 $this->cookiegroups[$clangId][$uid]['cookie_uids'] = array_merge(array_filter(array_unique($cookie_uids))); /** @phpstan-ignore-line */
-                $domainIds = array_filter(explode('|', $cookiegroup['domain']), strlen(...)); //@phpstan-ignore-line
+                $domainIds = array_filter(explode('|', $cookiegroup['domain']), strlen(...)); // @phpstan-ignore-line
                 foreach ($domainIds as $domainId) {
                     if (isset($this->domains[$domainId])) {
                         $this->domains[$domainId]['cookiegroups'][] = $uid; /** @phpstan-ignore-line */

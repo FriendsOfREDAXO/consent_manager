@@ -61,7 +61,7 @@ if ('delete' === $func) {
             $fragment->setVar('addon', $addon);
             $googleHelperHtml = $fragment->parse('ConsentManager/consent_manager_google_consent_helper.php');
             $field = $form->addRawField($googleHelperHtml);
-            
+
             $field = $form->addTextAreaField('script');
             $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));
@@ -83,7 +83,7 @@ if ('delete' === $func) {
             $fragment->setVar('addon', $addon);
             $googleHelperHtml = $fragment->parse('ConsentManager/consent_manager_google_consent_helper.php');
             $field = $form->addRawField($googleHelperHtml);
-            
+
             $field = $form->addTextAreaField('script');
             $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
             $field->setLabel($addon->i18n('consent_manager_cookiegroup_scripts'));

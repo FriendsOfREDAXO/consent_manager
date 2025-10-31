@@ -30,7 +30,7 @@ if ('delete' === $func) {
     $field->setLabel($addon->i18n('consent_manager_domain'));
     $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_empty_msg'));
     $field->getValidator()->add('custom', $addon->i18n('consent_manager_domain_malformed_msg'), RexFormSupport::validateHostname(...));
-    $field->getValidator()->add('custom', 'Domain muss in Kleinbuchstaben eingegeben werden (z.B. "example.com" statt "Example.com")', function($value) {
+    $field->getValidator()->add('custom', 'Domain muss in Kleinbuchstaben eingegeben werden (z.B. "example.com" statt "Example.com")', static function ($value) {
         return RexFormSupport::validateLowercase($value);
     });
     $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
@@ -105,7 +105,7 @@ if ('delete' === $func) {
 echo $msg;
 if ($showlist) {
     $listDebug = false;
-    
+
     // oembed_enabled nur laden wenn CKE5 verfügbar ist
     $oembedColumn = (rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) ? ', oembed_enabled' : '';
     $sql = 'SELECT id, uid, google_consent_mode_enabled, google_consent_mode_debug, inline_only_mode' . $oembedColumn . ' FROM ' . $table . ' ORDER BY uid ASC';
@@ -121,7 +121,7 @@ if ($showlist) {
 
     // Google Consent Mode Status Spalte
     $list->setColumnLabel('google_consent_mode_enabled', 'Google Consent Mode v2');
-    $list->setColumnFormat('google_consent_mode_enabled', 'custom', function ($params) use ($addon) {
+    $list->setColumnFormat('google_consent_mode_enabled', 'custom', static function ($params) use ($addon) {
         $value = $params['value'];
         switch ($value) {
             case 'disabled':
@@ -137,9 +137,9 @@ if ($showlist) {
 
     // Debug Status Spalte
     $list->setColumnLabel('google_consent_mode_debug', '🔍 Debug');
-    $list->setColumnFormat('google_consent_mode_debug', 'custom', function ($params) {
+    $list->setColumnFormat('google_consent_mode_debug', 'custom', static function ($params) {
         $value = (int) $params['value'];
-        if ($value === 1) {
+        if (1 === $value) {
             return '<span class="label label-success"><i class="fa fa-bug" style="color: #000; margin-right: 5px;"></i>Aktiv</span>';
         }
         return '<span class="label label-default"><i class="fa fa-bug" style="color: #000; margin-right: 5px;"></i>Deaktiviert</span>';
@@ -147,9 +147,9 @@ if ($showlist) {
 
     // Inline-Only Mode Status Spalte
     $list->setColumnLabel('inline_only_mode', '📱 Inline-Only');
-    $list->setColumnFormat('inline_only_mode', 'custom', function ($params) use ($addon) {
+    $list->setColumnFormat('inline_only_mode', 'custom', static function ($params) use ($addon) {
         $value = (int) $params['value'];
-        if ($value === 1) {
+        if (1 === $value) {
             return '<span class="label label-info"><i class="fa fa-hand-pointer-o" style="margin-right: 5px;"></i>' . $addon->i18n('consent_manager_domain_inline_only_mode_enabled') . '</span>';
         }
         return '<span class="label label-default"><i class="fa fa-window-maximize" style="margin-right: 5px;"></i>' . $addon->i18n('consent_manager_domain_inline_only_mode_disabled') . '</span>';
@@ -158,9 +158,9 @@ if ($showlist) {
     // oEmbed Status Spalte - nur anzeigen wenn CKE5 verfügbar ist
     if (rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {
         $list->setColumnLabel('oembed_enabled', '🎬 oEmbed');
-        $list->setColumnFormat('oembed_enabled', 'custom', function ($params) {
+        $list->setColumnFormat('oembed_enabled', 'custom', static function ($params) {
             $value = (int) ($params['value'] ?? 1); // Default: aktiviert
-            if ($value === 1) {
+            if (1 === $value) {
                 return '<span class="label label-success">✅ Aktiv</span>';
             }
             return '<span class="label label-default">🚫 Deaktiviert</span>';

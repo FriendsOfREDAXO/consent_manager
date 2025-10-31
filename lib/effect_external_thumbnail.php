@@ -25,7 +25,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * @api
-     * @return void 
+     * @return void
      */
     public function execute()
     {
@@ -271,10 +271,8 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         try {
             $data = file_get_contents($url, false, $context);
 
-            /**
-             * @var array<int, string> $http_response_header materializes out of thin air
-             */
-            
+            /** @var array<int, string> $http_response_header materializes out of thin air */
+
             $responseCode = null;
             foreach ($http_response_header as $header) {
                 if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
@@ -301,7 +299,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * @api
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -326,7 +324,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * Video-ID aus URL extrahieren.
-     * 
+     *
      * @api
      */
     public static function extractVideoId(string $url, string $service): ?string
@@ -346,7 +344,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * Service aus URL bestimmen.
-     * 
+     *
      * @api
      */
     public static function detectService(string $url): ?string

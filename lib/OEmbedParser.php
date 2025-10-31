@@ -2,10 +2,10 @@
 
 /**
  * Consent Manager oEmbed Parser.
- * 
+ *
  * CKE5 Integration for automatic oEmbed → Inline Blocker conversion
  * Mit optionaler Vidstack-Player Integration
- * 
+ *
  * @package redaxo\consent-manager
  * @author Friends Of REDAXO
  */
@@ -29,7 +29,7 @@ class OEmbedParser
 {
     /**
      * Register oEmbed parser as OUTPUT_FILTER extension.
-     * 
+     *
      * @api
      * @param string|null $domain Optional: Nur für spezifische Domain registrieren
      */
@@ -40,19 +40,19 @@ class OEmbedParser
             if (!is_string($content)) {
                 return $content;
             }
-            
+
             // Domain-Check wenn spezifiziert
-            if ($domain !== null && $domain !== rex::getServer()) {
+            if (null !== $domain && $domain !== rex::getServer()) {
                 return $content;
             }
-            
+
             return self::parse($content, $domain);
         }, rex_extension::LATE);
     }
 
     /**
      * Parse oEmbed tags and replace with Consent Manager Inline Blocker.
-     * 
+     *
      * @api
      * @param string $content HTML content
      * @param string|null $domain Domain für Player-Konfiguration
@@ -61,21 +61,21 @@ class OEmbedParser
     public static function parse(string $content, ?string $domain = null): string
     {
         // Domain ermitteln falls nicht übergeben
-        if ($domain === null) {
-            $domain = rex_request::server('HTTP_HOST','string',$domain);
+        if (null === $domain) {
+            $domain = rex_request::server('HTTP_HOST', 'string', $domain);
         }
-        
+
         // Domain-Config laden
         $config = self::getDomainConfig($domain);
-        
+
         // Wenn oEmbed deaktiviert ist, keine Umwandlung durchführen
         if (!$config['enabled']) {
             return $content; // Inhalt unverändert zurückgeben
         }
-        
+
         // Regex für <oembed url="..."></oembed>
         $pattern = '/<oembed\s+url=["\']([^"\']+)["\']\s*><\/oembed>/i';
-        
+
         return preg_replace_callback($pattern, static function ($matches) use ($domain) {
             $url = $matches[1];
             return self::processOembed($url, $domain);
@@ -84,7 +84,7 @@ class OEmbedParser
 
     /**
      * Process single oEmbed URL.
-     * 
+     *
      * @api
      * @param string $url Video URL (YouTube, Vimeo)
      * @param string|null $domain Domain für Konfiguration
@@ -132,7 +132,7 @@ class OEmbedParser
 
     /**
      * Plattform aus URL erkennen.
-     * 
+     *
      * @api
      * @param string $url Video URL
      * @return array|null ['service' => string, 'id' => string, 'platform' => string]
@@ -164,10 +164,9 @@ class OEmbedParser
 
     /**
      * Service-Existenz prüfen.
-     * 
+     *
      * @api
      * @param string $serviceKey Service UID
-     * @return bool
      */
     private static function serviceExists(string $serviceKey): bool
     {
@@ -178,7 +177,7 @@ class OEmbedParser
                 FROM ' . rex::getTable('consent_manager_cookie') . '
                 WHERE uid = ? AND clang_id = ?
             ', [$serviceKey, rex_clang::getCurrentId()]);
-            
+
             return $sql->getValue('count') > 0;
         } catch (rex_sql_exception $e) {
             return false;
@@ -187,7 +186,7 @@ class OEmbedParser
 
     /**
      * Domain-spezifische Konfiguration laden.
-     * 
+     *
      * @api
      * @param string $domain Domain-Name
      * @return array Konfiguration
@@ -210,7 +209,7 @@ class OEmbedParser
                 FROM ' . rex::getTable('consent_manager_domain') . '
                 WHERE uid = ?
             ', [$domain]);
-            
+
             if ($sql->getRows() > 0) {
                 $dbConfig = [
                     'enabled' => (bool) ($sql->getValue('oembed_enabled') ?? 1), // Default 1 wenn NULL
@@ -218,7 +217,7 @@ class OEmbedParser
                     'height' => (int) $sql->getValue('oembed_video_height') ?: 360,
                     'show_allow_all' => (bool) $sql->getValue('oembed_show_allow_all'),
                 ];
-                
+
                 return array_merge($defaultConfig, $dbConfig);
             }
         } catch (rex_sql_exception $e) {
@@ -238,7 +237,7 @@ class OEmbedParser
 
     /**
      * Domain-spezifische Konfiguration setzen.
-     * 
+     *
      * @api
      * @param string $domain Domain-Name
      * @param array $config Konfiguration
@@ -253,9 +252,8 @@ class OEmbedParser
 
     /**
      * Video-Titel aus Platform-Info generieren.
-     * 
+     *
      * @param array $platform Platform info
-     * @return string
      */
     private static function getVideoTitle(array $platform): string
     {
@@ -265,7 +263,7 @@ class OEmbedParser
 
     /**
      * Vidstack-Player Embed generieren (wenn Vidstack verfügbar und gewünscht).
-     * 
+     *
      * @api
      * @param string $url Video URL
      * @param array $options Player-Optionen
@@ -273,30 +271,30 @@ class OEmbedParser
      */
     private static function generateVidstackEmbed(string $url, array $options): string
     {
-                // Prüfe ob Vidstack Addon verfügbar ist
+        // Prüfe ob Vidstack Addon verfügbar ist
         if (!rex_addon::exists('vidstack') || !rex_addon::get('vidstack')->isAvailable()) {
             return '<!-- Vidstack Player nicht verfügbar -->';
         }
-        
+
         try {
             $player = new Video($url);
-            
+
             // Attribute für den Player setzen
             $attributes = [
                 'crossorigin' => '',
                 'playsinline' => true,
                 'controls' => true,  // Vidstack Controls anzeigen
             ];
-            
+
             if ($options['video_width']) {
                 $attributes['width'] = $options['video_width'];
             }
             if ($options['video_height']) {
                 $attributes['height'] = $options['video_height'];
             }
-            
+
             $player->setAttributes($attributes);
-            
+
             // Nur generate() verwenden - OHNE Vidstack Consent
             // Der Consent Manager Inline-Blocker kommt davor (via doConsent)
             return $player->generate();
@@ -307,10 +305,10 @@ class OEmbedParser
             return '<!-- Vidstack Error -->';
         }
     }
-    
+
     /**
      * Native Inline-Blocker Embed generieren.
-     * 
+     *
      * @api
      * @param string $serviceKey Service UID
      * @param string $url Video URL

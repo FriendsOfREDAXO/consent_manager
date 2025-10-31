@@ -2,13 +2,15 @@
 /**
  * Fragment: Consent Manager Quickstart Modal
  * Zeigt das 7-stufige Schnellstart-Setup Modal an
- *                                <div class="quickstart-step-title">
-                                <?= $addon->i18n('consent_manager_quickstart_step_configuration') ?>
-                                <span class="text-muted" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_after_import') ?></span>
-                            </div>                     <div class="quickstart-step-title">
-                                <?= $addon->i18n('consent_manager_quickstart_step_providers') ?>
-                                <span class="text-muted" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_after_import') ?></span>
-                            </div>wird über boot.php geladen
+ *    <div class="quickstart-step-title">
+ *      <?= $addon->i18n('consent_manager_quickstart_step_configuration') ?>
+ *      <span class="text-muted" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_after_import') ?></span>
+ *    </div>
+ *    <div class="quickstart-step-title">
+ *      <?= $addon->i18n('consent_manager_quickstart_step_providers') ?>
+ *      <span class="text-muted" style="font-size: 11px; margin-left: 8px;"><?= $addon->i18n('consent_manager_quickstart_status_after_import') ?></span>
+ *    </div>
+ * wird über boot.php geladen.
  */
 
 $addon = rex_addon::get('consent_manager');

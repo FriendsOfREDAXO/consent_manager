@@ -11,7 +11,7 @@ if ('' !== $searchvalue) {
     if (false !== DateTime::createFromFormat('d.m.Y', $searchvalue)) {
         $searchdate = strtotime($dosearch);
         if (false !== $searchdate) {
-            $where = ' WHERE `createdate` LIKE ' . $sql->escape(date('Y-m-d', $searchdate).'%') . ' ';
+            $where = ' WHERE `createdate` LIKE ' . $sql->escape(date('Y-m-d', $searchdate) . '%') . ' ';
         }
     }
     $intbool = (bool) preg_match('/^[1-9][0-9]{0,15}$/', $dosearch);
@@ -19,7 +19,7 @@ if ('' !== $searchvalue) {
         $where = ' WHERE `cachelogid` = ' . $sql->escape($dosearch) . ' ';
     }
     if ('' === $where) {
-        $where = ' WHERE `domain` LIKE ' . $sql->escape($dosearch.'%') . ' OR `ip` LIKE ' . $sql->escape($dosearch.'%') . ' OR `consentid` LIKE ' . $sql->escape($dosearch.'%') . ' ';
+        $where = ' WHERE `domain` LIKE ' . $sql->escape($dosearch . '%') . ' OR `ip` LIKE ' . $sql->escape($dosearch . '%') . ' OR `consentid` LIKE ' . $sql->escape($dosearch . '%') . ' ';
     }
 }
 

@@ -170,9 +170,9 @@ class Frontend
             }
 
             $this->scripts = array_map(trim(...), $this->scripts);
-            $this->scripts = array_filter($this->scripts, strlen(...)); //@phpstan-ignore-line
+            $this->scripts = array_filter($this->scripts, strlen(...)); // @phpstan-ignore-line
             $this->scriptsUnselect = array_map(trim(...), $this->scriptsUnselect);
-            $this->scriptsUnselect = array_filter($this->scriptsUnselect, strlen(...)); //@phpstan-ignore-line
+            $this->scriptsUnselect = array_filter($this->scriptsUnselect, strlen(...)); // @phpstan-ignore-line
         }
         if (isset($this->cache['texts'][$clang])) {
             $this->texts = $this->cache['texts'][$clang];
