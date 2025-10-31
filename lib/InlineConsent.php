@@ -270,7 +270,7 @@ class InlineConsent
         // Icon-Konfiguration
         $fragment->setVar('privacy_icon', $options['privacy_icon'] ?? 'uk-icon:shield');
 
-        $result = $fragment->parse('ConsentManager/consent_inline_placeholder.php');
+        $result = $fragment->parse('ConsentManager/inline_placeholder.php');
 
         return $result;
     }

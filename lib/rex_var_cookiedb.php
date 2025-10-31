@@ -10,6 +10,6 @@ class rex_var_cookiedb extends rex_var
     {
         $forceCache = $this->getArg('forceCache', 0, false);
         $forceReload = $this->getArg('forceReload', 0, false);
-        return "\\FriendsOfRedaxo\\ConsentManager\\Frontend::getFragment($forceCache, $forceReload, 'ConsentManager/consent_manager_cookiedb.php')";
+        return "\\FriendsOfRedaxo\\ConsentManager\\Frontend::getFragment($forceCache, $forceReload, 'ConsentManager/cookiedb.php')";
     }
 }

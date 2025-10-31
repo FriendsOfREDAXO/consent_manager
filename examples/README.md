@@ -45,7 +45,7 @@ Diese Beispielmodule demonstrieren die **Inline-Consent-Funktionalität** des Co
 
 **Template-Integration:**
 ```php
-<?= (new rex_fragment())->parse('ConsentManager/consent_manager_inline_cssjs.php') ?>
+<?= (new rex_fragment())->parse('ConsentManager/inline_cssjs.php') ?>
 ```
 
 ## 🎯 Verwendung

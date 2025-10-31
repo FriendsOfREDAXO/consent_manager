@@ -227,11 +227,11 @@ $fragment = new rex_fragment();
 $fragment->setVar('addon', $addon);
 $fragment->setVar('form', $form);
 $fragment->setVar('csrf', $csrf);
-echo $fragment->parse('ConsentManager/consent_manager_config_layout.php');
+echo $fragment->parse('ConsentManager/config_layout.php');
 
 // Quickstart Modal Fragment laden
 $modalFragment = new rex_fragment();
-echo $modalFragment->parse('ConsentManager/consent_manager_quickstart_modal.php');
+echo $modalFragment->parse('ConsentManager/quickstart_modal.php');
 
 if ('' !== rex_post('_csrf_token', 'string', '')) {
     Theme::generateDefaultAssets();

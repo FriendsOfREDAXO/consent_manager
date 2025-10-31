@@ -21,10 +21,10 @@ class rex_var_consent_manager extends rex_var
         // inline Parameter prüfen
         $inline = $this->hasArg('inline') && ('true' === $this->getArg('inline') || '1' === $this->getArg('inline'));
 
-        // Fragment-Dateiname (Standard: ConsentManager/consent_manager_box_cssjs.php)
+        // Fragment-Dateiname (Standard: ConsentManager/box_cssjs.php)
         $fragmentFile = $this->hasArg('fragment')
             ? $this->getArg('fragment')
-            : 'ConsentManager/consent_manager_box_cssjs.php';
+            : 'ConsentManager/box_cssjs.php';
 
         if ($inline) {
             // Inline-Modus: getFragmentWithVars mit inline=true
