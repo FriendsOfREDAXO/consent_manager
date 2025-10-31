@@ -1265,7 +1265,7 @@ echo doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");
 
 **CSS/JS einbinden (einmalig im Template):**
 ```php
-<?php echo rex_view::content('consent_manager_inline_cssjs.php'); ?>
+<?= (new rex_fragment())->parse('ConsentManager/consent_manager_inline_cssjs.php') ?>
 ```
 
 **Oder manuell:**
