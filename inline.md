@@ -56,19 +56,19 @@ Hinweis: Der Button-Text wird über den Schlüssel `button_inline_allow_all` ges
 ```php
 <?php
 // Template/Modul - statt direktem iframe
-echo doConsent('youtube', 'dQw4w9WgXcQ', [
+echo FriendsOfRedaxo\ConsentManager\doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Rick Astley - Never Gonna Give You Up',
     'width' => 560,
     'height' => 315
 ]);
 
 // Funktioniert auch mit kompletten URLs
-echo doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
+echo FriendsOfRedaxo\ConsentManager\doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
     'title' => 'Mein Video'
 ]);
 
 // Mit custom Attributen (z.B. für UIkit, Bootstrap, etc.)
-echo doConsent('youtube', 'dQw4w9WgXcQ', [
+echo FriendsOfRedaxo\ConsentManager\doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Responsive YouTube Video',
     'width' => 560,
     'height' => 315,
@@ -80,7 +80,7 @@ echo doConsent('youtube', 'dQw4w9WgXcQ', [
 ]);
 
 // Erweiterte Optionen
-echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+echo FriendsOfRedaxo\ConsentManager\InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Video laden',
     'placeholder_text' => 'Video abspielen',
     'privacy_notice' => 'Für YouTube werden Tracking-Cookies verwendet.',
@@ -157,7 +157,7 @@ echo doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");
 ### CSS/JS einbinden (einmalig im Template)
 
 ```php
-<?php echo rex_view::content('consent_manager_inline_cssjs.php'); ?>
+<?= (new rex_fragment())->parse('ConsentManager/inline_cssjs.php') ?>
 ```
 
 ### Oder manuell:
@@ -165,9 +165,10 @@ echo doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");
 ```html
 <!-- Im <head>-Bereich -->
 <?php
-if (class_exists('consent_manager_inline')) {
-    echo consent_manager_inline::getCSS();
-    echo consent_manager_inline::getJavaScript();
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+if (class_exists(InlineConsent::class)) {
+    echo InlineConsent::getCSS();
+    echo InlineConsent::getJavaScript();
 }
 ?>
 ```
@@ -306,26 +307,26 @@ Das System verwendet **CSS Custom Properties** für maximale Flexibilität:
 
 ### YouTube
 ```php
-echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+echo FriendsOfRedaxo\ConsentManager\InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'width' => '560',
     'height' => '315',
     'thumbnail' => 'auto' // Automatisches Mediamanager-Caching
 ]);
 
 // Oder mit eigener Thumbnail-URL
-echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+echo FriendsOfRedaxo\ConsentManager\InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'thumbnail' => 'https://example.com/my-custom-thumb.jpg'
 ]);
 
 // Oder mit Mediamanager-URL
-echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+echo FriendsOfRedaxo\ConsentManager\InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'thumbnail' => rex_media_manager::getUrl('my_custom_type', 'my-thumb.jpg')
 ]);
 ```
 
 ### Vimeo
 ```php
-echo consent_manager_inline::doConsent('vimeo', '123456789', [
+echo FriendsOfRedaxo\ConsentManager\InlineConsent::doConsent('vimeo', '123456789', [
     'width' => '640',
     'height' => '360',
     'thumbnail' => 'auto' // Automatisch über Mediamanager
@@ -334,7 +335,7 @@ echo consent_manager_inline::doConsent('vimeo', '123456789', [
 
 ### Google Maps
 ```php
-echo consent_manager_inline::doConsent('google-maps', 'EMBED_URL', [
+echo FriendsOfRedaxo\ConsentManager\InlineConsent::doConsent('google-maps', 'EMBED_URL', [
     'width' => '600',
     'height' => '450',
     'title' => 'Karte laden'
@@ -343,7 +344,7 @@ echo consent_manager_inline::doConsent('google-maps', 'EMBED_URL', [
 
 ### Generisch
 ```php
-echo consent_manager_inline::doConsent('custom-service', '<iframe src="..."></iframe>', [
+echo FriendsOfRedaxo\ConsentManager\InlineConsent::doConsent('custom-service', '<iframe src="..."></iframe>', [
     'title' => 'Externen Inhalt laden',
     'thumbnail' => '/media/preview.jpg'
 ]);
@@ -369,7 +370,7 @@ Im **Mediamanager → Types → consent_manager_thumbnail** können Benutzer all
 ### 🔧 Funktionsweise
 ```php
 // Automatisches Thumbnail-Caching
-$thumbnailUrl = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('youtube', 'dQw4w9WgXcQ');
+$thumbnailUrl = FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager::getThumbnailUrl('youtube', 'dQw4w9WgXcQ');
 // → https://example.com/media/consent_manager_thumbnail/youtube_dQw4w9WgXcQ_b279b658.jpg
 
 // 1. Effect lädt Thumbnail von YouTube/Vimeo herunter
@@ -389,19 +390,21 @@ Je Element lässt sich ein individuelles Vorschaubild definieren. Unterstützt w
 Beispiele:
 
 ```php
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
 // 1) Externe Bild-URL (einfach, aber datenschutzrechtlich abwägen)
-echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Video laden',
     'thumbnail' => 'https://cdn.example.com/previews/rick.jpg'
 ]);
 
 // 2) Medienpool-Datei (lokal gehostet)
-echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'thumbnail' => '/media/video_previews/rick.jpg'
 ]);
 
 // 3) Mediamanager (empfohlen): zentral skalieren/optimieren
-echo consent_manager_inline::doConsent('youtube', 'dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'thumbnail' => rex_media_manager::getUrl('consent_manager_thumbnail', 'rick.jpg')
 ]);
 ```
@@ -460,7 +463,7 @@ $options = [
 ];
 ```
 
-## 🧾 Referenz: Optionen für `consent_manager_inline::doConsent()`
+## 🧾 Referenz: Optionen für `InlineConsent::doConsent()`
 
 Folgende Optionen werden im dritten Parameter (Array) unterstützt:
 
@@ -584,7 +587,7 @@ Alle Texte sind automatisch mehrsprachig verfügbar und können pro Sprache ange
 
 ### Per Service
 ```php
-consent_manager_inline::setDomainConfig('example.com', [
+FriendsOfRedaxo\ConsentManager\InlineConsent::setDomainConfig('example.com', [
     'inline_only' => ['youtube', 'vimeo'], // Nur diese Services inline
     'always_ask' => ['google-maps']        // Diese immer fragen
 ]);
@@ -708,14 +711,16 @@ Das Thumbnail-System kann **unabhängig vom Inline-Consent** für eigene Projekt
 ### 🚀 Schnellstart
 
 ```php
+use FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager;
+
 // Einfachste Verwendung - aus Video-URL direkt Thumbnail generieren
-$thumbnailUrl = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrlFromVideoUrl(
+$thumbnailUrl = ThumbnailMediaManager::getThumbnailUrlFromVideoUrl(
     'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 );
 echo '<img src="' . $thumbnailUrl . '" alt="YouTube Thumbnail" />';
 
 // Oder mit Service + Video-ID
-$thumbnailUrl = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('youtube', 'dQw4w9WgXcQ');
+$thumbnailUrl = ThumbnailMediaManager::getThumbnailUrl('youtube', 'dQw4w9WgXcQ');
 ```
 
 ### 🎯 Praktische Anwendungsbeispiele
@@ -725,7 +730,7 @@ $thumbnailUrl = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrl('you
 <?php
 // Helper-Funktion für Templates
 function getVideoThumbnail($videoUrl) {
-    return rex_consent_manager_thumbnail_mediamanager::getThumbnailUrlFromVideoUrl($videoUrl);
+    return FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager::getThumbnailUrlFromVideoUrl($videoUrl);
 }
 
 // Video-Liste
@@ -784,7 +789,7 @@ $sql->insert();
 ```php
 // In YForm TableManager oder MForm
 <?php if ($video_url = $this->getValue('video_url')): ?>
-    <?php $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrlFromVideoUrl($video_url); ?>
+    <?php $thumbnail = FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager::getThumbnailUrlFromVideoUrl($video_url); ?>
     <div class="video-preview">
         <img src="<?= $thumbnail ?>" alt="Video" />
         <a href="<?= $video_url ?>" class="play-button">▶ Abspielen</a>
@@ -800,7 +805,7 @@ public static function getVideoThumbnailColumn($params)
     $videoUrl = $params['value'];
     if (!$videoUrl) return '';
     
-    $thumbnail = rex_consent_manager_thumbnail_mediamanager::getThumbnailUrlFromVideoUrl($videoUrl);
+    $thumbnail = FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager::getThumbnailUrlFromVideoUrl($videoUrl);
     if (!$thumbnail) return '';
     
     return '<img src="' . $thumbnail . '" style="max-width: 80px; height: auto;" />';
@@ -810,15 +815,17 @@ public static function getVideoThumbnailColumn($params)
 ### 🔄 Cache-Management
 
 ```php
+use FriendsOfRedaxo\ConsentManager\ThumbnailMediaManager;
+
 // Cache-Informationen abrufen
-$cacheInfo = rex_consent_manager_thumbnail_mediamanager::getCacheSize();
+$cacheInfo = ThumbnailMediaManager::getCacheSize();
 echo "Gecachte Thumbnails: {$cacheInfo['files']}, Größe: " . rex_formatter::bytes($cacheInfo['size']);
 
 // Cache für bestimmten Service löschen
-rex_consent_manager_thumbnail_mediamanager::clearCache('youtube');
+ThumbnailMediaManager::clearCache('youtube');
 
 // Kompletten Thumbnail-Cache löschen
-rex_consent_manager_thumbnail_mediamanager::clearCache();
+ThumbnailMediaManager::clearCache();
 ```
 
 ### 💡 Vorteile der Mediamanager-Integration

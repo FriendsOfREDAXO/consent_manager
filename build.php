@@ -2,7 +2,7 @@
 
 /**
  * Consent Manager Build Script
- * Minifies JavaScript files for production use
+ * Minifies JavaScript files for production use.
  */
 
 echo "Consent Manager Build Script\n";
@@ -62,4 +62,3 @@ foreach ($files as $source => $target) {
 
 echo "Build completed!\n";
 echo "Note: This is basic minification. For better compression, use a proper minifier like Terser.\n";
-?>

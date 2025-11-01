@@ -64,3 +64,6 @@ default_config:
 installer_ignore:
     - .github
     - .gitignore
+
+console_commands:
+    consent_manager:log-delete: FriendsOfRedaxo\ConsentManager\Command\LogDelete
