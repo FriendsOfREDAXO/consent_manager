@@ -11,8 +11,6 @@
 use FriendsOfRedaxo\ConsentManager\Frontend;
 use FriendsOfRedaxo\ConsentManager\InlineConsent;
 
-$addon = rex_addon::get('consent_manager');
-
 // Nur laden wenn Domain konfiguriert ist
 $consent_manager = new Frontend(0);
 

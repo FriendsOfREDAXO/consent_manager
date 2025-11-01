@@ -62,27 +62,24 @@ class Theme
         }
 
         if (str_starts_with($theme, 'project:')) {
-            $addon = rex_addon::get('project');
-            if (!file_exists($addon->getPath('consent_manager_themes/' . str_replace('project:', '', $theme)))) {
-                return false;
-            }
-
+            $projectAddon = rex_addon::get('project');
             $themefile = str_replace('project:', '', $theme);
-            $tempfile = rex_path::addonCache('consent_manager', $themefile . '_preview.css');
-            $this->compileScss($addon->getPath('consent_manager_themes/' . $themefile), $tempfile);
-            $css = trim((string) rex_file::get($tempfile));
-            rex_file::delete($tempfile);
-        } else {
-            $addon = rex_addon::get('consent_manager');
-            if (!file_exists($addon->getPath('scss/' . $theme))) {
+            $scssFile = $projectAddon->getPath('consent_manager_themes/' . $themefile);
+            if (!$projectAddon->isAvailable() || !file_exists($scssFile)) {
                 return false;
             }
-            $themefile = $theme;
+            $tempfile = rex_path::addonCache('consent_manager', $themefile . '_preview.css');
+        } else {
+            $scssFile = rex_path::addon('consent_manager', 'scss/' . $theme);
+            if (!file_exists($scssFile)) {
+                return false;
+            }
             $tempfile = rex_path::addonCache('consent_manager', $theme . '_preview.css');
-            $this->compileScss($addon->getPath('scss/' . $themefile), $tempfile);
-            $css = trim((string) rex_file::get($tempfile));
-            rex_file::delete($tempfile);
         }
+
+        $this->compileScss($scssFile, $tempfile);
+        $css = trim((string) rex_file::get($tempfile));
+        rex_file::delete($tempfile);
 
         return $css;
     }
@@ -92,11 +89,15 @@ class Theme
      */
     public static function generateDefaultAssets(): void
     {
-        $addon = rex_addon::get('consent_manager');
-
         $cmtheme = new self();
-        $cmtheme->compileScss($addon->getPath('scss/consent_manager_backend.scss'), $addon->getPath('assets/consent_manager_backend.css'));
-        $cmtheme->compileScss($addon->getPath('scss/consent_manager_frontend.scss'), $addon->getPath('assets/consent_manager_frontend.css'));
+        $cmtheme->compileScss(
+            rex_path::addon('consent_manager', 'scss/consent_manager_backend.scss'),
+            rex_path::addon('consent_manager', 'assets/consent_manager_backend.css'),
+        );
+        $cmtheme->compileScss(
+            rex_path::addon('consent_manager', 'scss/consent_manager_frontend.scss'),
+            rex_path::addon('consent_manager', 'assets/consent_manager_frontend.css'),
+        );
     }
 
     /**
@@ -104,8 +105,10 @@ class Theme
      */
     public static function copyAllAssets(): void
     {
-        $addon = rex_addon::get('consent_manager');
-        rex_dir::copy($addon->getPath('assets'), $addon->getAssetsPath());
+        rex_dir::copy(
+            rex_path::addon('consent_manager', 'assets'),
+            rex_path::addonAssets('consent_manager'),
+        );
     }
 
     /**
@@ -114,14 +117,13 @@ class Theme
     public static function generateThemeAssets(string $theme): void
     {
         if (str_starts_with($theme, 'project:')) {
-            $addon = rex_addon::get('project');
-            $source = $addon->getPath('consent_manager_themes/' . str_replace('project:', '', $theme));
-            $addon = rex_addon::get('consent_manager');
-            $dest = $addon->getPath('assets/' . str_replace('project:', 'project_', str_replace('.scss', '.css', $theme)));
+            // FIXME: Und wenn Project nicht aktiviert ist? siehe self::getCompiledStyle
+            $projectAddon = rex_addon::get('project');
+            $source = $projectAddon->getPath('consent_manager_themes/' . str_replace('project:', '', $theme));
+            $dest = rex_path::addon('consent_manager', 'assets/' . str_replace('project:', 'project_', str_replace('.scss', '.css', $theme)));
         } else {
-            $addon = rex_addon::get('consent_manager');
-            $source = $addon->getPath('scss/' . $theme);
-            $dest = $addon->getPath('assets/' . str_replace('.scss', '.css', $theme));
+            $source = rex_path::addon('consent_manager', 'scss/' . $theme);
+            $dest = rex_path::addon('consent_manager', 'assets/' . str_replace('.scss', '.css', $theme));
         }
         $cmtheme = new self();
         $cmtheme->compileScss($source, $dest);
@@ -137,12 +139,13 @@ class Theme
             $theme = $this->getTheme();
         }
         if (str_starts_with($theme, 'project:')) {
-            $addon = rex_addon::get('project');
-            $themefile = rex_file::get($addon->getPath('consent_manager_themes/' . str_replace('project:', '', $theme)));
+            // FIXME: Und wenn Project nicht aktiviert ist? siehe self::getCompiledStyle
+            $projectAddon = rex_addon::get('project');
+            $themefile = $projectAddon->getPath('consent_manager_themes/' . str_replace('project:', '', $theme));
         } else {
-            $addon = rex_addon::get('consent_manager');
-            $themefile = rex_file::get($addon->getPath('scss/' . $theme));
+            $themefile = rex_path::addon('consent_manager', 'scss/' . $theme);
         }
+        $themefile = rex_file::get($themefile);
         $lines = explode("\n", (string) $themefile);
 
         $json = '';

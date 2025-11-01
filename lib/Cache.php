@@ -9,6 +9,7 @@ use rex_extension_point;
 use rex_file;
 use rex_i18n;
 use rex_logger;
+use rex_path;
 use rex_sql;
 use rex_string;
 
@@ -56,8 +57,7 @@ class Cache
      */
     private function writeCache()
     {
-        $addon = rex_addon::get('consent_manager');
-        $configFile = $addon->getDataPath('config.json');
+        $configFile = rex_path::addonData('consent_manager', 'config.json');
         $this->fetchData();
         foreach (rex_clang::getAllIds() as $clangId) {
             $this->prepareCookie($clangId);
@@ -210,8 +210,7 @@ class Cache
      */
     public static function read()
     {
-        $addon = rex_addon::get('consent_manager');
-        $configFile = $addon->getDataPath('config.json');
+        $configFile = rex_path::addonData('consent_manager', 'config.json');
 
         return rex_file::getCache($configFile);
     }

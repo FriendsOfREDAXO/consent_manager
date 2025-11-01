@@ -15,7 +15,6 @@ class Config
     public static function getTables($multilangOnly = false)
     {
         $tables = [];
-        /** TODO: self oder static statt Config */
         foreach (self::getKeys() as $key) {
             if ($multilangOnly && 'domain' === $key) {
                 continue;

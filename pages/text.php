@@ -3,8 +3,6 @@
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
-$addon = rex_addon::get('consent_manager');
-
 $showlist = true;
 $pid = rex_request('pid', 'int', 0);
 $func = rex_request('func', 'string');
@@ -25,12 +23,12 @@ if ('delete' === $func) {
     $form->addHiddenField('clang_id', $clang_id);
     RexFormSupport::getId($form, $table);
 
-    $form->addRawField(RexFormSupport::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
+    $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), $form->getSql()->getValue('uid')));
     $form->addHiddenField('uid', $form->getSql()->getValue('uid'));
     $field = $form->addTextAreaField('text');
-    $field->setLabel($addon->i18n('consent_manager_text'));
+    $field->setLabel(rex_i18n::msg('consent_manager_text'));
 
-    $title = $form->isEditMode() ? $addon->i18n('consent_manager_text_edit') : $addon->i18n('consent_manager_text_add');
+    $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_text_edit') : rex_i18n::msg('consent_manager_text_add');
     $content = $form->get();
 
     $fragment = new rex_fragment();
@@ -55,10 +53,10 @@ if ($showlist) {
     $list->addColumn('', $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams('', ['func' => 'edit', 'pid' => '###pid###']);
 
-    $list->setColumnLabel('uid', $addon->i18n('consent_manager_uid'));
+    $list->setColumnLabel('uid', rex_i18n::msg('consent_manager_uid'));
     $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
 
-    $list->setColumnLabel('text', $addon->i18n('consent_manager_text'));
+    $list->setColumnLabel('text', rex_i18n::msg('consent_manager_text'));
 
     $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
@@ -67,7 +65,7 @@ if ($showlist) {
     $content = $list->get();
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', $addon->i18n('consent_manager_cookies'));
+    $fragment->setVar('title', rex_i18n::msg('consent_manager_cookies'));
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 }

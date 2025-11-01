@@ -2,13 +2,7 @@
 /**
  * Fragment für Google Consent Mode v2 Helper
  * Generiert die HTML-Struktur für den Helper-Panel.
- *
- * @var rex_addon $addon
  */
-
-if (!isset($addon)) {
-    $addon = rex_addon::get('consent_manager');
-}
 
 ?>
 <style>
@@ -55,9 +49,9 @@ body.dark .google-consent-preview-code,
 <div id="google-consent-helper-panel" class="panel panel-info">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <i class="fa fa-google"></i> <?= $addon->i18n('google_consent_helper_title') ?>
+            <i class="fa fa-google"></i> <?= rex_i18n::msg('consent_manager_google_consent_helper_title') ?>
             <button type="button" id="google-helper-toggle" class="btn btn-xs btn-default pull-right">
-                <i class="fa fa-chevron-down"></i> <?= $addon->i18n('google_consent_helper_show') ?>
+                <i class="fa fa-chevron-down"></i> <?= rex_i18n::msg('consent_manager_google_consent_helper_show') ?>
             </button>
             <div class="clearfix"></div>
         </h4>
@@ -71,27 +65,27 @@ body.dark .google-consent-preview-code,
             
             <p class="help-block">
                 <i class="fa fa-info-circle"></i> 
-                <?= $addon->i18n('google_consent_helper_description') ?>
+                <?= rex_i18n::msg('consent_manager_google_consent_helper_description') ?>
             </p>
             
             <!-- Service Auswahl -->
             <div class="form-group">
-                <label for="google-helper-service"><i class="fa fa-cog"></i> <?= $addon->i18n('google_consent_helper_service_type') ?>:</label>
+                <label for="google-helper-service"><i class="fa fa-cog"></i> <?= rex_i18n::msg('consent_manager_google_consent_helper_service_type') ?>:</label>
                 <select id="google-helper-service" class="form-control">
-                    <option value=""><?= $addon->i18n('google_consent_helper_select_service') ?></option>
-                    <option value="analytics"><?= $addon->i18n('google_consent_service_analytics') ?></option>
-                    <option value="google-analytics"><?= $addon->i18n('google_consent_service_google_analytics') ?></option>
-                    <option value="google-analytics-4"><?= $addon->i18n('google_consent_service_google_analytics_4') ?></option>
-                    <option value="google-tag-manager"><?= $addon->i18n('google_consent_service_google_tag_manager') ?></option>
-                    <option value="google-tag-manager-all"><?= $addon->i18n('google_consent_service_google_tag_manager_all') ?></option>
-                    <option value="matomo"><?= $addon->i18n('google_consent_service_matomo') ?></option>
-                    <option value="adwords"><?= $addon->i18n('google_consent_service_adwords') ?></option>
-                    <option value="google-ads"><?= $addon->i18n('google_consent_service_google_ads') ?></option>
-                    <option value="facebook-pixel"><?= $addon->i18n('google_consent_service_facebook_pixel') ?></option>
-                    <option value="youtube"><?= $addon->i18n('google_consent_service_youtube') ?></option>
-                    <option value="google-maps"><?= $addon->i18n('google_consent_service_google_maps') ?></option>
+                    <option value=""><?= rex_i18n::msg('consent_manager_google_consent_helper_select_service') ?></option>
+                    <option value="analytics"><?= rex_i18n::msg('consent_manager_google_consent_service_analytics') ?></option>
+                    <option value="google-analytics"><?= rex_i18n::msg('consent_manager_google_consent_service_google_analytics') ?></option>
+                    <option value="google-analytics-4"><?= rex_i18n::msg('consent_manager_google_consent_service_google_analytics_4') ?></option>
+                    <option value="google-tag-manager"><?= rex_i18n::msg('consent_manager_google_consent_service_google_tag_manager') ?></option>
+                    <option value="google-tag-manager-all"><?= rex_i18n::msg('consent_manager_google_consent_service_google_tag_manager_all') ?></option>
+                    <option value="matomo"><?= rex_i18n::msg('consent_manager_google_consent_service_matomo') ?></option>
+                    <option value="adwords"><?= rex_i18n::msg('consent_manager_google_consent_service_adwords') ?></option>
+                    <option value="google-ads"><?= rex_i18n::msg('consent_manager_google_consent_service_google_ads') ?></option>
+                    <option value="facebook-pixel"><?= rex_i18n::msg('consent_manager_google_consent_service_facebook_pixel') ?></option>
+                    <option value="youtube"><?= rex_i18n::msg('consent_manager_google_consent_service_youtube') ?></option>
+                    <option value="google-maps"><?= rex_i18n::msg('consent_manager_google_consent_service_google_maps') ?></option>
                 </select>
-                <small class="help-block"><?= $addon->i18n('google_consent_helper_auto_detection') ?></small>
+                <small class="help-block"><?= rex_i18n::msg('consent_manager_google_consent_helper_auto_detection') ?></small>
             </div>
             
             <!-- Buttons -->
@@ -99,12 +93,12 @@ body.dark .google-consent-preview-code,
                 <div class="btn-group btn-group-justified" role="group">
                     <div class="btn-group" role="group">
                         <button type="button" id="generate-consent-script" class="btn btn-success">
-                            <i class="fa fa-check"></i> <?= $addon->i18n('google_consent_helper_consent_script') ?>
+                            <i class="fa fa-check"></i> <?= rex_i18n::msg('consent_manager_google_consent_helper_consent_script') ?>
                         </button>
                     </div>
                     <div class="btn-group" role="group">
                         <button type="button" id="generate-revoke-script" class="btn btn-warning">
-                            <i class="fa fa-times"></i> <?= $addon->i18n('google_consent_helper_revoke_script') ?>
+                            <i class="fa fa-times"></i> <?= rex_i18n::msg('consent_manager_google_consent_helper_revoke_script') ?>
                         </button>
                     </div>
                 </div>
@@ -113,12 +107,12 @@ body.dark .google-consent-preview-code,
             <!-- Script Preview -->
             <div id="script-preview" class="well well-sm" style="display:none;">
                 <div class="form-group">
-                    <label><i class="fa fa-code"></i> <?= $addon->i18n('google_consent_helper_generated_script') ?>:</label>
+                    <label><i class="fa fa-code"></i> <?= rex_i18n::msg('consent_manager_google_consent_helper_generated_script') ?>:</label>
                     <div class="input-group">
                         <pre id="preview-content" class="google-consent-preview-code"></pre>
                         <div class="input-group-btn">
-                            <button type="button" id="copy-preview-script" class="btn btn-primary" title="<?= $addon->i18n('google_consent_helper_copy_to_clipboard') ?>">
-                                <i class="fa fa-copy"></i> <?= $addon->i18n('google_consent_helper_copy') ?>
+                            <button type="button" id="copy-preview-script" class="btn btn-primary" title="<?= rex_i18n::msg('consent_manager_google_consent_helper_copy_to_clipboard') ?>">
+                                <i class="fa fa-copy"></i> <?= rex_i18n::msg('consent_manager_google_consent_helper_copy') ?>
                             </button>
                         </div>
                     </div>

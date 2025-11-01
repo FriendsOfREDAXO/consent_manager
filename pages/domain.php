@@ -2,8 +2,6 @@
 
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
-$addon = rex_addon::get('consent_manager');
-
 $showlist = true;
 $id = rex_request('id', 'int', 0);
 $func = rex_request('func', 'string');
@@ -27,30 +25,30 @@ if ('delete' === $func) {
     $form->setApplyUrl(rex_url::currentBackendPage());
 
     $field = $form->addTextField('uid');
-    $field->setLabel($addon->i18n('consent_manager_domain'));
-    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_empty_msg'));
-    $field->getValidator()->add('custom', $addon->i18n('consent_manager_domain_malformed_msg'), RexFormSupport::validateHostname(...));
+    $field->setLabel(rex_i18n::msg('consent_manager_domain'));
+    $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_empty_msg'));
+    $field->getValidator()->add('custom', rex_i18n::msg('consent_manager_domain_malformed_msg'), RexFormSupport::validateHostname(...));
     $field->getValidator()->add('custom', 'Domain muss in Kleinbuchstaben eingegeben werden (z.B. "example.com" statt "Example.com")', static function ($value) {
         return RexFormSupport::validateLowercase($value);
     });
     $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
 
     $field = $form->addLinkmapField('privacy_policy');
-    $field->setLabel($addon->i18n('consent_manager_domain_privacy_policy')); /** @phpstan-ignore-line */
-    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_privacy_policy_empty_msg')); /** @phpstan-ignore-line */
+    $field->setLabel(rex_i18n::msg('consent_manager_domain_privacy_policy')); /** @phpstan-ignore-line */
+    $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_privacy_policy_empty_msg')); /** @phpstan-ignore-line */
 
     $field = $form->addLinkmapField('legal_notice');
-    $field->setLabel($addon->i18n('consent_manager_domain_legal_notice')); /** @phpstan-ignore-line */
-    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_domain_legal_notic_empty_msg')); /** @phpstan-ignore-line */
+    $field->setLabel(rex_i18n::msg('consent_manager_domain_legal_notice')); /** @phpstan-ignore-line */
+    $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_legal_notic_empty_msg')); /** @phpstan-ignore-line */
 
     // Google Consent Mode v2 Configuration
     $field = $form->addSelectField('google_consent_mode_enabled');
-    $field->setLabel($addon->i18n('google_consent_mode_title'));
+    $field->setLabel(rex_i18n::msg('consent_manager_google_consent_mode_title'));
     $select = $field->getSelect();
-    $select->addOption($addon->i18n('google_consent_mode_disabled'), 'disabled');
-    $select->addOption($addon->i18n('google_consent_mode_auto'), 'auto');
-    $select->addOption($addon->i18n('google_consent_mode_manual'), 'manual');
-    $field->setNotice($addon->i18n('google_consent_mode_notice'));
+    $select->addOption(rex_i18n::msg('consent_manager_google_consent_mode_disabled'), 'disabled');
+    $select->addOption(rex_i18n::msg('consent_manager_google_consent_mode_auto'), 'auto');
+    $select->addOption(rex_i18n::msg('consent_manager_google_consent_mode_manual'), 'manual');
+    $field->setNotice(rex_i18n::msg('consent_manager_google_consent_mode_notice'));
 
     // Debug Mode Configuration
     $field = $form->addSelectField('google_consent_mode_debug');
@@ -62,11 +60,11 @@ if ('delete' === $func) {
 
     // Inline-Only Mode Configuration
     $field = $form->addSelectField('inline_only_mode');
-    $field->setLabel($addon->i18n('consent_manager_domain_inline_only_mode'));
+    $field->setLabel(rex_i18n::msg('consent_manager_domain_inline_only_mode'));
     $select = $field->getSelect();
-    $select->addOption($addon->i18n('consent_manager_domain_inline_only_mode_disabled'), '0');
-    $select->addOption($addon->i18n('consent_manager_domain_inline_only_mode_enabled'), '1');
-    $field->setNotice($addon->i18n('consent_manager_domain_inline_only_mode_notice'));
+    $select->addOption(rex_i18n::msg('consent_manager_domain_inline_only_mode_disabled'), '0');
+    $select->addOption(rex_i18n::msg('consent_manager_domain_inline_only_mode_enabled'), '1');
+    $field->setNotice(rex_i18n::msg('consent_manager_domain_inline_only_mode_notice'));
 
     // oEmbed / CKE5 Video Configuration - nur anzeigen wenn CKE5 verfügbar ist
     if (rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {
@@ -93,7 +91,7 @@ if ('delete' === $func) {
         $field->setNotice('Drei-Button-Variante zeigt zusätzlich "Alle zulassen" Button zum sofortigen Freischalten aller Services einer Gruppe.');
     }
 
-    $title = $form->isEditMode() ? $addon->i18n('consent_manager_domain_edit') : $addon->i18n('consent_manager_domain_add');
+    $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_domain_edit') : rex_i18n::msg('consent_manager_domain_add');
     $content = $form->get();
 
     $fragment = new rex_fragment();
@@ -115,23 +113,23 @@ if ($showlist) {
     $list->addTableAttribute('class', 'table table-striped table-hover consent_manager-table consent_manager-table-cookiegroup');
 
     $list->removeColumn('id');
-    $list->setColumnLabel('uid', $addon->i18n('consent_manager_domain'));
+    $list->setColumnLabel('uid', rex_i18n::msg('consent_manager_domain'));
     $list->setColumnParams('uid', ['func' => 'edit', 'id' => '###id###']);
     $list->setColumnSortable('uid');
 
     // Google Consent Mode Status Spalte
     $list->setColumnLabel('google_consent_mode_enabled', 'Google Consent Mode v2');
-    $list->setColumnFormat('google_consent_mode_enabled', 'custom', static function ($params) use ($addon) {
+    $list->setColumnFormat('google_consent_mode_enabled', 'custom', static function ($params) {
         $value = $params['value'];
         switch ($value) {
             case 'disabled':
-                return '<span class="label label-default">❌ ' . $addon->i18n('google_consent_mode_disabled') . '</span>';
+                return '<span class="label label-default">❌ ' . rex_i18n::msg('consent_manager_google_consent_mode_disabled') . '</span>';
             case 'auto':
-                return '<span class="label label-success">🔄 ' . $addon->i18n('google_consent_mode_auto') . '</span>';
+                return '<span class="label label-success">🔄 ' . rex_i18n::msg('consent_manager_google_consent_mode_auto') . '</span>';
             case 'manual':
-                return '<span class="label label-info">⚙️ ' . $addon->i18n('google_consent_mode_manual') . '</span>';
+                return '<span class="label label-info">⚙️ ' . rex_i18n::msg('consent_manager_google_consent_mode_manual') . '</span>';
             default:
-                return '<span class="label label-default">❌ ' . $addon->i18n('google_consent_mode_disabled') . '</span>';
+                return '<span class="label label-default">❌ ' . rex_i18n::msg('consent_manager_google_consent_mode_disabled') . '</span>';
         }
     });
 
@@ -147,12 +145,12 @@ if ($showlist) {
 
     // Inline-Only Mode Status Spalte
     $list->setColumnLabel('inline_only_mode', '📱 Inline-Only');
-    $list->setColumnFormat('inline_only_mode', 'custom', static function ($params) use ($addon) {
+    $list->setColumnFormat('inline_only_mode', 'custom', static function ($params) {
         $value = (int) $params['value'];
         if (1 === $value) {
-            return '<span class="label label-info"><i class="fa fa-hand-pointer-o" style="margin-right: 5px;"></i>' . $addon->i18n('consent_manager_domain_inline_only_mode_enabled') . '</span>';
+            return '<span class="label label-info"><i class="fa fa-hand-pointer-o" style="margin-right: 5px;"></i>' . rex_i18n::msg('consent_manager_domain_inline_only_mode_enabled') . '</span>';
         }
-        return '<span class="label label-default"><i class="fa fa-window-maximize" style="margin-right: 5px;"></i>' . $addon->i18n('consent_manager_domain_inline_only_mode_disabled') . '</span>';
+        return '<span class="label label-default"><i class="fa fa-window-maximize" style="margin-right: 5px;"></i>' . rex_i18n::msg('consent_manager_domain_inline_only_mode_disabled') . '</span>';
     });
 
     // oEmbed Status Spalte - nur anzeigen wenn CKE5 verfügbar ist
@@ -184,7 +182,7 @@ if ($showlist) {
     $content = $list->get();
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', $addon->i18n('consent_manager_domains'));
+    $fragment->setVar('title', rex_i18n::msg('consent_manager_domains'));
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 }

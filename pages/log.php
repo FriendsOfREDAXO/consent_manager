@@ -1,7 +1,5 @@
 <?php
 
-$addon = rex_addon::get('consent_manager');
-
 $searchvalue = rex_request('Consent_Search', 'string', '');
 $where = '';
 
@@ -42,13 +40,13 @@ $list->setColumnSortable('createdate', 'desc');
 $list->setColumnSortable('domain', 'asc');
 $list->setColumnSortable('cachelogid', 'asc');
 
-$list->setColumnLabel('id', $addon->i18n('thead_id'));
-$list->setColumnLabel('createdate', $addon->i18n('thead_createdate'));
-$list->setColumnLabel('domain', $addon->i18n('thead_domain'));
-$list->setColumnLabel('ip', $addon->i18n('thead_ip'));
-$list->setColumnLabel('consents', $addon->i18n('thead_consents'));
-$list->setColumnLabel('cachelogid', $addon->i18n('thead_cachelogid'));
-$list->setColumnLabel('consentid', $addon->i18n('thead_consentid'));
+$list->setColumnLabel('id', rex_i18n::msg('consent_manager_thead_id'));
+$list->setColumnLabel('createdate', rex_i18n::msg('consent_manager_thead_createdate'));
+$list->setColumnLabel('domain', rex_i18n::msg('consent_manager_thead_domain'));
+$list->setColumnLabel('ip', rex_i18n::msg('consent_manager_thead_ip'));
+$list->setColumnLabel('consents', rex_i18n::msg('consent_manager_thead_consents'));
+$list->setColumnLabel('cachelogid', rex_i18n::msg('consent_manager_thead_cachelogid'));
+$list->setColumnLabel('consentid', rex_i18n::msg('consent_manager_thead_consentid'));
 
 $list->setColumnFormat('createdate', 'custom', static function ($params) {
     $list = $params['list'];
@@ -61,7 +59,7 @@ $list->setColumnFormat('consents', 'custom', static function ($params) {
     $str = implode(', ', $consents);
     return $str;
 });
-$list->setNoRowsMessage($addon->i18n('list_no_rows'));
+$list->setNoRowsMessage(rex_i18n::msg('consent_manager_list_no_rows'));
 
 $list->addTableAttribute('class', 'table table-striped table-hover');
 
@@ -72,7 +70,7 @@ $fragmentsearch->setVar('value', $searchvalue);
 $cmsearch = $fragmentsearch->parse('core/form/search.php');
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $addon->i18n('thead_title'));
+$fragment->setVar('title', rex_i18n::msg('consent_manager_thead_title'));
 $fragment->setVar('options', $cmsearch, false);
 $fragment->setVar('content', $list->get(), false);
 echo $fragment->parse('core/page/section.php');

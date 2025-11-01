@@ -18,12 +18,12 @@ if ('setup_minimal' === $func) {
         $result = JsonSetup::importSetup($jsonSetupFile, true);
         if ($result['success']) {
             CLang::addonJustInstalled();
-            echo rex_view::success($addon->i18n('consent_manager_import_minimal_success'));
+            echo rex_view::success(rex_i18n::msg('consent_manager_import_minimal_success'));
         } else {
-            echo rex_view::error($addon->i18n('consent_manager_import_minimal_error', $result['message']));
+            echo rex_view::error(rex_i18n::msg('consent_manager_import_minimal_error', $result['message']));
         }
     } else {
-        echo rex_view::error($addon->i18n('consent_manager_import_minimal_file_not_found'));
+        echo rex_view::error(rex_i18n::msg('consent_manager_import_minimal_file_not_found'));
     }
 
     // Redirect to normal config page without func parameter
@@ -36,12 +36,12 @@ if ('setup_minimal' === $func) {
         $result = JsonSetup::importSetup($jsonSetupFile, true);
         if ($result['success']) {
             CLang::addonJustInstalled();
-            echo rex_view::success($addon->i18n('consent_manager_import_standard_success'));
+            echo rex_view::success(rex_i18n::msg('consent_manager_import_standard_success'));
         } else {
-            echo rex_view::error($addon->i18n('consent_manager_import_standard_error', $result['message']));
+            echo rex_view::error(rex_i18n::msg('consent_manager_import_standard_error', $result['message']));
         }
     } else {
-        echo rex_view::error($addon->i18n('consent_manager_import_standard_file_not_found'));
+        echo rex_view::error(rex_i18n::msg('consent_manager_import_standard_file_not_found'));
     }
 
     // Redirect to normal config page without func parameter
@@ -54,12 +54,12 @@ if ('setup_minimal' === $func) {
         $result = JsonSetup::importSetup($jsonSetupFile, false, 'update');
         if ($result['success']) {
             CLang::addonJustInstalled();
-            echo rex_view::success($addon->i18n('consent_manager_import_minimal_update_success'));
+            echo rex_view::success(rex_i18n::msg('consent_manager_import_minimal_update_success'));
         } else {
-            echo rex_view::error($addon->i18n('consent_manager_import_minimal_update_error', $result['message']));
+            echo rex_view::error(rex_i18n::msg('consent_manager_import_minimal_update_error', $result['message']));
         }
     } else {
-        echo rex_view::error($addon->i18n('consent_manager_import_minimal_file_not_found'));
+        echo rex_view::error(rex_i18n::msg('consent_manager_import_minimal_file_not_found'));
     }
 
     // Redirect to normal config page without func parameter
@@ -72,12 +72,12 @@ if ('setup_minimal' === $func) {
         $result = JsonSetup::importSetup($jsonSetupFile, false, 'update');
         if ($result['success']) {
             CLang::addonJustInstalled();
-            echo rex_view::success($addon->i18n('consent_manager_import_standard_update_success'));
+            echo rex_view::success(rex_i18n::msg('consent_manager_import_standard_update_success'));
         } else {
-            echo rex_view::error($addon->i18n('consent_manager_import_standard_update_error', $result['message']));
+            echo rex_view::error(rex_i18n::msg('consent_manager_import_standard_update_error', $result['message']));
         }
     } else {
-        echo rex_view::error($addon->i18n('consent_manager_import_standard_file_not_found'));
+        echo rex_view::error(rex_i18n::msg('consent_manager_import_standard_file_not_found'));
     }
 
     // Redirect to normal config page without func parameter
@@ -166,15 +166,15 @@ if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_
                             }
                         }
 
-                        echo rex_view::success($addon->i18n('consent_manager_import_json_successful'));
+                        echo rex_view::success(rex_i18n::msg('consent_manager_import_json_successful'));
                     } catch (rex_sql_exception $e) {
-                        echo rex_view::error($addon->i18n('consent_manager_import_json_error') . ': ' . $e->getMessage());
+                        echo rex_view::error(rex_i18n::msg('consent_manager_import_json_error') . ': ' . $e->getMessage());
                     }
                 } else {
-                    echo rex_view::error($addon->i18n('consent_manager_import_json_invalid'));
+                    echo rex_view::error(rex_i18n::msg('consent_manager_import_json_invalid'));
                 }
             } else {
-                echo rex_view::error($addon->i18n('consent_manager_import_json_no_file'));
+                echo rex_view::error(rex_i18n::msg('consent_manager_import_json_no_file'));
             }
         }
     }
@@ -187,44 +187,43 @@ $cookie_count = $sql->getValue('count');
 
 // Settings Form erstellen mit verbesserter Struktur
 $form = rex_config_form::factory((string) $addon->getPackageId());
-$form->addFieldset($addon->i18n('consent_manager_config_legend'));
+$form->addFieldset(rex_i18n::msg('consent_manager_config_legend'));
 
 // CSS Output Einstellung
 $field = $form->addCheckboxField('outputowncss');
-$field->setLabel($addon->i18n('consent_manager_config_owncss'));
-$field->addOption($addon->i18n('consent_manager_config_owncss'), 1);
-$field->setNotice($addon->i18n('consent_manager_config_owncss_desc'));
+$field->setLabel(rex_i18n::msg('consent_manager_config_owncss'));
+$field->addOption(rex_i18n::msg('consent_manager_config_owncss'), 1);
+$field->setNotice(rex_i18n::msg('consent_manager_config_owncss_desc'));
 
 // Body Scrollbar Einstellung
 $field = $form->addCheckboxField('hidebodyscrollbar');
-$field->setLabel($addon->i18n('consent_manager_config_hidebodyscrollbar'));
-$field->addOption($addon->i18n('consent_manager_config_hidebodyscrollbar'), 1);
-$field->setNotice($addon->i18n('consent_manager_config_hidebodyscrollbar_desc'));
+$field->setLabel(rex_i18n::msg('consent_manager_config_hidebodyscrollbar'));
+$field->addOption(rex_i18n::msg('consent_manager_config_hidebodyscrollbar'), 1);
+$field->setNotice(rex_i18n::msg('consent_manager_config_hidebodyscrollbar_desc'));
 
 // Inline-Only Modus
 $field = $form->addCheckboxField('inline_only_mode');
-$field->setLabel($addon->i18n('consent_manager_config_inline_only_mode'));
-$field->addOption($addon->i18n('consent_manager_config_inline_only_mode'), 1);
-$field->setNotice($addon->i18n('consent_manager_config_inline_only_mode_desc'));
+$field->setLabel(rex_i18n::msg('consent_manager_config_inline_only_mode'));
+$field->addOption(rex_i18n::msg('consent_manager_config_inline_only_mode'), 1);
+$field->setNotice(rex_i18n::msg('consent_manager_config_inline_only_mode_desc'));
 
 // Cookie Lebensdauer
 $field = $form->addTextField('lifespan');
-$field->setLabel($addon->i18n('consent_manager_config_lifespan_label'));
+$field->setLabel(rex_i18n::msg('consent_manager_config_lifespan_label'));
 $field->setAttribute('type', 'number');
 $field->setAttribute('step', '1');
 $field->setAttribute('pattern', '[0-9]*');
 $field->setAttribute('placeholder', '365');
-$field->setNotice($addon->i18n('consent_manager_config_lifespan_notice'));
+$field->setNotice(rex_i18n::msg('consent_manager_config_lifespan_notice'));
 
 // Token Einstellungen Fieldset
-$form->addFieldset($addon->i18n('consent_manager_config_token_legend'));
+$form->addFieldset(rex_i18n::msg('consent_manager_config_token_legend'));
 $field = $form->addTextField('skip_consent');
-$field->setLabel($addon->i18n('consent_manager_config_token_label'));
-$field->setNotice($addon->i18n('consent_manager_config_token_notice'));
+$field->setLabel(rex_i18n::msg('consent_manager_config_token_label'));
+$field->setNotice(rex_i18n::msg('consent_manager_config_token_notice'));
 
 // Layout mit Fragment
 $fragment = new rex_fragment();
-$fragment->setVar('addon', $addon);
 $fragment->setVar('form', $form);
 $fragment->setVar('csrf', $csrf);
 echo $fragment->parse('ConsentManager/config_layout.php');

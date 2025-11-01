@@ -5,8 +5,6 @@ use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 use FriendsOfRedaxo\ConsentManager\RexListSupport;
 use FriendsOfRedaxo\ConsentManager\Utility;
 
-$addon = rex_addon::get('consent_manager');
-
 $showlist = true;
 $pid = rex_request('pid', 'int', 0);
 $func = rex_request('func', 'string');
@@ -35,16 +33,16 @@ if ('delete' === $func) {
 
     if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
         $field = $form->addTextField('uid');
-        $field->setLabel($addon->i18n('consent_manager_uid'));
-        $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_uid_empty_msg'));
-        $field->getValidator()->add('match', $addon->i18n('consent_manager_uid_malformed_msg'), '/^[a-z0-9-]+$/');
+        $field->setLabel(rex_i18n::msg('consent_manager_uid'));
+        $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_uid_empty_msg'));
+        $field->getValidator()->add('match', rex_i18n::msg('consent_manager_uid_malformed_msg'), '/^[a-z0-9-]+$/');
 
         $field = $form->addCheckboxField('required');
-        $field->addOption($addon->i18n('consent_manager_cookiegroup_required'), 1);
+        $field->addOption(rex_i18n::msg('consent_manager_cookiegroup_required'), 1);
 
         if (count($domains) > 0) {
             $field = $form->addCheckboxField('domain');
-            $field->setLabel($addon->i18n('consent_manager_domain'));
+            $field->setLabel(rex_i18n::msg('consent_manager_domain'));
             foreach ($domains as $v) {
                 $field->addOption($v['uid'], $v['id']);
             }
@@ -52,11 +50,11 @@ if ('delete' === $func) {
 
         $field = $form->addPrioField('prio');
         $field->setWhereCondition('clang_id = ' . $clang_id);
-        $field->setLabel($addon->i18n('prio'));
+        $field->setLabel(rex_i18n::msg('consent_manager_prio'));
         $field->setLabelField('uid');
     } else {
-        $form->addRawField(RexFormSupport::getFakeText($addon->i18n('consent_manager_uid'), $form->getSql()->getValue('uid')));
-        $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), $addon->i18n('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
+        $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), $form->getSql()->getValue('uid')));
+        $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), rex_i18n::msg('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
 
         $checkboxes = [];
         $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('domain')));
@@ -65,16 +63,16 @@ if ('delete' === $func) {
             $checkboxes[] = [$checked, $v['uid']];
         }
         if (count($checkboxes) > 0) {
-            $form->addRawField(RexFormSupport::getFakeCheckbox($addon->i18n('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
+            $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
     $field = $form->addTextField('name');
-    $field->setLabel($addon->i18n('consent_manager_name'));
-    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_uid_empty_msg'));
+    $field->setLabel(rex_i18n::msg('consent_manager_name'));
+    $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_uid_empty_msg'));
 
     $field = $form->addTextAreaField('description');
-    $field->setLabel($addon->i18n('consent_manager_description'));
-    $field->getValidator()->add('notEmpty', $addon->i18n('consent_manager_uid_empty_msg'));
+    $field->setLabel(rex_i18n::msg('consent_manager_description'));
+    $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_uid_empty_msg'));
 
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('consent_manager_cookie'));
@@ -85,7 +83,7 @@ if ('delete' === $func) {
     if ($clang_id === rex_clang::getStartId() || true !== $form->isEditMode()) {
         if ([] !== $cookies) {
             $field = $form->addCheckboxField('cookie');
-            $field->setLabel($addon->i18n('consent_manager_cookies'));
+            $field->setLabel(rex_i18n::msg('consent_manager_cookies'));
             foreach ($cookies as $v) {
                 $field->addOption($v['uid'], $v['uid']);
             }
@@ -102,11 +100,11 @@ if ('delete' === $func) {
                 $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
                 $checkboxes[] = [$checked, $v['uid']];
             }
-            $form->addRawField(RexFormSupport::getFakeCheckbox($addon->i18n('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
+            $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
 
-    $title = $form->isEditMode() ? $addon->i18n('consent_manager_cookiegroup_edit') : $addon->i18n('consent_manager_cookiegroup_add');
+    $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_cookiegroup_edit') : rex_i18n::msg('consent_manager_cookiegroup_add');
     $content = $form->get();
 
     $fragment = new rex_fragment();
@@ -119,7 +117,7 @@ echo $msg;
 
 if ($showlist) {
     if (false === Utility::consentConfigured()) {
-        echo rex_view::warning($addon->i18n('consent_manager_cookiegroup_nodomain_notice'));
+        echo rex_view::warning(rex_i18n::msg('consent_manager_cookiegroup_nodomain_notice'));
     }
 
     $listDebug = false;
@@ -134,15 +132,15 @@ if ($showlist) {
     $list->addTableAttribute('class', 'table table-striped table-hover consent_manager-table consent_manager-table-cookiegroup');
 
     $list->removeColumn('pid');
-    $list->setColumnLabel('domain', $addon->i18n('consent_manager_domain'));
+    $list->setColumnLabel('domain', rex_i18n::msg('consent_manager_domain'));
     $list->setColumnSortable('domain');
     $list->setColumnFormat('domain', 'custom', RexListSupport::formatDomain(...));
-    $list->setColumnLabel('cookie', $addon->i18n('consent_manager_cookies'));
+    $list->setColumnLabel('cookie', rex_i18n::msg('consent_manager_cookies'));
     $list->setColumnFormat('cookie', 'custom', RexListSupport::formatCookie(...));
-    $list->setColumnLabel('uid', $addon->i18n('consent_manager_uid'));
+    $list->setColumnLabel('uid', rex_i18n::msg('consent_manager_uid'));
     $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
     $list->setColumnSortable('uid');
-    $list->setColumnLabel('name', $addon->i18n('consent_manager_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('consent_manager_name'));
     $list->setColumnSortable('name');
 
     $tdIcon = '<i class="fa fa-coffee"></i>';
@@ -162,7 +160,7 @@ if ($showlist) {
     $content = $list->get();
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', $addon->i18n('consent_manager_cookiegroups'));
+    $fragment->setVar('title', rex_i18n::msg('consent_manager_cookiegroups'));
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 }

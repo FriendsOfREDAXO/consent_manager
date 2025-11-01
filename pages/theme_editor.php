@@ -7,11 +7,11 @@
 
 use FriendsOfRedaxo\ConsentManager\Theme;
 
-$addon = rex_addon::get('consent_manager');
-
 // Check if project addon is available and installed
+// TODO: Prüfen ob das weg kann.
+// Weiter unten wird nochmal abgefragt, on Project installiert ist.
 if (!rex_addon::get('project')->isAvailable()) {
-    echo rex_view::error($addon->i18n('theme_editor_project_addon_required'));
+    echo rex_view::error(rex_i18n::msg('consent_manager_theme_editor_project_addon_required'));
     return;
 }
 
@@ -69,9 +69,9 @@ if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
     // Save to project addon
     /**
      * REXSTAN: If condition is always true.
-     * NOTE: Nein, Project ist eben nicht immer installiert.
+     * NOTE: denn am Anfang wird ja schon auf Project geprüft. Eine der beiden Abfragen ist Murks.
      */
-    if (rex_addon::get('project')->isAvailable()) { // @phpstan-ignore-line
+    if (rex_addon::get('project')->isAvailable()) {
         $projectAddon = rex_addon::get('project');
         $themesDir = $projectAddon->getPath('consent_manager_themes/');
 
@@ -88,7 +88,7 @@ if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
                 Theme::generateThemeAssets('project:' . $filename);
                 Theme::copyAllAssets();
 
-                echo rex_view::success($addon->i18n('theme_editor_saved', $themeName));
+                echo rex_view::success(rex_i18n::msg('consent_manager_theme_editor_saved', $themeName));
                 echo rex_view::info('Theme gespeichert als: <code>' . $filename . '</code><br>Du kannst es jetzt unter "Theme" auswählen.');
             } catch (Exception $e) {
                 echo rex_view::error('Fehler beim Kompilieren: ' . $e->getMessage());
@@ -101,6 +101,7 @@ if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
     }
 }
 
+// TODO: Funktion verlagern in eine eigene Datei? -> Thomas fragen
 function generateA11yThemeScss($base, $name, $description, $colors)
 {
     $isCompact = ('compact' === $base);
