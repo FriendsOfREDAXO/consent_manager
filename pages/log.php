@@ -1,6 +1,6 @@
 <?php
 
-$searchvalue = rex_request('Consent_Search', 'string', '');
+$searchvalue = rex_request::request('Consent_Search', 'string', '');
 $where = '';
 
 if ('' !== $searchvalue) {

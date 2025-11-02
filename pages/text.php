@@ -4,8 +4,8 @@ use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $showlist = true;
-$pid = rex_request('pid', 'int', 0);
-$func = rex_request('func', 'string');
+$pid = rex_request::request('pid', 'int', 0);
+$func = rex_request::request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_text');
 $clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3) ?? '');
 $table = rex::getTable('consent_manager_text');
@@ -16,9 +16,9 @@ if ('delete' === $func) {
     $showlist = false;
     $form = rex_form::factory($table, '', 'pid = ' . $pid, 'post', $formDebug);
     $form->addParam('pid', $pid);
-    $form->addParam('sort', rex_request('sort', 'string', ''));
-    $form->addParam('sorttype', rex_request('sorttype', 'string', ''));
-    $form->addParam('start', rex_request('start', 'int', 0));
+    $form->addParam('sort', rex_request::request('sort', 'string', ''));
+    $form->addParam('sorttype', rex_request::request('sorttype', 'string', ''));
+    $form->addParam('start', rex_request::request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
     $form->addHiddenField('clang_id', $clang_id);
     RexFormSupport::getId($form, $table);
@@ -60,7 +60,7 @@ if ($showlist) {
 
     $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('function'), ['pid' => '###pid###', 'func' => 'edit', 'start' => rex_request('start', 'string')]);
+    $list->setColumnParams(rex_i18n::msg('function'), ['pid' => '###pid###', 'func' => 'edit', 'start' => rex_request::request('start', 'string')]);
 
     $content = $list->get();
 

@@ -3,8 +3,8 @@
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $showlist = true;
-$id = rex_request('id', 'int', 0);
-$func = rex_request('func', 'string');
+$id = rex_request::request('id', 'int', 0);
+$func = rex_request(::request'func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_domain');
 $table = rex::getTable('consent_manager_domain');
 $msg = '';
@@ -19,9 +19,9 @@ if ('delete' === $func) {
     $showlist = false;
     $form = rex_form::factory($table, '', 'id = ' . $id, 'post', $formDebug);
     $form->addParam('id', $id);
-    $form->addParam('sort', rex_request('sort', 'string', ''));
-    $form->addParam('sorttype', rex_request('sorttype', 'string', ''));
-    $form->addParam('start', rex_request('start', 'int', 0));
+    $form->addParam('sort', rex_request::request('sort', 'string', ''));
+    $form->addParam('sorttype', rex_request::request('sorttype', 'string', ''));
+    $form->addParam('start', rex_request::request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
 
     $field = $form->addTextField('uid');
@@ -172,7 +172,7 @@ if ($showlist) {
 
     $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('function'), ['id' => '###id###', 'func' => 'edit', 'start' => rex_request('start', 'string')]);
+    $list->setColumnParams(rex_i18n::msg('function'), ['id' => '###id###', 'func' => 'edit', 'start' => rex_request::request('start', 'string')]);
 
     $list->addColumn(rex_i18n::msg('delete'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete'), ['', '<td class="rex-table-action">###VALUE###</td>']);

@@ -6,7 +6,7 @@ use FriendsOfRedaxo\ConsentManager\Utility;
 
 $addon = rex_addon::get('consent_manager');
 
-$preview = rex_request('preview', 'string', '');
+$preview = rex_request::request('preview', 'string', '');
 $clang_id = rex_clang::getStartId();
 
 // Theme-Preview

@@ -18,7 +18,7 @@ if (!rex_addon::get('project')->isAvailable()) {
 $csrfToken = rex_csrf_token::factory('consent_manager_theme_editor');
 
 // Theme bases
-$themeBase = rex_request('theme_base', 'string', 'normal');
+$themeBase = rex_request::request('theme_base', 'string', 'normal');
 $themeBases = [
     'normal' => 'Accessibility (Normal)',
     'compact' => 'Accessibility (Compact)',

@@ -138,7 +138,7 @@ class Frontend
         $this->links['legal_notice'] = $this->cache['domains'][$this->domainName]['legal_notice'];
 
         $article = rex_article::getCurrentId();
-        $clang = rex_request('lang', 'integer', 0);
+        $clang = rex_request::request('lang', 'integer', 0);
         if (0 === $clang) {
             $clang = rex_clang::getCurrent()->getId();
         }
@@ -188,7 +188,7 @@ class Frontend
     {
         $addon = rex_addon::get('consent_manager');
 
-        $clang = rex_request('lang', 'integer', 0);
+        $clang = rex_request::request('lang', 'integer', 0);
         if (0 === $clang) {
             $clang = rex_clang::getCurrent()->getId();
         }

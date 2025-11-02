@@ -116,7 +116,7 @@ if (null !== $consent_manager->cookiegroups): ?>
                         </div>
                         <div class="consent_manager-sitelinks">
 <?php
-$clang = rex_request('lang', 'integer', 0);
+$clang = rex_request::request('lang', 'integer', 0);
 if (0 === $clang) {
     $clang = rex_clang::getCurrent()->getId();
 }

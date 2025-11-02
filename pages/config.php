@@ -7,7 +7,7 @@ use FriendsOfRedaxo\ConsentManager\Theme;
 
 $addon = rex_addon::get('consent_manager');
 
-$func = rex_request('func', 'string');
+$func = rex_request::request('func', 'string');
 
 // Import/Export Functionality
 if ('setup_minimal' === $func) {
