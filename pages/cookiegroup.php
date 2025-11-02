@@ -7,7 +7,7 @@ use FriendsOfRedaxo\ConsentManager\Utility;
 
 $showlist = true;
 $pid = rex_request::request('pid', 'int', 0);
-$func = rex_request(::request'func', 'string');
+$func = rex_request::request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_cookiegroup');
 $clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3) ?? '');
 $table = rex::getTable('consent_manager_cookiegroup');
@@ -21,7 +21,7 @@ if ('delete' === $func) {
     $form->addParam('pid', $pid);
     $form->addParam('sort', rex_request::request('sort', 'string', ''));
     $form->addParam('sorttype', rex_request::request('sorttype', 'string', ''));
-    $form->addParam('start', rex_request(::request'start', 'int', 0));
+    $form->addParam('start', rex_request::request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
     $form->addHiddenField('clang_id', $clang_id);
     RexFormSupport::getId($form, $table);

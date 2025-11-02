@@ -4,7 +4,7 @@ use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $showlist = true;
 $id = rex_request::request('id', 'int', 0);
-$func = rex_request(::request'func', 'string');
+$func = rex_request::request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_domain');
 $table = rex::getTable('consent_manager_domain');
 $msg = '';
