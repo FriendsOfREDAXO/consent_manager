@@ -59,7 +59,7 @@ $list->setColumnFormat('consents', 'custom', static function ($params) {
     $str = implode(', ', $consents);
     return $str;
 });
-$list->setNoRowsMessage(rex_i18n::msg('consent_manager_list_no_rows'));
+$list->setNoRowsMessage(rex_i18n::msg('list_no_rows'));
 
 $list->addTableAttribute('class', 'table table-striped table-hover');
 
