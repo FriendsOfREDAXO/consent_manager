@@ -203,11 +203,11 @@ consent_manager_cronjob_not_available = Consent Manager-tillägg är inte aktive
 consent_manager_cronjob_none_deleted = Inga poster raderades
 
 # Google Consent Mode v2
-google_consent_mode_title = Google Consent Mode v2
-google_consent_mode_disabled = Inaktiverad
-google_consent_mode_auto = Aktiverad (Auto-mappning)
+consent_manager_google_consent_mode_title = Google Consent Mode v2
+consent_manager_google_consent_mode_disabled = Inaktiverad
+consent_manager_consent_manager_google_consent_mode_auto = Aktiverad (Auto-mappning)
 google_consent_mode_manual = Aktiverad (Manuell)
-google_consent_mode_notice = ● Inaktiverad: Ingen Google Consent Mode<br>● Auto-mappning: Tjänster upptäcks automatiskt och gtag('consent', 'update') anrop genereras<br>● Manuell: Endast gtag('consent', 'default') - gtag('consent', 'update') måste implementeras i tjänsteskript
+consent_manager_google_consent_mode_notice = ● Inaktiverad: Ingen Google Consent Mode<br>● Auto-mappning: Tjänster upptäcks automatiskt och gtag('consent', 'update') anrop genereras<br>● Manuell: Endast gtag('consent', 'default') - gtag('consent', 'update') måste implementeras i tjänsteskript
 
 # Google Consent Helper
 google_consent_helper_title = Google Consent Mode v2 Hjälpare

@@ -11,6 +11,8 @@
  *      <span class="text-muted" style="font-size: 11px; margin-left: 8px;"><?= rex_i18n::msg('consent_manager_quickstart_status_after_import') ?></span>
  *    </div>
  * wird über boot.php geladen.
+ * 
+ * Es werden keine Parameter erwartet.
  */
 
 ?>

@@ -2,6 +2,8 @@
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
+/** @var rex_fragment $this */
+
 if (0 === rex_article::getCurrentId()) {
     return;
 }

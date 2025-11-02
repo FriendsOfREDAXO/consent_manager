@@ -4,8 +4,14 @@
  * Hauptlayout für die Konfigurationsseite.
  */
 
+/** @var rex_fragment $this */
+
+/** @var ?rex_form $form */
 $form = $this->getVar('form');
+
+/** @var ?rex_csrf_token $csrf */
 $csrf = $this->getVar('csrf');
+
 ?>
 
 <div class="rex-addon-output">
@@ -29,7 +35,7 @@ $csrf = $this->getVar('csrf');
                     </div>
                 </header>
                 <div class="panel-body">
-                    <?php if ($form): ?>
+                    <?php if (null !== $form): ?>
                         <?= $form->get() ?>
                     <?php else: ?>
                         <p>Form konnte nicht geladen werden.</p>

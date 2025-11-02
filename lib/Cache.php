@@ -7,6 +7,7 @@ use rex_addon;
 use rex_clang;
 use rex_extension_point;
 use rex_file;
+use rex_form;
 use rex_i18n;
 use rex_logger;
 use rex_path;
@@ -36,26 +37,22 @@ class Cache
     ];
 
     /**
-     * @param rex_extension_point<object> $ep
-     * @return bool
      * @api
+     * @param rex_extension_point<bool> $ep
      */
-    public static function write(rex_extension_point $ep)
+    public static function write(rex_extension_point $ep): bool
     {
-        $form = $ep->getParams()['form'];
-        if (!in_array($form->getTableName(), Config::getTables(), true)) {
-            return true;
+        /** @var rex_form $form */
+        $form = $ep->getParam('form');
+        if (in_array($form->getTableName(), Config::getTables(), true)) {
+            $cache = new self();
+            $cache->writeCache();
+            touch(rex_addon::get('consent_manager')->getAssetsPath('consent_manager_frontend.js'));
         }
-        $cache = new self();
-        $cache->writeCache();
-        touch(rex_addon::get('consent_manager')->getAssetsPath('consent_manager_frontend.js'));
         return true;
     }
 
-    /**
-     * @return void
-     */
-    private function writeCache()
+    private function writeCache(): void
     {
         $configFile = rex_path::addonData('consent_manager', 'config.json');
         $this->fetchData();
@@ -77,10 +74,7 @@ class Cache
         }
     }
 
-    /**
-     * @return void
-     */
-    private function fetchData()
+    private function fetchData(): void
     {
         $db = rex_sql::factory();
         $db->setTable(rex::getTable('consent_manager_domain'));
@@ -113,11 +107,7 @@ class Cache
         }
     }
 
-    /**
-     * @param int $clangId
-     * @return void
-     */
-    private function prepareCookie($clangId)
+    private function prepareCookie(int $clangId): void
     {
         if (isset($this->cookies[$clangId])) {
             foreach ((array) $this->cookies[$clangId] as $uid => $cookie) {
@@ -138,19 +128,15 @@ class Cache
         }
     }
 
-    /**
-     * @param int $clangId
-     * @return void
-     */
-    private function prepareCookieGroups($clangId)
+    private function prepareCookieGroups(int $clangId): void
     {
         if (isset($this->cookiegroups[$clangId])) {
             foreach ((array) $this->cookiegroups[$clangId] as $uid => $cookiegroup) {
                 $cookie_uids = [];
                 $cookiegroup = (array) $cookiegroup;
                 if (is_string($cookiegroup['cookie'])) {
-                    foreach (array_filter(explode('|', $cookiegroup['cookie']), strlen(...)) as $cookieUid) {
-                        if (isset($this->cookies[$clangId][$cookieUid])) { /** @phpstan-ignore-line */
+                    foreach (array_filter(explode('|', $cookiegroup['cookie']), strlen(...)) as $cookieUid) { /** @phpstan-ignore-line */
+                        if (isset($this->cookies[$clangId][$cookieUid])) { 
                             $cookie_uids[] = $cookieUid;
                         }
                     }
@@ -169,11 +155,7 @@ class Cache
         }
     }
 
-    /**
-     * @param int $clangId
-     * @return void
-     */
-    private function setConfig($clangId)
+    private function setConfig(int $clangId): void
     {
         if (isset($this->cookiegroups[$clangId])) {
             foreach ((array) $this->cookiegroups[$clangId] as $v) {
@@ -196,9 +178,8 @@ class Cache
 
     /**
      * @api
-     * @return void
      */
-    public static function forceWrite()
+    public static function forceWrite(): void
     {
         $cache = new self();
         $cache->writeCache();
@@ -208,7 +189,7 @@ class Cache
      * @api
      * @return array<int, string>
      */
-    public static function read()
+    public static function read(): array
     {
         $configFile = rex_path::addonData('consent_manager', 'config.json');
 

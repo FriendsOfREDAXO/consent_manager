@@ -203,11 +203,11 @@ consent_manager_cronjob_not_available = Consent Manager addon is not activated
 consent_manager_cronjob_none_deleted = No entries were deleted
 
 # Google Consent Mode v2
-google_consent_mode_title = Google Consent Mode v2
-google_consent_mode_disabled = Disabled
-google_consent_mode_auto = Enabled (Auto-Mapping)
-google_consent_mode_manual = Enabled (Manual)
-google_consent_mode_notice = ● Disabled: No Google Consent Mode<br>● Auto-Mapping: Services are automatically detected and gtag('consent', 'update') calls generated<br>● Manual: Only gtag('consent', 'default') - gtag('consent', 'update') must be implemented in service scripts
+consent_manager_google_consent_mode_title = Google Consent Mode v2
+consent_manager_google_consent_mode_disabled = Disabled
+consent_manager_google_consent_mode_auto = Enabled (Auto-Mapping)
+consent_manager_google_consent_mode_manual = Enabled (Manual)
+consent_manager_google_consent_mode_notice = ● Disabled: No Google Consent Mode<br>● Auto-Mapping: Services are automatically detected and gtag('consent', 'update') calls generated<br>● Manual: Only gtag('consent', 'default') - gtag('consent', 'update') must be implemented in service scripts
 
 # Google Consent Helper
 google_consent_helper_title = Google Consent Mode v2 Helper

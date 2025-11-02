@@ -19,11 +19,9 @@ use function in_array;
 class CLang
 {
     /**
-     * @param string $table
-     * @param int $pid
-     * @return string
+     * @api
      */
-    public static function deleteDataset($table, $pid)
+    public static function deleteDataset(string $table, int $pid): string
     {
         $msg = rex_view::success(rex_i18n::msg('consent_manager_successfully_deleted'));
         $db = rex_sql::factory();
@@ -41,10 +39,9 @@ class CLang
     }
 
     /**
-     * @param int $pid
-     * @return string
+     * @api
      */
-    public static function deleteCookie($pid)
+    public static function deleteCookie(int $pid): string
     {
         $msg = rex_view::success(rex_i18n::msg('consent_manager_successfully_deleted'));
         $db = rex_sql::factory();
@@ -65,11 +62,10 @@ class CLang
     }
 
     /**
-     * @param rex_extension_point<object> $ep
-     * @return void
+     * @param rex_extension_point<array<string,rex_be_page>> $ep
      * @api
      */
-    public static function addLangNav(rex_extension_point $ep)
+    public static function addLangNav(rex_extension_point $ep): void
     {
         if (rex::isBackend() && null !== rex::getUser()) {
             foreach (Config::getKeys() as $key) {
@@ -96,12 +92,12 @@ class CLang
     }
 
     /**
-     * @param rex_extension_point<object> $ep
-     * @return bool
      * @api
+     * @param rex_extension_point<bool> $ep
      */
-    public static function formSaved(rex_extension_point $ep)
+    public static function formSaved(rex_extension_point $ep): bool
     {
+        /** @var rex_form $form $form*/
         $form = $ep->getParams()['form'];
         $params = $ep->getParams();
         if (!in_array($form->getTableName(), Config::getTables(true), true)) {
@@ -117,11 +113,9 @@ class CLang
     }
 
     /**
-     * @param rex_form $form
      * @param array<rex_sql> $params
-     * @return void
      */
-    private static function insertDataset($form, $params)
+    private static function insertDataset(rex_form $form, array $params): void
     {
         $db = rex_sql::factory();
         $db->setTable($form->getTableName());
@@ -151,9 +145,8 @@ class CLang
 
     /**
      * @param rex_form $form
-     * @return bool
      */
-    private static function updateDataset($form)
+    private static function updateDataset($form): bool
     {
         $fields2Update = [];
         $newValues = [];
@@ -190,11 +183,10 @@ class CLang
     }
 
     /**
-     * @param rex_extension_point<object> $ep
-     * @return void
      * @api
+     * @param rex_extension_point<void> $ep
      */
-    public static function clangDeleted(rex_extension_point $ep)
+    public static function clangDeleted(rex_extension_point $ep): void
     {
         foreach (Config::getTables(true) as $table) {
             $deleteLang = rex_sql::factory();
@@ -204,9 +196,9 @@ class CLang
     }
 
     /**
-     * @return bool
+     * @api
      */
-    public static function addonJustInstalled()
+    public static function addonJustInstalled(): bool
     {
         $clangIds = rex_clang::getAllIds();
         if (1 === count($clangIds)) {
@@ -221,11 +213,7 @@ class CLang
         return false;
     }
 
-    /**
-     * @param int $clangId
-     * @return void
-     */
-    private static function addClang($clangId)
+    private static function addClang(int $clangId): void
     {
         foreach (Config::getTables(true) as $table) {
             $firstLang = rex_sql::factory();
@@ -252,11 +240,10 @@ class CLang
     }
 
     /**
-     * @param rex_extension_point<object> $ep
-     * @return void
      * @api
+     * @param rex_extension_point<void> $ep
      */
-    public static function clangAdded(rex_extension_point $ep)
+    public static function clangAdded(rex_extension_point $ep): void
     {
         self::addClang($ep->getParam('clang')->getId()); /** @phpstan-ignore-line */
         Cache::forceWrite();

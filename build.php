@@ -28,7 +28,7 @@ foreach ($files as $source => $target) {
     echo "📄 Processing $source...\n";
 
     // Read source file
-    $content = file_get_contents($sourcePath);
+    $content = (string) file_get_contents($sourcePath);
 
     // Basic minification (remove comments, extra whitespace)
     $minified = $content;
@@ -47,9 +47,9 @@ foreach ($files as $source => $target) {
     $minified = trim($minified);
 
     // Write minified file
-    if (file_put_contents($targetPath, $minified)) {
-        $originalSize = filesize($sourcePath);
-        $minifiedSize = filesize($targetPath);
+    if (false !== file_put_contents($targetPath, $minified)) {
+        $originalSize = (int) filesize($sourcePath);
+        $minifiedSize = (int) filesize($targetPath);
         $reduction = round((1 - $minifiedSize / $originalSize) * 100, 1);
 
         echo "✅ Created $target ({$minifiedSize} bytes, {$reduction}% reduction)\n";

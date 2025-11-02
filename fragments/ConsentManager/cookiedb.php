@@ -2,6 +2,8 @@
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
+/** @var rex_fragment $this */
+
 $consent_manager = new Frontend($this->getVar('forceCache'));
 if (is_string(rex_request::server('HTTP_HOST'))) {
     $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
