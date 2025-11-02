@@ -402,5 +402,5 @@ consent_manager_button_inline_details_text_info = Inline-platshållare: Knapp "I
 consent_manager_button_inline_allow_all_text_info = Inline-platshållare: Knapp "Tillåt alla"
 
 # Tema-editor
-theme_editor_saved = Tema "{0}" har skapats och sparats framgångsrikt!
-theme_editor_project_addon_required = Tema-editorn kräver det installerade "project"-tillägget för att spara anpassade teman. Vänligen installera project-tillägget via installeraren.
+consent_manager_theme_editor_saved = Tema "{0}" har skapats och sparats framgångsrikt!
+consent_manager_theme_editor_project_addon_required = Tema-editorn kräver det installerade "project"-tillägget för att spara anpassade teman. Vänligen installera project-tillägget via installeraren.
