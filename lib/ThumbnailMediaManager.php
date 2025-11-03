@@ -39,8 +39,9 @@ class ThumbnailMediaManager
         $sql = rex_sql::factory();
         $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', ['consent_manager_thumbnail']);
 
-        if (0 < $sql->getRows()) {
-            return null;
+        if (0 === $sql->getRows()) {
+            // Fallback zu direkter URL wenn kein Media Manager Type vorhanden
+            return self::getDirectThumbnailUrl($service, $videoId);
         }
 
         // Eindeutigen Dateinamen für Thumbnail generieren
