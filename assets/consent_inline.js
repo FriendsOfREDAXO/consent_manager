@@ -10,6 +10,13 @@ if (typeof window.consentManagerInline !== 'undefined') {
     window.consentManagerInline = {
         initialized: false,
         
+        // Debug-Funktion - nur aktiv wenn consentManagerDebug verfügbar
+        debug: function(message, data) {
+            if (window.consentManagerDebug && typeof window.consentManagerDebug.log === 'function') {
+                window.consentManagerDebug.log(message, data);
+            }
+        },
+        
         init: function() {
             if (this.initialized) return; // Bereits initialisiert
             this.initialized = true;
@@ -75,7 +82,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 if (e.target.matches('.consent-inline-once') && !e.target.matches('.consent-inline-allow-all')) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('🎯 Individual "Einmal laden" clicked');
+                    self.debug('🎯 Individual "Einmal laden" clicked');
                     var button = e.target;
                     var consentId = button.getAttribute('data-consent-id');
                     var serviceKey = button.getAttribute('data-service');
@@ -87,7 +94,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 if (e.target.matches('.consent-inline-allow-all')) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('🔄 "Alle erlauben" clicked');
+                    self.debug('🔄 "Alle erlauben" clicked');
                     var serviceKey = e.target.getAttribute('data-service');
                     self.allowAllForService(serviceKey);
                     return;
@@ -132,7 +139,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 
                 // Nur laden wenn globales Consent vorhanden (durch "Alle erlauben" gesetzt)
                 if (cookieData.consents && cookieData.consents.indexOf(serviceKey) !== -1) {
-                    console.log('🔄 Auto-loading container due to global consent for:', serviceKey);
+                    self.debug('🔄 Auto-loading container due to global consent for:', serviceKey);
                     self.loadContent(container);
                 }
             }
@@ -140,7 +147,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
         
         // Neue Funktion: Lädt nur den individuellen Container (NICHT alle!)
         acceptIndividual: function(consentId, serviceKey, button) {
-            console.log('🎯 acceptIndividual: Loading ONLY this container for service:', serviceKey);
+            this.debug('🎯 acceptIndividual: Loading ONLY this container for service:', serviceKey);
             var container = button.closest('.consent-inline-container');
             
             // WICHTIG: Consent NICHT global setzen - nur diesen Container laden
@@ -164,19 +171,19 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
         
         allowAllForService: function(serviceKey) {
-            console.log('🔄 allowAllForService: Loading ALL containers for service:', serviceKey);
+            this.debug('🔄 allowAllForService: Loading ALL containers for service:', serviceKey);
             // Alle Platzhalter für diesen Service laden
             var containers = document.querySelectorAll('.consent-inline-container[data-service="' + serviceKey + '"]');
             var self = this;
             
-            console.log('🔄 Found ' + containers.length + ' containers to load');
+            this.debug('🔄 Found ' + containers.length + ' containers to load');
             
             // Consent für Service GLOBAL setzen (damit zukünftige auch direkt laden)
             self.saveConsent(serviceKey);
             
             // Alle Container dieses Services laden
             for (var i = 0; i < containers.length; i++) {
-                console.log('🔄 Loading container ' + (i+1) + ' of ' + containers.length);
+                this.debug('🔄 Loading container ' + (i+1) + ' of ' + containers.length);
                 self.loadContent(containers[i]);
             }
             
@@ -224,7 +231,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
         
         loadContent: function(container) {
-            console.log('🎬 loadContent called for container:', container);
+            this.debug('🎬 loadContent called for container:', container);
             
             // Markiere als geladen damit nicht erneut verarbeitet
             container.setAttribute('data-loaded', 'true');
@@ -235,35 +242,35 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 return;
             }
             
-            console.log('📜 Content script found:', contentScript);
+            this.debug('📜 Content script found:', contentScript);
             
             var code = contentScript.innerHTML;
-            console.log('📝 Raw code:', code.substring(0, 100));
+            this.debug('📝 Raw code:', code.substring(0, 100));
             
             var tempTextArea = document.createElement('textarea');
             tempTextArea.innerHTML = code;
             var decodedCode = tempTextArea.value;
             
-            console.log('🔓 Decoded code:', decodedCode.substring(0, 100));
+            this.debug('🔓 Decoded code:', decodedCode.substring(0, 100));
             
             var wrapper = document.createElement('div');
             wrapper.innerHTML = decodedCode;
             
-            console.log('📦 Wrapper children:', wrapper.children.length, wrapper.children);
+            this.debug('📦 Wrapper children:', {count: wrapper.children.length, children: wrapper.children});
             
             // Inhalte vor Container einfügen
             var insertedCount = 0;
             while (wrapper.firstChild) {
-                console.log('➡️ Inserting child:', wrapper.firstChild);
+                this.debug('➡️ Inserting child:', wrapper.firstChild);
                 container.parentNode.insertBefore(wrapper.firstChild, container);
                 insertedCount++;
             }
             
-            console.log('✅ Inserted ' + insertedCount + ' elements');
+            this.debug('✅ Inserted ' + insertedCount + ' elements');
             
             // Container jetzt entfernen
             container.remove();
-            console.log('🗑️ Container removed');
+            this.debug('🗑️ Container removed');
         },
         
         logConsent: function(consentId, serviceKey, action) {

@@ -81,8 +81,8 @@ class Cache
         $db->select('*');
         $domains = $db->getArray();
         foreach ($domains as $v) {
-            $domainId = (string) ($v['id'] ?? '');
-            if ($domainId !== '') {
+            $domainId = (int) ($v['id'] ?? 0);
+            if ($domainId > 0) {
                 $this->domains[$domainId] = $v;
             }
         }

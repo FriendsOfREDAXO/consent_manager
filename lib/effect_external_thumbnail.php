@@ -226,7 +226,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         $error = curl_error($ch);
         curl_close($ch);
 
-        if (false === $data || ('' !== $error)) {
+        if (false === $data || ($error !== '')) {
             rex_logger::factory()->error('External thumbnail cURL error', [
                 'url' => $url,
                 'error' => $error,

@@ -13,7 +13,7 @@ class ThumbnailCleanup extends rex_cronjob
 {
     public function execute(): bool
     {
-        \rex_dir::deleteFiles(\rex_addon::get('consent_manager')->getCachePath());
+        ThumbnailCache::cleanupCache();
         return true;
     }
 

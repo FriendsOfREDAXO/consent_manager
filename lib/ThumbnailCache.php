@@ -68,7 +68,7 @@ class ThumbnailCache
         foreach ($thumbnailUrls as $url) {
             try {
                 $imageData = self::downloadImage($url);
-                if ('' < $imageData && strlen($imageData) > 1000) { // Mindestgröße prüfen
+                if ($imageData !== '' && strlen($imageData) > 1000) { // Mindestgröße prüfen
                     file_put_contents($cacheFile, $imageData);
 
                     // Auch in public assets kopieren für Web-Zugriff
@@ -112,13 +112,13 @@ class ThumbnailCache
             $apiUrl = "https://vimeo.com/api/v2/video/{$videoId}.json";
             $apiResponse = self::downloadImage($apiUrl);
 
-            if ('' < $apiResponse) {
+            if ($apiResponse !== '') {
                 $data = json_decode($apiResponse, true);
                 if (isset($data[0]['thumbnail_large'])) {
                     $thumbnailUrl = $data[0]['thumbnail_large'];
                     $imageData = self::downloadImage($thumbnailUrl);
 
-                    if ('' < $imageData) {
+                    if ($imageData !== '') {
                         file_put_contents($cacheFile, $imageData);
 
                         // In public assets kopieren
