@@ -121,7 +121,7 @@ if (0 === $clang) {
     $clang = rex_clang::getCurrent()->getId();
 }
 foreach ($consent_manager->links as $v) {
-    echo '<a tabindex="0" href="' . rex_request::getUrl($v, $clang) . '">' . (null !== rex_article::get($v, $clang) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
+    echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . (null !== rex_article::get($v, $clang) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
 }
 ?>
                         </div>
@@ -144,4 +144,4 @@ foreach ($consent_manager->links as $v) {
             }
 			?>
         </div>
-<?php endif ?>
+<?php endif; ?>

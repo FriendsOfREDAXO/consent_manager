@@ -227,7 +227,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         $error = curl_error($ch);
         curl_close($ch);
 
-        if (false === $data || '' < $error) {
+        if (false === $data || !empty($error)) {
             rex_logger::factory()->error('External thumbnail cURL error', [
                 'url' => $url,
                 'error' => $error,
@@ -244,7 +244,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             return null;
         }
 
-        return is_string($data) && '' < $data ? $data : null;
+        return is_string($data) && !empty($data) ? $data : null;
     }
 
     /**
@@ -290,7 +290,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                 return null;
             }
 
-            return false !== $data && '' < $data ? $data : null;
+            return false !== $data && !empty($data) ? $data : null;
         } catch (Exception $e) {
             rex_logger::logException($e);
             return null;

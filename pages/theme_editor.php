@@ -628,7 +628,7 @@ function generateA11yThemeScss($base, $name, $description, $colors)
                class="btn <?= $themeBase === $key ? 'btn-primary' : 'btn-default' ?>">
                 <?= $label ?>
             </a>
-        <?php endforeach ?>
+        <?php endforeach; ?>
     </div>
 
     <form action="<?= rex_url::currentBackendPage(['theme_base' => $themeBase]) ?>" method="post">

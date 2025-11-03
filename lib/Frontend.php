@@ -149,7 +149,7 @@ class Frontend
         if (isset($this->cache['cookies'][$clang])) {
             foreach ($this->cache['cookies'][$clang] as $uid => $cookie) {
                 if (!$cookie['provider_link_privacy']) {
-                    $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_request::getUrl($this->links['privacy_policy'], $clang);
+                    $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy'], $clang);
                 }
             }
         }
