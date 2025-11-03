@@ -43,12 +43,12 @@ if ('delete' === $func) {
 
     // Google Consent Mode v2 Configuration
     $field = $form->addSelectField('google_consent_mode_enabled');
-    $field->setLabel(rex_i18n::msg('consent_manager_google_consent_mode_title'));
+    $field->setLabel(rex_i18n::msg('consent_manager_google_mode_title'));
     $select = $field->getSelect();
-    $select->addOption(rex_i18n::msg('consent_manager_google_consent_mode_disabled'), 'disabled');
-    $select->addOption(rex_i18n::msg('consent_manager_google_consent_mode_auto'), 'auto');
-    $select->addOption(rex_i18n::msg('consent_manager_google_consent_mode_manual'), 'manual');
-    $field->setNotice(rex_i18n::msg('consent_manager_google_consent_mode_notice'));
+    $select->addOption(rex_i18n::msg('consent_manager_google_mode_disabled'), 'disabled');
+    $select->addOption(rex_i18n::msg('consent_manager_google_mode_auto'), 'auto');
+    $select->addOption(rex_i18n::msg('consent_manager_google_mode_manual'), 'manual');
+    $field->setNotice(rex_i18n::msg('consent_manager_google_mode_notice'));
 
     // Debug Mode Configuration
     $field = $form->addSelectField('google_consent_mode_debug');
@@ -123,13 +123,13 @@ if ($showlist) {
         $value = $params['value'];
         switch ($value) {
             case 'disabled':
-                return '<span class="label label-default">❌ ' . rex_i18n::msg('consent_manager_google_consent_mode_disabled') . '</span>';
+                return '<span class="label label-default">❌ ' . rex_i18n::msg('consent_manager_google_mode_disabled') . '</span>';
             case 'auto':
-                return '<span class="label label-success">🔄 ' . rex_i18n::msg('consent_manager_google_consent_mode_auto') . '</span>';
+                return '<span class="label label-success">🔄 ' . rex_i18n::msg('consent_manager_google_mode_auto') . '</span>';
             case 'manual':
-                return '<span class="label label-info">⚙️ ' . rex_i18n::msg('consent_manager_google_consent_mode_manual') . '</span>';
+                return '<span class="label label-info">⚙️ ' . rex_i18n::msg('consent_manager_google_mode_manual') . '</span>';
             default:
-                return '<span class="label label-default">❌ ' . rex_i18n::msg('consent_manager_google_consent_mode_disabled') . '</span>';
+                return '<span class="label label-default">❌ ' . rex_i18n::msg('consent_manager_google_mode_disabled') . '</span>';
         }
     });
 

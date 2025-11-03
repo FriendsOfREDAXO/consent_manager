@@ -203,39 +203,41 @@ consent_manager_cronjob_not_available = Consent Manager-tillägg är inte aktive
 consent_manager_cronjob_none_deleted = Inga poster raderades
 
 # Google Consent Mode v2
-consent_manager_google_consent_mode_title = Google Consent Mode v2
-consent_manager_google_consent_mode_disabled = Inaktiverad
-consent_manager_consent_manager_google_consent_mode_auto = Aktiverad (Auto-mappning)
-google_consent_mode_manual = Aktiverad (Manuell)
-consent_manager_google_consent_mode_notice = ● Inaktiverad: Ingen Google Consent Mode<br>● Auto-mappning: Tjänster upptäcks automatiskt och gtag('consent', 'update') anrop genereras<br>● Manuell: Endast gtag('consent', 'default') - gtag('consent', 'update') måste implementeras i tjänsteskript
+consent_manager_google_mode_title = Google Consent Mode v2
+consent_manager_google_mode_disabled = Inaktiverad
+consent_manager_consent_manager_google_mode_auto = Aktiverad (Auto-mappning)
+consent_manager_google_mode_manual = Aktiverad (Manuell)
+consent_manager_google_mode_notice = ● Inaktiverad: Ingen Google Consent Mode<br>● Auto-mappning: Tjänster upptäcks automatiskt och gtag('consent', 'update') anrop genereras<br>● Manuell: Endast gtag('consent', 'default') - gtag('consent', 'update') måste implementeras i tjänsteskript
 
 # Google Consent Helper
-google_consent_helper_title = Google Consent Mode v2 Hjälpare
-google_consent_helper_show = Visa hjälpare
+consent_manager_google_helper_title = Google Consent Mode v2 Hjälpare
+consent_manager_google_helper_show = Visa hjälpare
+# # FIXME: "google_consent_helper_hide" -> wo wird der Text benötigt?
 google_consent_helper_hide = Dölj hjälpare
-google_consent_helper_description = Automatisk generering av <code>gtag("consent", "update", {...})</code> skript för kända tjänster.
-google_consent_helper_service_type = Tjänstetyp
-google_consent_helper_select_service = -- Välj tjänst --
-google_consent_helper_auto_detection = Föreslås automatiskt baserat på tjänstenamn
-google_consent_helper_consent_script = Samtyckeskript
-google_consent_helper_revoke_script = Återkallningsskript
-google_consent_helper_generated_script = Genererat skript
-google_consent_helper_copy_to_clipboard = Kopiera till urklipp
-google_consent_helper_copy = Kopiera
+consent_manager_google_helper_description = Automatisk generering av <code>gtag("consent", "update", {...})</code> skript för kända tjänster.
+consent_manager_google_helper_service_type = Tjänstetyp
+consent_manager_google_helper_select_service = -- Välj tjänst --
+consent_manager_google_helper_auto_detection = Föreslås automatiskt baserat på tjänstenamn
+consent_manager_google_helper_consent_script = Samtyckeskript
+consent_manager_google_helper_revoke_script = Återkallningsskript
+consent_manager_google_helper_generated_script = Genererat skript
+consent_manager_google_helper_copy_to_clipboard = Kopiera till urklipp
+consent_manager_google_helper_copy = Kopiera
 
 # Google Consent Service Types
-google_consent_service_analytics = Analytics (analytics_storage)
-google_consent_service_google_analytics = Google Analytics (analytics_storage)
-google_consent_service_google_analytics_4 = Google Analytics 4 (analytics_storage)
-google_consent_service_google_tag_manager = Google Tag Manager
-google_consent_service_google_tag_manager_all = Google Tag Manager (Alla behörigheter) (analytics_storage)
-google_consent_service_matomo = Matomo (analytics_storage)
+consent_manager_google_service_analytics = Analytics (analytics_storage)
+consent_manager_google_service_google_analytics = Google Analytics (analytics_storage)
+consent_manager_google_service_google_analytics_4 = Google Analytics 4 (analytics_storage)
+consent_manager_google_service_google_tag_manager = Google Tag Manager
+consent_manager_google_service_google_tag_manager_all = Google Tag Manager (Alla behörigheter) (analytics_storage)
+consent_manager_google_service_matomo = Matomo (analytics_storage)
+# # FIXME: "google_consent_service_matomo-self-hosted" -> wo wird der Text benötigt?
 google_consent_service_matomo-self-hosted = Matomo Self-Hosted (analytics_storage)
-google_consent_service_adwords = Google AdWords (ad_storage, ad_user_data, ad_personalization)
-google_consent_service_google_ads = Google Ads (ad_storage, ad_user_data, ad_personalization)
-google_consent_service_facebook_pixel = Facebook Pixel (ad_storage, ad_user_data, ad_personalization)
-google_consent_service_youtube = YouTube (ad_storage, personalization_storage)
-google_consent_service_google_maps = Google Maps (functionality_storage, personalization_storage)
+consent_manager_google_service_adwords = Google AdWords (ad_storage, ad_user_data, ad_personalization)
+consent_manager_google_service_google_ads = Google Ads (ad_storage, ad_user_data, ad_personalization)
+consent_manager_google_service_facebook_pixel = Facebook Pixel (ad_storage, ad_user_data, ad_personalization)
+consent_manager_google_service_youtube = YouTube (ad_storage, personalization_storage)
+consent_manager_google_service_google_maps = Google Maps (functionality_storage, personalization_storage)
 
 # Import/Export & Setup
 consent_manager_setup_headline = Importera standardkonfiguration
