@@ -48,12 +48,12 @@ class Frontend
             Cache::forceWrite();
         }
         $this->cache = Cache::read();
-        if ([] === $this->cache || ([] !== $this->cache && rex_addon::get('consent_manager')->getVersion() !== $this->cache['majorVersion'])) { /** @phpstan-ignore-line */
+        if ([] === $this->cache || ([] !== $this->cache && rex_addon::get('consent_manager')->getVersion() !== ($this->cache['majorVersion'] ?? null))) { /** @phpstan-ignore-line */
             Cache::forceWrite();
             $this->cache = Cache::read();
         }
-        $this->cacheLogId = $this->cache['cacheLogId']; /** @phpstan-ignore-line */
-        $this->version = $this->cache['majorVersion']; /** @phpstan-ignore-line */
+        $this->cacheLogId = $this->cache['cacheLogId'] ?? ''; /** @phpstan-ignore-line */
+        $this->version = $this->cache['majorVersion'] ?? ''; /** @phpstan-ignore-line */
     }
 
     /**
@@ -133,9 +133,9 @@ class Frontend
             return;
         }
 
-        $this->domainInfo = $this->cache['domains'][$this->domainName];
-        $this->links['privacy_policy'] = $this->cache['domains'][$this->domainName]['privacy_policy'];
-        $this->links['legal_notice'] = $this->cache['domains'][$this->domainName]['legal_notice'];
+        $this->domainInfo = $this->cache['domains'][$this->domainName] ?? [];
+        $this->links['privacy_policy'] = $this->cache['domains'][$this->domainName]['privacy_policy'] ?? '';
+        $this->links['legal_notice'] = $this->cache['domains'][$this->domainName]['legal_notice'] ?? '';
 
         $article = rex_article::getCurrentId();
         $clang = rex_request::request('lang', 'integer', 0);
@@ -146,16 +146,18 @@ class Frontend
         if (in_array($article, [(int) $this->links['privacy_policy'], (int) $this->links['legal_notice']], true)) {
             $this->boxClass = 'consent_manager-initially-hidden';
         }
-        if (isset($this->cache['cookies'][$clang])) {
+        if (isset($this->cache['cookies'][$clang]) && is_array($this->cache['cookies'][$clang])) {
             foreach ($this->cache['cookies'][$clang] as $uid => $cookie) {
-                if (!$cookie['provider_link_privacy']) {
+                if (is_array($cookie) && '' === ($cookie['provider_link_privacy'] ?? '')) {
                     $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy'], $clang);
                 }
             }
         }
-        if (isset($this->cache['domains'][$this->domainName]['cookiegroups'])) {
+        if (isset($this->cache['domains'][$this->domainName]['cookiegroups']) && is_array($this->cache['domains'][$this->domainName]['cookiegroups'])) {
             foreach ($this->cache['domains'][$this->domainName]['cookiegroups'] as $uid) {
-                $this->cookiegroups[$uid] = $this->cache['cookiegroups'][$clang][$uid];
+                if (isset($this->cache['cookiegroups'][$clang][$uid])) {
+                    $this->cookiegroups[$uid] = $this->cache['cookiegroups'][$clang][$uid];
+                }
             }
         }
         foreach ($this->cookiegroups as $cookiegroup) {
@@ -207,9 +209,9 @@ class Frontend
         if ('' === $boxtemplate) {
             rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . Utility::hostname() . ')');
         }
-        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable()) {
+        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable() && function_exists('sprogdown')) {
             /** @phpstan-ignore-next-line */
-            $boxtemplate = sprogdown($boxtemplate, $clang);
+            $boxtemplate = \sprogdown($boxtemplate, $clang);
         }
         $boxtemplate = str_replace("'", "\\'", $boxtemplate);
         $boxtemplate = str_replace("\r", '', $boxtemplate);
@@ -328,9 +330,9 @@ class Frontend
         }
 
         // Process with sprog if available
-        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable()) {
+        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable() && function_exists('sprogdown')) {
             // @phpstan-ignore-next-line (sprogdown is optional dependency from sprog addon)
-            $sprogResult = sprogdown($boxtemplate, $clang);
+            $sprogResult = \sprogdown($boxtemplate, $clang);
             $boxtemplate = is_string($sprogResult) ? $sprogResult : $boxtemplate;
         }
 
