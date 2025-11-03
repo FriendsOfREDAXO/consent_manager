@@ -21,8 +21,9 @@ class GoogleConsentMode
      * ALLE Services standardmäßig verweigert - erst nach expliziter Zustimmung gewährt.
      *
      * @api
+     * @var array<string, string>
      */
-    public static $defaultConsentFlags = [
+    public static array $defaultConsentFlags = [
         'ad_storage' => 'denied',
         'ad_user_data' => 'denied',
         'ad_personalization' => 'denied',
@@ -36,8 +37,9 @@ class GoogleConsentMode
      * Service zu Consent-Flag Mappings.
      *
      * @api
+     * @var array<string, array<string>>
      */
-    public static $serviceMappings = [
+    public static array $serviceMappings = [
         'google-analytics' => ['analytics_storage'],
         'google-analytics-4' => ['analytics_storage'],
         'google-tag-manager' => ['analytics_storage', 'ad_storage', 'ad_user_data', 'ad_personalization'],
@@ -56,7 +58,7 @@ class GoogleConsentMode
      *
      * @api
      * @param string $domain Die Domain
-     * @return array konfiguration mit enabled, auto_mapping, default_state etc
+     * @return array{enabled: bool, auto_mapping: bool, domain: string, flags: array<string, string>} Konfiguration mit enabled, auto_mapping, default_state etc
      */
     public static function getDomainConfig(string $domain): array
     {
@@ -90,7 +92,7 @@ class GoogleConsentMode
      *
      * @api
      * @param int $clangId Die Sprach-ID
-     * @return array Array mit Service-UIDs und deren Consent-Flags
+     * @return array<string, array<string, string>> Array mit Service-UIDs und deren Consent-Flags
      */
     public static function getCookieConsentMappings(int $clangId): array
     {
@@ -104,12 +106,16 @@ class GoogleConsentMode
         );
 
         foreach ($sql->getArray() as $service) {
-            $uid = $service['uid'];
+            $uid = (string) ($service['uid'] ?? '');
+            if ('' === $uid) {
+                continue;
+            }
 
             // Suche nach bekannten Service-Mappings
             foreach (self::$serviceMappings as $serviceKey => $flags) {
+                $serviceName = (string) ($service['service_name'] ?? '');
                 if (str_contains($uid, $serviceKey)
-                    || false !== stripos($service['service_name'], str_replace('-', ' ', $serviceKey))) {
+                    || false !== stripos($serviceName, str_replace('-', ' ', $serviceKey))) {
                     $mappings[$uid] = $flags;
                     break;
                 }
@@ -233,7 +239,7 @@ class GoogleConsentMode
      * Holt alle verfügbaren Service-Mappings.
      *
      * @api
-     * @return array Service-Mappings
+     * @return array<string, array<string>> Service-Mappings
      */
     public static function getAllServiceMappings(): array
     {
@@ -245,7 +251,7 @@ class GoogleConsentMode
      *
      * @api
      * @param string $serviceKey Service-Schlüssel
-     * @param array $consentFlags Array mit Consent-Flags
+     * @param array<string> $consentFlags Array mit Consent-Flags
      */
     public static function addServiceMapping(string $serviceKey, array $consentFlags): void
     {

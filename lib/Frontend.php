@@ -77,11 +77,11 @@ class Frontend
      * @param int $forceCache
      * @param int $forceReload
      * @param string $fragmentFilename
-     * @param array $additionalVars
+     * @param array<string, mixed> $additionalVars
      * @return string
      * @api
      */
-    public static function getFragmentWithVars($forceCache, $forceReload, $fragmentFilename, $additionalVars = [])
+    public static function getFragmentWithVars($forceCache, $forceReload, $fragmentFilename, array $additionalVars = [])
     {
         $fragment = new rex_fragment();
         $fragment->setVar('forceCache', $forceCache);
@@ -313,8 +313,15 @@ class Frontend
         $boxtemplate = '';
         ob_start();
         echo self::getFragment(0, 0, 'ConsentManager/box.php');
-        $boxtemplate = ob_get_contents();
+        $boxTemplateResult = ob_get_contents();
         ob_end_clean();
+        
+        // Ensure we have a string for further processing
+        if (false === $boxTemplateResult) {
+            $boxtemplate = '';
+        } else {
+            $boxtemplate = $boxTemplateResult;
+        }
 
         if ('' === $boxtemplate) {
             rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . Utility::hostname() . ')');
@@ -322,8 +329,9 @@ class Frontend
 
         // Process with sprog if available
         if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable()) {
-            /** @phpstan-ignore-next-line */
-            $boxtemplate = sprogdown($boxtemplate, $clang);
+            // @phpstan-ignore-next-line (sprogdown is optional dependency from sprog addon)
+            $sprogResult = sprogdown($boxtemplate, $clang);
+            $boxtemplate = is_string($sprogResult) ? $sprogResult : $boxtemplate;
         }
 
         // Escape for JavaScript
@@ -353,6 +361,7 @@ class Frontend
         // Box template
         $output .= '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         $output .= 'var consent_manager_box_template = \'';
+        // $boxtemplate is guaranteed to be string after above checks
         $output .= $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
 
         // Cookie expiration

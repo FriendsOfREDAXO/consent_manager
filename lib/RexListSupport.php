@@ -19,6 +19,8 @@ class RexListSupport
         $ids = array_map(trim(...), explode('|', $params['value']));
         $ids = array_filter($ids, strlen(...)); // @phpstan-ignore-line
         if ([] !== $ids) {
+            // Ensure we have a proper list (reindex array to remove gaps)
+            $ids = array_values($ids);
             $domains = [];
             $db = rex_sql::factory();
             $db->setTable(rex::getTable('consent_manager_domain'));

@@ -1175,20 +1175,22 @@ Backend → Consent Manager → Dienste:
 
 ```php
 <?php
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
 // Template/Modul - statt direktem iframe
-echo doConsent('youtube', 'dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Rick Astley - Never Gonna Give You Up',
     'width' => 560,
     'height' => 315
 ]);
 
 // Funktioniert auch mit kompletten URLs
-echo doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
     'title' => 'Mein Video'
 ]);
 
 // Mit custom Attributen (z.B. für UIkit, Bootstrap, etc.)
-echo doConsent('youtube', 'dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Responsive YouTube Video',
     'width' => 560,
     'height' => 315,
@@ -1210,7 +1212,9 @@ echo doConsent('youtube', 'dQw4w9WgXcQ', [
 
 ```php
 <?php
-echo doConsent('google-maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12...', [
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
+echo InlineConsent::doConsent('google-maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12...', [
     'title' => 'Unsere Adresse',
     'height' => 450
 ]);
@@ -1221,19 +1225,21 @@ echo doConsent('google-maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12..
 
 ```php
 <?php
-echo doConsent('vimeo', '123456789', [
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
+echo InlineConsent::doConsent('vimeo', '123456789', [
     'title' => 'Mein Vimeo Video',
     'width' => 640,
     'height' => 360
 ]);
 
 // Oder mit URL
-echo doConsent('vimeo', 'https://vimeo.com/123456789', [
+echo InlineConsent::doConsent('vimeo', 'https://vimeo.com/123456789', [
     'title' => 'Corporate Video'
 ]);
 
 // Mit custom CSS Klassen und data-Attributen
-echo doConsent('vimeo', '123456789', [
+echo InlineConsent::doConsent('vimeo', '123456789', [
     'title' => 'Corporate Video',
     'attributes' => [
         'class' => 'responsive-video my-custom-class',
@@ -1248,14 +1254,16 @@ echo doConsent('vimeo', '123456789', [
 
 ```php
 <?php
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
 // Beliebige iframes
-echo doConsent('custom-iframe', '<iframe src="https://example.com/widget"></iframe>', [
+echo InlineConsent::doConsent('custom-iframe', '<iframe src="https://example.com/widget"></iframe>', [
     'title' => 'External Widget',
     'privacy_notice' => 'Dieses Widget setzt Cookies für Funktionalität.'
 ]);
 
 // JavaScript-Code
-echo doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");</script>', [
+echo InlineConsent::doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");</script>', [
     'title' => 'Google Analytics',
     'placeholder_text' => 'Analytics aktivieren'
 ]);
@@ -1313,7 +1321,7 @@ if (class_exists(InlineConsent::class)) {
 - Standard-Buttons: "Video laden", "Alle Einstellungen", "Datenschutz"
 
 **✅ Developer Experience:**
-- Ein `doConsent()` für alle Services
+- Ein `InlineConsent::doConsent()` für alle Services
 - Auto-Erkennung von Video-IDs aus URLs
 - Flexible Optionen-Arrays
 - Debug-Modus verfügbar

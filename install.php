@@ -242,7 +242,8 @@ if (rex_addon::get('cronjob')->isAvailable()) {
 if (class_exists(Cache::class)) {
     Cache::forceWrite();
 } elseif (class_exists('consent_manager_cache')) {
-    consent_manager_cache::forceWrite();
+    // Legacy compatibility - use modern Cache class
+    Cache::forceWrite();
 }
 
 // Delete Template cache

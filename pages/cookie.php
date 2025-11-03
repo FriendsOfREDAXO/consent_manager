@@ -36,7 +36,7 @@ if ('delete' === $func) {
             $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_uid_empty_msg'));
             $field->getValidator()->add('match', rex_i18n::msg('consent_manager_uid_malformed_msg'), '/^[a-z0-9-_]+$/');
         } else {
-            $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), $form->getSql()->getValue('uid')));
+            $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), (string) $form->getSql()->getValue('uid')));
         }
     }
     $field = $form->addTextField('service_name');
@@ -69,8 +69,8 @@ if ('delete' === $func) {
             $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'));
             $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
         } else {
-            $form->addRawField(RexFormSupport::getFakeTextarea(rex_i18n::msg('consent_manager_cookiegroup_scripts'), $form->getSql()->getValue('script')));
-            $form->addRawField(RexFormSupport::getFakeTextarea(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'), $form->getSql()->getValue('script_unselect')));
+            $form->addRawField(RexFormSupport::getFakeTextarea(rex_i18n::msg('consent_manager_cookiegroup_scripts'), (string) $form->getSql()->getValue('script')));
+            $form->addRawField(RexFormSupport::getFakeTextarea(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'), (string) $form->getSql()->getValue('script_unselect')));
         }
     }
     if ('add' === $func) {

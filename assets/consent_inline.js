@@ -69,26 +69,37 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 });
             }
             
-            // Event-Handler für Buttons
+            // Event-Handler für Buttons mit spezifischer Priorität
             document.addEventListener('click', function(e) {
-                if (e.target.matches('.consent-inline-once')) {
+                // Eindeutig nur "Einmal laden" Button - Lädt NUR diesen einen Container
+                if (e.target.matches('.consent-inline-once') && !e.target.matches('.consent-inline-allow-all')) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🎯 Individual "Einmal laden" clicked');
                     var button = e.target;
                     var consentId = button.getAttribute('data-consent-id');
                     var serviceKey = button.getAttribute('data-service');
-                    self.accept(consentId, serviceKey, button);
+                    self.acceptIndividual(consentId, serviceKey, button);
+                    return;
                 }
                 
+                // "Alle erlauben" Button - Lädt alle Container vom gleichen Service
                 if (e.target.matches('.consent-inline-allow-all')) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔄 "Alle erlauben" clicked');
                     var serviceKey = e.target.getAttribute('data-service');
                     self.allowAllForService(serviceKey);
+                    return;
                 }
                 
+                // Details Button
                 if (e.target.matches('.consent-inline-details')) {
                     e.preventDefault();
+                    e.stopPropagation();
                     var serviceKey = e.target.getAttribute('data-service');
                     self.showDetails(serviceKey);
+                    return;
                 }
             });
             
@@ -113,34 +124,59 @@ if (typeof window.consentManagerInline !== 'undefined') {
             
             var cookieData = self.getCookieData();
             
+            // NUR Container laden, wenn GLOBALES Consent für Service vorhanden ist
+            // (individual accepts setzen kein globales Consent)
             for (var i = 0; i < containers.length; i++) {
                 var container = containers[i];
                 var serviceKey = container.getAttribute('data-service');
                 
+                // Nur laden wenn globales Consent vorhanden (durch "Alle erlauben" gesetzt)
                 if (cookieData.consents && cookieData.consents.indexOf(serviceKey) !== -1) {
+                    console.log('🔄 Auto-loading container due to global consent for:', serviceKey);
                     self.loadContent(container);
                 }
             }
         },
         
-        accept: function(consentId, serviceKey, button) {
+        // Neue Funktion: Lädt nur den individuellen Container (NICHT alle!)
+        acceptIndividual: function(consentId, serviceKey, button) {
+            console.log('🎯 acceptIndividual: Loading ONLY this container for service:', serviceKey);
             var container = button.closest('.consent-inline-container');
-            // Consent direkt ohne Bestätigung setzen - User hat bereits bewusst geklickt
-            this.saveConsent(serviceKey);
+            
+            // WICHTIG: Consent NICHT global setzen - nur diesen Container laden
             this.loadContent(container);
-            this.logConsent(consentId, serviceKey, 'accepted');
+            this.logConsent(consentId, serviceKey, 'accepted_individual');
+            
+            // Custom Event für diesen einzelnen Container
+            document.dispatchEvent(new CustomEvent('consent-inline-individual-accepted', {
+                detail: { 
+                    service: serviceKey, 
+                    consentId: consentId,
+                    container: container
+                }
+            }));
+        },
+
+        // Alte accept Funktion bleibt für Kompatibilität
+        accept: function(consentId, serviceKey, button) {
+            // Redirect to individual accept for safety
+            this.acceptIndividual(consentId, serviceKey, button);
         },
         
         allowAllForService: function(serviceKey) {
+            console.log('🔄 allowAllForService: Loading ALL containers for service:', serviceKey);
             // Alle Platzhalter für diesen Service laden
             var containers = document.querySelectorAll('.consent-inline-container[data-service="' + serviceKey + '"]');
             var self = this;
             
-            // Consent für Service setzen
+            console.log('🔄 Found ' + containers.length + ' containers to load');
+            
+            // Consent für Service GLOBAL setzen (damit zukünftige auch direkt laden)
             self.saveConsent(serviceKey);
             
             // Alle Container dieses Services laden
             for (var i = 0; i < containers.length; i++) {
+                console.log('🔄 Loading container ' + (i+1) + ' of ' + containers.length);
                 self.loadContent(containers[i]);
             }
             

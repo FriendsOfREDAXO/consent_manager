@@ -24,13 +24,13 @@ use const PATHINFO_FILENAME;
 class JsonSetup
 {
     /**
-     * Import JSON setup configuration.
+     * Import setup from JSON file.
      *
      * @api
      * @param string $jsonFile Path to JSON setup file
      * @param bool $clearExisting Clear existing data before import
      * @param string $mode Import mode: 'replace' (default), 'update' (only add new)
-     * @return array Result array with success status and message
+     * @return array{success: bool, message: string} Result array with success status and message
      */
     public static function importSetup(string $jsonFile, bool $clearExisting = true, string $mode = 'replace'): array
     {
@@ -96,9 +96,10 @@ class JsonSetup
     }
 
     /**
-     * Export current configuration as JSON.
+     * Export current setup to array.
      *
      * @api
+     * @return array<string, mixed>
      */
     public static function exportSetup(bool $includeMetadata = true): array
     {
@@ -159,6 +160,7 @@ class JsonSetup
      * Get available setup templates.
      *
      * @api
+     * @return list<array<string, mixed>>
      */
     public static function getAvailableSetups(): array
     {
@@ -170,6 +172,10 @@ class JsonSetup
         }
 
         $files = glob($setupDir . '*.json');
+        if (false === $files) {
+            return $setups;
+        }
+        
         foreach ($files as $file) {
             $filename = basename($file);
 
@@ -229,6 +235,8 @@ class JsonSetup
 
     /**
      * Import cookie groups with mode support.
+     * 
+     * @param array<mixed> $cookiegroups
      */
     private static function importCookieGroups(array $cookiegroups, string $mode = 'replace'): void
     {
@@ -255,6 +263,8 @@ class JsonSetup
 
     /**
      * Import cookies/services with mode support.
+     * 
+     * @param array<mixed> $cookies
      */
     private static function importCookies(array $cookies, string $mode = 'replace'): void
     {
@@ -281,6 +291,8 @@ class JsonSetup
 
     /**
      * Import texts with mode support.
+     * 
+     * @param array<mixed> $texts
      */
     private static function importTexts(array $texts, string $mode = 'replace'): void
     {
@@ -307,6 +319,8 @@ class JsonSetup
 
     /**
      * Import domains with mode support.
+     * 
+     * @param array<mixed> $domains
      */
     private static function importDomains(array $domains, string $mode = 'replace'): void
     {
@@ -332,6 +346,10 @@ class JsonSetup
     }
 
     // Helper methods to find existing records
+    
+    /**
+     * @return array<string, mixed>|null
+     */
     private static function findExistingCookieGroup(string $uid): ?array
     {
         $sql = rex_sql::factory();
@@ -339,6 +357,9 @@ class JsonSetup
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     private static function findExistingCookie(string $uid): ?array
     {
         $sql = rex_sql::factory();
@@ -346,13 +367,19 @@ class JsonSetup
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
 
-    private static function findExistingText(string $uid, int $clangId): ?array
+    /**
+     * @return array<string, mixed>|null
+     */
+    private static function findExistingText(string $uid, int $clangId = 1): ?array
     {
         $sql = rex_sql::factory();
         $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_text') . ' WHERE uid = ? AND clang_id = ?', [$uid, $clangId]);
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     private static function findExistingDomain(string $uid): ?array
     {
         $sql = rex_sql::factory();
@@ -361,10 +388,16 @@ class JsonSetup
     }
 
     // Insert methods for new records
+    
+    /**
+     * @param array<string, mixed> $group
+     */
     private static function insertCookieGroup(array $group): void
     {
         $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('consent_manager_cookiegroup'));
+        /** @var non-empty-string $tableName */
+        $tableName = 'consent_manager_cookiegroup';
+        $sql->setTable(rex::getTable($tableName));
 
         $now = date('Y-m-d H:i:s');
 
@@ -397,6 +430,10 @@ class JsonSetup
     }
 
     // Helper methods
+    
+    /**
+     * @param non-empty-string $table
+     */
     private static function idExistsInTable(string $table, int $id): bool
     {
         $sql = rex_sql::factory();
@@ -404,6 +441,9 @@ class JsonSetup
         return $sql->getValue('count') > 0;
     }
 
+    /**
+     * @param non-empty-string $table
+     */
     private static function getNextAvailableId(string $table): int
     {
         $sql = rex_sql::factory();
@@ -412,10 +452,15 @@ class JsonSetup
         return $maxId + 1;
     }
 
+    /**
+     * @param array<string, mixed> $cookie
+     */
     private static function insertCookie(array $cookie): void
     {
         $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('consent_manager_cookie'));
+        /** @var non-empty-string $tableName */
+        $tableName = 'consent_manager_cookie';
+        $sql->setTable(rex::getTable($tableName));
 
         $now = date('Y-m-d H:i:s');
 
@@ -448,6 +493,9 @@ class JsonSetup
         $sql->insert();
     }
 
+    /**
+     * @param array<string, mixed> $text
+     */
     private static function insertText(array $text): void
     {
         $sql = rex_sql::factory();
@@ -477,6 +525,9 @@ class JsonSetup
         $sql->insert();
     }
 
+    /**
+     * @param array<string, mixed> $domain
+     */
     private static function insertDomain(array $domain): void
     {
         $sql = rex_sql::factory();

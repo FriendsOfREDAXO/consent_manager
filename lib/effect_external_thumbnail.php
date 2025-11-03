@@ -33,7 +33,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             $filename = $this->media->getMediaFilename();
 
             // Parameter aus Dateiname parsen: service_videoid_hash.jpg
-            if (preg_match('/^([^_]+)_([^_]+)_([^\.]+)\.jpg$/', $filename, $matches)) {
+            if ((bool) preg_match('/^([^_]+)_([^_]+)_([^\.]+)\.jpg$/', $filename, $matches)) {
                 $service = $matches[1];
                 $videoId = $matches[2];
             } else {
@@ -226,7 +226,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         $error = curl_error($ch);
         curl_close($ch);
 
-        if (false === $data || !empty($error)) {
+        if (false === $data || ('' !== $error)) {
             rex_logger::factory()->error('External thumbnail cURL error', [
                 'url' => $url,
                 'error' => $error,
@@ -274,7 +274,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
             $responseCode = null;
             foreach ($http_response_header as $header) {
-                if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
+                if ((bool) preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
                     $responseCode = (int) $matches[1];
                     break;
                 }
@@ -307,7 +307,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * @api
-     * @return array<int, array<string, mixed>>
+     * @return list<array{label: string, name: string, type: 'float'|'int'|'media'|'select'|'string', default?: mixed, notice?: string, prefix?: string, suffix?: string, attributes?: array<string, mixed>}>
      */
     public function getParams()
     {
@@ -350,7 +350,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
     public static function detectService(string $url): ?string
     {
         foreach (self::SERVICES as $service => $config) {
-            if (preg_match($config['pattern'], $url)) {
+            if ((bool) preg_match($config['pattern'], $url)) {
                 return $service;
             }
         }

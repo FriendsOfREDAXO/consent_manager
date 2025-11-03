@@ -23,7 +23,7 @@ if ('delete' === $func) {
     $form->addHiddenField('clang_id', $clang_id);
     RexFormSupport::getId($form, $table);
 
-    $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), $form->getSql()->getValue('uid')));
+    $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), (string) $form->getSql()->getValue('uid')));
     $form->addHiddenField('uid', $form->getSql()->getValue('uid'));
     $field = $form->addTextAreaField('text');
     $field->setLabel(rex_i18n::msg('consent_manager_text'));
