@@ -238,9 +238,11 @@ if (rex_addon::get('cronjob')->isAvailable()) {
 }
 
 // Rewrite
-/** FIXME: Beim Update wird die alte Klasse genommen? oder doch die neue? Könnte ein Problem werden. */
+// Beim Update kann es sein, dass die neue Klasse noch nicht geladen werden kann.
 if (class_exists(Cache::class)) {
     Cache::forceWrite();
+} elseif (class_exists('consent_manager_cache')) {
+    consent_manager_cache::forceWrite();
 }
 
 // Delete Template cache
