@@ -189,15 +189,15 @@ $buttons = '';
 $csrfToken = rex_csrf_token::factory('consent_manager');
 
 $theme = '';
-if ('1' === rex_post('formsubmit', 'string')) {
-    $theme = rex_post('theme', 'string', 'consent_manager_frontend.scss');
+if ('1' === rex_request::post('formsubmit', 'string')) {
+    $theme = rex_request::post('theme', 'string', 'consent_manager_frontend.scss');
 }
 
 // Formular abgesendet - Einstellungen speichern
 
-if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
+if ('1' === rex_request::post('formsubmit', 'string') && !$csrfToken->isValid()) {
     echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
-} elseif ('1' === rex_post('formsubmit', 'string')) {
+} elseif ('1' === rex_request::post('formsubmit', 'string')) {
     $cmtheme = new Theme();
     $theme_options = $cmtheme->getThemeInformation($theme);
     if (0 === count($theme_options)) {

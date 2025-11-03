@@ -44,24 +44,24 @@ $defaultColors = [
 
 // Get current colors from form or defaults
 $colors = [];
-if ('1' === rex_post('formsubmit', 'string')) {
+if ('1' === rex_request::post('formsubmit', 'string')) {
     $colors = [
-        'accent' => rex_post('accent_color', 'string', $defaultColors[$themeBase]['accent']),
-        'button_bg' => rex_post('button_bg', 'string', $defaultColors[$themeBase]['button_bg']),
-        'button_hover' => rex_post('button_hover', 'string', $defaultColors[$themeBase]['button_hover']),
-        'focus' => rex_post('focus_color', 'string', $defaultColors[$themeBase]['focus']),
-        'link' => rex_post('link_color', 'string', $defaultColors[$themeBase]['link']),
+        'accent' => rex_request::post('accent_color', 'string', $defaultColors[$themeBase]['accent']),
+        'button_bg' => rex_request::post('button_bg', 'string', $defaultColors[$themeBase]['button_bg']),
+        'button_hover' => rex_request::post('button_hover', 'string', $defaultColors[$themeBase]['button_hover']),
+        'focus' => rex_request::post('focus_color', 'string', $defaultColors[$themeBase]['focus']),
+        'link' => rex_request::post('link_color', 'string', $defaultColors[$themeBase]['link']),
     ];
 } else {
     $colors = $defaultColors[$themeBase];
 }
 
 // Save theme
-if ('1' === rex_post('formsubmit', 'string') && !$csrfToken->isValid()) {
+if ('1' === rex_request::post('formsubmit', 'string') && !$csrfToken->isValid()) {
     echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
-} elseif ('1' === rex_post('formsubmit', 'string')) {
-    $themeName = rex_post('theme_name', 'string', 'Custom A11y Theme');
-    $themeDescription = rex_post('theme_description', 'string', 'Individuell angepasstes Barrierefreiheits-Theme');
+} elseif ('1' === rex_request::post('formsubmit', 'string')) {
+    $themeName = rex_request::post('theme_name', 'string', 'Custom A11y Theme');
+    $themeDescription = rex_request::post('theme_description', 'string', 'Individuell angepasstes Barrierefreiheits-Theme');
 
     // Generate SCSS content
     $scssContent = generateA11yThemeScss($themeBase, $themeName, $themeDescription, $colors);

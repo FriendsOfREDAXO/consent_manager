@@ -232,7 +232,7 @@ echo $fragment->parse('ConsentManager/config_layout.php');
 $modalFragment = new rex_fragment();
 echo $modalFragment->parse('ConsentManager/quickstart_modal.php');
 
-if ('' !== rex_post('_csrf_token', 'string', '')) {
+if ('' !== rex_request::post('_csrf_token', 'string', '')) {
     Theme::generateDefaultAssets();
     Theme::copyAllAssets();
 }

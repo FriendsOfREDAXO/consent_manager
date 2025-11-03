@@ -149,7 +149,7 @@ class Frontend
         if (isset($this->cache['cookies'][$clang])) {
             foreach ($this->cache['cookies'][$clang] as $uid => $cookie) {
                 if (!$cookie['provider_link_privacy']) {
-                    $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy'], $clang);
+                    $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_request::getUrl($this->links['privacy_policy'], $clang);
                 }
             }
         }
@@ -217,14 +217,14 @@ class Frontend
 
         echo '/* --- Parameters --- */' . PHP_EOL;
         $consent_manager_parameters = [
-            'initially_hidden' => 'true' === rex_get('i', 'string', 'false'),
+            'initially_hidden' => 'true' === rex_request::get('i', 'string', 'false'),
             'domain' => Utility::hostname(),
             'consentid' => uniqid('', true),
-            'cachelogid' => rex_get('cid', 'string', ''),
-            'version' => rex_get('v', 'string', ''),
+            'cachelogid' => rex_request::get('cid', 'string', ''),
+            'version' => rex_request::get('v', 'string', ''),
             'fe_controller' => rex_url::frontend(),
-            'forcereload' => rex_get('r', 'int', 0),
-            'hidebodyscrollbar' => 'true' === rex_get('h', 'string', 'false'),
+            'forcereload' => rex_request::get('r', 'int', 0),
+            'hidebodyscrollbar' => 'true' === rex_request::get('h', 'string', 'false'),
             'cspNonce' => rex_response::getNonce(),
             'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),

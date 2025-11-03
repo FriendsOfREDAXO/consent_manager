@@ -7,7 +7,7 @@ use FriendsOfRedaxo\ConsentManager\Frontend;
 if (0 === rex_article::getCurrentId()) {
     return;
 }
-if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
+if (true === rex_request::get('consent_manager_outputjs', 'bool', false)) {
     return;
 }
 
@@ -100,7 +100,7 @@ if (0 === count($consent_manager->cookiegroups)) {
 }
 
 // Consent bei Parameter skip_consent ausblenden
-if ('' !== rex_config::get('consent_manager', 'skip_consent') && rex_get('skip_consent') === rex_config::get('consent_manager', 'skip_consent')) {
+if ('' !== rex_config::get('consent_manager', 'skip_consent') && rex_request::get('skip_consent') === rex_config::get('consent_manager', 'skip_consent')) {
     $consentparams['initially_hidden'] = 'true';
 }
 
