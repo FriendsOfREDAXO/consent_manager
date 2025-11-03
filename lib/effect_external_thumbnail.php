@@ -300,7 +300,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
      * @api
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'External Thumbnail';
     }
@@ -309,7 +309,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
      * @api
      * @return list<array{label: string, name: string, type: 'float'|'int'|'media'|'select'|'string', default?: mixed, notice?: string, prefix?: string, suffix?: string, attributes?: array<string, mixed>}>
      */
-    public function getParams()
+    public function getParams(): array
     {
         return [
             [
