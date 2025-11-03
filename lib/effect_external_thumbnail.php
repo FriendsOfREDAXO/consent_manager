@@ -124,11 +124,13 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
         $gray = imagecolorallocate($image, 200, 200, 200);
         $darkgray = imagecolorallocate($image, 100, 100, 100);
 
-        imagefill($image, 0, 0, $gray);
+        if (false !== $gray && false !== $darkgray) {
+            imagefill($image, 0, 0, $gray);
 
-        // Text hinzufügen
-        $text = 'Video Thumbnail';
-        imagestring($image, 3, 180, 175, $text, $darkgray);
+            // Text hinzufügen
+            $text = 'Video Thumbnail';
+            imagestring($image, 3, 180, 175, $text, $darkgray);
+        }
 
         // Als temporäre Datei speichern
         $filename = $this->media->getMediaFilename();
@@ -160,7 +162,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             return sprintf($config['thumbnail_url'], $videoId);
         }
 
-        if ('vimeo' === $service) {
+        if ('vimeo' === $service && isset($config['api_url'])) {
             // Vimeo API-Call
             $apiUrl = sprintf($config['api_url'], $videoId);
             $response = $this->makeHttpRequest($apiUrl);
@@ -205,21 +207,18 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
      */
     private function downloadWithCurl(string $url): ?string
     {
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 5,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_SSL_VERIFYHOST => 2,
-            CURLOPT_HTTPHEADER => [
-                'Accept: image/webp,image/apng,image/*,*/*;q=0.8',
-                'Accept-Language: de-DE,de;q=0.9,en;q=0.8',
-                'Cache-Control: no-cache',
-            ],
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: image/webp,image/apng,image/*,*/*;q=0.8',
+            'Accept-Language: de-DE,de;q=0.9,en;q=0.8',
+            'Cache-Control: no-cache',
         ]);
 
         $data = curl_exec($ch);
@@ -244,7 +243,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             return null;
         }
 
-        return is_string($data) && !empty($data) ? $data : null;
+        return is_string($data) && '' < $data ? $data : null;
     }
 
     /**
@@ -290,7 +289,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                 return null;
             }
 
-            return false !== $data && !empty($data) ? $data : null;
+            return false !== $data && '' < $data ? $data : null;
         } catch (Exception $e) {
             rex_logger::logException($e);
             return null;
@@ -308,6 +307,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * @api
+     * @return array<int, array<string, mixed>>
      */
     public function getParams()
     {
