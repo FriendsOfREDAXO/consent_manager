@@ -198,9 +198,6 @@ class Frontend
         header_remove();
         header('Content-Type: application/javascript; charset=utf-8');
         header('Cache-Control: max-age=604800, public');
-        // header('Pragma: cache');
-        // header('Cache-Control: public');
-        // header('Expires: ' . date('D, j M Y', strtotime('+1 week')) . ' 00:00:00 GMT');
         $boxtemplate = '';
         ob_start();
         echo self::getFragment(0, 0, 'ConsentManager/box.php');
