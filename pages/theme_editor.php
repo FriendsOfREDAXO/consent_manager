@@ -257,20 +257,20 @@ function generateA11yThemeScss($base, $name, $description, $colors)
             }
         }
 
-        button:focus,
-        a:focus,
-        input:focus,
-        [tabindex]:focus {
+        div.consent_manager-background button:focus,
+        div.consent_manager-background a:focus,
+        div.consent_manager-background input:focus,
+        div.consent_manager-background [tabindex]:focus {
             outline: 3px solid \$focus-color !important;
             outline-offset: 2px !important;
             box-shadow: 0 0 0 3px \$focus-shadow !important;
         }
 
         @media (prefers-contrast: high) {
-            button:focus,
-            a:focus,
-            input:focus,
-            [tabindex]:focus {
+            div.consent_manager-background button:focus,
+            div.consent_manager-background a:focus,
+            div.consent_manager-background input:focus,
+            div.consent_manager-background [tabindex]:focus {
                 outline: 4px solid currentColor !important;
                 outline-offset: 3px !important;
             }

@@ -149,11 +149,11 @@ div.consent_manager-script {
     }
 }
 
-/* Focus styles for all interactive elements */
-button:focus,
-a:focus,
-input:focus,
-[tabindex]:focus {
+/* Focus styles for all interactive elements within ConsentManager */
+div.consent_manager-background button:focus,
+div.consent_manager-background a:focus,
+div.consent_manager-background input:focus,
+div.consent_manager-background [tabindex]:focus {
     outline: 3px solid $focus-color !important;
     outline-offset: 2px !important;
     box-shadow: 0 0 0 3px $focus-shadow !important;
@@ -161,10 +161,10 @@ input:focus,
 
 /* Visible focus even in high contrast mode */
 @media (prefers-contrast: high) {
-    button:focus,
-    a:focus,
-    input:focus,
-    [tabindex]:focus {
+    div.consent_manager-background button:focus,
+    div.consent_manager-background a:focus,
+    div.consent_manager-background input:focus,
+    div.consent_manager-background [tabindex]:focus {
         outline: 4px solid currentColor !important;
         outline-offset: 3px !important;
     }
