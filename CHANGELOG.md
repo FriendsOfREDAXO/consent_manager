@@ -1,5 +1,102 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.0.0 - xx.yy.2025
+
+### 🚀 Neue Features
+
+* **Command log-delete:** aktiviert und verfügbar (in package.yml registriert)
+* **Cronjob ThumbnailCleanup:** ab dieser Version aktiviert und verfügbar.
+
+### 🛠️ Technische Änderungen
+
+* **Namespace FriendsOfRedaxo\ConsentManager**
+
+  Für eine Übergangszeit und um die Umstellung eigenen PHP-Codes auf Namespace-Klassen zu erleichtern,
+  stehen die alten Klassennamen weiterhin zur Verfügung, tragen jedoch einen deprecated-Vermerk.
+
+  In der Liste der geänderten Funktionen steht `...` als Abkürzung für `FriendsOfRedaxo\ConsentManager`
+  * Datei und Klassennamne von `rex_api_consent_manager_inline_log` geändert in `...\Api\InlineLog`.  
+    Externer API-Name `consent_manager_inline_log` beibehalten
+  * Datei und Klassenname von `rex_api_consent_manager` geändert in `...\Api\ConsentManager`.  
+    Externer API-Name `consent_manager` beibehalten
+  * Datei und Klassenname von `consent_manager_clang` geändert in `...\CLang`
+  * Datei und Klassenname von `consent_manager_inline` geändert in `...\InlineConsent`
+  * Datei und Klassenname von `consent_manager_config` geändert in `...\Config`
+  * Datei und Klassenname von `consent_manager_cache` geändert in `...\Cache`
+  * Datei und Klassenname von `consent_manager_frontend` geändert in `...\Frontend`
+  * Datei und Klassenname von `consent_manager_rex_form` geändert in `...\RexFormSupport`
+  * Datei und Klassenname von `consent_manager_rex_list` geändert in `...\RexListSupport`
+  * Datei und Klassenname von `consent_manager_util` geändert in `...\Utility`
+  * Datei und Klassenname von `consent_manager_google_consent_mode` geändert in `...\GoogleConsentMode`
+  * Datei und Klassenname von `consent_manager_json_setup` geändert in `...\JsonSetup`
+  * Datei und Klassenname von `consent_manager_oembed_parser` geändert in `...\OEmbedParser`
+  * Datei und Klassenname von `consent_manager_theme` geändert in `...\Theme`
+  * Datei und Klassenname von `consent_manager_thumbnail_cache` geändert in `...\ThumbnailCache`
+  * Datei und Klassenname von `rex_consent_manager_thumbnail_mediamanager` geändert in `...\ThumbnailMediaManager`
+  * Datei und Klassenname von `rex_consent_manager_command_log_delete` geändert in `...\Command\LogDelete`
+  * Datei und Klassenname von `rex_cronjob_log_delete` geändert in `...\Cronjob\LogDelete`.  
+    (Unterverzeichnis `lib/Cronjob` für die Cronjob-Klassen eingerichtet)
+  * Datei und Klassenname von `rex_cronjob_consent_manager_thumbnail_cleanup` geändert in `...\Cronjob\ThumbnailCleanup`
+  * Shorthand-Funktion `doConsent` aus InlineConsent.php in eine eigene Datei doConsent.php verschoben.
+* **consent_manager_google_consent_helper:** Datei und Klasse entfernt; nicht mehr in Benutzung 
+* **Cronjob LogDelete (ex. rex_cronjob_log_delete):** vorhandene Cronjobs in Tabelle `rex_cronjob`  werden automatisch auf den neuen Namen inkl. Namespace geändert.
+* **Namespace-Guide.md:** Hinweise zur Umstellung eigenen Codes auf Namespace-Klassen
+* **`lib/deprecated`:** Verzeichnis mit Hilfsklassen (alter Klassenname) für die reibungslose Umstellung auf Namespace-Klassen
+* **Globale Variablen:** Direkten Zugriff durch `rex_request::...` ersetzt
+* **Fragmente:** Die Fragmente sind in ein Addon-spezifisches Unterverzeichnis `fragments/ConsentManager` verschoben. Alle interen Aufrufe sind angepasst (`$fragment->parse('ConsentManager/fragment.php')). Doku angepasst.
+
+## Code-Refactoring und weiteres Bugfixing 
+
+**PHP-Modernisierung und Verbesserungen:**
+
+* Einführung von strikter Typisierung (int, string, array, bool) für alle Methoden und Eigenschaften
+* Erweiterung von PHPStan-Annotationen mit detaillierten Typinformationen
+* Verbesserung der InlineConsent-API mit dem Namespace `FriendsOfRedaxo\ConsentManager`
+* Alle `doConsent()`-Aufrufe auf `InlineConsent::doConsent()` aktualisiert
+* Rückgabewerte in allen Klassen korrekt deklariert
+* Fehlerbehandlung mit Typprüfungen verbessert
+* REDAXO-Anforderungen auf ^5.15 und PHP ^8.1 aktualisiert
+* Cache-Handling mit typensicheren Operationen optimiert
+* Nullable Typen in `ThumbnailCache` korrekt behandelt
+* Cronjob-Klassen modernisiert mit Rückgabetypen
+* PHPStan-Probleme durch bessere Typumwandlung und Validierung behoben
+* Dokumentationsbeispiele auf neue Namespaced-API-Aufrufe aktualisiert
+
+**Fehlerbehebungen und Optimierungen:**
+
+* Media Manager Thumbnails repariert
+* Rückgabewerte für `getName()` und `getParams()` im MediaManager-Effekt ergänzt
+* Kommentare von GitHub Copilot Review umgesetzt
+* `ThumbnailCleanup` Cronjob auf altersbasierte Bereinigung umgestellt
+* Legacy-Cache-Kompatibilität in `install.php` korrigiert
+* String-Vergleiche standardisiert (`$var !== ''`)
+* Domain-ID-Typ von String auf Integer korrigiert
+* Einheitliche Fehlerprüfmuster implementiert
+* Debug-Logs mit Debug-Flag geschützt
+* Deprecated-Klassen ignoriert
+* #412 behoben
+* Kommentierten Code entfernt
+* `consent_inline.js` aktualisiert
+
+**Frontend-spezifische Fixes:**
+
+* Null-Safety-Prüfungen für Domain- und Cookie-Daten implementiert
+* Array-Typvalidierung in `setDomain()` hinzugefügt
+* Sichere Array-Zugriffe, um Warnungen zu vermeiden
+* Null-Coalescing für Cookie-Skripte eingefügt
+* Fehler bei fehlenden Domains verhindert
+* Fehlerbehandlung bei unvollständiger Domain-Konfiguration verbessert
+
+
+### 📁 Neue Dateien
+
+* `Namespace-Guide.md`: Hinweise zur Umstellung eigenen Codes auf Namespace-Klassen
+* `lib/deprecated`: Verzeichnis mit Hilfsklassen (alter Klassenname) für die reibungslose Umstellung auf Namespace-Klassen
+* `fragments/ConsentManager`: neues Verzeichnis für die Fragmente; Fragmemt-Namen verkürzt (kein `consent_manager_` als Prefix)
+
+
+
+
 ## Version 4.5.0 - 14.10.2025
 
 ### 🚀 Neue Features

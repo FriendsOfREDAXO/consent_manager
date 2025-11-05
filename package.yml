@@ -49,9 +49,9 @@ page:
       }
 
 requires:
-  redaxo: "^5.12"
+  redaxo: "^5.15"
   php:
-    version: ">=7, <9"
+    version: ">=8.1, <9"
 
 default_config:
   hidebodyscrollbar: false
@@ -64,3 +64,6 @@ default_config:
 installer_ignore:
     - .github
     - .gitignore
+
+console_commands:
+    consent_manager:log-delete: FriendsOfRedaxo\ConsentManager\Command\LogDelete

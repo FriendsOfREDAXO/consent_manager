@@ -131,7 +131,7 @@ chore(i18n): Update German translations
 ## Key Features & Systems
 
 ### 1. Inline Consent System
-- **Fragment-based:** `consent_inline_placeholder.php` 
+- **Fragment-based:** `ConsentManager/inline_placeholder.php` 
 - **Service Detection:** YouTube, Vimeo, Google Maps auto-detection
 - **Thumbnail Cache:** Local caching system for external media
 - **Domain-specific:** Per-domain inline-only mode

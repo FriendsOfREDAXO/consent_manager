@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Cache;
+
 $addon = rex_addon::get('consent_manager');
 
 $justinstalled = true;
@@ -121,13 +123,13 @@ if (-1 === $addon->getConfig('justInstalled', -1)) {
 
 // Add Text for new Button button_select_none
 if (rex_version::compare($addon->getVersion(), '4.0', '<')) {
-    $sql = \rex_sql::factory();
+    $sql = rex_sql::factory();
     $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = \'button_accept\'');
     if ($sql->getValue('count') > 0) {
         $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = \'button_select_none\'');
         if (0 === (int) $sql->getValue('count')) { /** @phpstan-ignore-line */
             foreach (rex_clang::getAllIds() as $lang) {
-                $sql = \rex_sql::factory();
+                $sql = rex_sql::factory();
                 $sql->setTable(rex::getTable('consent_manager_text'));
                 $sql->setValue('id', 23);
                 $sql->setValue('uid', 'button_select_none');
@@ -147,15 +149,15 @@ $inlineTexts = [
     'inline_action_text' => 'Was möchten Sie tun?',
     'inline_privacy_notice' => 'Für die Anzeige werden Cookies benötigt.',
     'inline_title_fallback' => 'Externes Medium',
-    'inline_privacy_link_text' => 'Datenschutzerklärung von'
+    'inline_privacy_link_text' => 'Datenschutzerklärung von',
 ];
 
 foreach ($inlineTexts as $uid => $defaultText) {
-    $sql = \rex_sql::factory();
+    $sql = rex_sql::factory();
     $sql->setQuery('SELECT count(*) AS `count` FROM `' . rex::getTablePrefix() . 'consent_manager_text` WHERE `uid` = :uid', ['uid' => $uid]);
-    if (0 === (int) $sql->getValue('count')) {
+    if (0 === $sql->getValue('count')) {
         foreach (rex_clang::getAllIds() as $lang) {
-            $sql = \rex_sql::factory();
+            $sql = rex_sql::factory();
             $sql->setTable(rex::getTable('consent_manager_text'));
             $sql->setValue('uid', $uid);
             $sql->setValue('clang_id', $lang);
@@ -170,8 +172,8 @@ if (rex_addon::get('media_manager')->isAvailable()) {
     // Prüfe ob Type bereits existiert
     $sql = rex_sql::factory();
     $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', ['consent_manager_thumbnail']);
-    
-    if (!$sql->getRows()) {
+
+    if (0 === $sql->getRows()) {
         // Media Manager Type erstellen (als normaler Type, nicht System)
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('media_manager_type'));
@@ -181,9 +183,9 @@ if (rex_addon::get('media_manager')->isAvailable()) {
         $sql->addGlobalCreateFields();
         $sql->addGlobalUpdateFields();
         $sql->insert();
-        
+
         $typeId = $sql->getLastId();
-        
+
         // Effect für externe Thumbnails hinzufügen
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('media_manager_type_effect'));
@@ -194,13 +196,13 @@ if (rex_addon::get('media_manager')->isAvailable()) {
             'rex_effect_external_thumbnail' => [
                 'rex_effect_external_thumbnail_service' => 'youtube',
                 'rex_effect_external_thumbnail_video_id' => '',
-                'rex_effect_external_thumbnail_cache_ttl' => 168
-            ]
+                'rex_effect_external_thumbnail_cache_ttl' => 168,
+            ],
         ]));
         $sql->addGlobalCreateFields();
         $sql->addGlobalUpdateFields();
         $sql->insert();
-        
+
         // Optional: Resize-Effect hinzufügen für einheitliche Größe
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('media_manager_type_effect'));
@@ -212,8 +214,8 @@ if (rex_addon::get('media_manager')->isAvailable()) {
                 'rex_effect_resize_width' => '480',
                 'rex_effect_resize_height' => '360',
                 'rex_effect_resize_style' => 'maximum',
-                'rex_effect_resize_allow_enlarge' => 'not_enlarge'
-            ]
+                'rex_effect_resize_allow_enlarge' => 'not_enlarge',
+            ],
         ]));
         $sql->addGlobalCreateFields();
         $sql->addGlobalUpdateFields();
@@ -221,12 +223,31 @@ if (rex_addon::get('media_manager')->isAvailable()) {
     }
 }
 
+/**
+ * Mit der Umstellung auf Namespace wurde auch die Cronjob-Klasse "rex_cronjob_log_delete" umbenannt in
+ * "FriendsOfRedaxo\ConsentManager\Cronjob\LogDelete". Damit bestehende Cronjobs nach dem Update weiterhin funktionieren,
+ * muss der Cronjob-Typ in der Tabelle rex_cronjob auf den neuen Wert inkl. Namespace geändert werden.
+ */
+if (rex_addon::get('cronjob')->isAvailable()) {
+    $sql = rex_sql::factory();
+    $sql->setTable(rex::getTable('cronjob'));
+    $sql->setValue('type', 'FriendsOfRedaxo\\ConsentManager\\Cronjob\\LogDelete');
+    $sql->setWhere('type like :old', [':old' => 'rex_cronjob_log_delete']);
+    $sql->addGlobalUpdateFields();
+    $sql->update();
+}
+
 // Rewrite
-if (class_exists('consent_manager_cache')) {
+// Beim Update kann es sein, dass die neue Klasse noch nicht geladen werden kann.
+if (class_exists(Cache::class)) {
+    Cache::forceWrite();
+} elseif (class_exists('consent_manager_cache')) {
+    // Legacy compatibility - use legacy Cache class
+    /** @phpstan-ignore-next-line */
     consent_manager_cache::forceWrite();
 }
 
 // Delete Template cache
 rex_dir::delete(rex_path::cache('addons/templates'));
 // Delete Module cache
-rex_addon::get('structure')->clearCache(); /** @phpstan-ignore-line */
+rex_dir::delete(rex_path::cache('templates'));

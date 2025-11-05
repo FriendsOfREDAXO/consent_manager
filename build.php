@@ -2,7 +2,7 @@
 
 /**
  * Consent Manager Build Script
- * Minifies JavaScript files for production use
+ * Minifies JavaScript files for production use.
  */
 
 echo "Consent Manager Build Script\n";
@@ -28,7 +28,7 @@ foreach ($files as $source => $target) {
     echo "📄 Processing $source...\n";
 
     // Read source file
-    $content = file_get_contents($sourcePath);
+    $content = (string) file_get_contents($sourcePath);
 
     // Basic minification (remove comments, extra whitespace)
     $minified = $content;
@@ -47,9 +47,9 @@ foreach ($files as $source => $target) {
     $minified = trim($minified);
 
     // Write minified file
-    if (file_put_contents($targetPath, $minified)) {
-        $originalSize = filesize($sourcePath);
-        $minifiedSize = filesize($targetPath);
+    if (false !== file_put_contents($targetPath, $minified)) {
+        $originalSize = (int) filesize($sourcePath);
+        $minifiedSize = (int) filesize($targetPath);
         $reduction = round((1 - $minifiedSize / $originalSize) * 100, 1);
 
         echo "✅ Created $target ({$minifiedSize} bytes, {$reduction}% reduction)\n";
@@ -62,4 +62,3 @@ foreach ($files as $source => $target) {
 
 echo "Build completed!\n";
 echo "Note: This is basic minification. For better compression, use a proper minifier like Terser.\n";
-?>
