@@ -1394,8 +1394,8 @@ MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manag
 **Contributors:** [Siehe GitHub](https://github.com/FriendsOfREDAXO/consent_manager/graphs/contributors)
 
 **Danksagungen:**
+- [Christoph Böcker](https://github.com/Christophboecker) (Code refactoring, bug fixing und mehr) 
 - [Thomas Blum](https://github.com/tbaddade/) (Code aus Sprog AddOn)
-- [Thomas Skerbis](https://github.com/skerbis) (Testing und Spende)
 - [Peter Bickel](https://github.com/polarpixel) (Entwicklungsspende)
 - [Oliver Kreischer](https://github.com/olien) (Cookie-Design)
 
