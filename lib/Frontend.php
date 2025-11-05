@@ -133,9 +133,16 @@ class Frontend
             return;
         }
 
-        $this->domainInfo = $this->cache['domains'][$this->domainName] ?? [];
-        $this->links['privacy_policy'] = $this->cache['domains'][$this->domainName]['privacy_policy'] ?? '';
-        $this->links['legal_notice'] = $this->cache['domains'][$this->domainName]['legal_notice'] ?? '';
+        $domainData = $this->cache['domains'][$this->domainName];
+        
+        // Sicherstellen, dass Domain-Daten ein Array sind
+        if (!is_array($domainData)) {
+            return;
+        }
+
+        $this->domainInfo = $domainData;
+        $this->links['privacy_policy'] = $domainData['privacy_policy'] ?? '';
+        $this->links['legal_notice'] = $domainData['legal_notice'] ?? '';
 
         $article = rex_article::getCurrentId();
         $clang = rex_request::request('lang', 'integer', 0);
@@ -149,12 +156,15 @@ class Frontend
         if (isset($this->cache['cookies'][$clang]) && is_array($this->cache['cookies'][$clang])) {
             foreach ($this->cache['cookies'][$clang] as $uid => $cookie) {
                 if (is_array($cookie) && '' === ($cookie['provider_link_privacy'] ?? '')) {
-                    $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy'], $clang);
+                    // Sicherstellen, dass das Array-Element existiert und veränderbar ist
+                    if (isset($this->cache['cookies'][$clang][$uid]) && is_array($this->cache['cookies'][$clang][$uid])) {
+                        $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy'], $clang);
+                    }
                 }
             }
         }
-        if (isset($this->cache['domains'][$this->domainName]['cookiegroups']) && is_array($this->cache['domains'][$this->domainName]['cookiegroups'])) {
-            foreach ($this->cache['domains'][$this->domainName]['cookiegroups'] as $uid) {
+        if (isset($domainData['cookiegroups']) && is_array($domainData['cookiegroups'])) {
+            foreach ($domainData['cookiegroups'] as $uid) {
                 if (isset($this->cache['cookiegroups'][$clang][$uid])) {
                     $this->cookiegroups[$uid] = $this->cache['cookiegroups'][$clang][$uid];
                 }
@@ -164,9 +174,10 @@ class Frontend
             if (isset($cookiegroup['cookie_uids'])) {
                 foreach ($cookiegroup['cookie_uids'] as $uid) {
                     if (isset($this->cache['cookies'][$clang][$uid])) {
-                        $this->cookies[$uid] = $this->cache['cookies'][$clang][$uid];
-                        $this->scripts[$uid] = $this->cache['cookies'][$clang][$uid]['script'];
-                        $this->scriptsUnselect[$uid] = $this->cache['cookies'][$clang][$uid]['script_unselect'];
+                        $cookieData = $this->cache['cookies'][$clang][$uid];
+                        $this->cookies[$uid] = $cookieData;
+                        $this->scripts[$uid] = $cookieData['script'] ?? '';
+                        $this->scriptsUnselect[$uid] = $cookieData['script_unselect'] ?? '';
                     }
                 }
             }
