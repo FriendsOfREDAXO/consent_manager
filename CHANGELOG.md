@@ -45,6 +45,49 @@
 * **Globale Variablen:** Direkten Zugriff durch `rex_request::...` ersetzt
 * **Fragmente:** Die Fragmente sind in ein Addon-spezifisches Unterverzeichnis `fragments/ConsentManager` verschoben. Alle interen Aufrufe sind angepasst (`$fragment->parse('ConsentManager/fragment.php')). Doku angepasst.
 
+## Code-Refactoring und weiteres Bugfixing 
+
+**PHP-Modernisierung und Verbesserungen:**
+
+* Einführung von strikter Typisierung (int, string, array, bool) für alle Methoden und Eigenschaften
+* Erweiterung von PHPStan-Annotationen mit detaillierten Typinformationen
+* Verbesserung der InlineConsent-API mit dem Namespace `FriendsOfRedaxo\ConsentManager`
+* Alle `doConsent()`-Aufrufe auf `InlineConsent::doConsent()` aktualisiert
+* Rückgabewerte in allen Klassen korrekt deklariert
+* Fehlerbehandlung mit Typprüfungen verbessert
+* REDAXO-Anforderungen auf ^5.15 und PHP ^8.1 aktualisiert
+* Cache-Handling mit typensicheren Operationen optimiert
+* Nullable Typen in `ThumbnailCache` korrekt behandelt
+* Cronjob-Klassen modernisiert mit Rückgabetypen
+* PHPStan-Probleme durch bessere Typumwandlung und Validierung behoben
+* Dokumentationsbeispiele auf neue Namespaced-API-Aufrufe aktualisiert
+
+**Fehlerbehebungen und Optimierungen:**
+
+* Media Manager Thumbnails repariert
+* Rückgabewerte für `getName()` und `getParams()` im MediaManager-Effekt ergänzt
+* Kommentare von GitHub Copilot Review umgesetzt
+* `ThumbnailCleanup` Cronjob auf altersbasierte Bereinigung umgestellt
+* Legacy-Cache-Kompatibilität in `install.php` korrigiert
+* String-Vergleiche standardisiert (`$var !== ''`)
+* Domain-ID-Typ von String auf Integer korrigiert
+* Einheitliche Fehlerprüfmuster implementiert
+* Debug-Logs mit Debug-Flag geschützt
+* Deprecated-Klassen ignoriert
+* #412 behoben
+* Kommentierten Code entfernt
+* `consent_inline.js` aktualisiert
+
+**Frontend-spezifische Fixes:**
+
+* Null-Safety-Prüfungen für Domain- und Cookie-Daten implementiert
+* Array-Typvalidierung in `setDomain()` hinzugefügt
+* Sichere Array-Zugriffe, um Warnungen zu vermeiden
+* Null-Coalescing für Cookie-Skripte eingefügt
+* Fehler bei fehlenden Domains verhindert
+* Fehlerbehandlung bei unvollständiger Domain-Konfiguration verbessert
+
+
 ### 📁 Neue Dateien
 
 * `Namespace-Guide.md`: Hinweise zur Umstellung eigenen Codes auf Namespace-Klassen
