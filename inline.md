@@ -39,7 +39,9 @@ Optional steht eine Drei-Button-Variante zur Verfügung:
 Aktivierung im Code (pro Element):
 
 ```php
-echo doConsent('youtube', 'VIDEO_ID_ODER_URL', [
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
+echo InlineConsent::doConsent('youtube', 'VIDEO_ID_ODER_URL', [
     'title' => 'Mein Video',
     'show_allow_all' => true // Drei-Button-Variante einschalten
 ]);
@@ -55,20 +57,22 @@ Hinweis: Der Button-Text wird über den Schlüssel `button_inline_allow_all` ges
 
 ```php
 <?php
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
 // Template/Modul - statt direktem iframe
-echo FriendsOfRedaxo\ConsentManager\doConsent('youtube', 'dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Rick Astley - Never Gonna Give You Up',
     'width' => 560,
     'height' => 315
 ]);
 
 // Funktioniert auch mit kompletten URLs
-echo FriendsOfRedaxo\ConsentManager\doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
     'title' => 'Mein Video'
 ]);
 
 // Mit custom Attributen (z.B. für UIkit, Bootstrap, etc.)
-echo FriendsOfRedaxo\ConsentManager\doConsent('youtube', 'dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Responsive YouTube Video',
     'width' => 560,
     'height' => 315,
@@ -80,7 +84,7 @@ echo FriendsOfRedaxo\ConsentManager\doConsent('youtube', 'dQw4w9WgXcQ', [
 ]);
 
 // Erweiterte Optionen
-echo FriendsOfRedaxo\ConsentManager\InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
+echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
     'title' => 'Video laden',
     'placeholder_text' => 'Video abspielen',
     'privacy_notice' => 'Für YouTube werden Tracking-Cookies verwendet.',
@@ -98,7 +102,9 @@ echo FriendsOfRedaxo\ConsentManager\InlineConsent::doConsent('youtube', 'dQw4w9W
 
 ```php
 <?php
-echo doConsent('google-maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12...', [
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
+echo InlineConsent::doConsent('google-maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12...', [
     'title' => 'Unsere Adresse',
     'height' => 450
 ]);
@@ -109,19 +115,21 @@ echo doConsent('google-maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12..
 
 ```php
 <?php
-echo doConsent('vimeo', '123456789', [
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
+echo InlineConsent::doConsent('vimeo', '123456789', [
     'title' => 'Mein Vimeo Video',
     'width' => 640,
     'height' => 360
 ]);
 
 // Oder mit URL
-echo doConsent('vimeo', 'https://vimeo.com/123456789', [
+echo InlineConsent::doConsent('vimeo', 'https://vimeo.com/123456789', [
     'title' => 'Corporate Video'
 ]);
 
 // Mit custom CSS Klassen und data-Attributen
-echo doConsent('vimeo', '123456789', [
+echo InlineConsent::doConsent('vimeo', '123456789', [
     'title' => 'Corporate Video',
     'attributes' => [
         'class' => 'responsive-video my-custom-class',
@@ -136,14 +144,16 @@ echo doConsent('vimeo', '123456789', [
 
 ```php
 <?php
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
 // Beliebige iframes
-echo doConsent('custom-iframe', '<iframe src="https://example.com/widget"></iframe>', [
+echo InlineConsent::doConsent('custom-iframe', '<iframe src="https://example.com/widget"></iframe>', [
     'title' => 'External Widget',
     'privacy_notice' => 'Dieses Widget setzt Cookies für Funktionalität.'
 ]);
 
 // JavaScript-Code
-echo doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");</script>', [
+echo InlineConsent::doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");</script>', [
     'title' => 'Google Analytics',
     'placeholder_text' => 'Analytics aktivieren'
 ]);
@@ -208,7 +218,7 @@ if (class_exists(InlineConsent::class)) {
 - Standard-Buttons: "Video laden", "Alle Einstellungen", "Datenschutz"
 
 **✅ Developer Experience:**
-- Ein `doConsent()` für alle Services
+- Ein `InlineConsent::doConsent()` für alle Services
 - Auto-Erkennung von Video-IDs aus URLs
 - Flexible Optionen-Arrays
 - Debug-Modus verfügbar

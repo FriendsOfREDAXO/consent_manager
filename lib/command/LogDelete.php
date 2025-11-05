@@ -17,7 +17,7 @@ class LogDelete extends rex_console_command
         $this->setDescription('Deletes old entries in consent log table');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = $this->getStyle($input, $output);
         $io->title('consent_manager log_delete');

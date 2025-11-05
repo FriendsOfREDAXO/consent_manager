@@ -48,12 +48,12 @@ class Frontend
             Cache::forceWrite();
         }
         $this->cache = Cache::read();
-        if ([] === $this->cache || ([] !== $this->cache && rex_addon::get('consent_manager')->getVersion() !== $this->cache['majorVersion'])) { /** @phpstan-ignore-line */
+        if ([] === $this->cache || ([] !== $this->cache && rex_addon::get('consent_manager')->getVersion() !== ($this->cache['majorVersion'] ?? null))) { /** @phpstan-ignore-line */
             Cache::forceWrite();
             $this->cache = Cache::read();
         }
-        $this->cacheLogId = $this->cache['cacheLogId']; /** @phpstan-ignore-line */
-        $this->version = $this->cache['majorVersion']; /** @phpstan-ignore-line */
+        $this->cacheLogId = $this->cache['cacheLogId'] ?? ''; /** @phpstan-ignore-line */
+        $this->version = $this->cache['majorVersion'] ?? ''; /** @phpstan-ignore-line */
     }
 
     /**
@@ -77,11 +77,11 @@ class Frontend
      * @param int $forceCache
      * @param int $forceReload
      * @param string $fragmentFilename
-     * @param array $additionalVars
+     * @param array<string, mixed> $additionalVars
      * @return string
      * @api
      */
-    public static function getFragmentWithVars($forceCache, $forceReload, $fragmentFilename, $additionalVars = [])
+    public static function getFragmentWithVars($forceCache, $forceReload, $fragmentFilename, array $additionalVars = [])
     {
         $fragment = new rex_fragment();
         $fragment->setVar('forceCache', $forceCache);
@@ -133,9 +133,16 @@ class Frontend
             return;
         }
 
-        $this->domainInfo = $this->cache['domains'][$this->domainName];
-        $this->links['privacy_policy'] = $this->cache['domains'][$this->domainName]['privacy_policy'];
-        $this->links['legal_notice'] = $this->cache['domains'][$this->domainName]['legal_notice'];
+        $domainData = $this->cache['domains'][$this->domainName];
+        
+        // Sicherstellen, dass Domain-Daten ein Array sind
+        if (!is_array($domainData)) {
+            return;
+        }
+
+        $this->domainInfo = $domainData;
+        $this->links['privacy_policy'] = $domainData['privacy_policy'] ?? '';
+        $this->links['legal_notice'] = $domainData['legal_notice'] ?? '';
 
         $article = rex_article::getCurrentId();
         $clang = rex_request::request('lang', 'integer', 0);
@@ -146,25 +153,31 @@ class Frontend
         if (in_array($article, [(int) $this->links['privacy_policy'], (int) $this->links['legal_notice']], true)) {
             $this->boxClass = 'consent_manager-initially-hidden';
         }
-        if (isset($this->cache['cookies'][$clang])) {
+        if (isset($this->cache['cookies'][$clang]) && is_array($this->cache['cookies'][$clang])) {
             foreach ($this->cache['cookies'][$clang] as $uid => $cookie) {
-                if (!$cookie['provider_link_privacy']) {
-                    $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy'], $clang);
+                if (is_array($cookie) && '' === ($cookie['provider_link_privacy'] ?? '')) {
+                    // Sicherstellen, dass das Array-Element existiert und veränderbar ist
+                    if (isset($this->cache['cookies'][$clang][$uid]) && is_array($this->cache['cookies'][$clang][$uid])) {
+                        $this->cache['cookies'][$clang][$uid]['provider_link_privacy'] = rex_getUrl($this->links['privacy_policy'], $clang);
+                    }
                 }
             }
         }
-        if (isset($this->cache['domains'][$this->domainName]['cookiegroups'])) {
-            foreach ($this->cache['domains'][$this->domainName]['cookiegroups'] as $uid) {
-                $this->cookiegroups[$uid] = $this->cache['cookiegroups'][$clang][$uid];
+        if (isset($domainData['cookiegroups']) && is_array($domainData['cookiegroups'])) {
+            foreach ($domainData['cookiegroups'] as $uid) {
+                if (isset($this->cache['cookiegroups'][$clang][$uid])) {
+                    $this->cookiegroups[$uid] = $this->cache['cookiegroups'][$clang][$uid];
+                }
             }
         }
         foreach ($this->cookiegroups as $cookiegroup) {
             if (isset($cookiegroup['cookie_uids'])) {
                 foreach ($cookiegroup['cookie_uids'] as $uid) {
                     if (isset($this->cache['cookies'][$clang][$uid])) {
-                        $this->cookies[$uid] = $this->cache['cookies'][$clang][$uid];
-                        $this->scripts[$uid] = $this->cache['cookies'][$clang][$uid]['script'];
-                        $this->scriptsUnselect[$uid] = $this->cache['cookies'][$clang][$uid]['script_unselect'];
+                        $cookieData = $this->cache['cookies'][$clang][$uid];
+                        $this->cookies[$uid] = $cookieData;
+                        $this->scripts[$uid] = $cookieData['script'] ?? '';
+                        $this->scriptsUnselect[$uid] = $cookieData['script_unselect'] ?? '';
                     }
                 }
             }
@@ -196,9 +209,6 @@ class Frontend
         header_remove();
         header('Content-Type: application/javascript; charset=utf-8');
         header('Cache-Control: max-age=604800, public');
-        // header('Pragma: cache');
-        // header('Cache-Control: public');
-        // header('Expires: ' . date('D, j M Y', strtotime('+1 week')) . ' 00:00:00 GMT');
         $boxtemplate = '';
         ob_start();
         echo self::getFragment(0, 0, 'ConsentManager/box.php');
@@ -207,9 +217,9 @@ class Frontend
         if ('' === $boxtemplate) {
             rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . Utility::hostname() . ')');
         }
-        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable()) {
+        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable() && function_exists('sprogdown')) {
             /** @phpstan-ignore-next-line */
-            $boxtemplate = sprogdown($boxtemplate, $clang);
+            $boxtemplate = \sprogdown($boxtemplate, $clang);
         }
         $boxtemplate = str_replace("'", "\\'", $boxtemplate);
         $boxtemplate = str_replace("\r", '', $boxtemplate);
@@ -313,17 +323,25 @@ class Frontend
         $boxtemplate = '';
         ob_start();
         echo self::getFragment(0, 0, 'ConsentManager/box.php');
-        $boxtemplate = ob_get_contents();
+        $boxTemplateResult = ob_get_contents();
         ob_end_clean();
+        
+        // Ensure we have a string for further processing
+        if (false === $boxTemplateResult) {
+            $boxtemplate = '';
+        } else {
+            $boxtemplate = $boxTemplateResult;
+        }
 
         if ('' === $boxtemplate) {
             rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . Utility::hostname() . ')');
         }
 
         // Process with sprog if available
-        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable()) {
-            /** @phpstan-ignore-next-line */
-            $boxtemplate = sprogdown($boxtemplate, $clang);
+        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable() && function_exists('sprogdown')) {
+            // @phpstan-ignore-next-line (sprogdown is optional dependency from sprog addon)
+            $sprogResult = \sprogdown($boxtemplate, $clang);
+            $boxtemplate = is_string($sprogResult) ? $sprogResult : $boxtemplate;
         }
 
         // Escape for JavaScript
@@ -353,6 +371,7 @@ class Frontend
         // Box template
         $output .= '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         $output .= 'var consent_manager_box_template = \'';
+        // $boxtemplate is guaranteed to be string after above checks
         $output .= $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
 
         // Cookie expiration

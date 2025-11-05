@@ -24,12 +24,12 @@ use const CURLOPT_USERAGENT;
 
 class ThumbnailCache
 {
-    private static $cacheDir;
+    private static ?string $cacheDir = null;
 
     /**
      * Cache-Verzeichnis ermitteln.
      */
-    private static function getCacheDir()
+    private static function getCacheDir(): string
     {
         if (null === self::$cacheDir) {
             self::$cacheDir = rex_path::addonCache('consent_manager', 'thumbnails/');
@@ -45,14 +45,15 @@ class ThumbnailCache
      *
      * @api
      */
-    public static function cacheYouTubeThumbnail($videoId)
+    public static function cacheYouTubeThumbnail(string $videoId): string
     {
         $cacheDir = self::getCacheDir();
         $cacheFile = $cacheDir . 'youtube_' . $videoId . '.jpg';
         $cacheUrl = rex_url::addonAssets('consent_manager', 'cache/thumbnails/youtube_' . $videoId . '.jpg');
 
         // Prüfen ob bereits gecacht
-        if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 86400 * 7) { // 7 Tage Cache
+        $fileMtime = filemtime($cacheFile);
+        if (file_exists($cacheFile) && false !== $fileMtime && (time() - $fileMtime) < 86400 * 7) { // 7 Tage Cache
             return $cacheUrl;
         }
 
@@ -67,7 +68,7 @@ class ThumbnailCache
         foreach ($thumbnailUrls as $url) {
             try {
                 $imageData = self::downloadImage($url);
-                if ($imageData && strlen($imageData) > 1000) { // Mindestgröße prüfen
+                if ($imageData !== '' && strlen($imageData) > 1000) { // Mindestgröße prüfen
                     file_put_contents($cacheFile, $imageData);
 
                     // Auch in public assets kopieren für Web-Zugriff
@@ -94,14 +95,15 @@ class ThumbnailCache
      *
      * @api
      */
-    public static function cacheVimeoThumbnail($videoId)
+    public static function cacheVimeoThumbnail(string $videoId): string
     {
         $cacheDir = self::getCacheDir();
         $cacheFile = $cacheDir . 'vimeo_' . $videoId . '.jpg';
         $cacheUrl = rex_url::addonAssets('consent_manager', 'cache/thumbnails/vimeo_' . $videoId . '.jpg');
 
         // Prüfen ob bereits gecacht
-        if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 86400 * 7) {
+        $fileMtime = filemtime($cacheFile);
+        if (file_exists($cacheFile) && false !== $fileMtime && (time() - $fileMtime) < 86400 * 7) {
             return $cacheUrl;
         }
 
@@ -110,13 +112,13 @@ class ThumbnailCache
             $apiUrl = "https://vimeo.com/api/v2/video/{$videoId}.json";
             $apiResponse = self::downloadImage($apiUrl);
 
-            if ($apiResponse) {
+            if ($apiResponse !== '') {
                 $data = json_decode($apiResponse, true);
                 if (isset($data[0]['thumbnail_large'])) {
                     $thumbnailUrl = $data[0]['thumbnail_large'];
                     $imageData = self::downloadImage($thumbnailUrl);
 
-                    if ($imageData) {
+                    if ($imageData !== '') {
                         file_put_contents($cacheFile, $imageData);
 
                         // In public assets kopieren
@@ -140,22 +142,25 @@ class ThumbnailCache
     /**
      * Bild herunterladen.
      */
-    private static function downloadImage($url)
+    private static function downloadImage(string $url): string
     {
         // cURL verwenden wenn verfügbar
-        if (function_exists('curl_init')) {
+        if (function_exists('curl_init') && $url !== '') {
             $ch = curl_init();
+            /** @var non-empty-string $url */
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; ConsentManager/1.0)');
+            /** @var non-empty-string $userAgent */
+            $userAgent = 'Mozilla/5.0 (compatible; ConsentManager/1.0)';
+            curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
 
             $data = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            if (200 === $httpCode && false !== $data) {
+            if (200 === $httpCode && is_string($data)) {
                 return $data;
             }
         }
@@ -168,13 +173,14 @@ class ThumbnailCache
             ],
         ]);
 
-        return @file_get_contents($url, false, $context);
+        $result = @file_get_contents($url, false, $context);
+        return is_string($result) ? $result : '';
     }
 
     /**
      * Platzhalter-Bild generieren.
      */
-    private static function getPlaceholderImage($service)
+    private static function getPlaceholderImage(string $service): string
     {
         $icons = [
             'youtube' => '🎥',
@@ -212,7 +218,7 @@ class ThumbnailCache
      *
      * @api
      */
-    public static function cleanupCache($maxAge = 2592000) // 30 Tage
+    public static function cleanupCache(int $maxAge = 2592000): void // 30 Tage
     {
         $cacheDir = self::getCacheDir();
         $publicCacheDir = rex_path::addonAssets('consent_manager', 'cache/thumbnails/');
@@ -225,9 +231,12 @@ class ThumbnailCache
             }
 
             $files = glob($dir . '*');
-            foreach ($files as $file) {
-                if (is_file($file) && (time() - filemtime($file)) > $maxAge) {
-                    unlink($file);
+            if (false !== $files) {
+                foreach ($files as $file) {
+                    $fileMtime = filemtime($file);
+                    if (is_file($file) && false !== $fileMtime && (time() - $fileMtime) > $maxAge) {
+                        unlink($file);
+                    }
                 }
             }
         }

@@ -15,7 +15,10 @@ if ('' !== $preview) {
     rex_response::cleanOutputBuffers();
 
     $backgrounds = (array) glob($addon->getAssetsPath('*.jpg'));
-    $backgroundimage = basename((string) $backgrounds[array_rand($backgrounds)]);
+    $backgroundimage = '';
+    if ([] !== $backgrounds) {
+        $backgroundimage = basename((string) $backgrounds[array_rand($backgrounds)]);
+    }
 
     $cmtheme = new Theme($preview);
     $theme_options = $cmtheme->getThemeInformation();

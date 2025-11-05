@@ -242,10 +242,12 @@ if (rex_addon::get('cronjob')->isAvailable()) {
 if (class_exists(Cache::class)) {
     Cache::forceWrite();
 } elseif (class_exists('consent_manager_cache')) {
+    // Legacy compatibility - use legacy Cache class
+    /** @phpstan-ignore-next-line */
     consent_manager_cache::forceWrite();
 }
 
 // Delete Template cache
 rex_dir::delete(rex_path::cache('addons/templates'));
 // Delete Module cache
-rex_addon::get('structure')->clearCache(); /** @phpstan-ignore-line */
+rex_dir::delete(rex_path::cache('templates'));

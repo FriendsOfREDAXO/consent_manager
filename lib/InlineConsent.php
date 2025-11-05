@@ -23,8 +23,8 @@ use function strlen;
 
 class InlineConsent
 {
-    private static $cssOutputted = false;
-    private static $jsOutputted = false;
+    private static bool $cssOutputted = false;
+    private static bool $jsOutputted = false;
 
     /**
      * Generiert Inline-Consent für externen Content.
@@ -32,10 +32,10 @@ class InlineConsent
      * @api
      * @param string $serviceKey Service-Schlüssel aus Consent Manager
      * @param string $content Original Content (iframe, script, etc.)
-     * @param array $options Zusätzliche Optionen
+     * @param array<string, mixed> $options Zusätzliche Optionen
      * @return string HTML-Output
      */
-    public static function doConsent($serviceKey, $content, $options = [])
+    public static function doConsent(string $serviceKey, string $content, array $options = []): string
     {
         // Service aus DB laden
         $service = self::getService($serviceKey);
@@ -81,8 +81,10 @@ class InlineConsent
 
     /**
      * Service aus Datenbank laden.
+     * 
+     * @return array<string, mixed>|null
      */
-    private static function getService($serviceKey): ?array
+    private static function getService(string $serviceKey): ?array
     {
         $sql = rex_sql::factory();
 
@@ -104,8 +106,11 @@ class InlineConsent
 
     /**
      * YouTube Platzhalter.
+     * 
+     * @param array<string, mixed> $options
+     * @param array<string, mixed> $service
      */
-    private static function renderYouTubePlaceholder($serviceKey, $videoId, $options, $consentId, $service)
+    private static function renderYouTubePlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
         // Video ID extrahieren falls komplette URL übergeben wurde
         if (str_contains($videoId, 'youtube.com') || str_contains($videoId, 'youtu.be')) {
@@ -137,7 +142,7 @@ class InlineConsent
             }
         }
 
-        $iframe = '<iframe width="' . ($options['width'] ?: '560') . '" height="' . ($options['height'] ?: '315') . '" 
+        $iframe = '<iframe width="' . ($options['width'] ?? '560') . '" height="' . ($options['height'] ?? '315') . '" 
                    src="https://www.youtube.com/embed/' . rex_escape($videoId) . '" 
                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                    allowfullscreen' . $attributesString . '></iframe>';
@@ -152,8 +157,11 @@ class InlineConsent
 
     /**
      * Vimeo Platzhalter.
+     * 
+     * @param array<string, mixed> $options
+     * @param array<string, mixed> $service
      */
-    private static function renderVimeoPlaceholder($serviceKey, $videoId, $options, $consentId, $service)
+    private static function renderVimeoPlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
         // Video ID extrahieren
         if (str_contains($videoId, 'vimeo.com')) {
@@ -191,7 +199,7 @@ class InlineConsent
         }
 
         $iframe = '<iframe src="https://player.vimeo.com/video/' . rex_escape($videoId) . '" 
-                   width="' . ($options['width'] ?: '640') . '" height="' . ($options['height'] ?: '360') . '" 
+                   width="' . ($options['width'] ?? '640') . '" height="' . ($options['height'] ?? '360') . '" 
                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen' . $attributesString . '></iframe>';
 
         return self::renderPlaceholderHTML($serviceKey, $iframe, $options, $consentId, $service, [
@@ -203,11 +211,14 @@ class InlineConsent
 
     /**
      * Google Maps Platzhalter.
+     * 
+     * @param array<string, mixed> $options
+     * @param array<string, mixed> $service
      */
-    private static function renderGoogleMapsPlaceholder($serviceKey, $embedUrl, $options, $consentId, $service)
+    private static function renderGoogleMapsPlaceholder(string $serviceKey, string $embedUrl, array $options, string $consentId, array $service): string
     {
         $iframe = '<iframe src="' . rex_escape($embedUrl) . '" 
-                   width="' . ($options['width'] ?: '100%') . '" height="' . ($options['height'] ?: '450') . '" 
+                   width="' . ($options['width'] ?? '100%') . '" height="' . ($options['height'] ?? '450') . '" 
                    style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
 
         return self::renderPlaceholderHTML($serviceKey, $iframe, $options, $consentId, $service, [
@@ -220,8 +231,11 @@ class InlineConsent
 
     /**
      * Generischer Platzhalter.
+     * 
+     * @param array<string, mixed> $options
+     * @param array<string, mixed> $service
      */
-    private static function renderGenericPlaceholder($serviceKey, $content, $options, $consentId, $service)
+    private static function renderGenericPlaceholder(string $serviceKey, string $content, array $options, string $consentId, array $service): string
     {
         return self::renderPlaceholderHTML($serviceKey, $content, $options, $consentId, $service, [
             'thumbnail' => 'auto' !== $options['thumbnail'] ? $options['thumbnail'] : null,
@@ -233,8 +247,12 @@ class InlineConsent
 
     /**
      * Platzhalter HTML generieren.
+     * 
+     * @param array<string, mixed> $options
+     * @param array<string, mixed> $service
+     * @param array<string, mixed> $placeholderData
      */
-    private static function renderPlaceholderHTML($serviceKey, $content, $options, $consentId, $service, $placeholderData)
+    private static function renderPlaceholderHTML(string $serviceKey, string $content, array $options, string $consentId, array $service, array $placeholderData): string
     {
         $debug = rex::isDebugMode();
 
@@ -277,8 +295,10 @@ class InlineConsent
 
     /**
      * Content direkt rendern (wenn bereits Consent vorhanden).
+     * 
+     * @param array<string, mixed> $options
      */
-    private static function renderContent($content, $options)
+    private static function renderContent(string $content, array $options): string
     {
         // Build attributes string from options
         $attributesString = '';
@@ -294,19 +314,19 @@ class InlineConsent
 
         // Für YouTube URLs oder Video-IDs
         if (str_contains($content, 'youtube.com') || str_contains($content, 'youtu.be')
-            || (11 === strlen($content) && preg_match('/^[a-zA-Z0-9_-]{11}$/', $content))) {
+            || (11 === strlen($content) && (bool) preg_match('/^[a-zA-Z0-9_-]{11}$/', $content))) {
             // Video-ID extrahieren
-            if (11 === strlen($content) && preg_match('/^[a-zA-Z0-9_-]{11}$/', $content)) {
+            if (11 === strlen($content) && (bool) preg_match('/^[a-zA-Z0-9_-]{11}$/', $content)) {
                 $videoId = $content;
             } else {
                 preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $content, $matches);
                 $videoId = $matches[1] ?? '';
             }
 
-            if ($videoId) {
+            if ('' !== $videoId) {
                 // Standard YouTube iframe
-                $width = $options['width'] ?: '560';
-                $height = $options['height'] ?: '315';
+                $width = $options['width'] ?? '560';
+                $height = $options['height'] ?? '315';
                 return '<iframe width="' . $width . '" height="' . $height . '" 
                         src="https://www.youtube.com/embed/' . rex_escape($videoId) . '" 
                         frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -315,19 +335,19 @@ class InlineConsent
         }
 
         // Für Vimeo URLs oder Video-IDs
-        if (str_contains($content, 'vimeo.com') || preg_match('/^\d{6,}$/', $content)) {
+        if (str_contains($content, 'vimeo.com') || (bool) preg_match('/^\d{6,}$/', $content)) {
             // Video-ID extrahieren
-            if (preg_match('/^\d{6,}$/', $content)) {
+            if ((bool) preg_match('/^\d{6,}$/', $content)) {
                 $videoId = $content;
             } else {
                 preg_match('/vimeo\.com\/(\d+)/', $content, $matches);
                 $videoId = $matches[1] ?? '';
             }
 
-            if ($videoId) {
+            if ('' !== $videoId) {
                 // Standard Vimeo iframe
-                $width = $options['width'] ?: '640';
-                $height = $options['height'] ?: '360';
+                $width = $options['width'] ?? '640';
+                $height = $options['height'] ?? '360';
                 return '<iframe src="https://player.vimeo.com/video/' . rex_escape($videoId) . '" 
                         width="' . $width . '" height="' . $height . '" 
                         frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen' . $attributesString . '></iframe>';
@@ -337,7 +357,7 @@ class InlineConsent
         // Für Google Maps Embed URLs: In iframe umwandeln
         if (str_contains($content, 'google.com/maps/embed')) {
             return '<iframe src="' . rex_escape($content) . '" 
-                    width="' . ($options['width'] ?: '100%') . '" height="' . ($options['height'] ?: '450') . '" 
+                    width="' . ($options['width'] ?? '100%') . '" height="' . ($options['height'] ?? '450') . '" 
                     style="border:0;" allowfullscreen="" loading="lazy"' . $attributesString . '></iframe>';
         }
 
@@ -350,7 +370,7 @@ class InlineConsent
      *
      * @api
      */
-    public static function getJavaScript()
+    public static function getJavaScript(): string
     {
         if (self::$jsOutputted) {
             return '<!-- JavaScript bereits ausgegeben -->';
@@ -365,7 +385,7 @@ class InlineConsent
     /**
      * Button-Text aus Texte-Verwaltung laden.
      */
-    private static function getButtonText($key, $fallback)
+    private static function getButtonText(string $key, string $fallback): string
     {
         $debug = rex::isDebugMode();
 
@@ -375,7 +395,7 @@ class InlineConsent
                 [$key, rex_clang::getCurrentId()]);
 
             if ($sql->getRows() > 0) {
-                $value = $sql->getValue('text');
+                $value = (string) $sql->getValue('text');
                 if ($debug) {
                     echo "<!-- DEBUG getButtonText: key=$key, clang=" . rex_clang::getCurrentId() . ", value=$value -->\n";
                 }
@@ -398,7 +418,7 @@ class InlineConsent
      *
      * @api
      */
-    public static function getCSS()
+    public static function getCSS(): string
     {
         if (self::$cssOutputted) {
             return '<!-- CSS bereits ausgegeben -->';

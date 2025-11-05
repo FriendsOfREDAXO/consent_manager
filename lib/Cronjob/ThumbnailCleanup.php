@@ -11,26 +11,21 @@ use rex_cronjob;
  */
 class ThumbnailCleanup extends rex_cronjob
 {
-    public function execute()
+    public function execute(): bool
     {
-        try {
-            // Cache bereinigen (Dateien älter als 30 Tage löschen)
-            ThumbnailCache::cleanupCache(30 * 24 * 60 * 60);
-
-            $this->setMessage('Consent Manager Thumbnail Cache wurde bereinigt');
-            return true;
-        } catch (Exception $e) {
-            $this->setMessage('Fehler beim Bereinigen des Thumbnail Cache: ' . $e->getMessage());
-            return false;
-        }
+        ThumbnailCache::cleanupCache();
+        return true;
     }
 
-    public function getTypeName()
+    public function getTypeName(): string
     {
         return 'Consent Manager Thumbnail Cache bereinigen';
     }
 
-    public function getParamFields()
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function getParamFields(): array
     {
         return [];
     }

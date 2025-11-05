@@ -69,7 +69,7 @@ class OEmbedParser
         $config = self::getDomainConfig($domain);
 
         // Wenn oEmbed deaktiviert ist, keine Umwandlung durchführen
-        if (!$config['enabled']) {
+        if (!(bool) $config['enabled']) {
             return $content; // Inhalt unverändert zurückgeben
         }
 
@@ -135,12 +135,12 @@ class OEmbedParser
      *
      * @api
      * @param string $url Video URL
-     * @return array|null ['service' => string, 'id' => string, 'platform' => string]
+     * @return array{service: string, id: string, platform: string}|null
      */
     private static function detectPlatform(string $url): ?array
     {
         // YouTube
-        if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/', $url, $matches)) {
+        if ((bool) preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/', $url, $matches)) {
             return [
                 'service' => 'youtube',
                 'platform' => 'youtube',
@@ -150,7 +150,7 @@ class OEmbedParser
         }
 
         // Vimeo
-        if (preg_match('/vimeo\.com\/(\d+)/', $url, $matches)) {
+        if ((bool) preg_match('/vimeo\.com\/(\d+)/', $url, $matches)) {
             return [
                 'service' => 'vimeo',
                 'platform' => 'vimeo',
@@ -184,12 +184,12 @@ class OEmbedParser
         }
     }
 
-    /**
-     * Domain-spezifische Konfiguration laden.
+        /**
+     * Holt Domain-Konfiguration.
      *
      * @api
      * @param string $domain Domain-Name
-     * @return array Konfiguration
+     * @return array<string, mixed> Konfiguration
      */
     private static function getDomainConfig(string $domain): array
     {
@@ -213,8 +213,8 @@ class OEmbedParser
             if ($sql->getRows() > 0) {
                 $dbConfig = [
                     'enabled' => (bool) ($sql->getValue('oembed_enabled') ?? 1), // Default 1 wenn NULL
-                    'width' => (int) $sql->getValue('oembed_video_width') ?: 640,
-                    'height' => (int) $sql->getValue('oembed_video_height') ?: 360,
+                    'width' => (int) ($sql->getValue('oembed_video_width') ?? 640),
+                    'height' => (int) ($sql->getValue('oembed_video_height') ?? 360),
                     'show_allow_all' => (bool) $sql->getValue('oembed_show_allow_all'),
                 ];
 
@@ -240,7 +240,7 @@ class OEmbedParser
      *
      * @api
      * @param string $domain Domain-Name
-     * @param array $config Konfiguration
+     * @param array<string, mixed> $config Konfiguration
      */
     public static function setDomainConfig(string $domain, array $config): void
     {
@@ -251,9 +251,9 @@ class OEmbedParser
     }
 
     /**
-     * Video-Titel aus Platform-Info generieren.
+     * Video-Titel für Platzhalter generieren.
      *
-     * @param array $platform Platform info
+     * @param array<string, mixed> $platform Platform info
      */
     private static function getVideoTitle(array $platform): string
     {
@@ -266,8 +266,9 @@ class OEmbedParser
      *
      * @api
      * @param string $url Video URL
-     * @param array $options Player-Optionen
+     * @param array<string, mixed> $options Player-Optionen
      * @return string HTML
+     * @phpstan-ignore-next-line method.unused (Reserved for future Vidstack integration)
      */
     private static function generateVidstackEmbed(string $url, array $options): string
     {
@@ -286,10 +287,10 @@ class OEmbedParser
                 'controls' => true,  // Vidstack Controls anzeigen
             ];
 
-            if ($options['video_width']) {
+            if (isset($options['video_width']) && '' !== (string) $options['video_width']) {
                 $attributes['width'] = $options['video_width'];
             }
-            if ($options['video_height']) {
+            if (isset($options['video_height']) && '' !== (string) $options['video_height']) {
                 $attributes['height'] = $options['video_height'];
             }
 
@@ -312,8 +313,9 @@ class OEmbedParser
      * @api
      * @param string $serviceKey Service UID
      * @param string $url Video URL
-     * @param array $options Optionen
+     * @param array<string, mixed> $options Optionen
      * @return string HTML
+     * @phpstan-ignore-next-line method.unused (Reserved for future native embed integration)
      */
     private static function generateNativeEmbed(string $serviceKey, string $url, array $options): string
     {

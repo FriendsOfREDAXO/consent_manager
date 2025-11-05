@@ -67,42 +67,42 @@ if ('1' === rex_request::post('formsubmit', 'string') && !$csrfToken->isValid())
     $scssContent = generateA11yThemeScss($themeBase, $themeName, $themeDescription, $colors);
 
     // Save to project addon
-    /**
-     * REXSTAN: If condition is always true.
-     * NOTE: denn am Anfang wird ja schon auf Project geprüft. Eine der beiden Abfragen ist Murks.
-     */
-    if (rex_addon::get('project')->isAvailable()) {
-        $projectAddon = rex_addon::get('project');
-        $themesDir = $projectAddon->getPath('consent_manager_themes/');
+    // Project addon already checked at start of file
+    $projectAddon = rex_addon::get('project');
+    $themesDir = $projectAddon->getPath('consent_manager_themes/');
 
-        if (!is_dir($themesDir)) {
-            rex_dir::create($themesDir);
-        }
+    if (!is_dir($themesDir)) {
+        rex_dir::create($themesDir);
+    }
 
-        $filename = 'consent_manager_frontend_' . rex_string::normalize($themeName) . '.scss';
-        $filepath = $themesDir . $filename;
+    $filename = 'consent_manager_frontend_' . rex_string::normalize($themeName) . '.scss';
+    $filepath = $themesDir . $filename;
 
-        if (rex_file::put($filepath, $scssContent)) {
-            // Compile theme
-            try {
-                Theme::generateThemeAssets('project:' . $filename);
-                Theme::copyAllAssets();
+    if (rex_file::put($filepath, $scssContent)) {
+        // Compile theme
+        try {
+            Theme::generateThemeAssets('project:' . $filename);
+            Theme::copyAllAssets();
 
-                echo rex_view::success(rex_i18n::msg('consent_manager_theme_editor_saved', $themeName));
-                echo rex_view::info('Theme gespeichert als: <code>' . $filename . '</code><br>Du kannst es jetzt unter "Theme" auswählen.');
-            } catch (Exception $e) {
-                echo rex_view::error('Fehler beim Kompilieren: ' . $e->getMessage());
-            }
-        } else {
-            echo rex_view::error('Fehler beim Speichern der Datei.');
+            echo rex_view::success(rex_i18n::msg('consent_manager_theme_editor_saved', $themeName));
+            echo rex_view::info('Theme gespeichert als: <code>' . $filename . '</code><br>Du kannst es jetzt unter "Theme" auswählen.');
+        } catch (Exception $e) {
+            echo rex_view::error('Fehler beim Kompilieren: ' . $e->getMessage());
         }
     } else {
-        echo rex_view::warning('Das project-Addon muss installiert sein, um eigene Themes zu speichern.');
+        echo rex_view::error('Fehler beim Speichern der Datei.');
     }
 }
 
 // TODO: Funktion verlagern in eine eigene Datei? -> Thomas fragen
-function generateA11yThemeScss($base, $name, $description, $colors)
+/**
+ * @param string $base
+ * @param string $name  
+ * @param string $description
+ * @param array<string, string> $colors
+ * @return string
+ */
+function generateA11yThemeScss(string $base, string $name, string $description, array $colors): string
 {
     $isCompact = ('compact' === $base);
 

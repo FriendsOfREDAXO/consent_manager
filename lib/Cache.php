@@ -81,7 +81,10 @@ class Cache
         $db->select('*');
         $domains = $db->getArray();
         foreach ($domains as $v) {
-            $this->domains[$v['id']] = $v;
+            $domainId = (int) ($v['id'] ?? 0);
+            if ($domainId > 0) {
+                $this->domains[$domainId] = $v;
+            }
         }
 
         $db = rex_sql::factory();

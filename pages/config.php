@@ -122,9 +122,10 @@ if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_
             // Headers für Download
             header('Content-Type: application/json');
             header('Content-Disposition: attachment; filename="consent_manager_export_' . date('Y-m-d_H-i-s') . '.json"');
-            header('Content-Length: ' . strlen($json_export));
-
-            echo $json_export;
+            if (false !== $json_export) {
+                header('Content-Length: ' . strlen($json_export));
+                echo $json_export;
+            }
             exit;
         }
         if ('import_json' === $func) {
@@ -132,7 +133,11 @@ if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_
             $importFile = rex_request::files('import_file', 'array', []);
             if (0 < count($importFile) && UPLOAD_ERR_OK === $importFile['error']) {
                 $import_content = file_get_contents($importFile['tmp_name']);
-                $import_data = json_decode($import_content, true);
+                if (false !== $import_content) {
+                    $import_data = json_decode($import_content, true);
+                } else {
+                    $import_data = null;
+                }
 
                 if (JSON_ERROR_NONE === json_last_error() && is_array($import_data)) {
                     try {

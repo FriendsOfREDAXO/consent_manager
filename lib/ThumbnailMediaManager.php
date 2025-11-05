@@ -20,12 +20,12 @@ use function is_array;
 class ThumbnailMediaManager
 {
     /**
-     * Generiert Thumbnail-URL über Mediamanager.
+     * Thumbnail-URL über Media Manager generieren.
      *
      * @api
      * @param string $service Service-Name (youtube, vimeo)
      * @param string $videoId Video-ID
-     * @param array $options Zusätzliche Optionen
+     * @param array<string, mixed> $options Zusätzliche Optionen
      * @return string|null Thumbnail-URL oder null bei Fehler
      */
     public static function getThumbnailUrl(string $service, string $videoId, array $options = []): ?string
@@ -39,8 +39,9 @@ class ThumbnailMediaManager
         $sql = rex_sql::factory();
         $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', ['consent_manager_thumbnail']);
 
-        if (0 < $sql->getRows()) {
-            return null;
+        if (0 === $sql->getRows()) {
+            // Fallback zu direkter URL wenn kein Media Manager Type vorhanden
+            return self::getDirectThumbnailUrl($service, $videoId);
         }
 
         // Eindeutigen Dateinamen für Thumbnail generieren
@@ -68,13 +69,14 @@ class ThumbnailMediaManager
         $cacheTime = filemtime($cachePath);
         $ttl = 168 * 3600; // 1 Woche in Sekunden
 
-        return (time() - $cacheTime) < $ttl;
+        return false !== $cacheTime && (time() - $cacheTime) < $ttl;
     }
 
     /**
      * Cache-Größe ermitteln.
      *
      * @api
+     * @return array{files: int, size: int}
      */
     public static function getCacheSize(): array
     {
@@ -90,7 +92,10 @@ class ThumbnailMediaManager
 
         foreach ($files as $file) {
             if (is_file($file)) {
-                $totalSize += filesize($file);
+                $fileSize = filesize($file);
+                if (false !== $fileSize) {
+                    $totalSize += $fileSize;
+                }
             }
         }
 
@@ -127,11 +132,12 @@ class ThumbnailMediaManager
      * Service aus URL erkennen.
      *
      * @api
+     * @return array{service: string, video_id: string}|null
      */
     public static function detectServiceFromUrl(string $url): ?array
     {
         // YouTube
-        if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $matches)) {
+        if ((bool) preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $matches)) {
             return [
                 'service' => 'youtube',
                 'video_id' => $matches[1],
@@ -139,7 +145,7 @@ class ThumbnailMediaManager
         }
 
         // Vimeo
-        if (preg_match('/(?:vimeo\.com\/)([0-9]+)/', $url, $matches)) {
+        if ((bool) preg_match('/(?:vimeo\.com\/)([0-9]+)/', $url, $matches)) {
             return [
                 'service' => 'vimeo',
                 'video_id' => $matches[1],
@@ -153,6 +159,7 @@ class ThumbnailMediaManager
      * Thumbnail für Platzhalter generieren.
      *
      * @api
+     * @param array<string, mixed> $options
      */
     public static function generatePlaceholderThumbnail(string $service, string $videoId, array $options = []): string
     {
@@ -167,11 +174,11 @@ class ThumbnailMediaManager
     }
 
     /**
-     * Thumbnail-URL direkt aus Video-URL generieren.
+     * Thumbnail-URL aus Video-URL generieren.
      *
      * @api
      * @param string $videoUrl YouTube oder Vimeo URL
-     * @param array $options Zusätzliche Optionen
+     * @param array<string, mixed> $options Zusätzliche Optionen
      * @return string|null Thumbnail-URL oder null bei ungültiger URL
      */
     public static function getThumbnailUrlFromVideoUrl(string $videoUrl, array $options = []): ?string

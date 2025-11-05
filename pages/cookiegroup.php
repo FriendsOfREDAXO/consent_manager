@@ -44,7 +44,7 @@ if ('delete' === $func) {
             $field = $form->addCheckboxField('domain');
             $field->setLabel(rex_i18n::msg('consent_manager_domain'));
             foreach ($domains as $v) {
-                $field->addOption($v['uid'], $v['id']);
+                $field->addOption((string) $v['uid'], (int) $v['id']);
             }
         }
 
@@ -53,11 +53,13 @@ if ('delete' === $func) {
         $field->setLabel(rex_i18n::msg('consent_manager_prio'));
         $field->setLabelField('uid');
     } else {
-        $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), $form->getSql()->getValue('uid')));
+        $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), (string) $form->getSql()->getValue('uid')));
         $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), rex_i18n::msg('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
 
         $checkboxes = [];
-        $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('domain')));
+        $checkedBoxes = array_filter(explode('|', (string) $form->getSql()->getValue('domain')), static function ($value) {
+            return '' !== $value;
+        });
         foreach ($domains as $v) {
             $checked = (in_array((string) $v['id'], $checkedBoxes, true)) ? '|1|' : '';
             $checkboxes[] = [$checked, $v['uid']];
@@ -85,14 +87,16 @@ if ('delete' === $func) {
             $field = $form->addCheckboxField('cookie');
             $field->setLabel(rex_i18n::msg('consent_manager_cookies'));
             foreach ($cookies as $v) {
-                $field->addOption($v['uid'], $v['uid']);
+                $field->addOption((string) $v['uid'], (string) $v['uid']);
             }
         }
     } else {
         if ([] !== $cookies) {
             $checkboxes = [];
             if (null !== $form->getSql()->getValue('cookie')) {
-                $checkedBoxes = array_filter(explode('|', $form->getSql()->getValue('cookie')));
+                $checkedBoxes = array_filter(explode('|', (string) $form->getSql()->getValue('cookie')), static function ($value) {
+                    return '' !== $value;
+                });
             } else {
                 $checkedBoxes = [];
             }
