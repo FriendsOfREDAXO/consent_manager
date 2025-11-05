@@ -12,8 +12,15 @@ if (typeof window.consentManagerInline !== 'undefined') {
         
         // Debug-Funktion - nur aktiv wenn consentManagerDebug verfügbar
         debug: function(message, data) {
-            if (window.consentManagerDebug && typeof window.consentManagerDebug.log === 'function') {
-                window.consentManagerDebug.log(message, data);
+            // Sichere Prüfung ohne Seiteneffekte
+            try {
+                if (typeof window !== 'undefined' && 
+                    window.consentManagerDebug && 
+                    typeof window.consentManagerDebug.log === 'function') {
+                    window.consentManagerDebug.log(message, data);
+                }
+            } catch (e) {
+                // Fehler ignorieren - Debug-Funktion soll nie andere Skripte stören
             }
         },
         
@@ -392,12 +399,22 @@ if (typeof window.consentManagerInline !== 'undefined') {
         }
     };
 
-    // Auto-Init nur einmal ausführen
+    // Auto-Init mit Verzögerung und sicherer DOM-Prüfung
+    function safeInit() {
+        try {
+            if (typeof document !== 'undefined' && document.body) {
+                window.consentManagerInline.init();
+            }
+        } catch (e) {
+            // Init-Fehler ignorieren um andere Skripte nicht zu stören
+            console.warn('ConsentManager Inline Init Error:', e);
+        }
+    }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() { 
-            window.consentManagerInline.init(); 
-        });
-    } else {
-        window.consentManagerInline.init();
+        document.addEventListener('DOMContentLoaded', safeInit);
+    } else if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        // Kleine Verzögerung für bessere Kompatibilität
+        setTimeout(safeInit, 100);
     }
 }
