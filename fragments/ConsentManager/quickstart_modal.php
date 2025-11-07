@@ -179,7 +179,7 @@
                             <div>
                                 <h6><?= rex_i18n::msg('consent_manager_quickstart_template_code_label') ?></h6>
                                 <div style="display: flex; align-items: flex-start; gap: 8px;">
-                                    <div class="quickstart-code-block" id="template-code-block" style="flex: 1; margin: 0;">&lt;?php echo REX_CONSENT_MANAGER[]; ?&gt;</div>
+                                    <div class="quickstart-code-block" id="template-code-block" style="flex: 1; margin: 0;">REX_CONSENT_MANAGER[]</div>
                                     <clipboard-copy for="template-code-block" class="btn btn-xs btn-default" style="flex-shrink: 0; margin-top: 12px;" title="<?= rex_i18n::msg('consent_manager_quickstart_copy_title') ?>">
                                         <i class="fa fa-copy"></i> <?= rex_i18n::msg('consent_manager_quickstart_copy_button') ?>
                                     </clipboard-copy>
