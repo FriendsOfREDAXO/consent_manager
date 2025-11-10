@@ -42,25 +42,7 @@ if (0 < count($consent_manager->domainInfo)
     $googleConsentModeScriptUrl = $addon->getAssetsUrl($googleConsentModeScriptFile);
     $googleConsentModeOutput .= '    <script src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
 
-    // Debug-Script laden wenn Debug-Modus aktiviert
-    if (isset($consent_manager->domainInfo['google_consent_mode_debug'])
-        && 1 === $consent_manager->domainInfo['google_consent_mode_debug']) {
-        $debugScriptUrl = $addon->getAssetsUrl('consent_debug.js');
-        $googleConsentModeOutput .= '    <script src="' . $debugScriptUrl . '" defer></script>' . PHP_EOL;
-
-        // Debug-Konfiguration für JavaScript verfügbar machen
-        $googleConsentModeOutput .= '    <script>' . PHP_EOL;
-        $googleConsentModeOutput .= '        window.consentManagerDebugConfig = ' . json_encode([
-            'mode' => $consent_manager->domainInfo['google_consent_mode_enabled'] ?? 'disabled',
-            'auto_mapping' => ($consent_manager->domainInfo['google_consent_mode_enabled'] ?? 'disabled') === 'auto',
-            'debug_enabled' => true,
-            'domain' => rex_request::server('HTTP_HOST'),
-            'cache_log_id' => $consent_manager->cacheLogId,
-            'version' => $consent_manager->version,
-        ]) . ';' . PHP_EOL;
-        $googleConsentModeOutput .= '    </script>' . PHP_EOL;
-    }
-
+    // Debug-Script wird in boot.php geladen (nur für Backend-Benutzer)
     // Auto-Mapping wird jetzt im Frontend-JS gehandhabt
 }
 
