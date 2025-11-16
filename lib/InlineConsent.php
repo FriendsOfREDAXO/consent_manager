@@ -17,6 +17,7 @@ use rex_fragment;
 use rex_sql;
 use rex_sql_exception;
 use rex_url;
+use rex_view;
 
 use function is_array;
 use function strlen;
@@ -33,8 +34,6 @@ class InlineConsent
      * @param string $serviceKey Service-Schlüssel aus Consent Manager
      * @param string $content Original Content (iframe, script, etc.)
      * @param array<string, mixed> $options Zusätzliche Optionen
-     * 
-     * TODO: Teste über .lang aufbauen
      */
     public static function doConsent(string $serviceKey, string $content, array $options = []): string
     {
@@ -42,9 +41,10 @@ class InlineConsent
         $service = self::getService($serviceKey);
         if (null === $service) {
             if (rex::isDebugMode()) {
-                // TODO: Text über die rex_view-Methoden aufbauen statt HTML
-                return '<div class="alert alert-warning">Consent Manager: Service "' . $serviceKey . '" nicht gefunden</div>';
+                // TODO: Texte über .lang aufbauen
+                return rex_view::warning('Consent Manager: Service "' . htmlspecialchars($serviceKey) . '" nicht gefunden');
             }
+            // TODO: Texte über .lang aufbauen?
             return '<!-- Consent Manager: Service "' . $serviceKey . '" not found -->';
         }
 
@@ -286,6 +286,7 @@ class InlineConsent
         $fragment->setVar('inline_privacy_link_text', self::getButtonText('inline_privacy_link_text', 'Datenschutzerklärung von'));
 
         if ($debug) {
+            // TODO: Texte über .lang aufbauen?
             echo "<!-- DEBUG inline_privacy_notice from DB: $privacyNotice -->\n";
         }
 
@@ -326,6 +327,7 @@ class InlineConsent
             }
 
             if ('' !== $videoId) {
+                // TODO: Verlagerung in ein Fragment prüfen
                 // Standard YouTube iframe
                 $width = $options['width'] ?? '560';
                 $height = $options['height'] ?? '315';
@@ -347,6 +349,7 @@ class InlineConsent
             }
 
             if ('' !== $videoId) {
+                // TODO: Verlagerung in ein Fragment prüfen
                 // Standard Vimeo iframe
                 $width = $options['width'] ?? '640';
                 $height = $options['height'] ?? '360';
@@ -358,6 +361,7 @@ class InlineConsent
 
         // Für Google Maps Embed URLs: In iframe umwandeln
         if (str_contains($content, 'google.com/maps/embed')) {
+            // TODO: Verlagerung in ein Fragment prüfen
             return '<iframe src="' . rex_escape($content) . '" 
                     width="' . ($options['width'] ?? '100%') . '" height="' . ($options['height'] ?? '450') . '" 
                     style="border:0;" allowfullscreen="" loading="lazy"' . $attributesString . '></iframe>';
@@ -375,7 +379,7 @@ class InlineConsent
     public static function getJavaScript(): string
     {
         if (self::$jsOutputted) {
-            // TODO: wenn schon fester Text dann englisch
+            // TODO: wenn schon fester Text dann englisch; oder .lang
             return '<!-- JavaScript bereits ausgegeben -->';
         }
         self::$jsOutputted = true;
@@ -400,15 +404,18 @@ class InlineConsent
             if ($sql->getRows() > 0) {
                 $value = (string) $sql->getValue('text');
                 if ($debug) {
+                    // TODO: Texte über .lang aufbauen?
                     echo "<!-- DEBUG getButtonText: key=$key, clang=" . rex_clang::getCurrentId() . ", value=$value -->\n";
                 }
                 return $value;
             }
             if ($debug) {
+                // TODO: Texte über .lang aufbauen?
                 echo "<!-- DEBUG getButtonText: key=$key NOT FOUND in DB, using fallback=$fallback -->\n";
             }
         } catch (rex_sql_exception $e) {
             if ($debug) {
+                // TODO: Texte über .lang aufbauen?
                 echo "<!-- DEBUG getButtonText: key=$key, SQL ERROR: " . $e->getMessage() . " -->\n";
             }
         }

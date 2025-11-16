@@ -103,8 +103,7 @@ class RexFormSupport
      */
     public static function showInfo(string $msg): string
     {
-        // TODO: Ausgabe mit rex_view, kein direktes HTML ... wenn das geht.
-        return '<div class="consent_manager-rex-form-info"><i class="fa fa-info-circle"></i>' . $msg . '</div>';
+        return rex_view::info('<i class="fa fa-info-circle"></i> ' . htmlspecialchars($msg), 'consent_manager-rex-form-info');
     }
 
     /**
