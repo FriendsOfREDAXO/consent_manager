@@ -1,13 +1,25 @@
 <?php
 
 /**
- * TODO: hier die Schnittstelle beschreiben: 
- * - Welche Vars werden vom Fragment erwartet
- * - Welchen Typ haben die Vars
- * - Welchen Default-Wert haben optionale Vars
- * - Welche Vars sind mandatory und was passiert wenn sie fehlen (return oder Exception)
+ * Fragment für CSS/JS Integration der Consent Manager Box
+ * Lädt und integriert CSS- und JavaScript-Dateien für die Consent Manager Box.
+ * 
+ * Fragment Variables (via $this->getVar()):
+ * @var bool|int $forceCache (optional) - Erzwingt Cache-Nutzung (default: false)
+ * @var bool $forceReload (optional) - Erzwingt Neuladen der Daten (default: false)
+ * @var bool $inline (optional, default: false) - Inline-Modus aktivieren
+ * 
+ * Context Requirements:
+ * - Muss auf einer Article-Seite aufgerufen werden (rex_article::getCurrentId() > 0)
+ * - Darf nicht im consent_manager_outputjs Request-Modus sein
+ * 
+ * @throws void - Bei Article-ID 0 oder outputjs-Request erfolgt early return
+ * 
+ * Generated Output:
+ * - Google Consent Mode v2 Script (wenn aktiviert)
+ * - Consent Manager CSS und JavaScript
+ * - Inline-Mode alternative Ausgabe
  */
-
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
 /** @var rex_fragment $this */
