@@ -5,6 +5,12 @@
  *
  * Fragment für CSS/JS Integration der Inline-Consent-Funktion
  *
+ * TODO: hier die Schnittstelle beschreiben: 
+ * - Welche Vars werden vom Fragment erwartet
+ * - Welchen Typ haben die Vars
+ * - Welchen Default-Wert haben optionale Vars
+ * - Welche Vars sind mandatory und was passiert wenn sie fehlen (return oder Exception)
+ * 
  * @package redaxo\consent-manager
  */
 

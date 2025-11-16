@@ -27,6 +27,8 @@ class ThumbnailMediaManager
      * @param string $videoId Video-ID
      * @param array<string, mixed> $options Zusätzliche Optionen
      * @return string|null Thumbnail-URL oder null bei Fehler
+     * 
+     * TODO: prüfen, warum hier $options vorkommt. Der Parameter wird im Code nicht benutzt.
      */
     public static function getThumbnailUrl(string $service, string $videoId, array $options = []): ?string
     {
@@ -37,6 +39,7 @@ class ThumbnailMediaManager
 
         // Prüfen ob unser Mediamanager-Type existiert
         $sql = rex_sql::factory();
+        // TODO: Query in setTable/setWhere/select ändern
         $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', ['consent_manager_thumbnail']);
 
         if (0 === $sql->getRows()) {
@@ -174,12 +177,11 @@ class ThumbnailMediaManager
     }
 
     /**
-     * Thumbnail-URL aus Video-URL generieren.
+     * Thumbnail-URL aus Video-URL (YouTube oder Vimeo) generieren.
+     * NULL bei ungültiger URL
      *
      * @api
-     * @param string $videoUrl YouTube oder Vimeo URL
      * @param array<string, mixed> $options Zusätzliche Optionen
-     * @return string|null Thumbnail-URL oder null bei ungültiger URL
      */
     public static function getThumbnailUrlFromVideoUrl(string $videoUrl, array $options = []): ?string
     {
@@ -194,6 +196,8 @@ class ThumbnailMediaManager
 
     /**
      * Direkte Thumbnail-URL als Fallback.
+     * 
+     * TODO: prüfen, ob nicht ein Fragment für die SVGs besser wäre
      */
     private static function getDirectThumbnailUrl(string $service, string $videoId): string
     {

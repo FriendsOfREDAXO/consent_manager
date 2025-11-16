@@ -33,7 +33,8 @@ class InlineConsent
      * @param string $serviceKey Service-Schlüssel aus Consent Manager
      * @param string $content Original Content (iframe, script, etc.)
      * @param array<string, mixed> $options Zusätzliche Optionen
-     * @return string HTML-Output
+     * 
+     * TODO: Teste über .lang aufbauen
      */
     public static function doConsent(string $serviceKey, string $content, array $options = []): string
     {
@@ -41,6 +42,7 @@ class InlineConsent
         $service = self::getService($serviceKey);
         if (null === $service) {
             if (rex::isDebugMode()) {
+                // TODO: Text über die rex_view-Methoden aufbauen statt HTML
                 return '<div class="alert alert-warning">Consent Manager: Service "' . $serviceKey . '" nicht gefunden</div>';
             }
             return '<!-- Consent Manager: Service "' . $serviceKey . '" not found -->';
@@ -89,6 +91,7 @@ class InlineConsent
         $sql = rex_sql::factory();
 
         // Service aus der Cookie-Tabelle laden
+        // TODO: Query mit setTable/setWhere/select aufbauen
         $sql->setQuery('
             SELECT pid, id, clang_id, uid, service_name, provider, provider_link_privacy, 
                    definition, script, script_unselect, placeholder_text, placeholder_image,
@@ -271,6 +274,7 @@ class InlineConsent
         }
 
         // Alle Button-Texte für Fragment hinzufügen
+        // TODO: Button-Texte etc. über .lang bereitstellen
         $fragment->setVar('button_inline_details_text', self::getButtonText('button_inline_details', 'Einstellungen'));
         $fragment->setVar('inline_placeholder_text', self::getButtonText('inline_placeholder_text', 'Einmal laden'));
         $fragment->setVar('button_inline_allow_all_text', self::getButtonText('button_inline_allow_all', 'Alle erlauben'));
@@ -288,9 +292,7 @@ class InlineConsent
         // Icon-Konfiguration
         $fragment->setVar('privacy_icon', $options['privacy_icon'] ?? 'uk-icon:shield');
 
-        $result = $fragment->parse('ConsentManager/inline_placeholder.php');
-
-        return $result;
+        return $fragment->parse('ConsentManager/inline_placeholder.php');
     }
 
     /**
@@ -373,6 +375,7 @@ class InlineConsent
     public static function getJavaScript(): string
     {
         if (self::$jsOutputted) {
+            // TODO: wenn schon fester Text dann englisch
             return '<!-- JavaScript bereits ausgegeben -->';
         }
         self::$jsOutputted = true;
@@ -421,6 +424,7 @@ class InlineConsent
     public static function getCSS(): string
     {
         if (self::$cssOutputted) {
+            // TODO: wenn schon fester Text dann englisch
             return '<!-- CSS bereits ausgegeben -->';
         }
         self::$cssOutputted = true;

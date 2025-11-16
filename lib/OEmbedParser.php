@@ -35,8 +35,18 @@ class OEmbedParser
      */
     public static function register(?string $domain = null): void
     {
+        /**
+         * TODO: Muss die Domain-Abfrage nicht außerhalb des Output-Filters erfolgen?
+         * Begründung: "Nur für spezifische Domain registrieren" bedeutet ja grade, dass 
+         * rex_extension::register nur ausgeführt wird, wenn ... 
+         */
         rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) use ($domain) {
+            /** @var string $content */
             $content = $ep->getSubject();
+
+            /**
+             * NOTE: nur theoretisch kann $content etwas anderes sein als string. 
+             */
             if (!is_string($content)) {
                 return $content;
             }
@@ -109,6 +119,7 @@ class OEmbedParser
         // Prüfe ob Service in Consent Manager existiert
         if (!self::serviceExists($serviceKey)) {
             if (rex::isDebugMode()) {
+                // TODO: mit rex_view formatieren statt HTML zu schreiben
                 return '<div class="alert alert-warning">Consent Manager: Service "' . htmlspecialchars($serviceKey) . '" nicht konfiguriert</div>';
             }
             return '';
@@ -134,28 +145,27 @@ class OEmbedParser
      * Plattform aus URL erkennen.
      *
      * @api
-     * @param string $url Video URL
      * @return array{service: string, id: string, platform: string}|null
      */
-    private static function detectPlatform(string $url): ?array
+    private static function detectPlatform(string $videoUrl): ?array
     {
         // YouTube
-        if ((bool) preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/', $url, $matches)) {
+        if ((bool) preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/', $videoUrl, $matches)) {
             return [
                 'service' => 'youtube',
                 'platform' => 'youtube',
                 'id' => $matches[1],
-                'url' => $url,
+                'url' => $videoUrl,
             ];
         }
 
         // Vimeo
-        if ((bool) preg_match('/vimeo\.com\/(\d+)/', $url, $matches)) {
+        if ((bool) preg_match('/vimeo\.com\/(\d+)/', $videoUrl, $matches)) {
             return [
                 'service' => 'vimeo',
                 'platform' => 'vimeo',
                 'id' => $matches[1],
-                'url' => $url,
+                'url' => $videoUrl,
             ];
         }
 
@@ -163,15 +173,15 @@ class OEmbedParser
     }
 
     /**
-     * Service-Existenz prüfen.
+     * Service-Existenz prüfen (Service UID).
      *
      * @api
-     * @param string $serviceKey Service UID
      */
     private static function serviceExists(string $serviceKey): bool
     {
         try {
             $sql = rex_sql::factory();
+            // TODO: Query ändern in setTable/setWhere/select
             $sql->setQuery('
                 SELECT COUNT(*) as count
                 FROM ' . rex::getTable('consent_manager_cookie') . '
@@ -184,11 +194,10 @@ class OEmbedParser
         }
     }
 
-        /**
+    /**
      * Holt Domain-Konfiguration.
      *
      * @api
-     * @param string $domain Domain-Name
      * @return array<string, mixed> Konfiguration
      */
     private static function getDomainConfig(string $domain): array
@@ -204,6 +213,7 @@ class OEmbedParser
         // Domain aus Datenbank laden
         try {
             $sql = rex_sql::factory();
+            // TODO: Query ändern in setTable/setWhere/select
             $sql->setQuery('
                 SELECT oembed_enabled, oembed_video_width, oembed_video_height, oembed_show_allow_all
                 FROM ' . rex::getTable('consent_manager_domain') . '
@@ -239,7 +249,6 @@ class OEmbedParser
      * Domain-spezifische Konfiguration setzen.
      *
      * @api
-     * @param string $domain Domain-Name
      * @param array<string, mixed> $config Konfiguration
      */
     public static function setDomainConfig(string $domain, array $config): void
@@ -265,12 +274,10 @@ class OEmbedParser
      * Vidstack-Player Embed generieren (wenn Vidstack verfügbar und gewünscht).
      *
      * @api
-     * @param string $url Video URL
      * @param array<string, mixed> $options Player-Optionen
-     * @return string HTML
      * @phpstan-ignore-next-line method.unused (Reserved for future Vidstack integration)
      */
-    private static function generateVidstackEmbed(string $url, array $options): string
+    private static function generateVidstackEmbed(string $videoUrl, array $options): string
     {
         // Prüfe ob Vidstack Addon verfügbar ist
         if (!rex_addon::exists('vidstack') || !rex_addon::get('vidstack')->isAvailable()) {
@@ -278,7 +285,7 @@ class OEmbedParser
         }
 
         try {
-            $player = new Video($url);
+            $player = new Video($videoUrl);
 
             // Attribute für den Player setzen
             $attributes = [
@@ -311,14 +318,12 @@ class OEmbedParser
      * Native Inline-Blocker Embed generieren.
      *
      * @api
-     * @param string $serviceKey Service UID
-     * @param string $url Video URL
      * @param array<string, mixed> $options Optionen
      * @return string HTML
      * @phpstan-ignore-next-line method.unused (Reserved for future native embed integration)
      */
-    private static function generateNativeEmbed(string $serviceKey, string $url, array $options): string
+    private static function generateNativeEmbed(string $serviceKey, string $videoUrl, array $options): string
     {
-        return InlineConsent::doConsent($serviceKey, $url, $options);
+        return InlineConsent::doConsent($serviceKey, $videoUrl, $options);
     }
 }

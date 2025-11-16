@@ -53,9 +53,8 @@ class Theme
 
     /**
      * Get compiled scss.
-     * @return string|false
      */
-    public function getCompiledStyle(string $theme = '')
+    public function getCompiledStyle(string $theme = ''): string|false
     {
         if ('' === $theme) {
             $theme = $this->getTheme();
@@ -133,7 +132,7 @@ class Theme
      * Get theme info from file.
      * @return array<string, string>
      */
-    public function getThemeInformation(string $theme = '')
+    public function getThemeInformation(string $theme = ''): array
     {
         if ('' === $theme) {
             $theme = $this->getTheme();
@@ -155,6 +154,6 @@ class Theme
             }
         }
         $themeinfo = (array) json_decode($json, true);
-        return $themeinfo; /** @phpstan-ignore-line */
+        return $themeinfo;
     }
 }

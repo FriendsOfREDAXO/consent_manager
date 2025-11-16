@@ -6,6 +6,7 @@ use rex_extension_point;
 use rex_form;
 use rex_sql;
 use rex_string;
+use rex_view;
 use rex_yaml_parse_exception;
 
 use function in_array;
@@ -16,11 +17,11 @@ use const FILTER_VALIDATE_DOMAIN;
 class RexFormSupport
 {
     /**
-     * @param string $label
-     * @param string $value
-     * @return string
+     * @api
+     * 
+     * TODO: korrekter Weise müsste das wohl mit dem Fragment core/form/form.php gelöst werden.
      */
-    public static function getFakeText($label, $value)
+    public static function getFakeText(string $label, string $value): string
     {
         $html = '';
         $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
@@ -31,11 +32,10 @@ class RexFormSupport
     }
 
     /**
-     * @param string $label
-     * @param string $value
-     * @return string
+     * @api
+     * TODO: korrekter Weise müsste das wohl mit dem Fragment core/form/form.php gelöst werden.
      */
-    public static function getFakeTextarea($label, $value)
+    public static function getFakeTextarea(string $label, string $value): string
     {
         $html = '';
         $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
@@ -46,11 +46,11 @@ class RexFormSupport
     }
 
     /**
-     * @param string $label
+     * @api
      * @param array<string, string> $checkboxes
-     * @return string
+     * TODO: korrekter Weise müsste das wohl mit dem Fragment core/form/checkbox.php gelöst werden.
      */
-    public static function getFakeCheckbox($label, $checkboxes)
+    public static function getFakeCheckbox(string $label, array $checkboxes): string
     {
         $html = '';
         $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
@@ -68,11 +68,10 @@ class RexFormSupport
     }
 
     /**
-     * @param rex_form $form
-     * @param string $table
-     * @return void
+     * @api
+     * @param non-empty-string $table
      */
-    public static function getId(&$form, $table)
+    public static function getId(rex_form $form, string $table): void
     {
         if (!$form->isEditMode()) {
             $db = rex_sql::factory();
@@ -84,35 +83,35 @@ class RexFormSupport
     }
 
     /**
-     * @param rex_extension_point<object> $ep
-     * @return void
      * @api
+     * @param rex_extension_point<array<string,string>> $ep
      */
-    public static function removeDeleteButton(rex_extension_point $ep)
+    public static function removeDeleteButton(rex_extension_point $ep): void
     {
-        $formTable = $ep->getParams()['form']->getTableName();
+        /** @var rex_form $form */
+        $form = $ep->getParam('form');
+        $formTable = $form->getTableName();
         if (in_array($formTable, Config::getTables(), true)) {
             $subject = $ep->getSubject();
-            $subject['delete'] = ''; /** @phpstan-ignore-line */
+            $subject['delete'] = '';
             $ep->setSubject($subject);
         }
     }
 
     /**
-     * @param string $msg
-     * @return string
+     * @api
      */
-    public static function showInfo($msg)
+    public static function showInfo(string $msg): string
     {
+        // TODO: Ausgabe mit rex_view, kein direktes HTML ... wenn das geht.
         return '<div class="consent_manager-rex-form-info"><i class="fa fa-info-circle"></i>' . $msg . '</div>';
     }
 
     /**
-     * @param string $hostname
-     * @return bool|string
      * @api
+     * @param string $hostname
      */
-    public static function validateHostname($hostname)
+    public static function validateHostname(string $hostname): bool|string
     {
         $host = parse_url('https://' . $hostname);
         if (isset($host['scheme']) && isset($host['host']) && !isset($host['path'])) {
@@ -122,22 +121,19 @@ class RexFormSupport
     }
 
     /**
-     * @param string $value
-     * @return bool
+     * Prüft ob der Wert nur Kleinbuchstaben enthält
+     * 
      * @api
      */
-    public static function validateLowercase($value)
+    public static function validateLowercase(string $value): bool
     {
-        // Prüft ob der Wert nur Kleinbuchstaben enthält
         return $value === strtolower($value);
     }
 
     /**
-     * @param string $yaml
-     * @return bool
      * @api
      */
-    public static function validateYaml($yaml)
+    public static function validateYaml(string $yaml): bool
     {
         $valid = true;
         try {

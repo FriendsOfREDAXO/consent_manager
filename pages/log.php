@@ -49,13 +49,15 @@ $list->setColumnLabel('cachelogid', rex_i18n::msg('consent_manager_thead_cachelo
 $list->setColumnLabel('consentid', rex_i18n::msg('consent_manager_thead_consentid'));
 
 $list->setColumnFormat('createdate', 'custom', static function ($params) {
+    /** @var rex_list $list */
     $list = $params['list'];
-    $str = date('d.m.Y H:i:s', strtotime($list->getValue('createdate')));
+    $str = date('d.m.Y H:i:s', (int) strtotime((string) $list->getValue('createdate')));
     return $str;
 });
 $list->setColumnFormat('consents', 'custom', static function ($params) {
+    /** @var rex_list $list */
     $list = $params['list'];
-    $consents = (array) json_decode($list->getValue('consents'));
+    $consents = (array) json_decode((string) $list->getValue('consents'));
     $str = implode(', ', $consents);
     return $str;
 });

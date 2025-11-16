@@ -59,6 +59,8 @@ class GoogleConsentMode
      * @api
      * @param string $domain Die Domain
      * @return array{enabled: bool, auto_mapping: bool, domain: string, flags: array<string, string>} Konfiguration mit enabled, auto_mapping, default_state etc
+     * 
+     * TODO: Domainen nicht als Array sondern als Objekt/Klasse? Erleichtert Übergaben als Parameter usw. 
      */
     public static function getDomainConfig(string $domain): array
     {
@@ -66,6 +68,7 @@ class GoogleConsentMode
         $domain = strtolower($domain);
 
         $sql = rex_sql::factory();
+        // TODO: umstellen auf setTable/setWhere/select
         $sql->setQuery(
             'SELECT google_consent_mode_enabled FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
             [$domain],
@@ -91,7 +94,6 @@ class GoogleConsentMode
      * Holt Cookie-zu-Consent Mappings für eine Sprache.
      *
      * @api
-     * @param int $clangId Die Sprach-ID
      * @return array<string, array<string, string>> Array mit Service-UIDs und deren Consent-Flags
      */
     public static function getCookieConsentMappings(int $clangId): array
@@ -100,6 +102,7 @@ class GoogleConsentMode
 
         // Hole alle Services/Cookies
         $sql = rex_sql::factory();
+        // TODO: umstellen auf setTable/setWhere/select
         $sql->setQuery(
             'SELECT uid, service_name FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE clang_id = ?',
             [$clangId],
@@ -129,9 +132,8 @@ class GoogleConsentMode
      * Generiert das JavaScript für Google Consent Mode v2.
      *
      * @api
-     * @param string $domain Die Domain
-     * @param int $clangId Die Sprach-ID
-     * @return string Das generierte JavaScript
+     * 
+     * TODO: Das JS besser via Fragment erzeugen? Wegen Übersichtlichkeit?
      */
     public static function generateJavaScript(string $domain, int $clangId): string
     {
@@ -198,8 +200,6 @@ class GoogleConsentMode
      * Prüft ob Google Consent Mode für eine Domain aktiviert ist.
      *
      * @api
-     * @param string $domain Die zu prüfende Domain
-     * @return bool True wenn aktiviert
      */
     public static function isDomainEnabled(string $domain): bool
     {
@@ -209,14 +209,14 @@ class GoogleConsentMode
 
     /**
      * Setzt den Google Consent Mode Status für eine Domain.
+     * Return true wenn erfolgreich
      *
      * @api
-     * @param string $domain Die Domain
      * @param string $mode Modus: 'disabled', 'auto', 'manual'
-     * @return bool True bei Erfolg
      */
     public static function setDomainEnabled(string $domain, string $mode): bool
     {
+        // TODO: validModes in den Klassenheader packen
         $validModes = ['disabled', 'auto', 'manual'];
         if (!in_array($mode, $validModes, true)) {
             return false;
@@ -247,10 +247,9 @@ class GoogleConsentMode
     }
 
     /**
-     * Fügt ein neues Service-Mapping hinzu.
+     * Fügt ein neues Service-Mapping für den Service-Schlüssel hinzu.
      *
      * @api
-     * @param string $serviceKey Service-Schlüssel
      * @param array<string> $consentFlags Array mit Consent-Flags
      */
     public static function addServiceMapping(string $serviceKey, array $consentFlags): void

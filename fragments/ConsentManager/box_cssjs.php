@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * TODO: hier die Schnittstelle beschreiben: 
+ * - Welche Vars werden vom Fragment erwartet
+ * - Welchen Typ haben die Vars
+ * - Welchen Default-Wert haben optionale Vars
+ * - Welche Vars sind mandatory und was passiert wenn sie fehlen (return oder Exception)
+ */
+
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
 /** @var rex_fragment $this */
@@ -51,8 +59,8 @@ if (0 < count($consent_manager->domainInfo)
         // Debug-Konfiguration für JavaScript verfügbar machen
         $googleConsentModeOutput .= '    <script>' . PHP_EOL;
         $googleConsentModeOutput .= '        window.consentManagerDebugConfig = ' . json_encode([
-            'mode' => $consent_manager->domainInfo['google_consent_mode_enabled'] ?? 'disabled',
-            'auto_mapping' => ($consent_manager->domainInfo['google_consent_mode_enabled'] ?? 'disabled') === 'auto',
+            'mode' => $consent_manager->domainInfo['google_consent_mode_enabled'],
+            'auto_mapping' => $consent_manager->domainInfo['google_consent_mode_enabled'] === 'auto',
             'debug_enabled' => true,
             'domain' => rex_request::server('HTTP_HOST'),
             'cache_log_id' => $consent_manager->cacheLogId,

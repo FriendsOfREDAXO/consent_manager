@@ -179,6 +179,8 @@ class ThumbnailCache
 
     /**
      * Platzhalter-Bild generieren.
+     * 
+     * TODO: prüfen, ob man hier nicht auch auf ein Fragment setzen sollte; kein Ausgabecode im Programm selbst...
      */
     private static function getPlaceholderImage(string $service): string
     {
@@ -215,10 +217,11 @@ class ThumbnailCache
 
     /**
      * Cache aufräumen (alte Dateien löschen).
+     * Default: 30 Tage
      *
      * @api
      */
-    public static function cleanupCache(int $maxAge = 2592000): void // 30 Tage
+    public static function cleanupCache(int $maxAge = 2592000): void
     {
         $cacheDir = self::getCacheDir();
         $publicCacheDir = rex_path::addonAssets('consent_manager', 'cache/thumbnails/');

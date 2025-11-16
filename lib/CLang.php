@@ -119,9 +119,9 @@ class CLang
     {
         $db = rex_sql::factory();
         $db->setTable($form->getTableName());
-        $db->setWhere('pid = ' . $db->escape($params['sql']->getLastId())); /** @phpstan-ignore-line */
+        $db->setWhere('pid = :pid', [':pid'=> $params['sql']->getLastId()]);
         $db->select('*');
-        $inserted = $db->getArray()[0];
+        $inserted = $db->getArray()[0] ?? [];
         foreach (rex_clang::getAllIds() as $clangId) {
             if ((int) $inserted['clang_id'] === $clangId) {
                 continue;
@@ -143,10 +143,7 @@ class CLang
         }
     }
 
-    /**
-     * @param rex_form $form
-     */
-    private static function updateDataset($form): bool
+    private static function updateDataset(rex_form $form): bool
     {
         $fields2Update = [];
         $newValues = [];

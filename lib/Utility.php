@@ -17,10 +17,9 @@ class Utility
     /**
      * Check consent for cookieUid.
      *
-     * @param string $cookieUid
      * @api
      */
-    public static function has_consent($cookieUid): bool
+    public static function has_consent(string $cookieUid): bool
     {
         if (null !== rex_request::cookie('consent_manager') && is_string(rex_request::cookie('consent_manager'))) {
             $cookieData = (array) json_decode(rex_request::cookie('consent_manager'), true);
@@ -37,6 +36,7 @@ class Utility
 
     /**
      * Check if consent is configured.
+     * 
      * @api
      */
     public static function consentConfigured(): bool
@@ -45,6 +45,7 @@ class Utility
         $db->setDebug(false);
 
         // Check host
+        // TODO: setTable/setWhere/select
         $db->prepareQuery('SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` = :uid');
         $dbresult = $db->execute(['uid' => rex_request::server('HTTP_HOST')]);
         if (1 === $dbresult->getRows()) {
@@ -63,6 +64,7 @@ class Utility
      * Hostname WITH subdomain (DSGVO-konform).
      * Returns full hostname including subdomain to ensure consent is domain-specific.
      * Issue #317: Subdomain consent must be separate from main domain consent.
+     * 
      * @api
      */
     public static function hostname(): string
@@ -76,9 +78,10 @@ class Utility
     }
 
     /**
-     * Daomain info from Url.
-     * @return array<string, string>
+     * Domain info from Url.
+     * 
      * @api
+     * @return array<string, string>
      */
     public static function get_domaininfo(string $url): array
     {
@@ -92,7 +95,7 @@ class Utility
         $parts = explode('.', $matches[2]);
         $tld = array_pop($parts);
         $host = array_pop($parts);
-        if (2 === strlen($tld) && strlen($host) <= 3) { /** @phpstan-ignore-line */
+        if (2 === strlen($tld) && strlen($host) <= 3) {
             $tld = "$host.$tld";
             $host = array_pop($parts);
         }

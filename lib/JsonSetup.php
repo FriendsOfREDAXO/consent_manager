@@ -31,6 +31,8 @@ class JsonSetup
      * @param bool $clearExisting Clear existing data before import
      * @param string $mode Import mode: 'replace' (default), 'update' (only add new)
      * @return array{success: bool, message: string} Result array with success status and message
+     * 
+     * TODO: Texte via .lang erzeugen?
      */
     public static function importSetup(string $jsonFile, bool $clearExisting = true, string $mode = 'replace'): array
     {
@@ -55,6 +57,7 @@ class JsonSetup
 
             // Begin transaction
             $sql = rex_sql::factory();
+            // TODO: warum nicht $sql->beginTransaction()?
             $sql->setQuery('START TRANSACTION');
 
             try {
@@ -70,6 +73,7 @@ class JsonSetup
                 self::importDomains($setupData['domains'] ?? [], $mode);
 
                 // Commit transaction
+                // Warum nicht $sql->Commit()
                 $sql->setQuery('COMMIT');
 
                 // Force cache rebuild
@@ -84,6 +88,8 @@ class JsonSetup
                 ];
             } catch (Exception $e) {
                 // Rollback on error
+                // TODO: warum nicht $sql->rollBack()
+                // Typ von $sql ist "never"? Seltsam
                 $sql->setQuery('ROLLBACK');
                 throw $e;
             }
@@ -353,6 +359,7 @@ class JsonSetup
     private static function findExistingCookieGroup(string $uid): ?array
     {
         $sql = rex_sql::factory();
+        // TODO: SQL-Abfrage auf setTable/setWhere/select umstellen
         $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookiegroup') . ' WHERE uid = ?', [$uid]);
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
@@ -363,6 +370,7 @@ class JsonSetup
     private static function findExistingCookie(string $uid): ?array
     {
         $sql = rex_sql::factory();
+        // TODO: SQL-Abfrage auf setTable/setWhere/select umstellen
         $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE uid = ?', [$uid]);
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
@@ -373,6 +381,7 @@ class JsonSetup
     private static function findExistingText(string $uid, int $clangId = 1): ?array
     {
         $sql = rex_sql::factory();
+        // TODO: SQL-Abfrage auf setTable/setWhere/select umstellen
         $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_text') . ' WHERE uid = ? AND clang_id = ?', [$uid, $clangId]);
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
@@ -383,6 +392,7 @@ class JsonSetup
     private static function findExistingDomain(string $uid): ?array
     {
         $sql = rex_sql::factory();
+        // TODO: SQL-Abfrage auf setTable/setWhere/select umstellen
         $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?', [$uid]);
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
@@ -395,9 +405,7 @@ class JsonSetup
     private static function insertCookieGroup(array $group): void
     {
         $sql = rex_sql::factory();
-        /** @var non-empty-string $tableName */
-        $tableName = 'consent_manager_cookiegroup';
-        $sql->setTable(rex::getTable($tableName));
+        $sql->setTable(rex::getTable('consent_manager_cookiegroup'));
 
         $now = date('Y-m-d H:i:s');
 
@@ -437,6 +445,7 @@ class JsonSetup
     private static function idExistsInTable(string $table, int $id): bool
     {
         $sql = rex_sql::factory();
+        // TODO: SQL-Abfrage auf setTable/setWhere/select umstellen
         $sql->setQuery('SELECT COUNT(*) as count FROM ' . rex::getTable($table) . ' WHERE id = ?', [$id]);
         return $sql->getValue('count') > 0;
     }
@@ -447,6 +456,7 @@ class JsonSetup
     private static function getNextAvailableId(string $table): int
     {
         $sql = rex_sql::factory();
+        // TODO: SQL-Abfrage auf setTable/setWhere/select umstellen
         $sql->setQuery('SELECT MAX(id) as max_id FROM ' . rex::getTable($table));
         $maxId = (int) ($sql->getValue('max_id') ?? 0);
         return $maxId + 1;
@@ -458,9 +468,7 @@ class JsonSetup
     private static function insertCookie(array $cookie): void
     {
         $sql = rex_sql::factory();
-        /** @var non-empty-string $tableName */
-        $tableName = 'consent_manager_cookie';
-        $sql->setTable(rex::getTable($tableName));
+        $sql->setTable(rex::getTable('consent_manager_cookie'));
 
         $now = date('Y-m-d H:i:s');
 
