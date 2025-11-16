@@ -26,44 +26,56 @@ use const PHP_EOL;
 
 class Frontend
 {
-    public $cookiegroups = []; /** @phpstan-ignore-line */
-    public $cookies = []; /** @phpstan-ignore-line */
-    public $texts = []; /** @phpstan-ignore-line */
-    public $domainName = ''; /** @phpstan-ignore-line */
-    public $domainInfo = []; /** @phpstan-ignore-line */
-    public $links = []; /** @phpstan-ignore-line */
-    public $scripts = []; /** @phpstan-ignore-line */
-    public $scriptsUnselect = []; /** @phpstan-ignore-line */
-    public $boxClass = ''; /** @phpstan-ignore-line */
-    public $cache = []; /** @phpstan-ignore-line */
-    public $version = ''; /** @phpstan-ignore-line */
-    public $cacheLogId = ''; /** @phpstan-ignore-line */
+    /** @var array<array<string,mixed>> $cookiegroups */
+    public array $cookiegroups = [];
 
-    /**
-     * @param int $forceWrite
-     */
-    public function __construct($forceWrite = 0)
+    /** @var array<array<string,mixed>> $cookies */
+    public array $cookies = [];
+
+    /** @var array<string,string> $texts */
+    public array $texts = [];
+
+    public string $domainName = '';
+
+    /** @var array<string,mixed> $domainInfo */
+    public array $domainInfo = [];
+
+    /** @var array<string,int> $links */
+    public array $links = [];
+
+    /** @var array<string,string> $scripts */
+    public array $scripts = [];
+
+    /** @var array<string,string> $scriptsUnselect */
+    public array $scriptsUnselect = [];
+
+    public string $boxClass = '';
+
+    /** @var array<int|string,mixed> $cache */
+    public array $cache = [];
+
+    public string $version = '';
+
+    public string $cacheLogId = '';
+
+    public function __construct(int $forceWrite = 0)
     {
         if (1 === $forceWrite) {
             Cache::forceWrite();
         }
         $this->cache = Cache::read();
-        if ([] === $this->cache || ([] !== $this->cache && rex_addon::get('consent_manager')->getVersion() !== ($this->cache['majorVersion'] ?? null))) { /** @phpstan-ignore-line */
+        if (0 === count($this->cache) || (rex_addon::get('consent_manager')->getVersion() !== ($this->cache['majorVersion'] ?? null))) {
             Cache::forceWrite();
             $this->cache = Cache::read();
-        }
-        $this->cacheLogId = $this->cache['cacheLogId'] ?? ''; /** @phpstan-ignore-line */
-        $this->version = $this->cache['majorVersion'] ?? ''; /** @phpstan-ignore-line */
+        }   
+        $this->cacheLogId = $this->cache['cacheLogId'] ?? '';
+        $this->version = $this->cache['majorVersion'] ?? '';
     }
 
     /**
-     * @param int $forceCache
-     * @param int $forceReload
-     * @param string $fragmentFilename
-     * @return string
      * @api
      */
-    public static function getFragment($forceCache, $forceReload, $fragmentFilename)
+    public static function getFragment(int $forceCache, int $forceReload, string $fragmentFilename): string
     {
         $fragment = new rex_fragment();
         $fragment->setVar('forceCache', $forceCache);
@@ -74,14 +86,10 @@ class Frontend
     }
 
     /**
-     * @param int $forceCache
-     * @param int $forceReload
-     * @param string $fragmentFilename
      * @param array<string, mixed> $additionalVars
-     * @return string
      * @api
      */
-    public static function getFragmentWithVars($forceCache, $forceReload, $fragmentFilename, array $additionalVars = [])
+    public static function getFragmentWithVars(int $forceCache, int $forceReload, string $fragmentFilename, array $additionalVars = []): string
     {
         $fragment = new rex_fragment();
         $fragment->setVar('forceCache', $forceCache);
@@ -97,10 +105,10 @@ class Frontend
     }
 
     /**
-     * @param string $domain
+     * @api
      * @return void
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain)
     {
         // Domain immer in Kleinbuchstaben normalisieren für den Lookup
         $domain = Utility::hostname();
@@ -141,6 +149,11 @@ class Frontend
         }
 
         $this->domainInfo = $domainData;
+        /**
+         * TODO: was soll der Default ''? Wo immer auf die Werte zurückgegriffen wird finden ein typecast auf (int) statt.
+         * Dann müsste hier 0 gesetzt werden oder meinetwegen -1.
+         * Erwartet wird doch wohl entweder eine Datensatz-ID oder eine Artikel-ID, oder?
+         */
         $this->links['privacy_policy'] = $domainData['privacy_policy'] ?? '';
         $this->links['legal_notice'] = $domainData['legal_notice'] ?? '';
 
@@ -193,11 +206,12 @@ class Frontend
     }
 
     /**
-     * @param string $host
-     * @param string $article_id
-     * @return void
+     * @api
+     * 
+     * TODO: warum ist $article_id kein INT-Wert sondern STRING?
+     * TODO: warum die Parameter wenn sie in der Funktion nicht benötigt werden?
      */
-    public function outputJavascript($host = null, $article_id = null)
+    public function outputJavascript(string $host = null, string $article_id = null): never
     {
         $addon = rex_addon::get('consent_manager');
 
@@ -212,7 +226,7 @@ class Frontend
         $boxtemplate = '';
         ob_start();
         echo self::getFragment(0, 0, 'ConsentManager/box.php');
-        $boxtemplate = ob_get_contents();
+        $boxtemplate = (string) ob_get_contents();
         ob_end_clean();
         if ('' === $boxtemplate) {
             rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . Utility::hostname() . ')');
@@ -242,7 +256,9 @@ class Frontend
         echo 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES) . ';' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
-        echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL; /** @phpstan-ignore-line */
+        // REXSTAN: meldet «Binary operation "." between array<string>|string and '\';' results in an error.»
+        // Das ist definitiv falsch und eine Fehlinterpretation wegen obigem «$boxtemplate = str_replace(...»
+        echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
 
         $lifespan = $addon->getConfig('lifespan', 365);
         if ('' === $lifespan) {
@@ -264,6 +280,9 @@ class Frontend
         exit;
     }
 
+    /**
+     * @api
+     */
     public static function getFrontendCss(): string
     {
         $addon = rex_addon::get('consent_manager');
@@ -311,8 +330,9 @@ class Frontend
      * Get JavaScript output for consent manager
      * Returns complete JavaScript including parameters, box template and all required libraries.
      *
-     * @return string JavaScript content
      * @api
+     * 
+     * TODO: sollte man das JS nicht besser als Fragment bereitstellen ... das hier ist etwas unübersichtlich
      */
     public static function getJS(): string
     {
@@ -334,6 +354,8 @@ class Frontend
         }
 
         if ('' === $boxtemplate) {
+            // TODO: Prüfen,ob die Log-Meldungen engl. sein sollte wie an anderen Stellen bzw. nach .lang übertragen werden
+
             rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . Utility::hostname() . ')');
         }
 
@@ -403,7 +425,6 @@ class Frontend
      * Get HTML output for consent manager box
      * Returns only the box HTML without CSS or JavaScript.
      *
-     * @return string HTML content
      * @api
      */
     public static function getBox(): string

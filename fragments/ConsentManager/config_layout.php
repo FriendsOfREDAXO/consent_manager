@@ -2,6 +2,14 @@
 /**
  * Fragment: Consent Manager Config Layout
  * Hauptlayout für die Konfigurationsseite.
+ * 
+ * 
+ * TODO: hier die Schnittstelle beschreiben: 
+ * - Welche Vars werden vom Fragment erwartet
+ * - Welchen Typ haben die Vars
+ * - Welchen Default-Wert haben optionale Vars
+ * - Welche Vars sind mandatory und was passiert wenn sie fehlen (return oder Exception)
+
  */
 
 /** @var rex_fragment $this */

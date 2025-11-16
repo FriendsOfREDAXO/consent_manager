@@ -9,10 +9,10 @@ class Config
     /**
      * get consent_manager tables.
      *
-     * @param bool $multilangOnly
+     * @api
      * @return array<int, string>
      */
-    public static function getTables($multilangOnly = false)
+    public static function getTables(bool $multilangOnly = false)
     {
         $tables = [];
         foreach (self::getKeys() as $key) {
@@ -28,7 +28,8 @@ class Config
     /**
      * get consent_manager keys.
      *
-     * @return array<int, string>
+     * @api
+     * @return string[]
      */
     public static function getKeys()
     {

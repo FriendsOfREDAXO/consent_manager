@@ -15,9 +15,9 @@ class ConsentManager extends rex_api_function
     protected $published = true;
 
     /**
-     * @return never
+     * @api
      */
-    public function execute(): void
+    public function execute(): never
     {
         $domain = rex_request::post('domain', 'string', false);
         $consentid = rex_request::post('consentid', 'string', false);

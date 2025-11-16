@@ -126,7 +126,7 @@ class Cache
                 $cookie['definition'] = $defs;
                 $cookie['script'] = base64_encode($cookie['script']);
                 $cookie['script_unselect'] = base64_encode($cookie['script_unselect']);
-                $this->cookies[$clangId][$uid] = $cookie; /** @phpstan-ignore-line */
+                $this->cookies[$clangId][$uid] = $cookie;
             }
         }
     }
@@ -151,7 +151,7 @@ class Cache
                 $domainIds = array_filter(explode('|', $cookiegroup['domain']), strlen(...)); // @phpstan-ignore-line
                 foreach ($domainIds as $domainId) {
                     if (isset($this->domains[$domainId])) {
-                        $this->domains[$domainId]['cookiegroups'][] = $uid; /** @phpstan-ignore-line */
+                        $this->domains[$domainId]['cookiegroups'][] = $uid;
                     }
                 }
             }
@@ -162,19 +162,19 @@ class Cache
     {
         if (isset($this->cookiegroups[$clangId])) {
             foreach ((array) $this->cookiegroups[$clangId] as $v) {
-                $this->config['cookiegroups'][$v['clang_id']][$v['uid']] = $v; /** @phpstan-ignore-line */
+                $this->config['cookiegroups'][$v['clang_id']][$v['uid']] = $v;
             }
         }
         if (isset($this->cookies[$clangId])) {
             foreach ((array) $this->cookies[$clangId] as $v) {
-                $this->config['cookies'][$v['clang_id']][$v['uid']] = $v; /** @phpstan-ignore-line */
+                $this->config['cookies'][$v['clang_id']][$v['uid']] = $v;
             }
         }
         foreach ($this->domains as $v) {
-            $this->config['domains'][$v['uid']] = $v; /** @phpstan-ignore-line */
+            $this->config['domains'][$v['uid']] = $v;
         }
         if (isset($this->texts[$clangId])) {
-            $this->config['texts'][$clangId] = $this->texts[$clangId]; /** @phpstan-ignore-line */
+            $this->config['texts'][$clangId] = $this->texts[$clangId];
         }
         $this->config['majorVersion'] = rex_addon::get('consent_manager')->getVersion();
     }
@@ -190,12 +190,12 @@ class Cache
 
     /**
      * @api
-     * @return array<int, string>
+     * @return array<int|string, mixed>
      */
     public static function read(): array
     {
         $configFile = rex_path::addonData('consent_manager', 'config.json');
 
-        return rex_file::getCache($configFile);
+        return rex_file::getCache($configFile,[]);
     }
 }

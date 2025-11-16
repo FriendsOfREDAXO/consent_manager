@@ -10,11 +10,10 @@ class RexListSupport
     /**
      * format domains.
      *
-     * @param array<string, string> $params
-     * @return string
      * @api
+     * @param array<string, string> $params
      */
-    public static function formatDomain($params)
+    public static function formatDomain($params): string
     {
         $ids = array_map(trim(...), explode('|', $params['value']));
         $ids = array_filter($ids, strlen(...)); // @phpstan-ignore-line
@@ -37,11 +36,10 @@ class RexListSupport
     /**
      * format cookies.
      *
-     * @param array<string, string> $params
-     * @return string
      * @api
+     * @param array<string, string> $params
      */
-    public static function formatCookie($params)
+    public static function formatCookie($params): string
     {
         if (isset($params['value'])) {
             $uids = array_map(trim(...), explode('|', $params['value']));

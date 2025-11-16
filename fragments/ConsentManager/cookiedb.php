@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * TODO: hier die Schnittstelle beschreiben: 
+ * - Welche Vars werden vom Fragment erwartet
+ * - Welchen Typ haben die Vars
+ * - Welchen Default-Wert haben optionale Vars
+ * - Welche Vars sind mandatory und was passiert wenn sie fehlen (return oder Exception)
+ */
+
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
 /** @var rex_fragment $this */
@@ -11,7 +19,7 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
 
 $output = '';
 
-if ($consent_manager->cookiegroups) { /** phpstan-ignore-line */
+if (0 !== count($consent_manager->cookiegroups)) { /** phpstan-ignore-line */
     // Cookie Consent + History
     $cookiedata = [];
     if (is_string(rex_request::cookie('consent_manager'))) {

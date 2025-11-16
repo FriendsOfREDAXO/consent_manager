@@ -11,6 +11,9 @@ use rex_sql;
 
 class LogDelete extends rex_cronjob
 {
+    /**
+     * @api
+     */
     public function execute(): bool
     {
         if (rex_addon::get('consent_manager')->isAvailable()) {
@@ -33,12 +36,16 @@ class LogDelete extends rex_cronjob
         return false;
     }
 
+    /**
+     * @api
+     */
     public function getTypeName(): string
     {
         return rex_i18n::msg('consent_manager_cronjob_delete');
     }
 
     /**
+     * @api
      * @return list<array<string, mixed>>
      */
     public function getParamFields(): array
