@@ -1,14 +1,37 @@
 <?php
 
 /**
- * TODO: hier die Schnittstelle beschreiben: 
- * - Welche Vars werden vom Fragment erwartet
- * - Welchen Typ haben die Vars
- * - Welchen Default-Wert haben optionale Vars
- * - Welche Vars sind mandatory und was passiert wenn sie fehlen (return oder Exception)
+ * Fragment für die Consent Manager Box
+ * Zeigt die Cookie-Consent-Box im Frontend an.
+ * 
+ * @var Frontend $consent_manager (mandatory) - Frontend-Instanz mit allen benötigten Daten
+ *      Required properties:
+ *      - @property array $texts - Texte für die Box (headline, description, toggle_details, lifetime, provider)
+ *      - @property array $cookiegroups - Array von Cookie-Gruppen
+ *      - @property array $cookies - Array von Cookies mit ihren Definitionen
+ *      - @property string $boxClass - CSS-Klasse für die Box
+ *      - @property string $domainName - Domain-Name
+ *      - @property string $version - Versions-Nummer
+ *      - @property string $cacheLogId - Cache-Log-ID
+ * 
+ * @throws void - Bei fehlender Konfiguration wird eine Error-Meldung ausgegeben und return ausgeführt
+ * 
+ * Cookiegroup Structure:
+ * - uid: string - Eindeutige ID der Cookie-Gruppe
+ * - name: string - Anzeigename der Cookie-Gruppe
+ * - description: string - Beschreibung der Cookie-Gruppe
+ * - required: bool|string|int - Ist die Gruppe verpflichtend?
+ * - cookie_uids: array - Array von Cookie-UIDs in dieser Gruppe
+ * 
+ * Cookie Structure:
+ * - service_name: string - Name des Services
+ * - provider: string - Anbieter des Cookies
+ * - definition: array - Array von Cookie-Definitionen
+ *   - cookie_name: string - Name des Cookies
+ *   - description: string - Beschreibung
+ *   - cookie_lifetime: string - Lebensdauer
  */
 
-use FriendsOfRedaxo\ConsentManager\Frontend;
 
 $consent_manager = new Frontend(0);
 if (is_string(rex_request::server('HTTP_HOST'))) {
