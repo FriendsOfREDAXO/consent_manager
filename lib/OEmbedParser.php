@@ -22,6 +22,7 @@ use rex_extension_point;
 use rex_request;
 use rex_sql;
 use rex_sql_exception;
+use rex_view;
 
 use function is_string;
 
@@ -107,6 +108,7 @@ class OEmbedParser
         if (null === $platform) {
             // Unbekannte Plattform - Original zurückgeben oder Fehler
             if (rex::isDebugMode()) {
+                // TODO: Texte über .lang aufbauen
                 return '<!-- Consent Manager oEmbed: Unsupported platform for URL: ' . htmlspecialchars($url) . ' -->';
             }
             return '';
@@ -119,8 +121,8 @@ class OEmbedParser
         // Prüfe ob Service in Consent Manager existiert
         if (!self::serviceExists($serviceKey)) {
             if (rex::isDebugMode()) {
-                // TODO: mit rex_view formatieren statt HTML zu schreiben
-                return '<div class="alert alert-warning">Consent Manager: Service "' . htmlspecialchars($serviceKey) . '" nicht konfiguriert</div>';
+                // TODO: Texte über .lang aufbauen
+                return rex_view::warning('Consent Manager: Service "' . htmlspecialchars($serviceKey) . '" nicht konfiguriert');
             }
             return '';
         }
@@ -281,6 +283,7 @@ class OEmbedParser
     {
         // Prüfe ob Vidstack Addon verfügbar ist
         if (!rex_addon::exists('vidstack') || !rex_addon::get('vidstack')->isAvailable()) {
+            // TODO: Texte über .lang aufbauen
             return '<!-- Vidstack Player nicht verfügbar -->';
         }
 
@@ -308,8 +311,10 @@ class OEmbedParser
             return $player->generate();
         } catch (Exception $e) {
             if (rex::isDebugMode()) {
+                // TODO: Texte über .lang aufbauen
                 return '<!-- Vidstack Error: ' . htmlspecialchars($e->getMessage()) . ' -->';
             }
+                // TODO: Texte über .lang aufbauen
             return '<!-- Vidstack Error -->';
         }
     }
