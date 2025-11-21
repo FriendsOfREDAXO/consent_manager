@@ -23,6 +23,15 @@ test('malformed cookie or malformed event payload must not crash the page', asyn
     window.cmCookieExpires = 365;
     window.cmCookieSameSite = window.consent_manager_parameters.cookieSameSite || 'Lax';
     window.cmCookieSecure = window.consent_manager_parameters.cookieSecure || false;
+    // minimal box template string referenced by the frontend
+    // some frontend builds expect this to be a DOM node that can be appended
+    if (!window.consent_manager_box_template) {
+      // provide a minimal HTML string the frontend expects — must include
+      // the root element with id 'consent_manager-background' so DOMParser
+      // finds it and appendChild receives a valid Node.
+      window.consent_manager_box_template = '<div id="consent_manager-background"><div id="consent_manager-box">' +
+        '<div class="consent_manager-inner">Placeholder</div></div></div>';
+    }
   });
 
   await page.goto('http://localhost:8000/assets/tests/consent_cookie_migration_test.html');
