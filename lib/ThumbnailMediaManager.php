@@ -27,7 +27,7 @@ class ThumbnailMediaManager
      * @param string $videoId Video-ID
      * @param array<string, mixed> $options Zusätzliche Optionen
      * @return string|null Thumbnail-URL oder null bei Fehler
-     * 
+     *
      * TODO: prüfen, warum hier $options vorkommt. Der Parameter wird im Code nicht benutzt.
      */
     public static function getThumbnailUrl(string $service, string $videoId, array $options = []): ?string
@@ -196,7 +196,7 @@ class ThumbnailMediaManager
 
     /**
      * Direkte Thumbnail-URL als Fallback.
-     * 
+     *
      * TODO: prüfen, ob nicht ein Fragment für die SVGs besser wäre
      */
     private static function getDirectThumbnailUrl(string $service, string $videoId): string

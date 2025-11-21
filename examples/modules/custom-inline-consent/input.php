@@ -2,7 +2,7 @@
 
 /**
  * Demo-Modul: Inline-Consent für Custom iframes/Scripts
- * 
+ *
  * Eingabe-Teil des Moduls
  */
 

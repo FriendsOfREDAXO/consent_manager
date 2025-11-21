@@ -59,8 +59,8 @@ class GoogleConsentMode
      * @api
      * @param string $domain Die Domain
      * @return array{enabled: bool, auto_mapping: bool, domain: string, flags: array<string, string>} Konfiguration mit enabled, auto_mapping, default_state etc
-     * 
-     * TODO: Domainen nicht als Array sondern als Objekt/Klasse? Erleichtert Übergaben als Parameter usw. 
+     *
+     * TODO: Domainen nicht als Array sondern als Objekt/Klasse? Erleichtert Übergaben als Parameter usw.
      */
     public static function getDomainConfig(string $domain): array
     {
@@ -132,7 +132,7 @@ class GoogleConsentMode
      * Generiert das JavaScript für Google Consent Mode v2.
      *
      * @api
-     * 
+     *
      * TODO: Das JS besser via Fragment erzeugen? Wegen Übersichtlichkeit?
      */
     public static function generateJavaScript(string $domain, int $clangId): string

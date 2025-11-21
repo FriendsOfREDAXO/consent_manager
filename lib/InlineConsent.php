@@ -83,7 +83,7 @@ class InlineConsent
 
     /**
      * Service aus Datenbank laden.
-     * 
+     *
      * @return array<string, mixed>|null
      */
     private static function getService(string $serviceKey): ?array
@@ -109,7 +109,7 @@ class InlineConsent
 
     /**
      * YouTube Platzhalter.
-     * 
+     *
      * @param array<string, mixed> $options
      * @param array<string, mixed> $service
      */
@@ -160,7 +160,7 @@ class InlineConsent
 
     /**
      * Vimeo Platzhalter.
-     * 
+     *
      * @param array<string, mixed> $options
      * @param array<string, mixed> $service
      */
@@ -214,7 +214,7 @@ class InlineConsent
 
     /**
      * Google Maps Platzhalter.
-     * 
+     *
      * @param array<string, mixed> $options
      * @param array<string, mixed> $service
      */
@@ -234,7 +234,7 @@ class InlineConsent
 
     /**
      * Generischer Platzhalter.
-     * 
+     *
      * @param array<string, mixed> $options
      * @param array<string, mixed> $service
      */
@@ -250,7 +250,7 @@ class InlineConsent
 
     /**
      * Platzhalter HTML generieren.
-     * 
+     *
      * @param array<string, mixed> $options
      * @param array<string, mixed> $service
      * @param array<string, mixed> $placeholderData
@@ -298,7 +298,7 @@ class InlineConsent
 
     /**
      * Content direkt rendern (wenn bereits Consent vorhanden).
-     * 
+     *
      * @param array<string, mixed> $options
      */
     private static function renderContent(string $content, array $options): string
@@ -398,8 +398,10 @@ class InlineConsent
 
         try {
             $sql = rex_sql::factory();
-            $sql->setQuery('SELECT text FROM ' . rex::getTable('consent_manager_text') . ' WHERE uid = ? AND clang_id = ?',
-                [$key, rex_clang::getCurrentId()]);
+            $sql->setQuery(
+                'SELECT text FROM ' . rex::getTable('consent_manager_text') . ' WHERE uid = ? AND clang_id = ?',
+                [$key, rex_clang::getCurrentId()]
+            );
 
             if ($sql->getRows() > 0) {
                 $value = (string) $sql->getValue('text');

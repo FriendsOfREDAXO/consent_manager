@@ -31,7 +31,7 @@ class JsonSetup
      * @param bool $clearExisting Clear existing data before import
      * @param string $mode Import mode: 'replace' (default), 'update' (only add new)
      * @return array{success: bool, message: string} Result array with success status and message
-     * 
+     *
      * TODO: Texte via .lang erzeugen?
      */
     public static function importSetup(string $jsonFile, bool $clearExisting = true, string $mode = 'replace'): array
@@ -181,7 +181,7 @@ class JsonSetup
         if (false === $files) {
             return $setups;
         }
-        
+
         foreach ($files as $file) {
             $filename = basename($file);
 
@@ -241,7 +241,7 @@ class JsonSetup
 
     /**
      * Import cookie groups with mode support.
-     * 
+     *
      * @param array<mixed> $cookiegroups
      */
     private static function importCookieGroups(array $cookiegroups, string $mode = 'replace'): void
@@ -269,7 +269,7 @@ class JsonSetup
 
     /**
      * Import cookies/services with mode support.
-     * 
+     *
      * @param array<mixed> $cookies
      */
     private static function importCookies(array $cookies, string $mode = 'replace'): void
@@ -297,7 +297,7 @@ class JsonSetup
 
     /**
      * Import texts with mode support.
-     * 
+     *
      * @param array<mixed> $texts
      */
     private static function importTexts(array $texts, string $mode = 'replace'): void
@@ -325,7 +325,7 @@ class JsonSetup
 
     /**
      * Import domains with mode support.
-     * 
+     *
      * @param array<mixed> $domains
      */
     private static function importDomains(array $domains, string $mode = 'replace'): void
@@ -352,7 +352,7 @@ class JsonSetup
     }
 
     // Helper methods to find existing records
-    
+
     /**
      * @return array<string, mixed>|null
      */
@@ -398,7 +398,7 @@ class JsonSetup
     }
 
     // Insert methods for new records
-    
+
     /**
      * @param array<string, mixed> $group
      */
@@ -438,7 +438,7 @@ class JsonSetup
     }
 
     // Helper methods
-    
+
     /**
      * @param non-empty-string $table
      */

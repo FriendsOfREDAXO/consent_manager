@@ -97,7 +97,7 @@ if ('1' === rex_request::post('formsubmit', 'string') && !$csrfToken->isValid())
 // TODO: Funktion verlagern in eine eigene Datei? -> Thomas fragen
 /**
  * @param string $base
- * @param string $name  
+ * @param string $name
  * @param string $description
  * @param array<string, string> $colors
  * @return string

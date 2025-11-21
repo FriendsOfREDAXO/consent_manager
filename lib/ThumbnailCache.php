@@ -179,7 +179,7 @@ class ThumbnailCache
 
     /**
      * Platzhalter-Bild generieren.
-     * 
+     *
      * TODO: prüfen, ob man hier nicht auch auf ein Fragment setzen sollte; kein Ausgabecode im Programm selbst...
      */
     private static function getPlaceholderImage(string $service): string

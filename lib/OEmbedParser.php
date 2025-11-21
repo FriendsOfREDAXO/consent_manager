@@ -38,15 +38,15 @@ class OEmbedParser
     {
         /**
          * TODO: Muss die Domain-Abfrage nicht außerhalb des Output-Filters erfolgen?
-         * Begründung: "Nur für spezifische Domain registrieren" bedeutet ja grade, dass 
-         * rex_extension::register nur ausgeführt wird, wenn ... 
+         * Begründung: "Nur für spezifische Domain registrieren" bedeutet ja grade, dass
+         * rex_extension::register nur ausgeführt wird, wenn ...
          */
         rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) use ($domain) {
             /** @var string $content */
             $content = $ep->getSubject();
 
             /**
-             * NOTE: nur theoretisch kann $content etwas anderes sein als string. 
+             * NOTE: nur theoretisch kann $content etwas anderes sein als string.
              */
             if (!is_string($content)) {
                 return $content;
@@ -314,7 +314,7 @@ class OEmbedParser
                 // TODO: Texte über .lang aufbauen
                 return '<!-- Vidstack Error: ' . htmlspecialchars($e->getMessage()) . ' -->';
             }
-                // TODO: Texte über .lang aufbauen
+            // TODO: Texte über .lang aufbauen
             return '<!-- Vidstack Error -->';
         }
     }

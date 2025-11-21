@@ -2,7 +2,7 @@
 
 /**
  * Demo-Modul: Inline-Consent für YouTube Videos
- * 
+ *
  * Eingabe-Teil des Moduls
  */
 

@@ -2,9 +2,9 @@
 /**
  * Fragment: Consent Manager Config Layout
  * Hauptlayout für die Konfigurationsseite.
- * 
- * 
- * TODO: hier die Schnittstelle beschreiben: 
+ *
+ *
+ * TODO: hier die Schnittstelle beschreiben:
  * - Welche Vars werden vom Fragment erwartet
  * - Welchen Typ haben die Vars
  * - Welchen Default-Wert haben optionale Vars

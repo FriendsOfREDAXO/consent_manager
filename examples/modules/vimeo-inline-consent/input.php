@@ -2,7 +2,7 @@
 
 /**
  * Demo-Modul: Inline-Consent für Vimeo Videos
- * 
+ *
  * Eingabe-Teil des Moduls
  */
 

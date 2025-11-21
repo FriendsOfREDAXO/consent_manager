@@ -18,7 +18,7 @@ class RexFormSupport
 {
     /**
      * @api
-     * 
+     *
      * TODO: korrekter Weise müsste das wohl mit dem Fragment core/form/form.php gelöst werden.
      */
     public static function getFakeText(string $label, string $value): string
@@ -121,7 +121,7 @@ class RexFormSupport
 
     /**
      * Prüft ob der Wert nur Kleinbuchstaben enthält
-     * 
+     *
      * @api
      */
     public static function validateLowercase(string $value): bool
