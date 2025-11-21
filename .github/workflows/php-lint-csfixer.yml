@@ -1,0 +1,43 @@
+name: PHP Lint & PHP-CS-Fixer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  php-lint:
+    name: PHP lint & cs-fixer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v3
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml
+
+      - name: Install composer dependencies
+        run: |
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php composer-setup.php --quiet
+          php -r "unlink('composer-setup.php');"
+          php composer.phar install --no-interaction --prefer-dist --no-progress
+
+      - name: PHP syntax check
+        run: |
+          set -e
+          # exclude vendor
+          find . -type f -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
+
+      - name: Run PHP-CS-Fixer (dry-run)
+        run: |
+          if [ -f ./vendor/bin/php-cs-fixer ]; then
+            ./vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.php
+          else
+            echo "php-cs-fixer not found in vendor; skipping"
+          fi
