@@ -66,7 +66,12 @@ function debugLog(message, data) {
     addonVersion = parseInt(consent_manager_parameters.version);
     cachelogid = parseInt(consent_manager_parameters.cachelogid);
     // Cookie wurde mit einer aelteren Major-Version gesetzt, alle Consents loeschen und Consent anzeigen
-    if (addonVersion !== cookieVersion || cachelogid !== cookieCachelogid) {
+    // - treat cookies older than v4 as incompatible
+    // Treat cookies as incompatible when:
+    // - cookie version is missing/invalid
+    // - cookie major version is different from current addon major
+    // - cachelogid mismatch
+    if (isNaN(cookieVersion) || cookieVersion !== addonVersion || cachelogid !== cookieCachelogid) {
         show = 1;
         consents = [];
         deleteCookies();

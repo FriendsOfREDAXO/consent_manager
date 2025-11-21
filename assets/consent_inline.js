@@ -299,12 +299,21 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
         
         getCookieData: function() {
+            // resolve the current expected major version from global params when available
+            var currentMajorVersion = 4;
+            try {
+                if (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters && consent_manager_parameters.version) {
+                    currentMajorVersion = parseInt(consent_manager_parameters.version) || currentMajorVersion;
+                }
+            } catch (e) {
+                // ignore and fallback to default
+            }
             var cookieValue = this.getCookie('consent_manager');
             
         if (!cookieValue) {
             return {
                 consents: [],
-                version: 4,
+                version: currentMajorVersion,
                 cachelogid: Date.now(),
                 consentid: this.generateConsentId()
             };
@@ -330,7 +339,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     // Altes Format: direkt Array
                     return {
                         consents: data,
-                        version: 4,
+                        version: currentMajorVersion,
                         cachelogid: Date.now(),
                         consentid: this.generateConsentId()
                     };
@@ -338,7 +347,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     // Anderes Format mit 'cookies' Property
                     return {
                         consents: data.cookies || [],
-                        version: data.version || 4,
+                        version: data.version || currentMajorVersion,
                         cachelogid: data.cachelogid || Date.now(),
                         consentid: data.consentid || this.generateConsentId()
                     };
@@ -349,17 +358,17 @@ if (typeof window.consentManagerInline !== 'undefined') {
             
             // Fallback: String-basierte Suche nach Service-Keys
             var serviceKeys = this.extractServiceKeysFromString(cookieValue);
-        if (serviceKeys.length > 0) {
+            if (serviceKeys.length > 0) {
             return {
                 consents: serviceKeys,
-                version: 4,
+                        version: currentMajorVersion,
                 cachelogid: Date.now(),
                 consentid: this.generateConsentId()
             };
         }
-        return {
-            consents: [],
-            version: 4,
+            return {
+                consents: [],
+                version: currentMajorVersion,
             cachelogid: Date.now(),
             consentid: this.generateConsentId()
         };
@@ -413,7 +422,9 @@ if (typeof window.consentManagerInline !== 'undefined') {
                         var existing = JSON.parse(raw);
 
                         // Wenn existierendes Cookie keine oder inkompatible Struktur hat -> löschen
-                        if (!existing || typeof existing !== 'object' || !existing.hasOwnProperty('consents') || parseInt(existing.version || 0) !== parseInt(data.version || 0)) {
+                        // If existing cookie is missing/invalid or doesn't match expected major version -> clear
+                        var expectedVersion = parseInt(data.version || (typeof consent_manager_parameters !== 'undefined' ? consent_manager_parameters.version : currentMajorVersion)) || currentMajorVersion;
+                        if (!existing || typeof existing !== 'object' || !existing.hasOwnProperty('consents') || parseInt(existing.version || 0) !== expectedVersion) {
                             this.clearOldConsentCookies();
                         }
                     } catch (e) {

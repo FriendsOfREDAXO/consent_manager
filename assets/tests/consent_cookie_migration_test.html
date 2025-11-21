@@ -17,6 +17,13 @@
   </div>
 
   <div class="box">
+    <label>Simulate current add-on version: </label>
+    <input id="param-version" type="text" value="4" style="width:80px" />
+    <button id="set-param">Apply</button>
+    <div style="margin-top:8px;font-size:13px;color:#666">This sets <code>window.consent_manager_parameters.version</code> for the page to simulate a current add-on major version.</div>
+  </div>
+
+  <div class="box">
     <button id="inline-set">Call: consentManagerInline.setCookieData(...)</button>
     <button id="frontend-save">Call: saveConsent('all') (frontend)</button>
     <div id="result" style="margin-top:8px;white-space:pre-wrap;font-family:monospace"></div>
@@ -68,6 +75,13 @@
         cmCookieAPI.set('consent_manager', JSON.stringify(cookieData));
       }
       showCookies(document.getElementById('result'));
+    });
+
+    document.getElementById('set-param').addEventListener('click', function(){
+      var v = document.getElementById('param-version').value || '4';
+      window.consent_manager_parameters = window.consent_manager_parameters || {};
+      window.consent_manager_parameters.version = v;
+      document.getElementById('result').textContent = 'consent_manager_parameters.version = ' + v;
     });
 
     // expose a small helper for manual testing
