@@ -168,7 +168,14 @@ class GoogleConsentMode
             // Consent Manager Integration
             $js .= "// Integration mit Consent Manager (Auto-Mapping aktiviert)\n";
             $js .= "document.addEventListener('consent_manager-saved', function(e) {\n";
-            $js .= "    var consents = JSON.parse(e.detail);\n";
+            $js .= "    var consents;\n";
+            $js .= "    try {\n";
+            $js .= "        // e.detail may be a JSON string or already an object/array.\n";
+            $js .= "        consents = (typeof e.detail === 'string') ? JSON.parse(e.detail) : e.detail;\n";
+            $js .= "    } catch (err) {\n";
+            $js .= "        console.warn('consent_manager: malformed consent payload in event.detail', e.detail, err);\n";
+            $js .= "        consents = [];\n";
+            $js .= "    }\n";
             $js .= "    var updates = {};\n\n";
 
             // Mappings für Services generieren

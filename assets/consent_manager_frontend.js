@@ -32,6 +32,17 @@ function debugLog(message, data) {
 
     consent_manager_parameters.no_cookie_set = false;
 
+    // Helper: safe JSON parse for potentially-malformed external sources (cookies, attributes etc.)
+    function safeJSONParse(input, fallback) {
+        try {
+            if (typeof input === 'string') return JSON.parse(input);
+            if (typeof input === 'object' && input !== null) return input;
+        } catch (e) {
+            console.warn('consent_manager: safeJSONParse failed for input', input, e);
+        }
+        return fallback;
+    }
+
     // Es gibt keinen Datenschutzcookie, Consent zeigen
     if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {
         cmCookieAPI.set('consent_manager_test', 'test');
@@ -45,7 +56,7 @@ function debugLog(message, data) {
             show = 1;
         }
     } else {
-        cookieData = JSON.parse(cmCookieAPI.get('consent_manager'));
+        cookieData = safeJSONParse(cmCookieAPI.get('consent_manager'), {});
         // Cookie-Version auslesen. Cookie-Version = Major-Version des AddOns zum Zeitpunkt des speicherns
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
@@ -103,7 +114,7 @@ function debugLog(message, data) {
     // on startup trigger unselect-scripts of disabled consents
     consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
         // array mit cookie uids
-        var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+        var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
 
         cookieUids.forEach(function (uid) {
             if(!consents.includes(uid)) {
@@ -247,7 +258,7 @@ function debugLog(message, data) {
         if (toSave !== 'none') {
             consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
                 // array mit cookie uids
-                var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+                var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
                 if (el.checked || toSave === 'all') {
                     debugLog('saveConsent: Consent erteilt für', cookieUids);
                     cookieUids.forEach(function (uid) {
@@ -275,7 +286,7 @@ function debugLog(message, data) {
             debugLog('saveConsent: Keine Consents (none)');
             consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
                 // array mit cookie uids
-                var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+                var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
                 if (el.disabled) {
                     cookieUids.forEach(function (uid) {
                         consents.push(uid);
@@ -477,7 +488,7 @@ function debugLog(message, data) {
     function showBox() {
         consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
             var check = true,
-                cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+                cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
             cookieUids.forEach(function (uid) {
                 if (consents.indexOf(uid) === -1) {
                     check = false;
@@ -526,7 +537,7 @@ function debugLog(message, data) {
 function consent_manager_showBox() {
     var consents = [];
     if (typeof cmCookieAPI.get('consent_manager') != 'undefined') {
-        cookieData = JSON.parse(cmCookieAPI.get('consent_manager'));
+        cookieData = safeJSONParse(cmCookieAPI.get('consent_manager'), {});
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
         }
@@ -534,7 +545,7 @@ function consent_manager_showBox() {
     consent_managerBox = document.getElementById('consent_manager-background');
     consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
         var check = true,
-            cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+            cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
         cookieUids.forEach(function (uid) {
             if (consents.indexOf(uid) === -1) {
                 check = false;
@@ -696,7 +707,7 @@ function mapConsentsToGoogleFlags(consents) {
 function consent_manager_showBox() {
     var consents = [];
     if (typeof cmCookieAPI.get('consent_manager') != 'undefined') {
-        cookieData = JSON.parse(cmCookieAPI.get('consent_manager'));
+        cookieData = safeJSONParse(cmCookieAPI.get('consent_manager'), {});
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
         }
@@ -704,7 +715,7 @@ function consent_manager_showBox() {
     consent_managerBox = document.getElementById('consent_manager-background');
     consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
         var check = true,
-            cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+            cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
         cookieUids.forEach(function (uid) {
             if (consents.indexOf(uid) === -1) {
                 check = false;
@@ -740,7 +751,7 @@ function consent_manager_showBox() {
 
 function consent_manager_hasconsent(id) {
     if (typeof cmCookieAPI.get('consent_manager') !== 'undefined') {
-        return JSON.parse(cmCookieAPI.get('consent_manager')).consents.indexOf(id) !== -1;
+        return safeJSONParse(cmCookieAPI.get('consent_manager'), {consents: []}).consents.indexOf(id) !== -1;
     }
     return false;
 }
