@@ -124,13 +124,10 @@ function debugLog(message, data) {
     consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
         el.addEventListener('click', function () {
             if (el.classList.contains('consent_manager-save-selection')) {
-                deleteCookies();
                 saveConsent('selection');
             } else if (el.classList.contains('consent_manager-accept-all')) {
-                deleteCookies();
                 saveConsent('all');
             } else if (el.classList.contains('consent_manager-accept-none')) {
-                deleteCookies();
                 saveConsent('none');
             } else if (el.classList.contains('consent_manager-close')) {
                 if (!document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden')) {

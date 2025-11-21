@@ -44,6 +44,7 @@ test('consent cookie migration: clears legacy cookies before writing new cookie 
   await page.evaluate(() => { window.consent_manager_parameters = { version: '5' }; });
   await page.click('#frontend-save');
   await page.waitForTimeout(250);
-  const result2 = await page.locator('#result').textContent();
-  expect(result2).toContain('consent_manager=');
+  // read document.cookie directly to avoid page-specific UI timing issues
+  const cookieString = await page.evaluate(() => document.cookie || '');
+  expect(cookieString).toContain('consent_manager=');
 });

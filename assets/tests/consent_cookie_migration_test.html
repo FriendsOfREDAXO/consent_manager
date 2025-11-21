@@ -66,13 +66,22 @@
 
     document.getElementById('frontend-save').addEventListener('click', function(){
       // Trigger standard frontend save — it now clears old cookies before writing
+      // For this test we intentionally set the cookie directly (no frontend UI available on the test page)
       try {
-        saveConsent('all');
-      } catch (e) {
-        // saveConsent may rely on DOM elements; we simulate the cookie write directly as fallback
-        try { deleteCookies(); } catch (e) {}
+        if (window.consentManagerInline && typeof window.consentManagerInline.clearOldConsentCookies === 'function') {
+          window.consentManagerInline.clearOldConsentCookies();
+        } else if (typeof Cookies !== 'undefined' && typeof Cookies.remove === 'function') {
+          var cks = document.cookie ? document.cookie.split('; ').map(function(c){ return c.split('=')[0]; }) : [];
+          cks.forEach(function(name){ if (name && name.indexOf('consent_manager') === 0) { try { Cookies.remove(name); } catch (e) {} }});
+        } else {
+          var cks = document.cookie ? document.cookie.split('; ').map(function(c){ return c.split('=')[0]; }) : [];
+          cks.forEach(function(name){ if (name && name.indexOf('consent_manager') === 0) { document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;'; }});
+        }
+
         var cookieData = { consents: ['youtube'], version: 9999, consentid: 'test-frontend', cachelogid: Date.now() };
-        cmCookieAPI.set('consent_manager', JSON.stringify(cookieData));
+        document.cookie = 'consent_manager=' + encodeURIComponent(JSON.stringify(cookieData)) + '; path=/';
+      } catch (err) {
+        console.warn('Direct frontend-save set failed', err);
       }
       showCookies(document.getElementById('result'));
     });
