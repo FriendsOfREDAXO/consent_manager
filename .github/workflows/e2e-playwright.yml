@@ -28,8 +28,20 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
         run: |
           npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install Playwright browsers
         run: |
@@ -52,8 +64,8 @@ jobs:
         env:
           CI: true
         run: |
-          # Use multiple reporters so we can upload junit + html artifacts to the workflow results
-          npx playwright test --config=playwright.config.js --reporter=list,junit,html
+          # playright reporters are configured via playwright.config.js (includes github, junit -> test-results, html)
+          npx playwright test --config=playwright.config.js
 
       - name: Upload Playwright HTML report
         if: always()

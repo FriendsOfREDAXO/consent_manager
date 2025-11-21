@@ -12,4 +12,11 @@ module.exports = defineConfig({
   projects: [
     { name: 'chromium', use: { browserName: 'chromium' } },
   ],
+  // reporters: include junit output to test-results for workflow upload, and github reporter for GitHub checks
+  reporter: [
+    ['list'],
+    ['github'],
+    ['junit', { outputFile: 'test-results/junit-results.xml' }],
+    ['html', { open: 'never' }]
+  ]
 });
