@@ -14,6 +14,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Ensure full history and checkout of the PR/source ref so CI can commit & push fixes
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
+          persist-credentials: true
 
       - name: Setup PHP
         # v2 is the published major release for shivammathur/setup-php
@@ -54,7 +59,12 @@ jobs:
               git config user.email "$GIT_AUTHOR_EMAIL"
               git add -A
               git commit -m "ci: php-cs-fixer auto-fixes (CI)" || echo "no changes to commit"
-              git push
+              # If running on a pull_request event the runner checks out a detached head — push to the PR's head ref
+              if [ -n "${GITHUB_HEAD_REF}" ]; then
+                git push origin "HEAD:${GITHUB_HEAD_REF}"
+              else
+                git push
+              fi
             else
               echo 'No php-cs-fixer changes'
             fi
