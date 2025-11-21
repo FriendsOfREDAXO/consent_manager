@@ -5,16 +5,18 @@ test('malformed cookie or malformed event payload must not crash the page', asyn
   const errors = [];
   page.on('pageerror', (err) => errors.push(err.message));
 
-  await page.goto('http://localhost:8000/assets/tests/consent_cookie_migration_test.html');
-
-  // ensure basic global params are present to avoid unrelated page errors
-  await page.evaluate(() => {
-    window.consent_manager_parameters = window.consent_manager_parameters || {};
-    window.consent_manager_parameters.version = window.consent_manager_parameters.version || '5';
-    window.consent_manager_parameters.domain = window.consent_manager_parameters.domain || window.location.hostname;
-    window.consent_manager_parameters.consentid = window.consent_manager_parameters.consentid || 'test-consent';
-    window.consent_manager_parameters.cachelogid = window.consent_manager_parameters.cachelogid || Date.now();
+  // Inject minimal global params before any page scripts run so the page
+  // can't throw a "consent_manager_parameters is not defined" error.
+  await page.addInitScript(() => {
+    window.consent_manager_parameters = window.consent_manager_parameters || {
+      version: '5',
+      domain: window.location.hostname,
+      consentid: 'test-consent',
+      cachelogid: Date.now(),
+    };
   });
+
+  await page.goto('http://localhost:8000/assets/tests/consent_cookie_migration_test.html');
 
   // set a broken cookie
   await page.evaluate(() => {
