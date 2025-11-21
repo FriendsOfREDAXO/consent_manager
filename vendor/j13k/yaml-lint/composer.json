@@ -1,0 +1,52 @@
+{
+    "name": "j13k/yaml-lint",
+    "description": "A compact command line utility for checking YAML file syntax",
+    "keywords": [
+        "yaml",
+        "yml",
+        "lint",
+        "syntax",
+        "cli",
+        "utility",
+        "symfony"
+    ],
+    "homepage": "https://github.com/j13k/yaml-lint",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John Fitzpatrick",
+            "homepage": "https://github.com/j13k"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "ext-json": "*",
+        "symfony/yaml": "^2 || ^3 || ^4 || ^5 || ^6 || ^7"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2",
+        "phpunit/phpunit": "^11",
+        "symplify/easy-coding-standard": "^12"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.1.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "J13k\\": "src/J13k"
+        }
+    },
+    "bin": [
+        "bin/yaml-lint"
+    ],
+    "scripts": {
+        "code-style": "./vendor/bin/ecs check .",
+        "code-analyse": "./vendor/bin/phpstan analyze --level 3 src",
+        "test": "./vendor/bin/phpunit"
+    },
+    "support": {
+        "issues": "https://github.com/j13k/yaml-lint/issues"
+    }
+}

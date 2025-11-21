@@ -59,8 +59,8 @@ class GoogleConsentMode
      * @api
      * @param string $domain Die Domain
      * @return array{enabled: bool, auto_mapping: bool, domain: string, flags: array<string, string>} Konfiguration mit enabled, auto_mapping, default_state etc
-     * 
-     * TODO: Domainen nicht als Array sondern als Objekt/Klasse? Erleichtert Übergaben als Parameter usw. 
+     *
+     * TODO: Domainen nicht als Array sondern als Objekt/Klasse? Erleichtert Übergaben als Parameter usw.
      */
     public static function getDomainConfig(string $domain): array
     {
@@ -132,7 +132,7 @@ class GoogleConsentMode
      * Generiert das JavaScript für Google Consent Mode v2.
      *
      * @api
-     * 
+     *
      * TODO: Das JS besser via Fragment erzeugen? Wegen Übersichtlichkeit?
      */
     public static function generateJavaScript(string $domain, int $clangId): string
@@ -168,7 +168,14 @@ class GoogleConsentMode
             // Consent Manager Integration
             $js .= "// Integration mit Consent Manager (Auto-Mapping aktiviert)\n";
             $js .= "document.addEventListener('consent_manager-saved', function(e) {\n";
-            $js .= "    var consents = JSON.parse(e.detail);\n";
+            $js .= "    var consents;\n";
+            $js .= "    try {\n";
+            $js .= "        // e.detail may be a JSON string or already an object/array.\n";
+            $js .= "        consents = (typeof e.detail === 'string') ? JSON.parse(e.detail) : e.detail;\n";
+            $js .= "    } catch (err) {\n";
+            $js .= "        console.warn('consent_manager: malformed consent payload in event.detail', e.detail, err);\n";
+            $js .= "        consents = [];\n";
+            $js .= "    }\n";
             $js .= "    var updates = {};\n\n";
 
             // Mappings für Services generieren

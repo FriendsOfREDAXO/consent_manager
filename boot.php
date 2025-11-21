@@ -100,6 +100,64 @@ if (rex::isBackend()) {
 
 // Nur im Frontend
 if (rex::isFrontend()) {
+    // One-time server-side cookie migration / cleanup for malformed or old cookies (v < 4)
+    // This runs only once per visitor (per browser) thanks to the sentinel cookie 'consent_migrated_sent'.
+    rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+        // Only attempt migration for real HTTP requests
+        if (php_sapi_name() === 'cli') {
+            return;
+        }
+
+        // Skip for backend sessions
+        if (rex_backend_login::hasSession()) {
+            return;
+        }
+
+        $cookieName = 'consent_manager';
+        $sentinel = 'consent_migrated_sent';
+
+        // If user already went through migration, skip
+        if (!empty($_COOKIE[$sentinel])) {
+            return;
+        }
+
+        $raw = $_COOKIE[$cookieName] ?? null;
+        $mustDelete = false;
+
+        // determine current major version of the add-on (fallback to 4)
+        $addonMajor = 4;
+        try {
+            $addonObj = rex_addon::get('consent_manager');
+            $ver = (string) $addonObj->getVersion();
+            if (preg_match('/^([0-9]+)/', $ver, $m)) {
+                $addonMajor = intval($m[1]);
+            }
+        } catch (Throwable $e) {
+            // ignore and fallback to default major
+        }
+
+        if ($raw) {
+            $data = json_decode($raw, true);
+            // malformed or missing required keys OR cookie major version not equal to current add-on major
+            if (!is_array($data) || empty($data['consents']) || !isset($data['version']) || intval($data['version']) !== $addonMajor) {
+                $mustDelete = true;
+            }
+        }
+
+        // delete server-side (works also for HttpOnly cookies)
+        if ($mustDelete) {
+            $host = $_SERVER['HTTP_HOST'] ?? '';
+            $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+            // expire for current host/path
+            setcookie($cookieName, '', time() - 3600, '/', $host, $secure, true);
+            // also try shorter flags (some older cookies may differ)
+            setcookie($cookieName, '', time() - 3600, '/', $host, $secure, false);
+        }
+
+        // set sentinel to avoid repeating this check for this visitor
+        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        setcookie($sentinel, '1', time() + 60 * 60 * 24 * 30, '/', $_SERVER['HTTP_HOST'] ?? '', $secure, false);
+    });
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
         if (true === rex_request::get('consent_manager_outputjs', 'bool', false)) {
             $consent_manager = new Frontend(0);

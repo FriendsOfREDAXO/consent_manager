@@ -82,7 +82,8 @@ class CLang
                     $clang_id = rex_clang::getStartId();
                 }
                 foreach (rex_clang::getAll() as $id => $clang) {
-                    $page->addSubpage((new rex_be_page('clang' . $id, $clang->getName()))
+                    $page->addSubpage(
+                        (new rex_be_page('clang' . $id, $clang->getName()))
                         ->setSubPath(rex_path::addon('consent_manager', 'pages/' . $key . '.php'))
                         ->setIsActive($id === $clang_id),
                     );
@@ -119,7 +120,7 @@ class CLang
     {
         $db = rex_sql::factory();
         $db->setTable($form->getTableName());
-        $db->setWhere('pid = :pid', [':pid'=> $params['sql']->getLastId()]);
+        $db->setWhere('pid = :pid', [':pid' => $params['sql']->getLastId()]);
         $db->select('*');
         $inserted = $db->getArray()[0] ?? [];
         foreach (rex_clang::getAllIds() as $clangId) {

@@ -2,7 +2,6 @@
 
 namespace FriendsOfRedaxo\ConsentManager\Cronjob;
 
-use Exception;
 use FriendsOfRedaxo\ConsentManager\ThumbnailCache;
 use rex_cronjob;
 

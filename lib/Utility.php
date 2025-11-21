@@ -36,7 +36,7 @@ class Utility
 
     /**
      * Check if consent is configured.
-     * 
+     *
      * @api
      */
     public static function consentConfigured(): bool
@@ -64,7 +64,7 @@ class Utility
      * Hostname WITH subdomain (DSGVO-konform).
      * Returns full hostname including subdomain to ensure consent is domain-specific.
      * Issue #317: Subdomain consent must be separate from main domain consent.
-     * 
+     *
      * @api
      */
     public static function hostname(): string
@@ -79,7 +79,7 @@ class Utility
 
     /**
      * Domain info from Url.
-     * 
+     *
      * @api
      * @return array<string, string>
      */

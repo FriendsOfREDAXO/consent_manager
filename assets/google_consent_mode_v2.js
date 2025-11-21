@@ -111,6 +111,17 @@ function array_fill(startIndex, num, mixedVal) {
 }
 
 // Get current settings from localStorage
+// Safe JSON parsing helper for localStorage values
+function __consentSafeParse(value, fallback) {
+    try {
+        if (typeof value === 'string') return JSON.parse(value);
+        if (typeof value === 'object' && value !== null) return value;
+    } catch (e) {
+        console.warn('GoogleConsentModeV2: Invalid JSON in localStorage for', GOOGLE_CONSENT_V2_STORAGE_KEY, value, e);
+    }
+    return fallback;
+}
+
 let consentStorage = localStorage.getItem(GOOGLE_CONSENT_V2_STORAGE_KEY);
 
 if(consentStorage === null) {
@@ -121,7 +132,7 @@ if(consentStorage === null) {
     localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(defaultSettings));
 } else {
     // Check if array is consistent (if new entries appear in the future)
-    let storedSettings = JSON.parse(consentStorage);
+    let storedSettings = __consentSafeParse(consentStorage, {});
 
     // Merge mit neuen Default-Werten falls neue Felder hinzukommen
     let needsUpdate = false;
@@ -158,7 +169,7 @@ function setConsent(consent) {
         consentSettings = { ...GOOGLE_CONSENT_V2_DEFAULTS };
         debugLog('Initializing with defaults', consentSettings);
     } else {
-        consentSettings = JSON.parse(consentStorage);
+        consentSettings = __consentSafeParse(consentStorage, { ...GOOGLE_CONSENT_V2_DEFAULTS });
         debugLog('Loaded existing settings', consentSettings);
     }
 

@@ -1,0 +1,16 @@
+{
+  "name": "friendsofredaxo/consent_manager-addon-e2e-lint",
+  "description": "Dev dependencies for CI linting and PHP CS Fixer for consent_manager addon",
+  "type": "project",
+  "license": "MIT",
+  "require-dev": {
+    "friendsofredaxo/linter": "1.4.0",
+    "redaxo/php-cs-fixer-config": "2.17.0"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

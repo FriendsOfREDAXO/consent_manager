@@ -299,12 +299,21 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
         
         getCookieData: function() {
+            // resolve the current expected major version from global params when available
+            var currentMajorVersion = 4;
+            try {
+                if (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters && consent_manager_parameters.version) {
+                    currentMajorVersion = parseInt(consent_manager_parameters.version) || currentMajorVersion;
+                }
+            } catch (e) {
+                // ignore and fallback to default
+            }
             var cookieValue = this.getCookie('consent_manager');
             
         if (!cookieValue) {
             return {
                 consents: [],
-                version: 4,
+                version: currentMajorVersion,
                 cachelogid: Date.now(),
                 consentid: this.generateConsentId()
             };
@@ -330,7 +339,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     // Altes Format: direkt Array
                     return {
                         consents: data,
-                        version: 4,
+                        version: currentMajorVersion,
                         cachelogid: Date.now(),
                         consentid: this.generateConsentId()
                     };
@@ -338,7 +347,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     // Anderes Format mit 'cookies' Property
                     return {
                         consents: data.cookies || [],
-                        version: data.version || 4,
+                        version: data.version || currentMajorVersion,
                         cachelogid: data.cachelogid || Date.now(),
                         consentid: data.consentid || this.generateConsentId()
                     };
@@ -349,17 +358,17 @@ if (typeof window.consentManagerInline !== 'undefined') {
             
             // Fallback: String-basierte Suche nach Service-Keys
             var serviceKeys = this.extractServiceKeysFromString(cookieValue);
-        if (serviceKeys.length > 0) {
+            if (serviceKeys.length > 0) {
             return {
                 consents: serviceKeys,
-                version: 4,
+                        version: currentMajorVersion,
                 cachelogid: Date.now(),
                 consentid: this.generateConsentId()
             };
         }
-        return {
-            consents: [],
-            version: 4,
+            return {
+                consents: [],
+                version: currentMajorVersion,
             cachelogid: Date.now(),
             consentid: this.generateConsentId()
         };
@@ -378,10 +387,83 @@ if (typeof window.consentManagerInline !== 'undefined') {
             return services;
         },
         
+        // Lösche alte/malformed Consent-Cookies (inkl. ggf. anderer consent_manager-Namen)
+        clearOldConsentCookies: function() {
+            try {
+                var cookies = document.cookie ? document.cookie.split('; ') : [];
+                var hostname = window.location.hostname;
+                var configuredDomain = null;
+                try { configuredDomain = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters && consent_manager_parameters.domain) ? consent_manager_parameters.domain : null; } catch (e) { configuredDomain = null; }
+
+                var useCookiesApi = (typeof Cookies !== 'undefined' && typeof Cookies.remove === 'function');
+
+                cookies.forEach(function (c) {
+                    var name = c.split('=')[0];
+                    if (!name) return;
+
+                    if (name.indexOf('consent_manager') === 0) {
+                        if (useCookiesApi) {
+                            try { Cookies.remove(name); } catch (e) {}
+                            try { Cookies.remove(name, { path: '/' }); } catch (e) {}
+
+                            if (configuredDomain) {
+                                try { Cookies.remove(name, { path: '/', domain: configuredDomain }); } catch (e) {}
+                                try { Cookies.remove(name, { path: '/', domain: '.' + configuredDomain }); } catch (e) {}
+                            }
+
+                            if (hostname) {
+                                try { Cookies.remove(name, { path: '/', domain: hostname }); } catch (e) {}
+                                try { Cookies.remove(name, { path: '/', domain: '.' + hostname }); } catch (e) {}
+                            }
+                        } else {
+                            // fallback to document.cookie
+                            document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax";
+                            if (configuredDomain) {
+                                try { document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=" + configuredDomain + "; SameSite=Lax"; } catch (e) {}
+                                try { document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=." + configuredDomain + "; SameSite=Lax"; } catch (e) {}
+                            }
+                            try { document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=" + hostname + "; SameSite=Lax"; } catch (e) {}
+                            try { document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=." + hostname + "; SameSite=Lax"; } catch (e) {}
+                        }
+                    }
+                });
+            } catch (e) {
+                this.debug('clearOldConsentCookies failed', e);
+            }
+        },
+
         setCookieData: function(data) {
+            // Vor dem Setzen: alte / invalide Cookies entfernen
+            var shouldClear = false;
+            try {
+                var raw = this.getCookie('consent_manager');
+                if (raw !== null) {
+                    try {
+                        var existing = JSON.parse(raw);
+
+                        // Wenn existierendes Cookie keine oder inkompatible Struktur hat -> löschen
+                        // If existing cookie is missing/invalid or doesn't match expected major version -> clear
+                        var expectedVersion = parseInt(data.version || (typeof consent_manager_parameters !== 'undefined' ? consent_manager_parameters.version : currentMajorVersion)) || currentMajorVersion;
+                        if (!existing || typeof existing !== 'object' || !existing.hasOwnProperty('consents') || parseInt(existing.version || 0) !== expectedVersion) {
+                            shouldClear = true;
+                        }
+                    } catch (e) {
+                        // nicht-JSON / malformed -> löschen
+                        shouldClear = true;
+                    }
+                }
+            } catch (e) {
+                this.debug('pre-set validation failed', e);
+            }
             var expires = new Date();
             expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
             
+            if (shouldClear) {
+                // Clear once right before setting the new consent cookie
+                this.clearOldConsentCookies();
+            }
+
+            // Setze das neue Cookie (neu und sauber)
             document.cookie = 'consent_manager=' + JSON.stringify(data) + 
                              '; expires=' + expires.toUTCString() + 
                              '; path=/; SameSite=Lax';

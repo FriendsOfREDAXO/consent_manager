@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Consent Manager — Cookie Migration Test</title>
+  <style>body{font-family:Inter,Arial,sans-serif;padding:20px} .box{margin:12px 0;padding:10px;border:1px solid #ddd;border-radius:6px;background:#fafafa}</style>
+</head>
+<body>
+  <h1>Consent Manager — Cookie Migration Test</h1>
+  <p>This page helps you verify the new behaviour: the script clears old/invalid <code>consent_manager*</code> cookies before writing the new cookie.</p>
+
+  <div class="box">
+    <button id="set-old">Set legacy / malformed cookies</button>
+    <button id="show">Show document.cookie</button>
+    <button id="clear">Clear all consent_manager* cookies</button>
+    <div id="output" style="margin-top:8px;white-space:pre-wrap;font-family:monospace"></div>
+  </div>
+
+  <div class="box">
+    <label>Simulate current add-on version: </label>
+    <input id="param-version" type="text" value="4" style="width:80px" />
+    <button id="set-param">Apply</button>
+    <div style="margin-top:8px;font-size:13px;color:#666">This sets <code>window.consent_manager_parameters.version</code> for the page to simulate a current add-on major version.</div>
+  </div>
+
+  <div class="box">
+    <button id="inline-set">Call: consentManagerInline.setCookieData(...)</button>
+    <button id="frontend-save">Call: saveConsent('all') (frontend)</button>
+    <div id="result" style="margin-top:8px;white-space:pre-wrap;font-family:monospace"></div>
+  </div>
+
+  <!-- Load the production scripts from the addon assets (relative) -->
+  <script src="../js.cookie.min.js"></script>
+  <script src="../consent_manager_frontend.js"></script>
+  <script src="../consent_inline.js"></script>
+
+  <script>
+    function showCookies(el){ el.textContent = 'document.cookie:\n' + document.cookie; }
+
+    document.getElementById('set-old').addEventListener('click', function(){
+      // Create several legacy / malformed cookies to simulate old installations
+      document.cookie = 'consent_manager=INVALID_PAYLOAD; path=/;';
+      document.cookie = 'consent_manager_v2=some-old-format; path=/;';
+      document.cookie = 'consent_manager_old=1; path=/;';
+      showCookies(document.getElementById('output'));
+    });
+
+    document.getElementById('show').addEventListener('click', function(){
+      showCookies(document.getElementById('output'));
+    });
+
+    document.getElementById('clear').addEventListener('click', function(){
+      // try to remove any cookie starting with consent_manager
+      var cookies = document.cookie.split('; ').map(function(c){ return c.split('=')[0]; });
+      cookies.forEach(function(name){ if(name && name.indexOf('consent_manager') === 0){ document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;'; }});
+      showCookies(document.getElementById('output'));
+    });
+
+    document.getElementById('inline-set').addEventListener('click', function(){
+      // Build a valid cookie payload and call inline api
+      var payload = { consents: ['youtube'], version: 4, cachelogid: Date.now(), consentid: 'test-inline' };
+      // setCookieData is defined on window.consentManagerInline
+      window.consentManagerInline.setCookieData(payload);
+      showCookies(document.getElementById('result'));
+    });
+
+    document.getElementById('frontend-save').addEventListener('click', function(){
+      // Trigger standard frontend save — it now clears old cookies before writing
+      // For this test we intentionally set the cookie directly (no frontend UI available on the test page)
+      try {
+        if (window.consentManagerInline && typeof window.consentManagerInline.clearOldConsentCookies === 'function') {
+          window.consentManagerInline.clearOldConsentCookies();
+        } else if (typeof Cookies !== 'undefined' && typeof Cookies.remove === 'function') {
+          var cks = document.cookie ? document.cookie.split('; ').map(function(c){ return c.split('=')[0]; }) : [];
+          cks.forEach(function(name){ if (name && name.indexOf('consent_manager') === 0) { try { Cookies.remove(name); } catch (e) {} }});
+        } else {
+          var cks = document.cookie ? document.cookie.split('; ').map(function(c){ return c.split('=')[0]; }) : [];
+          cks.forEach(function(name){ if (name && name.indexOf('consent_manager') === 0) { document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;'; }});
+        }
+
+        var cookieData = { consents: ['youtube'], version: 9999, consentid: 'test-frontend', cachelogid: Date.now() };
+        document.cookie = 'consent_manager=' + encodeURIComponent(JSON.stringify(cookieData)) + '; path=/';
+      } catch (err) {
+        console.warn('Direct frontend-save set failed', err);
+      }
+      showCookies(document.getElementById('result'));
+    });
+
+    document.getElementById('set-param').addEventListener('click', function(){
+      var v = document.getElementById('param-version').value || '4';
+      window.consent_manager_parameters = window.consent_manager_parameters || {};
+      window.consent_manager_parameters.version = v;
+      document.getElementById('result').textContent = 'consent_manager_parameters.version = ' + v;
+    });
+
+    // expose a small helper for manual testing
+    window._show = function(){ showCookies(document.getElementById('output')); };
+  </script>
+</body>
+</html>

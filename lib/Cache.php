@@ -139,7 +139,7 @@ class Cache
                 $cookiegroup = (array) $cookiegroup;
                 if (is_string($cookiegroup['cookie'])) {
                     foreach (array_filter(explode('|', $cookiegroup['cookie']), strlen(...)) as $cookieUid) { /** @phpstan-ignore-line */
-                        if (isset($this->cookies[$clangId][$cookieUid])) { 
+                        if (isset($this->cookies[$clangId][$cookieUid])) {
                             $cookie_uids[] = $cookieUid;
                         }
                     }
@@ -196,6 +196,6 @@ class Cache
     {
         $configFile = rex_path::addonData('consent_manager', 'config.json');
 
-        return rex_file::getCache($configFile,[]);
+        return rex_file::getCache($configFile, []);
     }
 }

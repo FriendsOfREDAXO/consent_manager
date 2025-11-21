@@ -2,7 +2,7 @@
 
 /**
  * Demo-Modul: Inline-Consent für Google Maps
- * 
+ *
  * Eingabe-Teil des Moduls
  */
 

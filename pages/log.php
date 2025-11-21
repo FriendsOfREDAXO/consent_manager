@@ -27,7 +27,10 @@ $list = rex_list::factory(
     FROM ' . rex::getTable('consent_manager_consent_log') . ' ' . $where . '
     ORDER by `createdate` DESC, `cachelogid` ASC
     ',
-    30, 'Consent-Log', false);
+    30,
+    'Consent-Log',
+    false
+);
 
 if ('' !== $searchvalue) {
     $list->addParam('Consent_Search', $searchvalue);

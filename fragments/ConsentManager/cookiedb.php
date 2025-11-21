@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TODO: hier die Schnittstelle beschreiben: 
+ * TODO: hier die Schnittstelle beschreiben:
  * - Welche Vars werden vom Fragment erwartet
  * - Welchen Typ haben die Vars
  * - Welchen Default-Wert haben optionale Vars
@@ -29,11 +29,13 @@ if (0 !== count($consent_manager->cookiegroups)) { /** phpstan-ignore-line */
     if (null !== $consent_manager_cookie && isset($consent_manager_cookie['cachelogid'])) {
         $db = rex_sql::factory();
         $db->setDebug(false);
-        $db->setQuery('SELECT ' . rex::getTable('consent_manager_consent_log') . '.*
+        $db->setQuery(
+            'SELECT ' . rex::getTable('consent_manager_consent_log') . '.*
                         FROM ' . rex::getTable('consent_manager_consent_log') . '
                         WHERE ' . rex::getTable('consent_manager_consent_log') . '.cachelogid = :cachelogid
                         ORDER BY ' . rex::getTable('consent_manager_consent_log') . '.id DESC
-                        LIMIT 5', ['cachelogid' => $consent_manager_cookie['cachelogid']],
+                        LIMIT 5',
+            ['cachelogid' => $consent_manager_cookie['cachelogid']],
         );
         $history = $db->getArray();
         $consents = [];

@@ -2,8 +2,8 @@
 /**
  * Fragment für Google Consent Mode v2 Helper
  * Generiert die HTML-Struktur für den Helper-Panel.
- * 
- * TODO: hier die Schnittstelle beschreiben: 
+ *
+ * TODO: hier die Schnittstelle beschreiben:
  * - Welche Vars werden vom Fragment erwartet
  * - Welchen Typ haben die Vars
  * - Welchen Default-Wert haben optionale Vars

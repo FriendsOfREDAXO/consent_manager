@@ -1,0 +1,63 @@
+name: Upstream
+
+on:
+    pull_request:
+        types: [ opened, synchronize, reopened, ready_for_review ]
+
+jobs:
+    run:
+        name: ${{ matrix.repo }}@${{ matrix.branch }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        if: github.event.pull_request.draft == false
+
+        concurrency:
+            group: upstream-check-${{github.event_name}}-${{ matrix.repo }}-${{ matrix.branch }}-${{ github.head_ref || github.run_id }}
+            cancel-in-progress: true
+
+        env:
+            PHP_CS_FIXER_IGNORE_ENV: 1
+
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    -   repo: redaxo/redaxo
+                        branch: main
+                        php: '8.1'
+                    -   repo: redaxo/redaxo
+                        branch: 6.x
+                        php: '8.4'
+                    -   repo: yakamara/yform
+                        branch: master
+                        php: '8.1'
+
+        steps:
+            -   name: Checkout ${{ matrix.repo }}@${{ matrix.branch }}
+                uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+                with:
+                    repository: ${{ matrix.repo }}
+                    ref: ${{ matrix.branch }}
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4 # v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    coverage: none
+
+            -   name: Set redaxo/php-cs-fixer-config to main branch
+                run: composer require redaxo/php-cs-fixer-config:dev-main friendsofphp/php-cs-fixer:\* --dev --no-scripts --no-interaction --no-update --ansi
+
+            -   uses: ramsey/composer-install@v3
+                with:
+                    dependency-versions: 'highest' # to trigger 'composer update' instead of 'composer install'
+                    composer-options: ${{ hashFiles('composer.lock') != '' && 'redaxo/php-cs-fixer-config' || '' }} --with-all-dependencies
+
+            -   name: Run php-cs-fixer with config from main branch
+                run: vendor/bin/php-cs-fixer fix -v --ansi --diff || exit 0
+
+            -   name: Set redaxo/php-cs-fixer-config to current branch
+                run: composer require redaxo/php-cs-fixer-config:dev-${{ github.head_ref }} --dev --with-all-dependencies --no-scripts --no-interaction --no-progress --ansi
+
+            -   name: Run php-cs-fixer
+                run: vendor/bin/php-cs-fixer check -v --ansi --diff || echo "::warning file=src/Config.php::New changes in ${{ matrix.repo }}@${{ matrix.branch }}."

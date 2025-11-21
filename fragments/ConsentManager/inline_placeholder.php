@@ -58,17 +58,17 @@ if (isset($placeholderData['thumbnail']) && '' !== $placeholderData['thumbnail']
                     <div class="consent-inline-icon">
                         <?php
                         $iconClass = $placeholderData['icon'] ?? 'fa fa-play-circle';
-                        $iconLabel = $placeholderData['icon_label'] ?? 'Media Icon';
-                        if (str_starts_with($iconClass, 'uk-icon:')) {
-                            // UIkit Icon
-                            $ukIcon = str_replace('uk-icon:', '', $iconClass);
-                            echo '<span uk-icon="icon: ' . rex_escape($ukIcon) . '; ratio: 3" aria-label="' . rex_escape($iconLabel) . '"></span>';
-                        } else {
-                            // FontAwesome Icon
-                            echo '<i class="' . rex_escape($iconClass) . '" aria-hidden="true"></i>';
-                            echo '<span class="sr-only">' . rex_escape($iconLabel) . '</span>';
-                        }
-                        ?>
+$iconLabel = $placeholderData['icon_label'] ?? 'Media Icon';
+if (str_starts_with($iconClass, 'uk-icon:')) {
+    // UIkit Icon
+    $ukIcon = str_replace('uk-icon:', '', $iconClass);
+    echo '<span uk-icon="icon: ' . rex_escape($ukIcon) . '; ratio: 3" aria-label="' . rex_escape($iconLabel) . '"></span>';
+} else {
+    // FontAwesome Icon
+    echo '<i class="' . rex_escape($iconClass) . '" aria-hidden="true"></i>';
+    echo '<span class="sr-only">' . rex_escape($iconLabel) . '</span>';
+}
+?>
                     </div>
                     <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $inline_title_fallback) ?></h4>
                     <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? $inline_privacy_notice) ?></p>
@@ -78,14 +78,14 @@ if (isset($placeholderData['thumbnail']) && '' !== $placeholderData['thumbnail']
                     <div class="consent-inline-privacy-link">
                         <a href="<?= rex_escape($service['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer">
                             <?php
-                            $privacyIcon = $this->getVar('privacy_icon', 'fa fa-shield-alt');
-                            if (str_starts_with($privacyIcon, 'uk-icon:')) {
-                                $ukIcon = str_replace('uk-icon:', '', $privacyIcon);
-                                echo '<span uk-icon="icon: ' . rex_escape($ukIcon) . '" aria-hidden="true"></span>';
-                            } else {
-                                echo '<i class="' . rex_escape($privacyIcon) . '" aria-hidden="true"></i>';
-                            }
-                            ?>
+    $privacyIcon = $this->getVar('privacy_icon', 'fa fa-shield-alt');
+                        if (str_starts_with($privacyIcon, 'uk-icon:')) {
+                            $ukIcon = str_replace('uk-icon:', '', $privacyIcon);
+                            echo '<span uk-icon="icon: ' . rex_escape($ukIcon) . '" aria-hidden="true"></span>';
+                        } else {
+                            echo '<i class="' . rex_escape($privacyIcon) . '" aria-hidden="true"></i>';
+                        }
+?>
                             <?= rex_escape($inline_privacy_link_text) ?> <?= rex_escape($service['provider'] ?? $service['service_name'] ?? 'Anbieter') ?>
                         </a>
                     </div>

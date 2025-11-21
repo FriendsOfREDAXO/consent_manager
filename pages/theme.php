@@ -29,7 +29,7 @@ if ('' !== $preview) {
         $cmstyle = '';
         $cmbox = rex_view::error(rex_i18n::msg('consent_manager_error_css_notfound', $preview));
     }
-?><!doctype html>
+    ?><!doctype html>
 <html lang="de">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -97,7 +97,7 @@ div.theme_description span {
 <?php } ?>
 
 <?php
-    echo '<style>' . $cmstyle . '</style>' . PHP_EOL;
+        echo '<style>' . $cmstyle . '</style>' . PHP_EOL;
     echo $cmbox;
     if ('' !== $cmstyle) {
         echo rex_view::info(rex_i18n::msg('consent_manager_theme_preview_info'));

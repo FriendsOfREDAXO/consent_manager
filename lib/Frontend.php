@@ -67,7 +67,7 @@ class Frontend
         if (0 === count($this->cache) || (rex_addon::get('consent_manager')->getVersion() !== ($this->cache['majorVersion'] ?? null))) {
             Cache::forceWrite();
             $this->cache = Cache::read();
-        }   
+        }
         $this->cacheLogId = $this->cache['cacheLogId'] ?? '';
         $this->version = $this->cache['majorVersion'] ?? '';
     }
@@ -142,7 +142,7 @@ class Frontend
         }
 
         $domainData = $this->cache['domains'][$this->domainName];
-        
+
         // Sicherstellen, dass Domain-Daten ein Array sind
         if (!is_array($domainData)) {
             return;
@@ -207,7 +207,7 @@ class Frontend
 
     /**
      * @api
-     * 
+     *
      * TODO: warum ist $article_id kein INT-Wert sondern STRING?
      * TODO: warum die Parameter wenn sie in der Funktion nicht benötigt werden?
      */
@@ -331,7 +331,7 @@ class Frontend
      * Returns complete JavaScript including parameters, box template and all required libraries.
      *
      * @api
-     * 
+     *
      * TODO: sollte man das JS nicht besser als Fragment bereitstellen ... das hier ist etwas unübersichtlich
      */
     public static function getJS(): string
@@ -345,7 +345,7 @@ class Frontend
         echo self::getFragment(0, 0, 'ConsentManager/box.php');
         $boxTemplateResult = ob_get_contents();
         ob_end_clean();
-        
+
         // Ensure we have a string for further processing
         if (false === $boxTemplateResult) {
             $boxtemplate = '';

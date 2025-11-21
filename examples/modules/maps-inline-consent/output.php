@@ -2,7 +2,7 @@
 
 /**
  * Demo-Modul: Inline-Consent für Google Maps
- * 
+ *
  * Ausgabe-Teil des Moduls
  */
 
@@ -17,13 +17,13 @@ $mapsHeight = '' === $mapsHeight ? (int) $mapsHeight : 450;
 
 // Nur ausgeben wenn Embed-URL vorhanden
 if ('' < $embedUrl) {
-    
+
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
     if (class_exists(InlineConsent::class)) {
         echo InlineConsent::getCSS();
         echo InlineConsent::getJavaScript();
     }
-    
+
     // Inline-Consent für Google Maps generieren
     echo InlineConsent::doConsent('google-maps', $embedUrl, [
         'title' => $mapsTitle,
@@ -31,7 +31,7 @@ if ('' < $embedUrl) {
         'width' => '100%',
         'privacy_notice' => 'Für Google Maps werden Cookies für die Funktionalität benötigt.'
     ]);
-    
+
 } else {
     // Backend-Preview falls keine URL eingegeben
     if (rex::isBackend()) {

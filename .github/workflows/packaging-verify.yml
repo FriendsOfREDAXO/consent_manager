@@ -1,0 +1,40 @@
+name: Packaging verify
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [ main ]
+
+jobs:
+  verify-archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create source archive
+        run: |
+          git archive --format=zip --output=release-test.zip HEAD
+          echo "Archive size: $(du -h release-test.zip | cut -f1)"
+
+      - name: Verify forbidden files are not in archive
+        run: |
+          set -e
+          # list of forbidden patterns (case-insensitive)
+          patterns=("composer.phar" "node_modules/" "assets/tests/" "tests/" "phpunit.xml" "php-cs-fixer" ".php-cs-fixer.cache")
+          found=0
+          for p in "${patterns[@]}"; do
+            if unzip -l release-test.zip | grep -i --color=never -E "$p" >/dev/null; then
+              echo "Found forbidden pattern in archive: $p"
+              unzip -l release-test.zip | grep -i --color=never -E "$p" || true
+              found=1
+            fi
+          done
+          if [ "$found" -ne 0 ]; then
+            echo "Packaging verification failed: forbidden files found in release archive"
+            exit 1
+          fi
+          echo "Packaging verification passed - no forbidden files in archive."

@@ -25,7 +25,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * @api
-     * 
+     *
      * TODO: Prüfen,ob die (engl.) Meldungen weiter im Test stehen oder nach .lang übertragen werden
      */
     public function execute()
@@ -205,7 +205,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * Download mit cURL.
-     * 
+     *
      * TODO: Prüfen,ob die (engl.) Meldungen weiter im Test stehen oder nach .lang übertragen werden
      */
     private function downloadWithCurl(string $url): ?string
@@ -251,7 +251,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * Download mit file_get_contents (Fallback).
-     * 
+     *
      * TODO: Prüfen,ob die (engl.) Meldungen weiter im Test stehen oder nach .lang übertragen werden
      */
     private function downloadWithFileGetContents(string $url): ?string
@@ -303,7 +303,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
     /**
      * @api
-     * 
+     *
      * TODO: Prüfen,ob die (engl.) Meldungen weiter im Test stehen oder nach .lang übertragen werden
     */
     public function getName(): string
@@ -314,7 +314,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
     /**
      * @api
      * @return list<array{label: string, name: string, type: 'float'|'int'|'media'|'select'|'string', default?: mixed, notice?: string, prefix?: string, suffix?: string, attributes?: array<string, mixed>}>
-     * 
+     *
      * TODO: Prüfen,ob die (engl.) Meldungen weiter im Test stehen oder nach .lang übertragen werden
      */
     public function getParams(): array
