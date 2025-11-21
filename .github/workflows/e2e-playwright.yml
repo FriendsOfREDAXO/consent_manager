@@ -14,7 +14,7 @@ on:
 
 jobs:
   e2e:
-    name: Run Playwright E2E tests
+    name: test:e2e - Run Playwright E2E tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
 

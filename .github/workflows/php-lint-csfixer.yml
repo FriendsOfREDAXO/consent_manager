@@ -9,7 +9,7 @@ on:
 
 jobs:
   php-lint:
-    name: PHP lint & cs-fixer
+    name: test:php-cs - PHP lint & cs-fixer
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
