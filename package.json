@@ -1,0 +1,12 @@
+{
+  "name": "consent_manager-addon-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.37.1",
+    "http-server": "^14.1.1"
+  },
+  "scripts": {
+    "test:e2e": "http-server -p 8000 -c-1 ./ -o /assets/tests/consent_cookie_migration_test.html & npx playwright test --config=playwright.config.js --workers=1 --reporter=list"
+  }
+}
