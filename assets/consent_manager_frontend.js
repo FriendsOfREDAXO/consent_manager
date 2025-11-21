@@ -293,6 +293,14 @@ function debugLog(message, data) {
         cookieData.consents = consents;
         debugLog('saveConsent: Finale Consents', consents);
 
+        // Remove potential old/stale consent cookies before setting a new one.
+        try {
+            deleteCookies();
+        } catch (e) {
+            // defensive - deleteCookies may fail in some environments
+            console.warn('Consent Manager: deleteCookies() failed before setting cookie', e);
+        }
+
         cmCookieAPI.set('consent_manager', JSON.stringify(cookieData));
         
         // Google Consent Mode v2 Update

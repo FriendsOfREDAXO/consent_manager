@@ -87,6 +87,8 @@
 * Fehler bei fehlenden Domains verhindert
 * Fehlerbehandlung bei unvollständiger Domain-Konfiguration verbessert
 
+* **Cookie-Migration / Fix:** Vor dem Setzen eines neuen `consent_manager`-Cookies werden jetzt alte oder fehlerhafte `consent_manager*`-Cookies gelöscht. Das verhindert Fälle, in denen das Consent-Dialogfenster wiederholt geöffnet wird (Issue #424).
+
 
 ### 📁 Neue Dateien
 
