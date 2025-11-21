@@ -21,3 +21,6 @@ modules.xml
 
 # SASS source maps
 assets/*.css.map
+
+# local composer binary (don't add composer.phar to the repo)
+composer.phar
