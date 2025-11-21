@@ -24,4 +24,6 @@ phpunit.xml export-ignore
 .github/ export-ignore
 .github/workflows/ export-ignore
 assets/tests/** export-ignore
+.php-cs-fixer.cache export-ignore
+composer.phar export-ignore
 

@@ -75,6 +75,8 @@ installer_ignore:
   - .php-cs-fixer.dist.php
   - .php-cs-fixer
   - .php_cs.cache
+  - .php-cs-fixer.cache
+  - composer.phar
   - .github/workflows
   - vendor/*/tests
   - vendor/*/test
