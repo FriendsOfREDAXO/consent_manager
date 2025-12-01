@@ -629,6 +629,7 @@ $mform = new mform();
 $cookies = [];
 $qry = 'SELECT uid,service_name FROM '.rex::getTable('consent_manager_cookie').' WHERE clang_id = '.rex_clang::getCurrentId();
 foreach (rex_sql::factory()->getArray($qry) as $v) {
+    // Skip system entries (not the cookie name itself)
     if ($v['uid'] == 'consent_manager') continue;
     $cookies[$v['uid']] = $v['service_name'];
 }
@@ -1029,7 +1030,7 @@ if (rex_request::isAjaxRequest()) {
 
 ```php
 <?php
-$arr = json_decode($_COOKIE['consent_manager'], true);
+$arr = json_decode($_COOKIE['consentmanager'], true);
 $consents = $arr ? array_flip($arr['consents']) : [];
 
 if (isset($consents['google-maps'])) {

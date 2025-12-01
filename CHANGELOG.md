@@ -1,5 +1,25 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.1.0 - xx.yy.2025
+
+### 🔒 Breaking Changes
+
+* **Cookie-Name geändert:** Der Consent-Cookie heißt jetzt `consentmanager` statt `consent_manager` (ohne Unterstrich). Dies behebt Kompatibilitätsprobleme nach Updates und erzwingt eine Neubestätigung bei Benutzern, was DSGVO-konform bei größeren Änderungen empfohlen ist.
+
+### 🚀 Neue Features & Verbesserungen
+
+* **Async Fetch API:** Synchroner XMLHttpRequest durch asynchrone Fetch API ersetzt - verbessert Performance und beseitigt Browser-Warnungen
+* **CSP-Kompatibilität:** `new Function()` Validierung entfernt für strikte Content Security Policy Kompatibilität
+* **Verbesserte Fehlerbehandlung:** Detaillierte CSP/CORS-Fehlermeldungen mit Lösungshinweisen
+* **URL Encoding:** Parameter werden jetzt korrekt URL-encoded für bessere Sicherheit
+* **Code-Optimierungen:** Redundanter Code entfernt, Performance-Verbesserungen (68 Zeilen weniger)
+
+### 🐛 Bug Fixes
+
+* **Doppelte Funktionsdefinition:** `consent_manager_showBox()` war zweimal definiert
+* **Cookie-Name Konsistenz:** Alte minifizierte JS-Datei enthielt veralteten Cookie-Namen
+* **DOM-Zugriffe optimiert:** `getAttribute('data-uid')` wird jetzt gecached statt mehrfach aufgerufen
+
 ## Version 5.0.0 - xx.yy.2025
 
 ### 🚀 Neue Features
@@ -87,7 +107,7 @@
 * Fehler bei fehlenden Domains verhindert
 * Fehlerbehandlung bei unvollständiger Domain-Konfiguration verbessert
 
-* **Cookie-Migration / Fix:** Vor dem Setzen eines neuen `consent_manager`-Cookies werden jetzt alte oder fehlerhafte `consent_manager*`-Cookies gelöscht. Das verhindert Fälle, in denen das Consent-Dialogfenster wiederholt geöffnet wird (Issue #424).
+* **Cookie-Migration / Fix:** Vor dem Setzen eines neuen `consentmanager`-Cookies werden jetzt alte oder fehlerhafte `consent_manager*`-Cookies gelöscht. Das verhindert Fälle, in denen das Consent-Dialogfenster wiederholt geöffnet wird (Issue #424). **Hinweis:** Ab Version 5.1 wurde der Cookie-Name von `consent_manager` auf `consentmanager` geändert.
 
 
 ### 📁 Neue Dateien
