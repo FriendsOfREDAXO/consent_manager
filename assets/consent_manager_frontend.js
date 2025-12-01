@@ -354,6 +354,9 @@ function debugLog(message, data) {
         var domain = consent_manager_parameters.domain;
         var hostname = window.location.hostname;
         
+        // Liste aller möglichen Cookie-Namen (alt + neu) für komplette Bereinigung
+        var cookieNamesToDelete = ['consent_manager', 'consent_manager_test', 'consentmanager', 'consentmanager_test'];
+        
         for (var key in cmCookieAPI.get()) {
             var cookieName = encodeURIComponent(key);
             
@@ -378,6 +381,26 @@ function debugLog(message, data) {
                 Cookies.remove(cookieName, { 'domain': ('.' + hostname), 'path': '/' });
             }
         }
+        
+        // Explizit alte Cookie-Namen bereinigen (auch wenn nicht in cmCookieAPI.get())
+        cookieNamesToDelete.forEach(function(name) {
+            // Ohne Domain
+            Cookies.remove(name);
+            Cookies.remove(name, { 'path': '/' });
+            
+            // Mit Domain-Varianten
+            Cookies.remove(name, { 'domain': domain });
+            Cookies.remove(name, { 'domain': domain, 'path': '/' });
+            Cookies.remove(name, { 'domain': ('.' + domain) });
+            Cookies.remove(name, { 'domain': ('.' + domain), 'path': '/' });
+            
+            if (hostname !== domain) {
+                Cookies.remove(name, { 'domain': hostname });
+                Cookies.remove(name, { 'domain': hostname, 'path': '/' });
+                Cookies.remove(name, { 'domain': ('.' + hostname) });
+                Cookies.remove(name, { 'domain': ('.' + hostname), 'path': '/' });
+            }
+        });
     }
 
     function addScript(el) {

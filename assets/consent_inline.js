@@ -396,12 +396,16 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 try { configuredDomain = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters && consent_manager_parameters.domain) ? consent_manager_parameters.domain : null; } catch (e) { configuredDomain = null; }
 
                 var useCookiesApi = (typeof Cookies !== 'undefined' && typeof Cookies.remove === 'function');
+                
+                // Explizite Liste alter Cookie-Namen zum Löschen
+                var oldCookieNames = ['consent_manager', 'consent_manager_test', 'consentmanager', 'consentmanager_test'];
 
                 cookies.forEach(function (c) {
                     var name = c.split('=')[0];
                     if (!name) return;
 
-                    if (name.indexOf('consent_manager') === 0) {
+                    // Prüfe auf consent_manager-Präfix ODER bekannte alte Namen
+                    if (name.indexOf('consent_manager') === 0 || name.indexOf('consentmanager') === 0) {
                         if (useCookiesApi) {
                             try { Cookies.remove(name); } catch (e) {}
                             try { Cookies.remove(name, { path: '/' }); } catch (e) {}
