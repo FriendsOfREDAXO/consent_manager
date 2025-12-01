@@ -44,19 +44,19 @@ function debugLog(message, data) {
     }
 
     // Es gibt keinen Datenschutzcookie, Consent zeigen
-    if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {
-        cmCookieAPI.set('consent_manager_test', 'test');
+    if (typeof cmCookieAPI.get('consentmanager') === 'undefined') {
+        cmCookieAPI.set('consentmanager_test', 'test');
         // Test-Cookie konnte nicht gesetzt werden, kein Consent anzeigen
-        if (typeof cmCookieAPI.get('consent_manager_test') === 'undefined') {
+        if (typeof cmCookieAPI.get('consentmanager_test') === 'undefined') {
             show = 0;
             consent_manager_parameters.no_cookie_set = true;
             console.warn('Addon consent_manager: Es konnte kein Cookie für die Domain ' + consent_manager_parameters.domain + ' gesetzt werden!');
         } else {
-            cmCookieAPI.remove('consent_manager_test');
+            cmCookieAPI.remove('consentmanager_test');
             show = 1;
         }
     } else {
-        cookieData = safeJSONParse(cmCookieAPI.get('consent_manager'), {});
+        cookieData = safeJSONParse(cmCookieAPI.get('consentmanager'), {});
         // Cookie-Version auslesen. Cookie-Version = Major-Version des AddOns zum Zeitpunkt des speicherns
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
@@ -314,7 +314,7 @@ function debugLog(message, data) {
             console.warn('Consent Manager: deleteCookies() failed before setting cookie', e);
         }
 
-        cmCookieAPI.set('consent_manager', JSON.stringify(cookieData));
+        cmCookieAPI.set('consentmanager', JSON.stringify(cookieData));
         
         // Google Consent Mode v2 Update
         if (typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
@@ -325,7 +325,7 @@ function debugLog(message, data) {
             debugLog('Google Consent Mode not available for mapping');
         }
         
-        if (typeof cmCookieAPI.get('consent_manager') === 'undefined') {
+        if (typeof cmCookieAPI.get('consentmanager') === 'undefined') {
             consent_manager_parameters.no_cookie_set = true;
             console.warn('Addon consent_manager: Es konnte kein Cookie für die Domain ' + document.domain + ' gesetzt werden!');
         } else {
@@ -418,8 +418,30 @@ function debugLog(message, data) {
                 return;
             }
             
-            var scriptDom = new DOMParser().parseFromString(scriptContent, 'text/html');
-            debugLog('addScript: DOM geparst, Scripts gefunden:', scriptDom.scripts.length);
+            // Validierung: Prüfe auf ungültige Zeichen oder fehlerhafte Kodierung
+            if (scriptContent.includes('\ufffd') || scriptContent.includes('�')) {
+                console.error('addScript: Script enthält ungültige Zeichen (fehlerhaftes Encoding)', {
+                    uid: el.getAttribute('data-uid'),
+                    preview: scriptContent.substring(0, 100)
+                });
+                debugLog('addScript: Ungültiges Encoding erkannt, überspringe Script');
+                return;
+            }
+            
+            var scriptDom = null;
+            try {
+                scriptDom = new DOMParser().parseFromString(scriptContent, 'text/html');
+                debugLog('addScript: DOM geparst, Scripts gefunden:', scriptDom.scripts.length);
+            } catch (e) {
+                console.error('addScript: Fehler beim Parsen des HTML', e);
+                debugLog('addScript: HTML-Parsing fehlgeschlagen', e);
+                return;
+            }
+            
+            if (!scriptDom || !scriptDom.scripts || scriptDom.scripts.length === 0) {
+                debugLog('addScript: Keine Scripts im geparsten DOM gefunden');
+                return;
+            }
             
             // Get nonce from consent_manager_parameters (passed from PHP)
             var nonce = consent_manager_parameters.cspNonce || null;
@@ -457,11 +479,31 @@ function debugLog(message, data) {
                     scriptNode.src = originalScript.src;
                     debugLog('addScript: External script wird geladen', originalScript.src);
                 } else {
-                    scriptNode.textContent = originalScript.textContent;
-                    debugLog('addScript: Inline script gesetzt', {
-                        contentLength: originalScript.textContent.length,
-                        preview: originalScript.textContent.substring(0, 100)
-                    });
+                    // Validierung: Prüfe Inline-Script auf Syntaxfehler
+                    var inlineContent = originalScript.textContent;
+                    if (inlineContent) {
+                        // Test: Versuche Script zu validieren
+                        try {
+                            // Syntax-Check ohne Ausführung
+                            new Function(inlineContent);
+                            scriptNode.textContent = inlineContent;
+                            debugLog('addScript: Inline script gesetzt', {
+                                contentLength: inlineContent.length,
+                                preview: inlineContent.substring(0, 100)
+                            });
+                        } catch (syntaxError) {
+                            console.error('addScript: Ungültiger JavaScript-Code erkannt', {
+                                error: syntaxError.message,
+                                uid: el.getAttribute('data-uid'),
+                                preview: inlineContent.substring(0, 100)
+                            });
+                            debugLog('addScript: Syntax-Fehler im Script, überspringe', syntaxError);
+                            continue; // Überspringe dieses fehlerhafte Script
+                        }
+                    } else {
+                        debugLog('addScript: Inline script ist leer');
+                        continue;
+                    }
                 }
                 
                 // Append to document body
@@ -469,7 +511,12 @@ function debugLog(message, data) {
                     document.body.appendChild(scriptNode);
                     debugLog('addScript: Script erfolgreich zum DOM hinzugefügt');
                 } catch (e) {
-                    console.error('addScript: Fehler beim Hinzufügen des Scripts', e);
+                    console.error('addScript: Fehler beim Hinzufügen des Scripts', {
+                        error: e.message,
+                        uid: el.getAttribute('data-uid'),
+                        hasSrc: !!scriptNode.src,
+                        hasContent: !!scriptNode.textContent
+                    });
                     debugLog('addScript: Fehler beim appendChild', e);
                 }
             }
@@ -750,8 +797,8 @@ function consent_manager_showBox() {
 }
 
 function consent_manager_hasconsent(id) {
-    if (typeof cmCookieAPI.get('consent_manager') !== 'undefined') {
-        return safeJSONParse(cmCookieAPI.get('consent_manager'), {consents: []}).consents.indexOf(id) !== -1;
+    if (typeof cmCookieAPI.get('consentmanager') !== 'undefined') {
+        return safeJSONParse(cmCookieAPI.get('consentmanager'), {consents: []}).consents.indexOf(id) !== -1;
     }
     return false;
 }

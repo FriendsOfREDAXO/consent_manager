@@ -347,7 +347,7 @@
     // Consent Status aus Consent Manager Cookie ermitteln
     function getConsentManagerStatus() {
         const cookies = getCurrentDomainCookies();
-        const consentCookie = cookies.find(cookie => cookie.name === 'consent_manager');
+        const consentCookie = cookies.find(cookie => cookie.name === 'consentmanager');
         
         // Google Consent Mode aus localStorage laden
         let googleConsentMode = null;

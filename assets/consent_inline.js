@@ -48,9 +48,9 @@ if (typeof window.consentManagerInline !== 'undefined') {
             });
             
             // Cookie-Änderungen überwachen
-            var lastCookieValue = self.getCookie('consent_manager');
+            var lastCookieValue = self.getCookie('consentmanager');
             setInterval(function() {
-                var currentCookieValue = self.getCookie('consent_manager');
+                var currentCookieValue = self.getCookie('consentmanager');
                 if (currentCookieValue !== lastCookieValue) {
                     lastCookieValue = currentCookieValue;
                     self.updateAllPlaceholders();
@@ -308,7 +308,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
             } catch (e) {
                 // ignore and fallback to default
             }
-            var cookieValue = this.getCookie('consent_manager');
+            var cookieValue = this.getCookie('consentmanager');
             
         if (!cookieValue) {
             return {
@@ -436,7 +436,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
             // Vor dem Setzen: alte / invalide Cookies entfernen
             var shouldClear = false;
             try {
-                var raw = this.getCookie('consent_manager');
+                var raw = this.getCookie('consentmanager');
                 if (raw !== null) {
                     try {
                         var existing = JSON.parse(raw);
