@@ -357,32 +357,7 @@ function debugLog(message, data) {
         // Liste aller möglichen Cookie-Namen (alt + neu) für komplette Bereinigung
         var cookieNamesToDelete = ['consent_manager', 'consent_manager_test', 'consentmanager', 'consentmanager_test'];
         
-        for (var key in cmCookieAPI.get()) {
-            var cookieName = encodeURIComponent(key);
-            
-            // Versuche alle möglichen Domain/Path Kombinationen für Alt-Cookies
-            // 1. Ohne Domain (aktuelle Domain)
-            Cookies.remove(cookieName);
-            Cookies.remove(cookieName, { 'path': '/' });
-            
-            // 2. Mit exakter Domain aus Config
-            Cookies.remove(cookieName, { 'domain': domain });
-            Cookies.remove(cookieName, { 'domain': domain, 'path': '/' });
-            
-            // 3. Mit Wildcard-Domain (Alt-Cookies vor Issue #317)
-            Cookies.remove(cookieName, { 'domain': ('.' + domain) });
-            Cookies.remove(cookieName, { 'domain': ('.' + domain), 'path': '/' });
-            
-            // 4. Mit aktuellem Hostname (falls abweichend von Config)
-            if (hostname !== domain) {
-                Cookies.remove(cookieName, { 'domain': hostname });
-                Cookies.remove(cookieName, { 'domain': hostname, 'path': '/' });
-                Cookies.remove(cookieName, { 'domain': ('.' + hostname) });
-                Cookies.remove(cookieName, { 'domain': ('.' + hostname), 'path': '/' });
-            }
-        }
-        
-        // Explizit alte Cookie-Namen bereinigen (auch wenn nicht in cmCookieAPI.get())
+        // Explizit alle Cookie-Namen bereinigen (alt + neu, alle Domain-Varianten)
         cookieNamesToDelete.forEach(function(name) {
             // Ohne Domain
             Cookies.remove(name);

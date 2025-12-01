@@ -396,9 +396,6 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 try { configuredDomain = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters && consent_manager_parameters.domain) ? consent_manager_parameters.domain : null; } catch (e) { configuredDomain = null; }
 
                 var useCookiesApi = (typeof Cookies !== 'undefined' && typeof Cookies.remove === 'function');
-                
-                // Explizite Liste alter Cookie-Namen zum Löschen
-                var oldCookieNames = ['consent_manager', 'consent_manager_test', 'consentmanager', 'consentmanager_test'];
 
                 cookies.forEach(function (c) {
                     var name = c.split('=')[0];
