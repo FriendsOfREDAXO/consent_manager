@@ -329,18 +329,21 @@ function debugLog(message, data) {
             consent_manager_parameters.no_cookie_set = true;
             console.warn('Addon consent_manager: Es konnte kein Cookie für die Domain ' + document.domain + ' gesetzt werden!');
         } else {
-            var http = new XMLHttpRequest(),
-                url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager&buster=' + new Date().getTime(),
-                params = 'domain=' + document.domain + '&consentid=' + consent_manager_parameters.consentid + '&buster=' + new Date().getTime();
-            http.onerror = (e) => {
-                console.error('Addon consent_manager: Fehler beim speichern des Consent! ' + http.statusText);
-            };
-            http.open('POST', url, false);
-            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            http.setRequestHeader('Cache-Control', 'no-cache, no-store, max-age=0');
-            http.setRequestHeader('Expires', 'Thu, 1 Jan 1970 00:00:00 GMT');
-            http.setRequestHeader('Pragma', 'no-cache');
-            http.send(params);
+            // Async logging to avoid blocking UI (replaced deprecated synchronous XHR)
+            var url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager&buster=' + new Date().getTime();
+            var params = 'domain=' + encodeURIComponent(document.domain) + '&consentid=' + encodeURIComponent(consent_manager_parameters.consentid) + '&buster=' + new Date().getTime();
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Cache-Control': 'no-cache, no-store, max-age=0'
+                },
+                body: params
+            }).catch(function(error) {
+                console.error('Addon consent_manager: Fehler beim speichern des Consent!', error);
+                debugLog('Consent logging failed', error);
+            });
         }
 
         if (document.querySelectorAll('.consent_manager-show-box-reload').length || consent_manager_parameters.forcereload === 1) {
@@ -478,27 +481,14 @@ function debugLog(message, data) {
                     scriptNode.src = originalScript.src;
                     debugLog('addScript: External script wird geladen', originalScript.src);
                 } else {
-                    // Validierung: Prüfe Inline-Script auf Syntaxfehler
+                    // Set inline script content
                     var inlineContent = originalScript.textContent;
                     if (inlineContent) {
-                        // Test: Versuche Script zu validieren
-                        try {
-                            // Syntax-Check ohne Ausführung
-                            new Function(inlineContent);
-                            scriptNode.textContent = inlineContent;
-                            debugLog('addScript: Inline script gesetzt', {
-                                contentLength: inlineContent.length,
-                                preview: inlineContent.substring(0, 100)
-                            });
-                        } catch (syntaxError) {
-                            console.error('addScript: Ungültiger JavaScript-Code erkannt', {
-                                error: syntaxError.message,
-                                uid: uid,
-                                preview: inlineContent.substring(0, 100)
-                            });
-                            debugLog('addScript: Syntax-Fehler im Script, überspringe', syntaxError);
-                            continue; // Überspringe dieses fehlerhafte Script
-                        }
+                        scriptNode.textContent = inlineContent;
+                        debugLog('addScript: Inline script gesetzt', {
+                            contentLength: inlineContent.length,
+                            preview: inlineContent.substring(0, 100)
+                        });
                     } else {
                         debugLog('addScript: Inline script ist leer');
                         continue;
@@ -510,12 +500,23 @@ function debugLog(message, data) {
                     document.body.appendChild(scriptNode);
                     debugLog('addScript: Script erfolgreich zum DOM hinzugefügt');
                 } catch (e) {
-                    console.error('addScript: Fehler beim Hinzufügen des Scripts', {
+                    // Enhanced error logging with CSP/CORS hints
+                    var errorInfo = {
                         error: e.message,
                         uid: uid,
                         hasSrc: !!scriptNode.src,
-                        hasContent: !!scriptNode.textContent
-                    });
+                        hasContent: !!scriptNode.textContent,
+                        src: scriptNode.src || 'inline'
+                    };
+                    
+                    // Check for common CSP/CORS issues
+                    if (e.message && (e.message.includes('Content Security Policy') || e.message.includes('CSP'))) {
+                        errorInfo.hint = 'CSP violation - check Content-Security-Policy header';
+                    } else if (scriptNode.src && e.message && e.message.includes('CORS')) {
+                        errorInfo.hint = 'CORS error - external script may be blocked';
+                    }
+                    
+                    console.error('addScript: Fehler beim Hinzufügen des Scripts', errorInfo);
                     debugLog('addScript: Fehler beim appendChild', e);
                 }
             }
