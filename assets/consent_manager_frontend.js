@@ -384,7 +384,8 @@ function debugLog(message, data) {
             return;
         }
         
-        debugLog('addScript: Processing element', el);
+        var uid = el.getAttribute('data-uid') || 'unknown';
+        debugLog('addScript: Processing element', {uid: uid, element: el});
         
         if (!el.children.length) {
             var encodedScript = el.getAttribute('data-script');
@@ -419,7 +420,7 @@ function debugLog(message, data) {
             // Validierung: Prüfe auf ungültige Zeichen oder fehlerhafte Kodierung
             if (scriptContent.includes('\ufffd') || scriptContent.includes('�')) {
                 console.error('addScript: Script enthält ungültige Zeichen (fehlerhaftes Encoding)', {
-                    uid: el.getAttribute('data-uid'),
+                    uid: uid,
                     preview: scriptContent.substring(0, 100)
                 });
                 debugLog('addScript: Ungültiges Encoding erkannt, überspringe Script');
@@ -492,7 +493,7 @@ function debugLog(message, data) {
                         } catch (syntaxError) {
                             console.error('addScript: Ungültiger JavaScript-Code erkannt', {
                                 error: syntaxError.message,
-                                uid: el.getAttribute('data-uid'),
+                                uid: uid,
                                 preview: inlineContent.substring(0, 100)
                             });
                             debugLog('addScript: Syntax-Fehler im Script, überspringe', syntaxError);
@@ -511,7 +512,7 @@ function debugLog(message, data) {
                 } catch (e) {
                     console.error('addScript: Fehler beim Hinzufügen des Scripts', {
                         error: e.message,
-                        uid: el.getAttribute('data-uid'),
+                        uid: uid,
                         hasSrc: !!scriptNode.src,
                         hasContent: !!scriptNode.textContent
                     });
@@ -578,37 +579,6 @@ function debugLog(message, data) {
     }
 
 })();
-
-function consent_manager_showBox() {
-    var consents = [];
-    if (typeof cmCookieAPI.get('consent_manager') != 'undefined') {
-        cookieData = safeJSONParse(cmCookieAPI.get('consent_manager'), {});
-        if (cookieData.hasOwnProperty('version')) {
-            consents = cookieData.consents;
-        }
-    }
-    consent_managerBox = document.getElementById('consent_manager-background');
-    consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
-        var check = true,
-            cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
-        cookieUids.forEach(function (uid) {
-            if (consents.indexOf(uid) === -1) {
-                check = false;
-            }
-        });
-        if (check) {
-            el.checked = true;
-        }
-    });
-    if (consent_manager_parameters.hidebodyscrollbar) {
-        document.querySelector('body').style.overflow = 'hidden';
-    }
-    document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-    var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
-    var firstFocusableEl = focusableEls[0];
-    consent_managerBox.focus();
-    if (firstFocusableEl) firstFocusableEl.focus();
-}
 
 function mapConsentsToGoogleFlags(consents) {
     var flags = {
@@ -751,8 +721,9 @@ function mapConsentsToGoogleFlags(consents) {
 
 function consent_manager_showBox() {
     var consents = [];
-    if (typeof cmCookieAPI.get('consent_manager') != 'undefined') {
-        cookieData = safeJSONParse(cmCookieAPI.get('consent_manager'), {});
+    var cookieValue = cmCookieAPI.get('consentmanager');
+    if (typeof cookieValue !== 'undefined') {
+        cookieData = safeJSONParse(cookieValue, {});
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
         }
