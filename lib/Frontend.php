@@ -222,7 +222,19 @@ class Frontend
         rex_response::cleanOutputBuffers();
         header_remove();
         header('Content-Type: application/javascript; charset=utf-8');
+        // Use ETag based on version and timestamp for proper caching
+        $cacheVersion = rex_request::get('t', 'string', time());
+        $etag = md5($addon->getVersion() . '-' . $cacheVersion);
+        header('ETag: "' . $etag . '"');
         header('Cache-Control: max-age=604800, public');
+        
+        // Check if client has current version
+        $clientEtag = $_SERVER['HTTP_IF_NONE_MATCH'] ?? '';
+        if (trim($clientEtag, '"') === $etag) {
+            http_response_code(304);
+            exit;
+        }
+        
         $boxtemplate = '';
         ob_start();
         echo self::getFragment(0, 0, 'ConsentManager/box.php');
