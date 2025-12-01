@@ -45,12 +45,37 @@ function debugLog(message, data) {
             show = 1;
         }
     } else {
-        cookieData = JSON.parse(cmCookieAPI.get('consent_manager'));
-        // Cookie-Version auslesen. Cookie-Version = Major-Version des AddOns zum Zeitpunkt des speicherns
-        if (cookieData.hasOwnProperty('version')) {
-            consents = cookieData.consents;
-            cookieVersion = parseInt(cookieData.version);
-            cookieCachelogid = parseInt(cookieData.cachelogid);
+        // Cookie existiert - prüfe ob es im JSON-Format ist (seit Version 4.5)
+        var rawCookie = cmCookieAPI.get('consent_manager');
+        var isValidJson = false;
+        
+        try {
+            cookieData = JSON.parse(rawCookie);
+            // Prüfe ob es ein valides 4.5+ Cookie ist (mit version property)
+            if (cookieData && typeof cookieData === 'object' && cookieData.hasOwnProperty('version')) {
+                isValidJson = true;
+                consents = cookieData.consents;
+                cookieVersion = parseInt(cookieData.version);
+                cookieCachelogid = parseInt(cookieData.cachelogid);
+            }
+        } catch (e) {
+            // JSON.parse fehlgeschlagen = altes Cookie-Format (pre 4.5)
+            isValidJson = false;
+            debugLog('Altes Cookie-Format erkannt, wird gelöscht', e);
+        }
+        
+        // Wenn kein valides JSON-Cookie gefunden wurde, altes Cookie löschen und neu starten
+        if (!isValidJson) {
+            debugLog('Lösche altes Cookie im inkompatiblen Format');
+            cmCookieAPI.remove('consent_manager');
+            // Versuche auch mit verschiedenen Domain-Varianten zu löschen (für Edge Cases)
+            Cookies.remove('consent_manager', { 'path': '/' });
+            Cookies.remove('consent_manager', { 'domain': consent_manager_parameters.domain, 'path': '/' });
+            Cookies.remove('consent_manager', { 'domain': '.' + consent_manager_parameters.domain, 'path': '/' });
+            show = 1;
+            consents = [];
+            cookieVersion = -1;
+            cookieCachelogid = -1;
         }
     }
 
@@ -293,6 +318,14 @@ function debugLog(message, data) {
         cookieData.consents = consents;
         debugLog('saveConsent: Finale Consents', consents);
 
+        // Lösche explizit alle alten Cookie-Varianten bevor wir das neue setzen
+        // Dies verhindert Probleme mit alten Cookies im falschen Format
+        cmCookieAPI.remove('consent_manager');
+        Cookies.remove('consent_manager', { 'path': '/' });
+        Cookies.remove('consent_manager', { 'domain': consent_manager_parameters.domain, 'path': '/' });
+        Cookies.remove('consent_manager', { 'domain': '.' + consent_manager_parameters.domain, 'path': '/' });
+        
+        // Setze neues Cookie im JSON-Format
         cmCookieAPI.set('consent_manager', JSON.stringify(cookieData));
         
         // Google Consent Mode v2 Update

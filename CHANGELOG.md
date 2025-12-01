@@ -1,5 +1,24 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.5.5 - 01.12.2025
+
+### 🐛 Bugfixes
+
+* **Cookie-Format-Kompatibilität**: Behebt Problem mit Cookie-Aufforderung die immer wieder erscheint
+  * Alte Cookies im Pre-4.5-Format werden jetzt explizit erkannt und gelöscht
+  * JSON-Validierung vor dem Parsen verhindert Fehler bei alten Cookie-Formaten
+  * Explizites Löschen aller Cookie-Varianten (mit/ohne Domain-Prefix) vor neuem Setzen
+  * Betrifft hauptsächlich Chrome-basierte Browser die alte Cookies cachen
+  * User müssen nach Update einmalig neu zustimmen (DSGVO-konform)
+
+### 🔧 Technische Änderungen
+
+* **Robuste Cookie-Verwaltung**: Try-Catch um JSON.parse() mit Fallback auf Cookie-Löschung
+* **Multi-Domain Cookie-Cleanup**: Bereinigt Cookies über verschiedene Domain-Varianten hinweg
+* **Debug-Logging**: Erweiterte Logs für Cookie-Format-Probleme
+
+---
+
 ## Version 4.5.0 - 14.10.2025
 
 ### 🚀 Neue Features
