@@ -3,7 +3,7 @@
         'name' => 'friendsofredaxo/consent_manager-addon-e2e-lint',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '8685c48f00f59547eaea7d429a2716f540b8dac2',
+        'reference' => '9bef63d3a4f79de2eed720817d9317e807675363',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -76,7 +76,7 @@
         'friendsofredaxo/consent_manager-addon-e2e-lint' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '8685c48f00f59547eaea7d429a2716f540b8dac2',
+            'reference' => '9bef63d3a4f79de2eed720817d9317e807675363',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
