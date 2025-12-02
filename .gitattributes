@@ -25,8 +25,7 @@ phpunit.xml export-ignore
 .github/workflows/ export-ignore
 assets/tests/** export-ignore
 .gitignore export-ignore
-vendor/*/tests/ export-ignore
-vendor/*/test/ export-ignore
+vendor/* export-ignore
 .php-cs-fixer.cache export-ignore
 composer.phar export-ignore
 
