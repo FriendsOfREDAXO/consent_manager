@@ -1375,33 +1375,6 @@ MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manag
 
 ---
 
-## 📦 Repository & Release‑Packaging (Wichtig)
-
-Wir haben die Repo‑Packaging Regeln aktualisiert, damit Entwickler‑/Test‑Artefakte nicht versehentlich in AddOn Release‑ZIPs landen.
-
-- composer.phar wurde aus dem Repository entfernt. Bitte committe keine lokalen composer.phar binaries in dieses Repo.
-- `.gitattributes` enthält jetzt mehrere export-ignore Regeln (z. B. `node_modules/`, `assets/tests/`, `tests/`, `vendor/*/tests/`, `.php-cs-fixer.*`, `composer.phar`), sodass `git archive` / GitHub‑Source‑Zips diese Dateien nicht enthalten.
-- `package.yml` wurde erweitert (installer_ignore) — das REDAXO AddOn Packager/Installer ignoriert ebenfalls dev‑Artefakte beim Erstellen der AddOn‑ZIPs.
-
-CI‑Schutz:
-- Es gibt einen neuen Workflow `.github/workflows/packaging-verify.yml`, der bei PRs/Pushes prüft, dass generierte Git‑Archive keine verbotenen Dev‑Artefakte enthalten. Falls du lokale Tests/Debugging‑Binaries verwendest (z. B. composer.phar), halte diese bitte lokal und füge sie nicht zum Repo hinzu.
-
-Wie du lokal ein Release‑ZIP prüfst:
-
-```bash
-# Erzeugt ein ZIP vom aktuellen HEAD (simuliert das Release‑Archiv)
-git archive --format=zip --output=/tmp/consent_manager_release_test.zip HEAD
-
-# Auflisten und prüfen ob verbotene Dateien auftauchen
-unzip -l /tmp/consent_manager_release_test.zip | egrep "composer.phar|node_modules|assets/tests|tests/|phpunit|php-cs-fixer" || true
-```
-
-Wenn dabei `composer.phar` oder andere dev‑Artefakte angezeigt werden, bitte prüfen, ob sie versehentlich ins Repo gelangen — entferne sie und wiederhole die Prüfung.
-
-Tip: Wenn du Composer auf CI brauchst, nutze den offiziellen Installer (https://getcomposer.org) oder den System‑Composer; die Repo‑Konvention vermeidet das Einchecken der Binary in das Projekt.
-
----
-
 ## 🆘 Support und Community
 
 **Issue melden:** [GitHub Issues](https://github.com/FriendsOfREDAXO/consent_manager/issues)
