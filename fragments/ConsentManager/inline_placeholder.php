@@ -34,12 +34,19 @@ if (rex::isDebugMode()) {
     echo "<!-- DEBUG Fragment Variables: -->\n";
     echo "<!-- inline_privacy_notice: $inline_privacy_notice -->\n";
     echo '<!-- options[privacy_notice]: ' . ($options['privacy_notice'] ?? 'NOT SET') . " -->\n";
-    echo '<!-- Final value: ' . ($options['privacy_notice'] ?? $inline_privacy_notice) . " -->\n";
+    echo '<!-- service[placeholder_text]: ' . ($service['placeholder_text'] ?? 'NOT SET') . " -->\n";
+    echo '<!-- Final value: ' . ($options['privacy_notice'] ?? $service['placeholder_text'] ?? $inline_privacy_notice) . " -->\n";
 }
 
 $thumbnailHtml = '';
-if (isset($placeholderData['thumbnail']) && '' !== $placeholderData['thumbnail']) {
-    $thumbnailHtml = '<img src="' . rex_escape($placeholderData['thumbnail']) . '" 
+// Priorität: placeholderData['thumbnail'] > service['placeholder_image'] > leer
+$thumbnailSrc = $placeholderData['thumbnail'] ?? '';
+if ('' === $thumbnailSrc && isset($service['placeholder_image']) && '' !== $service['placeholder_image']) {
+    // Bild aus Mediapool verwenden
+    $thumbnailSrc = rex_url::media($service['placeholder_image']);
+}
+if ('' !== $thumbnailSrc) {
+    $thumbnailHtml = '<img src="' . rex_escape($thumbnailSrc) . '" 
                            alt="' . rex_escape($options['title'] ?? 'Video') . '" 
                            class="consent-inline-thumbnail" 
                            loading="lazy" />';
@@ -70,8 +77,8 @@ if (str_starts_with($iconClass, 'uk-icon:')) {
 }
 ?>
                     </div>
-                    <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $inline_title_fallback) ?></h4>
-                    <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? $inline_privacy_notice) ?></p>
+                    <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $service['service_name'] ?? $inline_title_fallback) ?></h4>
+                    <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? (isset($service['placeholder_text']) && '' !== $service['placeholder_text'] ? $service['placeholder_text'] : $inline_privacy_notice)) ?></p>
                     <p class="consent-inline-action-text"><?= rex_escape($inline_action_text) ?></p>
                     
                     <?php if (isset($service['provider_link_privacy']) && '' !== $service['provider_link_privacy']): ?>

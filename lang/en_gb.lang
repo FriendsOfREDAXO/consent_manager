@@ -47,7 +47,9 @@ consent_manager_cookie_provider = Provider
 consent_manager_cookie_provider_link_privacy = Privacy policy link
 consent_manager_cookie_definition = Definitions (YAML)
 consent_manager_cookie_placeholder_text = Placeholder text
+consent_manager_cookie_placeholder_text_notice = Inline consent only: Notice text displayed in the placeholder (e.g. "Cookies are required to display this video."). Leave empty for global default text.
 consent_manager_cookie_placeholder_image = Placeholder image
+consent_manager_cookie_placeholder_image_notice = Inline consent only: Preview image from media pool displayed in the placeholder. YouTube/Vimeo thumbnails are generated automatically.
 consent_manager_cookie_malformed_yaml = Definitions (YAML) are invalid! Please enter correct YAML code.
 
 consent_manager_cookiegroups = Groups

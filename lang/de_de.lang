@@ -47,7 +47,9 @@ consent_manager_cookie_provider = Anbieter
 consent_manager_cookie_provider_link_privacy = Link Datenschutzerklärung
 consent_manager_cookie_definition = Definitionen (YAML)
 consent_manager_cookie_placeholder_text = Platzhalter Text
+consent_manager_cookie_placeholder_text_notice = Nur für Inline-Consent: Hinweistext, der im Platzhalter angezeigt wird (z.B. "Für die Anzeige dieses Videos werden Cookies verwendet."). Leer lassen für globalen Standardtext.
 consent_manager_cookie_placeholder_image = Platzhalter Bild
+consent_manager_cookie_placeholder_image_notice = Nur für Inline-Consent: Vorschaubild aus dem Mediapool, das im Platzhalter angezeigt wird. Bei YouTube/Vimeo wird automatisch ein Thumbnail generiert.
 consent_manager_cookie_malformed_yaml = Definitionen (YAML) sind ungültig! Bitte korrekten YAML-Code eingeben.
 
 consent_manager_cookiegroups = Gruppen

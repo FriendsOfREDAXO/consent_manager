@@ -225,6 +225,32 @@ if (class_exists(InlineConsent::class)) {
 
 ---
 
+## 🔧 Backend-Konfiguration: Platzhalter pro Service
+
+Im Backend unter **Consent Manager → Cookies** können für jeden Service individuelle Platzhalter-Einstellungen vorgenommen werden:
+
+### Platzhalter Text
+
+Das Feld **"Platzhalter Text"** definiert den Hinweistext, der im Inline-Platzhalter angezeigt wird (z.B. "Für die Anzeige dieses YouTube-Videos werden Cookies verwendet.").
+
+**Priorität der Textquellen:**
+1. `$options['privacy_notice']` - Explizit beim `doConsent()`-Aufruf übergeben
+2. **Platzhalter Text aus Cookie-Eintrag** - Im Backend beim Service hinterlegt
+3. Globaler Fallback aus **Texte-Verwaltung** (`inline_privacy_notice`)
+
+### Platzhalter Bild
+
+Das Feld **"Platzhalter Bild"** ermöglicht die Auswahl eines Bildes aus dem Mediapool, das als Vorschaubild im Platzhalter angezeigt wird.
+
+**Priorität der Bildquellen:**
+1. Automatisch generiertes Thumbnail (YouTube, Vimeo)
+2. `$options['thumbnail']` - Explizit beim Aufruf übergeben
+3. **Platzhalter Bild aus Cookie-Eintrag** - Im Backend beim Service hinterlegt
+
+**Beispiel:** Für einen Custom-Service ohne automatisches Thumbnail kann im Backend ein eigenes Vorschaubild aus dem Mediapool gewählt werden.
+
+---
+
 ## 📄 Beispiel-Output
 
 Der Inline-Consent generiert ansprechende Platzhalter:

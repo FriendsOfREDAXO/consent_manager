@@ -2,9 +2,10 @@
 
 ## Version 5.0.2 - 09.12.2025
 
-### 🐛 Bugfix
+### 🐛 Bugfixes
 
 * **InlineConsent Platzhalter repariert:** Die Methode `Utility::has_consent()` verwendete noch den alten Cookie-Namen `consent_manager` statt des neuen `consentmanager`. Dadurch funktionierte die serverseitige Consent-Prüfung für Inline-Platzhalter nicht korrekt.
+* **Service-spezifische Platzhalter-Texte:** Die Felder `placeholder_text` und `placeholder_image` aus dem Cookie/Service-Eintrag werden jetzt im Inline-Consent-Fragment korrekt verwendet. Priorität: 1. Explizit übergebene Options, 2. Service-Daten aus DB, 3. Globaler Fallback aus Texte-Tabelle.
 
 ## Version 5.0.1 - 09.12.2025
 

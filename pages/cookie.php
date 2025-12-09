@@ -94,8 +94,10 @@ if ('delete' === $func) {
 
     $field = $form->addTextAreaField('placeholder_text');
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_placeholder_text'));
+    $field->setNotice(rex_i18n::msg('consent_manager_cookie_placeholder_text_notice'));
     $field = $form->addMediaField('placeholder_image');
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_placeholder_image'));
+    $field->setNotice(rex_i18n::msg('consent_manager_cookie_placeholder_image_notice'));
 
     $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_cookie_edit') : rex_i18n::msg('consent_manager_cookie_add');
     $content = $form->get();

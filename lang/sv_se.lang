@@ -47,7 +47,9 @@ consent_manager_cookie_provider = Leverantör
 consent_manager_cookie_provider_link_privacy = Länk till integritetspolicy
 consent_manager_cookie_definition = Definitioner (YAML)
 consent_manager_cookie_placeholder_text = Platshållartext
+consent_manager_cookie_placeholder_text_notice = Endast för inline-samtycke: Informationstext som visas i platshållaren (t.ex. "Cookies krävs för att visa denna video."). Lämna tomt för global standardtext.
 consent_manager_cookie_placeholder_image = Platshållarbild
+consent_manager_cookie_placeholder_image_notice = Endast för inline-samtycke: Förhandsvisningsbild från mediapoolen som visas i platshållaren. YouTube/Vimeo-miniatyrer genereras automatiskt.
 consent_manager_cookie_malformed_yaml = Definitioner (YAML) är ogiltiga! Vänligen ange korrekt YAML-kod.
 
 consent_manager_cookiegroups = Grupper
