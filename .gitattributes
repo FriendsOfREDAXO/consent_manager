@@ -25,7 +25,13 @@ phpunit.xml export-ignore
 .github/workflows/ export-ignore
 assets/tests/** export-ignore
 .gitignore export-ignore
-vendor/* export-ignore
+vendor/ export-ignore
 .php-cs-fixer.cache export-ignore
 composer.phar export-ignore
+composer.json export-ignore
+composer.lock export-ignore
+package.json export-ignore
+package-lock.json export-ignore
+playwright.config.js export-ignore
+test-results/ export-ignore
 

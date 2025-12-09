@@ -77,9 +77,14 @@ installer_ignore:
     - .php_cs.cache
     - .php-cs-fixer.cache
     - composer.phar
+    - composer.json
+    - composer.lock
+    - package.json
+    - package-lock.json
+    - playwright.config.js
+    - test-results
+    - vendor
     - .github/workflows
-    - vendor/*/tests
-    - vendor/*/test
 
 console_commands:
     consent_manager:log-delete: FriendsOfRedaxo\ConsentManager\Command\LogDelete

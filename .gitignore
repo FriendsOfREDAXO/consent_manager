@@ -24,3 +24,19 @@ assets/*.css.map
 
 # local composer binary (don't add composer.phar to the repo)
 composer.phar
+
+# Composer vendor directory - only for local dev / CI, never commit!
+vendor/
+
+# Composer lock file - regenerated in CI
+composer.lock
+
+# npm/node artifacts - only for local dev / CI
+node_modules/
+package-lock.json
+
+# Test results
+test-results/
+
+# PHP CS Fixer cache
+.php-cs-fixer.cache
