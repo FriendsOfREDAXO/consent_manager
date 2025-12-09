@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.0.3 - 09.12.2025
+
+### 🐛 Bugfix
+
+* **Consent-Log repariert:** Die API-Klasse `ConsentManager` und das Fragment `cookiedb.php` verwendeten noch den alten Cookie-Namen `consent_manager` statt des neuen `consentmanager`. Dadurch wurden Consents nicht mehr in die Datenbank-Tabelle `rex_consent_manager_consent_log` geschrieben und die Consent-Historie wurde nicht angezeigt.
+
 ## Version 5.0.2 - 09.12.2025
 
 ### 🐛 Bugfixes

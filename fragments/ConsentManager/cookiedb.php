@@ -22,10 +22,10 @@ $output = '';
 if (0 !== count($consent_manager->cookiegroups)) { /** phpstan-ignore-line */
     // Cookie Consent + History
     $cookiedata = [];
-    if (is_string(rex_request::cookie('consent_manager'))) {
-        $cookiedata = (array) json_decode(rex_request::cookie('consent_manager'), true);
+    if (is_string(rex_request::cookie('consentmanager'))) {
+        $cookiedata = (array) json_decode(rex_request::cookie('consentmanager'), true);
     }
-    $consent_manager_cookie = null !== rex_request::cookie('consent_manager') ? $cookiedata : null;
+    $consent_manager_cookie = null !== rex_request::cookie('consentmanager') ? $cookiedata : null;
     if (null !== $consent_manager_cookie && isset($consent_manager_cookie['cachelogid'])) {
         $db = rex_sql::factory();
         $db->setDebug(false);
