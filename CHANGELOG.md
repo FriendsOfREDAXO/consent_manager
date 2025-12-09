@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.0.4 - 09.12.2025
+
+### ♿ Barrierefreiheit / UX
+
+* **Fokus auf Dialog statt Button:** Der initiale Fokus beim Öffnen des Consent-Dialogs liegt jetzt auf dem Dialog-Wrapper statt auf dem ersten Button. Dies verhindert, dass Nutzer unbewusst auf "Alle ablehnen" fokussiert werden und entspricht den WCAG 2.1 Richtlinien für modale Dialoge. Nutzer können weiterhin per Tab zu allen interaktiven Elementen navigieren.
+
 ## Version 5.0.3 - 09.12.2025
 
 ### 🐛 Bugfix

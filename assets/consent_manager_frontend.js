@@ -557,21 +557,14 @@ function debugLog(message, data) {
             toggleBtn.setAttribute('aria-expanded', 'false');
         }
         
-        // Focus first interactive element (button) for better accessibility
-        var focusableButtons = consent_managerBox.querySelectorAll('button.consent_manager-save-selection, button.consent_manager-accept-all, button.consent_manager-accept-none');
-        var firstButton = focusableButtons[0];
-        
-        // Fallback to checkboxes if no buttons found
-        if (!firstButton) {
-            var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');
-            firstButton = focusableEls[0];
-        }
-        
-        // Set focus to first interactive element
-        if (firstButton) {
+        // Focus the dialog wrapper for better accessibility (WCAG 2.1)
+        // This allows screen readers to announce the dialog and users can tab to interactive elements
+        // Focusing a button directly would bias user choice and is not recommended
+        var dialogWrapper = document.getElementById('consent_manager-wrapper');
+        if (dialogWrapper) {
             // Use setTimeout to ensure DOM is ready
             setTimeout(function() {
-                firstButton.focus();
+                dialogWrapper.focus();
             }, 100);
         }
         
@@ -748,20 +741,13 @@ function consent_manager_showBox() {
     document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
     document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'false');
     
-    // Focus first interactive element (button) for better accessibility
-    var focusableButtons = consent_managerBox.querySelectorAll('button.consent_manager-save-selection, button.consent_manager-accept-all, button.consent_manager-accept-none');
-    var firstButton = focusableButtons[0];
-    
-    // Fallback to checkboxes if no buttons found
-    if (!firstButton) {
-        var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');
-        firstButton = focusableEls[0];
-    }
-    
-    // Set focus to first interactive element
-    if (firstButton) {
+    // Focus the dialog wrapper for better accessibility (WCAG 2.1)
+    // This allows screen readers to announce the dialog and users can tab to interactive elements
+    // Focusing a button directly would bias user choice and is not recommended
+    var dialogWrapper = document.getElementById('consent_manager-wrapper');
+    if (dialogWrapper) {
         setTimeout(function() {
-            firstButton.focus();
+            dialogWrapper.focus();
         }, 100);
     }
 }
