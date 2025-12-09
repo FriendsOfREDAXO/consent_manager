@@ -5,6 +5,7 @@
 ### 🔒 Breaking Changes
 
 * **Cookie-Name geändert:** Der Consent-Cookie heißt jetzt `consentmanager` statt `consent_manager` (ohne Unterstrich). Dies behebt Kompatibilitätsprobleme nach Updates und erzwingt eine Neubestätigung bei Benutzern, was DSGVO-konform bei größeren Änderungen empfohlen ist.
+* **Legacy iwcc-Migration entfernt:** Der Migrations-Code für das alte `iwcc`-Addon wurde entfernt. Wer noch vom uralten `iwcc`-Addon migrieren muss, sollte erst auf Version 4.x updaten.
 
 ### 🚀 Neue Features & Verbesserungen
 

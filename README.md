@@ -7,37 +7,7 @@
 Das AddOn stellt eine DSGVO-konforme Lösung für die Einholung von Einverständniserklärungen zu Cookies und externen Diensten bereit. Website-Besucher erhalten eine Consent-Box, in der einzelne Dienste-Gruppen akzeptiert oder abgelehnt werden können. Technisch notwendige Dienste bleiben dabei immer aktiv.
 
 **Kernfunktionen:**
-- Datenschutz-Opt-In-Banner für Dien## 🔍 Debug-Modus
-
-## 🔍 Debug-Modus
-
-**Consent-Debug-Panel:** Seit Version 4.4.0 verfügbar für Entwickler und Troubleshooting.
-
-**Aktivierung:**
-- **Domain-Konfiguration**: Debug-Modus in Domain-Einstellungen aktivieren
-- **Backend-Login erforderlich**: Nur für angemeldete Administrator sichtbar
-
-**Features:**
-- Live-Anzeige aller Cookie-Stati
-- Google Consent Mode Integration
-- LocalStorage-Übersicht
-- Service-Status-Monitor
-- Menü-Indikator mit <i class="fa fa-bug"></i> Symbol bei aktivem Debug-Modusg-Panel:** Seit Version 4.4.0 verfügbar für Entwickler und Troubleshooting.
-
-**Aktivierung:**
-- **Domain-Konfiguration**: In **Domains** → Debug-Modus auf "Aktiviert" setzen
-- **Backend-Login erforderlich**: Debug-Panel nur für angemeldete Backend-Benutzer sichtbar
-
-**Features:**
-- **🎯 Google Consent Mode v2 Status**: Zeigt aktiven Modus (Deaktiviert ❌ / Automatisch 🔄 / Manuell ⚙️)
-- **Live-Anzeige aller Consent-Stati**: analytics_storage, ad_storage, ad_user_data, etc.
-- **Service-Status-Monitor**: Welche Services sind aktiv und welchen Consent-Gruppen zugeordnet
-- **Cookie-Analyse**: Strukturierte Darstellung aller Cookies mit JSON-Parsing
-- **LocalStorage-Übersicht**: Einblick in alle gespeicherten Consent-Daten
-- **Echtzeit-Updates**: Status ändert sich live bei Consent-Änderungen
-- **Menü-Indikator**: <i class="fa fa-bug"></i> Symbol im Backend-Menü bei aktivem Debug-Modus
-
-**Sicherheit:** Debug-Panel ist aus Sicherheitsgründen nicht für normale Website-Besucher verfügbar.s
+- Datenschutz-Opt-In-Banner für Dienste und Cookies
 - Flexible Gruppierung von Diensten
 - Nachträgliche Änderung der Einstellungen möglich
 - Vollständig anpassbare Texte und Designs

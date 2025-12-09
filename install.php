@@ -6,26 +6,6 @@ $addon = rex_addon::get('consent_manager');
 
 $justinstalled = true;
 
-if (rex_sql_table::get(rex::getTable('iwcc_cookie'))->exists() && !rex_sql_table::get(rex::getTable('consent_manager_cookie'))->exists()) {
-    rex_sql_table::get(rex::getTable('iwcc_cookie'))->setName(rex::getTable('consent_manager_cookie'))->alter();
-    $justinstalled = false;
-}
-if (rex_sql_table::get(rex::getTable('iwcc_cookiegroup'))->exists() && !rex_sql_table::get(rex::getTable('consent_manager_cookiegroup'))->exists()) {
-    rex_sql_table::get(rex::getTable('iwcc_cookiegroup'))->setName(rex::getTable('consent_manager_cookiegroup'))->alter();
-}
-if (rex_sql_table::get(rex::getTable('iwcc_text'))->exists() && !rex_sql_table::get(rex::getTable('consent_manager_text'))->exists()) {
-    rex_sql_table::get(rex::getTable('iwcc_text'))->setName(rex::getTable('consent_manager_text'))->alter();
-}
-if (rex_sql_table::get(rex::getTable('iwcc_domain'))->exists() && !rex_sql_table::get(rex::getTable('consent_manager_domain'))->exists()) {
-    rex_sql_table::get(rex::getTable('iwcc_domain'))->setName(rex::getTable('consent_manager_domain'))->alter();
-}
-if (rex_sql_table::get(rex::getTable('iwcc_cache_log'))->exists() && !rex_sql_table::get(rex::getTable('consent_manager_cache_log'))->exists()) {
-    rex_sql_table::get(rex::getTable('iwcc_cache_log'))->setName(rex::getTable('consent_manager_cache_log'))->alter();
-}
-if (rex_sql_table::get(rex::getTable('iwcc_consent_log'))->exists() && !rex_sql_table::get(rex::getTable('consent_manager_consent_log'))->exists()) {
-    rex_sql_table::get(rex::getTable('iwcc_consent_log'))->setName(rex::getTable('consent_manager_consent_log'))->alter();
-}
-
 rex_sql_table::get(rex::getTable('consent_manager_cookie'))
     ->ensureColumn(new rex_sql_column('pid', 'int(10) unsigned', false, null, 'AUTO_INCREMENT'))
     ->ensureColumn(new rex_sql_column('id', 'int(10) unsigned'))
