@@ -1,3 +1,0 @@
-<?php
-
-invalid invalid

@@ -1,3 +1,0 @@
-SELECT  COUNT(*) AS amount
-FROM    one i
-JOIN    two io ON io.id = i.id

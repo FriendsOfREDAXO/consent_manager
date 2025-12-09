@@ -1,4 +1,0 @@
-SELECT ?
-FROM uno
-JOIN dos  ON dos.id = uno.id
-LIMIT ? OFFSET ?
