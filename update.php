@@ -1,5 +1,10 @@
 <?php
 
+// Cache-Klasse wird ggf. direkt eingebunden, da beim Install/Update der Autoloader nicht aktiv ist
+if (!class_exists('FriendsOfRedaxo\ConsentManager\Cache')) {
+    require_once __DIR__ . '/lib/Cache.php';
+}
+
 use FriendsOfRedaxo\ConsentManager\Cache;
 
 $addon = rex_addon::get('consent_manager');

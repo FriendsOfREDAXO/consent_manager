@@ -1,6 +1,9 @@
 <?php
 
-use FriendsOfRedaxo\ConsentManager\Cache;
+// Cache-Klasse wird ggf. direkt eingebunden, da beim Install/Update der Autoloader nicht aktiv ist
+if (!class_exists('FriendsOfRedaxo\ConsentManager\Cache')) {
+    require_once __DIR__ . '/lib/Cache.php';
+}
 
 $addon = rex_addon::get('consent_manager');
 
@@ -218,14 +221,8 @@ if (rex_addon::get('cronjob')->isAvailable()) {
 }
 
 // Rewrite
-// Beim Update kann es sein, dass die neue Klasse noch nicht geladen werden kann.
-if (class_exists(Cache::class)) {
-    Cache::forceWrite();
-} elseif (class_exists('consent_manager_cache')) {
-    // Legacy compatibility - use legacy Cache class
-    /** @phpstan-ignore-next-line */
-    consent_manager_cache::forceWrite();
-}
+// Cache-Klasse wurde oben bereits eingebunden
+FriendsOfRedaxo\ConsentManager\Cache::forceWrite();
 
 // Delete Template cache
 rex_dir::delete(rex_path::cache('addons/templates'));
