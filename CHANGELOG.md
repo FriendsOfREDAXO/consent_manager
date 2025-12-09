@@ -1,5 +1,17 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.0.2 - 09.12.2025
+
+### 🐛 Bugfix
+
+* **InlineConsent Platzhalter repariert:** Die Methode `Utility::has_consent()` verwendete noch den alten Cookie-Namen `consent_manager` statt des neuen `consentmanager`. Dadurch funktionierte die serverseitige Consent-Prüfung für Inline-Platzhalter nicht korrekt.
+
+## Version 5.0.1 - 09.12.2025
+
+### 🐛 Bugfix
+
+* **Installer-Update repariert:** Die Cache-Klasse wird jetzt beim Update explizit geladen, da der Autoloader zu diesem Zeitpunkt noch nicht aktiv ist.
+
 ## Version 5.0.0 - 09.12.2025
 
 ### 🔒 Breaking Changes

@@ -21,8 +21,8 @@ class Utility
      */
     public static function has_consent(string $cookieUid): bool
     {
-        if (null !== rex_request::cookie('consent_manager') && is_string(rex_request::cookie('consent_manager'))) {
-            $cookieData = (array) json_decode(rex_request::cookie('consent_manager'), true);
+        if (null !== rex_request::cookie('consentmanager') && is_string(rex_request::cookie('consentmanager'))) {
+            $cookieData = (array) json_decode(rex_request::cookie('consentmanager'), true);
             if (isset($cookieData['consents']) && is_array($cookieData['consents']) && 0 !== count($cookieData['consents'])) {
                 foreach ($cookieData['consents'] as $consent) {
                     if ($cookieUid === $consent) {
