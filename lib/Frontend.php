@@ -149,13 +149,8 @@ class Frontend
         }
 
         $this->domainInfo = $domainData;
-        /**
-         * TODO: was soll der Default ''? Wo immer auf die Werte zurückgegriffen wird finden ein typecast auf (int) statt.
-         * Dann müsste hier 0 gesetzt werden oder meinetwegen -1.
-         * Erwartet wird doch wohl entweder eine Datensatz-ID oder eine Artikel-ID, oder?
-         */
-        $this->links['privacy_policy'] = $domainData['privacy_policy'] ?? '';
-        $this->links['legal_notice'] = $domainData['legal_notice'] ?? '';
+        $this->links['privacy_policy'] = $domainData['privacy_policy'] ?? 0;
+        $this->links['legal_notice'] = $domainData['legal_notice'] ?? 0;
 
         $article = rex_article::getCurrentId();
         $clang = rex_request::request('lang', 'integer', 0);
@@ -207,11 +202,8 @@ class Frontend
 
     /**
      * @api
-     *
-     * TODO: warum ist $article_id kein INT-Wert sondern STRING?
-     * TODO: warum die Parameter wenn sie in der Funktion nicht benötigt werden?
      */
-    public function outputJavascript(string $host = null, string $article_id = null): never
+    public function outputJavascript(): never
     {
         $addon = rex_addon::get('consent_manager');
 

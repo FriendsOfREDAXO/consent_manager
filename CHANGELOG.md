@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.1.0 - xx.yy.2025
+## Version 5.0.0 - 09.12.2025
 
 ### 🔒 Breaking Changes
 
@@ -13,17 +13,6 @@
 * **Verbesserte Fehlerbehandlung:** Detaillierte CSP/CORS-Fehlermeldungen mit Lösungshinweisen
 * **URL Encoding:** Parameter werden jetzt korrekt URL-encoded für bessere Sicherheit
 * **Code-Optimierungen:** Redundanter Code entfernt, Performance-Verbesserungen (68 Zeilen weniger)
-
-### 🐛 Bug Fixes
-
-* **Doppelte Funktionsdefinition:** `consent_manager_showBox()` war zweimal definiert
-* **Cookie-Name Konsistenz:** Alte minifizierte JS-Datei enthielt veralteten Cookie-Namen
-* **DOM-Zugriffe optimiert:** `getAttribute('data-uid')` wird jetzt gecached statt mehrfach aufgerufen
-
-## Version 5.0.0 - xx.yy.2025
-
-### 🚀 Neue Features
-
 * **Command log-delete:** aktiviert und verfügbar (in package.yml registriert)
 * **Cronjob ThumbnailCleanup:** ab dieser Version aktiviert und verfügbar.
 
@@ -107,12 +96,18 @@
 * Fehler bei fehlenden Domains verhindert
 * Fehlerbehandlung bei unvollständiger Domain-Konfiguration verbessert
 
-* **Cookie-Migration / Fix:** Vor dem Setzen eines neuen `consentmanager`-Cookies werden jetzt alte oder fehlerhafte `consent_manager*`-Cookies gelöscht. Das verhindert Fälle, in denen das Consent-Dialogfenster wiederholt geöffnet wird (Issue #424). **Hinweis:** Ab Version 5.1 wurde der Cookie-Name von `consent_manager` auf `consentmanager` geändert.
+* **Cookie-Migration / Fix:** Vor dem Setzen eines neuen `consentmanager`-Cookies werden jetzt alte oder fehlerhafte `consent_manager*`-Cookies gelöscht. Das verhindert Fälle, in denen das Consent-Dialogfenster wiederholt geöffnet wird (Issue #424). **Hinweis:** Ab Version 5.0 wurde der Cookie-Name von `consent_manager` auf `consentmanager` geändert.
+
+
+### 🐛 Bug Fixes
+
+* **Doppelte Funktionsdefinition:** `consent_manager_showBox()` war zweimal definiert
+* **Cookie-Name Konsistenz:** Alte minifizierte JS-Datei enthielt veralteten Cookie-Namen
+* **DOM-Zugriffe optimiert:** `getAttribute('data-uid')` wird jetzt gecached statt mehrfach aufgerufen
 
 
 ### 📁 Neue Dateien
 
-* `Namespace-Guide.md`: Hinweise zur Umstellung eigenen Codes auf Namespace-Klassen
 * `lib/deprecated`: Verzeichnis mit Hilfsklassen (alter Klassenname) für die reibungslose Umstellung auf Namespace-Klassen
 * `fragments/ConsentManager`: neues Verzeichnis für die Fragmente; Fragmemt-Namen verkürzt (kein `consent_manager_` als Prefix)
 

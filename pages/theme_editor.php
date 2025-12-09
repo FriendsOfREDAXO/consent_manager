@@ -8,8 +8,6 @@
 use FriendsOfRedaxo\ConsentManager\Theme;
 
 // Check if project addon is available and installed
-// TODO: Prüfen ob das weg kann.
-// Weiter unten wird nochmal abgefragt, on Project installiert ist.
 if (!rex_addon::get('project')->isAvailable()) {
     echo rex_view::error(rex_i18n::msg('consent_manager_theme_editor_project_addon_required'));
     return;
