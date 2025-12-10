@@ -1379,6 +1379,11 @@ Alle Bilder von [Unsplash](https://unsplash.com) - kostenlos nutzbar:
 - [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) - Abstrakte Farbwolken
 - [Milad Fakurian](https://unsplash.com/@fakurian) - Weiche Farbübergänge
 - [Steve Johnson](https://unsplash.com/@steve_j) - Abstrakte Texturen
+- [Harley-Davidson](https://unsplash.com/@harleydavidson) - Motorrad
+- [Robert Katzki](https://unsplash.com/@ro_ka) - Wasser/Himmel
+- [Ricardo Gomez Angel](https://unsplash.com/@rgaleriacom) - Berge und Häuser
+- [Shapelined](https://unsplash.com/@shapelined) - Schwarz-weiß Architektur
+- [Willian West](https://unsplash.com/@willianwest) - Blaue Berge
 
 ---
 
