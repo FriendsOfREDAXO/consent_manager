@@ -31,13 +31,19 @@ class ConsentManager extends rex_api_function
         }
         
         // Security: Validate domain format (basic hostname validation)
-        // Only allow valid hostname characters
+        // Only allow valid hostname characters and limit length (DNS max = 255)
+        if (strlen($domain) > 255) {
+            exit;
+        }
         if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$/', $domain) && !preg_match('/^[a-zA-Z0-9]$/', $domain)) {
             exit;
         }
         
         // Security: Validate consentid format (uniqid generates alphanumeric with dots)
-        // consentid format: uniqid('', true) produces something like "5f3a3e1b2c3d4.12345678"
+        // consentid format: uniqid('', true) produces something like "5f3a3e1b2c3d4.12345678" (max 30 chars)
+        if (strlen($consentid) > 30) {
+            exit;
+        }
         if (!preg_match('/^[a-f0-9.]+$/i', $consentid)) {
             exit;
         }
@@ -48,11 +54,14 @@ class ConsentManager extends rex_api_function
             exit;
         }
         
-        // Security: Validate cachelogid - must be numeric or valid format
+        // Security: Validate cachelogid - must be numeric or valid format (max 50 chars)
         if (!isset($consent_manager['cachelogid']) || !is_scalar($consent_manager['cachelogid'])) {
             exit;
         }
         $cachelogid = (string) $consent_manager['cachelogid'];
+        if (strlen($cachelogid) > 50) {
+            exit;
+        }
         // cachelogid should only contain alphanumeric characters, dots and hyphens
         if (!preg_match('/^[a-zA-Z0-9._-]+$/', $cachelogid)) {
             exit;
@@ -61,7 +70,8 @@ class ConsentManager extends rex_api_function
         $validatedConsents = [];
         foreach ($consent_manager['consents'] as $consent) {
             // Only allow alphanumeric characters, hyphens and underscores (valid UIDs)
-            if (is_string($consent) && preg_match('/^[a-zA-Z0-9_-]+$/', $consent)) {
+            // Max 50 chars per UID to prevent oversized payloads
+            if (is_string($consent) && strlen($consent) <= 50 && preg_match('/^[a-zA-Z0-9_-]+$/', $consent)) {
                 $validatedConsents[] = $consent;
             }
             // Invalid consent values are silently dropped
