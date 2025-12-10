@@ -14,10 +14,13 @@ $addon->setConfig('forceCache', true);
 // Copy scripts to every language
 if (count(rex_clang::getAllIds()) > 1) {
     $sql = rex_sql::factory();
-    $sql->setQuery('SELECT `start_lang`.uid, `start_lang`.script FROM `' . rex::getTablePrefix() . 'consent_manager_cookie` AS `start_lang` '
+    $sql->setQuery(
+        'SELECT `start_lang`.uid, `start_lang`.script FROM `' . rex::getTablePrefix() . 'consent_manager_cookie` AS `start_lang` '
         . 'LEFT JOIN `' . rex::getTablePrefix() . 'consent_manager_cookie` AS `other_lang` ON `start_lang`.uid = `other_lang`.uid '
-        . 'WHERE `start_lang`.clang_id = ' . rex_clang::getStartId() . " AND `start_lang`.script <> '' AND `other_lang`.script = '' "
-        . 'GROUP BY uid, script');
+        . 'WHERE `start_lang`.clang_id = ? AND `start_lang`.script <> ? AND `other_lang`.script = ? '
+        . 'GROUP BY uid, script',
+        [rex_clang::getStartId(), '', '']
+    );
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $db = rex_sql::factory();
         $db->setTable(rex::getTable('consent_manager_cookie'));
