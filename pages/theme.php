@@ -215,196 +215,221 @@ if ('1' === rex_request::post('formsubmit', 'string') && !$csrfToken->isValid())
 
 // dump($_POST);
 // dump($addon->getConfig('theme', false));
-// Ausgabe der Themes
 
-$themes = (array) glob($addon->getPath('scss/consent_manager_frontend*.scss'));
-natsort($themes);
-if (count($themes) > 0) {
-    echo '<h2>' . rex_i18n::msg('consent_manager_themes_addon') . '</h2>';
-    echo '<p>' . rex_i18n::msg('consent_manager_themes_addon_info') . '</p>';
-    $cmtheme = new Theme();
-    foreach ($themes as $themefile) {
-        $output = '';
-        $content = '';
-        $class = '';
-        $titleactive = '';
-
-        $themeid = basename((string) $themefile);
-        $theme_options = $cmtheme->getThemeInformation($themeid);
-
-        if (count($theme_options) > 0) {
-            $authorlinks = [];
-            $authors = explode(',', $theme_options['autor']);
-            foreach ($authors as $author) {
-                $url = 'https://github.com/' . str_replace('@', '', trim($author));
-                $authorlinks[] = '<a href="' . $url . '" target="_blank">' . $author . '</a>';
-            }
-
-            $formElements = [];
-
-            $n = [];
-            $n['field'] = '';
-
-            $n['field'] .= '<p class="theme_description">';
-            $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_name') . '</span> ' . $theme_options['name'] . '<br>';
-            $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_description') . '</span> ' . $theme_options['description'] . '<br>';
-            $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_type') . '</span> ' . $theme_options['type'] . '<br>';
-            $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_style') . '</span> ' . $theme_options['style'] . '<br>';
-            $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_scssfile') . '</span> ' . $themeid . '<br>';
-            $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_autor') . '</span> ' . implode(', ', $authorlinks) . '<br>';
-            $n['field'] .= '</p>';
-
-            $n['field'] .= '<div class="thumbnail-container" title="' . $theme_options['name'] . '" data-theme="' . $themeid . '">';
-            $n['field'] .= '  <div class="thumbnail">';
-            $n['field'] .= '   <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview=' . $themeid . '&nofocus" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
-            $n['field'] .= '  </div>';
-            $n['field'] .= '</div>';
-
-            $formElements[] = $n;
-
-            $fragment = new rex_fragment();
-            $fragment->setVar('elements', $formElements, false);
-            $content = $fragment->parse('core/form/form.php');
-
-            // Buttons
-            $confirmmsg = rex_i18n::msg('consent_manager_config_confirm_select', $theme_options['name']);
-            $formElements = [];
-            $n = [];
-            $n['field'] = '<a href="?page=consent_manager/theme&preview=' . $themeid . '" class="btn rex-form-aligned btn-info consent_manager-button-preview" data-theme="' . $themeid . '">' . rex_i18n::msg('consent_manager_config_btn_preview') . '</a> ';
-            $n['field'] .= '<button class="btn btn-save" type="submit" name="save" data-confirm="' . $confirmmsg . '" value="' . rex_i18n::msg('consent_manager_config_btn_select', $theme_options['name']) . '">' . rex_i18n::msg('consent_manager_config_btn_select', $theme_options['name']) . '</button>';
-            $formElements[] = $n;
-            $fragment = new rex_fragment();
-            $fragment->setVar('elements', $formElements, false);
-            $buttons = $fragment->parse('core/form/submit.php');
-            $buttons = '<fieldset class="rex-form-action">' . $buttons . '</fieldset>';
-
-            // dump($themeid, $addon->getConfig('theme', ''));
-            $configtheme = $addon->getConfig('theme', 'consent_manager_frontend.scss');
-            if ('' === $configtheme || false === $configtheme) {
-                $configtheme = 'consent_manager_frontend.scss';
-            }
-            if ($themeid === $configtheme) {
-                $class = 'edit';
-                $titleactive = ' - ' . rex_i18n::msg('consent_manager_config_active_theme');
-            }
-
-            // Ausgabe des Formulars mit csrf-Schutz
-            $fragment = new rex_fragment();
-            $fragment->setVar('class', $class);
-            $fragment->setVar('title', $theme_options['name'] . $titleactive);
-            $fragment->setVar('body', $content, false);
-            $fragment->setVar('buttons', $buttons, false);
-            $output = $fragment->parse('core/page/section.php');
-
-            $output = '
-<form action="' . rex_url::currentBackendPage() . '#' . $themeid . '" method="post" id="' . $themeid . '">
-<input type="hidden" name="formsubmit" value="1" />
-<input type="hidden" name="theme" value="' . $themeid . '" />
-    ' . $csrfToken->getHiddenField() . '
-    ' . $output . '
-</form>
-';
-
-            echo $output;
-        }
-    }
-} else {
-    echo rex_view::error(rex_i18n::msg('consent_manager_error_no_themes', $addon->getPath('scss/')));
+// Aktuell aktives Theme ermitteln
+$configtheme = $addon->getConfig('theme', 'consent_manager_frontend.scss');
+if ('' === $configtheme || false === $configtheme) {
+    $configtheme = 'consent_manager_frontend.scss';
 }
 
-// Themes im project-Addon
+$cmtheme = new Theme();
+
+// Hilfsfunktion für Theme-Kachel
+$renderThemeCard = static function (string $themeid, array $theme_options, string $configtheme, rex_csrf_token $csrfToken, bool $isProjectTheme = false): string {
+    $isActive = ($themeid === $configtheme);
+    $activeClass = $isActive ? ' cm-theme-card--active' : '';
+    $activeBadge = $isActive ? '<span class="label label-success cm-theme-badge">' . rex_i18n::msg('consent_manager_config_active_theme') . '</span>' : '';
+    $projectBadge = $isProjectTheme ? '<span class="label label-info cm-theme-badge">' . rex_i18n::msg('consent_manager_theme_custom') . '</span>' : '';
+
+    $authorlinks = [];
+    $authors = explode(',', $theme_options['autor']);
+    foreach ($authors as $author) {
+        $url = 'https://github.com/' . str_replace('@', '', trim($author));
+        $authorlinks[] = '<a href="' . $url . '" target="_blank">' . trim($author) . '</a>';
+    }
+
+    $confirmmsg = rex_i18n::msg('consent_manager_config_confirm_select', $theme_options['name']);
+    $formId = str_replace([':', '.'], '-', $themeid);
+
+    $output = '
+<div class="cm-theme-card' . $activeClass . '">
+    <form action="' . rex_url::currentBackendPage() . '#' . $formId . '" method="post" id="' . $formId . '">
+        <input type="hidden" name="formsubmit" value="1" />
+        <input type="hidden" name="theme" value="' . rex_escape($themeid) . '" />
+        ' . $csrfToken->getHiddenField() . '
+        
+        <div class="cm-theme-preview thumbnail-container" title="' . rex_escape($theme_options['name']) . '" data-theme="' . rex_escape($themeid) . '">
+            <div class="thumbnail">
+                <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview=' . rex_escape($themeid) . '&nofocus" data-theme="' . rex_escape($themeid) . '" onload="this.style.opacity = 1"></iframe>
+            </div>
+        </div>
+        
+        <div class="cm-theme-info">
+            <div class="cm-theme-badges">' . $activeBadge . $projectBadge . '</div>
+            <h4 class="cm-theme-title">' . rex_escape($theme_options['name']) . '</h4>
+            <p class="cm-theme-desc">' . rex_escape($theme_options['description']) . '</p>
+            <div class="cm-theme-meta">
+                <span class="cm-theme-meta-item"><i class="rex-icon fa-paint-brush"></i> ' . rex_escape($theme_options['style']) . '</span>
+                <span class="cm-theme-meta-item"><i class="rex-icon fa-desktop"></i> ' . rex_escape($theme_options['type']) . '</span>
+            </div>
+            <div class="cm-theme-author">
+                <i class="rex-icon fa-user"></i> ' . implode(', ', $authorlinks) . '
+            </div>
+        </div>
+        
+        <div class="cm-theme-actions">
+            <a href="?page=consent_manager/theme&preview=' . rex_escape($themeid) . '" class="btn btn-xs btn-default consent_manager-button-preview" data-theme="' . rex_escape($themeid) . '">
+                <i class="rex-icon fa-eye"></i> ' . rex_i18n::msg('consent_manager_config_btn_preview') . '
+            </a>
+            ' . ($isActive ? '' : '<button class="btn btn-xs btn-primary" type="submit" name="save" data-confirm="' . rex_escape($confirmmsg) . '">
+                <i class="rex-icon fa-check"></i> ' . rex_i18n::msg('consent_manager_config_btn_activate') . '
+            </button>') . '
+        </div>
+    </form>
+</div>';
+
+    return $output;
+};
+
+// Sammle alle Themes
+$projectThemes = [];
+$addonThemes = [];
+
+// Eigene Themes aus project-Addon (werden zuerst angezeigt)
 if (true === rex_addon::exists('project')) {
     $themes = (array) glob(rex_addon::get('project')->getPath('consent_manager_themes/consent_manager_frontend*.scss'));
     natsort($themes);
-    if (count($themes) > 0) {
-        echo '<h2>' . rex_i18n::msg('consent_manager_themes_project_addon') . '</h2>';
-        echo '<p>' . rex_i18n::msg('consent_manager_themes_project_addon_info') . '</p>';
-        $cmtheme = new Theme();
-        foreach ($themes as $themefile) {
-            $output = '';
-            $content = '';
-            $class = '';
-            $titleactive = '';
-
-            $themeid = 'project:' . basename((string) $themefile);
-            $theme_options = $cmtheme->getThemeInformation($themeid);
-            if (count($theme_options) > 0) {
-                $authorlinks = [];
-                $authors = explode(',', $theme_options['autor']);
-                foreach ($authors as $author) {
-                    $url = 'https://github.com/' . str_replace('@', '', trim($author));
-                    $authorlinks[] = '<a href="' . $url . '" target="_blank">' . $author . '</a>';
-                }
-
-                $formElements = [];
-
-                $n = [];
-                $n['field'] = '';
-
-                $n['field'] .= '<p class="theme_description">';
-                $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_name') . '</span> ' . $theme_options['name'] . '<br>';
-                $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_description') . '</span> ' . $theme_options['description'] . '<br>';
-                $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_type') . '</span> ' . $theme_options['type'] . '<br>';
-                $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_style') . '</span> ' . $theme_options['style'] . '<br>';
-                $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_scssfile') . '</span> ' . $themeid . '<br>';
-                $n['field'] .= '<span>' . rex_i18n::msg('consent_manager_theme_autor') . '</span> ' . implode(', ', $authorlinks) . '<br>';
-                $n['field'] .= '</p>';
-
-                $n['field'] .= '<div class="thumbnail-container" title="' . $theme_options['name'] . '" data-theme="' . $themeid . '">';
-                $n['field'] .= '  <div class="thumbnail">';
-                $n['field'] .= '   <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview=' . $themeid . '&nofocus" data-theme="' . $themeid . '" onload="this.style.opacity = 1"></iframe>';
-                $n['field'] .= '  </div>';
-                $n['field'] .= '</div>';
-
-                $formElements[] = $n;
-
-                $fragment = new rex_fragment();
-                $fragment->setVar('elements', $formElements, false);
-                $content = $fragment->parse('core/form/form.php');
-
-                // Buttons
-                $confirmmsg = rex_i18n::msg('consent_manager_config_confirm_select', $theme_options['name']);
-                $formElements = [];
-                $n = [];
-                $n['field'] = '<a href="?page=consent_manager/theme&preview=' . $themeid . '" class="btn rex-form-aligned btn-info consent_manager-button-preview" data-theme="' . $themeid . '">' . rex_i18n::msg('consent_manager_config_btn_preview') . '</a> ';
-                $n['field'] .= '<button class="btn btn-save" type="submit" name="save" data-confirm="' . $confirmmsg . '" value="' . rex_i18n::msg('consent_manager_config_btn_select', $theme_options['name']) . '">' . rex_i18n::msg('consent_manager_config_btn_select', $theme_options['name']) . '</button>';
-                $formElements[] = $n;
-                $fragment = new rex_fragment();
-                $fragment->setVar('elements', $formElements, false);
-                $buttons = $fragment->parse('core/form/submit.php');
-                $buttons = '<fieldset class="rex-form-action">' . $buttons . '</fieldset>';
-
-                // dump($themeid, $addon->getConfig('theme', ''));
-                $configtheme = $addon->getConfig('theme', 'consent_manager_frontend.scss');
-                if ('' === $configtheme) {
-                    $configtheme = 'consent_manager_frontend.scss';
-                }
-                if ($themeid === $configtheme) {
-                    $class = 'edit';
-                    $titleactive = ' - ' . rex_i18n::msg('consent_manager_config_active_theme');
-                }
-
-                // Ausgabe des Formulars mit csrf-Schutz
-                $fragment = new rex_fragment();
-                $fragment->setVar('class', $class);
-                $fragment->setVar('title', $theme_options['name'] . $titleactive);
-                $fragment->setVar('body', $content, false);
-                $fragment->setVar('buttons', $buttons, false);
-                $output = $fragment->parse('core/page/section.php');
-
-                $output = '
-    <form action="' . rex_url::currentBackendPage() . '#' . str_replace(':', '-', $themeid) . '" method="post" id="' . str_replace(':', '-', $themeid) . '">
-    <input type="hidden" name="formsubmit" value="1" />
-    <input type="hidden" name="theme" value="' . $themeid . '" />
-        ' . $csrfToken->getHiddenField() . '
-        ' . $output . '
-    </form>
-    ';
-
-                echo $output;
-            }
+    foreach ($themes as $themefile) {
+        $themeid = 'project:' . basename((string) $themefile);
+        $theme_options = $cmtheme->getThemeInformation($themeid);
+        if (count($theme_options) > 0) {
+            $projectThemes[$themeid] = $theme_options;
         }
     }
+}
+
+// Addon-Themes
+$themes = (array) glob($addon->getPath('scss/consent_manager_frontend*.scss'));
+natsort($themes);
+foreach ($themes as $themefile) {
+    $themeid = basename((string) $themefile);
+    $theme_options = $cmtheme->getThemeInformation($themeid);
+    if (count($theme_options) > 0) {
+        $addonThemes[$themeid] = $theme_options;
+    }
+}
+
+// CSS für kompaktes Grid-Layout
+echo '<style>
+.cm-theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.cm-theme-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+.cm-theme-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-color: #bbb;
+}
+.cm-theme-card--active {
+    border-color: #3bb594;
+    border-width: 2px;
+    box-shadow: 0 0 0 3px rgba(59,181,148,0.2);
+}
+.cm-theme-card--active:hover {
+    border-color: #3bb594;
+}
+.cm-theme-preview {
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+.cm-theme-info {
+    padding: 12px 15px 8px;
+}
+.cm-theme-badges {
+    margin-bottom: 5px;
+    min-height: 22px;
+}
+.cm-theme-badge {
+    font-size: 10px;
+    margin-right: 5px;
+}
+.cm-theme-title {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+.cm-theme-desc {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+.cm-theme-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+.cm-theme-meta-item {
+    font-size: 11px;
+    color: #888;
+}
+.cm-theme-meta-item i {
+    margin-right: 3px;
+}
+.cm-theme-author {
+    font-size: 11px;
+    color: #888;
+}
+.cm-theme-author i {
+    margin-right: 3px;
+}
+.cm-theme-author a {
+    color: #666;
+}
+.cm-theme-actions {
+    padding: 10px 15px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 8px;
+}
+.cm-theme-section-title {
+    margin: 25px 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    color: #333;
+}
+.cm-theme-section-title:first-child {
+    margin-top: 0;
+}
+.cm-theme-section-info {
+    margin-bottom: 15px;
+    color: #666;
+    font-size: 13px;
+}
+</style>';
+
+// Ausgabe: Eigene Themes zuerst
+if (count($projectThemes) > 0) {
+    echo '<h2 class="cm-theme-section-title"><i class="rex-icon fa-star"></i> ' . rex_i18n::msg('consent_manager_themes_project_addon') . '</h2>';
+    echo '<p class="cm-theme-section-info">' . rex_i18n::msg('consent_manager_themes_project_addon_info') . '</p>';
+    echo '<div class="cm-theme-grid">';
+    foreach ($projectThemes as $themeid => $theme_options) {
+        echo $renderThemeCard($themeid, $theme_options, $configtheme, $csrfToken, true);
+    }
+    echo '</div>';
+}
+
+// Addon-Themes
+if (count($addonThemes) > 0) {
+    echo '<h2 class="cm-theme-section-title"><i class="rex-icon fa-th-large"></i> ' . rex_i18n::msg('consent_manager_themes_addon') . '</h2>';
+    echo '<p class="cm-theme-section-info">' . rex_i18n::msg('consent_manager_themes_addon_info') . '</p>';
+    echo '<div class="cm-theme-grid">';
+    foreach ($addonThemes as $themeid => $theme_options) {
+        echo $renderThemeCard($themeid, $theme_options, $configtheme, $csrfToken, false);
+    }
+    echo '</div>';
+} elseif (0 === count($projectThemes)) {
+    echo rex_view::error(rex_i18n::msg('consent_manager_error_no_themes', $addon->getPath('scss/')));
 }
 ?>
 

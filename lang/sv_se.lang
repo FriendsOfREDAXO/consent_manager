@@ -172,12 +172,14 @@ consent_manager_thead_consentid = Samtyckes-ID
 
 consent_manager_theme = Teman
 consent_manager_config_owncss_active = "Använd anpassad CSS" är aktivt i inställningar. För att använda teman måste denna inställning inaktiveras!
-consent_manager_config_active_theme = [Aktivt tema]
-consent_manager_config_btn_preview = Tema-förhandsgranskning
+consent_manager_config_active_theme = Aktiv
+consent_manager_config_btn_preview = Förhandsgranskning
 consent_manager_config_btn_select = Tillämpa tema <b>{0}</b>
+consent_manager_config_btn_activate = Aktivera
 consent_manager_config_confirm_select = Tillämpa tema [ {0} ]!?
 consent_manager_config_saved = Tema har tillämpats och är nu aktivt!
 consent_manager_config_invalid_theme = Ogiltig tema-fil. Ingen tema-information tillgänglig!
+consent_manager_theme_custom = Anpassat tema
 
 consent_manager_theme_name = Tema-namn:
 consent_manager_theme_scssfile = SCSS-fil:
