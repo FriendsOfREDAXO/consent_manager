@@ -43,7 +43,7 @@ $(document).on('rex:ready', function (event, container) {
             }
         }
         if (search != '') {
-            window.location.replace(newurl + '&Consent_Search=' + search);
+            window.location.replace(newurl + '&Consent_Search=' + encodeURIComponent(search));
         } else {
             window.location.replace(newurl);
         }
