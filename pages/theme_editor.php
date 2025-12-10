@@ -53,6 +53,9 @@ $defaultColors = [
         'overlay_opacity' => '75',
         'border_radius' => '4',
         'border_width' => '3',
+        // Schriftgrößen
+        'font_size' => '16',
+        'button_font_size' => '15',
         // Button-Styles
         'button_style' => 'filled',
         'button_radius' => '4',
@@ -88,6 +91,9 @@ $defaultColors = [
         'overlay_opacity' => '75',
         'border_radius' => '4',
         'border_width' => '2',
+        // Schriftgrößen
+        'font_size' => '15',
+        'button_font_size' => '14',
         // Button-Styles
         'button_style' => 'filled',
         'button_radius' => '4',
@@ -122,6 +128,9 @@ $defaultColors = [
         'overlay_opacity' => '60',
         'border_radius' => '0',
         'border_width' => '0',
+        // Schriftgrößen
+        'font_size' => '15',
+        'button_font_size' => '14',
         'button_style' => 'filled',
         'button_radius' => '6',
         'button_border_width' => '0',
@@ -154,6 +163,9 @@ $defaultColors = [
         'overlay_opacity' => '70',
         'border_radius' => '0',
         'border_width' => '0',
+        // Schriftgrößen
+        'font_size' => '15',
+        'button_font_size' => '14',
         'button_style' => 'filled',
         'button_radius' => '4',
         'button_border_width' => '0',
@@ -186,6 +198,9 @@ $defaultColors = [
         'overlay_opacity' => '40',
         'border_radius' => '12',
         'border_width' => '1',
+        // Schriftgrößen
+        'font_size' => '14',
+        'button_font_size' => '13',
         'button_style' => 'filled',
         'button_radius' => '8',
         'button_border_width' => '0',
@@ -221,6 +236,9 @@ $defaultColors = [
         'overlay_opacity' => '50',
         'border_radius' => '16',
         'border_width' => '1',
+        // Schriftgrößen
+        'font_size' => '',
+        'button_font_size' => '14',
         'button_style' => 'filled',
         'button_radius' => '12',
         'button_border_width' => '0',
@@ -256,6 +274,9 @@ $defaultColors = [
         'overlay_opacity' => '60',
         'border_radius' => '16',
         'border_width' => '1',
+        // Schriftgrößen
+        'font_size' => '',
+        'button_font_size' => '14',
         'button_style' => 'filled',
         'button_radius' => '12',
         'button_border_width' => '0',
@@ -297,6 +318,9 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
         'overlay_opacity' => rex_request::post('overlay_opacity', 'string', $defaultColors[$themeBase]['overlay_opacity']),
         'border_radius' => rex_request::post('border_radius', 'string', $defaultColors[$themeBase]['border_radius']),
         'border_width' => rex_request::post('border_width', 'string', $defaultColors[$themeBase]['border_width']),
+        // Schriftgrößen
+        'font_size' => rex_request::post('font_size', 'string', $defaultColors[$themeBase]['font_size'] ?? ''),
+        'button_font_size' => rex_request::post('button_font_size', 'string', $defaultColors[$themeBase]['button_font_size'] ?? '15'),
         // Button-Styles
         'button_style' => rex_request::post('button_style', 'string', $defaultColors[$themeBase]['button_style']),
         'button_radius' => rex_request::post('button_radius', 'string', $defaultColors[$themeBase]['button_radius']),

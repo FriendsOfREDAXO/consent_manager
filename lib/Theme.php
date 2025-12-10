@@ -264,6 +264,14 @@ class Theme
         $buttonRadius = ($colors['button_radius'] ?? '4') . 'px';
         $buttonBorderWidth = ($colors['button_border_width'] ?? '2') . 'px';
         $buttonBorderColor = $colors['button_border_color'] ?? $colors['button_bg'];
+        $buttonStyle = $colors['button_style'] ?? 'filled';
+        
+        // Schriftgröße (benutzerdefiniert oder Standard je nach Theme-Typ)
+        $customFontSize = $colors['font_size'] ?? null;
+        if ($customFontSize && '' !== $customFontSize) {
+            $fontSize = $customFontSize . 'px';
+        }
+        $buttonFontSize = $colors['button_font_size'] ?? '15';
         
         // Details-Toggle Button (anzeigen/ausblenden)
         $detailsLink = $colors['details_link'] ?? $colors['link'] ?? '#0066cc';
@@ -323,6 +331,16 @@ class Theme
             $isFluid => "backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2);",
             default => '',
         };
+
+        // Button-Style CSS (filled vs outline)
+        if ('outline' === $buttonStyle) {
+            $buttonBackgroundCss = 'transparent';
+            $buttonTextCss = '\$button-bg';
+        } else {
+            // filled (default)
+            $buttonBackgroundCss = '\$button-bg';
+            $buttonTextCss = '\$button-text';
+        }
 
         // Additional CSS for specific themes
         $additionalCss = '';
@@ -645,12 +663,12 @@ button.consent_manager-save-selection,
 button.consent_manager-accept-all,
 button.consent_manager-accept-none {
     transition: 0.2s ease all !important;
-    background: \$button-bg !important;
+    background: $buttonBackgroundCss !important;
     border: \$button-border-width solid \$button-border-color !important;
-    color: \$button-text !important;
+    color: $buttonTextCss !important;
     padding: $buttonPadding !important;
     border-radius: \$button-radius !important;
-    font-size: 15px !important;
+    font-size: {$buttonFontSize}px !important;
     font-weight: 600 !important;
     text-align: center !important;
     display: block !important;
@@ -659,6 +677,7 @@ button.consent_manager-accept-none {
     margin-bottom: 0.75em !important;
     cursor: pointer !important;
     line-height: 1.4 !important;
+    white-space: nowrap !important;
 }
 
 button.consent_manager-save-selection:hover,

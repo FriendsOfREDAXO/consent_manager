@@ -143,6 +143,33 @@ $csrfToken = $this->getVar('csrfToken');
             </div>
         </section>
         
+        <!-- Schriftgrößen -->
+        <section class="rex-page-section">
+            <div class="panel panel-default">
+                <header class="panel-heading">
+                    <div class="panel-title"><i class="rex-icon fa-text-height"></i> Schriftgrößen</div>
+                </header>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="font_size">Allgemeine Schriftgröße: <span id="font_size_value"><?= rex_escape($colors['font_size'] ?? '') ?><?= !empty($colors['font_size']) ? 'px' : 'Standard' ?></span></label>
+                                <input type="range" class="form-control" id="font_size" name="font_size" min="12" max="22" value="<?= rex_escape($colors['font_size'] ?? '16') ?>">
+                                <small class="help-block">Basis-Schriftgröße für die Consent-Box (12-22px, Standard je nach Theme-Typ)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="button_font_size">Button-Schriftgröße: <span id="button_font_size_value"><?= rex_escape($colors['button_font_size'] ?? '15') ?>px</span></label>
+                                <input type="range" class="form-control" id="button_font_size" name="button_font_size" min="12" max="20" value="<?= rex_escape($colors['button_font_size'] ?? '15') ?>">
+                                <small class="help-block">Schriftgröße für die Buttons (12-20px)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
         <!-- Details-Bereich -->
         <section class="rex-page-section">
             <div class="panel panel-default">
@@ -804,8 +831,14 @@ $csrfToken = $this->getVar('csrfToken');
                 const valueSpan = document.getElementById(this.id + '_value');
                 if (valueSpan) {
                     const isOpacity = this.id.includes('opacity');
-                    const unit = isOpacity ? '%' : 'px';
-                    valueSpan.textContent = this.value + unit;
+                    const isFontSize = this.id === 'font_size';
+                    let unit = isOpacity ? '%' : 'px';
+                    // Für allgemeine Schriftgröße: Wenn Standard-Bereich, zeige "Standard"
+                    if (isFontSize && this.value === '') {
+                        valueSpan.textContent = 'Standard';
+                    } else {
+                        valueSpan.textContent = this.value + unit;
+                    }
                 }
                 updateButtonPreviews();
                 updateDetailsTogglePreview();
