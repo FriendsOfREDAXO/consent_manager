@@ -22,21 +22,37 @@ $themeBases = [
     'compact' => 'Accessibility (Compact)',
 ];
 
-// Default colors
+// Default colors - erweitert mit mehr Optionen
 $defaultColors = [
     'normal' => [
         'accent' => '#333333',
         'button_bg' => '#333333',
+        'button_text' => '#ffffff',
         'button_hover' => '#000000',
+        'button_hover_text' => '#ffffff',
         'focus' => '#0066cc',
         'link' => '#0066cc',
+        'background' => '#ffffff',
+        'text' => '#1a1a1a',
+        'overlay' => '#000000',
+        'overlay_opacity' => '75',
+        'border_radius' => '4',
+        'border_width' => '3',
     ],
     'compact' => [
         'accent' => '#333333',
         'button_bg' => '#333333',
+        'button_text' => '#ffffff',
         'button_hover' => '#000000',
+        'button_hover_text' => '#ffffff',
         'focus' => '#0066cc',
         'link' => '#0066cc',
+        'background' => '#ffffff',
+        'text' => '#1a1a1a',
+        'overlay' => '#000000',
+        'overlay_opacity' => '75',
+        'border_radius' => '4',
+        'border_width' => '2',
     ],
 ];
 
@@ -46,9 +62,17 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
     $colors = [
         'accent' => rex_request::post('accent_color', 'string', $defaultColors[$themeBase]['accent']),
         'button_bg' => rex_request::post('button_bg', 'string', $defaultColors[$themeBase]['button_bg']),
+        'button_text' => rex_request::post('button_text', 'string', $defaultColors[$themeBase]['button_text']),
         'button_hover' => rex_request::post('button_hover', 'string', $defaultColors[$themeBase]['button_hover']),
+        'button_hover_text' => rex_request::post('button_hover_text', 'string', $defaultColors[$themeBase]['button_hover_text']),
         'focus' => rex_request::post('focus_color', 'string', $defaultColors[$themeBase]['focus']),
         'link' => rex_request::post('link_color', 'string', $defaultColors[$themeBase]['link']),
+        'background' => rex_request::post('background_color', 'string', $defaultColors[$themeBase]['background']),
+        'text' => rex_request::post('text_color', 'string', $defaultColors[$themeBase]['text']),
+        'overlay' => rex_request::post('overlay_color', 'string', $defaultColors[$themeBase]['overlay']),
+        'overlay_opacity' => rex_request::post('overlay_opacity', 'string', $defaultColors[$themeBase]['overlay_opacity']),
+        'border_radius' => rex_request::post('border_radius', 'string', $defaultColors[$themeBase]['border_radius']),
+        'border_width' => rex_request::post('border_width', 'string', $defaultColors[$themeBase]['border_width']),
     ];
 } else {
     $colors = $defaultColors[$themeBase];
@@ -108,11 +132,15 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
     $lineHeight = $isCompact ? '1.5em' : '1.6em';
     $padding = $isCompact ? '1.5em' : '2.5em';
     $paddingOuter = $isCompact ? '0.75em' : '1em';
-    $borderWidth = $isCompact ? '2px' : '3px';
+    $borderWidth = ($colors['border_width'] ?? ($isCompact ? '2' : '3')) . 'px';
+    $borderRadius = ($colors['border_radius'] ?? '4') . 'px';
     $maxWidth = $isCompact ? '55em' : '65em';
     $buttonPadding = $isCompact ? '10px 20px' : '12px 24px';
     $buttonMinHeight = $isCompact ? '44px' : '48px';
     $buttonMinWidth = $isCompact ? '140px' : '150px';
+    
+    // Overlay-Opacity
+    $overlayOpacity = ((int) ($colors['overlay_opacity'] ?? 75)) / 100;
 
     $hexToRgba = static function ($hex, $alpha = 0.2) {
         $hex = ltrim($hex, '#');
@@ -121,11 +149,23 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
         $b = hexdec(substr($hex, 4, 2));
         return "rgba($r, $g, $b, $alpha)";
     };
+    
+    // Overlay-Farbe mit Opacity
+    $overlayColor = $colors['overlay'] ?? '#000000';
+    $overlayRgba = $hexToRgba($overlayColor, $overlayOpacity);
 
     $accentRgba = $hexToRgba($colors['accent'], 0.3);
     $focusRgba = $hexToRgba($colors['focus'], 0.2);
     $linkHoverBg = $hexToRgba($colors['link'], 0.1);
     $cookieTitleBg = $hexToRgba($colors['accent'], 0.05);
+    
+    // Hintergrund und Text
+    $background = $colors['background'] ?? '#ffffff';
+    $textColor = $colors['text'] ?? '#1a1a1a';
+    
+    // Button-Textfarben
+    $buttonText = $colors['button_text'] ?? '#ffffff';
+    $buttonHoverText = $colors['button_hover_text'] ?? '#ffffff';
 
     return <<<SCSS
         /*
@@ -136,15 +176,17 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
         \$font-size: $fontSize;
         \$line-height: $lineHeight;
 
-        \$overlay-background: rgba(0, 0, 0, 0.75);
-        \$consent_manager-background: #ffffff;
-        \$consent_manager-border: #1a1a1a;
-        \$text-color: #1a1a1a;
+        \$overlay-background: $overlayRgba;
+        \$consent_manager-background: $background;
+        \$consent_manager-border: $textColor;
+        \$text-color: $textColor;
 
         \$accent-color: {$colors['accent']};
         \$accent-hover: {$colors['button_hover']};
         \$button-bg: {$colors['button_bg']};
+        \$button-text: $buttonText;
         \$button-hover: {$colors['button_hover']};
+        \$button-hover-text: $buttonHoverText;
 
         \$focus-color: {$colors['focus']};
         \$focus-shadow: $focusRgba;
@@ -200,6 +242,7 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
             line-height: \$line-height;
             background: \$consent_manager-background;
             border: $borderWidth solid \$accent-color;
+            border-radius: $borderRadius;
             color: \$text-color;
             position: relative;
             width: 100%;
@@ -384,10 +427,10 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
         button.consent_manager-accept-none {
             transition: 0.2s ease all;
             background: \$button-bg;
-            border: 2px solid \$button-bg;
-            color: #ffffff;
+            border: $borderWidth solid \$button-bg;
+            color: \$button-text;
             padding: $buttonPadding;
-            border-radius: 4px;
+            border-radius: $borderRadius;
             font-size: 15px;
             font-weight: 600;
             text-align: center;
@@ -407,6 +450,7 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
         button.consent_manager-accept-none:focus {
             background: \$button-hover;
             border-color: \$button-hover;
+            color: \$button-hover-text;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px $accentRgba;
         }
@@ -577,16 +621,17 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
 
 <style>
 .theme-editor-form {
-    max-width: 800px;
+    max-width: 900px;
 }
 .color-input-group {
     display: flex;
     align-items: center;
     gap: 15px;
     margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 .color-input-group label {
-    min-width: 200px;
+    min-width: 250px;
     font-weight: 600;
 }
 .color-input-group input[type="color"] {
@@ -600,11 +645,42 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
     width: 100px;
     font-family: monospace;
 }
-.color-preview {
-    width: 40px;
-    height: 40px;
-    border: 2px solid #ddd;
+.color-input-group input[type="range"] {
+    width: 150px;
+}
+.color-input-group .range-value {
+    min-width: 50px;
+    font-family: monospace;
+}
+.contrast-badge {
+    padding: 4px 10px;
     border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+.contrast-pass {
+    background: #d4edda;
+    color: #155724;
+}
+.contrast-fail {
+    background: #f8d7da;
+    color: #721c24;
+}
+.contrast-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+.auto-text-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f8f9fa;
+}
+.auto-text-btn:hover {
+    background: #e9ecef;
 }
 .theme-base-selector {
     margin-bottom: 30px;
@@ -615,9 +691,47 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
 .theme-base-selector .btn {
     margin-right: 10px;
 }
+.a11y-info {
+    padding: 15px;
+    background: #e7f3ff;
+    border-left: 4px solid #007bff;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.a11y-info h4 {
+    margin-top: 0;
+    color: #0056b3;
+}
+.preview-button {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: default;
+}
+.color-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+.color-section h4 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+}
 </style>
 
 <div class="theme-editor-form">
+    
+    <div class="a11y-info">
+        <h4>♿ Barrierefreiheits-Hinweis</h4>
+        <p>Der Theme-Editor prüft automatisch die WCAG 2.1 Kontrastanforderungen. Ein Kontrastverhältnis von mindestens <strong>4.5:1</strong> ist für normalen Text erforderlich, <strong>3:1</strong> für großen Text und UI-Komponenten.</p>
+    </div>
     
     <div class="theme-base-selector">
         <h3>Theme-Basis wählen:</h3>
@@ -649,39 +763,111 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
             </div>
         </fieldset>
         
-        <fieldset>
-            <legend>Farben anpassen</legend>
+        <div class="color-section">
+            <h4>🎨 Grundfarben</h4>
+            
+            <div class="color-input-group">
+                <label for="background_color">Hintergrundfarbe:</label>
+                <input type="color" id="background_color" name="background_color" value="<?= $colors['background'] ?>">
+                <input type="text" class="form-control color-hex" value="<?= $colors['background'] ?>" readonly>
+            </div>
+            
+            <div class="color-input-group">
+                <label for="text_color">Textfarbe:</label>
+                <input type="color" id="text_color" name="text_color" value="<?= $colors['text'] ?>">
+                <input type="text" class="form-control color-hex" value="<?= $colors['text'] ?>" readonly>
+                <span class="contrast-badge" id="text-contrast-badge">Prüfe...</span>
+            </div>
             
             <div class="color-input-group">
                 <label for="accent_color">Akzentfarbe (Rahmen, Details):</label>
                 <input type="color" id="accent_color" name="accent_color" value="<?= $colors['accent'] ?>">
-                <input type="text" class="form-control" value="<?= $colors['accent'] ?>" readonly>
+                <input type="text" class="form-control color-hex" value="<?= $colors['accent'] ?>" readonly>
             </div>
+        </div>
+        
+        <div class="color-section">
+            <h4>🔘 Buttons</h4>
             
             <div class="color-input-group">
                 <label for="button_bg">Button-Hintergrund:</label>
-                <input type="color" id="button_bg" name="button_bg" value="<?= $colors['button_bg'] ?>">
-                <input type="text" class="form-control" value="<?= $colors['button_bg'] ?>" readonly>
+                <input type="color" id="button_bg" name="button_bg" value="<?= $colors['button_bg'] ?>" data-auto-text="button_text">
+                <input type="text" class="form-control color-hex" value="<?= $colors['button_bg'] ?>" readonly>
+                <button type="button" class="auto-text-btn" onclick="autoTextColor('button_bg', 'button_text')">🔄 Textfarbe berechnen</button>
             </div>
             
             <div class="color-input-group">
-                <label for="button_hover">Button-Hover:</label>
-                <input type="color" id="button_hover" name="button_hover" value="<?= $colors['button_hover'] ?>">
-                <input type="text" class="form-control" value="<?= $colors['button_hover'] ?>" readonly>
+                <label for="button_text">Button-Textfarbe:</label>
+                <input type="color" id="button_text" name="button_text" value="<?= $colors['button_text'] ?>">
+                <input type="text" class="form-control color-hex" value="<?= $colors['button_text'] ?>" readonly>
+                <span class="contrast-badge" id="button-contrast-badge">Prüfe...</span>
+            </div>
+            
+            <div class="color-input-group">
+                <label for="button_hover">Button-Hover-Hintergrund:</label>
+                <input type="color" id="button_hover" name="button_hover" value="<?= $colors['button_hover'] ?>" data-auto-text="button_hover_text">
+                <input type="text" class="form-control color-hex" value="<?= $colors['button_hover'] ?>" readonly>
+                <button type="button" class="auto-text-btn" onclick="autoTextColor('button_hover', 'button_hover_text')">🔄 Textfarbe berechnen</button>
+            </div>
+            
+            <div class="color-input-group">
+                <label for="button_hover_text">Button-Hover-Textfarbe:</label>
+                <input type="color" id="button_hover_text" name="button_hover_text" value="<?= $colors['button_hover_text'] ?>">
+                <input type="text" class="form-control color-hex" value="<?= $colors['button_hover_text'] ?>" readonly>
+                <span class="contrast-badge" id="button-hover-contrast-badge">Prüfe...</span>
+            </div>
+            
+            <div style="margin-top: 15px; padding: 15px; background: #fff; border-radius: 4px;">
+                <strong>Vorschau:</strong><br><br>
+                <span class="preview-button" id="button-preview">Button-Text</span>
+                <span class="preview-button" id="button-hover-preview">Hover-Zustand</span>
+            </div>
+        </div>
+        
+        <div class="color-section">
+            <h4>🔗 Links & Focus</h4>
+            
+            <div class="color-input-group">
+                <label for="link_color">Link-Farbe:</label>
+                <input type="color" id="link_color" name="link_color" value="<?= $colors['link'] ?>">
+                <input type="text" class="form-control color-hex" value="<?= $colors['link'] ?>" readonly>
+                <span class="contrast-badge" id="link-contrast-badge">Prüfe...</span>
             </div>
             
             <div class="color-input-group">
                 <label for="focus_color">Focus-Farbe (Tastatur-Navigation):</label>
                 <input type="color" id="focus_color" name="focus_color" value="<?= $colors['focus'] ?>">
-                <input type="text" class="form-control" value="<?= $colors['focus'] ?>" readonly>
+                <input type="text" class="form-control color-hex" value="<?= $colors['focus'] ?>" readonly>
+            </div>
+        </div>
+        
+        <div class="color-section">
+            <h4>🎭 Overlay & Layout</h4>
+            
+            <div class="color-input-group">
+                <label for="overlay_color">Overlay-Farbe:</label>
+                <input type="color" id="overlay_color" name="overlay_color" value="<?= $colors['overlay'] ?>">
+                <input type="text" class="form-control color-hex" value="<?= $colors['overlay'] ?>" readonly>
             </div>
             
             <div class="color-input-group">
-                <label for="link_color">Link-Farbe:</label>
-                <input type="color" id="link_color" name="link_color" value="<?= $colors['link'] ?>">
-                <input type="text" class="form-control" value="<?= $colors['link'] ?>" readonly>
+                <label for="overlay_opacity">Overlay-Transparenz:</label>
+                <input type="range" id="overlay_opacity" name="overlay_opacity" min="0" max="100" value="<?= $colors['overlay_opacity'] ?>">
+                <span class="range-value" id="overlay_opacity_value"><?= $colors['overlay_opacity'] ?>%</span>
             </div>
-        </fieldset>
+            
+            <div class="color-input-group">
+                <label for="border_radius">Eckenradius (px):</label>
+                <input type="range" id="border_radius" name="border_radius" min="0" max="20" value="<?= $colors['border_radius'] ?>">
+                <span class="range-value" id="border_radius_value"><?= $colors['border_radius'] ?>px</span>
+            </div>
+            
+            <div class="color-input-group">
+                <label for="border_width">Rahmenbreite (px):</label>
+                <input type="range" id="border_width" name="border_width" min="1" max="5" value="<?= $colors['border_width'] ?>">
+                <span class="range-value" id="border_width_value"><?= $colors['border_width'] ?>px</span>
+            </div>
+        </div>
         
         <fieldset class="rex-form-action">
             <button class="btn btn-save" type="submit">
@@ -695,10 +881,130 @@ function generateA11yThemeScss(string $base, string $name, string $description, 
 </div>
 
 <script>
+// Kontrast-Berechnung nach WCAG 2.1
+function getLuminance(hex) {
+    const rgb = hexToRgb(hex);
+    const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function hexToRgb(hex) {
+    hex = hex.replace('#', '');
+    return {
+        r: parseInt(hex.substr(0, 2), 16),
+        g: parseInt(hex.substr(2, 2), 16),
+        b: parseInt(hex.substr(4, 2), 16)
+    };
+}
+
+function getContrastRatio(hex1, hex2) {
+    const l1 = getLuminance(hex1);
+    const l2 = getLuminance(hex2);
+    const lighter = Math.max(l1, l2);
+    const darker = Math.min(l1, l2);
+    return (lighter + 0.05) / (darker + 0.05);
+}
+
+function updateContrastBadge(badgeId, ratio) {
+    const badge = document.getElementById(badgeId);
+    if (!badge) return;
+    
+    const ratioText = ratio.toFixed(2) + ':1';
+    
+    if (ratio >= 4.5) {
+        badge.className = 'contrast-badge contrast-pass';
+        badge.textContent = '✓ ' + ratioText + ' (AAA)';
+    } else if (ratio >= 3) {
+        badge.className = 'contrast-badge contrast-warning';
+        badge.textContent = '⚠ ' + ratioText + ' (nur große Texte)';
+    } else {
+        badge.className = 'contrast-badge contrast-fail';
+        badge.textContent = '✗ ' + ratioText + ' (unzureichend)';
+    }
+}
+
+// Automatische Textfarbe berechnen (Schwarz oder Weiß)
+function autoTextColor(bgInputId, textInputId) {
+    const bgInput = document.getElementById(bgInputId);
+    const textInput = document.getElementById(textInputId);
+    
+    const bgColor = bgInput.value;
+    const luminance = getLuminance(bgColor);
+    
+    // Wähle Schwarz oder Weiß basierend auf Hintergrund-Helligkeit
+    const textColor = luminance > 0.179 ? '#000000' : '#ffffff';
+    
+    textInput.value = textColor;
+    textInput.nextElementSibling.value = textColor;
+    
+    updateAllContrasts();
+    updateButtonPreviews();
+}
+
+function updateAllContrasts() {
+    const bg = document.getElementById('background_color').value;
+    const text = document.getElementById('text_color').value;
+    const buttonBg = document.getElementById('button_bg').value;
+    const buttonText = document.getElementById('button_text').value;
+    const buttonHover = document.getElementById('button_hover').value;
+    const buttonHoverText = document.getElementById('button_hover_text').value;
+    const link = document.getElementById('link_color').value;
+    
+    updateContrastBadge('text-contrast-badge', getContrastRatio(bg, text));
+    updateContrastBadge('button-contrast-badge', getContrastRatio(buttonBg, buttonText));
+    updateContrastBadge('button-hover-contrast-badge', getContrastRatio(buttonHover, buttonHoverText));
+    updateContrastBadge('link-contrast-badge', getContrastRatio(bg, link));
+}
+
+function updateButtonPreviews() {
+    const buttonBg = document.getElementById('button_bg').value;
+    const buttonText = document.getElementById('button_text').value;
+    const buttonHover = document.getElementById('button_hover').value;
+    const buttonHoverText = document.getElementById('button_hover_text').value;
+    const borderRadius = document.getElementById('border_radius').value + 'px';
+    
+    const preview = document.getElementById('button-preview');
+    const hoverPreview = document.getElementById('button-hover-preview');
+    
+    preview.style.backgroundColor = buttonBg;
+    preview.style.color = buttonText;
+    preview.style.borderRadius = borderRadius;
+    
+    hoverPreview.style.backgroundColor = buttonHover;
+    hoverPreview.style.color = buttonHoverText;
+    hoverPreview.style.borderRadius = borderRadius;
+}
+
 // Update hex values when color picker changes
 document.querySelectorAll('input[type="color"]').forEach(function(colorInput) {
-    colorInput.addEventListener('change', function() {
-        this.nextElementSibling.value = this.value;
+    colorInput.addEventListener('input', function() {
+        const hexField = this.nextElementSibling;
+        if (hexField && hexField.classList.contains('color-hex')) {
+            hexField.value = this.value;
+        }
+        updateAllContrasts();
+        updateButtonPreviews();
     });
+});
+
+// Update range values
+document.querySelectorAll('input[type="range"]').forEach(function(rangeInput) {
+    rangeInput.addEventListener('input', function() {
+        const valueSpan = document.getElementById(this.id + '_value');
+        if (valueSpan) {
+            const unit = this.id === 'overlay_opacity' ? '%' : 'px';
+            valueSpan.textContent = this.value + unit;
+        }
+        updateButtonPreviews();
+    });
+});
+
+// Initial update
+document.addEventListener('DOMContentLoaded', function() {
+    updateAllContrasts();
+    updateButtonPreviews();
 });
 </script>

@@ -632,7 +632,7 @@
         }
         
         // Problem 3: Consent Manager Cookie fehlt bei erteiltem Consent
-        if (consentManagerStatus.status !== 'no_consent' && !document.cookie.includes('consent_manager=')) {
+        if (consentManagerStatus.status !== 'no_consent' && !document.cookie.includes('consentmanager=')) {
             issues.push({
                 type: 'warning',
                 title: 'Consent Cookie fehlt',
@@ -651,18 +651,7 @@
             });
         }
         
-        // Problem 5: Version Mismatch
-        if (googleConsentModeStatus.version && consentManagerStatus.version && 
-            googleConsentModeStatus.version !== consentManagerStatus.version) {
-            issues.push({
-                type: 'info',
-                title: 'Versionsunterschied',
-                message: `Consent Manager Version (${consentManagerStatus.version}) unterscheidet sich von Cache-Version (${googleConsentModeStatus.version}).`,
-                solution: 'Cache leeren oder Seite neu laden.'
-            });
-        }
-        
-        // Problem 7: Auto-Mapping aktiviert aber keine Google Consent Mode Updates
+        // Problem 5: Auto-Mapping aktiviert aber keine Google Consent Mode Updates
         if (googleConsentModeStatus.autoMapping && consentManagerStatus.status !== 'no_consent') {
             const googleConsentData = localStorage.getItem('consentMode');
             if (googleConsentData) {
