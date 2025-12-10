@@ -82,10 +82,12 @@ jobs:
           php redaxo_cms/redaxo/bin/console package:install '${{ github.event.repository.name }}'
           echo "✅ Addon installed successfully"
 
-      # Rexstan installieren für REDAXO-aware PHPStan
+      # Rexstan herunterladen und installieren
       - name: Install rexstan
         if: matrix.run-all-checks
         run: |
+          echo "📦 Downloading rexstan..."
+          php redaxo_cms/redaxo/bin/console package:download 'rexstan'
           php redaxo_cms/redaxo/bin/console package:install 'rexstan'
           echo "✅ Rexstan installed"
 
