@@ -25,7 +25,7 @@ $(document).on('rex:ready', function (event, container) {
 
     function consent_manager_setsearch() {
         const urlParams = new URLSearchParams(window.location.search);
-        entries = urlParams.entries();
+        const entries = urlParams.entries();
         for (const entry of entries) {
             if (entry[0] == 'Consent_Search' && $("#consent_manager_log_search .form-control").val() == '') {
                 $("#consent_manager_log_search .form-control").val(entry[1]);
@@ -35,11 +35,11 @@ $(document).on('rex:ready', function (event, container) {
 
     function consent_manager_dosearch(search) {
         const urlParams = new URLSearchParams(window.location.search);
-        entries = urlParams.entries();
-        newurl = window.location.pathname + '?';
+        const entries = urlParams.entries();
+        let newurl = window.location.pathname + '?';
         for (const entry of entries) {
             if ((entry[0] != 'Consent_Search') && (entry[0] != 'Consent-Log_start')) {
-                newurl = newurl + '&' + entry[0] + '=' + entry[1];
+                newurl = newurl + '&' + encodeURIComponent(entry[0]) + '=' + encodeURIComponent(entry[1]);
             }
         }
         if (search != '') {
