@@ -1,27 +1,8 @@
-// Issue #317: Remove domain parameter to prevent wildcard cookies (.example.com)
-// Cookies must be domain-specific for GDPR compliance
-// Cookie settings are now configurable via backend
-const cmCookieSameSite = consent_manager_parameters.cookieSameSite || 'Lax';
-const cmCookieSecure = consent_manager_parameters.cookieSecure || false;
-const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', sameSite: cmCookieSameSite, secure: cmCookieSecure });
-
-if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
-    console.log('Consent Manager: Script loaded');
-}
-
-function debugLog(message, data) {
-    if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
-        if (data !== undefined) {
-            console.log('Consent Manager: ' + message, data);
-        } else {
-            console.log('Consent Manager: ' + message);
-        }
-    }
-}
-
+/* globals Cookies, consent_managerIEVersion */
 (function () {
     'use strict';
-    var show = 0,
+    var expires = new Date(),
+        show = 0,
         cookieData = {},
         consents = [],
         addonVersion = -1,
@@ -30,34 +11,20 @@ function debugLog(message, data) {
         cookieCachelogid = -1,
         consent_managerBox;
 
-    consent_manager_parameters.no_cookie_set = false;
-
-    // Helper: safe JSON parse for potentially-malformed external sources (cookies, attributes etc.)
-    function safeJSONParse(input, fallback) {
-        try {
-            if (typeof input === 'string') return JSON.parse(input);
-            if (typeof input === 'object' && input !== null) return input;
-        } catch (e) {
-            console.warn('consent_manager: safeJSONParse failed for input', input, e);
-        }
-        return fallback;
-    }
-
-    // Es gibt keinen Datenschutzcookie, Consent zeigen
-    if (typeof cmCookieAPI.get('consentmanager') === 'undefined') {
-        cmCookieAPI.set('consentmanager_test', 'test');
-        // Test-Cookie konnte nicht gesetzt werden, kein Consent anzeigen
-        if (typeof cmCookieAPI.get('consentmanager_test') === 'undefined') {
+    expires.setFullYear(expires.getFullYear() + 1);
+    // es gibt keinen datenschutzcookie, banner zeigen
+    if (typeof Cookies.get('consent_manager') === 'undefined') {
+        show = 1;
+        Cookies.set('test', 'test', { path: '/', sameSite: 'Lax', secure: false });
+        // cookie konnte nicht gesetzt werden, kein cookie banner anzeigen
+        if (typeof Cookies.get('test') === 'undefined') {
             show = 0;
-            consent_manager_parameters.no_cookie_set = true;
-            console.warn('Addon consent_manager: Es konnte kein Cookie für die Domain ' + consent_manager_parameters.domain + ' gesetzt werden!');
         } else {
-            cmCookieAPI.remove('consentmanager_test');
-            show = 1;
+            Cookies.remove('test');
         }
     } else {
-        cookieData = safeJSONParse(cmCookieAPI.get('consentmanager'), {});
-        // Cookie-Version auslesen. Cookie-Version = Major-Version des AddOns zum Zeitpunkt des speicherns
+        cookieData = JSON.parse(Cookies.get('consent_manager'));
+        // cookie version auslesen. cookie version = major addon version zum zeitpunkt des cookie speicherns
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
             cookieVersion = parseInt(cookieData.version);
@@ -73,58 +40,30 @@ function debugLog(message, data) {
     consent_managerBox = consent_managerBox.getElementById('consent_manager-background');
     document.querySelectorAll('body')[0].appendChild(consent_managerBox);
 
-    // aktuelle Major-AddOn-Version auslesen
+    // aktuelle major addon version auslesen
     addonVersion = parseInt(consent_manager_parameters.version);
     cachelogid = parseInt(consent_manager_parameters.cachelogid);
-    // Cookie wurde mit einer aelteren Major-Version gesetzt, alle Consents loeschen und Consent anzeigen
-    // - treat cookies older than v4 as incompatible
-    // Treat cookies as incompatible when:
-    // - cookie version is missing/invalid
-    // - cookie major version is different from current addon major
-    // - cachelogid mismatch
-    if (isNaN(cookieVersion) || cookieVersion !== addonVersion || cachelogid !== cookieCachelogid) {
+    // cookie wurde mit einer aelteren major version gesetzt, alle consents loeschen und box zeigen
+    if (addonVersion !== cookieVersion || cachelogid !== cookieCachelogid) {
         show = 1;
         consents = [];
         deleteCookies();
     }
 
-    // on startup trigger scripts of enabled consents
-    debugLog('Startup: Triggering scripts for enabled consents', consents);
-    consents.forEach(function (uid) {
-        debugLog('Startup: Processing consent UID', uid);
-        var scriptElement = consent_managerBox.querySelector('[data-uid="script-' + uid + '"]');
-        var unselectElement = consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]');
-        debugLog('Startup: Elements found', {
-            scriptElement: !!scriptElement,
-            unselectElement: !!unselectElement
+    if (consent_managerIEVersion() === 9) {
+        consent_managerBox.querySelectorAll('.consent_manager-cookiegroup-checkbox').forEach(function (el) {
+            el.classList.remove('pretty');
+            el.querySelectorAll('.icon').forEach(function (icon) {
+                icon.remove();
+            });
         });
-        addScript(scriptElement);
-        removeScript(unselectElement);
-    });
-
-    // on startup trigger Google Consent Mode v2 update if consents exist
-    if (consents.length > 0 && typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
-        var googleConsentFlags = mapConsentsToGoogleFlags(consents);
-        debugLog('Auto-mapping Google Consent Mode flags', consents, googleConsentFlags);
-        window.GoogleConsentModeV2.setConsent(googleConsentFlags);
-    } else {
-        debugLog('Auto-mapping skipped', {consents: consents, hasGCM: typeof window.GoogleConsentModeV2 !== 'undefined', hasSetConsent: typeof window.GoogleConsentModeV2?.setConsent === 'function'});
     }
 
-    // on startup trigger unselect-scripts of disabled consents
-    consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
-        // array mit cookie uids
-        var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
-
-        cookieUids.forEach(function (uid) {
-            if(!consents.includes(uid)) {
-                removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
-                addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
-            }
-        });
+    consents.forEach(function (uid) {
+        addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
     });
 
-    if (consent_manager_parameters.initially_hidden || consent_manager_parameters.no_cookie_set) {
+    if (consent_manager_parameters.initially_hidden) {
         show = 0;
     }
 
@@ -135,118 +74,30 @@ function debugLog(message, data) {
     consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
         el.addEventListener('click', function () {
             if (el.classList.contains('consent_manager-save-selection')) {
+                deleteCookies();
                 saveConsent('selection');
             } else if (el.classList.contains('consent_manager-accept-all')) {
+                deleteCookies();
                 saveConsent('all');
-            } else if (el.classList.contains('consent_manager-accept-none')) {
-                saveConsent('none');
-            } else if (el.classList.contains('consent_manager-close')) {
-                if (!document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden')) {
-                    document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-                }
             }
             if (consent_manager_parameters.hidebodyscrollbar) {
                 document.querySelector('body').style.overflow = 'auto';
             }
             document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
-            document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'true');
-            
-            // Trigger close event (Issue #156)
-            document.dispatchEvent(new CustomEvent('consent_manager-close'));
-            
-            return false;
         });
     });
 
-    if (document.getElementById('consent_manager-toggle-details')) {
-        document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
-            document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-            // Update aria-expanded for accessibility
-            var isExpanded = !document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden');
-            this.setAttribute('aria-expanded', isExpanded);
-            return false;
-        });
-    }
-
-    if (document.getElementById('consent_manager-toggle-details')) {
-        document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
-            if (event.key == 'Enter') {
-                event.preventDefault();
-                document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-                // Update aria-expanded
-                var isExpanded = !document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden');
-                this.setAttribute('aria-expanded', isExpanded);
-                return false;
-            }
-        });
-    }
-
-    // ESC key to close consent box (Issue #326)
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' || event.key === 'Esc') {
-            var consentBox = document.getElementById('consent_manager-background');
-            if (consentBox && !consentBox.classList.contains('consent_manager-hidden')) {
-                event.preventDefault();
-                event.stopPropagation();
-                if (consent_manager_parameters.hidebodyscrollbar) {
-                    document.querySelector('body').style.overflow = 'auto';
-                }
-                consentBox.classList.add('consent_manager-hidden');
-                consentBox.setAttribute('aria-hidden', 'true');
-                // Trigger close event
-                document.dispatchEvent(new CustomEvent('consent_manager-close'));
-            }
-        }
-    }, true); // Use capture phase for priority
-
-    // Focus Trap: Keep focus within modal dialog (Issue #326)
-    document.addEventListener('keydown', function(event) {
-        var consentBox = document.getElementById('consent_manager-background');
-        if (!consentBox || consentBox.classList.contains('consent_manager-hidden')) {
-            return;
-        }
-
-        // Check if focus is actually inside the consent box
-        var wrapper = document.getElementById('consent_manager-wrapper');
-        if (!wrapper || !wrapper.contains(document.activeElement)) {
-            return;
-        }
-
-        if (event.key === 'Tab') {
-            var focusableElements = wrapper.querySelectorAll(
-                'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
-            );
-            var focusableArray = Array.from(focusableElements);
-            var firstFocusable = focusableArray[0];
-            var lastFocusable = focusableArray[focusableArray.length - 1];
-
-            if (event.shiftKey) {
-                // Shift + Tab: Wenn auf erstem Element, springe zu letztem
-                if (document.activeElement === firstFocusable) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    lastFocusable.focus();
-                }
-            } else {
-                // Tab: Wenn auf letztem Element, springe zu erstem
-                if (document.activeElement === lastFocusable) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    firstFocusable.focus();
-                }
-            }
-        }
-    }, true); // Use capture phase for priority
+    document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
+        document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
+    });
 
     document.querySelectorAll('.consent_manager-show-box, .consent_manager-show-box-reload').forEach(function (el) {
         el.addEventListener('click', function () {
             showBox();
-            return false;
         });
     });
 
     function saveConsent(toSave) {
-        debugLog('saveConsent: Start', toSave);
         consents = [];
         cookieData = {
             consents: [],
@@ -255,98 +106,31 @@ function debugLog(message, data) {
             cachelogid: consent_manager_parameters.cachelogid
         };
         // checkboxen
-        if (toSave !== 'none') {
-            consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
-                // array mit cookie uids
-                var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
-                if (el.checked || toSave === 'all') {
-                    debugLog('saveConsent: Consent erteilt für', cookieUids);
-                    cookieUids.forEach(function (uid) {
-                        consents.push(uid);
-                        debugLog('saveConsent: Führe Script aus für UID', uid);
-                        var scriptElement = consent_managerBox.querySelector('[data-uid="script-' + uid + '"]');
-                        var unselectElement = consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]');
-                        debugLog('saveConsent: Elements gefunden', {
-                            scriptElement: !!scriptElement,
-                            unselectElement: !!unselectElement,
-                            hasDataScript: scriptElement ? !!scriptElement.getAttribute('data-script') : false
-                        });
-                        addScript(scriptElement);
-                        removeScript(unselectElement);
-                    });
-                } else {
-                    debugLog('saveConsent: Consent verweigert für', cookieUids);
-                    cookieUids.forEach(function (uid) {
-                        removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
-                        addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
-                    });
-                }
-            });
-        } else {
-            debugLog('saveConsent: Keine Consents (none)');
-            consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
-                // array mit cookie uids
-                var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
-                if (el.disabled) {
-                    cookieUids.forEach(function (uid) {
-                        consents.push(uid);
-                        addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
-                        removeScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
-                    });
-                } else {
-                    el.checked = false;
-                    cookieUids.forEach(function (uid) {
-                        removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
-                        addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
-                    });
-                }
-            });
-        }
-
+        consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+            // array mit cookie uids
+            var cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
+            if (el.checked || toSave === 'all') {
+                cookieUids.forEach(function (uid) {
+                    consents.push(uid);
+                    addScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                });
+            } else {
+                cookieUids.forEach(function (uid) {
+                    removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                });
+            }
+        });
         cookieData.consents = consents;
-        debugLog('saveConsent: Finale Consents', consents);
+        Cookies.set('consent_manager', JSON.stringify(cookieData), { expires: expires, path: '/', sameSite: 'Lax', secure: false });
 
-        // Remove potential old/stale consent cookies before setting a new one.
-        try {
-            deleteCookies();
-        } catch (e) {
-            // defensive - deleteCookies may fail in some environments
-            console.warn('Consent Manager: deleteCookies() failed before setting cookie', e);
-        }
+        var http = new XMLHttpRequest(),
+            url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager',
+            params = 'domain=' + consent_manager_parameters.domain + '&consentid=' + consent_manager_parameters.consentid;
+        http.open('POST', url, false);
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        http.send(params);
 
-        cmCookieAPI.set('consentmanager', JSON.stringify(cookieData));
-        
-        // Google Consent Mode v2 Update
-        if (typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
-            var googleConsentFlags = mapConsentsToGoogleFlags(consents);
-            debugLog('Mapping consents to Google flags', consents, googleConsentFlags);
-            window.GoogleConsentModeV2.setConsent(googleConsentFlags);
-        } else {
-            debugLog('Google Consent Mode not available for mapping');
-        }
-        
-        if (typeof cmCookieAPI.get('consentmanager') === 'undefined') {
-            consent_manager_parameters.no_cookie_set = true;
-            console.warn('Addon consent_manager: Es konnte kein Cookie für die Domain ' + document.domain + ' gesetzt werden!');
-        } else {
-            // Async logging to avoid blocking UI (replaced deprecated synchronous XHR)
-            var url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager&buster=' + new Date().getTime();
-            var params = 'domain=' + encodeURIComponent(document.domain) + '&consentid=' + encodeURIComponent(consent_manager_parameters.consentid) + '&buster=' + new Date().getTime();
-            
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Cache-Control': 'no-cache, no-store, max-age=0'
-                },
-                body: params
-            }).catch(function(error) {
-                console.error('Addon consent_manager: Fehler beim speichern des Consent!', error);
-                debugLog('Consent logging failed', error);
-            });
-        }
-
-        if (document.querySelectorAll('.consent_manager-show-box-reload').length || consent_manager_parameters.forcereload === 1) {
+        if (document.querySelectorAll('.consent_manager-show-box-reload').length) {
             location.reload();
         } else {
             document.dispatchEvent(new CustomEvent('consent_manager-saved', { detail: JSON.stringify(consents) }));
@@ -355,173 +139,32 @@ function debugLog(message, data) {
 
     function deleteCookies() {
         var domain = consent_manager_parameters.domain;
-        var hostname = window.location.hostname;
-        
-        // Liste aller möglichen Cookie-Namen (alt + neu) für komplette Bereinigung
-        var cookieNamesToDelete = ['consent_manager', 'consent_manager_test', 'consentmanager', 'consentmanager_test'];
-        
-        // Explizit alle Cookie-Namen bereinigen (alt + neu, alle Domain-Varianten)
-        cookieNamesToDelete.forEach(function(name) {
-            // Ohne Domain
-            Cookies.remove(name);
-            Cookies.remove(name, { 'path': '/' });
-            
-            // Mit Domain-Varianten
-            Cookies.remove(name, { 'domain': domain });
-            Cookies.remove(name, { 'domain': domain, 'path': '/' });
-            Cookies.remove(name, { 'domain': ('.' + domain) });
-            Cookies.remove(name, { 'domain': ('.' + domain), 'path': '/' });
-            
-            if (hostname !== domain) {
-                Cookies.remove(name, { 'domain': hostname });
-                Cookies.remove(name, { 'domain': hostname, 'path': '/' });
-                Cookies.remove(name, { 'domain': ('.' + hostname) });
-                Cookies.remove(name, { 'domain': ('.' + hostname), 'path': '/' });
-            }
-        });
+        for (var key in Cookies.get()) {
+            Cookies.remove(encodeURIComponent(key));
+            Cookies.remove(encodeURIComponent(key), { 'domain': domain });
+            Cookies.remove(encodeURIComponent(key), { 'path': '/' });
+            Cookies.remove(encodeURIComponent(key), { 'domain': domain, 'path': '/' });
+            Cookies.remove(encodeURIComponent(key), { 'domain': ('.' + domain) });
+            Cookies.remove(encodeURIComponent(key), { 'domain': ('.' + domain), 'path': '/' });
+        }
     }
 
     function addScript(el) {
+        var scriptDom;
         if (!el) {
-            debugLog('addScript: Element ist null/undefined');
             return;
         }
-        
-        var uid = el.getAttribute('data-uid') || 'unknown';
-        debugLog('addScript: Processing element', {uid: uid, element: el});
-        
         if (!el.children.length) {
-            var encodedScript = el.getAttribute('data-script');
-            debugLog('addScript: Encoded script data', {
-                length: encodedScript ? encodedScript.length : 0,
-                preview: encodedScript ? encodedScript.substring(0, 50) + '...' : 'empty'
-            });
-            
-            if (!encodedScript) {
-                debugLog('addScript: Kein data-script Attribut gefunden');
-                return;
-            }
-            
-            var scriptContent = '';
-            try {
-                scriptContent = window.atob(encodedScript);
-                debugLog('addScript: Script erfolgreich dekodiert', {
-                    length: scriptContent.length,
-                    preview: scriptContent.substring(0, 100)
-                });
-            } catch (e) {
-                console.error('addScript: Fehler beim Base64-Dekodieren', e);
-                debugLog('addScript: Base64-Dekodierung fehlgeschlagen', e);
-                return;
-            }
-            
-            if (!scriptContent) {
-                debugLog('addScript: Script-Inhalt ist leer nach Dekodierung');
-                return;
-            }
-            
-            // Validierung: Prüfe auf ungültige Zeichen oder fehlerhafte Kodierung
-            if (scriptContent.includes('\ufffd') || scriptContent.includes('�')) {
-                console.error('addScript: Script enthält ungültige Zeichen (fehlerhaftes Encoding)', {
-                    uid: uid,
-                    preview: scriptContent.substring(0, 100)
-                });
-                debugLog('addScript: Ungültiges Encoding erkannt, überspringe Script');
-                return;
-            }
-            
-            var scriptDom = null;
-            try {
-                scriptDom = new DOMParser().parseFromString(scriptContent, 'text/html');
-                debugLog('addScript: DOM geparst, Scripts gefunden:', scriptDom.scripts.length);
-            } catch (e) {
-                console.error('addScript: Fehler beim Parsen des HTML', e);
-                debugLog('addScript: HTML-Parsing fehlgeschlagen', e);
-                return;
-            }
-            
-            if (!scriptDom || !scriptDom.scripts || scriptDom.scripts.length === 0) {
-                debugLog('addScript: Keine Scripts im geparsten DOM gefunden');
-                return;
-            }
-            
-            // Get nonce from consent_manager_parameters (passed from PHP)
-            var nonce = consent_manager_parameters.cspNonce || null;
-            
-            // CSP-compatible: Create script elements properly
+            scriptDom = new DOMParser().parseFromString(window.atob(el.getAttribute('data-script')), 'text/html');
             for (var i = 0; i < scriptDom.scripts.length; i++) {
-                var originalScript = scriptDom.scripts[i];
                 var scriptNode = document.createElement('script');
-                
-                debugLog('addScript: Processing script #' + (i + 1), {
-                    hasSrc: !!originalScript.src,
-                    src: originalScript.src || 'inline',
-                    hasContent: !!originalScript.textContent,
-                    contentLength: originalScript.textContent ? originalScript.textContent.length : 0,
-                    attributes: originalScript.attributes.length
-                });
-                
-                // Apply nonce if available
-                if (nonce) {
-                    scriptNode.setAttribute('nonce', nonce);
-                    debugLog('addScript: Nonce gesetzt', nonce);
-                }
-                
-                // Copy other attributes
-                for (var j = 0; j < originalScript.attributes.length; j++) {
-                    var attr = originalScript.attributes[j];
-                    if (attr.name !== 'nonce') { // Don't override nonce
-                        scriptNode.setAttribute(attr.name, attr.value);
-                        debugLog('addScript: Attribut kopiert', {name: attr.name, value: attr.value});
-                    }
-                }
-                
-                // Set src or inline content
-                if (originalScript.src) {
-                    scriptNode.src = originalScript.src;
-                    debugLog('addScript: External script wird geladen', originalScript.src);
+                if (scriptDom.scripts[i].src) {
+                    scriptNode.src = scriptDom.scripts[i].src;
                 } else {
-                    // Set inline script content
-                    var inlineContent = originalScript.textContent;
-                    if (inlineContent) {
-                        scriptNode.textContent = inlineContent;
-                        debugLog('addScript: Inline script gesetzt', {
-                            contentLength: inlineContent.length,
-                            preview: inlineContent.substring(0, 100)
-                        });
-                    } else {
-                        debugLog('addScript: Inline script ist leer');
-                        continue;
-                    }
+                    scriptNode.innerHTML = scriptDom.scripts[i].innerHTML;
                 }
-                
-                // Append to document body
-                try {
-                    document.body.appendChild(scriptNode);
-                    debugLog('addScript: Script erfolgreich zum DOM hinzugefügt');
-                } catch (e) {
-                    // Enhanced error logging with CSP/CORS hints
-                    var errorInfo = {
-                        error: e.message,
-                        uid: uid,
-                        hasSrc: !!scriptNode.src,
-                        hasContent: !!scriptNode.textContent,
-                        src: scriptNode.src || 'inline'
-                    };
-                    
-                    // Check for common CSP/CORS issues
-                    if (e.message && (e.message.includes('Content Security Policy') || e.message.includes('CSP'))) {
-                        errorInfo.hint = 'CSP violation - check Content-Security-Policy header';
-                    } else if (scriptNode.src && e.message && e.message.includes('CORS')) {
-                        errorInfo.hint = 'CORS error - external script may be blocked';
-                    }
-                    
-                    console.error('addScript: Fehler beim Hinzufügen des Scripts', errorInfo);
-                    debugLog('addScript: Fehler beim appendChild', e);
-                }
+                el.appendChild(scriptNode);
             }
-        } else {
-            debugLog('addScript: Element hat bereits children, wird übersprungen');
         }
     }
 
@@ -535,7 +178,7 @@ function debugLog(message, data) {
     function showBox() {
         consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
             var check = true,
-                cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
+                cookieUids = JSON.parse(el.getAttribute('data-cookie-uids'));
             cookieUids.forEach(function (uid) {
                 if (consents.indexOf(uid) === -1) {
                     check = false;
@@ -549,212 +192,6 @@ function debugLog(message, data) {
             document.querySelector('body').style.overflow = 'hidden';
         }
         document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-        document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'false');
-        
-        // Initialize aria-expanded for toggle button (A11y)
-        var toggleBtn = document.getElementById('consent_manager-toggle-details');
-        if (toggleBtn) {
-            toggleBtn.setAttribute('aria-expanded', 'false');
-        }
-        
-        // Focus the dialog wrapper for better accessibility (WCAG 2.1)
-        // This allows screen readers to announce the dialog and users can tab to interactive elements
-        // Focusing a button directly would bias user choice and is not recommended
-        var dialogWrapper = document.getElementById('consent_manager-wrapper');
-        if (dialogWrapper) {
-            // Use setTimeout to ensure DOM is ready
-            setTimeout(function() {
-                dialogWrapper.focus();
-            }, 100);
-        }
-        
-        // Trigger show event (Issue #156)
-        document.dispatchEvent(new CustomEvent('consent_manager-show'));
     }
 
 })();
-
-function mapConsentsToGoogleFlags(consents) {
-    var flags = {
-        'ad_storage': false,
-        'ad_user_data': false,
-        'ad_personalization': false,
-        'analytics_storage': false,
-        'personalization_storage': false,
-        'functionality_storage': false,
-        'security_storage': false
-    };
-
-    consents.forEach(function(uid) {
-        var lowerUid = uid.toLowerCase();
-        debugLog('Mapping UID', uid, lowerUid);
-        
-        // Standard Consent Manager Gruppen
-        if (lowerUid === 'analytics') {
-            flags['analytics_storage'] = true;
-            debugLog('Mapped analytics to analytics_storage');
-        }
-        if (lowerUid === 'marketing') {
-            flags['ad_storage'] = true;
-            flags['ad_user_data'] = true;
-            flags['ad_personalization'] = true;
-            debugLog('Mapped marketing to ad_*');
-        }
-        if (lowerUid === 'functional') {
-            flags['functionality_storage'] = true;
-            debugLog('Mapped functional to functionality_storage');
-        }
-        if (lowerUid === 'preferences') {
-            flags['personalization_storage'] = true;
-            debugLog('Mapped preferences to personalization_storage');
-        }
-        if (lowerUid === 'necessary') {
-            flags['security_storage'] = true;
-            debugLog('Mapped necessary to security_storage');
-        }
-        
-        // Google Analytics
-        if (lowerUid.includes('google-analytics') || lowerUid.includes('analytics') || lowerUid.includes('ga')) {
-            flags['analytics_storage'] = true;
-        }
-        
-        // Google Tag Manager
-        if (lowerUid.includes('google-tag-manager') || lowerUid.includes('gtm') || lowerUid.includes('tag-manager')) {
-            flags['analytics_storage'] = true;
-            flags['ad_storage'] = true;
-            flags['ad_user_data'] = true;
-            flags['ad_personalization'] = true;
-        }
-        
-        // Google Ads
-        if (lowerUid.includes('google-ads') || lowerUid.includes('adwords') || lowerUid.includes('google-adwords')) {
-            flags['ad_storage'] = true;
-            flags['ad_user_data'] = true;
-            flags['ad_personalization'] = true;
-        }
-        
-        // Facebook Pixel
-        if (lowerUid.includes('facebook-pixel') || lowerUid.includes('facebook') || lowerUid.includes('meta-pixel')) {
-            flags['ad_storage'] = true;
-            flags['ad_user_data'] = true;
-            flags['ad_personalization'] = true;
-        }
-        
-        // YouTube
-        if (lowerUid.includes('youtube') || lowerUid.includes('yt')) {
-            flags['ad_storage'] = true;
-            flags['personalization_storage'] = true;
-        }
-        
-        // Google Maps
-        if (lowerUid.includes('google-maps') || lowerUid.includes('maps') || lowerUid.includes('gmaps')) {
-            flags['functionality_storage'] = true;
-            flags['personalization_storage'] = true;
-        }
-        
-        // Matomo
-        if (lowerUid.includes('matomo') || lowerUid.includes('piwik')) {
-            flags['analytics_storage'] = true;
-        }
-        
-        // Hotjar
-        if (lowerUid.includes('hotjar')) {
-            flags['analytics_storage'] = true;
-        }
-        
-        // Microsoft Clarity
-        if (lowerUid.includes('microsoft-clarity') || lowerUid.includes('clarity')) {
-            flags['analytics_storage'] = true;
-        }
-        
-        // LinkedIn
-        if (lowerUid.includes('linkedin')) {
-            flags['ad_storage'] = true;
-            flags['ad_user_data'] = true;
-            flags['ad_personalization'] = true;
-        }
-        
-        // TikTok
-        if (lowerUid.includes('tiktok')) {
-            flags['ad_storage'] = true;
-            flags['ad_user_data'] = true;
-            flags['ad_personalization'] = true;
-        }
-        
-        // Pinterest
-        if (lowerUid.includes('pinterest')) {
-            flags['ad_storage'] = true;
-            flags['ad_user_data'] = true;
-            flags['ad_personalization'] = true;
-        }
-        
-        // Booking.com
-        if (lowerUid.includes('booking')) {
-            flags['ad_storage'] = true;
-            flags['ad_user_data'] = true;
-            flags['ad_personalization'] = true;
-        }
-        
-        // HubSpot
-        if (lowerUid.includes('hubspot')) {
-            flags['analytics_storage'] = true;
-            flags['ad_storage'] = true;
-            flags['ad_user_data'] = true;
-            flags['ad_personalization'] = true;
-        }
-        
-        // WhatsApp Business
-        if (lowerUid.includes('whatsapp')) {
-            flags['functionality_storage'] = true;
-        }
-    });
-
-    debugLog('Final mapped flags', flags);
-    return flags;
-}
-
-function consent_manager_showBox() {
-    var consents = [];
-    var cookieValue = cmCookieAPI.get('consentmanager');
-    if (typeof cookieValue !== 'undefined') {
-        cookieData = safeJSONParse(cookieValue, {});
-        if (cookieData.hasOwnProperty('version')) {
-            consents = cookieData.consents;
-        }
-    }
-    consent_managerBox = document.getElementById('consent_manager-background');
-    consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
-        var check = true,
-            cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
-        cookieUids.forEach(function (uid) {
-            if (consents.indexOf(uid) === -1) {
-                check = false;
-            }
-        });
-        if (check) {
-            el.checked = true;
-        }
-    });
-    if (consent_manager_parameters.hidebodyscrollbar) {
-        document.querySelector('body').style.overflow = 'hidden';
-    }
-    document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-    document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'false');
-    
-    // Focus the dialog wrapper for better accessibility (WCAG 2.1)
-    // This allows screen readers to announce the dialog and users can tab to interactive elements
-    // Focusing a button directly would bias user choice and is not recommended
-    var dialogWrapper = document.getElementById('consent_manager-wrapper');
-    if (dialogWrapper) {
-        setTimeout(function() {
-            dialogWrapper.focus();
-        }, 100);
-    }
-}
-
-function consent_manager_hasconsent(id) {
-    if (typeof cmCookieAPI.get('consentmanager') !== 'undefined') {
-        return safeJSONParse(cmCookieAPI.get('consentmanager'), {consents: []}).consents.indexOf(id) !== -1;
-    }
-    return false;
-}

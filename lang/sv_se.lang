@@ -1,410 +1,78 @@
-consent_manager_title = Consent Manager
+consent_manager_title = Cookies-grejerna
 consent_manager_name = Namn
-consent_manager_name_empty_msg = Namn är ett obligatoriskt fält
+consent_manager_name_empty_msg = Namn är obligatoriskt
 consent_manager_uid = Nyckel
-consent_manager_prio = Ordning
+consent_manager_prio = Rangföljd
 consent_manager_uid_with_hint = Nyckel [a-z0-9-]
 consent_manager_uid_empty_msg = Nyckel är ett obligatoriskt fält
-consent_manager_uid_malformed_msg = Nyckel får bara innehålla små a-z, 0-9 och -, t.ex. "google-analytics" eller "youtube"
+consent_manager_uid_malformed_msg = Nyckeln kan endast bestå av små a-z, 0-9 och -, t.ex. "google-analytics" eller "youtube"
 consent_manager_description = Beskrivning
-consent_manager_not_deletable = Denna post kan inte raderas eftersom den behövs av tillägget
-consent_manager_successfully_deleted = Post raderad
-consent_manager_help = Hjälp
-consent_manager_changelog = Ändringslogg
+consent_manager_not_deletable = Denna post kan inte tas bort eftersom den krävs av tillägget
+consent_manager_successfully_deleted = Posten raderad
+consent_manager_help = Hjällp
 
-# Frontend Text Keys (från 4.3.0 export)
-headline = Integritetsinställningar
-description = Vår webbplats använder externa tjänster för olika ändamål, såsom statistik eller leverans av multimedia. Genom att välja och bekräfta tjänsterna samtycker du till överföring av data till dessa tjänster. Dessa tjänster och även denna webbplats kan sätta cookies. Valet kan ändras och återkallas när som helst.
-toggle_details = Visa/dölj detaljer
-provider = Leverantör:
-link_privacy = Integritetspolicy
-lifetime = Livstid:
-button_accept = Bekräfta val
-button_select_all = Välj alla
-cookiename = Cookie-namn:
-service = Tjänst:
-usage = Användningsområde:
-category = Kategori:
-value = Värde:
-missingdescription = Ingen information tillgänglig
-headline_usedcookies = Denna webbplats använder för närvarande följande cookies
-headline_mayusedcookies = Cookies som denna webbplats kan använda
-headline_currentconsent = Ditt nuvarande samtycke
-headline_historyconsent = Din samtyckes-historik
-consent_date = Samtyckesdatum
-consent_id = Samtyckes-ID
-consent_consents = Samtycken
-edit_consent = Redigera cookie-inställningar
-button_select_none = Endast nödvändiga
-
-consent_manager_cookies = Tjänster
-consent_manager_cookie_add = Skapa tjänst
-consent_manager_cookie_edit = Redigera tjänst
-consent_manager_cookie_consent_manager_info = "consent_manager" behövs av tillägget, denna cookie lagrar användarens val.
-consent_manager_cookie_notice_provider_link_privacy = Lämna tom för domänens integritetspolicy
-consent_manager_cookie_service_name = Tjänst-/Cookie-namn
+consent_manager_cookies = Cookies
+consent_manager_cookie_add = Skapa cookie
+consent_manager_cookie_edit = Beaebeta cookie:n
+consent_manager_cookie_consent_manager_info = "consent_manager" krävs av tillägget, användarens val sparas i denna cookie.
+consent_manager_cookie_notice_provider_link_privacy = Lämna tomt för dataskyddsdeklarationen för domänen
+consent_manager_cookie_service_name = Servicenamn
 consent_manager_cookie_provider = Leverantör
-consent_manager_cookie_provider_link_privacy = Länk till integritetspolicy
-consent_manager_cookie_definition = Definitioner (YAML)
-consent_manager_cookie_placeholder_text = Platshållartext
-consent_manager_cookie_placeholder_text_notice = Endast för inline-samtycke: Informationstext som visas i platshållaren (t.ex. "Cookies krävs för att visa denna video."). Lämna tomt för global standardtext.
-consent_manager_cookie_placeholder_image = Platshållarbild
-consent_manager_cookie_placeholder_image_notice = Endast för inline-samtycke: Förhandsvisningsbild från mediapoolen som visas i platshållaren. YouTube/Vimeo-miniatyrer genereras automatiskt.
-consent_manager_cookie_malformed_yaml = Definitioner (YAML) är ogiltiga! Vänligen ange korrekt YAML-kod.
+consent_manager_cookie_provider_link_privacy = Dataskyddsdeklaration länk
+consent_manager_cookie_definition = Cookie definitionen (YAML)
+consent_manager_cookie_placeholder_text = Platshållare text
+consent_manager_cookie_placeholder_image = Platshållare bild
 
-consent_manager_cookiegroups = Grupper
-consent_manager_cookiegroup_add = Skapa grupp
-consent_manager_cookiegroup_edit = Redigera grupp
-consent_manager_cookiegroup_required = denna grupp innehåller tekniskt nödvändiga tjänster och cookies
-consent_manager_cookiegroup_scripts = Skript som laddas efter samtycke
-consent_manager_cookiegroup_scripts_unselect = Skript som laddas efter återkallande av samtycke
-consent_manager_cookiegroup_scripts_notice = Ange skript inklusive <code><script>...</script></code>
-consent_manager_cookiegroup_nodomain_notice = Ingen domän eller tjänster tilldelade än! Samtyckes-boxen kanske inte visas i frontend.
+consent_manager_cookiegroups = Cookie grupper
+consent_manager_cookiegroup_add = Skapa cookie grupp
+consent_manager_cookiegroup_edit = Bearbeta cookie grupp
+consent_manager_cookiegroup_required = denna cookie-grupp innehåller de tekniskt nödvändiga cookies
+consent_manager_cookiegroup_scripts = Skript som laddas efter godkännande
+consent_manager_cookiegroup_scripts_notice = Ange skript inklusive <code> <script> ... </script> </code>
 
-consent_manager_texts = Texter
-consent_manager_text = Text
+consent_manager_texts = Cookie texter
+consent_manager_text = text
 consent_manager_text_add = Skapa text
-consent_manager_text_edit = Redigera text
+consent_manager_text_edit = Bearbeta text
 
 consent_manager_domains = Domäner
 consent_manager_domain = Domän
-consent_manager_domain_empty_msg = Domän är ett obligatoriskt fält
-consent_manager_domain_malformed_msg = Vänligen ange domän i format <code>mindomän.se</code>
-consent_manager_domain_add = Lägg till domän
-consent_manager_domain_edit = Redigera domän
-consent_manager_domain_privacy_policy = Integritetspolicy
-consent_manager_domain_legal_notice = Juridisk information
-consent_manager_domain_privacy_policy_empty_msg = Integritetspolicy är ett obligatoriskt fält
-consent_manager_domain_legal_notic_empty_msg = Juridisk information är ett obligatoriskt fält
+consent_manager_domain_empty_msg = Domän är obligatoriskt
+consent_manager_domain_malformed_msg = Ange domänen i formatet <code> meinedomain.de </code>
+consent_manager_domain_add = Tillfoga domän
+consent_manager_domain_edit = Bearbeta domän
+consent_manager_domain_privacy_policy = Dataskyddsdeklaration
+consent_manager_domain_legal_notice = Impressum
+consent_manager_domain_privacy_policy_empty_msg = Dataskyddsdeklaration är ett obligatoriskt fält
+consent_manager_domain_legal_notic_empty_msg = Impressum är ett obligatoriskt fält
 
-consent_manager_setup = Import / Export
+consent_manager_setup = Setup
 consent_manager_setup_headline = Importera exempelkonfiguration
-consent_manager_setup_info = Texter och vanligt behövda cookies/cookie-grupper importeras.<br>VARNING - befintliga texter och cookies/cookie-grupper raderas.
+consent_manager_setup_info = Texter och ofta använda cookies / cookiegrupper importeras. <br> <strong> OBS! - befintliga texter och cookies / cookiegrupper raderas. </strong>
 consent_manager_setup_import = Import
-consent_manager_setup_import_confirm = Importera data och radera befintliga!?
-consent_manager_setup_import_successful = Exempelkonfiguration importerad framgångsrikt
+consent_manager_setup_import_confirm = Importera data och ta bort befintliga!?
+consent_manager_setup_import_successful = Exempelkonfigurationen importerades
 
-# Export/Import
-consent_manager_export_headline = Exportera konfiguration
-consent_manager_export = Export
-consent_manager_export_info = Exporterar alla tjänster, grupper, texter och domäner som JSON-fil för säkerhetskopiering eller överföring till andra installationer.
-consent_manager_export_download = Ladda ner konfiguration
+consent_manager_cache_write_failed = Cachefile kunde inte skrivas
 
-consent_manager_import_headline = Importera konfiguration
-consent_manager_import = Import
-consent_manager_import_info = Importerar en tidigare exporterad JSON-konfiguration.<br><b>VARNING - befintlig data raderas.</b>
-consent_manager_import_file_label = Välj JSON-fil
-consent_manager_import_json = Importera JSON
-consent_manager_import_json_confirm = Importera JSON-fil och radera befintlig data!?
-consent_manager_import_json_successful = JSON-konfiguration importerad framgångsrikt
-
-# Cookie Definition Builder
-consent_manager_cookie_definition_builder = Cookie Definition Builder
-consent_manager_cookie_name = Cookie-namn
-consent_manager_cookie_name_help = t.ex. _ga, PHPSESSID, consent_manager
-consent_manager_cookie_time = Lagringsvaraktighet
-consent_manager_cookie_time_help = t.ex. 1 år, Session, 30 dagar
-consent_manager_cookie_desc = Beskrivning
-consent_manager_cookie_desc_help = Syfte och funktionalitet för cookien
-consent_manager_cookie_desc_placeholder = Beskrivning av cookien och dess syfte...
-consent_manager_cookie_actions = Åtgärder
-consent_manager_cookie_add_row = Lägg till cookie-rad
-consent_manager_cookie_remove_row = Ta bort cookie-rad
-consent_manager_cookie_add_cookie = Lägg till cookie
-consent_manager_cookie_toggle_yaml = Visa YAML-kod
-consent_manager_cookie_hide_yaml = Dölj YAML-kod
-consent_manager_cookie_yaml_preview = YAML-förhandsgranskning
-consent_manager_import_confirm = Importera JSON-konfiguration och radera befintlig data!?
-consent_manager_import_json_successful = JSON-konfiguration importerad framgångsrikt
-consent_manager_import_json_error = Fel vid import av JSON-konfiguration
-consent_manager_import_json_invalid = Ogiltig JSON-fil
-consent_manager_import_json_no_file = Ingen fil vald
-consent_manager_import_json_invalid_extension = Endast JSON-filer (.json) är tillåtna
-consent_manager_import_json_file_too_large = Filen är för stor (max. 2MB tillåtet)
-
-# Welcome Modal
-consent_manager_welcome_modal_title = Välkommen till Consent Manager
-consent_manager_welcome_modal_intro = Denna guide hjälper till med att sätta upp cookie-samtyckessystemet:
-consent_manager_welcome_modal_step1_title = 1. Importera standardtjänster
-consent_manager_welcome_modal_step1_desc = Importera förkonfigurerade tjänster som Google Analytics, Facebook Pixel, YouTube etc.
-consent_manager_welcome_modal_step2_title = 2. Konfigurera domän
-consent_manager_welcome_modal_step2_desc = Definiera domäner för vilka Consent Manager ska vara aktiv.
-consent_manager_welcome_modal_step3_title = 3. Anpassa tjänster
-consent_manager_welcome_modal_step3_desc = Redigera importerade tjänster och lägg till anpassade tjänster.
-consent_manager_welcome_modal_step4_title = 4. Anpassa texter
-consent_manager_welcome_modal_step4_desc = Anpassa samtyckes-box texter enligt dina behov.
-consent_manager_welcome_modal_step5_title = 5. Välj tema
-consent_manager_welcome_modal_step5_desc = Välj en design för samtyckes-boxen.
-consent_manager_welcome_modal_link_setup = Till Import/Export
-consent_manager_welcome_modal_link_domains = Till Domäner
-consent_manager_welcome_modal_link_services = Till Tjänster/Cookies
-consent_manager_welcome_modal_link_texts = Till Texter
-consent_manager_welcome_modal_link_theme = Till Teman
-consent_manager_welcome_modal_dont_show = Visa inte denna hjälp igen
-consent_manager_welcome_modal_button_close = Förstått!
-
-consent_manager_cache_write_failed = Cache-fil kunde inte skrivas
-
-consent_manager_config = Inställningar
-consent_manager_config_title = Consent Manager-inställningar
-consent_manager_config_legend = Frontend-utmatningsinställningar
-consent_manager_config_css_desc = Om aktiverat matas CSS för frontend endast ut när det behövs.<br>1. När ingen cookie för Consent Manager har satts än (cookie consent_manager)<br>2. När en länk för att öppna samtyckes-boxen finns på webbplatsen (med klassen <code>consent_manager-show-box</code> eller <code>consent_manager-show-box-reload</code>).
-consent_manager_config_css = Mata ut CSS i frontend endast vid behov
-consent_manager_config_owncss_desc = Om aktiverat matas ingen standard-CSS för samtyckes-boxen ut i frontend (consent_manager_frontend.css).<br>CSS för styling av samtyckes-boxen måste finnas i egna CSS-filer!
-consent_manager_config_owncss = Använd anpassad CSS
-consent_manager_config_hidebodyscrollbar = Dölj webbplatsens scrollbar
-consent_manager_config_hidebodyscrollbar_desc = Om aktiverat döljs webbplatsens scrollbar när samtyckes-boxen visas. Detta förhindrar scrollning av webbplatsen i bakgrunden av boxen. När samtyckes-boxen stängs visas scrollbaren igen.
-consent_manager_config_lifespan_label = Livstid
-consent_manager_config_lifespan_notice = Livstid för inställningscookien i dagar. Standard: 365
-consent_manager_config_token_legend = Hoppa över samtyckesruta
+consent_manager_config = Inställningarna
+consent_manager_config_title = Inställningar för Consent-Manager
+consent_manager_config_legend = Utgångsinställningar frontend
+consent_manager_config_css_desc = Om det är aktiverat matas CSS endast ut för frontend om detta är nödvändigt. <br> 1. Om ingen cookie ännu har ställts in för samtyckehanteraren (cookie consent_manager) <br> 2. Om det finns en länk för att öppna samtyckesrutan på webbplatsen (med klassens tillstånd_manager-show-box eller consent_manager-show-box-reload).  volume_up content_copy  share
+consent_manager_config_css = Ladda CSS i frontend endast när det behövs
+consent_manager_config_owncss_desc = Om den är aktiverad matas ingen standard-CSS för samtyckesrutan ut i frontend (consent_manager_frontend.css). <br> CSS för att utforma samtyckesrutan måste finnas i sina egna CSS-filer!
+consent_manager_config_owncss = Använda egna CSS
+consent_manager_config_hidebodyscrollbar = Dölj rullningslisten på webbplatsen
+consent_manager_config_hidebodyscrollbar_desc = Om den är aktiverad döljs webbplatsens rullningslåda när samtyckesrutan visas. Detta förhindrar att webbplatsen rullar i rutans bakgrund. När samtyckesrutan stängs visas rullningslisten igen.
+consent_manager_config_token_legend = Hoppa över samtyckesfönstret
 consent_manager_config_token_label = Token
-consent_manager_config_token_notice = Skicka denna token som GET-parameter <code>skip_consent=MITTTOKEN</code> för att hoppa över samtycke.
+consent_manager_config_token_notice = Skicka denna token som en GET-parameter <code> skip_consent = MINTOKEN </code> för att hoppa över samtycket.
 
-consent_manager_log = Samtyckes-logg
-consent_manager_thead_title = Samtyckes-logg
-consent_manager_thead_id = ID
-consent_manager_thead_createdate = Datum
-consent_manager_thead_domain = Domän
-consent_manager_thead_ip = IP
-consent_manager_thead_consents = Samtycken
-consent_manager_thead_cachelogid = Cache-logg-ID
-consent_manager_thead_consentid = Samtyckes-ID
-
-consent_manager_theme = Teman
-consent_manager_config_owncss_active = "Använd anpassad CSS" är aktivt i inställningar. För att använda teman måste denna inställning inaktiveras!
-consent_manager_config_active_theme = [Aktivt tema]
-consent_manager_config_btn_preview = Tema-förhandsgranskning
-consent_manager_config_btn_select = Tillämpa tema <b>{0}</b>
-consent_manager_config_confirm_select = Tillämpa tema [ {0} ]!?
-consent_manager_config_saved = Tema har tillämpats och är nu aktivt!
-consent_manager_config_invalid_theme = Ogiltig tema-fil. Ingen tema-information tillgänglig!
-
-consent_manager_theme_name = Tema-namn:
-consent_manager_theme_scssfile = SCSS-fil:
-consent_manager_theme_description = Beskrivning:
-consent_manager_theme_type = Tema-typ:
-consent_manager_theme_style = Tema-stil:
-consent_manager_theme_autor = Författare:
-
-consent_manager_themes_addon = Teman i Consent Manager-tillägg
-consent_manager_themes_addon_info = (SCSS-filer i mapp: <b>./src/addons/consent_manager/scss/</b>)
-consent_manager_themes_project_addon = Teman i projekt-tillägg
-consent_manager_themes_project_addon_info = (SCSS-filer i mapp: <b>./src/addons/project/consent_manager_themes/</b>)
-
-consent_manager_error_no_themes = Inga teman tillgängliga!<br>Mapp: {0}
-consent_manager_error_css_notfound = Den begärda SCSS-filen '{0}' finns inte!
-consent_manager_error_noconfig = Inga texter/domäner/tjänster konfigurerade än!
-
-consent_manager_theme_preview_info = <b>Anteckningar:</b> Ingen cookie sätts! ESC för att avsluta förhandsvisning. Klick på sida återöppnar popup.
-
-consent_manager_cronjob_delete = Samtyckes-logg: radera gamla poster
-consent_manager_cronjob_delete_days = Ålder i dagar
-consent_manager_cronjob_delete_days_notice = Radera alla poster äldre än detta antal dagar
-consent_manager_cronjob_deleted = {0} poster raderades
-consent_manager_cronjob_not_available = Consent Manager-tillägg är inte aktiverat
-consent_manager_cronjob_none_deleted = Inga poster raderades
-
-# Google Consent Mode v2
-consent_manager_google_mode_title = Google Consent Mode v2
-consent_manager_google_mode_disabled = Inaktiverad
-consent_manager_consent_manager_google_mode_auto = Aktiverad (Auto-mappning)
-consent_manager_google_mode_manual = Aktiverad (Manuell)
-consent_manager_google_mode_notice = ● Inaktiverad: Ingen Google Consent Mode<br>● Auto-mappning: Tjänster upptäcks automatiskt och gtag('consent', 'update') anrop genereras<br>● Manuell: Endast gtag('consent', 'default') - gtag('consent', 'update') måste implementeras i tjänsteskript
-
-# Google Consent Helper
-consent_manager_google_helper_title = Google Consent Mode v2 Hjälpare
-consent_manager_google_helper_show = Visa hjälpare
-# # FIXME: "google_consent_helper_hide" -> wo wird der Text benötigt?
-google_consent_helper_hide = Dölj hjälpare
-consent_manager_google_helper_description = Automatisk generering av <code>gtag("consent", "update", {...})</code> skript för kända tjänster.
-consent_manager_google_helper_service_type = Tjänstetyp
-consent_manager_google_helper_select_service = -- Välj tjänst --
-consent_manager_google_helper_auto_detection = Föreslås automatiskt baserat på tjänstenamn
-consent_manager_google_helper_consent_script = Samtyckeskript
-consent_manager_google_helper_revoke_script = Återkallningsskript
-consent_manager_google_helper_generated_script = Genererat skript
-consent_manager_google_helper_copy_to_clipboard = Kopiera till urklipp
-consent_manager_google_helper_copy = Kopiera
-
-# Google Consent Service Types
-consent_manager_google_service_analytics = Analytics (analytics_storage)
-consent_manager_google_service_google_analytics = Google Analytics (analytics_storage)
-consent_manager_google_service_google_analytics_4 = Google Analytics 4 (analytics_storage)
-consent_manager_google_service_google_tag_manager = Google Tag Manager
-consent_manager_google_service_google_tag_manager_all = Google Tag Manager (Alla behörigheter) (analytics_storage)
-consent_manager_google_service_matomo = Matomo (analytics_storage)
-# # FIXME: "google_consent_service_matomo-self-hosted" -> wo wird der Text benötigt?
-google_consent_service_matomo-self-hosted = Matomo Self-Hosted (analytics_storage)
-consent_manager_google_service_adwords = Google AdWords (ad_storage, ad_user_data, ad_personalization)
-consent_manager_google_service_google_ads = Google Ads (ad_storage, ad_user_data, ad_personalization)
-consent_manager_google_service_facebook_pixel = Facebook Pixel (ad_storage, ad_user_data, ad_personalization)
-consent_manager_google_service_youtube = YouTube (ad_storage, personalization_storage)
-consent_manager_google_service_google_maps = Google Maps (functionality_storage, personalization_storage)
-
-# Import/Export & Setup
-consent_manager_setup_headline = Importera standardkonfiguration
-consent_manager_setup_import_confirm = Importera data och radera befintliga!?
-consent_manager_setup_import_successful = Exempelkonfiguration importerad framgångsrikt
-
-# Sidnavigation
-consent_manager_import_export = Import / Export
-consent_manager_import_export_title = Hantera konfiguration
-
-# Export/Import
-consent_manager_service_vimeo_name = Vimeo
-consent_manager_service_onoffice_name = onOffice Fastighetsprogram
-consent_manager_service_hrs-hotel-booking_name = HRS Hotellbokningssystem
-consent_manager_service_booking-com_name = Booking.com Widget
-consent_manager_service_immoscout24_name = ImmobilienScout24 Widget
-
-consent_manager_service_pinterest-tag_desc = Pinterest spårning och sociala mediafunktioner
-consent_manager_service_vimeo_desc = Vimeo videospelare och streamingfunktioner
-consent_manager_service_onoffice_desc = Fastighetsprogram och objekthantering
-consent_manager_service_hrs-hotel-booking_desc = HRS hotellbokningswidget
-consent_manager_service_booking-com_desc = Booking.com hotellbokningswidget
-consent_manager_service_immoscout24_desc = ImmobilienScout24 fastighetswidget
-
-# Ytterligare tjänster
-consent_manager_service_matomo-self-hosted_name = Matomo (Self-Hosted)
-consent_manager_service_viato_name = Viato Hotellbokningssystem
-
-consent_manager_service_matomo-self-hosted_desc = Integritetsvänlig webbanalys (självhostad)
-consent_manager_service_viato_desc = Viato hotellbokningswidget
-
-# Snabbstartsguide
-consent_manager_quickstart_title = Consent Manager Snabbstartsguide
-consent_manager_quickstart_welcome = Dessa steg hjälper med initial installation av Consent Manager.
-consent_manager_quickstart_button = Snabbstartsguide
-consent_manager_quickstart_import_hint = Efter import behöver du bara: <strong>Konfigurera domän (Steg 2)</strong> och <strong>Anpassa design (Steg 6)</strong>.<br>Cookie-grupper, tjänster och texter är redan förkonfigurerade.
-consent_manager_quickstart_manual_config = Manuell konfiguration steg för steg (endast om du <u>inte</u> importerade):
-consent_manager_quickstart_step_import = Importera standard-setup
-consent_manager_quickstart_step_import_desc = Importera en förkonfigurerad setup-fil med domän, cookie-grupper, tjänster och texter.
-consent_manager_quickstart_import_hint = Efter import är alla följande steg redan klara! Du behöver då bara justera domänen och välja design.
-consent_manager_quickstart_manual_config = Alternativ: Manuell konfiguration steg för steg (endast om du inte importerade):
-consent_manager_quickstart_step_domain = Konfigurera domän
-consent_manager_quickstart_step_domain_desc = Lägg till och konfigurera webbplatsdomän.
-consent_manager_quickstart_step_cookiegroups = Skapa cookie-grupper
-consent_manager_quickstart_step_cookiegroups_desc = Skapa cookie-grupper som "Tekniskt nödvändiga", "Marknadsföring", "Analys".
-consent_manager_quickstart_step_services = Definiera tjänster/cookies
-consent_manager_quickstart_step_services_desc = Konfigurera specifika tjänster som Google Analytics, Facebook Pixel etc.
-consent_manager_quickstart_step_texts = Anpassa texter
-consent_manager_quickstart_step_texts_desc = Anpassa bannertexter, integritetspolicy och annat innehåll.
-consent_manager_quickstart_step_theme = Välj design
-consent_manager_quickstart_step_theme_desc = Välj lämplig design för cookie-bannern eller anpassa den.
-consent_manager_quickstart_step_template = Mall-integration
-consent_manager_quickstart_step_template_desc = Sista steget: integrera Consent Manager i webbplatsmallen.
-consent_manager_quickstart_template_code_label = Kod för mall:
-consent_manager_quickstart_template_code_info = Denna kod ska placeras före den avslutande </body>-taggen i mallen.
-consent_manager_quickstart_template_final_message = Installation lyckades! Din Consent Manager är nu redo att användas.
-consent_manager_quickstart_privacy_settings_info = Testa funktionalitet via:
-consent_manager_quickstart_privacy_settings_link = Integritetsinställningar
-
-# Import/Export
-consent_manager_quickstart_status_required = alltid obligatorisk
-consent_manager_quickstart_status_final = slutlig
-consent_manager_quickstart_status_recommended = rekommenderad
-consent_manager_quickstart_status_after_import = klar efter import ✓
-
-# Snabbstarts-knapparnas etiketter
-consent_manager_quickstart_btn_domain = Hantera domäner
-consent_manager_quickstart_btn_cookiegroups = Hantera grupper
-consent_manager_quickstart_btn_services = Hantera tjänster
-consent_manager_quickstart_btn_texts = Redigera texter
-consent_manager_quickstart_btn_theme = Välj tema
-consent_manager_quickstart_status_done = klar efter import ✓
-
-# Setup-varianter
-consent_manager_setup_minimal_title = Minimal Setup
-consent_manager_setup_minimal_desc = Endast tekniskt nödvändiga cookies för GDPR-efterlevnad. Perfekt för enkla webbplatser utan spårning.
-consent_manager_setup_minimal_button = Minimal Setup
-consent_manager_setup_minimal_confirm = Importera Minimal Setup?\n\nVARNING: Alla nuvarande inställningar skrivs över!
-
-consent_manager_setup_standard_title = Standard Setup
-consent_manager_setup_standard_desc = Omfattande setup med Google Analytics, Facebook Pixel, YouTube, Google Maps och andra viktiga tjänster.
-consent_manager_setup_standard_button = Standard Setup
-consent_manager_setup_standard_confirm = Importera Standard Setup?\n\nVARNING: Alla nuvarande inställningar skrivs över!
-
-# Integritetsinställningar Länkkod
-consent_manager_privacy_link_label = Integritetsinställningar Länk
-consent_manager_privacy_link_desc = Lägg till denna länk i din integritetspolicy eller sidfot för efterföljande cookie-inställningar:
-consent_manager_privacy_link_code = HTML-kod för Integritetsinställningar Länk
-
-# Användarbehörigheter
-perm_general_consent_manager[texteditonly] = Consent Manager - Redigera endast texter
-perm_general_consent_manager[editor] = Consent Manager - Fullständig åtkomst för redaktörer
-
-# Ytterligare texter för snabbstartsmodal
-consent_manager_quickstart_import_info = Efter import finns grundläggande konfigurationer tillgängliga. Följande steg krävs fortfarande: justera domän, integrera mall-kod och tilldela grupper till domäner.
-consent_manager_quickstart_manual_alternative = — eller konfigurera manuellt —
-consent_manager_quickstart_timeline_intro = Använd följande tidslinje för perfekt installation
-consent_manager_quickstart_status_required = Obligatorisk
-consent_manager_quickstart_copy_button = Kopiera
-consent_manager_quickstart_copy_title = Kopiera kod
-consent_manager_quickstart_recommended = Rekommenderad
-
-# Konfigurationssidans strängar
-consent_manager_config_settings_title = Consent Manager-inställningar
-consent_manager_config_quickstart_title = Snabbstart - Importera Setup
-consent_manager_config_choose_setup = Välj en setup för snabbstart:
-consent_manager_config_standard_setup_title = Standard Setup
-consent_manager_config_standard_setup_desc = Omfattande setup med Google Analytics, Facebook Pixel, YouTube, Google Maps och andra viktiga tjänster.
-consent_manager_config_minimal_setup_title = Minimal Setup
-consent_manager_config_minimal_setup_desc = Endast tekniskt nödvändiga cookies för GDPR-efterlevnad. För erfarna användare som vill göra större delen av konfigurationen själva.
-consent_manager_config_load_complete = Ladda komplett
-consent_manager_config_load_new_only = Endast nya
-consent_manager_config_standard_confirm = Importera Standard Setup?\n\nVARNING: Alla nuvarande inställningar skrivs över!
-consent_manager_config_standard_update_confirm = Standard Setup-uppdatering?\n\nEndast nya tjänster läggs till, befintliga förblir oförändrade.
-consent_manager_config_minimal_confirm = Importera Minimal Setup?\n\nVARNING: Alla nuvarande inställningar skrivs över!
-consent_manager_config_minimal_update_confirm = Minimal Setup-uppdatering?\n\nEndast nya tjänster läggs till, befintliga förblir oförändrade.
-consent_manager_config_export_title = Exportera konfiguration
-consent_manager_config_export_desc = Exportera din nuvarande konfiguration som JSON-fil för säkerhetskopiering eller överföring.
-consent_manager_config_export_button = Exportera JSON
-consent_manager_config_import_title = Importera JSON-konfiguration
-consent_manager_config_import_desc = Importera en tidigare exporterad JSON-konfiguration.
-consent_manager_config_import_button = Importera JSON
-consent_manager_config_after_import_title = Efter setup-import:
-consent_manager_config_step_domains = 1. Konfigurera domän
-consent_manager_config_step_services = 2. Anpassa tjänster
-consent_manager_config_step_texts = 3. Anpassa texter
-consent_manager_config_step_theme = 4. Välj design
-consent_manager_config_template_info = Mall-kod: <code>REX_CONSENT_MANAGER[]</code> (integrera före avslutande <code>body</code>-tagg)
-
-# Ytterligare snabbstartsmodal
-consent_manager_setup_minimal_expert = För erfarna användare som vill göra större delen av konfigurationen själva.
-
-# Importmeddelanden
-consent_manager_import_minimal_success = Minimal setup importerad framgångsrikt - endast tekniskt nödvändiga cookies
-consent_manager_import_minimal_error = Minimal setup-import misslyckades: {0}
-consent_manager_import_minimal_file_not_found = Minimal setup-fil hittades inte: minimal_setup.json
-consent_manager_import_standard_success = Standard setup importerad framgångsrikt - alla viktiga tjänster förkonfigurerade
-consent_manager_import_standard_error = Standard setup-import misslyckades: {0}
-consent_manager_import_standard_file_not_found = Standard setup-fil hittades inte: default_setup.json
-consent_manager_import_minimal_update_success = Minimal setup-uppdatering lyckades - endast nya tjänster tillagda, befintliga oförändrade
-consent_manager_import_minimal_update_error = Minimal setup-uppdatering misslyckades: {0}
-consent_manager_import_standard_update_success = Standard setup-uppdatering lyckades - endast nya tjänster tillagda, befintliga oförändrade
-consent_manager_import_standard_update_error = Standard setup-uppdatering misslyckades: {0}
-consent_manager_quickstart_status_final = Slutförande
-
-# Inline Consent-inställningar
-consent_manager_config_inline_only_mode = Använd endast inline-consent
-consent_manager_config_inline_only_mode_desc = Den globala consent-popupen visas inte som standard. Samtycke begärs endast vid behov via doConsent().
-
-# Domän Inline Consent-inställningar
-consent_manager_domain_inline_only_mode = Inline-endast läge
-consent_manager_domain_inline_only_mode_disabled = Standard (med popup)
-consent_manager_domain_inline_only_mode_enabled = Endast inline-consent
-consent_manager_domain_inline_only_mode_notice = Med "Endast inline-consent" undertrycks den globala consent-popupen. Samtycke begärs endast vid behov via doConsent().
-
-# Inline-platshållartexter (för consent_manager_text-tabell)
-# Dessa kan anpassas via Consent Manager → Texter
-consent_manager_inline_title_fallback_info = Inline-platshållare: Titel-reserv (när ingen specifik titel angiven)
-consent_manager_inline_privacy_notice_info = Inline-platshållare: Integritetsnotis
-consent_manager_inline_action_text_info = Inline-platshållare: Åtgärdstext ("Vad vill du göra?")
-consent_manager_inline_placeholder_text_info = Inline-platshållare: Knapp "Ladda en gång"
-consent_manager_inline_privacy_link_text_info = Inline-platshållare: Länktext "Integritetspolicy från"
-consent_manager_button_inline_details_text_info = Inline-platshållare: Knapp "Inställningar"
-consent_manager_button_inline_allow_all_text_info = Inline-platshållare: Knapp "Tillåt alla"
-
-# Tema-editor
-consent_manager_theme_editor_saved = Tema "{0}" har skapats och sparats framgångsrikt!
-consent_manager_theme_editor_project_addon_required = Tema-editorn kräver det installerade "project"-tillägget för att spara anpassade teman. Vänligen installera project-tillägget via installeraren.
+consent_manager_log =
+consent_manager_thead_title =
+consent_manager_thead_id =
+consent_manager_thead_createdate =
+consent_manager_thead_domain =
+consent_manager_thead_consents =
+consent_manager_thead_cachelogid =
+consent_manager_thead_consentid =

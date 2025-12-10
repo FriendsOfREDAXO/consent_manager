@@ -1,57 +1,10 @@
-/*
-Theme: {"name": "Standard-Theme „Light“", "description": "Theme „Light“ mit hellem Hintergrund, Auswahl mit Checkboxen, farbneutral gehalten", "type": "light", "style": "Popup zentriert, Checkboxen", "autor": "@IngoWinter, @aeberhard"}
-*/
-
-$font-family: Verdana, Geneva, sans-serif;
-$font-size: 14px;
-
-$overlay-background: rgba(0, 0, 0, .4);
-
-$consent_manager-background: #fefefe;
-
-$title-color: #666;
-$text-color: #444;
-
-$close-background: #666;
-$close-color: #eee;
-$close-hover-background: darken($close-background, 10);
-$close-hover-color: lighten($close-color, 10);
-
-$checkbox-color: #111;
-
-$button-background: #999;
-$button-color: #fff;
-$button-hover-background: darken($button-background, 30);
-$button-hover-color: lighten($button-color, 30);
-
-$link-color: #999;
-$link-hover-color: darken($link-color, 20);
-
-$cookie-title-color: $title-color;
-$cookie-title-background: #d4d4d4;
-$cookie-desc-background: #f9f9f9;
-
-/* Animations */
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-/* Overlay */
-
-div.consent_manager-background {
+.consent_manager-background {
     position: fixed;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    background: $overlay-background;
+    background: rgba(0, 0, 0, .6);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,289 +15,263 @@ div.consent_manager-background {
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
-    animation: fadeIn .2s;
-    outline: 0;
 }
-
-/* Wrapper */
-
-div.consent_manager-wrapper {
-    font-family: $font-family;
-    font-size: $font-size;
-    line-height: 1.5em;
-    background: $consent_manager-background;
-    border: 1px solid darken($consent_manager-background, 20);
-    color: $text-color;
+.consent_manager-wrapper {
+    background: #fff;
     position: relative;
+    font-size: 15px;
     width: 100%;
-    max-width: 65em;
-    max-height: 95vh;
+    max-width: 60em;
+    max-height: 100vh;
     overflow-y: auto;
     box-sizing: border-box;
-    animation: fadeIn .4s;
 }
-
-div.consent_manager-wrapper-inner {
-    padding: 2em;
+.consent_manager-wrapper-inner {
+    padding: 1em;
     position: relative;
 }
-
-div.consent_manager-hidden {
+.consent_manager-hidden {
     display: none;
 }
-
-/* Script-Container */
-
-div.consent_manager-script {
-    display: none;
+.consent_manager-detail {
+    margin-bottom: 1em;
 }
-
-/* Close-Button */
-
-.consent_manager-close-box {
-    position: absolute;
-    cursor: pointer;
-    right: 1.5em;
-    top: 1em;
-    display: block;
-    border-radius: 50% !important;
-    border: solid 2px $close-background;
-    width: 30px;
-    height: 30px;
-    line-height: 28px;
-    background-color: $close-background;
-    color: $close-color;
-    font-family: Arial;
-    font-size: 18px;
-    padding: 0;
-    margin: 0;
-    opacity: .5;
-    transition: .3s ease all;
-
-    &:hover {
-        border-color: $close-hover-background;
-        background-color: $close-hover-background;
-        color: $close-hover-color;
-        opacity: 1;
+.consent_manager-headline {
+    font-weight: bold;
+    font-size: 1.2em;
+    span {
+        font-weight: normal;
     }
 }
-
-/* Headline */
-
-div.consent_manager-wrapper .consent_manager-headline {
-    margin: 0 0 1em 0;
-    font-weight: bold;
-    font-size: $font-size +4px;
-    color: $title-color;
-}
-
-/* Text-Block */
-
-div.consent_manager-wrapper p.consent_manager-text {
-    margin: 0 0 1.5em 0;
-}
-
-/* Cookie Checkboxen */
-
-div.consent_manager-cookiegroups {
-    margin: 0 0 1.5em 0;
-}
-
-div.consent_manager-cookiegroup-checkbox {
-    margin-bottom: 1.5em;
-}
-
-div.consent_manager-cookiegroups label {
-    position: relative;
-    font-weight: bold;
-    font-size: $font-size +1px;
-    color: $checkbox-color;
-    cursor: pointer;
-}
-
-div.consent_manager-cookiegroups label>span {
-    cursor: pointer;
-}
-
-div.consent_manager-cookiegroups label>input[type="checkbox"] {
-    filter: grayscale(1);
-    filter: hue-rotate(275deg);
-    transform: scale(1.6);
-    margin: 0 .7em 0 .2em;
-    cursor: pointer;
-}
-
-.consent_manager-wrapper input[type="checkbox"]:disabled,
-.consent_manager-cookiegroups label>input[type="checkbox"]:disabled+* {
-    opacity: .7;
-    cursor: default;
-}
-
-/* Detail-Link Toggle */
-
-div.consent_manager-show-details {
-    padding: 0 0 1.5em 0;
-
-    .icon-info-circled {
-        display: inline-block;
-        line-height: 1.2em;
-        height: 1.4em;
-        cursor: pointer;
-        color: $link-color;
-        border: none;
-        background-color: transparent;
-        &:hover {
-            color: $link-hover-color;
-        }
-    }
-}
-
-div.consent_manager-show-details .icon-info-circled:before {
-    color: $consent_manager-background;
-    background-color: $link-color;
-    opacity: .7;
-    content: "i";
-    font-family: "Serif";
-    font-weight: bold;
-    display: inline-block;
-    border-radius: 50%;
-    text-align: center;
-    margin-right: 7px;
-    line-height: 1.4em;
-    height: 1.4em;
-    width: 1.4em;
-}
-
-/* Buttons */
-
-button.consent_manager-save-selection,
-button.consent_manager-accept-all,
-button.consent_manager-accept-none {
-    transition: .3s ease all;
-    background: $button-background;
-    border: 1px solid $button-background;
-    color: $button-color;
-    padding: .5em 2em;
-    border-radius: 3px;
-    font-size: $font-size;
-    font-weight: bold;
-    text-align: center;
-    display: block;
-    min-height: 3em;
-    width: 100%;
-    margin-bottom: 1.0em;
-    cursor: pointer;
-
-    &:hover {
-        background: $button-hover-background;
-        border-color: $button-hover-background;
-        color: $button-hover-color;
-        text-decoration: none;
-    }
-}
-
-/* Seitenlinks - Datenschutz + Impressum */
-
-div.consent_manager-sitelinks {
-    margin: 1.5em 0 0 0;
-
+.consent_manager-show-details {
+    padding: 0 0 1em 0;
     a {
-        display: inline-block;
-        margin: .4em 1em .4em 0;
-        color: $link-color;
+        color: #999;
         text-decoration: none;
-        cursor: pointer;
-
         &:hover {
-            color: $link-hover-color;
+            color: #444;
             text-decoration: none;
         }
     }
 }
-
-/* Detail Block */
-
-div.consent_manager-wrapper div.consent_manager-detail {
-    margin-bottom: 3em;
-}
-
-div.consent_manager-wrapper div.consent_manager-detail a {
-    color: $link-color;
-
+.consent_manager-save-selection,
+.consent_manager-accept-all {
+    transition: 200ms ease all;
+    background: #999;
+    border: 1px solid #444;
+    color: #fff;
+    padding: .5em 2em;
+    border-radius: .2em;
+    font-weight: bold;
+    text-align: center;
+    margin: .5em 0;
+    display: block;
     &:hover {
-        color: $link-hover-color;
+        background: #444;
+        border-color: #444;
+        color: #fff;
         text-decoration: none;
     }
 }
-
-div.consent_manager-wrapper div.consent_manager-detail div.consent_manager-cookiegroup-title {
-    color: $cookie-title-color;
-    background-color: $cookie-title-background;
-    padding: 5px 11px;
-    margin: 1.5em 0 0 0;
+.consent_manager-sitelinks {
+    a {
+    display: inline-block;
+    margin: .5em .5em .5em 0;
+    color: #999;
+    text-decoration: none;
+    &:hover {
+        color: #444;
+        text-decoration: none;
+    }
 }
-
-div.consent_manager-wrapper div.consent_manager-cookiegroup-description {
-    border-left: 1px solid $cookie-title-background;
-    padding: 5px 10px;
-    background: $cookie-desc-background;
 }
-
-div.consent_manager-wrapper div.consent_manager-cookie {
-    margin-top: 3px;
-    border-left: 1px solid $cookie-title-background;
-    padding: 5px 10px;
-    background: $cookie-desc-background;
-
-    span {
-        display: block;
-        margin-top: .5em;
+.consent_manager-save-and-close {
+    color: #999;
+    &:hover {
+        color: #444;
     }
 }
 
-/* Breakpoints */
+a.consent_manager-close-box {
+    position: absolute;
+    right: .75em;
+    top: .75em;
+    display: block;
+    border-radius: 50% !important;
+    width: 28px;
+    height: 28px;
+    color: #fff;
+    background-color:#666;
+    text-indent:-999px;
+    &:hover {
+        background-color: #444;
+        color: #fff;
+    }
+    &::before {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #fff;
+        width: 4px;
+        left: 12px;
+        top: 7px;
+        bottom: 7px;
+        transform: rotate(45deg);
+    }
+    &::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: #fff;
+        width: 4px;
+        left: 12px;
+        top: 7px;
+        bottom: 7px;
+        transform: rotate(-45deg);
+    }
+}
 
-@media only screen and (min-width: 600px) {
-    div.consent_manager-cookiegroups {
-        padding: 1em 0 0 0;
+.consent_manager-cookiegroups {
+    padding: 1em 0;
+}
+
+.consent_manager-cookiegroup {
+    & + .consent_manager-cookiegroup-title {
+        margin-top: 1em;
+    }
+}
+.consent_manager-cookiegroup-title {
+    background-color: #d4d4d4;
+    padding: 5px 10px;
+}
+.consent_manager-cookie {
+    margin-top: .5em;
+    border-left: 2px solid #999;
+    padding: .5em .5em .5em 1em;
+    background: #f9f9f9;
+    span {
+        display: block;
+    }
+}
+
+.consent_manager-show-details .icon-info-circled:before {
+    color: #fff;
+    background-color: #666;
+    content: "i";
+    font-family: "Serif";
+    font-weight:bold;
+    display: inline-block;
+    border-radius: 50% !important;
+    line-height:1.0em;
+    width:1.0em;
+    height:1.0em;
+    text-align:center;
+    vertical-align:middle;
+    margin-right:5px;
+}
+
+a.consent_manager-close, #consent_manager-toggle-details {
+    cursor:pointer;
+}
+
+.consent_manager-cookiegroup-checkbox {
+    margin: 0 2em .5em 0;
+}
+.consent_manager-cookiegroups label {
+    position: relative;
+    font-weight:bold;
+    font-size:1.2em;
+    color:#333;
+    cursor:pointer;
+}
+.consent_manager-cookiegroups label > input[type="checkbox"] {
+    display: none;
+}
+.consent_manager-cookiegroups label > input[type="checkbox"] + *::before {
+    content: "";
+    display: inline-block;
+    vertical-align: top;
+    width: 20px;
+    height: 20px;
+    border-radius: 20% !important;
+    border-style: solid;
+    border-width: 1px;
+    margin-right: 5px;
+}
+
+/* When we use SVG with background-image property, we should ensure that reserved URL characters are encoded (e.g. < === %3C and > === %3E) and also replace the space with '%20'. */
+
+.consent_manager-cookiegroups label > input[type="checkbox"]:checked + *::before {
+    content: "";
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20height='20'%20width='20'%3E%3Cpath%20fill='none'%20stroke='black'%20stroke-opacity='0.8'%20stroke-width='3'%20d='M1.73%2012.91l6.37%206.37L22.79%204.59'%20/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: -1px -4px;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+.consent_manager-cookiegroups label > input[type="checkbox"]:disabled + *::before {
+    content: "";
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20height='20'%20width='20'%3E%3Cpath%20fill='none'%20stroke='gray'%20stroke-opacity='1.0'%20stroke-width='3'%20d='M1.73%2012.91l6.37%206.37L22.79%204.59'%20/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 0px -4px;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+.consent_manager-cookiegroups label > input[type="checkbox"]:checked + * {
+    color: #000;
+}
+.consent_manager-cookiegroups label > input[type="checkbox"]:disabled + * {
+    color: #999;
+    cursor: default;
+}
+
+@media (min-width: 35em) {
+    .consent_manager-cookiegroups {
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
-        margin-bottom: 0;
+        padding-top: 1em;
     }
-
-    div.consent_manager-cookiegroup-checkbox {
-        margin-left: 1.5em;
-        margin-bottom: 1.0em;
+    .consent_manager-cookiegroup-checkbox {
+        margin: 0 2em 0 0;
     }
-
-    div.consent_manager-show-details {
+    .consent_manager-show-details {
         text-align: right;
-        padding: 1.5em 0 1.5em 0;
+        padding: 1em 2em 1em 0;
     }
-
-    div.consent_manager-buttons {
+    .consent_manager-buttons {
         display: flex;
         justify-content: flex-end;
         align-items: center;
     }
-
-    button.consent_manager-save-selection,
-    button.consent_manager-accept-all,
-    button.consent_manager-accept-none {
+    .consent_manager-sitelinks {
+        text-align: right;
+        padding-right: 1.5em;
+        a {
+            margin: .5em 0 .5em 1em;
+        }
+    }
+    .consent_manager-save-selection,
+    .consent_manager-accept-all {
         display: inline-block;
         margin: 0 0 0 .5em;
-        width: auto;
     }
+}
 
-    div.consent_manager-sitelinks {
-        margin: 0 0 0 0;
+@media (min-width: 50em) {
+    .consent_manager-wrapper-inner {
+        padding: 2em;
     }
-
-    div.consent_manager-buttons-sitelinks {
+    .consent_manager-buttons-sitelinks {
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-direction: row-reverse;
+    }
+    a.consent_manager-close-box {
+        right: 1.5em;
+        top: 1.5em;
     }
 }
