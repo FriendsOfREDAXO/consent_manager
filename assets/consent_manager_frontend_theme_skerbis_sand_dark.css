@@ -1,0 +1,576 @@
+@charset "UTF-8";
+/*
+Theme: {"name": "Skerbis Sand Dark", "description": "Dunkles sandiges Theme mit eingeprägten (inset) Buttons bei Hover - warm und organisch", "type": "dark", "style": "Popup zentriert, Sand/Neumorphism, Switches", "autor": "@skerbis"}
+*/
+/**
+ * Consent Manager - Skerbis Sand Dark Theme
+ * 
+ * Design Konzept:
+ * - Dunkle, warme Sandpalette
+ * - Eingeprägte (inset) Buttons bei Hover im Neumorphism-Stil
+ * - Subtile Sandtextur
+ * - Weiche, organische Schatten
+ * 
+ * Accessibility:
+ * - prefers-reduced-motion Support
+ * - prefers-reduced-transparency Support  
+ * - prefers-contrast Support (high/more)
+ * - DSGVO-konforme gleichwertige Buttons
+ */
+/* ========================================
+   Variables - Dark Sand Palette
+   ======================================== */
+/* Dark Sand Colors */
+/* Text */
+/* Accent - Warm Earth Tones */
+/* Switch */
+/* Shadows for Neumorphism - Dark Mode */
+/* Spacing & Radius */
+/* ========================================
+   Accessibility - Reduced Motion
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* ========================================
+   Accessibility - High Contrast
+   ======================================== */
+@media (prefers-contrast: more), (prefers-contrast: high) {
+  div.consent_manager-background {
+    background: rgba(0, 0, 0, 0.95) !important;
+  }
+  div.consent_manager-wrapper {
+    background: #000000 !important;
+    border: 3px solid #ffffff !important;
+    box-shadow: none !important;
+  }
+  div.consent_manager-wrapper::before {
+    display: none !important;
+  }
+  div.consent_manager-wrapper .consent_manager-headline,
+  div.consent_manager-wrapper p.consent_manager-text,
+  .consent_manager-cookiegroup-checkbox span {
+    color: #ffffff !important;
+  }
+  button.consent_manager-accept-all,
+  button.consent_manager-save-selection,
+  button.consent_manager-accept-none {
+    background: #000000 !important;
+    border: 2px solid #ffffff !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+  }
+  button.consent_manager-accept-all:hover,
+  button.consent_manager-accept-all:focus,
+  button.consent_manager-save-selection:hover,
+  button.consent_manager-save-selection:focus,
+  button.consent_manager-accept-none:hover,
+  button.consent_manager-accept-none:focus {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .consent_manager-wrapper [type=checkbox]::after {
+    background: #000000 !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: none !important;
+  }
+  .consent_manager-wrapper [type=checkbox]:checked::after {
+    background: #ffffff !important;
+  }
+  .consent_manager-wrapper [type=checkbox]::before {
+    background: #ffffff !important;
+  }
+  .consent_manager-wrapper [type=checkbox]:checked::before {
+    background: #000000 !important;
+  }
+  .consent_manager-sitelinks a,
+  div.consent_manager-detail a {
+    color: #ffff00 !important;
+    text-decoration: underline !important;
+  }
+  div.consent_manager-cookiegroup-title {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  div.consent_manager-cookiegroup-description,
+  div.consent_manager-cookie {
+    background: #1a1a1a !important;
+    border: 1px solid #ffffff !important;
+    color: #ffffff !important;
+  }
+  *:focus {
+    outline: 3px solid #ffff00 !important;
+    outline-offset: 2px !important;
+  }
+}
+/* ========================================
+   Animations
+   ======================================== */
+@keyframes sandAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+/* ========================================
+   Background Overlay
+   ======================================== */
+div.consent_manager-background {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 999999;
+  overflow: hidden;
+  box-sizing: border-box;
+  outline: 0;
+}
+
+/* ========================================
+   Main Wrapper - Dark Sand Neumorphism
+   ======================================== */
+div.consent_manager-wrapper {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  /* Dark Sand Background */
+  background: #3d362e;
+  /* Rounded Shape */
+  border-radius: 20px;
+  /* Neumorphism Shadow - raised effect dark mode */
+  box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.5), -12px -12px 24px rgba(90, 80, 68, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  /* Animation */
+  animation: sandAppear 0.4s ease-out;
+  /* Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #5c5245 transparent;
+}
+div.consent_manager-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+div.consent_manager-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+div.consent_manager-wrapper::-webkit-scrollbar-thumb {
+  background: #5c5245;
+  border-radius: 3px;
+}
+div.consent_manager-wrapper {
+  /* Subtle sand texture overlay */
+}
+div.consent_manager-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+div.consent_manager-wrapper-inner {
+  padding: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+div.consent_manager-hidden {
+  display: none;
+}
+
+div.consent_manager-script {
+  display: none;
+}
+
+/* ========================================
+   Close Button - Dark Sand Style
+   ======================================== */
+.consent_manager-close-box {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #3d362e;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-indent: -9999px;
+  color: transparent;
+  z-index: 10;
+  /* Inset effect */
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.5), inset -3px -3px 6px rgba(90, 80, 68, 0.25);
+}
+.consent_manager-close-box::before, .consent_manager-close-box::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 1px;
+  transition: all 0.2s ease;
+}
+.consent_manager-close-box::before {
+  transform: rotate(45deg);
+}
+.consent_manager-close-box::after {
+  transform: rotate(-45deg);
+}
+.consent_manager-close-box:hover::before, .consent_manager-close-box:hover::after {
+  background: rgba(255, 255, 255, 0.92);
+}
+.consent_manager-close-box:focus {
+  outline: 2px solid #d4a574;
+  outline-offset: 2px;
+}
+
+/* ========================================
+   Headline
+   ======================================== */
+div.consent_manager-wrapper .consent_manager-headline {
+  margin: 0 40px 16px 0;
+  font-weight: 600;
+  font-size: 1.35rem;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.01em;
+}
+
+/* ========================================
+   Text Block
+   ======================================== */
+div.consent_manager-wrapper p.consent_manager-text {
+  margin: 0 0 20px 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* ========================================
+   Cookie Checkboxes / Switches (Dark Sand Style)
+   ======================================== */
+div.consent_manager-cookiegroups {
+  margin: 0 0 20px 0;
+}
+
+.consent_manager-cookiegroup-checkbox {
+  margin-bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  vertical-align: middle;
+}
+.consent_manager-cookiegroup-checkbox span {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  user-select: none;
+  line-height: 31px;
+  vertical-align: middle;
+}
+
+/* Dark Sand-Style Switch - Inset */
+.consent_manager-wrapper [type=checkbox] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  width: 51px;
+  height: 31px;
+  border: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: transparent;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.consent_manager-wrapper [type=checkbox]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #4a4238;
+  border-radius: 980px;
+  transition: all 0.25s ease;
+  /* Inset shadow for pressed look */
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(90, 80, 68, 0.25);
+}
+
+.consent_manager-wrapper [type=checkbox]::before {
+  content: "";
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  top: 2px;
+  left: 2px;
+  background: linear-gradient(145deg, #6e6354, #5c5245);
+  border-radius: 50%;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5), -2px -2px 4px rgba(90, 80, 68, 0.25);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.consent_manager-wrapper [type=checkbox]:checked::after {
+  background: #8fb17a;
+  box-shadow: inset 4px 4px 8px rgba(70, 100, 60, 0.5), inset -4px -4px 8px rgba(120, 160, 100, 0.25);
+}
+
+.consent_manager-wrapper [type=checkbox]:checked::before {
+  transform: translateX(20px);
+  background: linear-gradient(145deg, #f5f0e8, #e8e0d4);
+}
+
+.consent_manager-wrapper [type=checkbox]:focus {
+  outline: none;
+}
+.consent_manager-wrapper [type=checkbox]:focus::after {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(90, 80, 68, 0.25), 0 0 0 3px rgba(143, 177, 122, 0.3);
+}
+
+.consent_manager-wrapper input[type=checkbox]:disabled,
+.consent_manager-cookiegroups label > input[type=checkbox]:disabled + * {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   Detail Link Toggle
+   ======================================== */
+div.consent_manager-show-details {
+  padding: 0 0 20px 0;
+}
+
+.consent_manager-show-details .icon-info-circled {
+  color: #d4a574;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+.consent_manager-show-details .icon-info-circled:hover {
+  color: #e6be94;
+  background: rgba(212, 165, 116, 0.15);
+}
+.consent_manager-show-details .icon-info-circled:focus {
+  outline: 2px solid #d4a574;
+  outline-offset: 2px;
+}
+.consent_manager-show-details .icon-info-circled::before {
+  display: none;
+}
+
+/* ========================================
+   Buttons - DSGVO Compliant (Dünne Fuge, Inset bei Hover)
+   ======================================== */
+div.consent_manager-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* DSGVO: Alle Buttons gleichwertig - dünne Fuge, Inset bei Hover */
+button.consent_manager-accept-all,
+button.consent_manager-save-selection,
+button.consent_manager-accept-none {
+  position: relative;
+  background: #3d362e;
+  border: 1px solid #5c5245;
+  color: rgba(255, 255, 255, 0.92);
+  padding: 16px 20px;
+  border-radius: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  min-height: 50px;
+  cursor: pointer;
+  width: 100%;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  /* Dünne Fuge - leichter äußerer Schatten */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+button.consent_manager-accept-all:hover,
+button.consent_manager-save-selection:hover,
+button.consent_manager-accept-none:hover {
+  background: #4a4238;
+  border-color: #6e6354;
+  /* Inset/Pressed effect - eingeprägt bei Hover */
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(90, 80, 68, 0.25);
+}
+button.consent_manager-accept-all:active,
+button.consent_manager-save-selection:active,
+button.consent_manager-accept-none:active {
+  box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.5), inset -6px -6px 12px rgba(90, 80, 68, 0.25);
+}
+button.consent_manager-accept-all:focus,
+button.consent_manager-save-selection:focus,
+button.consent_manager-accept-none:focus {
+  outline: 2px solid #d4a574;
+  outline-offset: 2px;
+}
+
+/* ========================================
+   Site Links
+   ======================================== */
+.consent_manager-sitelinks {
+  margin: 20px 0 0 0;
+  padding-top: 16px;
+  border-top: 1px solid #5c5245;
+}
+.consent_manager-sitelinks a {
+  display: inline-block;
+  margin: 6px 16px 6px 0;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  transition: color 0.2s ease;
+}
+.consent_manager-sitelinks a:hover {
+  color: #d4a574;
+}
+.consent_manager-sitelinks a:focus {
+  outline: 2px solid #d4a574;
+  outline-offset: 2px;
+}
+
+/* ========================================
+   Detail Block
+   ======================================== */
+div.consent_manager-wrapper div.consent_manager-detail {
+  margin-bottom: 28px;
+}
+
+div.consent_manager-wrapper div.consent_manager-detail a {
+  color: #d4a574;
+  text-decoration: none;
+}
+div.consent_manager-wrapper div.consent_manager-detail a:hover {
+  color: #e6be94;
+  text-decoration: underline;
+}
+
+div.consent_manager-wrapper div.consent_manager-cookiegroup-title {
+  background: #5c5245;
+  color: rgba(255, 255, 255, 0.92);
+  padding: 10px 16px;
+  margin: 20px 0 0 0;
+  border-radius: 10px 10px 0 0;
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+
+div.consent_manager-wrapper div.consent_manager-cookiegroup-description {
+  background: #4a4238;
+  padding: 10px 16px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+  border-left: 1px solid #5c5245;
+  border-right: 1px solid #5c5245;
+}
+
+div.consent_manager-wrapper div.consent_manager-cookie {
+  background: rgba(74, 66, 56, 0.7);
+  padding: 10px 16px;
+  margin-top: 1px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+  border-left: 1px solid #5c5245;
+  border-right: 1px solid #5c5245;
+}
+div.consent_manager-wrapper div.consent_manager-cookie:last-child {
+  border-radius: 0 0 10px 10px;
+  border-bottom: 1px solid #5c5245;
+}
+div.consent_manager-wrapper div.consent_manager-cookie span {
+  display: block;
+  margin-bottom: 2px;
+}
+div.consent_manager-wrapper div.consent_manager-cookie span:last-child {
+  margin-bottom: 0;
+}
+
+/* ========================================
+   Responsive Breakpoints
+   ======================================== */
+@media only screen and (min-width: 600px) {
+  div.consent_manager-wrapper {
+    max-width: 680px;
+  }
+  div.consent_manager-cookiegroups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-end;
+  }
+  .consent_manager-cookiegroup-checkbox {
+    margin-bottom: 0;
+  }
+  div.consent_manager-show-details {
+    text-align: right;
+  }
+  div.consent_manager-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  button.consent_manager-accept-all,
+  button.consent_manager-save-selection,
+  button.consent_manager-accept-none {
+    width: auto;
+    min-width: 140px;
+  }
+  .consent_manager-sitelinks {
+    margin: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+  div.consent_manager-buttons-sitelinks {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row-reverse;
+    padding-top: 16px;
+    border-top: 1px solid #5c5245;
+    margin-top: 16px;
+  }
+}
+@media only screen and (min-width: 900px) {
+  div.consent_manager-wrapper {
+    max-width: 720px;
+  }
+}
+
+/*# sourceMappingURL=consent_manager_frontend_theme_skerbis_sand_dark.css.map */

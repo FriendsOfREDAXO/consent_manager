@@ -4,6 +4,12 @@
 
 ### 🎨 Theme-Editor Erweiterungen
 
+* **Neue Skerbis-Themes**: 5 neue Design-Themes hinzugefügt:
+  - **Skerbis Light Glass v2**: iOS 26 Liquid Glass Design mit Prisma-Rahmen-Animation
+  - **Skerbis Dark Glass v2**: iOS 26 Liquid Glass Design in Dunkel mit Border-Glow
+  - **Skerbis Sand**: Neumorphismus-Style mit Inset-Buttons bei Hover
+  - **Skerbis Sand Dark**: Dunkle Variante des Sand-Themes
+  - **Skerbis Pill**: Kompaktes Bottom-Pill-Banner mit Slide-up Animation
 * **Neue Theme-Basis-Varianten**: 5 neue Accessibility-Themes hinzugefügt:
   - **Banner Top**: Volle Breite, fixiert am oberen Bildschirmrand
   - **Banner Bottom**: Volle Breite, fixiert am unteren Bildschirmrand (dunkles Theme)

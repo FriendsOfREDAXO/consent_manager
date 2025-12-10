@@ -1,0 +1,787 @@
+/*
+Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme inspiriert von iOS 26 - mit echten Glaseffekten, spekularen Lichtreflexionen, abgerundeter Ästhetik und voller Accessibility-Unterstützung", "type": "dark", "style": "Popup zentriert, Liquid Glass, Switches", "autor": "@skerbis"}
+*/
+
+/**
+ * Consent Manager - Skerbis Dark Glass v2 (Liquid Glass Edition)
+ * 
+ * Inspired by Apple's iOS 26 Liquid Glass Design:
+ * - Multi-layer glass with specular highlights
+ * - Soft, rounded aesthetic with pill-shaped elements
+ * - Dynamic light reflections on edges
+ * - High blur with saturated backdrop
+ * - White edge glow effects
+ * 
+ * Accessibility:
+ * - prefers-reduced-motion Support
+ * - prefers-reduced-transparency Support  
+ * - prefers-contrast Support (high/more)
+ * - DSGVO-konforme gleichwertige Buttons
+ */
+
+/* ========================================
+   Variables - Liquid Glass Palette
+   ======================================== */
+
+$font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+$font-size-base: 15px;
+$line-height: 1.55;
+
+/* Liquid Glass Colors */
+$glass-dark: rgba(28, 28, 30, 0.72);
+$glass-lighter: rgba(58, 58, 60, 0.55);
+$glass-border-light: rgba(255, 255, 255, 0.18);
+$glass-border-inner: rgba(255, 255, 255, 0.08);
+$glass-specular: rgba(255, 255, 255, 0.25);
+$glass-shadow-dark: rgba(0, 0, 0, 0.45);
+
+/* Text */
+$text-primary: rgba(255, 255, 255, 0.95);
+$text-secondary: rgba(255, 255, 255, 0.70);
+$text-tertiary: rgba(255, 255, 255, 0.50);
+
+/* Accent - iOS Blue */
+$accent-blue: #0A84FF;
+$accent-blue-light: #409CFF;
+$accent-green: #30D158;
+$accent-glow: rgba(10, 132, 255, 0.35);
+
+/* Switch */
+$switch-on: #30D158;
+$switch-off: rgba(120, 120, 128, 0.32);
+$switch-knob: #ffffff;
+
+/* Spacing & Radius */
+$radius-pill: 980px;
+$radius-large: 24px;
+$radius-medium: 16px;
+$radius-small: 12px;
+
+$spacing-xs: 6px;
+$spacing-sm: 10px;
+$spacing-md: 16px;
+$spacing-lg: 20px;
+$spacing-xl: 28px;
+
+/* ========================================
+   Accessibility - Reduced Motion
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========================================
+   Accessibility - Reduced Transparency
+   ======================================== */
+
+@media (prefers-reduced-transparency: reduce) {
+    div.consent_manager-wrapper {
+        background: #1c1c1e !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    div.consent_manager-wrapper::before,
+    div.consent_manager-wrapper::after {
+        display: none !important;
+    }
+
+    div.consent_manager-cookiegroup-description,
+    div.consent_manager-cookie {
+        background: #2c2c2e !important;
+    }
+    
+    button.consent_manager-accept-all,
+    button.consent_manager-save-selection,
+    button.consent_manager-accept-none {
+        background: #3a3a3c !important;
+        backdrop-filter: none !important;
+    }
+}
+
+/* ========================================
+   Accessibility - High Contrast
+   ======================================== */
+
+@media (prefers-contrast: more), (prefers-contrast: high) {
+    div.consent_manager-background {
+        background: rgba(0, 0, 0, 0.9) !important;
+    }
+    
+    div.consent_manager-wrapper {
+        background: #000000 !important;
+        border: 3px solid #ffffff !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    div.consent_manager-wrapper::before,
+    div.consent_manager-wrapper::after {
+        display: none !important;
+    }
+
+    div.consent_manager-wrapper .consent_manager-headline,
+    div.consent_manager-wrapper p.consent_manager-text,
+    .consent_manager-cookiegroup-checkbox span {
+        color: #ffffff !important;
+    }
+
+    /* High Contrast Buttons */
+    button.consent_manager-accept-all,
+    button.consent_manager-save-selection,
+    button.consent_manager-accept-none {
+        background: #000000 !important;
+        border: 2px solid #ffffff !important;
+        color: #ffffff !important;
+        backdrop-filter: none !important;
+    }
+
+    button.consent_manager-accept-all:hover,
+    button.consent_manager-accept-all:focus,
+    button.consent_manager-save-selection:hover,
+    button.consent_manager-save-selection:focus,
+    button.consent_manager-accept-none:hover,
+    button.consent_manager-accept-none:focus {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    /* High Contrast Switches */
+    .consent_manager-wrapper [type="checkbox"]::after {
+        background: #000000 !important;
+        border: 2px solid #ffffff !important;
+    }
+
+    .consent_manager-wrapper [type="checkbox"]:checked::after {
+        background: #ffffff !important;
+    }
+
+    .consent_manager-wrapper [type="checkbox"]::before {
+        background: #ffffff !important;
+    }
+
+    .consent_manager-wrapper [type="checkbox"]:checked::before {
+        background: #000000 !important;
+    }
+
+    /* High Contrast Links */
+    .consent_manager-sitelinks a,
+    div.consent_manager-detail a {
+        color: #ffff00 !important;
+        text-decoration: underline !important;
+    }
+
+    /* High Contrast Details */
+    div.consent_manager-cookiegroup-title {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    div.consent_manager-cookiegroup-description,
+    div.consent_manager-cookie {
+        background: #1a1a1a !important;
+        border: 1px solid #ffffff !important;
+        color: #ffffff !important;
+    }
+
+    /* High Contrast Focus */
+    *:focus {
+        outline: 3px solid #ffff00 !important;
+        outline-offset: 2px !important;
+    }
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+@keyframes liquidGlassAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(20px);
+        filter: blur(20px);
+    }
+    60% {
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes borderGlow {
+    0%, 100% {
+        border-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 
+            0 0 0 1px rgba(255, 255, 255, 0.08),
+            0 2px 4px rgba(0, 0, 0, 0.1),
+            0 8px 16px rgba(0, 0, 0, 0.15),
+            0 24px 48px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        border-color: rgba(255, 255, 255, 0.35);
+        box-shadow: 
+            0 0 0 1px rgba(255, 255, 255, 0.2),
+            0 0 25px rgba(150, 150, 255, 0.15),
+            0 2px 4px rgba(0, 0, 0, 0.1),
+            0 8px 16px rgba(0, 0, 0, 0.15),
+            0 24px 48px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* ========================================
+   Background Overlay - Transparent (kein dunkles Overlay)
+   ======================================== */
+
+div.consent_manager-background {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: $spacing-lg;
+    z-index: 999999;
+    overflow: hidden;
+    box-sizing: border-box;
+    outline: 0;
+}
+
+/* ========================================
+   Main Wrapper - Liquid Glass Effect
+   ======================================== */
+
+div.consent_manager-wrapper {
+    font-family: $font-family;
+    font-size: $font-size-base;
+    line-height: $line-height;
+    color: $text-primary;
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    max-height: 85vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    
+    /* Liquid Glass Background */
+    background: $glass-dark;
+    backdrop-filter: blur(50px) saturate(190%);
+    -webkit-backdrop-filter: blur(50px) saturate(190%);
+    
+    /* Rounded Pill-like Shape */
+    border-radius: $radius-large;
+    
+    /* Multi-layer border for glass depth */
+    border: 1px solid $glass-border-light;
+    
+    /* Complex shadow for floating effect with outer glow */
+    box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 8px 16px rgba(0, 0, 0, 0.15),
+        0 24px 48px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    
+    /* Animation */
+    animation: liquidGlassAppear 0.5s cubic-bezier(0.2, 0.9, 0.3, 1), borderGlow 4s ease-in-out infinite 0.5s;
+    
+    /* Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 3px;
+    }
+    
+    /* Top edge highlight line */
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 10%;
+        right: 10%;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.2) 20%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0.2) 80%,
+            transparent 100%
+        );
+        border-radius: 1px;
+        pointer-events: none;
+    }
+    
+    /* Inner gradient overlay */
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.05) 0%,
+            transparent 40%
+        );
+        border-radius: $radius-large;
+        pointer-events: none;
+    }
+}
+
+div.consent_manager-wrapper-inner {
+    padding: $spacing-xl;
+    position: relative;
+    z-index: 1;
+}
+
+div.consent_manager-hidden {
+    display: none;
+}
+
+div.consent_manager-script {
+    display: none;
+}
+
+/* ========================================
+   Close Button - Pill Style
+   ======================================== */
+
+.consent_manager-close-box {
+    position: absolute;
+    right: $spacing-md;
+    top: $spacing-md;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-indent: -9999px;
+    color: transparent;
+    z-index: 10;
+    
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 1.5px;
+        background: $text-secondary;
+        border-radius: 1px;
+        transition: all 0.2s ease;
+    }
+    
+    &::before {
+        transform: rotate(45deg);
+    }
+    
+    &::after {
+        transform: rotate(-45deg);
+    }
+    
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        
+        &::before,
+        &::after {
+            background: $text-primary;
+        }
+    }
+    
+    &:focus {
+        outline: 2px solid $accent-blue;
+        outline-offset: 2px;
+    }
+}
+
+/* ========================================
+   Headline
+   ======================================== */
+
+div.consent_manager-wrapper .consent_manager-headline {
+    margin: 0 36px $spacing-md 0;
+    font-weight: 600;
+    font-size: 1.35rem;
+    color: $text-primary;
+    letter-spacing: -0.02em;
+}
+
+/* ========================================
+   Text Block
+   ======================================== */
+
+div.consent_manager-wrapper p.consent_manager-text {
+    margin: 0 0 $spacing-lg 0;
+    color: $text-secondary;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+/* ========================================
+   Cookie Checkboxes / Switches (iOS Style)
+   ======================================== */
+
+div.consent_manager-cookiegroups {
+    margin: 0 0 $spacing-lg 0;
+}
+
+.consent_manager-cookiegroup-checkbox {
+    margin-bottom: $spacing-sm;
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    vertical-align: middle;
+    
+    span {
+        font-size: 0.9375rem;
+        color: $text-primary;
+        cursor: pointer;
+        user-select: none;
+        line-height: 31px;
+        vertical-align: middle;
+    }
+}
+
+/* iOS-Style Switch - Liquid Glass */
+.consent_manager-wrapper [type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+    margin-right: 8px !important;
+    width: 51px;
+    height: 31px;
+    border: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: transparent;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.consent_manager-wrapper [type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(120, 120, 128, 0.32);
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $radius-pill;
+    transition: all 0.25s ease;
+    box-shadow: 
+        inset 0 1px 2px rgba(0, 0, 0, 0.2),
+        0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.consent_manager-wrapper [type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 27px;
+    height: 27px;
+    top: 2px;
+    left: 2px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(235, 235, 240, 0.95) 100%);
+    border-radius: 50%;
+    box-shadow: 
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        0 1px 2px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+.consent_manager-wrapper [type="checkbox"]:checked::after {
+    background: rgba(48, 209, 88, 0.85);
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border-color: rgba(48, 209, 88, 0.4);
+    box-shadow: 
+        inset 0 1px 2px rgba(0, 0, 0, 0.15),
+        0 0 12px rgba(48, 209, 88, 0.4);
+}
+
+.consent_manager-wrapper [type="checkbox"]:checked::before {
+    transform: translateX(20px);
+}
+
+.consent_manager-wrapper [type="checkbox"]:focus {
+    outline: none;
+    
+    &::after {
+        box-shadow: 
+            inset 0 1px 2px rgba(0, 0, 0, 0.2),
+            0 0 0 4px rgba(48, 209, 88, 0.3);
+    }
+}
+
+.consent_manager-wrapper input[type="checkbox"]:disabled,
+.consent_manager-cookiegroups label > input[type="checkbox"]:disabled + * {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   Detail Link Toggle
+   ======================================== */
+
+div.consent_manager-show-details {
+    padding: 0 0 $spacing-lg 0;
+}
+
+.consent_manager-show-details .icon-info-circled {
+    color: $accent-blue;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-small;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        color: $accent-blue-light;
+        background: rgba(10, 132, 255, 0.12);
+    }
+    
+    &:focus {
+        outline: 2px solid $accent-blue;
+        outline-offset: 2px;
+    }
+    
+    &::before {
+        display: none;
+    }
+}
+
+/* ========================================
+   Buttons - DSGVO Compliant (Liquid Glass Pills)
+   ======================================== */
+
+div.consent_manager-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+}
+
+/* DSGVO: Alle Buttons gleichwertig - keine visuelle Hervorhebung */
+button.consent_manager-accept-all,
+button.consent_manager-save-selection,
+button.consent_manager-accept-none {
+    position: relative;
+    background: $glass-lighter;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: $text-primary;
+    padding: $spacing-md $spacing-lg;
+    border-radius: $radius-medium;
+    font-family: $font-family;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    min-height: 50px;
+    cursor: pointer;
+    width: 100%;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    
+    /* Subtle inner highlight */
+    box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+        background: rgba(78, 78, 80, 0.65);
+        border-color: rgba(255, 255, 255, 0.18);
+        transform: scale(1.01);
+    }
+    
+    &:active {
+        transform: scale(0.99);
+    }
+    
+    &:focus {
+        outline: 2px solid $accent-blue;
+        outline-offset: 2px;
+    }
+}
+
+/* ========================================
+   Site Links
+   ======================================== */
+
+.consent_manager-sitelinks {
+    margin: $spacing-lg 0 0 0;
+    padding-top: $spacing-md;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    
+    a {
+        display: inline-block;
+        margin: $spacing-xs $spacing-md $spacing-xs 0;
+        color: $text-tertiary;
+        text-decoration: none;
+        font-size: 0.8125rem;
+        transition: color 0.2s ease;
+        
+        &:hover {
+            color: $accent-blue;
+        }
+        
+        &:focus {
+            outline: 2px solid $accent-blue;
+            outline-offset: 2px;
+        }
+    }
+}
+
+/* ========================================
+   Detail Block
+   ======================================== */
+
+div.consent_manager-wrapper div.consent_manager-detail {
+    margin-bottom: $spacing-xl;
+}
+
+div.consent_manager-wrapper div.consent_manager-detail a {
+    color: $accent-blue;
+    text-decoration: none;
+    
+    &:hover {
+        color: $accent-blue-light;
+        text-decoration: underline;
+    }
+}
+
+div.consent_manager-wrapper div.consent_manager-cookiegroup-title {
+    background: rgba(255, 255, 255, 0.1);
+    color: $text-primary;
+    padding: $spacing-sm $spacing-md;
+    margin: $spacing-lg 0 0 0;
+    border-radius: $radius-small $radius-small 0 0;
+    font-weight: 500;
+    font-size: 0.9375rem;
+}
+
+div.consent_manager-wrapper div.consent_manager-cookiegroup-description {
+    background: rgba(0, 0, 0, 0.25);
+    padding: $spacing-sm $spacing-md;
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    border-left: 1px solid rgba(255, 255, 255, 0.06);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+div.consent_manager-wrapper div.consent_manager-cookie {
+    background: rgba(0, 0, 0, 0.2);
+    padding: $spacing-sm $spacing-md;
+    margin-top: 1px;
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    border-left: 1px solid rgba(255, 255, 255, 0.06);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    
+    &:last-child {
+        border-radius: 0 0 $radius-small $radius-small;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    
+    span {
+        display: block;
+        margin-bottom: 2px;
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+/* ========================================
+   Responsive Breakpoints
+   ======================================== */
+
+@media only screen and (min-width: 600px) {
+    div.consent_manager-wrapper {
+        max-width: 680px;
+    }
+    
+    div.consent_manager-cookiegroups {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-lg;
+        justify-content: flex-end;
+    }
+    
+    .consent_manager-cookiegroup-checkbox {
+        margin-bottom: 0;
+    }
+    
+    div.consent_manager-show-details {
+        text-align: right;
+    }
+    
+    div.consent_manager-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    
+    button.consent_manager-accept-all,
+    button.consent_manager-save-selection,
+    button.consent_manager-accept-none {
+        width: auto;
+        min-width: 140px;
+    }
+    
+    .consent_manager-sitelinks {
+        margin: 0;
+        padding-top: 0;
+        border-top: none;
+    }
+    
+    div.consent_manager-buttons-sitelinks {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row-reverse;
+        padding-top: $spacing-md;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        margin-top: $spacing-md;
+    }
+}
+
+@media only screen and (min-width: 900px) {
+    div.consent_manager-wrapper {
+        max-width: 720px;
+    }
+}
