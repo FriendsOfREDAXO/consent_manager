@@ -39,7 +39,7 @@ if (count(rex_clang::getAllIds()) > 1) {
 
 // Log normalisierte Domains zu Kleinbuchstaben (Fix für Issue #339)
 $sql = rex_sql::factory();
-$sql->setQuery('UPDATE `' . rex::getTablePrefix() . 'consent_manager_consent_log` SET domain = LOWER(domain) WHERE domain != LOWER(domain)');
+$sql->setQuery('UPDATE `' . rex::getTablePrefix() . 'consent_manager_consent_log` SET domain = LOWER(domain) WHERE domain != LOWER(domain)', []);
 
 // Ensure inline_only_mode Spalte in Domain-Tabelle
 rex_sql_table::get(rex::getTable('consent_manager_domain'))
