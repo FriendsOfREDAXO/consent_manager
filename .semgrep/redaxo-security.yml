@@ -1,0 +1,184 @@
+rules:
+  # XSS: Unescaped output in PHP short tags
+  - id: redaxo-xss-short-echo
+    patterns:
+      - pattern: <?= $X ?>
+      - pattern-not: <?= rex_escape($X) ?>
+      - pattern-not: <?= (int)$X ?>
+      - pattern-not: <?= (float)$X ?>
+      - pattern-not: <?= htmlspecialchars($X, ...) ?>
+    message: |
+      Potenzielle XSS-Schwachstelle: Ausgabe ohne rex_escape().
+      Verwende: <?= rex_escape($variable) ?>
+    languages: [php]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation"
+      owasp: A7:2017 Cross-Site Scripting (XSS)
+
+  # XSS: Unescaped echo
+  - id: redaxo-xss-echo
+    patterns:
+      - pattern: echo $X;
+      - pattern-not: echo rex_escape($X);
+      - pattern-not: echo (int)$X;
+      - pattern-not: echo htmlspecialchars($X, ...);
+      - pattern-not: echo rex_view::...(...);
+    message: |
+      Potenzielle XSS-Schwachstelle: echo ohne Escaping.
+      Verwende: echo rex_escape($variable);
+    languages: [php]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-79"
+
+  # SQL Injection: String concatenation in queries
+  - id: redaxo-sql-injection-concat
+    patterns:
+      - pattern: $sql->setQuery("..." . $X . "...");
+      - pattern-not: $sql->setQuery("...", [...]);
+    message: |
+      Potenzielle SQL-Injection: String-Konkatenation in Query.
+      Verwende Prepared Statements: $sql->setQuery('SELECT * FROM table WHERE id = ?', [$id]);
+    languages: [php]
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-89: SQL Injection"
+      owasp: A1:2017 Injection
+
+  # SQL Injection: Direct variable in query
+  - id: redaxo-sql-injection-direct
+    patterns:
+      - pattern: $sql->setQuery("...$X...");
+      - pattern-not: $sql->setQuery("...", [...]);
+    message: |
+      Potenzielle SQL-Injection: Variable direkt im Query-String.
+      Verwende Prepared Statements mit Platzhaltern.
+    languages: [php]
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-89"
+
+  # Dangerous functions
+  - id: redaxo-dangerous-eval
+    pattern: eval($X)
+    message: |
+      Gefährliche Funktion: eval() sollte nicht verwendet werden.
+      Dies kann zu Remote Code Execution führen.
+    languages: [php]
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-95: Eval Injection"
+
+  - id: redaxo-dangerous-exec
+    patterns:
+      - pattern-either:
+          - pattern: exec($X, ...)
+          - pattern: system($X, ...)
+          - pattern: passthru($X, ...)
+          - pattern: shell_exec($X)
+          - pattern: popen($X, ...)
+          - pattern: proc_open($X, ...)
+    message: |
+      Gefährliche Funktion: Shell-Ausführung erkannt.
+      Wenn nötig, alle Eingaben mit escapeshellarg() escapen.
+    languages: [php]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-78: OS Command Injection"
+
+  # Unvalidated redirects
+  - id: redaxo-open-redirect
+    patterns:
+      - pattern: rex_response::sendRedirect($X)
+      - pattern-not: rex_response::sendRedirect(rex_url::...(...))
+    message: |
+      Potenzielle Open-Redirect-Schwachstelle.
+      Verwende rex_url Funktionen für sichere Redirects.
+    languages: [php]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-601: Open Redirect"
+
+  # File inclusion
+  - id: redaxo-file-inclusion
+    patterns:
+      - pattern-either:
+          - pattern: include($X)
+          - pattern: include_once($X)
+          - pattern: require($X)
+          - pattern: require_once($X)
+      - pattern-not: include(rex_path::...(...))
+      - pattern-not: require(rex_path::...(...))
+      - pattern-not: include(__DIR__ . ...)
+      - pattern-not: require(__DIR__ . ...)
+    message: |
+      Potenzielle File-Inclusion-Schwachstelle.
+      Verwende rex_path Funktionen für sichere Pfade.
+    languages: [php]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-98: PHP File Inclusion"
+
+  # CSRF: Form without token
+  - id: redaxo-csrf-missing
+    patterns:
+      - pattern: |
+          <form ...>
+            ...
+          </form>
+      - pattern-not: |
+          <form ...>
+            ...
+            $...->getHiddenField()
+            ...
+          </form>
+      - pattern-not: |
+          <form ...>
+            ...
+            rex_csrf_token::...
+            ...
+          </form>
+    message: |
+      Formular ohne CSRF-Token gefunden.
+      Verwende: rex_csrf_token::factory('name')->getHiddenField()
+    languages: [php]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-352: CSRF"
+
+  # JavaScript: innerHTML with user input
+  - id: js-xss-innerhtml
+    patterns:
+      - pattern: $X.innerHTML = $Y
+      - pattern-not: $X.innerHTML = ""
+      - pattern-not: $X.innerHTML = ''
+    message: |
+      Potenzielle XSS: innerHTML mit dynamischem Inhalt.
+      Verwende textContent oder DOMPurify.sanitize().
+    languages: [javascript]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-79"
+
+  # JavaScript: document.write
+  - id: js-xss-document-write
+    pattern: document.write($X)
+    message: |
+      Gefährlich: document.write() kann XSS ermöglichen.
+      Verwende DOM-Methoden wie createElement() stattdessen.
+    languages: [javascript]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-79"
