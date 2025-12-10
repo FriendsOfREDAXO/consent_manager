@@ -20,13 +20,13 @@ if (null !== $consent_manager->cookiegroups): ?>
                                 if (count($cookiegroup['cookie_uids']) >= 1) {
                                     if ($cookiegroup['required']) {
                                         echo '<div class="consent_manager-cookiegroup-checkbox">';
-                                        echo '<label for="' . $cookiegroup['uid'] . '"><input type="checkbox" disabled="disabled" data-action="toggle-cookie" id="' . $cookiegroup['uid'] . '" data-uid="' . $cookiegroup['uid'] . '" data-cookie-uids=\'' . json_encode($cookiegroup['cookie_uids']) . '\' checked>';
-                                        echo '<span>' . $cookiegroup['name'] . '</span></label>';
+                                        echo '<label for="' . rex_escape($cookiegroup['uid']) . '"><input type="checkbox" disabled="disabled" data-action="toggle-cookie" id="' . rex_escape($cookiegroup['uid']) . '" data-uid="' . rex_escape($cookiegroup['uid']) . '" data-cookie-uids=\'' . json_encode($cookiegroup['cookie_uids']) . '\' checked>';
+                                        echo '<span>' . rex_escape($cookiegroup['name']) . '</span></label>';
                                         echo '</div>' . PHP_EOL;
                                     } else {
                                         echo '<div class="consent_manager-cookiegroup-checkbox">';
-                                        echo '<label for="' . $cookiegroup['uid'] . '"><input tabindex="0" type="checkbox" id="' . $cookiegroup['uid'] . '" data-uid="' . $cookiegroup['uid'] . '" data-cookie-uids=\'' . json_encode($cookiegroup['cookie_uids']) . '\'>';
-                                        echo '<span>' . $cookiegroup['name'] . '</span></label>';
+                                        echo '<label for="' . rex_escape($cookiegroup['uid']) . '"><input tabindex="0" type="checkbox" id="' . rex_escape($cookiegroup['uid']) . '" data-uid="' . rex_escape($cookiegroup['uid']) . '" data-cookie-uids=\'' . json_encode($cookiegroup['cookie_uids']) . '\'>';
+                                        echo '<span>' . rex_escape($cookiegroup['name']) . '</span></label>';
                                         echo '</div>' . PHP_EOL;
                                     }
                                 }
@@ -51,9 +51,10 @@ if (null !== $consent_manager->cookiegroups): ?>
 									}
                         		}
 								echo '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
-                                echo $cookiegroup['name'] . ' <span class="consent_manager-cookiegroup-number">(' . $countAll . ')</span>';
+                                echo rex_escape($cookiegroup['name']) . ' <span class="consent_manager-cookiegroup-number">(' . $countAll . ')</span>';
                                 echo '</div>';
                                 echo '<div class="consent_manager-cookiegroup-description">';
+                                // Description darf HTML enthalten (bewusste Entscheidung)
                                 echo $cookiegroup['description'];
                                 echo '</div>';
                                 echo '<div class="consent_manager-cookiegroup">';
@@ -63,7 +64,8 @@ if (null !== $consent_manager->cookiegroups): ?>
                                         if (isset($cookie['definition'])) {
                                             foreach ($cookie['definition'] as $def) {
                                                 $serviceName		= '';
-                                                if($cookie['service_name']) $serviceName = '('.$cookie['service_name'].')';
+                                                // XSS-Schutz: Service-Name escapen
+                                                if($cookie['service_name']) $serviceName = '(' . rex_escape($cookie['service_name']) . ')';
 
                                                 $linkTarget		=  '';
 												$linkRel		=  '';
@@ -81,17 +83,22 @@ if (null !== $consent_manager->cookiegroups): ?>
 												$expressionsAry = ['diese website','this website'];
 
                                                 echo '<div class="consent_manager-cookie">';
-                                                echo '<span class="consent_manager-cookie-name"><strong>' . $def['cookie_name'] . '</strong> ' . $serviceName . '</span>';
+                                                // XSS-Schutz: Cookie-Name escapen
+                                                echo '<span class="consent_manager-cookie-name"><strong>' . rex_escape($def['cookie_name']) . '</strong> ' . $serviceName . '</span>';
+                                                // Description darf HTML enthalten (bewusste Entscheidung)
                                                 echo '<span class="consent_manager-cookie-description">' . $def['description'] . '</span>';
-                                                echo '<span class="consent_manager-cookie-description">' . $consent_manager->texts['lifetime'] . ' ' . $def['cookie_lifetime'] . '</span>';
-                                                echo '<span class="consent_manager-cookie-provider">' . $consent_manager->texts['provider'] . ' ' . $cookie['provider'] . '</span>';
+                                                // XSS-Schutz: Lifetime escapen
+                                                echo '<span class="consent_manager-cookie-description">' . $consent_manager->texts['lifetime'] . ' ' . rex_escape($def['cookie_lifetime']) . '</span>';
+                                                // XSS-Schutz: Provider escapen
+                                                echo '<span class="consent_manager-cookie-provider">' . $consent_manager->texts['provider'] . ' ' . rex_escape($cookie['provider']) . '</span>';
 
                                                 if(!in_array($cookProvider, $expressionsAry)) {
                                                 	$linkTarget = 'target="_blank"';
 													$linkRel	= 'rel="noopener noreferrer nofollow"';
                                                 }
                                                 echo '<span class="consent_manager-cookie-link-privacy-policy">'.PHP_EOL;
-                                                echo '	<a href="'.$cookie['provider_link_privacy'].'" '.$linkTarget.' '.$linkRel .'>'.$consent_manager->texts['link_privacy'].'</a>'.PHP_EOL;
+                                                // XSS-Schutz: Provider-Link escapen
+                                                echo '	<a href="' . rex_escape($cookie['provider_link_privacy']) . '" ' . $linkTarget . ' ' . $linkRel . '>' . $consent_manager->texts['link_privacy'] . '</a>'.PHP_EOL;
                                                 echo '</span>'.PHP_EOL;
                                                 echo '</div>' . PHP_EOL;
                                             }
@@ -118,7 +125,9 @@ if (0 === $clang) {
     $clang = rex_clang::getCurrent()->getId();
 }
 foreach ($consent_manager->links as $v) {
-    echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . (null !== rex_article::get($v, $clang) ? rex_article::get($v, $clang)->getName() : '') . '</a>';
+    $article = rex_article::get($v, $clang);
+    $articleName = null !== $article ? rex_escape($article->getName()) : '';
+    echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . $articleName . '</a>';
 }
 ?>
                         </div>

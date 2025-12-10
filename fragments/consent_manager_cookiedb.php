@@ -31,13 +31,15 @@ if ($consent_manager->cookiegroups) { /** phpstan-ignore-line */
 
         $consents_service_names = [];
         foreach ($consents as $consent) {
-            $consents_service_names[] = $consent_manager->cookies[$consent]['service_name'] . ' (' . $consent . ')';
+            // XSS-Schutz: Service-Namen escapen
+            $consents_service_names[] = rex_escape($consent_manager->cookies[$consent]['service_name']) . ' (' . rex_escape($consent) . ')';
         }
         $consents_uids_output = implode(', ', $consents_service_names);
 
         $output .= '<h2>' . $consent_manager->texts['headline_currentconsent'] . '</h2>';
-        $output .= '<p class="consent_manager-history-date"><span>' . $consent_manager->texts['consent_date'] . ':</span> ' . ($history[0]['createdate'] ?? '-') . '</p>';
-        $output .= '<p class="consent_manager-history-id"><span>' . $consent_manager->texts['consent_id'] . ':</span> ' . ($history[0]['consentid'] ?? '-') . '</p>';
+        // XSS-Schutz: Daten aus consent_log escapen
+        $output .= '<p class="consent_manager-history-date"><span>' . $consent_manager->texts['consent_date'] . ':</span> ' . rex_escape($history[0]['createdate'] ?? '-') . '</p>';
+        $output .= '<p class="consent_manager-history-id"><span>' . $consent_manager->texts['consent_id'] . ':</span> ' . rex_escape($history[0]['consentid'] ?? '-') . '</p>';
         $output .= '<p class="consent_manager-history-consents"><span>' . $consent_manager->texts['consent_consents'] . ':</span> ' . $consents_uids_output . '</p>';
         $output .= '<p><a class="consent_manager-show-box">' . $consent_manager->texts['edit_consent'] . '</a></p>'; // mit consent_manager-show-box-reload funktionierts nicht korrekt
 
@@ -52,12 +54,14 @@ if ($consent_manager->cookiegroups) { /** phpstan-ignore-line */
             $consents = (array) json_decode((string) $historyentry['consents']);
             $consents_service_names = [];
             foreach ($consents as $consent) {
-                $consents_service_names[] = $consent_manager->cookies[$consent]['service_name'] . ' (' . $consent . ')';
+                // XSS-Schutz: Service-Namen escapen
+                $consents_service_names[] = rex_escape($consent_manager->cookies[$consent]['service_name']) . ' (' . rex_escape($consent) . ')';
             }
             $consents_uids_output = implode(', ', $consents_service_names);
             $output .= '<tr>';
-            $output .= '<td class="consent_manager-history-date">' . $historyentry['createdate'] . '</td>';
-            $output .= '<td class="consent_manager-history-id">' . $historyentry['consentid'] . '</td>';
+            // XSS-Schutz: History-Daten escapen
+            $output .= '<td class="consent_manager-history-date">' . rex_escape($historyentry['createdate']) . '</td>';
+            $output .= '<td class="consent_manager-history-id">' . rex_escape($historyentry['consentid']) . '</td>';
             $output .= '<td class="consent_manager-history-consents">' . $consents_uids_output . '</td>';
             $output .= '</tr>';
         }
@@ -72,9 +76,10 @@ if ($consent_manager->cookiegroups) { /** phpstan-ignore-line */
     foreach ($consent_manager->cookiegroups as $cookiegroup) {
         if (count($cookiegroup['cookie_uids']) >= 1) {
             $output .= '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
-            $output .= $cookiegroup['name'] . ' <span>(' . count($cookiegroup['cookie_uids']) . ')</span>';
+            $output .= rex_escape($cookiegroup['name']) . ' <span>(' . count($cookiegroup['cookie_uids']) . ')</span>';
             $output .= '</div>';
             $output .= '<div class="consent_manager-cookiegroup-description">';
+            // Description darf HTML enthalten (bewusste Entscheidung)
             $output .= $cookiegroup['description'];
             $output .= '</div>';
             $output .= '<div class="consent_manager-cookiegroup">';
@@ -90,11 +95,12 @@ if ($consent_manager->cookiegroups) { /** phpstan-ignore-line */
                 $cookie = $consent_manager->cookies[$cookieUid];
                 foreach ($cookie['definition'] as $def) {
                     $output .= '<tr>';
-                    $output .= '<td class="consent_manager-cookie-name">' . $def['cookie_name'] . '</td>';
-                    $output .= '<td class="consent_manager-cookie-provider"><a href="' . $cookie['provider_link_privacy'] . '">' . $cookie['provider'] . '</a></td>';
+                    $output .= '<td class="consent_manager-cookie-name">' . rex_escape($def['cookie_name']) . '</td>';
+                    $output .= '<td class="consent_manager-cookie-provider"><a href="' . rex_escape($cookie['provider_link_privacy']) . '">' . rex_escape($cookie['provider']) . '</a></td>';
+                    // Description darf HTML enthalten (bewusste Entscheidung)
                     $output .= '<td class="consent_manager-cookie-description">' . $def['description'] . '</td>';
-                    $output .= '<td class="consent_manager-cookie-lifetime">' . $def['cookie_lifetime'] . '</td>';
-                    $output .= '<td class="consent_manager-cookie-service">' . $cookie['service_name'] . '</td>';
+                    $output .= '<td class="consent_manager-cookie-lifetime">' . rex_escape($def['cookie_lifetime']) . '</td>';
+                    $output .= '<td class="consent_manager-cookie-service">' . rex_escape($cookie['service_name']) . '</td>';
                     $output .= '</tr>';
                 }
             }
@@ -131,12 +137,14 @@ if ($consent_manager->cookiegroups) { /** phpstan-ignore-line */
                 </tr>';
     foreach ($_COOKIE as $cookiename => $cookieValue) { /** @phpstan-ignore-line */
         $output .= '<tr>';
-        $output .= '<td class="consent_manager-cookie-name">' . $cookiename . '</td>';
+        // XSS-Schutz: Cookie-Name escapen da aus externer Quelle ($_COOKIE)
+        $output .= '<td class="consent_manager-cookie-name">' . htmlspecialchars($cookiename, ENT_QUOTES, 'UTF-8') . '</td>';
         if (isset($cookiedb[$cookiename]) || array_key_exists($cookiename, $cookiedb)) {
-            $output .= '<td class="consent_manager-cookie-provider">' . $cookiedb[$cookiename]['provider'] . '</td>';
+            $output .= '<td class="consent_manager-cookie-provider">' . rex_escape($cookiedb[$cookiename]['provider']) . '</td>';
+            // Description darf HTML enthalten (bewusste Entscheidung)
             $output .= '<td class="consent_manager-cookie-description">' . $cookiedb[$cookiename]['description'] . '</td>';
-            $output .= '<td class="consent_manager-cookie-lifetime">' . $cookiedb[$cookiename]['lifetime'] . '</td>';
-            $output .= '<td class="consent_manager-cookie-service">' . $cookiedb[$cookiename]['service_name'] . '</td>';
+            $output .= '<td class="consent_manager-cookie-lifetime">' . rex_escape($cookiedb[$cookiename]['lifetime']) . '</td>';
+            $output .= '<td class="consent_manager-cookie-service">' . rex_escape($cookiedb[$cookiename]['service_name']) . '</td>';
         } else {
             $output .= '<td colspan="4">' . $consent_manager->texts['missingdescription'] . '</td>';
         }
