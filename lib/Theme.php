@@ -545,6 +545,7 @@ div.consent_manager-wrapper .consent_manager-headline {
 
 div.consent_manager-wrapper p.consent_manager-text {
     margin: 0 0 1em 0;
+    padding-right: 3em;
     color: \$text-color;
 }
 
