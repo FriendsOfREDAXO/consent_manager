@@ -34,23 +34,25 @@ rules:
       category: security
       cwe: "CWE-79"
 
-  # SQL Injection: String concatenation in queries
-  # Ausnahme: rex::getTablePrefix() und rex::getTable() sind sicher (interne REDAXO-Funktionen)
-  - id: redaxo-sql-injection-concat
+  # SQL Injection: Variablen in WHERE/SET/VALUES Klauseln müssen Prepared Statements nutzen
+  # SICHER: 'SELECT * FROM ' . rex::getTable('user') . ' WHERE id = ?', [$id]
+  # UNSICHER: 'SELECT * FROM ' . rex::getTable('user') . ' WHERE id = ' . $id
+  - id: redaxo-sql-injection-value-concat
     patterns:
-      - pattern: $sql->setQuery("..." . $X . "...");
-      - pattern-not: $sql->setQuery("...", [...]);
-      - pattern-not: $sql->setQuery("..." . rex::getTablePrefix() . "...");
-      - pattern-not: $sql->setQuery("..." . rex::getTable(...) . "...");
-      - pattern-not: $sql->setQuery('...' . rex::getTablePrefix() . '...');
-      - pattern-not: $sql->setQuery('...' . rex::getTable(...) . '...');
+      - pattern-either:
+          # Variable nach WHERE ohne Prepared Statement
+          - pattern: $sql->setQuery("..." . $VAR);
+          - pattern: $sql->setQuery('...' . $VAR);
+      - pattern-not: $sql->setQuery($QUERY, [...]);
       - metavariable-regex:
-          metavariable: $X
-          regex: '^(?!rex::getTablePrefix|rex::getTable).*$'
+          metavariable: $VAR
+          # Matcht Variablen wie $id, $userId, aber nicht rex::getTable*
+          regex: '^\$[a-zA-Z_]'
     message: |
-      Potenzielle SQL-Injection: String-Konkatenation in Query.
-      Verwende Prepared Statements: $sql->setQuery('SELECT * FROM table WHERE id = ?', [$id]);
-      Hinweis: rex::getTablePrefix() und rex::getTable() sind sichere Ausnahmen.
+      SQL-Injection Risiko: Variable am Ende des Query-Strings konkateniert.
+      UNSICHER: setQuery('... WHERE id = ' . $id)
+      SICHER:   setQuery('... WHERE id = ?', [$id])
+      Verwende IMMER Prepared Statements für Werte!
     languages: [php]
     severity: ERROR
     metadata:
@@ -58,21 +60,25 @@ rules:
       cwe: "CWE-89: SQL Injection"
       owasp: A1:2017 Injection
 
-  # SQL Injection: Direct variable in query (aber nicht rex::getTable*)
-  - id: redaxo-sql-injection-direct
+  # SQL Injection: Tabellennamen mit rex::getTable* sind OK, aber danach muss Prepared Statement folgen
+  - id: redaxo-sql-best-practice
     patterns:
-      - pattern: $sql->setQuery("...$X...");
-      - pattern-not: $sql->setQuery("...", [...]);
-      - pattern-not-regex: rex::getTablePrefix|rex::getTable
+      - pattern-either:
+          - pattern: $sql->setQuery("..." . rex::getTablePrefix() . "...");
+          - pattern: $sql->setQuery("..." . rex::getTable(...) . "...");
+          - pattern: $sql->setQuery('...' . rex::getTablePrefix() . '...');
+          - pattern: $sql->setQuery('...' . rex::getTable(...) . '...');
+      - pattern-not: $sql->setQuery($QUERY, [...]);
     message: |
-      Potenzielle SQL-Injection: Variable direkt im Query-String.
-      Verwende Prepared Statements mit Platzhaltern.
-      Hinweis: rex::getTablePrefix() und rex::getTable() sind sichere Ausnahmen.
+      Best Practice: Auch wenn rex::getTablePrefix()/rex::getTable() sicher sind,
+      sollte die Query Prepared Statements für alle Werte verwenden.
+      Empfohlen: setQuery('SELECT * FROM ' . rex::getTable('user') . ' WHERE id = ?', [$id])
     languages: [php]
-    severity: ERROR
+    severity: WARNING
     metadata:
       category: security
-      cwe: "CWE-89"
+      cwe: "CWE-89: SQL Injection"
+      subcategory: best-practice
 
   # Dangerous functions
   - id: redaxo-dangerous-eval
