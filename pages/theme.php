@@ -318,15 +318,14 @@ echo '<style>
     margin-bottom: 30px;
 }
 .cm-theme-card {
-    background: #fff;
-    border: 1px solid #ddd;
+    background: var(--rex-card-bg, #fff);
+    border: 1px solid var(--rex-card-border, #ddd);
     border-radius: 4px;
     overflow: hidden;
     transition: box-shadow 0.2s, border-color 0.2s;
 }
 .cm-theme-card:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    border-color: #bbb;
 }
 .cm-theme-card--active {
     border-color: #3bb594;
@@ -338,7 +337,7 @@ echo '<style>
 }
 .cm-theme-preview {
     cursor: pointer;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--rex-card-border, #eee);
 }
 .cm-theme-info {
     padding: 12px 15px 8px;
@@ -355,12 +354,11 @@ echo '<style>
     margin: 0 0 5px 0;
     font-size: 14px;
     font-weight: 600;
-    color: #333;
 }
 .cm-theme-desc {
     margin: 0 0 8px 0;
     font-size: 12px;
-    color: #666;
+    opacity: 0.8;
     line-height: 1.4;
 }
 .cm-theme-meta {
@@ -370,40 +368,39 @@ echo '<style>
 }
 .cm-theme-meta-item {
     font-size: 11px;
-    color: #888;
+    opacity: 0.6;
 }
 .cm-theme-meta-item i {
     margin-right: 3px;
 }
 .cm-theme-author {
     font-size: 11px;
-    color: #888;
+    opacity: 0.6;
 }
 .cm-theme-author i {
     margin-right: 3px;
 }
 .cm-theme-author a {
-    color: #666;
+    opacity: 0.8;
 }
 .cm-theme-actions {
     padding: 10px 15px;
-    background: #f9f9f9;
-    border-top: 1px solid #eee;
+    background: var(--rex-panel-heading-bg, #f9f9f9);
+    border-top: 1px solid var(--rex-card-border, #eee);
     display: flex;
     gap: 8px;
 }
 .cm-theme-section-title {
     margin: 25px 0 15px 0;
     padding-bottom: 10px;
-    border-bottom: 2px solid #eee;
-    color: #333;
+    border-bottom: 2px solid var(--rex-card-border, #eee);
 }
 .cm-theme-section-title:first-child {
     margin-top: 0;
 }
 .cm-theme-section-info {
     margin-bottom: 15px;
-    color: #666;
+    opacity: 0.7;
     font-size: 13px;
 }
 </style>';
