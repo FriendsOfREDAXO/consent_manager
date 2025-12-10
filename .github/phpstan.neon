@@ -1,0 +1,30 @@
+parameters:
+    level: 5
+    paths:
+        - ../lib
+        - ../pages
+        - ../fragments
+        - ../boot.php
+        - ../install.php
+        - ../uninstall.php
+        - ../update.php
+    excludePaths:
+        - ../vendor
+        - vendor
+    
+    # REDAXO-spezifische Einstellungen
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+    
+    ignoreErrors:
+        # REDAXO Klassen sind zur Analyse-Zeit nicht verfügbar
+        - '#Class rex[a-zA-Z_]* not found#'
+        - '#Function rex[a-zA-Z_]* not found#'
+        - '#Call to static method [a-zA-Z_]+\(\) on an unknown class rex[a-zA-Z_]*#'
+        
+        # Dynamische Methoden in REDAXO
+        - '#Call to an undefined method rex[a-zA-Z_]*::[a-zA-Z_]+\(\)#'
+        
+        # Fragment Variablen
+        - '#Variable \$this might not be defined#'
+        - '#Undefined variable: \$this#'

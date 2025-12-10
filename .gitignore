@@ -28,6 +28,10 @@ composer.phar
 # Composer vendor directory - only for local dev / CI, never commit!
 vendor/
 
+# CI tools vendor directory
+.github/vendor/
+.github/composer.lock
+
 # Composer lock file - regenerated in CI
 composer.lock
 

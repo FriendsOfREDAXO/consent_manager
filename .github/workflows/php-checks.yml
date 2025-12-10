@@ -1,0 +1,163 @@
+name: PHP Quality Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  php-checks:
+    name: PHP ${{ matrix.php-version }} Checks
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.1', '8.2', '8.3']
+        include:
+          - php-version: '8.1'
+            run-all-checks: true  # Alle Checks nur auf einer PHP-Version
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: gd, intl, pdo_mysql
+          coverage: none
+          tools: composer:v2
+
+      # REDAXO herunterladen und installieren
+      - name: Download latest REDAXO release
+        run: |
+          LATEST_RELEASE=$(curl -L -s -H 'Accept: application/json' https://github.com/redaxo/redaxo/releases/latest)
+          REDAXO_VERSION=$(echo $LATEST_RELEASE | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
+          echo "📦 Downloading REDAXO $REDAXO_VERSION"
+          curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/$REDAXO_VERSION/redaxo_$REDAXO_VERSION.zip
+          unzip -oq redaxo.zip -d redaxo_cms
+          rm redaxo.zip
+
+      - name: Init database
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -uroot -h127.0.0.1 -proot -e 'CREATE DATABASE redaxo5;'
+
+      - name: Setup REDAXO
+        run: |
+          php redaxo_cms/redaxo/bin/console setup:run -n \
+            --lang=de_de \
+            --agree-license \
+            --db-host=127.0.0.1 \
+            --db-name=redaxo5 \
+            --db-password=root \
+            --db-createdb=no \
+            --db-setup=normal \
+            --admin-username=admin \
+            --admin-password=adminpassword \
+            --error-email=test@redaxo.invalid \
+            --ansi
+          php redaxo_cms/redaxo/bin/console config:set --type boolean debug.enabled true
+          php redaxo_cms/redaxo/bin/console config:set --type boolean debug.throw_always_exception true
+
+      - name: Copy addon to REDAXO
+        run: |
+          rsync -av \
+            --exclude='vendor' \
+            --exclude='.github' \
+            --exclude='.git' \
+            --exclude='redaxo_cms' \
+            --exclude='node_modules' \
+            './' 'redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}'
+
+      - name: Install addon
+        run: |
+          php redaxo_cms/redaxo/bin/console package:install '${{ github.event.repository.name }}'
+          echo "✅ Addon installed successfully"
+
+      # CI-Tools aus .github/ installieren
+      - name: Install CI tools
+        working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}/.github
+        run: |
+          composer install --prefer-dist --no-progress --no-interaction
+          echo "✅ CI tools installed"
+
+      # PHP Syntax Check (auf allen PHP-Versionen)
+      - name: PHP Syntax Check
+        run: |
+          echo "🔍 Checking PHP syntax..."
+          find redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }} \
+            -name "*.php" \
+            -not -path "*/.github/*" \
+            -not -path "*/vendor/*" \
+            -print0 | xargs -0 -n1 php -l > /dev/null
+          echo "✅ No syntax errors found"
+
+      # PHPStan (nur auf einer PHP-Version)
+      - name: PHPStan Analysis
+        if: matrix.run-all-checks
+        working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
+        run: |
+          echo "🔍 Running PHPStan..."
+          .github/vendor/bin/phpstan analyse \
+            --configuration=.github/phpstan.neon \
+            --no-progress \
+            --error-format=github \
+            || true
+
+      # PHP-CS-Fixer (nur auf einer PHP-Version)
+      - name: PHP-CS-Fixer Check
+        if: matrix.run-all-checks
+        working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
+        run: |
+          echo "🔍 Checking code style..."
+          .github/vendor/bin/php-cs-fixer fix \
+            --dry-run \
+            --diff \
+            --config=.github/php-cs-fixer.php \
+            || true
+
+      # Psalm (nur auf einer PHP-Version)
+      - name: Psalm Analysis
+        if: matrix.run-all-checks
+        working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
+        run: |
+          echo "🔍 Running Psalm..."
+          .github/vendor/bin/psalm \
+            --no-cache \
+            --config=.github/psalm.xml \
+            --show-info=false \
+            --output-format=github \
+            || true
+
+      # Psalm Taint Analysis (Security)
+      - name: Psalm Taint Analysis (Security)
+        if: matrix.run-all-checks
+        working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
+        run: |
+          echo "🔒 Running Psalm Taint Analysis..."
+          .github/vendor/bin/psalm \
+            --no-cache \
+            --config=.github/psalm.xml \
+            --taint-analysis \
+            --show-info=false \
+            --output-format=github \
+            || true
+
+      # Rector Check
+      - name: Rector Check
+        if: matrix.run-all-checks
+        working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
+        run: |
+          echo "🔍 Checking for Rector suggestions..."
+          .github/vendor/bin/rector process \
+            --config=.github/rector.php \
+            --dry-run \
+            || true
