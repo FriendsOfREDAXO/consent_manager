@@ -71,7 +71,7 @@ jobs:
         run: |
           rsync -av \
             --exclude='vendor' \
-            --exclude='.github' \
+            --exclude='.github/vendor' \
             --exclude='.git' \
             --exclude='redaxo_cms' \
             --exclude='node_modules' \
