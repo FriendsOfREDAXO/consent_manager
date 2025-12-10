@@ -64,6 +64,7 @@ default_config:
 installer_ignore:
     - .github
     - .gitignore
+    - .semgrep
     # development and test artifacts — should not be included in the released zip
     - node_modules
     - assets/tests
