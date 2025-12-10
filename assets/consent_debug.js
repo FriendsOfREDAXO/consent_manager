@@ -9,6 +9,20 @@
     let debugPanel = null;
     let isVisible = false;
     
+    /**
+     * HTML-Escape für sichere Ausgabe von User-Daten
+     * Verhindert XSS bei manipulierten Cookies/LocalStorage
+     */
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+    
     // Panel HTML erstellen
     function createDebugPanel() {
         const panel = document.createElement('div');
@@ -709,9 +723,9 @@
                                 issue.type === 'warning' ? '#856404' : '#0c5460';
                 
                 return `<div style="margin: 8px 0; padding: 12px; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 6px; font-size: 12px;">
-                    <div style="font-weight: bold; margin-bottom: 6px; color: ${textColor};">${icon} ${issue.title}</div>
-                    <div style="margin-bottom: 6px; color: ${textColor};">${issue.message}</div>
-                    <div style="font-size: 11px; color: #6c757d;"><strong>Lösung:</strong> ${issue.solution}</div>
+                    <div style="font-weight: bold; margin-bottom: 6px; color: ${textColor};">${icon} ${escapeHtml(issue.title)}</div>
+                    <div style="margin-bottom: 6px; color: ${textColor};">${escapeHtml(issue.message)}</div>
+                    <div style="font-size: 11px; color: #6c757d;"><strong>Lösung:</strong> ${escapeHtml(issue.solution)}</div>
                 </div>`;
             }).join('');
         } else {
@@ -823,8 +837,8 @@
             if (activeServices.length > 0) {
                 servicesHtml += activeServices.map(service => `
                     <div class="service-item">
-                        <div class="service-name">${service.name}</div>
-                        <div class="service-group">${service.group}</div>
+                        <div class="service-name">${escapeHtml(service.name)}</div>
+                        <div class="service-group">${escapeHtml(service.group)}</div>
                     </div>
                 `).join('');
             } else {
@@ -845,26 +859,26 @@
                 // Wenn JSON-Daten vorhanden, formatiert anzeigen
                 if (cookie.parsedValue) {
                     displayValue = `<div class="cookie-value">
-                        <div><strong>Raw:</strong> ${cookie.value.length > 50 ? cookie.value.substring(0, 50) + '...' : cookie.value}</div>
+                        <div><strong>Raw:</strong> ${escapeHtml(cookie.value.length > 50 ? cookie.value.substring(0, 50) + '...' : cookie.value)}</div>
                         <div><strong>Dekodiert & Formatiert:</strong></div>
-                        <pre class="json-preview">${JSON.stringify(cookie.parsedValue, null, 2)}</pre>
+                        <pre class="json-preview">${escapeHtml(JSON.stringify(cookie.parsedValue, null, 2))}</pre>
                     </div>`;
                 } else if (cookie.decodedValue !== cookie.value) {
                     // URL-dekodiert aber kein JSON
                     displayValue = `<div class="cookie-value">
-                        <div><strong>Raw:</strong> ${cookie.value.length > 50 ? cookie.value.substring(0, 50) + '...' : cookie.value}</div>
-                        <div><strong>Dekodiert:</strong> ${cookie.decodedValue}</div>
+                        <div><strong>Raw:</strong> ${escapeHtml(cookie.value.length > 50 ? cookie.value.substring(0, 50) + '...' : cookie.value)}</div>
+                        <div><strong>Dekodiert:</strong> ${escapeHtml(cookie.decodedValue)}</div>
                     </div>`;
                 } else {
                     // Normale Cookie-Werte
                     const shortValue = cookie.value.length > 80 
                         ? cookie.value.substring(0, 80) + '...' 
                         : cookie.value;
-                    displayValue = `<div class="cookie-value">${shortValue || '<em>leer</em>'}</div>`;
+                    displayValue = `<div class="cookie-value">${escapeHtml(shortValue) || '<em>leer</em>'}</div>`;
                 }
                 
                 return `<div class="cookie-item">
-                    <div class="cookie-name">${cookie.name}</div>
+                    <div class="cookie-name">${escapeHtml(cookie.name)}</div>
                     ${displayValue}
                 </div>`;
               }).join('')
@@ -876,21 +890,21 @@
         const localStorageData = getLocalStorageData();
         const storageHtml = localStorageData.length > 0
             ? localStorageData.map(item => {
-                let displayValue = item.value;
+                let displayValue = escapeHtml(item.value);
                 
                 // JSON formatieren falls möglich
                 try {
                     const parsed = JSON.parse(item.value);
-                    displayValue = `<pre class="json-preview">${JSON.stringify(parsed, null, 2)}</pre>`;
+                    displayValue = `<pre class="json-preview">${escapeHtml(JSON.stringify(parsed, null, 2))}</pre>`;
                 } catch (e) {
                     // Lange Strings kürzen
                     if (item.value.length > 100) {
-                        displayValue = item.value.substring(0, 100) + '...';
+                        displayValue = escapeHtml(item.value.substring(0, 100) + '...');
                     }
                 }
                 
                 return `<div class="storage-item">
-                    <div class="storage-key">${item.key}</div>
+                    <div class="storage-key">${escapeHtml(item.key)}</div>
                     <div class="storage-value">${displayValue}</div>
                 </div>`;
               }).join('')
