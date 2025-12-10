@@ -26,7 +26,7 @@ $csrfToken = $this->getVar('csrfToken');
         </div>
     </div>
     
-    <?php if ('fluid' === $themeBase): ?>
+    <?php if ('fluid' === $themeBase || 'fluid_dark' === $themeBase): ?>
     <div class="panel panel-warning">
         <div class="panel-heading">
             <h3 class="panel-title"><i class="rex-icon fa-exclamation-triangle"></i> Hinweis zur Barrierefreiheit bei Glaseffekt-Themes</h3>
@@ -99,7 +99,7 @@ $csrfToken = $this->getVar('csrfToken');
                                     <span class="input-group-addon color-hex-display"><?= rex_escape($colors['background']) ?></span>
                                 </div>
                             </div>
-                            <?php if ('fluid' === $themeBase): ?>
+                            <?php if ('fluid' === $themeBase || 'fluid_dark' === $themeBase): ?>
                             <div class="form-group">
                                 <label for="background_opacity">Hintergrund-Transparenz: <span id="background_opacity_value"><?= rex_escape($colors['background_opacity'] ?? '100') ?>%</span></label>
                                 <input type="range" class="form-control" id="background_opacity" name="background_opacity" min="0" max="100" value="<?= rex_escape($colors['background_opacity'] ?? '100') ?>">
@@ -211,7 +211,7 @@ $csrfToken = $this->getVar('csrfToken');
                                     <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_bg'] ?? '#f8f9fa') ?></span>
                                 </div>
                             </div>
-                            <?php if ('fluid' === $themeBase): ?>
+                            <?php if ('fluid' === $themeBase || 'fluid_dark' === $themeBase): ?>
                             <div class="form-group">
                                 <label for="details_bg_opacity">Hintergrund-Transparenz: <span id="details_bg_opacity_value"><?= rex_escape($colors['details_bg_opacity'] ?? '100') ?>%</span></label>
                                 <input type="range" class="form-control" id="details_bg_opacity" name="details_bg_opacity" min="0" max="100" value="<?= rex_escape($colors['details_bg_opacity'] ?? '100') ?>">

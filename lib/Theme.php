@@ -172,7 +172,7 @@ class Theme
         $isBannerTop = ('banner_top' === $base);
         $isBannerBottom = ('banner_bottom' === $base);
         $isMinimal = ('minimal' === $base);
-        $isFluid = ('fluid' === $base);
+        $isFluid = ('fluid' === $base || 'fluid_dark' === $base);
         $isBanner = $isBannerTop || $isBannerBottom;
 
         // Base values depending on theme type
