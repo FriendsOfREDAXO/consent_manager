@@ -13,6 +13,7 @@
 * **IE11-Polyfills entfernt**: Obsolete Polyfills für IE11 (classList, DOMParser, NodeList.forEach, etc.) entfernt - IE11 ist seit Juni 2022 End-of-Life
 * **GitHub Security Action**: Neue automatisierte Sicherheitsprüfung mit CodeQL und Semgrep
 * **Semgrep REDAXO-Regeln**: Custom Security-Regeln für REDAXO-spezifische Patterns (rex_escape, SQL Injection, etc.)
+* **PHP Quality Checks**: GitHub Action für automatische Code-Qualitätsprüfung mit Rexstan (REDAXO-aware PHPStan)
 
 ---
 
