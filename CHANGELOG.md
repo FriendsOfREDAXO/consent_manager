@@ -1,5 +1,21 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.1.1 - unreleased
+
+### 🔒 Sicherheitsfixes
+
+* **XSS-Schutz in Debug-Panel**: Alle Cookie- und LocalStorage-Werte werden jetzt mit `escapeHtml()` escaped, bevor sie im Debug-Panel angezeigt werden
+* **URL-Parameter Encoding**: Alle URL-Parameter in der Backend-Suche werden jetzt mit `encodeURIComponent()` escaped
+* **SQL Prepared Statements**: Queries in `update.php` auf Prepared Statements umgestellt
+
+### 🧹 Code-Qualität
+
+* **IE11-Polyfills entfernt**: Obsolete Polyfills für IE11 (classList, DOMParser, NodeList.forEach, etc.) entfernt - IE11 ist seit Juni 2022 End-of-Life
+* **GitHub Security Action**: Neue automatisierte Sicherheitsprüfung mit CodeQL und Semgrep
+* **Semgrep REDAXO-Regeln**: Custom Security-Regeln für REDAXO-spezifische Patterns (rex_escape, SQL Injection, etc.)
+
+---
+
 ## Version 5.1.0 - 10.12.2025
 
 > ⚠️ **DRINGEND - Sicherheitsupdate:** Diese Version enthält wichtige Sicherheitsfixes. Ein Update wird dringend empfohlen. Vielen Dank an die **Deutsche Telekom Security GmbH** für die verantwortungsvolle Meldung der Schwachstellen.
