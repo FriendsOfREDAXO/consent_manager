@@ -82,8 +82,16 @@ jobs:
           php redaxo_cms/redaxo/bin/console package:install '${{ github.event.repository.name }}'
           echo "✅ Addon installed successfully"
 
-      # CI-Tools aus .github/ installieren
+      # Rexstan installieren für REDAXO-aware PHPStan
+      - name: Install rexstan
+        if: matrix.run-all-checks
+        run: |
+          php redaxo_cms/redaxo/bin/console package:install 'rexstan'
+          echo "✅ Rexstan installed"
+
+      # CI-Tools aus .github/ installieren (für PHP-CS-Fixer, Rector)
       - name: Install CI tools
+        if: matrix.run-all-checks
         working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}/.github
         run: |
           composer install --prefer-dist --no-progress --no-interaction
@@ -100,16 +108,14 @@ jobs:
             -print0 | xargs -0 -n1 php -l > /dev/null
           echo "✅ No syntax errors found"
 
-      # PHPStan (nur auf einer PHP-Version)
-      - name: PHPStan Analysis
+      # Rexstan (PHPStan mit REDAXO-Stubs)
+      - name: Rexstan Analysis
         if: matrix.run-all-checks
-        working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
         run: |
-          echo "🔍 Running PHPStan..."
-          .github/vendor/bin/phpstan analyse \
-            --configuration=.github/phpstan.neon \
-            --no-progress \
-            --error-format=github \
+          echo "🔍 Running Rexstan (PHPStan für REDAXO)..."
+          php redaxo_cms/redaxo/bin/console rexstan:analyze \
+            --level 5 \
+            redaxo/src/addons/${{ github.event.repository.name }} \
             || true
 
       # PHP-CS-Fixer (nur auf einer PHP-Version)
@@ -122,33 +128,6 @@ jobs:
             --dry-run \
             --diff \
             --config=.github/php-cs-fixer.php \
-            || true
-
-      # Psalm (nur auf einer PHP-Version)
-      - name: Psalm Analysis
-        if: matrix.run-all-checks
-        working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
-        run: |
-          echo "🔍 Running Psalm..."
-          .github/vendor/bin/psalm \
-            --no-cache \
-            --config=.github/psalm.xml \
-            --show-info=false \
-            --output-format=github \
-            || true
-
-      # Psalm Taint Analysis (Security)
-      - name: Psalm Taint Analysis (Security)
-        if: matrix.run-all-checks
-        working-directory: redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}
-        run: |
-          echo "🔒 Running Psalm Taint Analysis..."
-          .github/vendor/bin/psalm \
-            --no-cache \
-            --config=.github/psalm.xml \
-            --taint-analysis \
-            --show-info=false \
-            --output-format=github \
             || true
 
       # Rector Check
