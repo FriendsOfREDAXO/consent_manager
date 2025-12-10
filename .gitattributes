@@ -9,29 +9,3 @@
 *.json  text eol=lf whitespace=blank-at-eol,blank-at-eof,space-before-tab,tab-in-indent,tabwidth=4
 *.yml   text eol=lf whitespace=blank-at-eol,blank-at-eof,space-before-tab,tab-in-indent,tabwidth=4
 
-# Exclude development/test files from generated release archives (export-ignore)
-# This keeps node_modules, tests, CI workflows and formatter configs out of release zips
-node_modules/ export-ignore
-assets/tests/ export-ignore
-tests/ export-ignore
-phpunit.xml export-ignore
-.php_cs export-ignore
-.php_cs.dist export-ignore
-.php-cs-fixer.php export-ignore
-.php-cs-fixer.dist.php export-ignore
-.php-cs-fixer export-ignore
-.php_cs.cache export-ignore
-.github/ export-ignore
-.github/workflows/ export-ignore
-assets/tests/** export-ignore
-.gitignore export-ignore
-vendor/ export-ignore
-.php-cs-fixer.cache export-ignore
-composer.phar export-ignore
-composer.json export-ignore
-composer.lock export-ignore
-package.json export-ignore
-package-lock.json export-ignore
-playwright.config.js export-ignore
-test-results/ export-ignore
-

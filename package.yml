@@ -1,5 +1,5 @@
 package: consent_manager
-version: "5.1.1"
+version: "4.3.1"
 author: "Friends Of REDAXO"
 supportpage: https://redaxo.org/support/community/#slack
 
@@ -9,9 +9,6 @@ page:
   pjax: true
   icon: rex-icon fa fa-coffee
   subpages:
-    config:
-      title: "Settings"
-      icon: rex-icon fa-cog
     cookiegroup:
       title: "translate:consent_manager_cookiegroups"
     cookie:
@@ -20,38 +17,32 @@ page:
       title: "translate:consent_manager_texts"
     domain:
       title: "translate:consent_manager_domains"
+    config:
+      title: "translate:consent_manager_config"
     theme:
       title: "translate:consent_manager_theme"
-    theme_editor:
-      title: "Theme Editor"
-      icon: rex-icon fa-paint-brush
     log:
       title: "translate:consent_manager_log"
+    setup:
+      title: "translate:consent_manager_setup"
     help:
       {
         title: "translate:consent_manager_help",
         icon: rex-icon fa-question-circle,
         subPath: README.md,
-        itemClass: pull-right,
-      }
-    inline:
-      {
-        title: "Inline Consent",
-        icon: rex-icon fa-play-circle,
-        subPath: inline.md,
-        itemClass: pull-right,
+        itemclass: pull-right,
       }
     changelog:
       {
         title: "translate:consent_manager_changelog",
         subPath: CHANGELOG.md,
-        itemClass: pull-right,
+        itemclass: pull-right,
       }
 
 requires:
-  redaxo: "^5.15"
+  redaxo: "^5.12"
   php:
-    version: ">=8.1, <9"
+    version: ">=7, <9"
 
 default_config:
   hidebodyscrollbar: false
@@ -59,33 +50,7 @@ default_config:
   skip_consent: ''
   lifespan: 365
   theme: false
-  first_run_completed: false
 
 installer_ignore:
     - .github
     - .gitignore
-    - .semgrep
-    # development and test artifacts — should not be included in the released zip
-    - node_modules
-    - assets/tests
-    - tests
-    - phpunit.xml
-    - .php_cs
-    - .php_cs.dist
-    - .php-cs-fixer.php
-    - .php-cs-fixer.dist.php
-    - .php-cs-fixer
-    - .php_cs.cache
-    - .php-cs-fixer.cache
-    - composer.phar
-    - composer.json
-    - composer.lock
-    - package.json
-    - package-lock.json
-    - playwright.config.js
-    - test-results
-    - vendor
-    - .github/workflows
-
-console_commands:
-    consent_manager:log-delete: FriendsOfRedaxo\ConsentManager\Command\LogDelete

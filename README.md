@@ -1,1382 +1,473 @@
-# Consent-Manager für REDAXO CMS
+# Consent-Manager für das [REDAXO CMS](https://redaxo.org)
 
 ![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.jpg?raw=true)
 
-## Was ist der Consent-Manager?
+Stellt ein Datenschutz-Opt-In-Banner für Dienste und ggf. deren zugehörige Cookies zur Verfügung. Die Dienste können in selbst definierte Gruppen zusammengefasst werden. Der Website Besucher bekommt eine Consent-Box angezeigt in der er allen oder einzelnen Dienste-Gruppen zustimmen kann. Es existiert eine Gruppe **Notwendig**, die nicht deaktiviert werden kann. Die Consent-Box kann erneut (zum Beispiel über einen Link im Impressum, oder Footer) aufgerufen werden. So können nachträglich Änderungen durchgeführt werden. Alle Texte sowie die Gestaltung der Consent-Box sind frei konfigurierbar. Eine Themeauswahl bietet unterschiedliche Designs für den Start.
 
-Das AddOn stellt eine DSGVO-konforme Lösung für die Einholung von Einverständniserklärungen zu Cookies und externen Diensten bereit. Website-Besucher erhalten eine Consent-Box, in der einzelne Dienste-Gruppen akzeptiert oder abgelehnt werden können. Technisch notwendige Dienste bleiben dabei immer aktiv.
+## Rechtlicher Hinweis
 
-**Kernfunktionen:**
-- Datenschutz-Opt-In-Banner für Dienste und Cookies
-- Flexible Gruppierung von Diensten
-- Nachträgliche Änderung der Einstellungen möglich
-- Vollständig anpassbare Texte und Designs
-- Google Consent Mode v2 Integration
-- Mehrsprachig und Multi-Domain-fähig
+Die im AddOn gelieferten Texte und Cookie-Definitionen sind Beispiele und ggf. unvollständig oder nicht aktuell. Es liegt in der Verantwortung der Betreiber und Entwickler der Website sicherzustellen, das die Funktionalität der Abfrage, die Texte, Dienste, Cookies der geltenden Rechtslage und den Datenschutzbestimmungen entsprechen. Dies gilt auch für die korrekte Integration der Lösung.
+
+> Wir empfehlen für die Formulierung der Texte und Cookie-Listen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung)
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
-## ⚠️ Rechtlicher Hinweis
+## Kurzanleitung
 
-**Wichtiger Haftungsausschluss:** Die mitgelieferten Texte und Cookie-Definitionen sind ausschließlich Beispiele und können unvollständig oder nicht aktuell sein. 
+1. AddOn `consent_manager` über den Installer herunterladen und installieren.
+2. [Domains hinterlegen](#domains-hinzufuegen)
+3. [Dienste anlegen](#dienste-anlegen) und JS Scripte hinterlegen
+4. [Dienste-Gruppen anlegen](#gruppen-anlegen)
+5. Der jeweiligen Domain-Gruppe die gewünschten Domains und Dienste zuordnen
+6. `REX_CONSENT_MANAGER[forceCache=0 forceReload=0]` in den `<head>`-Bereich der gewünschten [Templates einfügen](#in-template-einfuegen), bzw.<br>`echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php');`,<br> wenn via PHP.
+7. Alle weiteren Einstellungen sind optional.
 
-**Rechtliche Verantwortung:** Website-Betreiber und Entwickler sind eigenverantwortlich dafür zuständig, dass:
-- Die Funktionalität der Abfrage den rechtlichen Anforderungen entspricht
-- Alle Texte, Dienste und Cookie-Beschreibungen korrekt und vollständig sind
-- Die Integration ordnungsgemäß erfolgt
-- Die Lösung der geltenden Rechtslage und den Datenschutzbestimmungen entspricht
+> **Hinweis:** Wird keine Auswahlbox angezeigt Punkte 2 bis 6 nochmal checken ... und/oder siehe [Fehlerbehebung](#fehlerbehebung)
 
-**Empfehlung:** Für die Formulierung der Texte und Cookie-Listen sollten Datenschutzbeauftragte oder die Rechtsabteilung konsultiert werden.
+> **Hinweis:** Im Reiter **Setup** besteht die Möglichkeit einen Import gängiger Dienste durchzuführen.
 
----
+## Einrichten
 
-## 🚀 Schnellstart
+### Domains hinzufügen
 
-### 1. Installation und Setup-Assistent
-```bash
-# AddOn über REDAXO Installer herunterladen und installieren
-```
+Consent-Manager kann für mehrere Domains einzeln gesteuert werden.
+Jede Domain der REDAXO-Instanz die Consent-Manager nutzen soll muss einzeln (ohne Protokoll http/https) hinterlegt werden.
 
-**Quickstart-Assistent:** Beim ersten Aufruf der Konfiguration führt Sie ein **7-stufiger Assistent** durch das komplette Setup - von der Domain-Konfiguration bis zur Theme-Auswahl.
+Zum Beispiel:  `www.meinedomain.tld` und  `meinedomain.tld`
 
-**Setup-Varianten wählen:**
-- **Minimal:** Nur essentieller Service für datenschutz-minimale Websites  
-- **Standard:** Vollständige Service-Sammlung für umfassende Cookie-Verwaltung
+Die Datenschutzerklärung und das Impressum wird für jede Domain hinterlegt. Die Seiten werden nachher automatisch in der Consent-Box verlinkt. Beim Aufruf wird die hier hinterlegte Domain mit `$_SERVER['HTTP_HOST']` verglichen und die Consent-Box wird bei Übereinstimmung angezeigt.
 
-### 2. Domain konfigurieren
-Unter **Domains** die Website-Domain hinterlegen (ohne Protokoll):
-```
-beispiel.de
-www.beispiel.de
-```
+### Dienste anlegen
 
-### 3. Template-Integration
+Für jeden Dienst (zum Beispiel Google Analytics oder Matamo) wird ein einzelner Eintrag erstellt. Hat ein Dienst mehrere Cookies werden diese trotzdem in einem einzigen Eintrag beschrieben. **Alle Angaben dienen nur zur Information des Webseiten Besuchers und haben keinen Einfluss auf das Setzen/Löschen der Cookies bzw. deren Eigenschaften!** Im Reiter **Setup** besteht die Möglichkeit einen Import gängiger Dienste durchzuführen.
 
-**Wichtig:** Assets müssen im Template eingebunden werden, damit der Consent Manager und die Inline-Blocker funktionieren!
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookies.png?raw=true)
 
-#### 🔧 Standard Integration (Consent Manager Box)
+#### Schlüssel:
 
-**PHP-Aufruf (empfohlen):**
-```php
-<?php 
-use FriendsOfRedaxo\ConsentManager\Frontend;
+ist zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten.
 
-// Standard-Integration (alles in einem)
-echo Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php'); 
+#### Dienstname:
 
-// Oder Komponenten einzeln laden (mehr Flexibilität):
-?>
-<style><?php echo Frontend::getCSS(); ?></style>
-<script<?php echo Frontend::getNonceAttribute(); ?>>
-    <?php echo Frontend::getJS(); ?>
-</script>
-<?php echo Frontend::getBox(); ?>
+wird später in der Consent-Box angezeigt.
 
-<?php
-// Mit custom Fragment
-echo Frontend::getFragment(0, 0, 'my_custom_box.php');
+#### Cookie Definitionen:
 
-// Mit Inline-Modus
-echo Frontend::getFragmentWithVars(0, 0, 'ConsentManager/box_cssjs.php', ['inline' => true]);
-?>
-```
+enthält die Beschreibung aller Cookies des Dienstes die in der Consent-Box angezeigt werden sollen. Die Beschreibung wird im *YAML-Format* hinterlegt, zum Beispiel:
 
-#### 🎯 Inline-Consent Assets (CKE5 oEmbed & manuelle Blocker)
-
-**Für Inline-Blocker (YouTube, Vimeo, Google Maps, etc.) müssen zusätzliche Assets geladen werden:**
-
-```php
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title><?= rex_article::getCurrent()->getName() ?></title>
-    
-    <!-- Consent Manager Inline CSS (für Blocker-Platzhalter) -->
-    <link rel="stylesheet" href="<?= rex_url::addonAssets('consent_manager', 'consent_inline.css') ?>">
-    
-    <!-- Optional: Vidstack CSS (nur wenn Vidstack installiert) -->
-    <?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
-        <link rel="stylesheet" href="<?= rex_url::addonAssets('vidstack', 'vidstack.css') ?>">
-    <?php endif; ?>
-</head>
-<body>
-    <?php
-    // Hauptinhalt mit automatischer oEmbed-Umwandlung
-    echo rex_article::getCurrent()->getArticle();
-    ?>
-    
-    <!-- Consent Manager Inline JavaScript (WICHTIG für Button-Funktionalität!) -->
-    <script defer src="<?= rex_url::addonAssets('consent_manager', 'consent_inline.js') ?>"></script>
-    
-    <!-- Optional: Vidstack JavaScript (nur wenn Vidstack installiert) -->
-    <?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
-        <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack.js') ?>"></script>
-        <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack_helper.js') ?>"></script>
-    <?php endif; ?>
-</body>
-</html>
-```
-
-**Was wird benötigt:**
-
-| Asset | Wofür? | Zwingend? |
-|-------|--------|-----------|
-| `consent_inline.css` | Styling der Inline-Blocker (Thumbnails, Buttons, Overlay) | ✅ Ja |
-| `consent_inline.js` | Button-Funktionalität ("Einmal laden", "Einstellungen") | ✅ Ja |
-| `vidstack.css` | Styling für Vidstack Player (nur bei `player_mode: vidstack`) | Optional |
-| `vidstack.js` | Vidstack Player Funktionalität | Optional |
-
-**⚠️ Ohne diese Assets:**
-- Inline-Blocker werden **nicht korrekt dargestellt**
-- Buttons **funktionieren nicht** ("Einmal laden" macht nichts)
-- Videos **laden nicht** nach Consent-Klick
-- CKE5 oEmbed-Tags werden **nicht umgewandelt**
-
-#### 📋 Komplett-Beispiel Template
-
-```php
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= rex_article::getCurrent()->getName() ?></title>
-    
-    <!-- Consent Manager Inline CSS -->
-    <link rel="stylesheet" href="<?= rex_url::addonAssets('consent_manager', 'consent_inline.css') ?>">
-    
-    <!-- Optional: Vidstack CSS -->
-    <?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
-        <link rel="stylesheet" href="<?= rex_url::addonAssets('vidstack', 'vidstack.css') ?>">
-    <?php endif; ?>
-    
-    <!-- Dein eigenes CSS -->
-    <link rel="stylesheet" href="<?= rex_url::base('assets/css/styles.css') ?>">
-</head>
-<body>
-    <?php
-    // Consent Manager Box (globales Cookie-Banner)
-    echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php');
-    
-    // Hauptinhalt mit automatischer oEmbed-Umwandlung
-    echo rex_article::getCurrent()->getArticle();
-    ?>
-    
-    <!-- Consent Manager Inline JavaScript (für Blocker-Buttons) -->
-    <script defer src="<?= rex_url::addonAssets('consent_manager', 'consent_inline.js') ?>"></script>
-    
-    <!-- Optional: Vidstack JavaScript -->
-    <?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
-        <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack.js') ?>"></script>
-        <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack_helper.js') ?>"></script>
-    <?php endif; ?>
-    
-    <!-- Dein eigenes JavaScript -->
-    <script defer src="<?= rex_url::base('assets/js/scripts.js') ?>"></script>
-</body>
-</html>
-```
-
-**Verfügbare Parameter:**
-
-| Parameter | Standard | Beschreibung |
-|-----------|----------|--------------|
-| `forceCache` | `0` im Frontend, `1` im Backend | Cache-Steuerung: `0` = Cache verwenden, `1` = Cache neu generieren |
-| `forceReload` | `0` wenn `cache` Parameter gesetzt, sonst `1` | Reload-Steuerung der Consent-Box |
-| `fragment` | `ConsentManager/box_cssjs.php` | Custom Fragment-Template-Datei |
-| `vars` (Array) | `[]` | Zusätzliche Variablen (z.B. `['inline' => true]`) |
-
-**REX_CONSENT_MANAGER Variable (alternativ):**
-```php
-REX_CONSENT_MANAGER[]
-REX_CONSENT_MANAGER[forceCache=0 forceReload=0]
-REX_CONSENT_MANAGER[inline=true]
-REX_CONSENT_MANAGER[fragment=my_custom_box.php]
-```
-
-**Platzierung:**
-- Im `<head>`-Bereich oder vor `</body>` (empfohlen für Performance)
-- Für Inline-Consent-Modus: `['inline' => true]` als Parameter übergeben
-
-### 4. Cookie-Einstellungen nachträglich aufrufen
-
-**⚠️ Wichtiger Hinweis:** Stellen Sie sicher, dass Nutzer die Cookie-Einstellungen jederzeit wieder aufrufen können! Das ist rechtlich erforderlich und sollte gut sichtbar auf jeder Seite verfügbar sein.
-
-**Empfohlene Integration:**
-- **Footer-Link:** Platzieren Sie einen dauerhaften Link im Website-Footer
-- **Datenschutz-Seite:** Verlinken Sie aus der Datenschutzerklärung
-- **Barrierefreiheit:** Der Link sollte immer erreichbar sein
-
-**HTML-Link:**
-```html
-<a class="consent_manager-show-box">Datenschutz-Einstellungen</a>
-```
-
-**Mit automatischem Reload:**
-```html
-<a class="consent_manager-show-box-reload">Datenschutz-Einstellungen</a>
-```
-
-**JavaScript-Aufruf:**
-```javascript
-consent_manager_showBox();
-```
-
-**Beispiel Footer-Integration:**
-```html
-<footer>
-    <div class="footer-links">
-        <a href="/impressum/">Impressum</a>
-        <a href="/datenschutz/">Datenschutz</a>
-        <a class="consent_manager-show-box">Cookie-Einstellungen</a>
-    </div>
-</footer>
-```
-
-### 5. Consent-Status abfragen
-**JavaScript:**
-```javascript
-if (consent_manager_hasconsent('youtube')) {
-    // YouTube wurde akzeptiert
-}
-```
-
-**PHP:**
-```php
-<?php
-if (FriendsOfRedaxo\ConsentManager\Utility::has_consent('youtube')) {
-    // YouTube wurde akzeptiert
-}
-?>
-```
-
----
-
-## 📋 Detaillierte Konfiguration
-
-### Domain-Verwaltung
-
-Jede Domain der REDAXO-Instanz muss einzeln konfiguriert werden:
-- Domain ohne Protokoll hinterlegen (z.B. `www.beispiel.de`)
-- Datenschutzerklärung und Impressum je Domain
-- Automatischer Abgleich mit `$_SERVER['HTTP_HOST']`
-
-**Google Consent Mode v2 Integration:**
-- Pro Domain aktivierbar
-- GDPR-konforme Standard-Einstellungen
-- Automatische Script-Integration
-- Debug-Konsole verfügbar
-
-### Dienste konfigurieren
-
-Jeder externe Dienst (Analytics, Social Media, etc.) wird einzeln angelegt:
-
-**Schlüssel:** Interne Bezeichnung ohne Sonderzeichen
-**Dienstname:** Wird in der Consent-Box angezeigt
-**Cookie-Definitionen:** YAML-Format für Cookie-Details
-
-### Cookie-Einstellungen (SameSite & Secure)
-
-**Konfigurierbare Cookie-Sicherheit** (seit Version 4.5.0):
-
-Der Consent Manager unterstützt konfigurierbare Cookie-Einstellungen für maximale Sicherheit:
-
-**Standardwerte:**
-```yaml
-cookie_samesite: 'Lax'    # Standard für gute Kompatibilität
-cookie_secure: false      # false für HTTP-Seiten
-```
-
-**Empfohlene Werte für HTTPS-Seiten:**
-```yaml
-cookie_samesite: 'Strict' # Maximale Sicherheit
-cookie_secure: true       # Nur über HTTPS übertragen
-```
-
-**SameSite Optionen:**
-- `Strict`: Cookies werden nur bei direktem Besuch der Domain gesendet (höchste Sicherheit)
-- `Lax`: Cookies werden auch bei Top-Level-Navigation gesendet (Standard, guter Kompromiss)
-- `None`: Cookies werden immer gesendet (⚠️ erfordert `secure: true`)
-
-**Secure Flag:**
-- `true`: Cookie wird nur über HTTPS übertragen (empfohlen für Produktiv-Sites)
-- `false`: Cookie wird auch über HTTP übertragen (nur für Entwicklung)
-
-**Konfiguration in `package.yml`:**
-```yaml
-cookie_samesite: 'Strict'
-cookie_secure: true
-```
-
-**⚠️ Wichtig für Subdomains:**
-Seit Version 4.5.0 werden **keine Wildcard-Cookies** mehr gesetzt. Jede (Sub-)Domain erhält ihren eigenen Consent-Cookie. Dies ist DSGVO-konform, bedeutet aber:
-- `example.com` und `shop.example.com` sind separate Domains
-- Consent muss für jede Domain einzeln eingeholt werden
-- Cookie gilt nur für die exakte Domain, nicht für Subdomains
-
-### Cookie-Definitionen mit YAML
-
-Das AddOn verwendet YAML-Format für die Definition von Cookie-Details:
-
-**Beispiel Cookie-Definition:**
 ```yaml
 -
  name: _ga
- time: "2 Jahre"
- desc: "Speichert für jeden Besucher eine anonyme ID für die Zuordnung von Seitenaufrufen."
+ time: 2 Jahre
+ desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
 -
  name: _gat
- time: "1 Tag"
- desc: "Verhindert zu schnelle Datenübertragung an Analytics-Server."
+ time: 1 Tag
+ desc: Verhindert, dass in zu schneller Folge Daten an den Analytics Server übertragen werden.
+-
+ name: _gid
+ time: 1 Tag
+ desc: Speichert für jeden Besucher der Website eine anonyme ID. Anhand der ID können Seitenaufrufe einem Besucher zugeordnet werden.
 ```
 
-**JavaScript-Integration:**
-```html
-<script>
-// Wird geladen, wenn Nutzer zustimmt
-gtag('config', 'GA_MEASUREMENT_ID');
-</script>
-```
+#### Anbieter:
 
-### Gruppen-Management
+Hier kann optional der Anbieter hinterlegt werden (zum Beispiel Google). Die Angaben werden in der Beschreibung angzeigt.
 
-Dienste werden in Gruppen zusammengefasst, die einzeln akzeptiert werden können:
+#### Link Datenschutzerklärung:
 
-| Einstellung | Beschreibung |
-|-------------|--------------|
-| **Schlüssel** | Interne Bezeichnung ohne Sonderzeichen |
-| **Technisch notwendig** | Gruppe ist immer aktiv und nicht deaktivierbar |
-| **Domain** | Zuordnung zur entsprechenden Domain |
-| **Name** | Anzeigename für Website-Besucher |
-| **Beschreibung** | Erklärung der Gruppe |
-| **Dienste** | Zugewiesene Services |
+Standardmäßig wird die Datenschutzerklärung der Domain angezeigt. Exisitiert für den Dienst eine separate Datenschutzerklärung (zum Beispiel: [https://policies.google.com/privacy](https://policies.google.com/privacy)) kann diese hier hinterlegt werden. Auch REDAXO-Links (redaxo://1) können genutzt werden.
 
----
+#### Platzhalter Text:
 
-## 🎨 Design und Anpassung
+Hier kann optional ein Platzhalter Text hinterlegt werden
 
-### Theme-System
+#### Platzhalter Bild:
 
-Das AddOn bietet verschiedene vorgefertigte Themes:
+Hier kann optional ein Platzhalter Bild aus dem Medienpoolhinterlegt werden
 
-![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/themes.png?raw=true)
+#### Skripte, die nach Einverständnis geladen werden:
 
-**Verfügbare Themes:**
-- Standard-Themes (Hell, Dunkel, Bottom Bar, Bottom Right)
-- Community-Themes (Olien Dark/Light, Skerbis Glass, XOrange)
-- **🆕 Accessibility Theme** (`consent_manager_frontend_a11y.css`) - Barrierefrei optimiert
+Hier werden alle Scripte (inklusive `<script>`-Tag hinterlegt, die geladen werden, sobald der Nutzer mit der Gruppe einverstanden ist). Werden unterschiedliche Skripte je Domain benötigt, muss je Domain der Dienst extra angelegt werden. Die Scripte müssen nicht inline ausgeführt werden. Aufrufe externer Scripte sind möglich, z.B.: `<script type="text/javascript" src="/ressources/script.js">`. 
 
-**Eigenes Theme erstellen:**
-1. Bestehendes Theme kopieren
-2. In `/project/consent_manager_themes/` ablegen
-3. Dateiname: `consent_manager_frontend_theme_*.scss`
-4. Anpassungen vornehmen
-5. In Theme-Vorschau auswählen
+### Gruppen anlegen
 
-**Theme-Vorschau testen:**
-```
-/redaxo/index.php?page=consent_manager/theme&preview=project:consent_manager_frontend_mein_theme.scss
-```
+Gruppen sind die Gruppen, die der Websitebsucher später einzeln akzeptieren oder ablehnen kann. **Außerdem werden hier über die zugewiesenen Dienste die Scripte hinterlegt, die geladen werden, sobald der Benutzer die Gruppe akzeptiert hat.**
 
-### ♿ Barrierefreiheit (Accessibility)
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-cookiegroups.png?raw=true)
 
-**Issues #326, #304 - Optimierungen für Barrierefreiheit:**
+| Feld | Beschreibung |
+| ---- | ------------ |
+| Schlüssel | Zur internen Verwendung und darf keine Sonderzeichen/Leerzeichen enthalten |
+| Technisch notwendige Dienste | Wenn aktiv, wird die Gruppe vorausgewählt und kann nicht deaktiviert werden Dienste |
+| Domain | Hier wird die zuvor angelegte Domain ausgewählt, bei deren Aufruf die Gruppe angezeigt werden soll. |
+| Name | Name der Gruppe (wird dem Website-Besucher angezeigt). |
+| Beschreibung | Allgmeine Beschreibung der Gruppe (wird dem Website-Besucher angezeigt). |
+| Dienste | Hier werden die zuvor angelegten Dienste ausgewählt, die der Gruppe angehören sollen |
 
-Das neue **A11y-Theme** (`consent_manager_frontend_a11y.scss`) bietet umfassende Barrierefreiheit:
+### Beispielkonfiguration importieren
 
-**WCAG 2.1 AA Konformität:**
-- ✅ **Kontrastverhältnisse:** 4.5:1 für Text, 3:1 für UI-Komponenten
-- ✅ **Focus-Indikatoren:** 3px blaue Umrandung für alle interaktiven Elemente
-- ✅ **Touch-Targets:** Mindestens 44x44px für alle Buttons und Links
-- ✅ **Screen Reader:** Korrekte ARIA-Attribute (Issue #304)
-  - `role="dialog"` nur auf consent_manager-wrapper
-  - `aria-modal="true"` für modalen Dialog
-  - `aria-labelledby` verknüpft mit Überschrift
-  - `aria-hidden` dynamisch bei Öffnen/Schließen
-- ✅ **Tastatursteuerung:** Vollständige Navigation ohne Maus möglich
-- ✅ **Focus Trap:** Tab-Navigation bleibt innerhalb des Modals
-- ✅ **DSGVO-konform:** Alle 3 Buttons (ablehnen/auswählen/alle) visuell gleichwertig
+Über den Menüpunkt **Setup** kann eine Beispielkonfiguration mit Gruppen importiert werden. **Vorhandene Dienste und Gruppen werden dabei gelöscht!**
 
-**Modales Verhalten (Issue #326):**
-- **Auto-Focus:** Beim Öffnen wird automatisch der erste Button fokussiert
-- **Focus Trap:** Tab/Shift+Tab bleiben innerhalb des Consent-Dialogs
-- **ESC funktioniert immer:** Schließt Dialog von jedem Element aus
-- **Tastatur-Zugänglichkeit:** Kein Entkommen nur mit Maus nötig
-- **ARIA-Management:** Hintergrund-Container ist für Screen Reader unsichtbar (Issue #304)
+### Im Template einfügen
 
-**Tastatursteuerung:**
-```
-ESC             → Consent Box schließen (von überall im Dialog)
-Tab             → Vorwärts zwischen Elementen navigieren (bleibt im Dialog)
-Shift+Tab       → Rückwärts zwischen Elementen navigieren (bleibt im Dialog)
-Enter / Space   → Details ein-/ausklappen
-Enter           → Buttons aktivieren
-```
+Der Platzhalter `REX_CONSENT_MANAGER[]` wird im `<head>`-Bereich des Templates oder vor dem `</body>`-Tag eingefügt.
+Gibt es mehrere Templates die die Consent-Box aufrufen sollen, muss der Platzhalter entsprechend in allen Templates eingefügt werden.
 
-**Theme-Varianten:**
-1. **Accessibility (WCAG 2.1 AA)** - Neutrales Grau, DSGVO-konforme Buttons
-2. **Accessibility Blue** - Blauer Akzent (#0066cc)
-3. **Accessibility Green** - Grüner Akzent (#025335)
-4. **Accessibility Compact** - Platzsparende Version, Grau
-5. **Accessibility Compact Blue** - Platzsparend mit blauem Akzent
-Enter / Space   → Details ein-/ausklappen (Issue #326)
-Enter           → Buttons aktivieren
-```
+**Wichtig: Der Platzhalter funktioniert ausschließlich in REDAXO-Templates, nicht innerhalb von php-includes, Modulen oder Fragmenten.**
 
-**Implementierte Features:**
-- **ESC-Taste:** Schließt die Consent Box ohne durch alle Felder zu tabben
-- **Space-Taste:** Aktiviert den "Details anzeigen"-Button (zusätzlich zu Enter)
-- **aria-expanded:** Zeigt Screen Readern den Zustand des Details-Bereichs
-- **Reduzierte Bewegung:** Respektiert `prefers-reduced-motion` Einstellung
-- **Hoher Kontrast:** Unterstützt `prefers-contrast: high` Modus
-- **Focus-Management:** Automatischer Focus auf erste Checkbox beim Öffnen
+Durch den Parameter `forceReload=1` kann ein Reload der Webseite bei Auswahl der Cookies erzwungen werden. `REX_CONSENT_MANAGER[forceReload=1]`
 
-**Verwendung:**
+**Beispiel:**
+
 ```php
-<!-- Im Backend: Theme auf "consent_manager_frontend_a11y.css" setzen -->
-<!-- Oder manuell: -->
-<link rel="stylesheet" href="/assets/addons/consent_manager/consent_manager_frontend_a11y.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Meine Webseite</title>
+    ...
+    <link rel="stylesheet" href="<?php echo template_asset_url('theme/css/meincss.min.css'); ?>">
+REX_CONSENT_MANAGER[forceReload=1]
+</head>
 ```
 
-**Zusätzliche Empfehlungen:**
-- Platzieren Sie den Cookie-Einstellungs-Link prominent im Footer
-- Verwenden Sie beschreibende Linktexte (z.B. "Cookie-Einstellungen" statt "Klick hier")
-- Testen Sie mit Screen Readern (NVDA, JAWS, VoiceOver)
-- Prüfen Sie Keyboard-Navigation regelmäßig
+oder
 
-### Individuelles Design
-
-**Fragment anpassen:**
-- Standard: `/redaxo/src/addons/consent_manager/fragments/ConsentManager/box.php`
-- Eigenes Fragment: `..../theme/private/fragments/ConsentManager/box.php`
-- Eigenes Fragment: `..../project/fragments/ConsentManager/box.php`
-
-**CSS-Ausgabe steuern:**
-- Standardmäßig wird `consent_manager_frontend.css` ausgegeben
-- Über Einstellungen deaktivierbar für eigene CSS-Implementierung
-
----
-
-## 🔧 Erweiterte Features
-
-### Google Consent Mode v2
-
-Der Consent Manager bietet **drei Implementierungswege** für Google Consent Mode v2:
-
-#### ❌ **Deaktiviert**
-Google Consent Mode wird nicht verwendet - Standard GDPR-Verhalten ohne gtag-Integration.
-
-#### 🤖 **Automatisch (Empfohlen)**
-
-**Domain-Aktivierung:**
-- In **Domains** → Google Consent Mode v2 auf "Automatisch (Auto-Mapping)" setzen
-- System erkennt automatisch Services und mappt sie zu Consent-Flags
-- Keine manuelle Programmierung erforderlich
-
-**Debug-Konsole für Entwickler:**
-```
-Domain-Konfiguration → Debug-Modus "Aktiviert"
-```
-- **Domain-Konfiguration**: Debug-Modus in Domain-Einstellungen aktivieren
-- **Backend-Login erforderlich**: Nur für angemeldete Administrator sichtbar
-
-**Automatische Service-Mappings:**
-```
-Google Analytics     → analytics_storage
-Google Tag Manager   → analytics_storage, ad_storage, ad_user_data, ad_personalization
-Google Ads          → ad_storage, ad_user_data, ad_personalization  
-Facebook Pixel      → ad_storage, ad_user_data, ad_personalization
-YouTube             → ad_storage, personalization_storage
-Google Maps         → functionality_storage, personalization_storage
-Matomo/Hotjar       → analytics_storage
+```php
+<head>
+    <meta charset="UTF-8">
+    <title>Meine Webseite</title>
+    ...
+    <link rel="stylesheet" href="<?php echo template_asset_url('theme/css/meincss.min.css'); ?>">
+</head>
+<body>
+    ...
+REX_CONSENT_MANAGER[forceReload=1]
+</body>
 ```
 
-**Service-Schlüssel für automatische Erkennung:**
-Die automatische Erkennung funktioniert über den **Service-Schlüssel (UID)**. Verwende diese Schlüssel:
+**Beispiel PHP-Ausgabe**
 
-| Service | Empfohlener Schlüssel | Alternative |
-|---------|---------------------|-------------|
-| **Google Analytics** | `google-analytics` | `analytics`, `ga` |
-| **Google Tag Manager** | `google-tag-manager` | `gtm`, `tag-manager` |
-| **Google Ads** | `google-ads` | `adwords`, `google-adwords` |
-| **Facebook Pixel** | `facebook-pixel` | `facebook`, `meta-pixel` |
-| **YouTube** | `youtube` | `yt` |
-| **Google Maps** | `google-maps` | `maps`, `gmaps` |
-| **Matomo** | `matomo` | `piwik` |
-| **Hotjar** | `hotjar` | - |
-| **Microsoft Clarity** | `microsoft-clarity` | `clarity` |
-
-**🔧 Flexible UID-Struktur (Multidomain/Multilanguage):**
-
-Das Auto-Mapping funktioniert mit **Partial String Matching** - Suffixes sind erlaubt:
-
-✅ **Funktioniert perfekt:**
-```
-google-analytics        → Erkannt als Google Analytics
-google-analytics-shop   → Erkannt als Google Analytics  
-google-analytics-de     → Erkannt als Google Analytics
-facebook-pixel-checkout → Erkannt als Facebook Pixel
-matomo-staging          → Erkannt als Matomo
-youtube-embeds          → Erkannt als YouTube
+```php
+...
+<body>
+...
+<?php echo consent_manager_frontend::getFragment(false, false, 'consent_manager_box_cssjs.php'); ?>
+...
+</body>
+...
 ```
 
-❌ **Funktioniert NICHT:**
-```
-shop-google-analytics   → NICHT erkannt (Prefix stört)
-custom-analytics        → NICHT erkannt (fehlt "google-analytics")
-```
+### Beispiel-Modul zur nachträglichen Abfrage
 
-**💡 Empfehlung für Multidomain/Multilanguage:**
-- `google-analytics-de`, `google-analytics-shop`, `google-analytics-en`
-- `facebook-pixel-landing`, `facebook-pixel-checkout`  
-- `matomo-domain1`, `matomo-domain2`
-- `youtube-videos-de`, `youtube-videos-en`
+#### Eingabe-Modul (mit MForm)
 
-**Beispiel Service-Anlage:**
-1. **Dienste** → **Service hinzufügen**
-2. **Schlüssel:** `google-tag-manager` ⭐
-3. **Dienstname:** `Google Tag Manager`
-4. **Scripts:** Dein GTM-Code
-5. **Gruppe zuweisen:** z.B. "Marketing"
-
-➡️ System erkennt automatisch "google-tag-manager" und mappt zu `analytics_storage`, `ad_storage`, etc.
-
-**Funktionsweise:**
-1. System generiert automatisch `gtag('consent', 'default', {...})` mit GDPR-konformen Defaults (alle 'denied')
-2. Bei Consent-Änderungen wird automatisch `gtag('consent', 'update', {...})` aufgerufen
-3. Services werden basierend auf UID/Namen automatisch erkannt und gemappt
-
-#### ⚙️ **Manuell (Experten)**
-
-**Eigene gtag-Integration in Service-Scripts:**
-```javascript
-<script>
-// Google Consent Mode wird initialisiert, aber Service-Scripts müssen 
-// gtag('consent', 'update') selbst implementieren
-gtag('consent', 'update', {
-    'analytics_storage': 'granted'
-});
-</script>
-```
-
-#### 🛠️ **Technische Details**
-
-**GDPR-konforme Standard-Einstellungen:**
-- `analytics_storage: denied`
-- `ad_storage: denied` 
-- `ad_user_data: denied`
-- `ad_personalization: denied`
-- `functionality_storage: denied`
-- `security_storage: denied`
-- `personalization_storage: denied`
-
-**Debug-Konsole zeigt:**
-- **🎯 Google Consent Mode v2 Status**: Aktueller Modus (Deaktiviert/Automatisch/Manuell)
-- **Consent-Status**: Alle gtag-Flags mit aktuellen Werten
-- **Service-Übersicht**: Erkannte Services und deren Zuordnung
-- **Cookie-Analyse**: Detaillierte Cookie-Informationen
-- **localStorage**: Consent-Daten-Speicherung
-
-**Aktivierung Debug-Konsole:**
-```
-?debug_consent=1
-```
-
-**Vorteile automatischer Modus:**
-- ✅ Keine Programmierung erforderlich
-- ✅ Automatische Service-Erkennung
-- ✅ GDPR-konforme Defaults
-- ✅ Wartungsfreie Updates
-- ✅ Debug-Konsole für Troubleshooting
-
-### Beispiel-Modul für nachträgliche Abfrage
-
-**Eingabe-Modul mit MForm:**
 ```php
 <?php
 $mform = new mform();
 $cookies = [];
 $qry = 'SELECT uid,service_name FROM '.rex::getTable('consent_manager_cookie').' WHERE clang_id = '.rex_clang::getCurrentId();
 foreach (rex_sql::factory()->getArray($qry) as $v) {
-    // Skip system entries (not the cookie name itself)
     if ($v['uid'] == 'consent_manager') continue;
     $cookies[$v['uid']] = $v['service_name'];
 }
 $mform->addSelectField(1);
 $mform->setOptions($cookies);
+$mform->setSize(1);
 $mform->setLabel('Dienst');
+
+$mform->addTextAreaField(2, ['label' => 'HTML/JS das bei Consent geladen wird']);
+$mform->addCheckboxField(5, [1 => 'Seitenreload nötig']);
+
+$mform->addTextAreaField(3, ['label' => 'Platzhaltertext']);
+$mform->addMediaField(1, ['label' => 'Platzhalterbild']);
+
 echo $mform->show();
-?>
 ```
 
-### Cookie-Historie anzeigen
+#### Ausgabe-Modul
 
-**Template-Integration:**
-```php
-REX_COOKIEDB[]
-```
-
-Zeigt alle gesetzten Cookies und die Einwilligungshistorie an.
-
----
-
-## 🔍 Debugging und Problemlösung
-
-### Debug-Modus aktivieren
-
-**Aktivierung:**
-- **Domain-Konfiguration**: In **Domains** → Debug-Modus auf "Aktiviert" setzen
-- **REDAXO Debug-Modus**: `rex::isDebugMode()` (automatisch aktiv)
-- **Backend-Login erforderlich**: Nur für angemeldete Backend-Benutzer
-
-**Debug-Konsole zeigt:**
-- Consent-Status und Default-Werte
-- Service-Konfiguration
-- Cookie-Details
-- Browser-Storage-Inhalte
-- Google Consent Mode Status
-
-### Häufige Probleme
-
-**Consent-Box wird nicht angezeigt:**
-- Domain korrekt hinterlegt und in Cookie-Gruppe zugeordnet?
-- Domain-Übereinstimmung prüfen (`www.` vs. ohne)
-- Template-Platzhalter im `<head>`-Bereich?
-- Eigenes CSS aktiviert aber nicht eingebunden?
-
-**Cookies angezeigt, Scripts nicht geladen:**
-- Scripts in entsprechendem Service hinterlegt?
-- `<script>`-Tags vollständig vorhanden?
-- Consent tatsächlich erteilt?
-
-**Seite ohne Consent-Box:**
-Token in Einstellungen definieren und URL-Parameter verwenden:
-```
-https://beispiel.de/seite.html?skip_consent=MEINTOKEN
-```
-
-**CSP (Content Security Policy) Kompatibilität:**
-✅ **Gelöst ab Version 4.5.0:** Das Consent-Manager AddOn ist jetzt CSP-kompatibel!
-
-**Implementierte Lösung:**
-- **Automatische Nonce-Übergabe**: Nonce wird automatisch von `rex_response::getNonce()` geholt
-- **Keine manuelle Konfiguration nötig**: Funktioniert out-of-the-box
-- **Kein innerHTML mehr**: Scripts werden via `document.createElement()` und `textContent` eingefügt
-- **CSP-freundlich**: Kompatibel mit `script-src 'nonce-XXX'` Policies
-
-**CSP-Header Beispiel:**
-```
-Content-Security-Policy: script-src 'self' 'nonce-ZUFÄLLIGER_NONCE';
-```
-
-**Einfache Verwendung im Template:**
 ```php
 <?php
-// Einfach aufrufen - Nonce wird automatisch verwendet!
-echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php');
-?>
-```
+$serviceName = '';
+$cookieUid = 'REX_VALUE[1]';
+$needsReload = (bool)'REX_VALUE[5]' ? '-reload' : '';
+$consented = false;
+$placeholderImage = '';
+$placeholderText = '';
 
-**Manuelle CSP-Header setzen (optional):**
-```php
-<?php
-// Nur wenn du eigene CSP-Header setzen möchtest
-$nonce = rex_response::getNonce();
-header("Content-Security-Policy: script-src 'self' 'nonce-{$nonce}'");
-
-echo FriendsOfRedaxo\ConsentManager\Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php');
-?>
-```
-
-**Externe Scripts bevorzugen:**
-Für maximale CSP-Kompatibilität externe Scripts mit `src` Attribut verwenden:
-```javascript
-// ✅ Empfohlen: Externe Script-Dateien
-<script src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-
-// ⚠️ Weniger CSP-freundlich: Inline-Scripts
-<script>
-  gtag('config', 'GA_MEASUREMENT_ID');
-</script>
-```
-
-**Hinweis zu Issue #320:**
-Das ursprünglich gemeldete Problem mit dynamischen Script-Injektionen ist behoben. Die Lösung verwendet:
-- `createElement()` statt `innerHTML`
-- `textContent` statt `innerHTML` für Script-Content
-- Automatische Nonce-Propagierung
-- Anhängen an `document.body` statt versteckte Container
-
-**Subdomain-Probleme und DSGVO-Konformität:**
-✅ **Gelöst ab Version 4.5.0:** Subdomain-spezifische Consent-Verwaltung (Issue #317)
-
-**Problem:**
-- Alte Versionen verwendeten Wildcard-Cookies (`.example.com`)
-- Consent von `example.com` galt fälschlicherweise auch für `shop.example.com`
-- **DSGVO-Verstoß**: Consent muss domain-spezifisch sein!
-
-**Lösung:**
-- **Domain-spezifische Cookies**: Jede (Sub-)Domain erhält eigenen Consent
-- **Keine Wildcard-Domains**: Cookie gilt nur für exakte Domain
-- **Korrekte Subdomain-Erkennung**: `shop.example.com` wird als vollständige Domain behandelt
-
-**Empfehlung für HTTPS-Seiten:**
-```php
-// In package.yml oder Einstellungen:
-cookie_samesite: 'Strict'  # Empfohlen für HTTPS
-cookie_secure: true        # Nur über HTTPS übertragen
-```
-
-**Wichtig für Multi-Domain-Setups:**
-- Jede Domain benötigt eigene Consent-Manager Konfiguration
-- `example.com` und `shop.example.com` sind DSGVO-rechtlich separate Websites
-- Consent muss für jede Domain einzeln eingeholt werden
-
-### Berechtigungen für Redakteure
-
-**Vollzugriff für Redakteure:**
-- Recht `consent_manager[]` zuweisen
-- Zusätzlich `consent_manager[editor]` zuweisen
-- **Zugriff auf alle Funktionen** (Domains, Services, Gruppen, Texte, Konfiguration)
-
-**Nur Text-Bearbeitung erlauben:**
-- Recht `consent_manager[]` zuweisen
-- Zusätzlich `consent_manager[texteditonly]` zuweisen
-- **Nur Zugriff auf Texte** (eingeschränkter Modus)
-
-**Administratoren:**
-- Haben immer vollen Zugriff auf alle Funktionen
-
----
-
-## 🌍 Mehrsprachigkeit
-
-**Automatische Übertragung:**
-- Inhalte der Startsprache werden automatisch in neue Sprachen übertragen
-- Nachträgliche Anpassung möglich
-
-**Sprachspezifische Felder:**
-- Texte und Beschreibungen individuell anpassbar
-- Schlüssel, Scripts und Domains nur in Startsprache änderbar
-
----
-
-## 📊 API und JavaScript-Events
-
-### Event-Listener
-
-Der Consent Manager triggert mehrere JavaScript-Events für Custom-Integrationen:
-
-**Verf\u00fcgbare Events:**
-- `consent_manager-show` - Box wurde ge\u00f6ffnet
-- `consent_manager-close` - Box wurde geschlossen
-- `consent_manager-saved` - Consent wurde gespeichert (enth\u00e4lt Consent-Daten)
-
-**JavaScript Event-Listener:**
-```javascript
-// Box wurde ge\u00f6ffnet
-document.addEventListener('consent_manager-show', function() {
-    console.log('Consent Box ge\u00f6ffnet');
-    // Custom Analytics-Tracking
-    // Custom Overlays/Animations
-});
-
-// Box wurde geschlossen
-document.addEventListener('consent_manager-close', function() {
-    console.log('Consent Box geschlossen');
-    // Cleanup-Aktionen
-});
-
-// Consent wurde gespeichert
-document.addEventListener('consent_manager-saved', function(e) {
-    var consents = JSON.parse(e.detail);
-    console.log('Gespeicherte Consents:', consents);
-    // Verarbeitung der Consent-Daten
-    // z.B. Analytics, Tag Manager Updates
-});
-```
-
-**Praktische Beispiele:**
-
-```javascript
-// A/B-Testing: Tracking welche Nutzer Consent-Box sehen
-document.addEventListener('consent_manager-show', function() {
-    if (typeof gtag !== 'undefined') {
-        gtag('event', 'consent_box_shown');
-    }
-});
-
-// Custom Animation beim Schließen
-document.addEventListener('consent_manager-close', function() {
-    document.body.classList.add('consent-box-closed');
-});
-
-// Conditional Script Loading basierend auf Consent
-document.addEventListener('consent_manager-saved', function(e) {
-    var consents = JSON.parse(e.detail);
-    
-    if (consents.includes('google-analytics')) {
-        // Google Analytics wurde akzeptiert
-        console.log('Analytics aktiviert');
-    }
-    
-    if (consents.includes('marketing')) {
-        // Marketing-Cookies wurden akzeptiert
-        console.log('Marketing aktiviert');
-    }
-});
-```
-
-### PHP-Utility-Funktionen
-
-```php
-// Consent-Status prüfen
-FriendsOfRedaxo\ConsentManager\Utility::has_consent('service_key');
-
-// Frontend-Instanz erstellen
-$consent_manager = new FriendsOfRedaxo\ConsentManager\Frontend();
+$consent_manager = new consent_manager_frontend();
 $consent_manager->setDomain($_SERVER['HTTP_HOST']);
-```
 
----
-
-## 📝 Setup und Import
-
-### Quickstart-Assistent für neue Nutzer
-
-Beim ersten Aufruf der Konfiguration wird ein **7-stufiger Quickstart-Assistent** angezeigt:
-
-1. **Willkommen** - Übersicht über das Setup
-2. **Domain konfigurieren** - Website-Domain hinterlegen
-3. **Services wählen** - Zwischen Minimal- und Standard-Setup entscheiden
-4. **Gruppen** - Cookie-Gruppen verwalten
-5. **Texte** - Frontend-Texte anpassen
-6. **Design** - Theme auswählen
-7. **Testen** - Frontend-Integration testen
-
-**Mehrsprachig:** Der Assistent ist vollständig in Deutsch und Englisch verfügbar.
-
-### JSON-basiertes Setup-System
-
-Das neue **JSON-basierte Setup-System** ersetzt das alte SQL-Format und bietet:
-
-**Vorteile:**
-- ✅ Bessere Versionskontrolle und Nachvollziehbarkeit
-- ✅ Einfacher Export/Import von Konfigurationen
-- ✅ Strukturierte Datenhaltung
-- ✅ Flexible Anpassung an individuelle Bedürfnisse
-
-### Setup-Varianten
-
-**Minimal-Setup:** Grundkonfiguration mit nur essentiellem Service
-- Domain-Gruppe "Technisch notwendig"
-- Basic Consent Manager Service
-- Ideal für datenschutz-minimale Websites
-
-**Standard-Setup:** Vollständige Service-Sammlung (⚠️ **Überschreibt vorhandene Daten!**)
-- Alle gängigen Services vorkonfiguriert
-- Strukturierte Cookie-Gruppen
-- Ready-to-use für die meisten Websites
-
-### Konfiguration exportieren/importieren
-
-**Export der aktuellen Konfiguration:**
-```
-Configuration → Export aktuelle Konfiguration → JSON-Datei herunterladen
-```
-
-**Import einer JSON-Konfiguration:**
-```
-Configuration → JSON-Datei hochladen → Import bestätigen
-```
-
-⚠️ **Wichtiger Hinweis:** Import überschreibt **alle** bestehenden Domains, Cookie-Gruppen und Services!
-
-### Vorgefertigte Dienste
-
-Das Standard-Setup enthält eine umfangreiche Sammlung mit **25 vorkonfigurierten Services** für moderne Websites, darunter gängige Dienste wie beispielsweise Google Analytics, Facebook Pixel, YouTube, Google Maps, Matomo, HubSpot, WhatsApp Business, LinkedIn, TikTok, Pinterest, Booking.com und viele weitere.
-
-Die Services sind bereits strukturiert in Kategorien wie Analytics, Marketing, externe Medien, Kommunikation und technisch notwendige Dienste organisiert.
-
-⚠️ **Wichtiger Hinweis:** Die Beispielkonfigurationen sind Vorlagen und müssen an die individuellen Anforderungen angepasst werden:
-- **API-Keys ersetzen:** Alle Platzhalter müssen durch echte IDs/Keys ersetzt werden
-- **Rechtliche Prüfung:** Cookie-Beschreibungen und Datenschutzlinks sollten von Datenschutzbeauftragten oder der Rechtsabteilung geprüft werden
-- **Aktualität:** Dienste-Definitionen entsprechen dem aktuellen Stand der Datenschutzbestimmungen
-
----
-
-## 🛠️ Erweiterte Integration
-
-### API-Methoden (Issue #282)
-
-Seit Version 5.x stehen separate Methoden für CSS, JavaScript und Box-HTML zur Verfügung:
-
-**`Frontend::getCSS()`**
-```php
-<?php
-// Gibt nur das CSS zurück
-$css = FriendsOfRedaxo\ConsentManager\Frontend::getCSS();
-echo '<style>' . $css . '</style>';
-?>
-```
-- **Return:** CSS-String mit Theme-Unterstützung
-- **Use Case:** Inline-CSS oder separate CSS-Datei generieren
-- **Performance:** Cached durch REDAXO
-
-**`Frontend::getJS()`**
-```php
-<?php
-// Gibt JavaScript inkl. Parameter und Box-Template zurück
-$js = FriendsOfRedaxo\ConsentManager\Frontend::getJS();
-?>
-<script<?php echo FriendsOfRedaxo\ConsentManager\Frontend::getNonceAttribute(); ?>>
-    <?php echo $js; ?>
-</script>
-```
-- **Return:** Vollständiges JavaScript (js.cookie, polyfills, consent_manager_frontend.js)
-- **Enthält:** Parameter, Box-Template, Cookie-Expiration
-- **CSP:** Nonce-Attribut automatisch über `getNonceAttribute()` verfügbar
-- **Use Case:** Inline-JavaScript oder separate JS-Datei
-
-**`Frontend::getBox()`**
-```php
-<?php
-// Gibt nur das Box-HTML zurück (ohne CSS/JS)
-echo FriendsOfRedaxo\ConsentManager\Frontend::getBox();
-?>
-```
-- **Return:** HTML der Consent-Box
-- **Use Case:** AJAX-Loading, Custom Integration, SPA-Frameworks
-- **Voraussetzung:** CSS und JS müssen separat geladen sein
-
-**`Frontend::getNonceAttribute()`**
-```php
-<?php
-// CSP-Nonce-Attribut für Script-Tags
-?>
-<script<?php echo FriendsOfRedaxo\ConsentManager\Frontend::getNonceAttribute(); ?>>
-    // Ihr JavaScript-Code
-</script>
-```
-- **Return:** ` nonce="XXX"` oder leerer String
-- **CSP:** Automatische Integration mit REDAXO's CSP-Nonce
-- **Use Case:** Inline-Scripts mit Content Security Policy
-
-**Anwendungsbeispiele:**
-
-```php
-<?php
-use FriendsOfRedaxo\ConsentManager\Frontend;
-
-// Beispiel 1: Alles inline im Template
-?>
-<style><?php echo Frontend::getCSS(); ?></style>
-<?php echo Frontend::getBox(); ?>
-<script<?php echo Frontend::getNonceAttribute(); ?>>
-    <?php echo Frontend::getJS(); ?>
-</script>
-
-<?php
-// Beispiel 2: JavaScript in separate Datei schreiben
-$jsFile = rex_path::assets('consent_manager_custom.js');
-rex_file::put($jsFile, Frontend::getJS());
-?>
-<script src="<?php echo rex_url::assets('consent_manager_custom.js'); ?>"<?php echo Frontend::getNonceAttribute(); ?>></script>
-
-<?php
-// Beispiel 3: Für AJAX/SPA nur Box-HTML zurückgeben
-if (rex_request::isAjaxRequest()) {
-    rex_response::sendJson([
-        'html' => Frontend::getBox(),
-        'css' => Frontend::getCSS()
-    ]);
-    exit;
+// "globale" platzhalter aus dem addon setzen
+if (isset($consent_manager->cookies[$cookieUid])) {
+    $placeholderImage = $consent_manager->cookies[$cookieUid]['placeholder_image'];
+    $placeholderText = $consent_manager->cookies[$cookieUid]['placeholder_text'];
 }
-?>
-```
 
-### Conditional Loading mit PHP
-
-```php
-<?php
-$arr = json_decode($_COOKIE['consentmanager'], true);
-$consents = $arr ? array_flip($arr['consents']) : [];
-
-if (isset($consents['google-maps'])) {
-    // Google Maps laden
-    echo '<div id="google-maps"></div>';
-} else {
-    // Platzhalter mit Consent-Link anzeigen
-    echo '<div>Für Google Maps müssen Cookies akzeptiert werden.</div>';
-    echo '<a class="consent_manager-show-box-reload">Cookie-Einstellungen</a>';
-}
-?>
-```
-
-### AJAX-Integration
-
-```javascript
-// Prüfung vor AJAX-Request
-function loadExternalContent() {
-    if (consent_manager_hasconsent('external-api')) {
-        $.ajax({
-            url: '/api/external-data',
-            success: function(data) {
-                // Daten verarbeiten
-            }
-        });
+if (isset($_COOKIE['consent_manager'])) {
+    $cookieData = json_decode($_COOKIE['consent_manager'], true);
+    foreach ($cookieData['consents'] as $consent) {
+        if ($cookieUid == $consent) {
+            $consented = true;
+            break;
+        }
     }
+
 }
+?>
+
+<?php if (rex::isFrontend()): ?>
+    <?php if ($consented): ?>
+        <div class="consent_manager-module" data-uid="<?= $cookieUid ?>">
+            REX_VALUE[2 output=html]
+        </div>
+    <?php else: ?>
+        <div class="consent_manager-module" data-payload="<?= base64_encode('REX_VALUE[2 output=html]') ?>" data-uid="<?= $cookieUid ?>">
+            <div class="consent_manager-module__placeholder">
+                <div class="consent_manager-module__placeholder-image">
+                    <img src="/media/<?= ('REX_MEDIA[1]' ? 'REX_MEDIA[1]' : $placeholderImage) ?>" alt="">
+                </div>
+                <div class="consent_manager-module__placeholder-text">
+                    <div class="consent_manager-module__placeholder-text-background">
+                        <?= nl2br('REX_VALUE[3 output=html]' ? 'REX_VALUE[3 output=html]' : $placeholderText) ?>
+                        <div class="consent_manager-show-box<?= $needsReload ?>"><b>Datenschutz-Einstellungen anpassen</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif ?>
+<?php else: ?>
+    <label><?= $serviceName ?></label>
+    <textarea readonly disabled style="width:100%;" id="consent_manager-module-textarea-REX_SLICE_ID">REX_VALUE[2 output=html]</textarea>
+<?php endif ?>
 ```
 
----
+#### zusätzliches JS
 
-## 🎯 Inline-Consent für einzelne Medien
-
-**Neu:** Consent nur bei Bedarf - perfekt für Seiten mit wenigen externen Inhalten.
-
-### 🚀 Schnellstart Inline-Consent
-
-**Problem:** Sie haben 400 Artikel, aber nur 2 brauchen YouTube-Videos. Normale Consent-Banner nerven alle Besucher, obwohl 99% nie Videos sehen.
-
-**Lösung:** Inline-Consent zeigt Platzhalter statt Videos. Consent-Dialog erscheint erst beim Klick auf "Video laden".
-
-### 📋 Voraussetzungen
-
-**Template-Integration ZWINGEND erforderlich:**
-
-Die folgenden Assets **müssen** im Template eingebunden sein, damit Inline-Blocker funktionieren:
-
-```php
-<!-- Im <head> -->
-<link rel="stylesheet" href="<?= rex_url::addonAssets('consent_manager', 'consent_inline.css') ?>">
-
-<!-- Vor </body> -->
-<script defer src="<?= rex_url::addonAssets('consent_manager', 'consent_inline.js') ?>"></script>
+```js
+jQuery(function ($) {
+    'use strict';
+    $('.consent_manager-module').each(function () {
+        var $this = $(this),
+            uid = $this.data('uid');
+        $(document).on('consent_manager-saved', function (e) {
+            var consents = JSON.parse(e.originalEvent.detail);
+            consents.forEach(function (v) {
+                if (v === uid) {
+                    $this.html(window.atob($this.data('payload')));
+                }
+            });
+        });
+    });
+});
 ```
 
-**Optional für Vidstack Player (moderne Video-Wiedergabe):**
+## Einstellungen und Optionen
 
-```php
-<!-- Im <head> -->
-<?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
-    <link rel="stylesheet" href="<?= rex_url::addonAssets('vidstack', 'vidstack.css') ?>">
-<?php endif; ?>
+Die folgenden Einstellungen sind optional. Mit ihnen kann man Consent-Manager an die eigenen Bedürfnisse anpassen. Sie ändern jedoch nichts an der Funktionalität des AddOns.
 
-<!-- Vor </body> -->
-<?php if (rex_addon::exists('vidstack') && rex_addon::get('vidstack')->isAvailable()): ?>
-    <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack.js') ?>"></script>
-    <script defer src="<?= rex_url::addonAssets('vidstack', 'vidstack_helper.js') ?>"></script>
-<?php endif; ?>
+### Dienste-Texte anpassen
+
+Hier können alle allgemeinen Texte der Consent-Box angepasst werden.
+
+> Wir empfehlen hierzu einen Spezialisten zu kontaktieren. (z.B: Datenschutzbeauftragte, Rechtsabteilung)
+
+### Mehrsprachigkeit
+
+Verfügt die Website über mehrere Sprachen oder wird eine neue Sprache angelegt, werden die Inhalte der Startsprache automatisch übertragen und können nachher angepasst werden. **Einige Felder wie Schlüssel, Scripte, Domain und Cookie-Auswahl können nur in der Startsprache geändert werden. Die Änderungen werden automatisch auf alle weiteren Sprachen übertragen.**
+
+### Themes für die Consent-Box
+
+![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/themes.png?raw=true)
+
+Das AddOn liefert bereits eine Auswahl Themes mit, die im Reiter nur ausgewählt und aktiviert werden müssen.
+
+Um ein eigenes Theme zu erstellen, empfiehlt es sich, ein bestehendes Theme zu kopieren und im Verzeichnis `/project/consent_manager_themes/` des Projekt-AddOns abzulegen. Der neue Dateiname sollte der Schreibweise `consent_manager_frontend_theme*.scss` entsprechen.
+
+z.B: `/project/consent_manager_themes/consent_manager_frontend_theme_mein_theme.scss`
+
+Anschließend können die gewünschten Anpassungen vorgenommen werden und das neue Theme kann unter "Themes" in der Theme-Vorschau ausgewählt werden.
+
+> Gerne können eigene Themes auch als PR eingereicht werden 😀. Bitte mit Screenshot oder Demo-Link.
+
+#### Tipp:
+
+Zum Testen und Entwickeln des eigenen Themes (im Ordner `/project/consent_manager_themes/`) kann man die Vorschau auch direkt aufrufen:
+
+z.B:
+```
+/redaxo/index.php?page=consent_manager/theme&preview=project:consent_manager_frontend_mein_theme.scss
 ```
 
-**⚠️ Ohne diese Assets funktionieren:**
-- ❌ **Buttons nicht** ("Einmal laden", "Einstellungen")
-- ❌ **Videos laden nicht** nach Consent
-- ❌ **CKE5 oEmbed nicht** automatisch umgewandelt
-- ❌ **Styling fehlt** (keine Thumbnails, kein Overlay)
+Einfach mit der rechten Maustaste auf den Button `Theme Vorschau` klicken und Link in neuem Fenster öffnen.
 
-### 🎬 CKE5 oEmbed Integration (automatisch!)
+### Individuelles Design
 
-**Automatische Umwandlung von oEmbed-Tags:**
+Reicht die Lösung über ein Theme nicht, kann die Box auch vollständig individualisert werden.
+Der HTML-Code der Cookie Box liegt im Fragment `/redaxo/src/addons/consent_manager/fragments/consent_manager_box.php`. Änderungen in dieser Datei werden beim nächsten Update überschrieben. Deshalb ist es empfehlenswert, das Fragment zu kopieren und zum Beispiel im Project oder Theme AddOn abzulegen 'theme/private/fragments/consent_manager_box.php' und die Änderungen hier vorzunehmen. Das eigene CSS stellt man entweder über ein Theme scss bereit oder individuell im Template als eigene CSS-Datei.
+
+
+### Ausgabe-Einstellungen
+
+Über den Menüpunkt **Einstellungen** kann die Ausgabe für CSS und JavaScript im Frontend gesteuert werden.
+Standardmäßig wird auf jeder Seite das benötigte JavaScript und die CSS-Datei `consent_manager_frontend.css` ausgegeben.
+
+Der Platzhalter `REX_CONSENT_MANAGER[]` im Template wird durch folgenden Code ersetzt.
 
 ```html
-<!-- Redakteur fügt in CKE5 ein: -->
-<oembed url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"></oembed>
-
-<!-- Frontend zeigt automatisch: -->
-<!-- ┌─────────────────────────────────┐ -->
-<!-- │ 📺 Video-Thumbnail               │ -->
-<!-- │ YouTube Video                    │ -->
-<!-- │ Für Anzeige werden Cookies...   │ -->
-<!-- │ [Einmal laden] [Einstellungen]  │ -->
-<!-- └─────────────────────────────────┘ -->
+<style><style>/*consent_manager_frontend.css*/ @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}</style>
+<script src="./index.php?consent_manager_outputjs=1&amp;lang=1&amp;a=6&amp;i=false&amp;h=false&amp;cid=43&amp;v=4&amp;r=0&amp;t=16732118931" id="consent_manager_script" defer></script>
 ```
 
-**Unterstützte Plattformen:**
-- ✅ YouTube (alle URL-Formate)
-- ✅ Vimeo (alle URL-Formate)
+Sind im eigenen Frontend-Theme Styles für die Consent-Box vorhanden kann hier die Ausgabe der CSS-Datei `consent_manager_frontend.css` durch aktivieren der Einstellung **Eigenes CSS verwenden** unterdrückt werden. Es wird dann nur die JavaScript-Zeile ausgegeben.
 
-**Services konfigurieren:**
+## Gesetzte Cookies / Einwilligungshistorie
 
-Backend → Consent Manager → Dienste:
+Mit Hilfe des Platzhalters `REX_COOKIEDB[]` können alle derzeit gesetzten Cookies sowie die Einwilligungshistorie z.B. in der Datenschutzerklärung ausgegeben werden.
 
-1. **YouTube Service:**
-   - UID: `youtube`
-   - Service-Name: YouTube
-   - Datenschutz: `https://policies.google.com/privacy`
+**Wichtig: Der Platzhalter funktioniert ausschließlich in REDAXO-Templates, nicht innerhalb von php-includes, Modulen oder Fragmenten.**
 
-2. **Vimeo Service:**
-   - UID: `vimeo`
-   - Service-Name: Vimeo
-   - Datenschutz: `https://vimeo.com/privacy`
+## Tipps & Tricks
 
-**Player-Modi (Backend → Domains):**
+Hast du eigene Tipps & Tricks? [Füge Sie auf Github direkt in die Readme hinzu](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/README.md) oder lege ein [Issue](https://github.com/FriendsOfREDAXO/consent_manager/issues) an.
 
-| Modus | Beschreibung |
-|-------|-------------|
-| `auto` | Vidstack wenn verfügbar, sonst native iframe (Standard) |
-| `vidstack` | Immer Vidstack Player (moderne UI, Accessibility) |
-| `native` | Immer Standard YouTube/Vimeo iframe |
+### Cookie-Box manuell aufrufen
 
-**Vorteile Vidstack Player:**
-- ✅ Moderne, anpassbare Player-UI
-- ✅ Kleinere Dateigröße als YouTube iframe
-- ✅ Vollständige Accessibility (WCAG 2.1)
-- ✅ Touch-optimiert
-- ✅ Konsistente UI über alle Plattformen
+Soll der Nutzer die Möglichkeit bekommen, seine Einstellungen nachträglich anzupassen (zum Beispiel im Impressum oder auf einer Cookie-Seite) ist das mit folgenden Links möglich:
 
-### ⚠️ Wichtige Funktionsweise des Inline-Modus
+### Link zur Consent-Box
 
-**Medienspezifischer Consent:**
-- ✅ **Inline-Consent aktiviert NUR das angeklickte Medium**
-- ✅ Jedes Video/Embed wird **einzeln** freigeschaltet
-- ✅ **Keine globale Aktivierung** aller Services einer Gruppe
-- ✅ Maximaler Datenschutz durch minimale Consent-Erteilung
-
-**Beispiel:** Nutzer klickt "YouTube Video laden" → Nur dieses eine Video wird geladen, andere YouTube-Videos auf der Seite bleiben gesperrt.
-
-**Globale Aktivierung über "Alle Einstellungen":**
-- Der Button **"Alle Einstellungen"** (früher "Cookie-Details") öffnet das vollständige Consent Manager Fenster
-- Dort kann der Nutzer **alle Services einer Gruppe** global aktivieren
-- **Wichtig:** Button-Text ist über die **Texte-Verwaltung** vollständig anpassbar und übersetzbar
-
-### YouTube-Videos mit Inline-Consent
-
-```php
-<?php
-use FriendsOfRedaxo\ConsentManager\InlineConsent;
-
-// Template/Modul - statt direktem iframe
-echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
-    'title' => 'Rick Astley - Never Gonna Give You Up',
-    'width' => 560,
-    'height' => 315
-]);
-
-// Funktioniert auch mit kompletten URLs
-echo InlineConsent::doConsent('youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', [
-    'title' => 'Mein Video'
-]);
-
-// Mit custom Attributen (z.B. für UIkit, Bootstrap, etc.)
-echo InlineConsent::doConsent('youtube', 'dQw4w9WgXcQ', [
-    'title' => 'Responsive YouTube Video',
-    'width' => 560,
-    'height' => 315,
-    'attributes' => [
-        'class' => 'uk-responsive-width',
-        'data-uk-video' => 'automute: true',
-        'data-uk-responsive' => ''
-    ]
-]);
-?>
-```
-
-**✅ Automatische Privacy Policy Links:**
-- Services mit hinterlegter `provider_link_privacy` zeigen automatisch den entsprechenden Datenschutz-Link
-- Format: "🔒 Datenschutzerklärung von [Anbieter]" (z.B. "🔒 Datenschutzerklärung von Google")
-- Link öffnet in neuem Tab/Fenster
-
-### Google Maps einbetten
-
-```php
-<?php
-use FriendsOfRedaxo\ConsentManager\InlineConsent;
-
-echo InlineConsent::doConsent('google-maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12...', [
-    'title' => 'Unsere Adresse',
-    'height' => 450
-]);
-?>
-```
-
-### Vimeo-Videos
-
-```php
-<?php
-use FriendsOfRedaxo\ConsentManager\InlineConsent;
-
-echo InlineConsent::doConsent('vimeo', '123456789', [
-    'title' => 'Mein Vimeo Video',
-    'width' => 640,
-    'height' => 360
-]);
-
-// Oder mit URL
-echo InlineConsent::doConsent('vimeo', 'https://vimeo.com/123456789', [
-    'title' => 'Corporate Video'
-]);
-
-// Mit custom CSS Klassen und data-Attributen
-echo InlineConsent::doConsent('vimeo', '123456789', [
-    'title' => 'Corporate Video',
-    'attributes' => [
-        'class' => 'responsive-video my-custom-class',
-        'data-video-id' => '123456789',
-        'data-analytics' => 'tracked'
-    ]
-]);
-?>
-```
-
-### Custom iframes/Scripts
-
-```php
-<?php
-use FriendsOfRedaxo\ConsentManager\InlineConsent;
-
-// Beliebige iframes
-echo InlineConsent::doConsent('custom-iframe', '<iframe src="https://example.com/widget"></iframe>', [
-    'title' => 'External Widget',
-    'privacy_notice' => 'Dieses Widget setzt Cookies für Funktionalität.'
-]);
-
-// JavaScript-Code
-echo InlineConsent::doConsent('google-analytics', '<script>gtag("config", "GA_MEASUREMENT_ID");</script>', [
-    'title' => 'Google Analytics',
-    'placeholder_text' => 'Analytics aktivieren'
-]);
-?>
-```
-
-### Template-Integration
-
-**CSS/JS einbinden (einmalig im Template):**
-```php
-<?= (new rex_fragment())->parse('ConsentManager/inline_cssjs.php') ?>
-```
-
-**Oder manuell:**
 ```html
-<!-- Im <head>-Bereich -->
+<a class="consent_manager-show-box">Datenschutz-Einstellungen</a>
+```
+
+### Link mit Reload
+
+öffnet die Cookie-Box und erzwingt einen Page-Reload nach der Einwilligung.
+
+```html
+<a class="consent_manager-show-box-reload">Datenschutz-Einstellungen</a>
+```
+
+### Aufruf per Javascript
+
+Die Cookie-Box kann auch durch einen JavaScript-Aufruf geöffnet werden `consent_manager_showBox()`.
+
+```htmo
+// Achtung hier mit Unterstrichen da sonst der Beispiel-Code verstümmelt wird.
+// Unterstriche bei `on_click` und `java_script` müssen entfernt werden!
+<button on_click="java_script:consent_manager_showBox();">Datenschutz-Einstellungen</button>
+```
+
+### Consent per JavaScript ermitteln
+
+Um mit JavaScript einen Consent abzufragen die Funktion `consent_manager_hasconsent()` verwenden.
+
+```js
+<script>
+window.addEventListener('load', (event) => {
+    if (true === consent_manager_hasconsent('youtube')) {
+        alert('youtube Ok');
+    }
+});
+</script>
+```
+
+### Consent mit PHP ermitteln
+
+Um mit PHP einen Consent abzufragen die Klassen-Funktion `consent_manager_util::has_consent()` verwenden.
+
+```php
 <?php
-use FriendsOfRedaxo\ConsentManager\InlineConsent;
-if (class_exists(InlineConsent::class)) {
-    echo InlineConsent::getCSS();
-    echo InlineConsent::getJavaScript();
+if (true === consent_manager_util::has_consent('youtube')) {
+    echo('youtube Ok');
 }
 ?>
 ```
 
-### Features der Inline-Lösung
 
-**✅ Vollständige Integration:**
-- Nutzt bestehende Service-Konfiguration
-- Automatisches Logging aller Consent-Aktionen  
-- **"Alle Einstellungen"-Button** öffnet vollständiges Consent Manager Fenster
-- Bereits erteilte Consents werden respektiert
-- DSGVO-konforme Dokumentation
-- **Button-Texte anpassbar:** "Alle Einstellungen" kann über Texte-Verwaltung geändert werden (z.B. "Cookie-Einstellungen", "Datenschutz-Optionen", etc.)
-- **Privacy Policy Links:** Automatische Anzeige von Datenschutzerklärungen der Service-Anbieter
-- **Keine Confirm-Alerts:** Direkte Consent-Aktivierung ohne störende Browser-Dialoge
+### Seite ohne Consent-Box
 
-**✅ Smart Service Detection:**
-- YouTube: Automatische Thumbnail-Generierung
-- Vimeo: Professionelle Platzhalter
-- Google Maps: Karten-Icon und Hinweise
-- Generic: Universell für alle anderen Services
+Um z.B. einen Link zu teilen bei dem keine Consent-Box erscheinen soll kann in den Einstellungen ein **TOKEN** hinterlegt werden.
+An die URL dann einfach `skip_consent=MEINTOKEN` anhängen.
 
-**✅ User Experience:**
-- Responsive Design
-- Smooth Animations
-- Accessibility-konform
-- Mobile-optimiert
-- **Vollständig übersetzbare Buttons** über REDAXO Texte-Verwaltung
+z.B.: `https://meinedomain.de/SeiteOhneToken.html?skip_consent=MEINTOKEN`
 
-**✅ Mehrsprachigkeit:**
-- Alle Button-Texte über **Consent Manager → Texte** anpassbar
-- Automatische Sprachen-Synchronisation
-- Individuelle Anpassung pro Sprache möglich
-- Standard-Buttons: "Video laden", "Alle Einstellungen", "Datenschutz"
+### Scripte per PHP laden
 
-**✅ Developer Experience:**
-- Ein `InlineConsent::doConsent()` für alle Services
-- Auto-Erkennung von Video-IDs aus URLs
-- Flexible Optionen-Arrays
-- Debug-Modus verfügbar
+Neben der Einbindung der Scripte direkt über das Addon lassen sich Scripte auch per PHP einbinden. Somit kann man (am Beispiel GoogleMaps) eine Meldung ausgeben, dass bestimmte Cookies akzeptiert werden müssen um die Karte zu laden.
+Problem dabei: öffnet man die Cookie-Box und akzeptiert die Cookies, wird zwar das Script geladen, aber ohne Page-Reload ändert sich der Inhalt der Seite nicht. Deshalb sollte man hier den Link: `<a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>` verwenden.
 
-### Beispiel-Output
-
-Der Inline-Consent generiert ansprechende Platzhalter:
-
-```html
-<!-- YouTube-Platzhalter -->
-<div class="consent-inline-placeholder">
-    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" />
-    <div class="consent-inline-overlay">
-        <div class="consent-inline-icon">🎥</div>
-        <h4>Rick Astley - Never Gonna Give You Up</h4>
-        <p>Für YouTube werden Cookies benötigt.</p>
-        <button onclick="...">YouTube Video laden</button>
-        <button onclick="...">Cookie-Details</button>
-    </div>
-</div>
+```php
+$arr = json_decode($_COOKIE['consent_manager'], true);
+$check = [];
+if ($arr)
+{
+$check = array_flip($arr['consents']);
+}
+#dump($arr);
+if ($check['google-maps']) {
+  // Code Ausgabe bei akzeptierter CookieGruppe
+  // GoogleMaps-Code
+} else {
+  // Code Ausgabe bei abgelehnter CookieGruppe
+  // Warnhinweis + <a class="consent_manager-show-box-reload">Cookie Einstellungen bearbeiten</a>
+}
 ```
 
-### Vorteile gegenüber globalem Consent
+### Berechtigung für Redakteure
 
-| Global Consent | Inline Consent |
-|----------------|----------------|
-| ❌ Nervt alle Besucher | ✅ Nur bei tatsächlicher Nutzung |
-| ❌ "Consent Fatigue" | ✅ Kontextuell und verständlich |
-| ❌ Viele leere Zustimmungen | ✅ Bewusste Entscheidungen |
-| ❌ Komplexe Setup für 2 Videos | ✅ Einfache Integration |
+Um die Cookie-Texte auch für Redakteure zur Änderung bereitzustellen muss diesen das Recht `consent_manager[]` und zusätzlich das Recht `consent_manager[texteditonly]` zugewiesen werden. Die Redakteure können dann nur die Cookie-Texte ändern, alle anderen Funktionen werden ausgeblendet.
 
-**Perfect für:**
-- Blogs mit gelegentlichen Videos
-- Corporate Sites mit einzelnen Maps
-- Landing Pages mit gezielten Embeds
-- Alle Seiten wo < 10% der Inhalte Consent brauchen
+## Fehlerbehebung
 
-## 🔍 Debug-Modus
+### Die Consent-Box wird nicht angzeigt
 
-**Consent-Debug-Panel:** Seit Version 4.4.0 verfügbar für Entwickler und Troubleshooting.
+* Ist eine Domain hinterlegt und in der Cookie-Gruppe zugeordnet? - Bei mehreren Domains sind die Gruppen für jede Domain einzeln anzulegen.
+* Stimmt die zugeordnete Domain mit der aufgerufenen Domain überein? - www.meinedomain.de und meinedomain.de sind zwei verschiedene Domains.
+* Ist die Website über die zugeordnete Domain (www.meinedomain.tld) erreichbar? - Unterordner Installationen funktionieren nicht.
+* Sind der Platzhalter REX_CONSENT_MANAGER[] oder der PHP-Code in einem Template im `head`-Bereich hinterlegt? .
+* Unter Einstellungen ist *Eigenes CSS verwenden* aktiviert aber es wird kein eigenes CSS eingebunden (HTML der Box wird am Seitenende angezeigt und nicht als Popup)
+* Ist der Startkartikel der Seite auch als Not Found Artikel (404) konfiguriert? - Die Cookie-Box wird beim 404 Artikel nicht ausgegeben
 
-**Aktivierung:**
-```
-?debug_consent=1
-```
+### Die Consent-Box wird angezeigt, aber die Cookies werden nicht angezeigt
 
-**Features:**
-- Live-Anzeige aller Cookie-Stati
-- Google Consent Mode Integration
-- LocalStorage-Übersicht
-- Service-Status-Monitor
-- **Neu:** Inline-Consent-Tracking
+* Ist eine entsprechende Cookie-Gruppe angelegt?
+* Wurde Dienst in der entsprechenden Gruppe aktiviert?
 
----
+### Die Consent-Box und Cookies werden angezeigt, Scripte aber nicht geladen.
 
-## 📄 Lizenz und Credits
+* Sind die Scripte in der entsprechenden Cookies hinterlegt?
+* Sind die Scripte inklusive `<script>...</script>`-Tag hinterlegt?
+
+### Fehler melden
+
+Du hast einen Fehler gefunden oder wünscht dir ein Feature? Lege ein [Issue auf Github an](https://github.com/FriendsOfREDAXO/consent_manager/issues).
+
+## Lizenz, Autor, Credits, Sponsoren
 
 ### Lizenz
-MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/LICENSE.md)
 
-### Entwicklung
-**Friends Of REDAXO:** [https://github.com/FriendsOfREDAXO](https://github.com/FriendsOfREDAXO)
+MIT Lizenz, siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/LICENSE.md)
+[cookie.js](https://github.com/js-cookie/js-cookie): [MIT Lizenz](https://github.com/js-cookie/js-cookie/blob/master/LICENSE)
 
-**Projekt-Leads:**
-- [Ingo Winter](https://github.com/IngoWinter)
-- [Andreas Eberhard](https://github.com/aeberhard)
-- [Thomas Skerbis](https://github.com/skerbis) 
+### Autor
+
+**Friends Of REDAXO**
+[https://github.com/FriendsOfREDAXO](https://github.com/FriendsOfREDAXO)
+
+**Projekt-Leads**
+[Ingo Winter](https://github.com/IngoWinter), [Andreas Eberhard](https://github.com/aeberhard)
 
 ### Credits
-**Contributors:** [Siehe GitHub](https://github.com/FriendsOfREDAXO/consent_manager/graphs/contributors)
 
-**Danksagungen:**
-- [Christoph Böcker](https://github.com/Christophboecker) (Code refactoring, bug fixing und mehr) 
-- [Thomas Blum](https://github.com/tbaddade/) (Code aus Sprog AddOn)
-- [Peter Bickel](https://github.com/polarpixel) (Entwicklungsspende)
-- [Oliver Kreischer](https://github.com/olien) (Cookie-Design)
+[Contributors:](https://github.com/FriendsOfREDAXO/consent_manager/graphs/contributors)
 
-**Externe Bibliotheken:**
-- [cookie.js](https://github.com/js-cookie/js-cookie) - MIT Lizenz
+First Release: [Ingo Winter](https://github.com/IngoWinter).
 
----
+### Sponoren:
 
-## 🆘 Support und Community
-
-**Issue melden:** [GitHub Issues](https://github.com/FriendsOfREDAXO/consent_manager/issues)
-
-**Contributions:** Pull Requests sind willkommen - besonders eigene Themes mit Screenshot oder Demo-Link!
+[Thomas Blum](https://github.com/tbaddade/) wird eine Menge Code aus seinem [Sprog Addon](https://github.com/tbaddade/redaxo_sprog) in Consent-Manager wiederfinden.
+[Thomas Skerbis](https://github.com/skerbis) hat unermüdlich getestet und für die Entwicklung gespendet,
+[Peter Bickel](https://github.com/polarpixel) hat für die Entwicklung gespendet,
+[Oliver Kreischer](https://github.com/olien) hat den Keks gebacken.

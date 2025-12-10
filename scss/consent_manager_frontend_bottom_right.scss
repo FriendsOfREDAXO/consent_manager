@@ -107,12 +107,6 @@ div.consent_manager-hidden {
     display: none;
 }
 
-/* Script-Container */
-
-div.consent_manager-script {
-    display: none;
-}
-
 /* Close-Button */
 
 .consent_manager-close-box {
@@ -199,14 +193,12 @@ div.consent_manager-cookiegroups label>input[type="checkbox"] {
 div.consent_manager-show-details {
     padding: 0 0 1.5em 0;
 
-    .icon-info-circled {
+    a {
         display: inline-block;
         line-height: 1.2em;
         height: 1.4em;
         cursor: pointer;
         color: $link-color;
-        border: none;
-        background-color: transparent;
 
         &:hover {
             color: $link-hover-color;

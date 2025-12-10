@@ -94,12 +94,6 @@ div.consent_manager-hidden {
     display: none;
 }
 
-/* Script-Container */
-
-div.consent_manager-script {
-    display: none;
-}
-
 /* Close-Button */
 
 .consent_manager-close-box {
@@ -249,12 +243,10 @@ div.consent_manager-show-details {
 }
 
 .consent_manager-show-details {
-    .icon-info-circled {
+    a {
         color: $text-color;
         text-decoration: none;
         cursor: pointer;
-        border: none;
-        background-color: transparent;
 
         &:hover {
             color: $link-color;
