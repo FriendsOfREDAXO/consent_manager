@@ -261,6 +261,10 @@ if (typeof window.consentManagerInline !== 'undefined') {
             this.debug('🔓 Decoded code:', decodedCode.substring(0, 100));
             
             var wrapper = document.createElement('div');
+            // nosemgrep: javascript.browser.security.innerHTML-sink.innerHTML-sink
+            // SICHER: decodedCode stammt aus einem serverseitig generierten <script type="text/template">
+            // Element im DOM, nicht aus User-Input. Der Inhalt wird vom Backend-Redakteur kontrolliert
+            // und enthält beabsichtigt HTML (z.B. iframes für YouTube/Vimeo Embeds).
             wrapper.innerHTML = decodedCode;
             
             this.debug('📦 Wrapper children:', {count: wrapper.children.length, children: wrapper.children});
