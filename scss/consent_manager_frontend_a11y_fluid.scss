@@ -283,23 +283,8 @@ div.consent_manager-buttons {
     gap: $spacing-xs;
 }
 
-button.consent_manager-accept-all {
-    transition: all 0.2s ease;
-    background: $button-primary-bg;
-    border: none;
-    color: #ffffff;
-    padding: $spacing-sm $spacing-md;
-    border-radius: 10px;
-    font-size: $font-size-base;
-    font-weight: 600;
-    text-align: center;
-    min-height: 48px;
-    cursor: pointer;
-    line-height: 1.5;
-    width: 100%;
-    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
-}
-
+/* DSGVO: Alle Buttons gleichwertig - keine visuelle Hervorhebung */
+button.consent_manager-accept-all,
 button.consent_manager-save-selection,
 button.consent_manager-accept-none {
     transition: all 0.2s ease;
@@ -315,20 +300,17 @@ button.consent_manager-accept-none {
     cursor: pointer;
     line-height: 1.5;
     width: 100%;
+    white-space: nowrap;
 }
 
 button.consent_manager-accept-all:hover,
-button.consent_manager-accept-all:focus {
-    background: $button-primary-hover;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
-}
-
+button.consent_manager-accept-all:focus,
 button.consent_manager-save-selection:hover,
 button.consent_manager-save-selection:focus,
 button.consent_manager-accept-none:hover,
 button.consent_manager-accept-none:focus {
     background: $button-secondary-hover;
+    border-color: $accent-color;
     transform: translateY(-2px);
 }
 

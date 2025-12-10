@@ -1,42 +1,43 @@
 /*
-Theme: {"name": "Accessibility Minimal", "description": "WCAG 2.1 AA konformes Minimal-Theme - sehr kompakt, nur das Wesentliche, ideal für wenig aufdringliche Consent-Abfragen", "type": "light", "style": "Minimal Corner, Accessibility-optimiert", "autor": "@skerbis"}
+Theme: {"name": "Accessibility Minimal Dark", "description": "WCAG 2.1 AA konformes Minimal-Theme in Anthrazit - sehr kompakt, nur das Wesentliche, ideal für wenig aufdringliche Consent-Abfragen", "type": "dark", "style": "Minimal Corner Dark, Accessibility-optimiert", "autor": "@skerbis"}
 */
 
 /**
- * Consent Manager - Accessibility Minimal Theme
+ * Consent Manager - Accessibility Minimal Dark Theme
  * 
  * Features:
  * - WCAG 2.1 AA compliant
  * - Ultra-compact design
+ * - Dark anthracite color scheme
  * - Positioned in bottom-right corner
  * - Expands on interaction
  * - Minimal visual footprint
  */
 
-/* Variables */
+/* Variables - Dark Anthracite */
 $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-size: 15px;
 $line-height: 1.5em;
 
-$card-background: #ffffff;
-$card-border: #e0e0e0;
-$card-shadow: rgba(0, 0, 0, 0.15);
-$text-color: #1a1a1a;
-$text-muted: #666666;
+$card-background: #23272f;
+$card-border: #3a3f4a;
+$card-shadow: rgba(0, 0, 0, 0.4);
+$text-color: #e8e8e8;
+$text-muted: #a0a0a0;
 
-$focus-color: #0066cc;
-$focus-shadow: rgba(0, 102, 204, 0.2);
+$focus-color: #60a5fa;
+$focus-shadow: rgba(96, 165, 250, 0.25);
 
-$button-primary-bg: #0066cc;
-$button-primary-hover: #0052a3;
-$button-secondary-bg: #f5f5f5;
-$button-secondary-hover: #e8e8e8;
+$button-primary-bg: #3b82f6;
+$button-primary-hover: #2563eb;
+$button-secondary-bg: #2d323c;
+$button-secondary-hover: #3a3f4a;
 
-$link-color: #0066cc;
-$link-hover-bg: #e6f3ff;
+$link-color: #60a5fa;
+$link-hover-bg: rgba(96, 165, 250, 0.15);
 
-$cookie-accent: #0066cc;
-$cookie-bg: #f9f9f9;
+$cookie-accent: #3b82f6;
+$cookie-bg: #2d323c;
 
 /* Animations */
 @media (prefers-reduced-motion: reduce) {
@@ -147,7 +148,7 @@ div.consent_manager-wrapper .consent_manager-headline {
     padding-right: 2.5em;
     font-weight: 600;
     font-size: 16px;
-    color: $text-color;
+    color: #ffffff;
     line-height: 1.3;
 }
 
@@ -238,20 +239,20 @@ div.consent_manager-show-details {
     }
 }
 
-/* Action buttons - stacked, all equal (DSGVO compliant) */
+/* Action buttons - stacked */
 div.consent_manager-buttons {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
 }
 
-/* DSGVO: Alle Buttons gleichwertig - Outline-Style mit pastellblauem Rahmen */
+/* DSGVO: Alle Buttons gleichwertig - Outline-Style mit blauem Rahmen */
 button.consent_manager-accept-all,
 button.consent_manager-save-selection,
 button.consent_manager-accept-none {
     transition: 0.15s ease all;
     background: transparent;
-    border: 1px solid #93c5fd;
+    border: 1px solid #1e40af;
     color: $text-color;
     padding: 10px 16px;
     border-radius: 8px;
@@ -271,8 +272,8 @@ button.consent_manager-save-selection:hover,
 button.consent_manager-save-selection:focus,
 button.consent_manager-accept-none:hover,
 button.consent_manager-accept-none:focus {
-    background: rgba(147, 197, 253, 0.15);
-    border-color: #60a5fa;
+    background: rgba(30, 64, 175, 0.2);
+    border-color: #1e3a8a;
 }
 
 /* Site links - compact */
@@ -320,7 +321,7 @@ div.consent_manager-wrapper div.consent_manager-detail {
     }
 
     div.consent_manager-cookiegroup-title {
-        color: $text-color;
+        color: #ffffff;
         background-color: $cookie-bg;
         padding: 8px 10px;
         margin: 0.75em 0 0 0;
@@ -371,6 +372,17 @@ div.consent_manager-wrapper div.consent_manager-detail {
         max-width: 100%;
         border-radius: 12px 12px 0 0;
         border-bottom: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    div.consent_manager-wrapper {
+        border: 2px solid #ffffff;
+    }
+    
+    button {
+        border-width: 2px !important;
     }
 }
 

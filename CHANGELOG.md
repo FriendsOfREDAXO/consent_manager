@@ -4,17 +4,23 @@
 
 ### 🎨 Theme-Editor Erweiterungen
 
-* **Neue Theme-Basis-Varianten**: 4 neue Accessibility-Themes hinzugefügt:
+* **Neue Theme-Basis-Varianten**: 5 neue Accessibility-Themes hinzugefügt:
   - **Banner Top**: Volle Breite, fixiert am oberen Bildschirmrand
   - **Banner Bottom**: Volle Breite, fixiert am unteren Bildschirmrand (dunkles Theme)
   - **Minimal**: Kompakte Ecke unten rechts, wenig aufdringlich
+  - **Minimal Dark**: Kompakte Ecke in Anthrazit mit Outline-Buttons
   - **Fluid**: Responsive mit Glaseffekt (backdrop-filter), fluid Typography mit clamp()
+  - **Fluid Dark**: Fluid-Theme in Anthrazit mit Glaseffekt
 * **Glaseffekt-Transparenz**: Neue Opacity-Slider für Hintergrund und Details-Bereich beim Fluid-Theme
 * **Barrierefreiheits-Warnung**: Hinweis beim Fluid-Theme über mögliche Einschränkungen bei Glaseffekten
 * **`prefers-reduced-transparency` Support**: Automatischer Fallback auf undurchsichtige Hintergründe für Nutzer die Transparenz reduzieren möchten
+* **Schriftgrößen-Einstellungen**: Neue Slider für allgemeine Schriftgröße (12-22px) und Button-Schriftgröße (12-20px)
+* **DSGVO-konforme Buttons**: Alle vorinstallierten A11y-Themes zeigen jetzt gleichwertige Buttons ohne Hervorhebung - keine visuelle Bevorzugung von "Alle akzeptieren"
 
 ### 🐛 Bugfixes
 
+* **Button-Text Umbruch**: `white-space: nowrap` verhindert mehrzeilige Button-Texte (Barrierefreiheit)
+* **Button-Style Outline**: Outline-Button-Stil wird jetzt korrekt angewendet
 * **Theme-Übersicht Headline-Überlappung**: Close-Button überdeckt nicht mehr den Titel bei kompakten Themes
 * **Theme-Editor Slider-Updates**: Event-Listener reagieren jetzt korrekt auf `rex:ready` für PJAX-Navigation
 
