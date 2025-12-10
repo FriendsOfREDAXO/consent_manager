@@ -2,6 +2,22 @@
 
 ## Version 5.1.1 - unreleased
 
+### 🎨 Theme-Editor Erweiterungen
+
+* **Neue Theme-Basis-Varianten**: 4 neue Accessibility-Themes hinzugefügt:
+  - **Banner Top**: Volle Breite, fixiert am oberen Bildschirmrand
+  - **Banner Bottom**: Volle Breite, fixiert am unteren Bildschirmrand (dunkles Theme)
+  - **Minimal**: Kompakte Ecke unten rechts, wenig aufdringlich
+  - **Fluid**: Responsive mit Glaseffekt (backdrop-filter), fluid Typography mit clamp()
+* **Glaseffekt-Transparenz**: Neue Opacity-Slider für Hintergrund und Details-Bereich beim Fluid-Theme
+* **Barrierefreiheits-Warnung**: Hinweis beim Fluid-Theme über mögliche Einschränkungen bei Glaseffekten
+* **`prefers-reduced-transparency` Support**: Automatischer Fallback auf undurchsichtige Hintergründe für Nutzer die Transparenz reduzieren möchten
+
+### 🐛 Bugfixes
+
+* **Theme-Übersicht Headline-Überlappung**: Close-Button überdeckt nicht mehr den Titel bei kompakten Themes
+* **Theme-Editor Slider-Updates**: Event-Listener reagieren jetzt korrekt auf `rex:ready` für PJAX-Navigation
+
 ### 🔒 Sicherheitsfixes
 
 * **XSS-Schutz in Debug-Panel**: Alle Cookie- und LocalStorage-Werte werden jetzt mit `escapeHtml()` escaped, bevor sie im Debug-Panel angezeigt werden

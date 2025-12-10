@@ -176,10 +176,14 @@ consent_manager_config_active_theme = Aktiv
 consent_manager_config_btn_preview = Förhandsgranskning
 consent_manager_config_btn_select = Tillämpa tema <b>{0}</b>
 consent_manager_config_btn_activate = Aktivera
+consent_manager_config_btn_delete = Radera
 consent_manager_config_confirm_select = Tillämpa tema [ {0} ]!?
+consent_manager_config_confirm_delete = Verkligen radera tema [ {0} ]? Denna åtgärd kan inte ångras!
 consent_manager_config_saved = Tema har tillämpats och är nu aktivt!
 consent_manager_config_invalid_theme = Ogiltig tema-fil. Ingen tema-information tillgänglig!
 consent_manager_theme_custom = Anpassat tema
+consent_manager_theme_deleted = Tema har raderats.
+consent_manager_theme_delete_error = Tema kunde inte raderas.
 
 consent_manager_theme_name = Tema-namn:
 consent_manager_theme_scssfile = SCSS-fil:

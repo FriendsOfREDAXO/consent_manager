@@ -176,10 +176,14 @@ consent_manager_config_active_theme = Active
 consent_manager_config_btn_preview = Preview
 consent_manager_config_btn_select = Apply theme <b>{0}</b>
 consent_manager_config_btn_activate = Activate
+consent_manager_config_btn_delete = Delete
 consent_manager_config_confirm_select = Apply theme [ {0} ]!?
+consent_manager_config_confirm_delete = Really delete theme [ {0} ]? This action cannot be undone!
 consent_manager_config_saved = Theme has been applied and is now active!
 consent_manager_config_invalid_theme = Invalid theme file. No theme information available!
 consent_manager_theme_custom = Custom Theme
+consent_manager_theme_deleted = Theme has been deleted successfully.
+consent_manager_theme_delete_error = Theme could not be deleted.
 
 consent_manager_theme_name = Theme name:
 consent_manager_theme_scssfile = SCSS file:

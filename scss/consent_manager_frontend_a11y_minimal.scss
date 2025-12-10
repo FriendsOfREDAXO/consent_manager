@@ -1,0 +1,409 @@
+/*
+Theme: {"name": "Accessibility Minimal", "description": "WCAG 2.1 AA konformes Minimal-Theme - sehr kompakt, nur das Wesentliche, ideal für wenig aufdringliche Consent-Abfragen", "type": "light", "style": "Minimal Corner, Accessibility-optimiert", "autor": "@skerbis"}
+*/
+
+/**
+ * Consent Manager - Accessibility Minimal Theme
+ * 
+ * Features:
+ * - WCAG 2.1 AA compliant
+ * - Ultra-compact design
+ * - Positioned in bottom-right corner
+ * - Expands on interaction
+ * - Minimal visual footprint
+ */
+
+/* Variables */
+$font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-size: 15px;
+$line-height: 1.5em;
+
+$card-background: #ffffff;
+$card-border: #e0e0e0;
+$card-shadow: rgba(0, 0, 0, 0.15);
+$text-color: #1a1a1a;
+$text-muted: #666666;
+
+$focus-color: #0066cc;
+$focus-shadow: rgba(0, 102, 204, 0.2);
+
+$button-primary-bg: #0066cc;
+$button-primary-hover: #0052a3;
+$button-secondary-bg: #f5f5f5;
+$button-secondary-hover: #e8e8e8;
+
+$link-color: #0066cc;
+$link-hover-bg: #e6f3ff;
+
+$cookie-accent: #0066cc;
+$cookie-bg: #f9f9f9;
+
+/* Animations */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@keyframes fadeSlideIn {
+    0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Background - subtle */
+div.consent_manager-background {
+    position: fixed;
+    left: auto;
+    top: auto;
+    right: 1em;
+    bottom: 1em;
+    background: transparent;
+    z-index: 999999;
+    pointer-events: none;
+    outline: 0;
+}
+
+div.consent_manager-wrapper {
+    pointer-events: auto;
+}
+
+/* Card wrapper */
+div.consent_manager-wrapper {
+    font-family: $font-family;
+    font-size: $font-size;
+    line-height: $line-height;
+    background: $card-background;
+    border: 1px solid $card-border;
+    border-radius: 12px;
+    color: $text-color;
+    position: relative;
+    width: 360px;
+    max-width: calc(100vw - 2em);
+    max-height: calc(100vh - 2em);
+    overflow-y: auto;
+    box-sizing: border-box;
+    animation: fadeSlideIn 0.3s ease-out;
+    box-shadow: 0 8px 32px $card-shadow;
+}
+
+div.consent_manager-wrapper-inner {
+    padding: 1.25em;
+    position: relative;
+}
+
+div.consent_manager-hidden {
+    display: none;
+}
+
+div.consent_manager-script {
+    display: none;
+}
+
+/* Close button - small */
+.consent_manager-close-box {
+    position: absolute;
+    cursor: pointer;
+    right: 0.75em;
+    top: 0.75em;
+    display: block;
+    border-radius: 50% !important;
+    border: none;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    background-color: $button-secondary-bg;
+    color: $text-muted;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 0;
+    margin: 0;
+    transition: 0.2s ease all;
+    text-align: center;
+
+    &:hover,
+    &:focus {
+        background-color: $button-secondary-hover;
+        color: $text-color;
+        outline: 2px solid $focus-color;
+        outline-offset: 2px;
+    }
+}
+
+/* Focus styles */
+div.consent_manager-background button:focus,
+div.consent_manager-background a:focus,
+div.consent_manager-background input:focus,
+div.consent_manager-background [tabindex]:focus {
+    outline: 2px solid $focus-color !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 3px $focus-shadow !important;
+}
+
+/* Headline - compact */
+div.consent_manager-wrapper .consent_manager-headline {
+    margin: 0 0 0.5em 0;
+    padding-right: 2.5em;
+    font-weight: 600;
+    font-size: 16px;
+    color: $text-color;
+    line-height: 1.3;
+}
+
+div.consent_manager-wrapper p.consent_manager-text {
+    margin: 0 0 1em 0;
+    color: $text-muted;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Cookie groups - stacked compact */
+div.consent_manager-cookiegroups {
+    margin: 0 0 1em 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+div.consent_manager-cookiegroup-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+div.consent_manager-cookiegroups label {
+    position: relative;
+    font-weight: 500;
+    font-size: 13px;
+    color: $text-color;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background-color 0.15s ease;
+    margin: 0 -8px;
+
+    &:hover {
+        background-color: $cookie-bg;
+    }
+
+    &:focus-within {
+        background-color: $link-hover-bg;
+    }
+}
+
+div.consent_manager-cookiegroups label > input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0 8px 0 0;
+    cursor: pointer;
+    border: 2px solid $card-border;
+    border-radius: 4px;
+    flex-shrink: 0;
+    accent-color: $button-primary-bg;
+}
+
+.consent_manager-wrapper input[type="checkbox"]:disabled,
+.consent_manager-cookiegroups label > input[type="checkbox"]:disabled + * {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Details toggle - text link style */
+div.consent_manager-show-details {
+    padding: 0 0 1em 0;
+
+    button {
+        display: inline;
+        line-height: 1.4;
+        min-height: auto;
+        padding: 0;
+        cursor: pointer;
+        color: $link-color;
+        background: none;
+        border: none;
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        transition: 0.15s ease all;
+
+        &:hover,
+        &:focus {
+            color: $button-primary-hover;
+        }
+    }
+}
+
+/* Action buttons - stacked */
+div.consent_manager-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+button.consent_manager-accept-all {
+    transition: 0.15s ease all;
+    background: $button-primary-bg;
+    border: none;
+    color: #ffffff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    min-height: 40px;
+    cursor: pointer;
+    line-height: 1.4;
+    width: 100%;
+}
+
+button.consent_manager-save-selection,
+button.consent_manager-accept-none {
+    transition: 0.15s ease all;
+    background: $button-secondary-bg;
+    border: none;
+    color: $text-color;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    min-height: 40px;
+    cursor: pointer;
+    line-height: 1.4;
+    width: 100%;
+}
+
+button.consent_manager-accept-all:hover,
+button.consent_manager-accept-all:focus {
+    background: $button-primary-hover;
+}
+
+button.consent_manager-save-selection:hover,
+button.consent_manager-save-selection:focus,
+button.consent_manager-accept-none:hover,
+button.consent_manager-accept-none:focus {
+    background: $button-secondary-hover;
+}
+
+/* Site links - compact */
+div.consent_manager-sitelinks {
+    margin: 1em 0 0 0;
+    padding-top: 1em;
+    border-top: 1px solid $card-border;
+    text-align: center;
+
+    a {
+        display: inline-block;
+        margin: 0 0.75em;
+        color: $text-muted;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 12px;
+        transition: 0.15s ease all;
+
+        &:hover,
+        &:focus {
+            color: $link-color;
+            text-decoration: underline;
+        }
+    }
+}
+
+div.consent_manager-buttons-sitelinks {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Detail section - compact */
+div.consent_manager-wrapper div.consent_manager-detail {
+    margin-bottom: 1em;
+
+    a {
+        color: $link-color;
+        text-decoration: underline;
+        font-size: 13px;
+
+        &:hover,
+        &:focus {
+            color: $button-primary-hover;
+        }
+    }
+
+    div.consent_manager-cookiegroup-title {
+        color: $text-color;
+        background-color: $cookie-bg;
+        padding: 8px 10px;
+        margin: 0.75em 0 0 0;
+        font-weight: 600;
+        font-size: 13px;
+        border-radius: 6px 6px 0 0;
+        border-left: 3px solid $cookie-accent;
+    }
+
+    div.consent_manager-cookiegroup-description {
+        padding: 8px 10px;
+        background: $cookie-bg;
+        color: $text-muted;
+        font-size: 12px;
+        border-left: 3px solid $card-border;
+    }
+
+    div.consent_manager-cookie {
+        margin-top: 1px;
+        padding: 8px 10px;
+        background: $cookie-bg;
+        color: $text-muted;
+        font-size: 11px;
+        border-left: 3px solid $card-border;
+
+        &:last-child {
+            border-radius: 0 0 6px 6px;
+        }
+
+        span {
+            display: block;
+            margin-top: 0.3em;
+            line-height: 1.4;
+        }
+    }
+}
+
+/* Mobile - full width at bottom */
+@media only screen and (max-width: 420px) {
+    div.consent_manager-background {
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    div.consent_manager-wrapper {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 12px 12px 0 0;
+        border-bottom: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    div.consent_manager-background {
+        display: none !important;
+    }
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

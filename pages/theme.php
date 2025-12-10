@@ -196,11 +196,43 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
     $theme = rex_request::post('theme', 'string', 'consent_manager_frontend.scss');
 }
 
+// Formular abgesendet - Theme löschen
+if ('1' === rex_request::post('formsubmit', 'string') && '1' === rex_request::post('delete', 'string') && $csrfToken->isValid()) {
+    $themeToDelete = rex_request::post('theme', 'string', '');
+    $currentTheme = $addon->getConfig('theme', 'consent_manager_frontend.scss');
+    
+    // Nur project-Themes löschen und nicht das aktive Theme
+    if (str_starts_with($themeToDelete, 'project:') && $themeToDelete !== $currentTheme) {
+        $scssFile = rex_addon::get('project')->getPath('consent_manager_themes/' . str_replace('project:', '', $themeToDelete));
+        $cssFile = $addon->getAssetsPath(str_replace(['project:', '.scss'], ['project_', '.css'], $themeToDelete));
+        
+        $deleted = false;
+        if (file_exists($scssFile)) {
+            rex_file::delete($scssFile);
+            $deleted = true;
+        }
+        if (file_exists($cssFile)) {
+            rex_file::delete($cssFile);
+        }
+        // Auch aus public assets löschen
+        $publicCss = rex_path::addonAssets('consent_manager', str_replace(['project:', '.scss'], ['project_', '.css'], $themeToDelete));
+        if (file_exists($publicCss)) {
+            rex_file::delete($publicCss);
+        }
+        
+        if ($deleted) {
+            echo rex_view::success(rex_i18n::msg('consent_manager_theme_deleted'));
+        } else {
+            echo rex_view::error(rex_i18n::msg('consent_manager_theme_delete_error'));
+        }
+    }
+}
+
 // Formular abgesendet - Einstellungen speichern
 
 if ('1' === rex_request::post('formsubmit', 'string') && !$csrfToken->isValid()) {
     echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
-} elseif ('1' === rex_request::post('formsubmit', 'string')) {
+} elseif ('1' === rex_request::post('formsubmit', 'string') && '1' !== rex_request::post('delete', 'string')) {
     $cmtheme = new Theme();
     $theme_options = $cmtheme->getThemeInformation($theme);
     if (0 === count($theme_options)) {
@@ -239,7 +271,16 @@ $renderThemeCard = static function (string $themeid, array $theme_options, strin
     }
 
     $confirmmsg = rex_i18n::msg('consent_manager_config_confirm_select', $theme_options['name']);
+    $deletemsg = rex_i18n::msg('consent_manager_config_confirm_delete', $theme_options['name']);
     $formId = str_replace([':', '.'], '-', $themeid);
+
+    // Delete button nur für project themes die nicht aktiv sind
+    $deleteButton = '';
+    if ($isProjectTheme && !$isActive) {
+        $deleteButton = '<button class="btn btn-xs btn-danger" type="submit" name="delete" value="1" data-confirm="' . rex_escape($deletemsg) . '" title="' . rex_i18n::msg('consent_manager_config_btn_delete') . '">
+                <i class="rex-icon fa-trash"></i>
+            </button>';
+    }
 
     $output = '
 <div class="cm-theme-card' . $activeClass . '">
@@ -248,32 +289,37 @@ $renderThemeCard = static function (string $themeid, array $theme_options, strin
         <input type="hidden" name="theme" value="' . rex_escape($themeid) . '" />
         ' . $csrfToken->getHiddenField() . '
         
-        <div class="cm-theme-preview thumbnail-container" title="' . rex_escape($theme_options['name']) . '" data-theme="' . rex_escape($themeid) . '">
-            <div class="thumbnail">
-                <iframe loading="lazy" width="1440px" height="900px" class="thumbnailframe" src="?page=consent_manager/theme&preview=' . rex_escape($themeid) . '&nofocus" data-theme="' . rex_escape($themeid) . '" onload="this.style.opacity = 1"></iframe>
+        <div class="cm-theme-preview" title="' . rex_escape($theme_options['name']) . '" data-theme="' . rex_escape($themeid) . '">
+            <div class="cm-theme-thumbnail">
+                <iframe loading="lazy" class="cm-theme-iframe" src="?page=consent_manager/theme&preview=' . rex_escape($themeid) . '&nofocus" data-theme="' . rex_escape($themeid) . '"></iframe>
             </div>
         </div>
         
-        <div class="cm-theme-info">
-            <div class="cm-theme-badges">' . $activeBadge . $projectBadge . '</div>
-            <h4 class="cm-theme-title">' . rex_escape($theme_options['name']) . '</h4>
-            <p class="cm-theme-desc">' . rex_escape($theme_options['description']) . '</p>
-            <div class="cm-theme-meta">
-                <span class="cm-theme-meta-item"><i class="rex-icon fa-paint-brush"></i> ' . rex_escape($theme_options['style']) . '</span>
-                <span class="cm-theme-meta-item"><i class="rex-icon fa-desktop"></i> ' . rex_escape($theme_options['type']) . '</span>
+        <div class="cm-theme-content">
+            <div class="cm-theme-info">
+                <div class="cm-theme-badges">' . $activeBadge . $projectBadge . '</div>
+                <h4 class="cm-theme-title">' . rex_escape($theme_options['name']) . '</h4>
+                <p class="cm-theme-desc">' . rex_escape($theme_options['description']) . '</p>
+                <div class="cm-theme-meta">
+                    <span class="cm-theme-meta-item"><i class="rex-icon fa-paint-brush"></i> ' . rex_escape($theme_options['style']) . '</span>
+                    <span class="cm-theme-meta-item"><i class="rex-icon fa-desktop"></i> ' . rex_escape($theme_options['type']) . '</span>
+                </div>
+                <div class="cm-theme-author">
+                    <i class="rex-icon fa-user"></i> ' . implode(', ', $authorlinks) . '
+                </div>
             </div>
-            <div class="cm-theme-author">
-                <i class="rex-icon fa-user"></i> ' . implode(', ', $authorlinks) . '
+            
+            <div class="cm-theme-actions">
+                <div class="cm-theme-actions-left">
+                    <a href="?page=consent_manager/theme&preview=' . rex_escape($themeid) . '" class="btn btn-xs btn-default consent_manager-button-preview" data-theme="' . rex_escape($themeid) . '">
+                        <i class="rex-icon fa-eye"></i> ' . rex_i18n::msg('consent_manager_config_btn_preview') . '
+                    </a>
+                    ' . ($isActive ? '' : '<button class="btn btn-xs btn-primary" type="submit" name="save" data-confirm="' . rex_escape($confirmmsg) . '">
+                        <i class="rex-icon fa-check"></i> ' . rex_i18n::msg('consent_manager_config_btn_activate') . '
+                    </button>') . '
+                </div>
+                ' . $deleteButton . '
             </div>
-        </div>
-        
-        <div class="cm-theme-actions">
-            <a href="?page=consent_manager/theme&preview=' . rex_escape($themeid) . '" class="btn btn-xs btn-default consent_manager-button-preview" data-theme="' . rex_escape($themeid) . '">
-                <i class="rex-icon fa-eye"></i> ' . rex_i18n::msg('consent_manager_config_btn_preview') . '
-            </a>
-            ' . ($isActive ? '' : '<button class="btn btn-xs btn-primary" type="submit" name="save" data-confirm="' . rex_escape($confirmmsg) . '">
-                <i class="rex-icon fa-check"></i> ' . rex_i18n::msg('consent_manager_config_btn_activate') . '
-            </button>') . '
         </div>
     </form>
 </div>';
@@ -309,23 +355,83 @@ foreach ($themes as $themefile) {
     }
 }
 
-// CSS für kompaktes Grid-Layout
+// CSS für kompaktes Grid-Layout mit Dark/Light Theme Support
 echo '<style>
+/* === CSS Variables - Dark Theme (Default) === */
+.cm-theme-grid {
+    --cm-bg-card: #2d3748;
+    --cm-bg-actions: #1a202c;
+    --cm-border: #4a5568;
+    --cm-text: #e2e8f0;
+    --cm-text-muted: #a0aec0;
+    --cm-link: #63b3ed;
+}
+
+/* === System Light Theme === */
+@media (prefers-color-scheme: light) {
+    body:not(.rex-theme-dark) .cm-theme-grid {
+        --cm-bg-card: #fff;
+        --cm-bg-actions: #f9f9f9;
+        --cm-border: #ddd;
+        --cm-text: #333;
+        --cm-text-muted: #666;
+        --cm-link: #0066cc;
+    }
+}
+
+/* === REDAXO Light Theme === */
+body.rex-theme-light .cm-theme-grid {
+    --cm-bg-card: #fff !important;
+    --cm-bg-actions: #f9f9f9 !important;
+    --cm-border: #ddd !important;
+    --cm-text: #333 !important;
+    --cm-text-muted: #666 !important;
+    --cm-link: #0066cc !important;
+}
+
+/* === REDAXO Dark Theme === */
+body.rex-theme-dark .cm-theme-grid {
+    --cm-bg-card: #2d3748 !important;
+    --cm-bg-actions: #1a202c !important;
+    --cm-border: #4a5568 !important;
+    --cm-text: #e2e8f0 !important;
+    --cm-text-muted: #a0aec0 !important;
+    --cm-link: #63b3ed !important;
+}
+
 .cm-theme-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-bottom: 30px;
 }
+@media (max-width: 1400px) {
+    .cm-theme-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 900px) {
+    .cm-theme-grid {
+        grid-template-columns: 1fr;
+    }
+}
 .cm-theme-card {
-    background: var(--rex-card-bg, #fff);
-    border: 1px solid var(--rex-card-border, #ddd);
+    background: var(--cm-bg-card);
+    border: 1px solid var(--cm-border);
     border-radius: 4px;
     overflow: hidden;
     transition: box-shadow 0.2s, border-color 0.2s;
+    color: var(--cm-text);
+    display: flex;
+    flex-direction: column;
+}
+.cm-theme-card form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 .cm-theme-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 .cm-theme-card--active {
     border-color: #3bb594;
@@ -337,10 +443,39 @@ echo '<style>
 }
 .cm-theme-preview {
     cursor: pointer;
-    border-bottom: 1px solid var(--rex-card-border, #eee);
+    border-bottom: 1px solid var(--cm-border);
+    width: 100%;
+    padding-bottom: 62.5%;
+    position: relative;
+    overflow: hidden;
+    background: #1a1a1a;
+}
+.cm-theme-thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1440px;
+    height: 900px;
+    transform-origin: 0 0;
+}
+.cm-theme-iframe {
+    width: 1440px;
+    height: 900px;
+    border: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.cm-theme-iframe.loaded {
+    opacity: 1;
+}
+.cm-theme-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 .cm-theme-info {
     padding: 12px 15px 8px;
+    flex: 1;
 }
 .cm-theme-badges {
     margin-bottom: 5px;
@@ -354,11 +489,12 @@ echo '<style>
     margin: 0 0 5px 0;
     font-size: 14px;
     font-weight: 600;
+    color: var(--cm-text);
 }
 .cm-theme-desc {
     margin: 0 0 8px 0;
     font-size: 12px;
-    opacity: 0.8;
+    color: var(--cm-text-muted);
     line-height: 1.4;
 }
 .cm-theme-meta {
@@ -368,39 +504,47 @@ echo '<style>
 }
 .cm-theme-meta-item {
     font-size: 11px;
-    opacity: 0.6;
+    color: var(--cm-text-muted);
 }
 .cm-theme-meta-item i {
     margin-right: 3px;
 }
 .cm-theme-author {
     font-size: 11px;
-    opacity: 0.6;
+    color: var(--cm-text-muted);
 }
 .cm-theme-author i {
     margin-right: 3px;
 }
 .cm-theme-author a {
-    opacity: 0.8;
+    color: var(--cm-link);
 }
 .cm-theme-actions {
     padding: 10px 15px;
-    background: var(--rex-panel-heading-bg, #f9f9f9);
-    border-top: 1px solid var(--rex-card-border, #eee);
+    background: var(--cm-bg-actions);
+    border-top: 1px solid var(--cm-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+}
+.cm-theme-actions-left {
     display: flex;
     gap: 8px;
 }
 .cm-theme-section-title {
     margin: 25px 0 15px 0;
     padding-bottom: 10px;
-    border-bottom: 2px solid var(--rex-card-border, #eee);
+    border-bottom: 2px solid var(--cm-border);
+    color: var(--cm-text);
 }
 .cm-theme-section-title:first-child {
     margin-top: 0;
 }
 .cm-theme-section-info {
     margin-bottom: 15px;
-    opacity: 0.7;
+    color: var(--cm-text-muted);
     font-size: 13px;
 }
 </style>';
@@ -434,3 +578,31 @@ if (count($addonThemes) > 0) {
   <button class="btn btn-default cm_modal-button-close"><i class="fa fa-close"></i></button>
   <iframe src="about:blank" class="cm_modal-iframe"></iframe>
 </div>
+
+<script>
+// Scale thumbnails to fit container width
+function scaleThumbnails() {
+    document.querySelectorAll('.cm-theme-preview').forEach(function(container) {
+        var thumbnail = container.querySelector('.cm-theme-thumbnail');
+        if (thumbnail) {
+            var containerWidth = container.offsetWidth;
+            var scale = containerWidth / 1440;
+            thumbnail.style.transform = 'scale(' + scale + ')';
+        }
+    });
+}
+
+// Run on load and resize
+window.addEventListener('load', scaleThumbnails);
+window.addEventListener('resize', scaleThumbnails);
+// Run immediately
+setTimeout(scaleThumbnails, 100);
+
+// Mark iframes as loaded
+document.querySelectorAll('.cm-theme-iframe').forEach(function(iframe) {
+    iframe.addEventListener('load', function() {
+        this.classList.add('loaded');
+        scaleThumbnails();
+    });
+});
+</script>

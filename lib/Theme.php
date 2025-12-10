@@ -169,17 +169,63 @@ class Theme
     public static function generateA11yThemeScss(string $base, string $name, string $description, array $colors): string
     {
         $isCompact = ('compact' === $base);
+        $isBannerTop = ('banner_top' === $base);
+        $isBannerBottom = ('banner_bottom' === $base);
+        $isMinimal = ('minimal' === $base);
+        $isFluid = ('fluid' === $base);
+        $isBanner = $isBannerTop || $isBannerBottom;
 
-        $fontSize = $isCompact ? '15px' : '16px';
-        $lineHeight = $isCompact ? '1.5em' : '1.6em';
-        $padding = $isCompact ? '1.5em' : '2.5em';
-        $paddingOuter = $isCompact ? '0.75em' : '1em';
+        // Base values depending on theme type
+        if ($isMinimal) {
+            $fontSize = '14px';
+            $lineHeight = '1.4em';
+            $padding = '1.25em';
+            $paddingOuter = '0';
+            $maxWidth = '380px';
+            $buttonPadding = '8px 16px';
+            $buttonMinHeight = '40px';
+            $buttonMinWidth = '100px';
+        } elseif ($isBanner) {
+            $fontSize = '15px';
+            $lineHeight = '1.5em';
+            $padding = '1.5em 2em';
+            $paddingOuter = '0';
+            $maxWidth = '100%';
+            $buttonPadding = '10px 20px';
+            $buttonMinHeight = '44px';
+            $buttonMinWidth = '140px';
+        } elseif ($isFluid) {
+            $fontSize = 'clamp(14px, calc(1vw + 0.5rem), 16px)';
+            $lineHeight = '1.6em';
+            $padding = 'clamp(1.25em, 3vw, 2.5em)';
+            $paddingOuter = '1em';
+            $maxWidth = 'min(90vw, 55em)';
+            $buttonPadding = 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)';
+            $buttonMinHeight = '44px';
+            $buttonMinWidth = '120px';
+        } elseif ($isCompact) {
+            $fontSize = '15px';
+            $lineHeight = '1.5em';
+            $padding = '1.5em';
+            $paddingOuter = '0.75em';
+            $maxWidth = '55em';
+            $buttonPadding = '10px 20px';
+            $buttonMinHeight = '44px';
+            $buttonMinWidth = '140px';
+        } else {
+            // normal
+            $fontSize = '16px';
+            $lineHeight = '1.6em';
+            $padding = '2.5em';
+            $paddingOuter = '1em';
+            $maxWidth = '65em';
+            $buttonPadding = '12px 24px';
+            $buttonMinHeight = '48px';
+            $buttonMinWidth = '150px';
+        }
+
         $borderWidth = ($colors['border_width'] ?? ($isCompact ? '2' : '3')) . 'px';
         $borderRadius = ($colors['border_radius'] ?? '4') . 'px';
-        $maxWidth = $isCompact ? '55em' : '65em';
-        $buttonPadding = $isCompact ? '10px 20px' : '12px 24px';
-        $buttonMinHeight = $isCompact ? '44px' : '48px';
-        $buttonMinWidth = $isCompact ? '140px' : '150px';
         
         // Overlay-Opacity
         $overlayOpacity = ((int) ($colors['overlay_opacity'] ?? 75)) / 100;
@@ -201,8 +247,12 @@ class Theme
         $linkHoverBg = $hexToRgba($colors['link'], 0.1);
         $cookieTitleBg = $hexToRgba($colors['accent'], 0.05);
         
-        // Hintergrund und Text
-        $background = $colors['background'] ?? '#ffffff';
+        // Hintergrund und Text - mit Opacity für Fluid-Theme
+        $backgroundHex = $colors['background'] ?? '#ffffff';
+        $backgroundOpacity = ((int) ($colors['background_opacity'] ?? 100)) / 100;
+        $background = $isFluid && $backgroundOpacity < 1 
+            ? $hexToRgba($backgroundHex, $backgroundOpacity) 
+            : $backgroundHex;
         $textColor = $colors['text'] ?? '#1a1a1a';
         $titleColor = $colors['title'] ?? $textColor;
         
@@ -221,11 +271,19 @@ class Theme
         $detailsToggleBorder = $colors['details_toggle_border'] ?? $detailsLink;
         $detailsToggleBorderWidth = ($colors['details_toggle_border_width'] ?? '2') . 'px';
         
-        // Details-Bereich (aufgeklappte Ansicht)
-        $detailsBg = $colors['details_bg'] ?? '#f8f9fa';
+        // Details-Bereich (aufgeklappte Ansicht) - mit Opacity für Fluid-Theme
+        $detailsBgHex = $colors['details_bg'] ?? '#f8f9fa';
+        $detailsBgOpacity = ((int) ($colors['details_bg_opacity'] ?? 100)) / 100;
+        $detailsBg = $isFluid && $detailsBgOpacity < 1 
+            ? $hexToRgba($detailsBgHex, $detailsBgOpacity) 
+            : $detailsBgHex;
         $detailsText = $colors['details_text'] ?? '#1a1a1a';
         $detailsHeading = $colors['details_heading'] ?? '#1a1a1a';
-        $detailsBorder = $colors['details_border'] ?? '#dee2e6';
+        $detailsBorderHex = $colors['details_border'] ?? '#dee2e6';
+        $detailsBorderOpacity = ((int) ($colors['details_border_opacity'] ?? 100)) / 100;
+        $detailsBorder = $isFluid && $detailsBorderOpacity < 1 
+            ? $hexToRgba($detailsBorderHex, $detailsBorderOpacity) 
+            : $detailsBorderHex;
         $detailsLinkColor = $colors['details_link'] ?? '#0066cc';
         $detailsLinkHoverColor = $colors['details_link_hover'] ?? '#004499';
         
@@ -239,9 +297,78 @@ class Theme
         $linkColor = $colors['link'];
         $focusColor = $colors['focus'];
 
+        // Theme style description
+        $styleDesc = match (true) {
+            $isBannerTop => 'Banner oben, Accessibility-optimiert',
+            $isBannerBottom => 'Banner unten, Accessibility-optimiert',
+            $isMinimal => 'Minimal Ecke, Accessibility-optimiert',
+            $isFluid => 'Fluid responsive, Glaseffekt, Accessibility-optimiert',
+            $isCompact => 'Popup kompakt, Accessibility-optimiert',
+            default => 'Popup zentriert, Accessibility-optimiert',
+        };
+
+        // Position-specific CSS for background wrapper
+        $backgroundPositionCss = match (true) {
+            $isBannerTop => 'justify-content: flex-start; align-items: stretch;',
+            $isBannerBottom => 'justify-content: flex-end; align-items: stretch;',
+            $isMinimal => 'justify-content: flex-end; align-items: flex-end; padding: 0 1em 1em 0;',
+            default => 'justify-content: center; align-items: center;',
+        };
+
+        // Wrapper-specific CSS
+        $wrapperPositionCss = match (true) {
+            $isBannerTop => "border-radius: 0; border-left: none; border-right: none; border-top: none;",
+            $isBannerBottom => "border-radius: 0; border-left: none; border-right: none; border-bottom: none;",
+            $isMinimal => "max-height: 80vh;",
+            $isFluid => "backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2);",
+            default => '',
+        };
+
+        // Additional CSS for specific themes
+        $additionalCss = '';
+        if ($isFluid) {
+            $fallbackBg = $backgroundHex;
+            $detailsFallbackBg = $detailsBgHex;
+            $additionalCss = <<<ADDCSS
+
+/* Fluid Theme - Glaseffekt */
+@supports (backdrop-filter: blur(12px)) {
+    div.consent_manager-wrapper {
+        background: {$background};
+    }
+}
+
+@supports not (backdrop-filter: blur(12px)) {
+    div.consent_manager-wrapper {
+        background: {$fallbackBg};
+    }
+}
+
+/* Barrierefreiheit: Reduzierte Transparenz für Nutzer die dies bevorzugen */
+@media (prefers-reduced-transparency: reduce) {
+    div.consent_manager-background {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    div.consent_manager-wrapper {
+        background: {$fallbackBg} !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: 2px solid {$textColor} !important;
+    }
+    
+    div.consent_manager-wrapper div.consent_manager-detail div.consent_manager-cookiegroup-description,
+    div.consent_manager-wrapper div.consent_manager-detail div.consent_manager-cookie {
+        background: {$detailsFallbackBg} !important;
+    }
+}
+ADDCSS;
+        }
+
         return <<<SCSS
 /*
-Theme: {"name": "$name", "description": "$description", "type": "light", "style": "Popup zentriert, Accessibility-optimiert, Custom Colors", "autor": "@custom"}
+Theme: {"name": "$name", "description": "$description", "type": "light", "style": "$styleDesc, Custom Colors", "autor": "@custom"}
 */
 
 \$font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -312,8 +439,7 @@ div.consent_manager-background {
     background: transparent;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    $backgroundPositionCss
     padding: $paddingOuter;
     z-index: 999999;
     height: 100%;
@@ -342,6 +468,7 @@ div.consent_manager-wrapper {
     box-sizing: border-box;
     animation: fadeIn 0.4s;
     box-shadow: 0 10px 40px $accentRgba;
+    $wrapperPositionCss
 }
 
 div.consent_manager-wrapper-inner {
@@ -409,6 +536,7 @@ div.consent_manager-background [tabindex]:focus {
 
 div.consent_manager-wrapper .consent_manager-headline {
     margin: 0 0 0.75em 0;
+    padding-right: 3em;
     font-weight: bold;
     font-size: 18px;
     color: \$text-color;
@@ -712,6 +840,7 @@ div.consent_manager-wrapper div.consent_manager-detail {
     white-space: nowrap;
     border-width: 0;
 }
+$additionalCss
 SCSS;
     }
 }

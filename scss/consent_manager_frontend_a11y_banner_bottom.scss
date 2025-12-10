@@ -1,0 +1,440 @@
+/*
+Theme: {"name": "Accessibility Banner (Bottom)", "description": "WCAG 2.1 AA konformes Banner-Theme, fixiert am unteren Bildschirmrand mit voller Breite", "type": "light", "style": "Banner unten, Accessibility-optimiert", "autor": "@skerbis"}
+*/
+
+/**
+ * Consent Manager - Accessibility Banner Bottom Theme
+ * 
+ * Features:
+ * - WCAG 2.1 AA compliant
+ * - Full-width banner at bottom of screen
+ * - Non-intrusive design that doesn't block content
+ * - Clear focus indicators
+ * - Keyboard navigation (ESC, Tab, Enter)
+ */
+
+/* Variables */
+$font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-size: 16px;
+$line-height: 1.5em;
+
+$banner-background: #1a1a1a;
+$banner-border: #3a3a3a;
+$text-color: #ffffff;
+$text-muted: #b0b0b0;
+
+$focus-color: #66b3ff;
+$focus-shadow: rgba(102, 179, 255, 0.3);
+
+$button-accept-bg: #3bb594;
+$button-accept-hover: #2d9a7c;
+$button-secondary-bg: transparent;
+$button-secondary-border: #ffffff;
+
+$link-color: #66b3ff;
+$link-hover-color: #99ccff;
+$link-hover-bg: rgba(255, 255, 255, 0.1);
+
+$cookie-title-bg: #2a2a2a;
+$cookie-desc-bg: #252525;
+$cookie-border: #3a3a3a;
+$cookie-accent: #3bb594;
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@keyframes slideUp {
+    0% { transform: translateY(100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Background - no overlay for banner */
+div.consent_manager-background {
+    position: fixed;
+    left: 0;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    z-index: 999999;
+    pointer-events: none;
+    outline: 0;
+}
+
+div.consent_manager-wrapper {
+    pointer-events: auto;
+}
+
+/* Banner wrapper - bottom position */
+div.consent_manager-wrapper {
+    font-family: $font-family;
+    font-size: $font-size;
+    line-height: $line-height;
+    background: $banner-background;
+    border-top: 3px solid $cookie-accent;
+    color: $text-color;
+    position: relative;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    animation: slideUp 0.3s ease-out;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+}
+
+div.consent_manager-wrapper-inner {
+    padding: 1.25em 1.5em;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+div.consent_manager-hidden {
+    display: none;
+}
+
+div.consent_manager-script {
+    display: none;
+}
+
+/* Close button */
+.consent_manager-close-box {
+    position: absolute;
+    cursor: pointer;
+    right: 0.75em;
+    top: 0.75em;
+    display: block;
+    border-radius: 4px !important;
+    border: 2px solid $text-color;
+    width: 36px;
+    height: 36px;
+    line-height: 32px;
+    background-color: transparent;
+    color: $text-color;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    transition: 0.2s ease all;
+    text-align: center;
+
+    &:hover,
+    &:focus {
+        background-color: $text-color;
+        color: $banner-background;
+        outline: 3px solid $focus-color;
+        outline-offset: 2px;
+    }
+}
+
+/* Focus styles */
+div.consent_manager-background button:focus,
+div.consent_manager-background a:focus,
+div.consent_manager-background input:focus,
+div.consent_manager-background [tabindex]:focus {
+    outline: 3px solid $focus-color !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 3px $focus-shadow !important;
+}
+
+/* Headline */
+div.consent_manager-wrapper .consent_manager-headline {
+    margin: 0 0 0.4em 0;
+    font-weight: bold;
+    font-size: 17px;
+    color: $text-color;
+    line-height: 1.3;
+}
+
+div.consent_manager-wrapper p.consent_manager-text {
+    margin: 0 0 0.75em 0;
+    color: $text-muted;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Cookie groups - compact inline */
+div.consent_manager-cookiegroups {
+    margin: 0 0 0.75em 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em 1em;
+    align-items: center;
+}
+
+div.consent_manager-cookiegroup-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+div.consent_manager-cookiegroups label {
+    position: relative;
+    font-weight: 500;
+    font-size: 14px;
+    color: $text-color;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:focus-within {
+        background-color: $link-hover-bg;
+        outline: 3px solid $focus-color;
+        outline-offset: 2px;
+    }
+}
+
+div.consent_manager-cookiegroups label > input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0 8px 0 0;
+    cursor: pointer;
+    border: 2px solid $text-color;
+    flex-shrink: 0;
+    accent-color: $cookie-accent;
+}
+
+.consent_manager-wrapper input[type="checkbox"]:disabled,
+.consent_manager-cookiegroups label > input[type="checkbox"]:disabled + * {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Details toggle */
+div.consent_manager-show-details {
+    padding: 0 0 0.75em 0;
+
+    button {
+        display: inline-flex;
+        align-items: center;
+        line-height: 1.4;
+        min-height: 36px;
+        padding: 6px 12px;
+        cursor: pointer;
+        color: $link-color;
+        background-color: transparent;
+        border: 1px solid $link-color;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 500;
+        transition: 0.2s ease all;
+
+        &:hover,
+        &:focus {
+            background-color: $link-color;
+            color: $banner-background;
+        }
+    }
+}
+
+/* Action buttons */
+button.consent_manager-save-selection,
+button.consent_manager-accept-none {
+    transition: 0.2s ease all;
+    background: $button-secondary-bg;
+    border: 2px solid $button-secondary-border;
+    color: $text-color;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    min-height: 40px;
+    cursor: pointer;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+button.consent_manager-accept-all {
+    transition: 0.2s ease all;
+    background: $button-accept-bg;
+    border: 2px solid $button-accept-bg;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    min-height: 40px;
+    cursor: pointer;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+button.consent_manager-save-selection:hover,
+button.consent_manager-save-selection:focus,
+button.consent_manager-accept-none:hover,
+button.consent_manager-accept-none:focus {
+    background: $text-color;
+    color: $banner-background;
+    border-color: $text-color;
+}
+
+button.consent_manager-accept-all:hover,
+button.consent_manager-accept-all:focus {
+    background: $button-accept-hover;
+    border-color: $button-accept-hover;
+    box-shadow: 0 2px 8px rgba(59, 181, 148, 0.4);
+}
+
+/* Site links */
+div.consent_manager-sitelinks {
+    margin: 0;
+
+    a {
+        display: inline-block;
+        margin: 0 1em 0 0;
+        color: $link-color;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        cursor: pointer;
+        font-size: 13px;
+        padding: 4px;
+        border-radius: 4px;
+        transition: 0.2s ease all;
+
+        &:hover,
+        &:focus {
+            color: $link-hover-color;
+            background-color: $link-hover-bg;
+        }
+    }
+}
+
+/* Detail section */
+div.consent_manager-wrapper div.consent_manager-detail {
+    margin-bottom: 1em;
+
+    a {
+        color: $link-color;
+        text-decoration: underline;
+
+        &:hover,
+        &:focus {
+            color: $link-hover-color;
+        }
+    }
+
+    div.consent_manager-cookiegroup-title {
+        color: $text-color;
+        background-color: $cookie-title-bg;
+        padding: 8px 12px;
+        margin: 0.75em 0 0 0;
+        font-weight: bold;
+        font-size: 14px;
+        border-left: 3px solid $cookie-accent;
+    }
+
+    div.consent_manager-cookiegroup-description {
+        border-left: 3px solid $cookie-border;
+        padding: 8px 12px;
+        background: $cookie-desc-bg;
+        color: $text-muted;
+        font-size: 13px;
+    }
+
+    div.consent_manager-cookie {
+        margin-top: 2px;
+        border-left: 3px solid $cookie-border;
+        padding: 8px 12px;
+        background: $cookie-desc-bg;
+        color: $text-muted;
+        font-size: 12px;
+
+        span {
+            display: block;
+            margin-top: 0.4em;
+            line-height: 1.5;
+        }
+    }
+}
+
+/* Responsive - Desktop layout */
+@media only screen and (min-width: 768px) {
+    div.consent_manager-wrapper-inner {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75em 2em;
+        align-items: center;
+        padding-right: 3.5em;
+    }
+
+    div.consent_manager-wrapper .consent_manager-headline {
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    div.consent_manager-wrapper p.consent_manager-text {
+        margin: 0;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    div.consent_manager-cookiegroups {
+        margin: 0;
+    }
+
+    div.consent_manager-show-details {
+        padding: 0;
+    }
+
+    div.consent_manager-buttons {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    button.consent_manager-save-selection,
+    button.consent_manager-accept-all,
+    button.consent_manager-accept-none {
+        margin: 0;
+    }
+
+    div.consent_manager-sitelinks {
+        flex-basis: 100%;
+        padding-top: 0.5em;
+        border-top: 1px solid $cookie-border;
+    }
+
+    div.consent_manager-buttons-sitelinks {
+        display: contents;
+    }
+
+    div.consent_manager-wrapper div.consent_manager-detail {
+        flex-basis: 100%;
+    }
+}
+
+/* Print styles */
+@media print {
+    div.consent_manager-background {
+        display: none !important;
+    }
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

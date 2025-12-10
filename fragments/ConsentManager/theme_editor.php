@@ -26,6 +26,23 @@ $csrfToken = $this->getVar('csrfToken');
         </div>
     </div>
     
+    <?php if ('fluid' === $themeBase): ?>
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="rex-icon fa-exclamation-triangle"></i> Hinweis zur Barrierefreiheit bei Glaseffekt-Themes</h3>
+        </div>
+        <div class="panel-body">
+            <p><strong>Achtung:</strong> Das Fluid/Glass-Theme verwendet transparente Hintergründe und Unschärfe-Effekte (backdrop-filter). Dies kann die Lesbarkeit für einige Nutzer beeinträchtigen:</p>
+            <ul>
+                <li><strong>Transparenz:</strong> Text über halbtransparenten Flächen kann je nach Seitenhintergrund schwer lesbar sein</li>
+                <li><strong>Browser-Support:</strong> <code>backdrop-filter</code> wird nicht von allen Browsern unterstützt - ein Fallback wird automatisch generiert</li>
+                <li><strong>Barrierefreiheit:</strong> Nutzer mit Sehbeeinträchtigungen bevorzugen oft undurchsichtige Hintergründe</li>
+            </ul>
+            <p class="text-info"><i class="rex-icon fa-info-circle"></i> <strong>Empfehlung:</strong> Setze die Hintergrund-Transparenz auf mindestens 85-90% für bessere Lesbarkeit. Das generierte Theme respektiert automatisch <code>prefers-reduced-transparency</code> und zeigt dann einen undurchsichtigen Hintergrund.</p>
+        </div>
+    </div>
+    <?php endif; ?>
+    
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Theme-Basis wählen</h3>
@@ -82,6 +99,13 @@ $csrfToken = $this->getVar('csrfToken');
                                     <span class="input-group-addon color-hex-display"><?= rex_escape($colors['background']) ?></span>
                                 </div>
                             </div>
+                            <?php if ('fluid' === $themeBase): ?>
+                            <div class="form-group">
+                                <label for="background_opacity">Hintergrund-Transparenz: <span id="background_opacity_value"><?= rex_escape($colors['background_opacity'] ?? '100') ?>%</span></label>
+                                <input type="range" class="form-control" id="background_opacity" name="background_opacity" min="0" max="100" value="<?= rex_escape($colors['background_opacity'] ?? '100') ?>">
+                                <small class="help-block">Für Glaseffekt empfohlen: 70-90%</small>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -187,6 +211,12 @@ $csrfToken = $this->getVar('csrfToken');
                                     <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_bg'] ?? '#f8f9fa') ?></span>
                                 </div>
                             </div>
+                            <?php if ('fluid' === $themeBase): ?>
+                            <div class="form-group">
+                                <label for="details_bg_opacity">Hintergrund-Transparenz: <span id="details_bg_opacity_value"><?= rex_escape($colors['details_bg_opacity'] ?? '100') ?>%</span></label>
+                                <input type="range" class="form-control" id="details_bg_opacity" name="details_bg_opacity" min="0" max="100" value="<?= rex_escape($colors['details_bg_opacity'] ?? '100') ?>">
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -754,8 +784,8 @@ $csrfToken = $this->getVar('csrfToken');
         }
     }
 
-    // Event Listeners
-    document.addEventListener('DOMContentLoaded', function() {
+    // Event Listeners - use rex:ready for REDAXO backend
+    function initThemeEditor() {
         // Update hex values when color picker changes
         document.querySelectorAll('.color-picker').forEach(function(colorInput) {
             colorInput.addEventListener('input', function() {
@@ -773,7 +803,8 @@ $csrfToken = $this->getVar('csrfToken');
             rangeInput.addEventListener('input', function() {
                 const valueSpan = document.getElementById(this.id + '_value');
                 if (valueSpan) {
-                    const unit = (this.id === 'overlay_opacity' || this.id === 'shadow_opacity') ? '%' : 'px';
+                    const isOpacity = this.id.includes('opacity');
+                    const unit = isOpacity ? '%' : 'px';
                     valueSpan.textContent = this.value + unit;
                 }
                 updateButtonPreviews();
@@ -796,6 +827,14 @@ $csrfToken = $this->getVar('csrfToken');
         updateDetailsPreviews();
         updateDetailsTogglePreview();
         updateShadowPreview();
-    });
+    }
+    
+    // Support both DOMContentLoaded and rex:ready for REDAXO backend
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initThemeEditor);
+    } else {
+        initThemeEditor();
+    }
+    $(document).on('rex:ready', initThemeEditor);
 })();
 </script>
