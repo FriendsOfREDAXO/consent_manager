@@ -1,5 +1,34 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.1.0 - 10.12.2025
+
+> ⚠️ **DRINGEND - Sicherheitsupdate:** Diese Version enthält wichtige Sicherheitsfixes. Ein Update wird dringend empfohlen. Vielen Dank an die **Deutsche Telekom Security GmbH** für die verantwortungsvolle Meldung der Schwachstellen.
+
+### 🎨 Neuer Theme-Editor
+
+Der Theme-Editor wurde komplett überarbeitet und bietet jetzt umfangreiche Anpassungsmöglichkeiten für barrierefreie Consent-Dialoge:
+
+* **WCAG 2.1 Kontrast-Prüfung**: Live-Badges zeigen Kontrastverhältnisse (AAA/AA/unzureichend)
+* **Automatische Textfarben**: Berechnet optimale Text-/Hintergrund-Kombinationen per Klick
+* **Details-Bereich anpassbar**: Separate Farben für den aufgeklappten Cookie-Details-Bereich
+* **"Details anzeigen" Button**: Farbe, Hover-Farbe und Rahmen individuell einstellbar
+* **Button-Styles**: Filled/Outline-Stil, individueller Eckenradius, Rahmenbreite und -farbe
+* **Schatten-Effekte**: 5 Schatten-Stile (Kein/Dezent/Mittel/Stark/Schwebend) mit Farbauswahl
+* **Live-Vorschauen**: Alle Änderungen sofort sichtbar in Vorschau-Elementen
+* **Fragment-Architektur**: Code nach REDAXO-Konventionen refaktoriert (Page + Fragment)
+
+### 🐛 Bugfixes
+
+* **Debug-Widget Cookie-Name**: Das Debug-Widget suchte nach dem alten Cookie-Namen `consent_manager` statt `consentmanager`
+* **Debug-Widget Versionsvergleich entfernt**: Die fehlerhafte Versions-Warnung wurde entfernt
+
+### 🔒 Sicherheitsfixes
+
+* **XSS in Theme-Editor (CVE pending)**: Unsichere Ausgabe von Konfigurationswerten im Theme-Editor behoben - alle Werte werden jetzt mit `rex_escape()` escaped
+* **XSS in Service-Konfiguration**: Fehlende Escapierung bei der Ausgabe von Cookie/Service-Konfigurationen im Backend behoben
+
+---
+
 ## Version 5.0.4 - 09.12.2025
 
 ### ♿ Barrierefreiheit / UX
