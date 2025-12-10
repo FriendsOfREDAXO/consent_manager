@@ -7,13 +7,13 @@
 * **XSS-Schutz in Debug-Panel**: Alle Cookie- und LocalStorage-Werte werden jetzt mit `escapeHtml()` escaped, bevor sie im Debug-Panel angezeigt werden
 * **URL-Parameter Encoding**: Alle URL-Parameter in der Backend-Suche werden jetzt mit `encodeURIComponent()` escaped
 * **SQL Prepared Statements**: Queries in `update.php` auf Prepared Statements umgestellt
+* **API Input-Validierung**: Längenbegrenzungen für alle API-Parameter (Domain max 255, Consent-ID max 30, UIDs max 50 Zeichen)
 
 ### 🧹 Code-Qualität
 
 * **IE11-Polyfills entfernt**: Obsolete Polyfills für IE11 (classList, DOMParser, NodeList.forEach, etc.) entfernt - IE11 ist seit Juni 2022 End-of-Life
 * **GitHub Security Action**: Neue automatisierte Sicherheitsprüfung mit CodeQL und Semgrep
 * **Semgrep REDAXO-Regeln**: Custom Security-Regeln für REDAXO-spezifische Patterns (rex_escape, SQL Injection, etc.)
-* **PHP Quality Checks**: GitHub Action für automatische Code-Qualitätsprüfung mit Rexstan (REDAXO-aware PHPStan)
 
 ---
 
