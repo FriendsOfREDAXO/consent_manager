@@ -77,6 +77,12 @@ jobs:
             --exclude='node_modules' \
             './' 'redaxo_cms/redaxo/src/addons/${{ github.event.repository.name }}'
 
+      - name: Install required addons
+        run: |
+          echo "📦 Installing cronjob addon (required by consent_manager)..."
+          php redaxo_cms/redaxo/bin/console package:install 'cronjob'
+          echo "✅ Cronjob addon installed"
+
       - name: Install addon
         run: |
           php redaxo_cms/redaxo/bin/console package:install '${{ github.event.repository.name }}'
