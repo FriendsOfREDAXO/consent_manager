@@ -287,7 +287,8 @@ class InlineConsent
 
         if ($debug) {
             // TODO: Texte über .lang aufbauen?
-            echo "<!-- DEBUG inline_privacy_notice from DB: $privacyNotice -->\n";
+            // XSS-Schutz: Debug-Werte escapen da aus DB
+            echo '<!-- DEBUG inline_privacy_notice from DB: ' . htmlspecialchars($privacyNotice, ENT_QUOTES, 'UTF-8') . " -->\n";
         }
 
         // Icon-Konfiguration
@@ -407,7 +408,8 @@ class InlineConsent
                 $value = (string) $sql->getValue('text');
                 if ($debug) {
                     // TODO: Texte über .lang aufbauen?
-                    echo "<!-- DEBUG getButtonText: key=$key, clang=" . rex_clang::getCurrentId() . ", value=$value -->\n";
+                    // XSS-Schutz: Debug-Werte escapen da aus DB
+                    echo '<!-- DEBUG getButtonText: key=' . htmlspecialchars($key, ENT_QUOTES, 'UTF-8') . ', clang=' . rex_clang::getCurrentId() . ', value=' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . " -->\n";
                 }
                 return $value;
             }
