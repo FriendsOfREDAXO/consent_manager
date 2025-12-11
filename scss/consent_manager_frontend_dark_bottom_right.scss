@@ -1,5 +1,5 @@
 /*
-Theme: {"name": "Standard-Theme „Dark Bottom-Right“", "description": "Theme „Dark Bottom-Right“ mit dunklem Hintergrund, Auswahl mit Checkboxen, relativ farbneutral gehalten", "type": "dark", "style": "Popup unten rechts, Checkboxen", "autor": "@IngoWinter, @aeberhard"}
+Theme: {"name": "Standard-Theme „Dark Bottom-Right“", "description": "Theme „Dark Bottom-Right“ mit dunklem Hintergrund, Outline-Buttons, prefers-contrast Support", "type": "dark", "style": "Popup unten rechts, Checkboxen", "autor": "@IngoWinter, @aeberhard"}
 */
 
 $font-family: Verdana, Geneva, sans-serif;
@@ -19,10 +19,11 @@ $close-hover-color: lighten($close-color, 10);
 
 $checkbox-color: #d8e5ea;
 
-$button-background: #33383c;
+$button-border-color: #4a5158;
+$button-background: #252a2e;
 $button-color: #d8e5ea;
-$button-hover-background: lighten($button-background, 10);
-$button-hover-color: lighten($button-color, 10);
+$button-hover-background: #3a4148;
+$button-hover-color: #ffffff;
 
 $link-color: #a6c4dd;
 $link-hover-color: darken($link-color, 10);
@@ -86,6 +87,7 @@ div.consent_manager-wrapper {
     line-height: 1.5em;
     background: $consent_manager-background;
     border: 1px solid lighten($consent_manager-background, 20);
+    border-radius: 5px;
     color: $text-color;
     position: absolute;
     bottom: 0px;
@@ -121,8 +123,8 @@ div.consent_manager-script {
     right: 1.5em;
     top: 1em;
     display: block;
-    border-radius: 50% !important;
-    border: solid 2px $close-background;
+    border-radius: 5px;
+    border: solid 1px $close-background;
     width: 30px;
     height: 30px;
     line-height: 28px;
@@ -237,10 +239,10 @@ button.consent_manager-accept-all,
 button.consent_manager-accept-none {
     transition: .3s ease all;
     background: $button-background;
-    border: 1px solid $button-background;
+    border: 1px solid $button-border-color;
     color: $button-color;
     padding: .5em 2em;
-    border-radius: 3px;
+    border-radius: 5px;
     font-size: $font-size;
     font-weight: bold;
     text-align: center;
@@ -255,6 +257,11 @@ button.consent_manager-accept-none {
         border-color: $button-hover-background;
         color: $button-hover-color;
         text-decoration: none;
+    }
+    
+    &:focus {
+        outline: 2px solid $button-border-color;
+        outline-offset: 2px;
     }
 }
 
@@ -361,5 +368,70 @@ div.consent_manager-wrapper div.consent_manager-cookie {
         justify-content: space-between;
         align-items: center;
         flex-direction: row-reverse;
+    }
+}
+
+/* ========================================
+   Accessibility - Reduced Motion
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========================================
+   Accessibility - High Contrast
+   ======================================== */
+
+@media (prefers-contrast: more), (prefers-contrast: high) {
+    div.consent_manager-wrapper {
+        background: #000000 !important;
+        border: 3px solid #ffffff !important;
+        box-shadow: none !important;
+    }
+
+    div.consent_manager-wrapper .consent_manager-headline,
+    div.consent_manager-wrapper p.consent_manager-text,
+    div.consent_manager-cookiegroups label {
+        color: #ffffff !important;
+    }
+
+    button.consent_manager-accept-all,
+    button.consent_manager-save-selection,
+    button.consent_manager-accept-none {
+        background: #000000 !important;
+        border: 3px solid #ffffff !important;
+        color: #ffffff !important;
+    }
+
+    button.consent_manager-accept-all:hover,
+    button.consent_manager-save-selection:hover,
+    button.consent_manager-accept-none:hover {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    .consent_manager-close-box {
+        background: #ffffff !important;
+        border-color: #ffffff !important;
+        color: #000000 !important;
+        opacity: 1 !important;
+    }
+
+    *:focus {
+        outline: 3px solid #ffffff !important;
+        outline-offset: 2px !important;
+    }
+
+    div.consent_manager-sitelinks a,
+    div.consent_manager-show-details .icon-info-circled {
+        color: #ffffff !important;
+        text-decoration: underline !important;
     }
 }

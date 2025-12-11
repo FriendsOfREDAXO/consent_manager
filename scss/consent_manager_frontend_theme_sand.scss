@@ -1,16 +1,15 @@
 /*
-Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme inspiriert von iOS 26 - mit echten Glaseffekten, spekularen Lichtreflexionen, abgerundeter Ästhetik und voller Accessibility-Unterstützung", "type": "dark", "style": "Popup zentriert, Liquid Glass, Switches", "autor": "@skerbis"}
+Theme: {"name": "Sand", "description": "Sandiges, erdiges Theme mit eingeprägten (inset) Buttons und natürlicher Textur - warm und organisch", "type": "light", "style": "Popup zentriert, Sand/Neumorphism, Switches", "autor": "@skerbis"}
 */
 
 /**
- * Consent Manager - Skerbis Dark Glass v2 (Liquid Glass Edition)
+ * Consent Manager - Skerbis Sand Theme
  * 
- * Inspired by Apple's iOS 26 Liquid Glass Design:
- * - Multi-layer glass with specular highlights
- * - Soft, rounded aesthetic with pill-shaped elements
- * - Dynamic light reflections on edges
- * - High blur with saturated backdrop
- * - White edge glow effects
+ * Design Konzept:
+ * - Warme, sandige Farbpalette
+ * - Eingeprägte (inset) Buttons im Neumorphism-Stil
+ * - Subtile Sandtextur
+ * - Weiche, organische Schatten
  * 
  * Accessibility:
  * - prefers-reduced-motion Support
@@ -20,42 +19,44 @@ Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme insp
  */
 
 /* ========================================
-   Variables - Liquid Glass Palette
+   Variables - Sand Palette
    ======================================== */
 
 $font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
 $font-size-base: 15px;
 $line-height: 1.55;
 
-/* Liquid Glass Colors */
-$glass-dark: rgba(28, 28, 30, 0.72);
-$glass-lighter: rgba(58, 58, 60, 0.55);
-$glass-border-light: rgba(255, 255, 255, 0.18);
-$glass-border-inner: rgba(255, 255, 255, 0.08);
-$glass-specular: rgba(255, 255, 255, 0.25);
-$glass-shadow-dark: rgba(0, 0, 0, 0.45);
+/* Sand Colors */
+$sand-light: #f5f0e8;
+$sand-base: #e8e0d4;
+$sand-medium: #d4c9b8;
+$sand-dark: #b8a88f;
+$sand-darker: #9a8a70;
 
 /* Text */
-$text-primary: rgba(255, 255, 255, 0.95);
-$text-secondary: rgba(255, 255, 255, 0.70);
-$text-tertiary: rgba(255, 255, 255, 0.50);
+$text-primary: #4a4136;
+$text-secondary: #6b5d4d;
+$text-tertiary: #8c7a66;
 
-/* Accent - iOS Blue */
-$accent-blue: #0A84FF;
-$accent-blue-light: #409CFF;
-$accent-green: #30D158;
-$accent-glow: rgba(10, 132, 255, 0.35);
+/* Accent - Warm Earth Tones */
+$accent-terra: #c4956a;
+$accent-terra-dark: #a67c52;
+$accent-green: #7a9a6d;
 
 /* Switch */
-$switch-on: #30D158;
-$switch-off: rgba(120, 120, 128, 0.32);
+$switch-on: #7a9a6d;
+$switch-off: $sand-medium;
 $switch-knob: #ffffff;
 
+/* Shadows for Neumorphism */
+$shadow-light: rgba(255, 255, 255, 0.7);
+$shadow-dark: rgba(166, 146, 117, 0.35);
+
 /* Spacing & Radius */
+$radius-large: 20px;
+$radius-medium: 14px;
+$radius-small: 10px;
 $radius-pill: 980px;
-$radius-large: 24px;
-$radius-medium: 16px;
-$radius-small: 12px;
 
 $spacing-xs: 6px;
 $spacing-sm: 10px;
@@ -78,69 +79,37 @@ $spacing-xl: 28px;
 }
 
 /* ========================================
-   Accessibility - Reduced Transparency
-   ======================================== */
-
-@media (prefers-reduced-transparency: reduce) {
-    div.consent_manager-wrapper {
-        background: #1c1c1e !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-    }
-    
-    div.consent_manager-wrapper::before,
-    div.consent_manager-wrapper::after {
-        display: none !important;
-    }
-
-    div.consent_manager-cookiegroup-description,
-    div.consent_manager-cookie {
-        background: #2c2c2e !important;
-    }
-    
-    button.consent_manager-accept-all,
-    button.consent_manager-save-selection,
-    button.consent_manager-accept-none {
-        background: #3a3a3c !important;
-        backdrop-filter: none !important;
-    }
-}
-
-/* ========================================
    Accessibility - High Contrast
    ======================================== */
 
 @media (prefers-contrast: more), (prefers-contrast: high) {
     div.consent_manager-background {
-        background: rgba(0, 0, 0, 0.9) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
     }
     
     div.consent_manager-wrapper {
-        background: #000000 !important;
-        border: 3px solid #ffffff !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
+        background: #ffffff !important;
+        border: 3px solid #000000 !important;
+        box-shadow: none !important;
     }
     
-    div.consent_manager-wrapper::before,
-    div.consent_manager-wrapper::after {
+    div.consent_manager-wrapper::before {
         display: none !important;
     }
 
     div.consent_manager-wrapper .consent_manager-headline,
     div.consent_manager-wrapper p.consent_manager-text,
     .consent_manager-cookiegroup-checkbox span {
-        color: #ffffff !important;
+        color: #000000 !important;
     }
 
-    /* High Contrast Buttons */
     button.consent_manager-accept-all,
     button.consent_manager-save-selection,
     button.consent_manager-accept-none {
-        background: #000000 !important;
-        border: 2px solid #ffffff !important;
-        color: #ffffff !important;
-        backdrop-filter: none !important;
+        background: #ffffff !important;
+        border: 2px solid #000000 !important;
+        color: #000000 !important;
+        box-shadow: none !important;
     }
 
     button.consent_manager-accept-all:hover,
@@ -149,51 +118,48 @@ $spacing-xl: 28px;
     button.consent_manager-save-selection:focus,
     button.consent_manager-accept-none:hover,
     button.consent_manager-accept-none:focus {
-        background: #ffffff !important;
-        color: #000000 !important;
+        background: #000000 !important;
+        color: #ffffff !important;
     }
 
-    /* High Contrast Switches */
     .consent_manager-wrapper [type="checkbox"]::after {
-        background: #000000 !important;
-        border: 2px solid #ffffff !important;
+        background: #ffffff !important;
+        border: 2px solid #000000 !important;
+        box-shadow: none !important;
     }
 
     .consent_manager-wrapper [type="checkbox"]:checked::after {
-        background: #ffffff !important;
-    }
-
-    .consent_manager-wrapper [type="checkbox"]::before {
-        background: #ffffff !important;
-    }
-
-    .consent_manager-wrapper [type="checkbox"]:checked::before {
         background: #000000 !important;
     }
 
-    /* High Contrast Links */
+    .consent_manager-wrapper [type="checkbox"]::before {
+        background: #000000 !important;
+    }
+
+    .consent_manager-wrapper [type="checkbox"]:checked::before {
+        background: #ffffff !important;
+    }
+
     .consent_manager-sitelinks a,
     div.consent_manager-detail a {
-        color: #ffff00 !important;
+        color: #0000cc !important;
         text-decoration: underline !important;
     }
 
-    /* High Contrast Details */
     div.consent_manager-cookiegroup-title {
-        background: #ffffff !important;
-        color: #000000 !important;
+        background: #000000 !important;
+        color: #ffffff !important;
     }
 
     div.consent_manager-cookiegroup-description,
     div.consent_manager-cookie {
-        background: #1a1a1a !important;
-        border: 1px solid #ffffff !important;
-        color: #ffffff !important;
+        background: #f0f0f0 !important;
+        border: 1px solid #000000 !important;
+        color: #000000 !important;
     }
 
-    /* High Contrast Focus */
     *:focus {
-        outline: 3px solid #ffff00 !important;
+        outline: 3px solid #0000cc !important;
         outline-offset: 2px !important;
     }
 }
@@ -202,46 +168,19 @@ $spacing-xl: 28px;
    Animations
    ======================================== */
 
-@keyframes liquidGlassAppear {
+@keyframes sandAppear {
     0% {
         opacity: 0;
-        transform: scale(0.92) translateY(20px);
-        filter: blur(20px);
-    }
-    60% {
-        filter: blur(0);
+        transform: scale(0.95) translateY(15px);
     }
     100% {
         opacity: 1;
         transform: scale(1) translateY(0);
-        filter: blur(0);
-    }
-}
-
-@keyframes borderGlow {
-    0%, 100% {
-        border-color: rgba(255, 255, 255, 0.15);
-        box-shadow: 
-            0 0 0 1px rgba(255, 255, 255, 0.08),
-            0 2px 4px rgba(0, 0, 0, 0.1),
-            0 8px 16px rgba(0, 0, 0, 0.15),
-            0 24px 48px rgba(0, 0, 0, 0.25),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-    }
-    50% {
-        border-color: rgba(255, 255, 255, 0.35);
-        box-shadow: 
-            0 0 0 1px rgba(255, 255, 255, 0.2),
-            0 0 25px rgba(150, 150, 255, 0.15),
-            0 2px 4px rgba(0, 0, 0, 0.1),
-            0 8px 16px rgba(0, 0, 0, 0.15),
-            0 24px 48px rgba(0, 0, 0, 0.25),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
     }
 }
 
 /* ========================================
-   Background Overlay - Transparent (kein dunkles Overlay)
+   Background Overlay
    ======================================== */
 
 div.consent_manager-background {
@@ -260,7 +199,7 @@ div.consent_manager-background {
 }
 
 /* ========================================
-   Main Wrapper - Liquid Glass Effect
+   Main Wrapper - Sand Neumorphism
    ======================================== */
 
 div.consent_manager-wrapper {
@@ -276,34 +215,27 @@ div.consent_manager-wrapper {
     overflow-x: hidden;
     box-sizing: border-box;
     
-    /* Liquid Glass Background */
-    background: $glass-dark;
-    backdrop-filter: blur(50px) saturate(190%);
-    -webkit-backdrop-filter: blur(50px) saturate(190%);
+    /* Sand Background */
+    background: $sand-light;
     
-    /* Rounded Pill-like Shape */
+    /* Rounded Shape */
     border-radius: $radius-large;
     
-    /* Multi-layer border for glass depth */
-    border: 1px solid $glass-border-light;
-    
-    /* Complex shadow for floating effect with outer glow */
+    /* Neumorphism Shadow - raised effect */
     box-shadow: 
-        0 0 0 1px rgba(255, 255, 255, 0.1),
-        0 2px 4px rgba(0, 0, 0, 0.1),
-        0 8px 16px rgba(0, 0, 0, 0.15),
-        0 24px 48px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+        12px 12px 24px $shadow-dark,
+        -12px -12px 24px $shadow-light,
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
     
     /* Animation */
-    animation: liquidGlassAppear 0.5s cubic-bezier(0.2, 0.9, 0.3, 1), borderGlow 4s ease-in-out infinite 0.5s;
+    animation: sandAppear 0.4s ease-out;
     
     /* Scrollbar */
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    scrollbar-color: $sand-medium transparent;
     
     &::-webkit-scrollbar {
-        width: 5px;
+        width: 6px;
     }
     
     &::-webkit-scrollbar-track {
@@ -311,40 +243,17 @@ div.consent_manager-wrapper {
     }
     
     &::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.15);
+        background: $sand-medium;
         border-radius: 3px;
     }
     
-    /* Top edge highlight line */
+    /* Subtle sand texture overlay */
     &::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 10%;
-        right: 10%;
-        height: 1px;
-        background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.2) 20%,
-            rgba(255, 255, 255, 0.4) 50%,
-            rgba(255, 255, 255, 0.2) 80%,
-            transparent 100%
-        );
-        border-radius: 1px;
-        pointer-events: none;
-    }
-    
-    /* Inner gradient overlay */
-    &::after {
-        content: '';
-        position: absolute;
         inset: 0;
-        background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.05) 0%,
-            transparent 40%
-        );
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        opacity: 0.03;
         border-radius: $radius-large;
         pointer-events: none;
     }
@@ -365,19 +274,19 @@ div.consent_manager-script {
 }
 
 /* ========================================
-   Close Button - Pill Style
+   Close Button - Sand Style
    ======================================== */
 
 .consent_manager-close-box {
     position: absolute;
     right: $spacing-md;
     top: $spacing-md;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.12);
+    background: $sand-light;
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -386,12 +295,17 @@ div.consent_manager-script {
     color: transparent;
     z-index: 10;
     
+    /* Inset effect */
+    box-shadow: 
+        inset 3px 3px 6px $shadow-dark,
+        inset -3px -3px 6px $shadow-light;
+    
     &::before,
     &::after {
         content: '';
         position: absolute;
         width: 12px;
-        height: 1.5px;
+        height: 2px;
         background: $text-secondary;
         border-radius: 1px;
         transition: all 0.2s ease;
@@ -406,8 +320,6 @@ div.consent_manager-script {
     }
     
     &:hover {
-        background: rgba(255, 255, 255, 0.2);
-        
         &::before,
         &::after {
             background: $text-primary;
@@ -415,7 +327,7 @@ div.consent_manager-script {
     }
     
     &:focus {
-        outline: 2px solid $accent-blue;
+        outline: 2px solid $accent-terra;
         outline-offset: 2px;
     }
 }
@@ -425,11 +337,11 @@ div.consent_manager-script {
    ======================================== */
 
 div.consent_manager-wrapper .consent_manager-headline {
-    margin: 0 36px $spacing-md 0;
+    margin: 0 40px $spacing-md 0;
     font-weight: 600;
     font-size: 1.35rem;
     color: $text-primary;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
 }
 
 /* ========================================
@@ -444,7 +356,7 @@ div.consent_manager-wrapper p.consent_manager-text {
 }
 
 /* ========================================
-   Cookie Checkboxes / Switches (iOS Style)
+   Cookie Checkboxes / Switches (Sand Style)
    ======================================== */
 
 div.consent_manager-cookiegroups {
@@ -468,7 +380,7 @@ div.consent_manager-cookiegroups {
     }
 }
 
-/* iOS-Style Switch - Liquid Glass */
+/* Sand-Style Switch - Inset */
 .consent_manager-wrapper [type="checkbox"] {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -489,15 +401,13 @@ div.consent_manager-cookiegroups {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(120, 120, 128, 0.32);
-    backdrop-filter: blur(10px) saturate(150%);
-    -webkit-backdrop-filter: blur(10px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: $sand-base;
     border-radius: $radius-pill;
     transition: all 0.25s ease;
+    /* Inset shadow for pressed look */
     box-shadow: 
-        inset 0 1px 2px rgba(0, 0, 0, 0.2),
-        0 1px 0 rgba(255, 255, 255, 0.05);
+        inset 4px 4px 8px $shadow-dark,
+        inset -4px -4px 8px $shadow-light;
 }
 
 .consent_manager-wrapper [type="checkbox"]::before {
@@ -507,24 +417,20 @@ div.consent_manager-cookiegroups {
     height: 27px;
     top: 2px;
     left: 2px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(235, 235, 240, 0.95) 100%);
+    background: linear-gradient(145deg, #ffffff, $sand-light);
     border-radius: 50%;
     box-shadow: 
-        0 3px 8px rgba(0, 0, 0, 0.25),
-        0 1px 2px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        3px 3px 6px $shadow-dark,
+        -2px -2px 4px $shadow-light;
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1;
 }
 
 .consent_manager-wrapper [type="checkbox"]:checked::after {
-    background: rgba(48, 209, 88, 0.85);
-    backdrop-filter: blur(10px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    border-color: rgba(48, 209, 88, 0.4);
+    background: $switch-on;
     box-shadow: 
-        inset 0 1px 2px rgba(0, 0, 0, 0.15),
-        0 0 12px rgba(48, 209, 88, 0.4);
+        inset 4px 4px 8px rgba(90, 120, 80, 0.4),
+        inset -4px -4px 8px rgba(140, 180, 130, 0.3);
 }
 
 .consent_manager-wrapper [type="checkbox"]:checked::before {
@@ -536,14 +442,15 @@ div.consent_manager-cookiegroups {
     
     &::after {
         box-shadow: 
-            inset 0 1px 2px rgba(0, 0, 0, 0.2),
-            0 0 0 4px rgba(48, 209, 88, 0.3);
+            inset 4px 4px 8px $shadow-dark,
+            inset -4px -4px 8px $shadow-light,
+            0 0 0 3px rgba(122, 154, 109, 0.3);
     }
 }
 
 .consent_manager-wrapper input[type="checkbox"]:disabled,
 .consent_manager-cookiegroups label > input[type="checkbox"]:disabled + * {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
@@ -556,7 +463,7 @@ div.consent_manager-show-details {
 }
 
 .consent_manager-show-details .icon-info-circled {
-    color: $accent-blue;
+    color: $accent-terra;
     text-decoration: none;
     cursor: pointer;
     border: none;
@@ -570,12 +477,12 @@ div.consent_manager-show-details {
     transition: all 0.2s ease;
     
     &:hover {
-        color: $accent-blue-light;
-        background: rgba(10, 132, 255, 0.12);
+        color: $accent-terra-dark;
+        background: rgba(196, 149, 106, 0.1);
     }
     
     &:focus {
-        outline: 2px solid $accent-blue;
+        outline: 2px solid $accent-terra;
         outline-offset: 2px;
     }
     
@@ -585,7 +492,7 @@ div.consent_manager-show-details {
 }
 
 /* ========================================
-   Buttons - DSGVO Compliant (Liquid Glass Pills)
+   Buttons - DSGVO Compliant (Inset/Pressed Sand Style)
    ======================================== */
 
 div.consent_manager-buttons {
@@ -594,15 +501,13 @@ div.consent_manager-buttons {
     gap: $spacing-sm;
 }
 
-/* DSGVO: Alle Buttons gleichwertig - keine visuelle Hervorhebung */
+/* DSGVO: Alle Buttons gleichwertig - dünne Fuge, Inset bei Hover */
 button.consent_manager-accept-all,
 button.consent_manager-save-selection,
 button.consent_manager-accept-none {
     position: relative;
-    background: $glass-lighter;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: $sand-light;
+    border: 1px solid $sand-medium;
     color: $text-primary;
     padding: $spacing-md $spacing-lg;
     border-radius: $radius-medium;
@@ -616,23 +521,28 @@ button.consent_manager-accept-none {
     white-space: nowrap;
     transition: all 0.2s ease;
     
-    /* Subtle inner highlight */
+    /* Dünne Fuge - leichter äußerer Schatten */
     box-shadow: 
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-        0 2px 4px rgba(0, 0, 0, 0.1);
+        0 1px 2px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
     
     &:hover {
-        background: rgba(78, 78, 80, 0.65);
-        border-color: rgba(255, 255, 255, 0.18);
-        transform: scale(1.01);
+        background: $sand-base;
+        border-color: $sand-dark;
+        /* Inset/Pressed effect - eingeprägt bei Hover */
+        box-shadow: 
+            inset 4px 4px 8px $shadow-dark,
+            inset -4px -4px 8px $shadow-light;
     }
     
     &:active {
-        transform: scale(0.99);
+        box-shadow: 
+            inset 6px 6px 12px $shadow-dark,
+            inset -6px -6px 12px $shadow-light;
     }
     
     &:focus {
-        outline: 2px solid $accent-blue;
+        outline: 2px solid $accent-terra;
         outline-offset: 2px;
     }
 }
@@ -644,7 +554,7 @@ button.consent_manager-accept-none {
 .consent_manager-sitelinks {
     margin: $spacing-lg 0 0 0;
     padding-top: $spacing-md;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid $sand-medium;
     
     a {
         display: inline-block;
@@ -655,11 +565,11 @@ button.consent_manager-accept-none {
         transition: color 0.2s ease;
         
         &:hover {
-            color: $accent-blue;
+            color: $accent-terra;
         }
         
         &:focus {
-            outline: 2px solid $accent-blue;
+            outline: 2px solid $accent-terra;
             outline-offset: 2px;
         }
     }
@@ -674,17 +584,17 @@ div.consent_manager-wrapper div.consent_manager-detail {
 }
 
 div.consent_manager-wrapper div.consent_manager-detail a {
-    color: $accent-blue;
+    color: $accent-terra;
     text-decoration: none;
     
     &:hover {
-        color: $accent-blue-light;
+        color: $accent-terra-dark;
         text-decoration: underline;
     }
 }
 
 div.consent_manager-wrapper div.consent_manager-cookiegroup-title {
-    background: rgba(255, 255, 255, 0.1);
+    background: $sand-medium;
     color: $text-primary;
     padding: $spacing-sm $spacing-md;
     margin: $spacing-lg 0 0 0;
@@ -694,26 +604,26 @@ div.consent_manager-wrapper div.consent_manager-cookiegroup-title {
 }
 
 div.consent_manager-wrapper div.consent_manager-cookiegroup-description {
-    background: rgba(0, 0, 0, 0.25);
+    background: $sand-base;
     padding: $spacing-sm $spacing-md;
     font-size: 0.8125rem;
     color: $text-secondary;
-    border-left: 1px solid rgba(255, 255, 255, 0.06);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-left: 1px solid $sand-medium;
+    border-right: 1px solid $sand-medium;
 }
 
 div.consent_manager-wrapper div.consent_manager-cookie {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba($sand-base, 0.5);
     padding: $spacing-sm $spacing-md;
     margin-top: 1px;
     font-size: 0.8125rem;
     color: $text-secondary;
-    border-left: 1px solid rgba(255, 255, 255, 0.06);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-left: 1px solid $sand-medium;
+    border-right: 1px solid $sand-medium;
     
     &:last-child {
         border-radius: 0 0 $radius-small $radius-small;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid $sand-medium;
     }
     
     span {
@@ -775,7 +685,7 @@ div.consent_manager-wrapper div.consent_manager-cookie {
         align-items: center;
         flex-direction: row-reverse;
         padding-top: $spacing-md;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 1px solid $sand-medium;
         margin-top: $spacing-md;
     }
 }

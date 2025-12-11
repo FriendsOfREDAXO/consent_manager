@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /*
-Theme: {"name": "Skerbis Pill", "description": "Modernes Cookie-Banner als Pill am unteren Bildschirmrand - kompakt, elegant und DSGVO-konform", "type": "light", "style": "Bottom Pill Banner, Compact", "autor": "@skerbis"}
+Theme: {"name": "Pill", "description": "Modernes Cookie-Banner als Pill am unteren Bildschirmrand - kompakt, elegant und DSGVO-konform", "type": "light", "style": "Bottom Pill Banner, Compact", "autor": "@skerbis"}
 */
 /**
  * Consent Manager - Skerbis Pill Theme
@@ -81,14 +81,12 @@ Theme: {"name": "Skerbis Pill", "description": "Modernes Cookie-Banner als Pill 
   }
 }
 /* ========================================
-   Background - Bottom Aligned with Backdrop
+   Background - Bottom Aligned, transparent
    ======================================== */
 div.consent_manager-background {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: transparent;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -99,6 +97,7 @@ div.consent_manager-background {
   overflow: hidden;
   box-sizing: border-box;
   outline: 0;
+  pointer-events: none;
 }
 
 /* ========================================
@@ -115,25 +114,28 @@ div.consent_manager-wrapper {
   max-height: none;
   overflow: visible;
   box-sizing: border-box;
-  /* Pill Background */
-  background: #ffffff;
+  pointer-events: auto;
+  /* Glass Background with Backdrop */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   /* Full pill shape */
   border-radius: 50px;
-  /* Deutlicher Rahmen und Schatten */
-  border: 2px solid rgba(50, 64, 80, 0.15);
-  box-shadow: 0 8px 32px rgba(50, 64, 80, 0.25), 0 2px 8px rgba(50, 64, 80, 0.15);
+  /* Glass Rahmen */
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 8px 32px rgba(50, 64, 80, 0.2), 0 2px 8px rgba(50, 64, 80, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   /* Animation */
   animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 div.consent_manager-wrapper-inner {
-  padding: 20px 30px;
+  padding: 20px 60px 20px 28px; /* Rechts extra Platz für Close-Button */
   position: relative;
   z-index: 1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 /* Wenn Details sichtbar sind: Wrapper wird zum Popup */
@@ -166,10 +168,58 @@ div.consent_manager-script {
 }
 
 /* ========================================
-   Close Button - Hidden in Pill
+   Close Button - Pill Style
    ======================================== */
 .consent_manager-close-box {
-  display: none;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(50, 64, 80, 0.1);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-indent: -9999px;
+  color: transparent;
+  z-index: 10;
+}
+.consent_manager-close-box::before, .consent_manager-close-box::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  background: #666666;
+  border-radius: 1px;
+  transition: all 0.2s ease;
+}
+.consent_manager-close-box::before {
+  transform: rotate(45deg);
+}
+.consent_manager-close-box::after {
+  transform: rotate(-45deg);
+}
+.consent_manager-close-box:hover {
+  background: rgba(50, 64, 80, 0.2);
+}
+.consent_manager-close-box:hover::before, .consent_manager-close-box:hover::after {
+  background: #333333;
+}
+.consent_manager-close-box:focus {
+  outline: 2px solid #4b9ad9;
+  outline-offset: 2px;
+}
+
+/* Close Button Position im Popup-Modus */
+div.consent_manager-background:has(.consent_manager-detail) .consent_manager-close-box {
+  top: 16px;
+  right: 16px;
+  transform: none;
 }
 
 /* ========================================
@@ -183,7 +233,7 @@ div.consent_manager-wrapper .consent_manager-headline {
    Text Block - Compact Inline
    ======================================== */
 div.consent_manager-wrapper p.consent_manager-text {
-  margin: 0;
+  margin: 0 0 1em 0;
   color: #333333;
   font-size: 0.875rem;
   line-height: 1.4;
@@ -213,7 +263,7 @@ div.consent_manager-cookiegroups {
   margin: 0;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 24px;
   vertical-align: middle;
 }
 .consent_manager-cookiegroup-checkbox span {
@@ -239,6 +289,7 @@ div.consent_manager-cookiegroups {
   background: transparent;
   vertical-align: middle;
   margin: 0;
+  margin-right: 8px !important;
 }
 
 .consent_manager-wrapper [type=checkbox]::after {
@@ -292,6 +343,7 @@ div.consent_manager-show-details {
   padding: 0;
   display: flex;
   align-items: center;
+  margin-top: 1em;
 }
 
 .consent_manager-show-details .icon-info-circled {
@@ -500,4 +552,4 @@ div.consent_manager-wrapper div.consent_manager-cookie span:last-child {
   }
 }
 
-/*# sourceMappingURL=consent_manager_frontend_theme_skerbis_pill.css.map */
+/*# sourceMappingURL=consent_manager_frontend_theme_pill.scss.map */

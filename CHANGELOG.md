@@ -1,15 +1,16 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.1.1 - unreleased
+## Version 5.2.0 - unreleased
 
 ### 🎨 Theme-Editor Erweiterungen
 
-* **Neue Skerbis-Themes**: 5 neue Design-Themes hinzugefügt:
-  - **Skerbis Light Glass v2**: iOS 26 Liquid Glass Design mit Prisma-Rahmen-Animation
-  - **Skerbis Dark Glass v2**: iOS 26 Liquid Glass Design in Dunkel mit Border-Glow
-  - **Skerbis Sand**: Neumorphismus-Style mit Inset-Buttons bei Hover
-  - **Skerbis Sand Dark**: Dunkle Variante des Sand-Themes
-  - **Skerbis Pill**: Kompaktes Bottom-Pill-Banner mit Slide-up Animation
+* **Neue Design-Themes**: 5 neue Themes hinzugefügt (Autor: @skerbis):
+  - **Light Glass v2**: iOS 26 Liquid Glass Design mit Prisma-Rahmen-Animation
+  - **Dark Glass v2**: iOS 26 Liquid Glass Design in Dunkel mit Border-Glow
+  - **Sand**: Neumorphismus-Style mit Inset-Buttons bei Hover
+  - **Sand Dark**: Dunkle Variante des Sand-Themes
+  - **Pill**: Kompaktes Bottom-Pill-Banner mit Slide-up Animation
+* **Standard-Themes modernisiert**: Outline-Buttons, 5px Abrundung, prefers-contrast Support
 * **Neue Theme-Basis-Varianten**: 5 neue Accessibility-Themes hinzugefügt:
   - **Banner Top**: Volle Breite, fixiert am oberen Bildschirmrand
   - **Banner Bottom**: Volle Breite, fixiert am unteren Bildschirmrand (dunkles Theme)

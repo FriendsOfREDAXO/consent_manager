@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /*
-Theme: {"name": "Skerbis Light Glass v2", "description": "Liquid Glass Theme inspiriert von iOS 26 - Light Variante mit hellen Glaseffekten, spekularen Lichtreflexionen, abgerundeter Ästhetik und voller Accessibility-Unterstützung", "type": "light", "style": "Popup zentriert, Liquid Glass, Switches", "autor": "@skerbis"}
+Theme: {"name": "Light Glass v2", "description": "Liquid Glass Theme inspiriert von iOS 26 - Light Variante mit hellen Glaseffekten, spekularen Lichtreflexionen, abgerundeter Ästhetik und voller Accessibility-Unterstützung", "type": "light", "style": "Popup zentriert, Liquid Glass, Switches", "autor": "@skerbis"}
 */
 /**
  * Consent Manager - Skerbis Light Glass v2 (Liquid Glass Edition)
@@ -358,7 +358,7 @@ div.consent_manager-cookiegroups {
   margin-bottom: 10px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 24px;
   vertical-align: middle;
 }
 .consent_manager-cookiegroup-checkbox span {
@@ -376,6 +376,7 @@ div.consent_manager-cookiegroups {
   -moz-appearance: none;
   appearance: none;
   position: relative;
+  margin-right: 8px !important;
   width: 51px;
   height: 31px;
   border: 0;
@@ -654,4 +655,4 @@ div.consent_manager-wrapper div.consent_manager-cookie span:last-child {
   }
 }
 
-/*# sourceMappingURL=consent_manager_frontend_theme_skerbis_light_glass_v2.css.map */
+/*# sourceMappingURL=consent_manager_frontend_theme_light_glass_v2.scss.map */

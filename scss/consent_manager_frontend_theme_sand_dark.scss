@@ -1,16 +1,15 @@
 /*
-Theme: {"name": "Skerbis Light Glass v2", "description": "Liquid Glass Theme inspiriert von iOS 26 - Light Variante mit hellen Glaseffekten, spekularen Lichtreflexionen, abgerundeter Ästhetik und voller Accessibility-Unterstützung", "type": "light", "style": "Popup zentriert, Liquid Glass, Switches", "autor": "@skerbis"}
+Theme: {"name": "Sand Dark", "description": "Dunkles sandiges Theme mit eingeprägten (inset) Buttons bei Hover - warm und organisch", "type": "dark", "style": "Popup zentriert, Sand/Neumorphism, Switches", "autor": "@skerbis"}
 */
 
 /**
- * Consent Manager - Skerbis Light Glass v2 (Liquid Glass Edition)
+ * Consent Manager - Skerbis Sand Dark Theme
  * 
- * Inspired by Apple's iOS 26 Liquid Glass Design:
- * - Multi-layer glass with specular highlights
- * - Soft, rounded aesthetic with pill-shaped elements
- * - Dynamic light reflections on edges
- * - High blur with saturated backdrop
- * - Soft shadow effects
+ * Design Konzept:
+ * - Dunkle, warme Sandpalette
+ * - Eingeprägte (inset) Buttons bei Hover im Neumorphism-Stil
+ * - Subtile Sandtextur
+ * - Weiche, organische Schatten
  * 
  * Accessibility:
  * - prefers-reduced-motion Support
@@ -20,42 +19,44 @@ Theme: {"name": "Skerbis Light Glass v2", "description": "Liquid Glass Theme ins
  */
 
 /* ========================================
-   Variables - Liquid Glass Palette (Light)
+   Variables - Dark Sand Palette
    ======================================== */
 
 $font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
 $font-size-base: 15px;
 $line-height: 1.55;
 
-/* Liquid Glass Colors - Light */
-$glass-light: rgba(255, 255, 255, 0.78);
-$glass-lighter: rgba(255, 255, 255, 0.55);
-$glass-border-dark: rgba(0, 0, 0, 0.1);
-$glass-border-inner: rgba(0, 0, 0, 0.05);
-$glass-specular: rgba(255, 255, 255, 0.7);
-$glass-shadow-light: rgba(0, 0, 0, 0.12);
+/* Dark Sand Colors */
+$sand-darkest: #2a2520;
+$sand-darker: #3d362e;
+$sand-dark: #4a4238;
+$sand-medium: #5c5245;
+$sand-light: #6e6354;
 
-/* Text - Dark on Light */
-$text-primary: rgba(0, 0, 0, 0.88);
-$text-secondary: rgba(0, 0, 0, 0.6);
-$text-tertiary: rgba(0, 0, 0, 0.45);
+/* Text */
+$text-primary: rgba(255, 255, 255, 0.92);
+$text-secondary: rgba(255, 255, 255, 0.7);
+$text-tertiary: rgba(255, 255, 255, 0.5);
 
-/* Accent - iOS Blue */
-$accent-blue: #007AFF;
-$accent-blue-light: #4DA2FF;
-$accent-green: #34C759;
-$accent-glow: rgba(0, 122, 255, 0.25);
+/* Accent - Warm Earth Tones */
+$accent-terra: #d4a574;
+$accent-terra-light: #e6be94;
+$accent-green: #8fb17a;
 
 /* Switch */
-$switch-on: #34C759;
-$switch-off: rgba(120, 120, 128, 0.2);
-$switch-knob: #ffffff;
+$switch-on: #8fb17a;
+$switch-off: $sand-medium;
+$switch-knob: #f5f0e8;
+
+/* Shadows for Neumorphism - Dark Mode */
+$shadow-light: rgba(90, 80, 68, 0.25);
+$shadow-dark: rgba(0, 0, 0, 0.5);
 
 /* Spacing & Radius */
+$radius-large: 20px;
+$radius-medium: 14px;
+$radius-small: 10px;
 $radius-pill: 980px;
-$radius-large: 24px;
-$radius-medium: 16px;
-$radius-small: 12px;
 
 $spacing-xs: 6px;
 $spacing-sm: 10px;
@@ -78,69 +79,37 @@ $spacing-xl: 28px;
 }
 
 /* ========================================
-   Accessibility - Reduced Transparency
-   ======================================== */
-
-@media (prefers-reduced-transparency: reduce) {
-    div.consent_manager-wrapper {
-        background: #f5f5f7 !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-    }
-    
-    div.consent_manager-wrapper::before,
-    div.consent_manager-wrapper::after {
-        display: none !important;
-    }
-
-    div.consent_manager-cookiegroup-description,
-    div.consent_manager-cookie {
-        background: #e8e8ed !important;
-    }
-    
-    button.consent_manager-accept-all,
-    button.consent_manager-save-selection,
-    button.consent_manager-accept-none {
-        background: #ffffff !important;
-        backdrop-filter: none !important;
-    }
-}
-
-/* ========================================
    Accessibility - High Contrast
    ======================================== */
 
 @media (prefers-contrast: more), (prefers-contrast: high) {
     div.consent_manager-background {
-        background: rgba(255, 255, 255, 0.9) !important;
+        background: rgba(0, 0, 0, 0.95) !important;
     }
     
     div.consent_manager-wrapper {
-        background: #ffffff !important;
-        border: 3px solid #000000 !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
+        background: #000000 !important;
+        border: 3px solid #ffffff !important;
+        box-shadow: none !important;
     }
     
-    div.consent_manager-wrapper::before,
-    div.consent_manager-wrapper::after {
+    div.consent_manager-wrapper::before {
         display: none !important;
     }
 
     div.consent_manager-wrapper .consent_manager-headline,
     div.consent_manager-wrapper p.consent_manager-text,
     .consent_manager-cookiegroup-checkbox span {
-        color: #000000 !important;
+        color: #ffffff !important;
     }
 
-    /* High Contrast Buttons */
     button.consent_manager-accept-all,
     button.consent_manager-save-selection,
     button.consent_manager-accept-none {
-        background: #ffffff !important;
-        border: 2px solid #000000 !important;
-        color: #000000 !important;
-        backdrop-filter: none !important;
+        background: #000000 !important;
+        border: 2px solid #ffffff !important;
+        color: #ffffff !important;
+        box-shadow: none !important;
     }
 
     button.consent_manager-accept-all:hover,
@@ -149,51 +118,48 @@ $spacing-xl: 28px;
     button.consent_manager-save-selection:focus,
     button.consent_manager-accept-none:hover,
     button.consent_manager-accept-none:focus {
-        background: #000000 !important;
-        color: #ffffff !important;
+        background: #ffffff !important;
+        color: #000000 !important;
     }
 
-    /* High Contrast Switches */
     .consent_manager-wrapper [type="checkbox"]::after {
-        background: #ffffff !important;
-        border: 2px solid #000000 !important;
+        background: #000000 !important;
+        border: 2px solid #ffffff !important;
+        box-shadow: none !important;
     }
 
     .consent_manager-wrapper [type="checkbox"]:checked::after {
-        background: #000000 !important;
-    }
-
-    .consent_manager-wrapper [type="checkbox"]::before {
-        background: #000000 !important;
-    }
-
-    .consent_manager-wrapper [type="checkbox"]:checked::before {
         background: #ffffff !important;
     }
 
-    /* High Contrast Links */
+    .consent_manager-wrapper [type="checkbox"]::before {
+        background: #ffffff !important;
+    }
+
+    .consent_manager-wrapper [type="checkbox"]:checked::before {
+        background: #000000 !important;
+    }
+
     .consent_manager-sitelinks a,
     div.consent_manager-detail a {
-        color: #0000cc !important;
+        color: #ffff00 !important;
         text-decoration: underline !important;
     }
 
-    /* High Contrast Details */
     div.consent_manager-cookiegroup-title {
-        background: #000000 !important;
-        color: #ffffff !important;
+        background: #ffffff !important;
+        color: #000000 !important;
     }
 
     div.consent_manager-cookiegroup-description,
     div.consent_manager-cookie {
-        background: #f0f0f0 !important;
-        border: 1px solid #000000 !important;
-        color: #000000 !important;
+        background: #1a1a1a !important;
+        border: 1px solid #ffffff !important;
+        color: #ffffff !important;
     }
 
-    /* High Contrast Focus */
     *:focus {
-        outline: 3px solid #0000cc !important;
+        outline: 3px solid #ffff00 !important;
         outline-offset: 2px !important;
     }
 }
@@ -202,90 +168,19 @@ $spacing-xl: 28px;
    Animations
    ======================================== */
 
-@keyframes liquidGlassAppear {
+@keyframes sandAppear {
     0% {
         opacity: 0;
-        transform: scale(0.92) translateY(20px);
-        filter: blur(20px);
-    }
-    60% {
-        filter: blur(0);
+        transform: scale(0.95) translateY(15px);
     }
     100% {
         opacity: 1;
         transform: scale(1) translateY(0);
-        filter: blur(0);
-    }
-}
-
-@keyframes prismaGlow {
-    0% {
-        box-shadow: 
-            0 0 0 1px rgba(255, 100, 100, 0.3),
-            0 0 15px rgba(255, 100, 100, 0.1),
-            0 2px 4px rgba(0, 0, 0, 0.04),
-            0 8px 16px rgba(0, 0, 0, 0.06),
-            0 24px 48px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
-    }
-    16% {
-        box-shadow: 
-            0 0 0 1px rgba(255, 180, 100, 0.3),
-            0 0 15px rgba(255, 180, 100, 0.1),
-            0 2px 4px rgba(0, 0, 0, 0.04),
-            0 8px 16px rgba(0, 0, 0, 0.06),
-            0 24px 48px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
-    }
-    33% {
-        box-shadow: 
-            0 0 0 1px rgba(255, 255, 100, 0.3),
-            0 0 15px rgba(255, 255, 100, 0.1),
-            0 2px 4px rgba(0, 0, 0, 0.04),
-            0 8px 16px rgba(0, 0, 0, 0.06),
-            0 24px 48px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
-    }
-    50% {
-        box-shadow: 
-            0 0 0 1px rgba(100, 255, 150, 0.3),
-            0 0 15px rgba(100, 255, 150, 0.1),
-            0 2px 4px rgba(0, 0, 0, 0.04),
-            0 8px 16px rgba(0, 0, 0, 0.06),
-            0 24px 48px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
-    }
-    66% {
-        box-shadow: 
-            0 0 0 1px rgba(100, 180, 255, 0.3),
-            0 0 15px rgba(100, 180, 255, 0.1),
-            0 2px 4px rgba(0, 0, 0, 0.04),
-            0 8px 16px rgba(0, 0, 0, 0.06),
-            0 24px 48px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
-    }
-    83% {
-        box-shadow: 
-            0 0 0 1px rgba(180, 100, 255, 0.3),
-            0 0 15px rgba(180, 100, 255, 0.1),
-            0 2px 4px rgba(0, 0, 0, 0.04),
-            0 8px 16px rgba(0, 0, 0, 0.06),
-            0 24px 48px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
-    }
-    100% {
-        box-shadow: 
-            0 0 0 1px rgba(255, 100, 100, 0.3),
-            0 0 15px rgba(255, 100, 100, 0.1),
-            0 2px 4px rgba(0, 0, 0, 0.04),
-            0 8px 16px rgba(0, 0, 0, 0.06),
-            0 24px 48px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
     }
 }
 
 /* ========================================
-   Background Overlay - Transparent (kein Overlay)
+   Background Overlay
    ======================================== */
 
 div.consent_manager-background {
@@ -304,7 +199,7 @@ div.consent_manager-background {
 }
 
 /* ========================================
-   Main Wrapper - Liquid Glass Effect (Light)
+   Main Wrapper - Dark Sand Neumorphism
    ======================================== */
 
 div.consent_manager-wrapper {
@@ -320,34 +215,27 @@ div.consent_manager-wrapper {
     overflow-x: hidden;
     box-sizing: border-box;
     
-    /* Liquid Glass Background - Light */
-    background: $glass-light;
-    backdrop-filter: blur(50px) saturate(180%);
-    -webkit-backdrop-filter: blur(50px) saturate(180%);
+    /* Dark Sand Background */
+    background: $sand-darker;
     
-    /* Rounded Pill-like Shape */
+    /* Rounded Shape */
     border-radius: $radius-large;
     
-    /* Multi-layer border for glass depth */
-    border: 1px solid $glass-border-dark;
-    
-    /* Complex shadow for floating effect with outer glow */
+    /* Neumorphism Shadow - raised effect dark mode */
     box-shadow: 
-        0 0 0 1px rgba(255, 255, 255, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.04),
-        0 8px 16px rgba(0, 0, 0, 0.06),
-        0 24px 48px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+        12px 12px 24px $shadow-dark,
+        -12px -12px 24px $shadow-light,
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
     
     /* Animation */
-    animation: liquidGlassAppear 0.5s cubic-bezier(0.2, 0.9, 0.3, 1), prismaGlow 8s linear infinite 0.5s;
+    animation: sandAppear 0.4s ease-out;
     
-    /* Scrollbar - Light */
+    /* Scrollbar */
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+    scrollbar-color: $sand-medium transparent;
     
     &::-webkit-scrollbar {
-        width: 5px;
+        width: 6px;
     }
     
     &::-webkit-scrollbar-track {
@@ -355,40 +243,17 @@ div.consent_manager-wrapper {
     }
     
     &::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.15);
+        background: $sand-medium;
         border-radius: 3px;
     }
     
-    /* Top edge highlight line */
+    /* Subtle sand texture overlay */
     &::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 10%;
-        right: 10%;
-        height: 1px;
-        background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.5) 20%,
-            rgba(255, 255, 255, 0.8) 50%,
-            rgba(255, 255, 255, 0.5) 80%,
-            transparent 100%
-        );
-        border-radius: 1px;
-        pointer-events: none;
-    }
-    
-    /* Inner gradient overlay */
-    &::after {
-        content: '';
-        position: absolute;
         inset: 0;
-        background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.15) 0%,
-            transparent 40%
-        );
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        opacity: 0.02;
         border-radius: $radius-large;
         pointer-events: none;
     }
@@ -409,19 +274,19 @@ div.consent_manager-script {
 }
 
 /* ========================================
-   Close Button - Pill Style (Light)
+   Close Button - Dark Sand Style
    ======================================== */
 
 .consent_manager-close-box {
     position: absolute;
     right: $spacing-md;
     top: $spacing-md;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.08);
+    background: $sand-darker;
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -430,12 +295,17 @@ div.consent_manager-script {
     color: transparent;
     z-index: 10;
     
+    /* Inset effect */
+    box-shadow: 
+        inset 3px 3px 6px $shadow-dark,
+        inset -3px -3px 6px $shadow-light;
+    
     &::before,
     &::after {
         content: '';
         position: absolute;
         width: 12px;
-        height: 1.5px;
+        height: 2px;
         background: $text-secondary;
         border-radius: 1px;
         transition: all 0.2s ease;
@@ -450,8 +320,6 @@ div.consent_manager-script {
     }
     
     &:hover {
-        background: rgba(0, 0, 0, 0.15);
-        
         &::before,
         &::after {
             background: $text-primary;
@@ -459,7 +327,7 @@ div.consent_manager-script {
     }
     
     &:focus {
-        outline: 2px solid $accent-blue;
+        outline: 2px solid $accent-terra;
         outline-offset: 2px;
     }
 }
@@ -469,11 +337,11 @@ div.consent_manager-script {
    ======================================== */
 
 div.consent_manager-wrapper .consent_manager-headline {
-    margin: 0 36px $spacing-md 0;
+    margin: 0 40px $spacing-md 0;
     font-weight: 600;
     font-size: 1.35rem;
     color: $text-primary;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
 }
 
 /* ========================================
@@ -488,7 +356,7 @@ div.consent_manager-wrapper p.consent_manager-text {
 }
 
 /* ========================================
-   Cookie Checkboxes / Switches (iOS Style)
+   Cookie Checkboxes / Switches (Dark Sand Style)
    ======================================== */
 
 div.consent_manager-cookiegroups {
@@ -512,7 +380,7 @@ div.consent_manager-cookiegroups {
     }
 }
 
-/* iOS-Style Switch - Liquid Glass */
+/* Dark Sand-Style Switch - Inset */
 .consent_manager-wrapper [type="checkbox"] {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -533,15 +401,13 @@ div.consent_manager-cookiegroups {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(120, 120, 128, 0.16);
-    backdrop-filter: blur(10px) saturate(150%);
-    -webkit-backdrop-filter: blur(10px) saturate(150%);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: $sand-dark;
     border-radius: $radius-pill;
     transition: all 0.25s ease;
+    /* Inset shadow for pressed look */
     box-shadow: 
-        inset 0 1px 2px rgba(0, 0, 0, 0.06),
-        0 1px 0 rgba(255, 255, 255, 0.5);
+        inset 4px 4px 8px $shadow-dark,
+        inset -4px -4px 8px $shadow-light;
 }
 
 .consent_manager-wrapper [type="checkbox"]::before {
@@ -551,28 +417,25 @@ div.consent_manager-cookiegroups {
     height: 27px;
     top: 2px;
     left: 2px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 247, 1) 100%);
+    background: linear-gradient(145deg, $sand-light, $sand-medium);
     border-radius: 50%;
     box-shadow: 
-        0 3px 8px rgba(0, 0, 0, 0.12),
-        0 1px 2px rgba(0, 0, 0, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        3px 3px 6px $shadow-dark,
+        -2px -2px 4px $shadow-light;
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1;
 }
 
 .consent_manager-wrapper [type="checkbox"]:checked::after {
-    background: rgba(52, 199, 89, 0.85);
-    backdrop-filter: blur(10px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    border-color: rgba(52, 199, 89, 0.3);
+    background: $switch-on;
     box-shadow: 
-        inset 0 1px 2px rgba(0, 0, 0, 0.1),
-        0 0 8px rgba(52, 199, 89, 0.3);
+        inset 4px 4px 8px rgba(70, 100, 60, 0.5),
+        inset -4px -4px 8px rgba(120, 160, 100, 0.25);
 }
 
 .consent_manager-wrapper [type="checkbox"]:checked::before {
     transform: translateX(20px);
+    background: linear-gradient(145deg, #f5f0e8, #e8e0d4);
 }
 
 .consent_manager-wrapper [type="checkbox"]:focus {
@@ -580,14 +443,15 @@ div.consent_manager-cookiegroups {
     
     &::after {
         box-shadow: 
-            inset 0 1px 2px rgba(0, 0, 0, 0.06),
-            0 0 0 4px rgba(52, 199, 89, 0.25);
+            inset 4px 4px 8px $shadow-dark,
+            inset -4px -4px 8px $shadow-light,
+            0 0 0 3px rgba(143, 177, 122, 0.3);
     }
 }
 
 .consent_manager-wrapper input[type="checkbox"]:disabled,
 .consent_manager-cookiegroups label > input[type="checkbox"]:disabled + * {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
@@ -600,7 +464,7 @@ div.consent_manager-show-details {
 }
 
 .consent_manager-show-details .icon-info-circled {
-    color: $accent-blue;
+    color: $accent-terra;
     text-decoration: none;
     cursor: pointer;
     border: none;
@@ -614,12 +478,12 @@ div.consent_manager-show-details {
     transition: all 0.2s ease;
     
     &:hover {
-        color: $accent-blue-light;
-        background: rgba(0, 122, 255, 0.1);
+        color: $accent-terra-light;
+        background: rgba(212, 165, 116, 0.15);
     }
     
     &:focus {
-        outline: 2px solid $accent-blue;
+        outline: 2px solid $accent-terra;
         outline-offset: 2px;
     }
     
@@ -629,7 +493,7 @@ div.consent_manager-show-details {
 }
 
 /* ========================================
-   Buttons - DSGVO Compliant (Liquid Glass Pills - Light)
+   Buttons - DSGVO Compliant (Dünne Fuge, Inset bei Hover)
    ======================================== */
 
 div.consent_manager-buttons {
@@ -638,15 +502,13 @@ div.consent_manager-buttons {
     gap: $spacing-sm;
 }
 
-/* DSGVO: Alle Buttons gleichwertig - keine visuelle Hervorhebung */
+/* DSGVO: Alle Buttons gleichwertig - dünne Fuge, Inset bei Hover */
 button.consent_manager-accept-all,
 button.consent_manager-save-selection,
 button.consent_manager-accept-none {
     position: relative;
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: $sand-darker;
+    border: 1px solid $sand-medium;
     color: $text-primary;
     padding: $spacing-md $spacing-lg;
     border-radius: $radius-medium;
@@ -660,23 +522,28 @@ button.consent_manager-accept-none {
     white-space: nowrap;
     transition: all 0.2s ease;
     
-    /* Subtle inner highlight */
+    /* Dünne Fuge - leichter äußerer Schatten */
     box-shadow: 
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
-        0 2px 4px rgba(0, 0, 0, 0.06);
+        0 1px 2px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
     
     &:hover {
-        background: rgba(255, 255, 255, 0.85);
-        border-color: rgba(0, 0, 0, 0.15);
-        transform: scale(1.01);
+        background: $sand-dark;
+        border-color: $sand-light;
+        /* Inset/Pressed effect - eingeprägt bei Hover */
+        box-shadow: 
+            inset 4px 4px 8px $shadow-dark,
+            inset -4px -4px 8px $shadow-light;
     }
     
     &:active {
-        transform: scale(0.99);
+        box-shadow: 
+            inset 6px 6px 12px $shadow-dark,
+            inset -6px -6px 12px $shadow-light;
     }
     
     &:focus {
-        outline: 2px solid $accent-blue;
+        outline: 2px solid $accent-terra;
         outline-offset: 2px;
     }
 }
@@ -688,7 +555,7 @@ button.consent_manager-accept-none {
 .consent_manager-sitelinks {
     margin: $spacing-lg 0 0 0;
     padding-top: $spacing-md;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    border-top: 1px solid $sand-medium;
     
     a {
         display: inline-block;
@@ -699,11 +566,11 @@ button.consent_manager-accept-none {
         transition: color 0.2s ease;
         
         &:hover {
-            color: $accent-blue;
+            color: $accent-terra;
         }
         
         &:focus {
-            outline: 2px solid $accent-blue;
+            outline: 2px solid $accent-terra;
             outline-offset: 2px;
         }
     }
@@ -718,17 +585,17 @@ div.consent_manager-wrapper div.consent_manager-detail {
 }
 
 div.consent_manager-wrapper div.consent_manager-detail a {
-    color: $accent-blue;
+    color: $accent-terra;
     text-decoration: none;
     
     &:hover {
-        color: $accent-blue-light;
+        color: $accent-terra-light;
         text-decoration: underline;
     }
 }
 
 div.consent_manager-wrapper div.consent_manager-cookiegroup-title {
-    background: rgba(0, 0, 0, 0.06);
+    background: $sand-medium;
     color: $text-primary;
     padding: $spacing-sm $spacing-md;
     margin: $spacing-lg 0 0 0;
@@ -738,26 +605,26 @@ div.consent_manager-wrapper div.consent_manager-cookiegroup-title {
 }
 
 div.consent_manager-wrapper div.consent_manager-cookiegroup-description {
-    background: rgba(0, 0, 0, 0.03);
+    background: $sand-dark;
     padding: $spacing-sm $spacing-md;
     font-size: 0.8125rem;
     color: $text-secondary;
-    border-left: 1px solid rgba(0, 0, 0, 0.06);
-    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    border-left: 1px solid $sand-medium;
+    border-right: 1px solid $sand-medium;
 }
 
 div.consent_manager-wrapper div.consent_manager-cookie {
-    background: rgba(0, 0, 0, 0.02);
+    background: rgba($sand-dark, 0.7);
     padding: $spacing-sm $spacing-md;
     margin-top: 1px;
     font-size: 0.8125rem;
     color: $text-secondary;
-    border-left: 1px solid rgba(0, 0, 0, 0.06);
-    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    border-left: 1px solid $sand-medium;
+    border-right: 1px solid $sand-medium;
     
     &:last-child {
         border-radius: 0 0 $radius-small $radius-small;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        border-bottom: 1px solid $sand-medium;
     }
     
     span {
@@ -819,7 +686,7 @@ div.consent_manager-wrapper div.consent_manager-cookie {
         align-items: center;
         flex-direction: row-reverse;
         padding-top: $spacing-md;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        border-top: 1px solid $sand-medium;
         margin-top: $spacing-md;
     }
 }

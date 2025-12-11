@@ -1,16 +1,15 @@
 @charset "UTF-8";
 /*
-Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme inspiriert von iOS 26 - mit echten Glaseffekten, spekularen Lichtreflexionen, abgerundeter Ästhetik und voller Accessibility-Unterstützung", "type": "dark", "style": "Popup zentriert, Liquid Glass, Switches", "autor": "@skerbis"}
+Theme: {"name": "Sand Dark", "description": "Dunkles sandiges Theme mit eingeprägten (inset) Buttons bei Hover - warm und organisch", "type": "dark", "style": "Popup zentriert, Sand/Neumorphism, Switches", "autor": "@skerbis"}
 */
 /**
- * Consent Manager - Skerbis Dark Glass v2 (Liquid Glass Edition)
+ * Consent Manager - Skerbis Sand Dark Theme
  * 
- * Inspired by Apple's iOS 26 Liquid Glass Design:
- * - Multi-layer glass with specular highlights
- * - Soft, rounded aesthetic with pill-shaped elements
- * - Dynamic light reflections on edges
- * - High blur with saturated backdrop
- * - White edge glow effects
+ * Design Konzept:
+ * - Dunkle, warme Sandpalette
+ * - Eingeprägte (inset) Buttons bei Hover im Neumorphism-Stil
+ * - Subtile Sandtextur
+ * - Weiche, organische Schatten
  * 
  * Accessibility:
  * - prefers-reduced-motion Support
@@ -19,12 +18,13 @@ Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme insp
  * - DSGVO-konforme gleichwertige Buttons
  */
 /* ========================================
-   Variables - Liquid Glass Palette
+   Variables - Dark Sand Palette
    ======================================== */
-/* Liquid Glass Colors */
+/* Dark Sand Colors */
 /* Text */
-/* Accent - iOS Blue */
+/* Accent - Warm Earth Tones */
 /* Switch */
+/* Shadows for Neumorphism - Dark Mode */
 /* Spacing & Radius */
 /* ========================================
    Accessibility - Reduced Motion
@@ -39,44 +39,18 @@ Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme insp
   }
 }
 /* ========================================
-   Accessibility - Reduced Transparency
-   ======================================== */
-@media (prefers-reduced-transparency: reduce) {
-  div.consent_manager-wrapper {
-    background: #1c1c1e !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-  div.consent_manager-wrapper::before,
-  div.consent_manager-wrapper::after {
-    display: none !important;
-  }
-  div.consent_manager-cookiegroup-description,
-  div.consent_manager-cookie {
-    background: #2c2c2e !important;
-  }
-  button.consent_manager-accept-all,
-  button.consent_manager-save-selection,
-  button.consent_manager-accept-none {
-    background: #3a3a3c !important;
-    backdrop-filter: none !important;
-  }
-}
-/* ========================================
    Accessibility - High Contrast
    ======================================== */
 @media (prefers-contrast: more), (prefers-contrast: high) {
   div.consent_manager-background {
-    background: rgba(0, 0, 0, 0.9) !important;
+    background: rgba(0, 0, 0, 0.95) !important;
   }
   div.consent_manager-wrapper {
     background: #000000 !important;
     border: 3px solid #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
   }
-  div.consent_manager-wrapper::before,
-  div.consent_manager-wrapper::after {
+  div.consent_manager-wrapper::before {
     display: none !important;
   }
   div.consent_manager-wrapper .consent_manager-headline,
@@ -84,14 +58,13 @@ Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme insp
   .consent_manager-cookiegroup-checkbox span {
     color: #ffffff !important;
   }
-  /* High Contrast Buttons */
   button.consent_manager-accept-all,
   button.consent_manager-save-selection,
   button.consent_manager-accept-none {
     background: #000000 !important;
     border: 2px solid #ffffff !important;
     color: #ffffff !important;
-    backdrop-filter: none !important;
+    box-shadow: none !important;
   }
   button.consent_manager-accept-all:hover,
   button.consent_manager-accept-all:focus,
@@ -102,10 +75,10 @@ Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme insp
     background: #ffffff !important;
     color: #000000 !important;
   }
-  /* High Contrast Switches */
   .consent_manager-wrapper [type=checkbox]::after {
     background: #000000 !important;
     border: 2px solid #ffffff !important;
+    box-shadow: none !important;
   }
   .consent_manager-wrapper [type=checkbox]:checked::after {
     background: #ffffff !important;
@@ -116,13 +89,11 @@ Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme insp
   .consent_manager-wrapper [type=checkbox]:checked::before {
     background: #000000 !important;
   }
-  /* High Contrast Links */
   .consent_manager-sitelinks a,
   div.consent_manager-detail a {
     color: #ffff00 !important;
     text-decoration: underline !important;
   }
-  /* High Contrast Details */
   div.consent_manager-cookiegroup-title {
     background: #ffffff !important;
     color: #000000 !important;
@@ -133,7 +104,6 @@ Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme insp
     border: 1px solid #ffffff !important;
     color: #ffffff !important;
   }
-  /* High Contrast Focus */
   *:focus {
     outline: 3px solid #ffff00 !important;
     outline-offset: 2px !important;
@@ -142,33 +112,18 @@ Theme: {"name": "Skerbis Dark Glass v2", "description": "Liquid Glass Theme insp
 /* ========================================
    Animations
    ======================================== */
-@keyframes liquidGlassAppear {
+@keyframes sandAppear {
   0% {
     opacity: 0;
-    transform: scale(0.92) translateY(20px);
-    filter: blur(20px);
-  }
-  60% {
-    filter: blur(0);
+    transform: scale(0.95) translateY(15px);
   }
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
-    filter: blur(0);
-  }
-}
-@keyframes borderGlow {
-  0%, 100% {
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.15), 0 24px 48px rgba(0, 0, 0, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-  }
-  50% {
-    border-color: rgba(255, 255, 255, 0.35);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 0 25px rgba(150, 150, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.15), 0 24px 48px rgba(0, 0, 0, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
   }
 }
 /* ========================================
-   Background Overlay - Transparent (kein dunkles Overlay)
+   Background Overlay
    ======================================== */
 div.consent_manager-background {
   position: fixed;
@@ -186,13 +141,13 @@ div.consent_manager-background {
 }
 
 /* ========================================
-   Main Wrapper - Liquid Glass Effect
+   Main Wrapper - Dark Sand Neumorphism
    ======================================== */
 div.consent_manager-wrapper {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 0.92);
   position: relative;
   width: 100%;
   max-width: 680px;
@@ -200,55 +155,38 @@ div.consent_manager-wrapper {
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
-  /* Liquid Glass Background */
-  background: rgba(28, 28, 30, 0.72);
-  backdrop-filter: blur(50px) saturate(190%);
-  -webkit-backdrop-filter: blur(50px) saturate(190%);
-  /* Rounded Pill-like Shape */
-  border-radius: 24px;
-  /* Multi-layer border for glass depth */
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  /* Complex shadow for floating effect with outer glow */
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.15), 0 24px 48px rgba(0, 0, 0, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  /* Dark Sand Background */
+  background: #3d362e;
+  /* Rounded Shape */
+  border-radius: 20px;
+  /* Neumorphism Shadow - raised effect dark mode */
+  box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.5), -12px -12px 24px rgba(90, 80, 68, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   /* Animation */
-  animation: liquidGlassAppear 0.5s cubic-bezier(0.2, 0.9, 0.3, 1), borderGlow 4s ease-in-out infinite 0.5s;
+  animation: sandAppear 0.4s ease-out;
   /* Scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: #5c5245 transparent;
 }
 div.consent_manager-wrapper::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
 }
 div.consent_manager-wrapper::-webkit-scrollbar-track {
   background: transparent;
 }
 div.consent_manager-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: #5c5245;
   border-radius: 3px;
 }
 div.consent_manager-wrapper {
-  /* Top edge highlight line */
+  /* Subtle sand texture overlay */
 }
 div.consent_manager-wrapper::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.2) 80%, transparent 100%);
-  border-radius: 1px;
-  pointer-events: none;
-}
-div.consent_manager-wrapper {
-  /* Inner gradient overlay */
-}
-div.consent_manager-wrapper::after {
-  content: "";
-  position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
-  border-radius: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  border-radius: 20px;
   pointer-events: none;
 }
 
@@ -267,18 +205,18 @@ div.consent_manager-script {
 }
 
 /* ========================================
-   Close Button - Pill Style
+   Close Button - Dark Sand Style
    ======================================== */
 .consent_manager-close-box {
   position: absolute;
   right: 16px;
   top: 16px;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.12);
+  background: #3d362e;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -286,12 +224,14 @@ div.consent_manager-script {
   text-indent: -9999px;
   color: transparent;
   z-index: 10;
+  /* Inset effect */
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.5), inset -3px -3px 6px rgba(90, 80, 68, 0.25);
 }
 .consent_manager-close-box::before, .consent_manager-close-box::after {
   content: "";
   position: absolute;
   width: 12px;
-  height: 1.5px;
+  height: 2px;
   background: rgba(255, 255, 255, 0.7);
   border-radius: 1px;
   transition: all 0.2s ease;
@@ -302,14 +242,11 @@ div.consent_manager-script {
 .consent_manager-close-box::after {
   transform: rotate(-45deg);
 }
-.consent_manager-close-box:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
 .consent_manager-close-box:hover::before, .consent_manager-close-box:hover::after {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.92);
 }
 .consent_manager-close-box:focus {
-  outline: 2px solid #0A84FF;
+  outline: 2px solid #d4a574;
   outline-offset: 2px;
 }
 
@@ -317,11 +254,11 @@ div.consent_manager-script {
    Headline
    ======================================== */
 div.consent_manager-wrapper .consent_manager-headline {
-  margin: 0 36px 16px 0;
+  margin: 0 40px 16px 0;
   font-weight: 600;
   font-size: 1.35rem;
-  color: rgba(255, 255, 255, 0.95);
-  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.01em;
 }
 
 /* ========================================
@@ -335,7 +272,7 @@ div.consent_manager-wrapper p.consent_manager-text {
 }
 
 /* ========================================
-   Cookie Checkboxes / Switches (iOS Style)
+   Cookie Checkboxes / Switches (Dark Sand Style)
    ======================================== */
 div.consent_manager-cookiegroups {
   margin: 0 0 20px 0;
@@ -345,24 +282,25 @@ div.consent_manager-cookiegroups {
   margin-bottom: 10px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 24px;
   vertical-align: middle;
 }
 .consent_manager-cookiegroup-checkbox span {
   font-size: 0.9375rem;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 0.92);
   cursor: pointer;
   user-select: none;
   line-height: 31px;
   vertical-align: middle;
 }
 
-/* iOS-Style Switch - Liquid Glass */
+/* Dark Sand-Style Switch - Inset */
 .consent_manager-wrapper [type=checkbox] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   position: relative;
+  margin-right: 8px !important;
   width: 51px;
   height: 31px;
   border: 0;
@@ -377,13 +315,11 @@ div.consent_manager-cookiegroups {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(120, 120, 128, 0.32);
-  backdrop-filter: blur(10px) saturate(150%);
-  -webkit-backdrop-filter: blur(10px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #4a4238;
   border-radius: 980px;
   transition: all 0.25s ease;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(255, 255, 255, 0.05);
+  /* Inset shadow for pressed look */
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(90, 80, 68, 0.25);
 }
 
 .consent_manager-wrapper [type=checkbox]::before {
@@ -393,35 +329,33 @@ div.consent_manager-cookiegroups {
   height: 27px;
   top: 2px;
   left: 2px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(235, 235, 240, 0.95) 100%);
+  background: linear-gradient(145deg, #6e6354, #5c5245);
   border-radius: 50%;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5), -2px -2px 4px rgba(90, 80, 68, 0.25);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
 }
 
 .consent_manager-wrapper [type=checkbox]:checked::after {
-  background: rgba(48, 209, 88, 0.85);
-  backdrop-filter: blur(10px) saturate(180%);
-  -webkit-backdrop-filter: blur(10px) saturate(180%);
-  border-color: rgba(48, 209, 88, 0.4);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), 0 0 12px rgba(48, 209, 88, 0.4);
+  background: #8fb17a;
+  box-shadow: inset 4px 4px 8px rgba(70, 100, 60, 0.5), inset -4px -4px 8px rgba(120, 160, 100, 0.25);
 }
 
 .consent_manager-wrapper [type=checkbox]:checked::before {
   transform: translateX(20px);
+  background: linear-gradient(145deg, #f5f0e8, #e8e0d4);
 }
 
 .consent_manager-wrapper [type=checkbox]:focus {
   outline: none;
 }
 .consent_manager-wrapper [type=checkbox]:focus::after {
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(48, 209, 88, 0.3);
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(90, 80, 68, 0.25), 0 0 0 3px rgba(143, 177, 122, 0.3);
 }
 
 .consent_manager-wrapper input[type=checkbox]:disabled,
 .consent_manager-cookiegroups label > input[type=checkbox]:disabled + * {
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -433,7 +367,7 @@ div.consent_manager-show-details {
 }
 
 .consent_manager-show-details .icon-info-circled {
-  color: #0A84FF;
+  color: #d4a574;
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -443,15 +377,15 @@ div.consent_manager-show-details {
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
-  border-radius: 12px;
+  border-radius: 10px;
   transition: all 0.2s ease;
 }
 .consent_manager-show-details .icon-info-circled:hover {
-  color: #409CFF;
-  background: rgba(10, 132, 255, 0.12);
+  color: #e6be94;
+  background: rgba(212, 165, 116, 0.15);
 }
 .consent_manager-show-details .icon-info-circled:focus {
-  outline: 2px solid #0A84FF;
+  outline: 2px solid #d4a574;
   outline-offset: 2px;
 }
 .consent_manager-show-details .icon-info-circled::before {
@@ -459,7 +393,7 @@ div.consent_manager-show-details {
 }
 
 /* ========================================
-   Buttons - DSGVO Compliant (Liquid Glass Pills)
+   Buttons - DSGVO Compliant (Dünne Fuge, Inset bei Hover)
    ======================================== */
 div.consent_manager-buttons {
   display: flex;
@@ -467,18 +401,16 @@ div.consent_manager-buttons {
   gap: 10px;
 }
 
-/* DSGVO: Alle Buttons gleichwertig - keine visuelle Hervorhebung */
+/* DSGVO: Alle Buttons gleichwertig - dünne Fuge, Inset bei Hover */
 button.consent_manager-accept-all,
 button.consent_manager-save-selection,
 button.consent_manager-accept-none {
   position: relative;
-  background: rgba(58, 58, 60, 0.55);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.95);
+  background: #3d362e;
+  border: 1px solid #5c5245;
+  color: rgba(255, 255, 255, 0.92);
   padding: 16px 20px;
-  border-radius: 16px;
+  border-radius: 14px;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
   font-size: 1rem;
   font-weight: 500;
@@ -488,25 +420,26 @@ button.consent_manager-accept-none {
   width: 100%;
   white-space: nowrap;
   transition: all 0.2s ease;
-  /* Subtle inner highlight */
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Dünne Fuge - leichter äußerer Schatten */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 button.consent_manager-accept-all:hover,
 button.consent_manager-save-selection:hover,
 button.consent_manager-accept-none:hover {
-  background: rgba(78, 78, 80, 0.65);
-  border-color: rgba(255, 255, 255, 0.18);
-  transform: scale(1.01);
+  background: #4a4238;
+  border-color: #6e6354;
+  /* Inset/Pressed effect - eingeprägt bei Hover */
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(90, 80, 68, 0.25);
 }
 button.consent_manager-accept-all:active,
 button.consent_manager-save-selection:active,
 button.consent_manager-accept-none:active {
-  transform: scale(0.99);
+  box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.5), inset -6px -6px 12px rgba(90, 80, 68, 0.25);
 }
 button.consent_manager-accept-all:focus,
 button.consent_manager-save-selection:focus,
 button.consent_manager-accept-none:focus {
-  outline: 2px solid #0A84FF;
+  outline: 2px solid #d4a574;
   outline-offset: 2px;
 }
 
@@ -516,7 +449,7 @@ button.consent_manager-accept-none:focus {
 .consent_manager-sitelinks {
   margin: 20px 0 0 0;
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid #5c5245;
 }
 .consent_manager-sitelinks a {
   display: inline-block;
@@ -527,10 +460,10 @@ button.consent_manager-accept-none:focus {
   transition: color 0.2s ease;
 }
 .consent_manager-sitelinks a:hover {
-  color: #0A84FF;
+  color: #d4a574;
 }
 .consent_manager-sitelinks a:focus {
-  outline: 2px solid #0A84FF;
+  outline: 2px solid #d4a574;
   outline-offset: 2px;
 }
 
@@ -542,45 +475,45 @@ div.consent_manager-wrapper div.consent_manager-detail {
 }
 
 div.consent_manager-wrapper div.consent_manager-detail a {
-  color: #0A84FF;
+  color: #d4a574;
   text-decoration: none;
 }
 div.consent_manager-wrapper div.consent_manager-detail a:hover {
-  color: #409CFF;
+  color: #e6be94;
   text-decoration: underline;
 }
 
 div.consent_manager-wrapper div.consent_manager-cookiegroup-title {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.95);
+  background: #5c5245;
+  color: rgba(255, 255, 255, 0.92);
   padding: 10px 16px;
   margin: 20px 0 0 0;
-  border-radius: 12px 12px 0 0;
+  border-radius: 10px 10px 0 0;
   font-weight: 500;
   font-size: 0.9375rem;
 }
 
 div.consent_manager-wrapper div.consent_manager-cookiegroup-description {
-  background: rgba(0, 0, 0, 0.25);
+  background: #4a4238;
   padding: 10px 16px;
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.7);
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 1px solid #5c5245;
+  border-right: 1px solid #5c5245;
 }
 
 div.consent_manager-wrapper div.consent_manager-cookie {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(74, 66, 56, 0.7);
   padding: 10px 16px;
   margin-top: 1px;
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.7);
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 1px solid #5c5245;
+  border-right: 1px solid #5c5245;
 }
 div.consent_manager-wrapper div.consent_manager-cookie:last-child {
-  border-radius: 0 0 12px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0 0 10px 10px;
+  border-bottom: 1px solid #5c5245;
 }
 div.consent_manager-wrapper div.consent_manager-cookie span {
   display: block;
@@ -631,7 +564,7 @@ div.consent_manager-wrapper div.consent_manager-cookie span:last-child {
     align-items: center;
     flex-direction: row-reverse;
     padding-top: 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid #5c5245;
     margin-top: 16px;
   }
 }
@@ -641,4 +574,4 @@ div.consent_manager-wrapper div.consent_manager-cookie span:last-child {
   }
 }
 
-/*# sourceMappingURL=consent_manager_frontend_theme_skerbis_dark_glass_v2.css.map */
+/*# sourceMappingURL=consent_manager_frontend_theme_sand_dark.scss.map */
