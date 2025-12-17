@@ -50,23 +50,29 @@ if (0 < count($consent_manager->domainInfo)
     $googleConsentModeScriptUrl = $addon->getAssetsUrl($googleConsentModeScriptFile);
     $googleConsentModeOutput .= '    <script src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
 
-    // Debug-Script laden wenn Debug-Modus aktiviert
+    // Debug-Script laden wenn Debug-Modus aktiviert UND User im Backend eingeloggt
     if (isset($consent_manager->domainInfo['google_consent_mode_debug'])
         && 1 === $consent_manager->domainInfo['google_consent_mode_debug']) {
-        $debugScriptUrl = $addon->getAssetsUrl('consent_debug.js');
-        $googleConsentModeOutput .= '    <script src="' . $debugScriptUrl . '" defer></script>' . PHP_EOL;
+        // User für Frontend initialisieren
+        rex_backend_login::createUser();
+        
+        // Nur für eingeloggte Backend-Benutzer
+        if (rex_backend_login::hasSession() && null !== rex::getUser()) {
+            $debugScriptUrl = $addon->getAssetsUrl('consent_debug.js');
+            $googleConsentModeOutput .= '    <script src="' . $debugScriptUrl . '" defer></script>' . PHP_EOL;
 
-        // Debug-Konfiguration für JavaScript verfügbar machen
-        $googleConsentModeOutput .= '    <script>' . PHP_EOL;
-        $googleConsentModeOutput .= '        window.consentManagerDebugConfig = ' . json_encode([
-            'mode' => $consent_manager->domainInfo['google_consent_mode_enabled'],
-            'auto_mapping' => $consent_manager->domainInfo['google_consent_mode_enabled'] === 'auto',
-            'debug_enabled' => true,
-            'domain' => rex_request::server('HTTP_HOST'),
-            'cache_log_id' => $consent_manager->cacheLogId,
-            'version' => $consent_manager->version,
-        ]) . ';' . PHP_EOL;
-        $googleConsentModeOutput .= '    </script>' . PHP_EOL;
+            // Debug-Konfiguration für JavaScript verfügbar machen
+            $googleConsentModeOutput .= '    <script>' . PHP_EOL;
+            $googleConsentModeOutput .= '        window.consentManagerDebugConfig = ' . json_encode([
+                'mode' => $consent_manager->domainInfo['google_consent_mode_enabled'],
+                'auto_mapping' => $consent_manager->domainInfo['google_consent_mode_enabled'] === 'auto',
+                'debug_enabled' => true,
+                'domain' => rex_request::server('HTTP_HOST'),
+                'cache_log_id' => $consent_manager->cacheLogId,
+                'version' => $consent_manager->version,
+            ]) . ';' . PHP_EOL;
+            $googleConsentModeOutput .= '    </script>' . PHP_EOL;
+        }
     }
 
     // Auto-Mapping wird jetzt im Frontend-JS gehandhabt
