@@ -2,6 +2,16 @@
 
 ## Version 5.2.0 - unreleased
 
+## Version 5.1.3 - 18.12.2025
+
+### 🐛 Bugfixes
+
+* **Theme-Editor Button-Hintergrundfarbe**: Button-Hintergrundfarbe wird jetzt korrekt aus dem Theme-Editor übernommen (Fix: SCSS-Variable-Interpolation korrigiert)
+
+---
+
+## Version 5.1.2 - 17.12.2025
+
 ### 🎨 Theme-Editor Erweiterungen
 
 * **Neue Design-Themes**: 5 neue Themes hinzugefügt (Autor: @skerbis):

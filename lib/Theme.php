@@ -335,11 +335,11 @@ class Theme
         // Button-Style CSS (filled vs outline)
         if ('outline' === $buttonStyle) {
             $buttonBackgroundCss = 'transparent';
-            $buttonTextCss = '\$button-bg';
+            $buttonTextCss = '$button-bg';
         } else {
             // filled (default)
-            $buttonBackgroundCss = '\$button-bg';
-            $buttonTextCss = '\$button-text';
+            $buttonBackgroundCss = '$button-bg';
+            $buttonTextCss = '$button-text';
         }
 
         // Additional CSS for specific themes
