@@ -2,6 +2,14 @@
 
 ## Version 5.2.0 - unreleased
 
+## Version 5.1.4 - 18.12.2025
+
+### 🐛 Bugfixes
+
+* **Button-Layout responsive optimiert**: Buttons passen sich jetzt der Textlänge an und nutzen auf Desktop `flex: 1` für gleichmäßige Verteilung
+
+---
+
 ## Version 5.1.3 - 18.12.2025
 
 ### 🐛 Bugfixes

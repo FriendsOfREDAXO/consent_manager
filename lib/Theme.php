@@ -806,10 +806,11 @@ div.consent_manager-wrapper div.consent_manager-detail {
     button.consent_manager-save-selection,
     button.consent_manager-accept-all,
     button.consent_manager-accept-none {
-        display: inline-block;
-        margin: 0;
-        width: auto;
-        min-width: $buttonMinWidth;
+        display: inline-block !important;
+        margin: 0 !important;
+        width: auto !important;
+        min-width: auto !important;
+        flex: 1 !important;
     }
 
     div.consent_manager-sitelinks {
