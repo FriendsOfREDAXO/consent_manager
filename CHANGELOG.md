@@ -1,5 +1,24 @@
 # REDAXO consent_manager - Changelog
 
+## Version 4.5.7 - 18.12.2025
+
+### 🐛 Bugfixes
+
+* **PHP-seitiges Cookie-Cleanup**: Serverseitige Bereinigung alter Cookies vor JavaScript-Load
+  * Löst Problem mit wiederholten Consent-Aufforderungen nach Domain-Parameter-Änderung (Issue #317)
+  * Betrifft Upgrades von 4.3.x/4.4.x auf 4.5.0-4.5.4 wo Domain-Parameter temporär entfernt war
+  * Browser-übergreifende Lösung: Löscht Wildcard-Cookies (`.domain.com`) und domain-specific Cookies
+  * JSON-Validierung prüft auf valides Cookie-Format (version + consents Properties)
+  * Cleanup erfolgt bei jedem Frontend-Seitenaufruf bis alle alten Cookies bereinigt sind
+
+### 🔧 Technische Änderungen
+
+* **boot.php Cookie-Migration**: Proaktives Cleanup über alle Domain-Varianten (domain, .domain, hostname)
+* **Robuste Validierung**: @json_decode mit Fallback-Prüfung auf Array-Struktur und Required-Fields
+* **Inline-Dokumentation**: Detaillierte Kommentare zur Timeline und Root-Cause des Problems
+
+---
+
 ## Version 4.5.5 - 01.12.2025
 
 ### 🐛 Bugfixes

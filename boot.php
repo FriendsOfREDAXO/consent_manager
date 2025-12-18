@@ -90,6 +90,39 @@ if (rex::isBackend()) {
 
 // Nur im Frontend
 if (rex::isFrontend()) {
+    // Cookie-Cleanup: Lösche alte Cookies mit inkompatiblem Domain-Attribut
+    // Fix für Issue mit "immer wieder neue Zustimmung" nach Domain-Parameter-Änderung (Issue #317)
+    //
+    // HINTERGRUND (Thomas):
+    // Zwischen 4.5.0-4.5.4 (17.10.2025, Commit 33983a7) war der Domain-Parameter temporär aus cmCookieAPI entfernt.
+    // Cookies wurden ohne Domain-Attribut gesetzt (domain-specific statt .domain.com Wildcard wie in 4.3.x/4.4.x).
+    // Chrome/Edge-Browser behielten alte Wildcard-Cookies UND speicherten neue domain-specific Cookies parallel.
+    // Dieser PHP-Fix löscht proaktiv alle alten/defekten Cookie-Varianten vor dem JavaScript-Load (ab 4.5.6).
+    if (isset($_COOKIE['consent_manager'])) {
+        $cookieValue = $_COOKIE['consent_manager'];
+        $needsCleanup = false;
+        
+        // Prüfe ob Cookie im validen JSON-Format ist
+        $cookieData = @json_decode($cookieValue, true);
+        if (!is_array($cookieData) || !isset($cookieData['version']) || !isset($cookieData['consents'])) {
+            $needsCleanup = true;
+        }
+        
+        // Lösche alte Cookies über alle Domain-Varianten
+        if ($needsCleanup && isset($_SERVER['HTTP_HOST'])) {
+            $host = $_SERVER['HTTP_HOST'];
+            $domain = preg_replace('/:\d+$/', '', $host); // Port entfernen
+            
+            // Setze Cookie mit Ablaufdatum in der Vergangenheit über alle Varianten
+            setcookie('consent_manager', '', time() - 3600, '/');
+            setcookie('consent_manager', '', time() - 3600, '/', $domain);
+            setcookie('consent_manager', '', time() - 3600, '/', '.' . $domain);
+            
+            // Entferne aus $_COOKIE Array
+            unset($_COOKIE['consent_manager']);
+        }
+    }
+    
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
         if (true === rex_get('consent_manager_outputjs', 'bool', false)) {
             $consent_manager = new consent_manager_frontend(0);
