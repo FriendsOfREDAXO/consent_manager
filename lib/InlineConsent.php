@@ -92,6 +92,36 @@ class InlineConsent
     }
 
     /**
+     * Extrahiert die YouTube Video ID aus einer URL oder gibt die ID zurück.
+     */
+    private static function extractYouTubeId(string $input): ?string
+    {
+        if (11 === strlen($input) && (bool) preg_match('/^[a-zA-Z0-9_-]{11}$/', $input)) {
+            return $input;
+        }
+        if (str_contains($input, 'youtube.com') || str_contains($input, 'youtu.be')) {
+            preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $input, $matches);
+            return $matches[1] ?? null;
+        }
+        return null;
+    }
+
+    /**
+     * Extrahiert die Vimeo Video ID aus einer URL oder gibt die ID zurück.
+     */
+    private static function extractVimeoId(string $input): ?string
+    {
+        if ((bool) preg_match('/^\d{6,}$/', $input)) {
+            return $input;
+        }
+        if (str_contains($input, 'vimeo.com')) {
+            preg_match('/vimeo\.com\/(\d+)/', $input, $matches);
+            return $matches[1] ?? null;
+        }
+        return null;
+    }
+
+    /**
      * YouTube Platzhalter.
      *
      * @param array<string, mixed> $options
@@ -100,9 +130,9 @@ class InlineConsent
     private static function renderYouTubePlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
         // Video ID extrahieren falls komplette URL übergeben wurde
-        if (str_contains($videoId, 'youtube.com') || str_contains($videoId, 'youtu.be')) {
-            preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $videoId, $matches);
-            $videoId = $matches[1] ?? $videoId;
+        $extractedId = self::extractYouTubeId($videoId);
+        if (null !== $extractedId) {
+            $videoId = $extractedId;
         }
 
         // Thumbnail über Mediamanager generieren (falls verfügbar)
@@ -151,9 +181,9 @@ class InlineConsent
     private static function renderVimeoPlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
         // Video ID extrahieren
-        if (str_contains($videoId, 'vimeo.com')) {
-            preg_match('/vimeo\.com\/(\d+)/', $videoId, $matches);
-            $videoId = $matches[1] ?? $videoId;
+        $extractedId = self::extractVimeoId($videoId);
+        if (null !== $extractedId) {
+            $videoId = $extractedId;
         }
 
         // Thumbnail über Mediamanager generieren (falls verfügbar)
@@ -301,47 +331,28 @@ class InlineConsent
         }
 
         // Für YouTube URLs oder Video-IDs
-        if (str_contains($content, 'youtube.com') || str_contains($content, 'youtu.be')
-            || (11 === strlen($content) && (bool) preg_match('/^[a-zA-Z0-9_-]{11}$/', $content))) {
-            // Video-ID extrahieren
-            if (11 === strlen($content) && (bool) preg_match('/^[a-zA-Z0-9_-]{11}$/', $content)) {
-                $videoId = $content;
-            } else {
-                preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $content, $matches);
-                $videoId = $matches[1] ?? '';
-            }
-
-            if ('' !== $videoId) {
-                // TODO: Verlagerung in ein Fragment prüfen
-                // Standard YouTube iframe
-                $width = $options['width'] ?? '560';
-                $height = $options['height'] ?? '315';
-                return '<iframe width="' . $width . '" height="' . $height . '" 
-                        src="https://www.youtube.com/embed/' . rex_escape($videoId) . '" 
-                        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen' . $attributesString . '></iframe>';
-            }
+        $youtubeId = self::extractYouTubeId($content);
+        if (null !== $youtubeId) {
+            // TODO: Verlagerung in ein Fragment prüfen
+            // Standard YouTube iframe
+            $width = $options['width'] ?? '560';
+            $height = $options['height'] ?? '315';
+            return '<iframe width="' . $width . '" height="' . $height . '" 
+                    src="https://www.youtube.com/embed/' . rex_escape($youtubeId) . '" 
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen' . $attributesString . '></iframe>';
         }
 
         // Für Vimeo URLs oder Video-IDs
-        if (str_contains($content, 'vimeo.com') || (bool) preg_match('/^\d{6,}$/', $content)) {
-            // Video-ID extrahieren
-            if ((bool) preg_match('/^\d{6,}$/', $content)) {
-                $videoId = $content;
-            } else {
-                preg_match('/vimeo\.com\/(\d+)/', $content, $matches);
-                $videoId = $matches[1] ?? '';
-            }
-
-            if ('' !== $videoId) {
-                // TODO: Verlagerung in ein Fragment prüfen
-                // Standard Vimeo iframe
-                $width = $options['width'] ?? '640';
-                $height = $options['height'] ?? '360';
-                return '<iframe src="https://player.vimeo.com/video/' . rex_escape($videoId) . '" 
-                        width="' . $width . '" height="' . $height . '" 
-                        frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen' . $attributesString . '></iframe>';
-            }
+        $vimeoId = self::extractVimeoId($content);
+        if (null !== $vimeoId) {
+            // TODO: Verlagerung in ein Fragment prüfen
+            // Standard Vimeo iframe
+            $width = $options['width'] ?? '640';
+            $height = $options['height'] ?? '360';
+            return '<iframe src="https://player.vimeo.com/video/' . rex_escape($vimeoId) . '" 
+                    width="' . $width . '" height="' . $height . '" 
+                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen' . $attributesString . '></iframe>';
         }
 
         // Für Google Maps Embed URLs: In iframe umwandeln

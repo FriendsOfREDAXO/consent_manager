@@ -6,6 +6,7 @@
 
 * **Neue Public API**: Einführung der Klasse `FriendsOfRedaxo\ConsentManager\ConsentManager` für den einfachen Zugriff auf gecachte Daten (Cookies, Gruppen, Texte, Domains)
 * **Performance**: Interne Klassen (`Frontend`, `InlineConsent`, `GoogleConsentMode`) nutzen nun den Cache statt direkter SQL-Abfragen
+* **Code-Qualität**: Refactoring der `InlineConsent` Klasse zur Vermeidung von Code-Duplizierung bei der Video-ID-Erkennung
 * **API Dokumentation**: Neue Dokumentation der öffentlichen API in der README.md
 
 ### 🐛 Bugfixes
