@@ -8,7 +8,7 @@
 * **Performance**: Interne Klassen (`Frontend`, `InlineConsent`, `GoogleConsentMode`) nutzen nun den Cache statt direkter SQL-Abfragen
 * **Code-Qualität**: Refactoring der `InlineConsent` Klasse zur Vermeidung von Code-Duplizierung bei der Video-ID-Erkennung
 * **Statistik**: Neue Auswertung der Consent-Logs im Backend (Tägliche Consents, Top-Services)
-* **Privacy**: Dynamische Cookie-Laufzeit - Bei minimaler Zustimmung (nur notwendige Cookies) wird die Laufzeit auf 14 Tage begrenzt (Privacy by Design)
+* **Privacy**: Dynamische Cookie-Laufzeit - Bei minimaler Zustimmung (nur notwendige Cookies) wird die Laufzeit auf 14 Tage begrenzt (Privacy by Design). Die Cookie-Beschreibung wird im Setup und Update automatisch angepasst ("14 Tage / 1 Jahr").
 * **API Dokumentation**: Neue Dokumentation der öffentlichen API in der README.md
 
 ### 🛡️ Security

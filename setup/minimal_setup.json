@@ -31,7 +31,7 @@
       "service_name": "Consent Manager Cookie",
       "provider": "Diese Website",
       "provider_link_privacy": "",
-      "definition": "-\n name: consent_manager\n time: \"1 Jahr\"\n desc: \"Speichert Ihre Einwilligung zu Cookies und deren Kategorien.\"",
+      "definition": "-\n name: consent_manager\n time: \"14 Tage / 1 Jahr\"\n desc: \"Speichert Ihre Einwilligung zu Cookies und deren Kategorien.\"",
       "script": "",
       "script_unselect": "",
       "placeholder_text": "",

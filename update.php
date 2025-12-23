@@ -53,3 +53,8 @@ rex_sql_table::get(rex::getTable('consent_manager_domain'))
     ->ensureColumn(new rex_sql_column('oembed_video_height', 'int(10) unsigned', true, '360'))
     ->ensureColumn(new rex_sql_column('oembed_show_allow_all', 'tinyint(1)', true, '0'))
     ->ensure();
+
+// Update cookie lifetime text for consent_manager cookie (Privacy by Design)
+$sql = rex_sql::factory();
+$sql->setQuery('UPDATE `' . rex::getTablePrefix() . 'consent_manager_cookie` SET definition = REPLACE(definition, "time: \"1 Jahr\"", "time: \"14 Tage / 1 Jahr\"") WHERE uid = "consent_manager"');
+

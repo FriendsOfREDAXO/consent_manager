@@ -87,7 +87,7 @@
       "service_name": "Datenschutz Cookie",
       "provider": "Diese Website",
       "provider_link_privacy": "",
-      "definition": "-\n name: consent_manager\n time: \"1 Jahr\"\n desc: \"Speichert Ihre Auswahl bzgl. der Cookies.\"",
+      "definition": "-\n name: consent_manager\n time: \"14 Tage / 1 Jahr\"\n desc: \"Speichert Ihre Auswahl bzgl. der Cookies.\"",
       "script": "",
       "script_unselect": "",
       "placeholder_text": "",
