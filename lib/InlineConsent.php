@@ -88,23 +88,7 @@ class InlineConsent
      */
     private static function getService(string $serviceKey): ?array
     {
-        $sql = rex_sql::factory();
-
-        // Service aus der Cookie-Tabelle laden
-        // TODO: Query mit setTable/setWhere/select aufbauen
-        $sql->setQuery('
-            SELECT pid, id, clang_id, uid, service_name, provider, provider_link_privacy, 
-                   definition, script, script_unselect, placeholder_text, placeholder_image,
-                   createuser, updateuser, createdate, updatedate
-            FROM ' . rex::getTable('consent_manager_cookie') . '
-            WHERE uid = ? AND clang_id = ?
-        ', [$serviceKey, rex_clang::getCurrentId()]);
-
-        if (0 === $sql->getRows()) {
-            return null;
-        }
-
-        return $sql->getRow();
+        return ConsentManager::getCookieData($serviceKey);
     }
 
     /**
@@ -395,36 +379,8 @@ class InlineConsent
      */
     private static function getButtonText(string $key, string $fallback): string
     {
-        $debug = rex::isDebugMode();
-
-        try {
-            $sql = rex_sql::factory();
-            $sql->setQuery(
-                'SELECT text FROM ' . rex::getTable('consent_manager_text') . ' WHERE uid = ? AND clang_id = ?',
-                [$key, rex_clang::getCurrentId()]
-            );
-
-            if ($sql->getRows() > 0) {
-                $value = (string) $sql->getValue('text');
-                if ($debug) {
-                    // TODO: Texte über .lang aufbauen?
-                    // XSS-Schutz: Debug-Werte escapen da aus DB
-                    echo '<!-- DEBUG getButtonText: key=' . htmlspecialchars($key, ENT_QUOTES, 'UTF-8') . ', clang=' . rex_clang::getCurrentId() . ', value=' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . " -->\n";
-                }
-                return $value;
-            }
-            if ($debug) {
-                // TODO: Texte über .lang aufbauen?
-                echo "<!-- DEBUG getButtonText: key=$key NOT FOUND in DB, using fallback=$fallback -->\n";
-            }
-        } catch (rex_sql_exception $e) {
-            if ($debug) {
-                // TODO: Texte über .lang aufbauen?
-                echo "<!-- DEBUG getButtonText: key=$key, SQL ERROR: " . $e->getMessage() . " -->\n";
-            }
-        }
-
-        return $fallback;
+        $texts = ConsentManager::getTexts();
+        return $texts[$key] ?? $fallback;
     }
 
     /**

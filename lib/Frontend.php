@@ -63,13 +63,9 @@ class Frontend
         if (1 === $forceWrite) {
             Cache::forceWrite();
         }
-        $this->cache = Cache::read();
-        if (0 === count($this->cache) || (rex_addon::get('consent_manager')->getVersion() !== ($this->cache['majorVersion'] ?? null))) {
-            Cache::forceWrite();
-            $this->cache = Cache::read();
-        }
-        $this->cacheLogId = $this->cache['cacheLogId'] ?? '';
-        $this->version = $this->cache['majorVersion'] ?? '';
+        $this->cache = ConsentManager::getCache();
+        $this->cacheLogId = ConsentManager::getCacheLogId();
+        $this->version = ConsentManager::getVersion();
     }
 
     /**
@@ -113,22 +109,23 @@ class Frontend
         // Domain immer in Kleinbuchstaben normalisieren für den Lookup
         $domain = Utility::hostname();
 
-        if (!isset($this->cache['domains'])) {
+        $domains = ConsentManager::getDomains();
+        if (empty($domains)) {
             return;
         }
 
         // Zuerst exakte Domain suchen
-        if (isset($this->cache['domains'][$domain])) {
+        if (isset($domains[$domain])) {
             $this->domainName = $domain;
         } else {
             // Dann HTTP_HOST versuchen (für Fälle mit Port oder Subdomain)
             $httpHost = strtolower(rex_request::server('HTTP_HOST'));
-            if (isset($this->cache['domains'][$httpHost])) {
+            if (isset($domains[$httpHost])) {
                 $this->domainName = $httpHost;
             } else {
                 // Domain ohne Port versuchen
                 $httpHostNoPort = preg_replace('/:\d+$/', '', $httpHost);
-                if (isset($this->cache['domains'][$httpHostNoPort])) {
+                if (isset($domains[$httpHostNoPort])) {
                     $this->domainName = $httpHostNoPort;
                 } else {
                     return;
@@ -137,11 +134,11 @@ class Frontend
         }
 
         // Zusätzliche Sicherheitsabfrage
-        if ('' === $this->domainName || !isset($this->cache['domains'][$this->domainName])) {
+        if ('' === $this->domainName || !isset($domains[$this->domainName])) {
             return;
         }
 
-        $domainData = $this->cache['domains'][$this->domainName];
+        $domainData = $domains[$this->domainName];
 
         // Sicherstellen, dass Domain-Daten ein Array sind
         if (!is_array($domainData)) {

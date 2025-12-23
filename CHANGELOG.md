@@ -2,7 +2,11 @@
 
 ## Version 5.2.0 - unreleased
 
-## Version 5.1.4 - 18.12.2025
+### 🚀 Features
+
+* **Neue Public API**: Einführung der Klasse `FriendsOfRedaxo\ConsentManager\ConsentManager` für den einfachen Zugriff auf gecachte Daten (Cookies, Gruppen, Texte, Domains)
+* **Performance**: Interne Klassen (`Frontend`, `InlineConsent`, `GoogleConsentMode`) nutzen nun den Cache statt direkter SQL-Abfragen
+* **API Dokumentation**: Neue Dokumentation der öffentlichen API in der README.md
 
 ### 🐛 Bugfixes
 

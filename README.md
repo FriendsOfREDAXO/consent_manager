@@ -1348,6 +1348,130 @@ Der Inline-Consent generiert ansprechende Platzhalter:
 
 ---
 
+
+# API Dokumentation
+
+Das Consent Manager Addon stellt eine öffentliche API bereit, um auf Konfigurationsdaten, Cookies und Platzhalter zuzugreifen sowie Consent-Abfragen im Frontend zu generieren.
+
+## Datenabruf (ConsentManager)
+
+Die Klasse `FriendsOfRedaxo\ConsentManager\ConsentManager` dient als zentrale Schnittstelle zum Abruf von gecachten Daten. Alle Methoden sind statisch.
+
+### Cookie Daten abrufen
+
+Gibt die vollständigen Daten eines Cookies (Services) zurück.
+
+```php
+use FriendsOfRedaxo\ConsentManager\ConsentManager;
+
+// Für die aktuelle Sprache
+$data = ConsentManager::getCookieData('youtube');
+
+// Für eine spezifische Sprache (z.B. ID 2)
+$data = ConsentManager::getCookieData('youtube', 2);
+```
+
+**Rückgabewert:** `array|null` - Die Daten des Cookies oder `null`, wenn nicht gefunden.
+
+### Platzhalter Daten abrufen
+
+Gibt speziell die konfigurierten Platzhalter-Informationen (Bild und Text) für einen Service zurück. Dies ist hilfreich, um eigene Consent-Blocker zu bauen.
+
+```php
+use FriendsOfRedaxo\ConsentManager\ConsentManager;
+
+$placeholder = ConsentManager::getPlaceholderData('youtube');
+
+if ($placeholder) {
+    echo $placeholder['image']; // Dateiname im Medienpool
+    echo $placeholder['text'];  // Platzhalter-Text
+}
+```
+
+**Rückgabewert:** `array{image: string, text: string}|null`
+
+### Alle Cookies abrufen
+
+Gibt alle konfigurierten Cookies für eine Sprache zurück.
+
+```php
+$cookies = ConsentManager::getCookies();
+// oder $cookies = ConsentManager::getCookies($clangId);
+```
+
+### Cookie-Gruppen abrufen
+
+Gibt alle Cookie-Gruppen zurück.
+
+```php
+$groups = ConsentManager::getCookieGroups();
+```
+
+### Texte abrufen
+
+Gibt alle im Addon konfigurierten Texte für das Frontend zurück.
+
+```php
+$texts = ConsentManager::getTexts();
+echo $texts['consent_manager_accept_all']; // Beispiel
+```
+
+### Domains abrufen
+
+Gibt alle konfigurierten Domains zurück.
+
+```php
+$domains = ConsentManager::getDomains();
+```
+
+### Domain-Konfiguration abrufen
+
+Gibt die Konfiguration einer spezifischen Domain zurück.
+
+```php
+$domainConfig = ConsentManager::getDomain('example.org');
+```
+
+## Inline Consent (InlineConsent)
+
+Die Klasse `FriendsOfRedaxo\ConsentManager\InlineConsent` ermöglicht die Ausgabe von blockierten Inhalten, die erst nach Zustimmung geladen werden (z.B. YouTube-Videos, Iframes).
+
+### Inhalt mit Consent-Abfrage ausgeben
+
+Umschließt einen Inhalt (z.B. Iframe) oder eine Video-ID mit dem Consent-Platzhalter.
+
+```php
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
+
+// Einfachste Verwendung mit Service-Key und Inhalt
+$content = '<iframe src="..."></iframe>';
+echo InlineConsent::doConsent('youtube', $content);
+```
+
+**Mit Optionen:**
+
+```php
+$options = [
+    'title' => 'Mein Video',
+    'width' => '100%',
+    'height' => '400px',
+    'thumbnail' => 'my_image.jpg', // oder 'auto' für automatische Thumbnails bei YouTube/Vimeo
+    'attributes' => ['class' => 'my-video-class']
+];
+
+// Bei YouTube/Vimeo kann auch direkt die ID oder URL übergeben werden
+echo InlineConsent::doConsent('youtube', 'https://youtu.be/dQw4w9WgXcQ', $options);
+```
+
+### CSS und JavaScript manuell ausgeben
+
+Falls benötigt, können CSS und JS für den Inline-Consent manuell ausgegeben werden. Im Normalfall werden diese Assets automatisch eingebunden, sobald `doConsent` aufgerufen wird.
+
+```php
+echo InlineConsent::getCSS();
+echo InlineConsent::getJavaScript();
+```
+
 ## 📄 Lizenz und Credits
 
 ### Lizenz

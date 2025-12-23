@@ -67,17 +67,11 @@ class GoogleConsentMode
         // Domain in Kleinbuchstaben normalisieren für den Lookup
         $domain = strtolower($domain);
 
-        $sql = rex_sql::factory();
-        // TODO: umstellen auf setTable/setWhere/select
-        $sql->setQuery(
-            'SELECT google_consent_mode_enabled FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
-            [$domain],
-        );
-
+        $domainData = ConsentManager::getDomain($domain);
         $mode = 'disabled';
 
-        if ($sql->getRows() > 0) {
-            $mode = $sql->getValue('google_consent_mode_enabled') ?? 'disabled';
+        if ($domainData) {
+            $mode = $domainData['google_consent_mode_enabled'] ?? 'disabled';
         }
 
         return [
@@ -101,14 +95,9 @@ class GoogleConsentMode
         $mappings = [];
 
         // Hole alle Services/Cookies
-        $sql = rex_sql::factory();
-        // TODO: umstellen auf setTable/setWhere/select
-        $sql->setQuery(
-            'SELECT uid, service_name FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE clang_id = ?',
-            [$clangId],
-        );
+        $cookies = ConsentManager::getCookies($clangId);
 
-        foreach ($sql->getArray() as $service) {
+        foreach ($cookies as $service) {
             $uid = (string) ($service['uid'] ?? '');
             if ('' === $uid) {
                 continue;
