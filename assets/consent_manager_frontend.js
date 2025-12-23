@@ -248,6 +248,7 @@ function debugLog(message, data) {
     function saveConsent(toSave) {
         debugLog('saveConsent: Start', toSave);
         consents = [];
+        var hasOptionalConsent = false;
         cookieData = {
             consents: [],
             version: addonVersion,
@@ -260,6 +261,9 @@ function debugLog(message, data) {
                 // array mit cookie uids
                 var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
                 if (el.checked || toSave === 'all') {
+                    if (!el.disabled) {
+                        hasOptionalConsent = true;
+                    }
                     debugLog('saveConsent: Consent erteilt für', cookieUids);
                     cookieUids.forEach(function (uid) {
                         consents.push(uid);
@@ -314,7 +318,12 @@ function debugLog(message, data) {
             console.warn('Consent Manager: deleteCookies() failed before setting cookie', e);
         }
 
-        cmCookieAPI.set('consentmanager', JSON.stringify(cookieData));
+        if (!hasOptionalConsent) {
+            debugLog('saveConsent: Minimal consent only - setting short cookie lifetime (14 days)');
+            cmCookieAPI.set('consentmanager', JSON.stringify(cookieData), { expires: 14 });
+        } else {
+            cmCookieAPI.set('consentmanager', JSON.stringify(cookieData));
+        }
         
         // Google Consent Mode v2 Update
         if (typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {

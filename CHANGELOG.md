@@ -8,11 +8,17 @@
 * **Performance**: Interne Klassen (`Frontend`, `InlineConsent`, `GoogleConsentMode`) nutzen nun den Cache statt direkter SQL-Abfragen
 * **Code-Qualität**: Refactoring der `InlineConsent` Klasse zur Vermeidung von Code-Duplizierung bei der Video-ID-Erkennung
 * **Statistik**: Neue Auswertung der Consent-Logs im Backend (Tägliche Consents, Top-Services)
+* **Privacy**: Dynamische Cookie-Laufzeit - Bei minimaler Zustimmung (nur notwendige Cookies) wird die Laufzeit auf 14 Tage begrenzt (Privacy by Design)
 * **API Dokumentation**: Neue Dokumentation der öffentlichen API in der README.md
+
+### 🛡️ Security
+
+* **CSP**: Nonce-Schutz für Inline-Skripte im Backend-Log hinzugefügt
 
 ### 🐛 Bugfixes
 
 * **Button-Layout responsive optimiert**: Buttons passen sich jetzt der Textlänge an und nutzen auf Desktop `flex: 1` für gleichmäßige Verteilung
+* **Localization**: Fehlende Übersetzungen im Statistik-Modul ergänzt
 
 ---
 
