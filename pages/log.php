@@ -74,8 +74,89 @@ $fragmentsearch->setVar('autofocus', false);
 $fragmentsearch->setVar('value', $searchvalue);
 $cmsearch = $fragmentsearch->parse('core/form/search.php');
 
+$statsBtn = '<button class="btn btn-info" id="btn-consent-stats" style="margin-right: 10px;"><i class="rex-icon fa-bar-chart"></i> ' . rex_i18n::msg('consent_manager_stats') . '</button>';
+
 $fragment = new rex_fragment();
 $fragment->setVar('title', rex_i18n::msg('consent_manager_thead_title'));
-$fragment->setVar('options', $cmsearch, false);
+$fragment->setVar('options', '<div style="display:flex; justify-content:flex-end; align-items:center;">' . $statsBtn . $cmsearch . '</div>', false);
 $fragment->setVar('content', $list->get(), false);
 echo $fragment->parse('core/page/section.php');
+
+?>
+<!-- Modal -->
+<div class="modal fade" id="consent-stats-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><?php echo rex_i18n::msg('consent_manager_stats_title'); ?></h4>
+      </div>
+      <div class="modal-body" id="consent-stats-body">
+        <div class="text-center"><i class="rex-icon fa-spinner fa-spin fa-3x"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script nonce="<?= rex_response::getNonce() ?>">
+$(document).on('click', '#btn-consent-stats', function() {
+    $('#consent-stats-modal').modal('show');
+    loadConsentStats();
+});
+
+function loadConsentStats() {
+    $('#consent-stats-body').html('<div class="text-center"><i class="rex-icon fa-spinner fa-spin fa-3x"></i></div>');
+    $.ajax({
+        url: 'index.php?rex-api-call=consent_manager_stats&days=30',
+        dataType: 'json',
+        success: function(data) {
+            renderStats(data);
+        },
+        error: function() {
+            $('#consent-stats-body').html('<div class="alert alert-danger"><?php echo rex_i18n::msg('consent_manager_stats_error'); ?></div>');
+        }
+    });
+}
+
+function renderStats(data) {
+    var html = '';
+    
+    // Summary
+    html += '<div class="row"><div class="col-md-12"><h4><?php echo rex_i18n::msg('consent_manager_stats_total'); ?> ' + data.total + '</h4></div></div>';
+    html += '<hr>';
+
+    // Cookies
+    html += '<div class="row"><div class="col-md-6">';
+    html += '<h5><?php echo rex_i18n::msg('consent_manager_stats_top_cookies'); ?></h5>';
+    html += '<table class="table table-striped table-condensed">';
+    html += '<thead><tr><th><?php echo rex_i18n::msg('consent_manager_stats_service'); ?></th><th><?php echo rex_i18n::msg('consent_manager_stats_count'); ?></th><th>%</th></tr></thead><tbody>';
+    
+    $.each(data.cookies, function(uid, count) {
+        var percent = data.total > 0 ? Math.round((count / data.total) * 100) : 0;
+        html += '<tr>';
+        html += '<td>' + uid + '</td>';
+        html += '<td>' + count + '</td>';
+        html += '<td><div class="progress" style="margin-bottom:0"><div class="progress-bar progress-bar-info" role="progressbar" style="width: ' + percent + '%;">' + percent + '%</div></div></td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table>';
+    html += '</div>';
+
+    // Daily
+    html += '<div class="col-md-6">';
+    html += '<h5><?php echo rex_i18n::msg('consent_manager_stats_history'); ?></h5>';
+    html += '<table class="table table-striped table-condensed">';
+    html += '<thead><tr><th><?php echo rex_i18n::msg('consent_manager_stats_date'); ?></th><th><?php echo rex_i18n::msg('consent_manager_stats_count'); ?></th></tr></thead><tbody>';
+    $.each(data.daily, function(i, day) {
+        html += '<tr>';
+        html += '<td>' + day.date + '</td>';
+        html += '<td>' + day.count + '</td>';
+        html += '</tr>';
+    });
+    html += '</tbody></table>';
+    html += '</div></div>';
+
+    $('#consent-stats-body').html(html);
+}
+</script>
+<?php

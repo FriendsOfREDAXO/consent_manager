@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\Api\ConsentManager;
+use FriendsOfRedaxo\ConsentManager\Api\ConsentStatsApi;
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\Cronjob\LogDelete;
@@ -216,6 +217,7 @@ if (rex::isFrontend()) {
 }
 
 rex_api_function::register('consent_manager', ConsentManager::class);
+rex_api_function::register('consent_manager_stats', ConsentStatsApi::class);
 
 // CKE5 oEmbed Parser automatisch im Frontend registrieren - nur wenn CKE5 verfügbar ist
 if (rex::isFrontend() && rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {

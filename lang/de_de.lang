@@ -414,3 +414,14 @@ consent_manager_button_inline_allow_all_text_info = Inline Placeholder: Button "
 # Theme Editor
 consent_manager_theme_editor_saved = Theme "{0}" wurde erfolgreich erstellt und gespeichert!
 consent_manager_theme_editor_project_addon_required = Der Theme-Editor benötigt das installierte "project" AddOn, um eigene Themes zu speichern. Bitte installiere das project AddOn über den Installer.
+
+consent_manager_stats = Statistik
+consent_manager_stats_title = Consent Statistik
+consent_manager_stats_error = Fehler beim Laden der Statistik.
+consent_manager_stats_total = Gesamt Consents (30 Tage):
+consent_manager_stats_top_cookies = Top Cookies/Services
+consent_manager_stats_service = Service
+consent_manager_stats_count = Anzahl
+consent_manager_stats_history = Verlauf (Tage)
+consent_manager_stats_date = Datum
+
