@@ -724,6 +724,14 @@ function mapConsentsToGoogleFlags(consents) {
 }
 
 function consent_manager_showBox() {
+    var consentBox = document.getElementById('consent_manager-background');
+    
+    // Safety check: box must exist in DOM
+    if (!consentBox) {
+        console.warn('Consent Manager: Consent box element not found in DOM');
+        return;
+    }
+    
     var consents = [];
     var cookieValue = cmCookieAPI.get('consentmanager');
     if (typeof cookieValue !== 'undefined') {
@@ -732,8 +740,8 @@ function consent_manager_showBox() {
             consents = cookieData.consents;
         }
     }
-    consent_managerBox = document.getElementById('consent_manager-background');
-    consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+    
+    consentBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
         var check = true,
             cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
         cookieUids.forEach(function (uid) {
@@ -745,11 +753,13 @@ function consent_manager_showBox() {
             el.checked = true;
         }
     });
+    
     if (consent_manager_parameters.hidebodyscrollbar) {
         document.querySelector('body').style.overflow = 'hidden';
     }
-    document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-    document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'false');
+    
+    consentBox.classList.remove('consent_manager-hidden');
+    consentBox.setAttribute('aria-hidden', 'false');
     
     // Focus the dialog wrapper for better accessibility (WCAG 2.1)
     // This allows screen readers to announce the dialog and users can tab to interactive elements
