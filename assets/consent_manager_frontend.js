@@ -19,6 +19,18 @@ function debugLog(message, data) {
     }
 }
 
+// Helper: safe JSON parse for potentially-malformed external sources (cookies, attributes etc.)
+// Must be global scope so consent_manager_hasconsent() and consent_manager_showBox() can access it
+function safeJSONParse(input, fallback) {
+    try {
+        if (typeof input === 'string') return JSON.parse(input);
+        if (typeof input === 'object' && input !== null) return input;
+    } catch (e) {
+        console.warn('consent_manager: safeJSONParse failed for input', input, e);
+    }
+    return fallback;
+}
+
 (function () {
     'use strict';
     var show = 0,
@@ -31,17 +43,6 @@ function debugLog(message, data) {
         consent_managerBox;
 
     consent_manager_parameters.no_cookie_set = false;
-
-    // Helper: safe JSON parse for potentially-malformed external sources (cookies, attributes etc.)
-    function safeJSONParse(input, fallback) {
-        try {
-            if (typeof input === 'string') return JSON.parse(input);
-            if (typeof input === 'object' && input !== null) return input;
-        } catch (e) {
-            console.warn('consent_manager: safeJSONParse failed for input', input, e);
-        }
-        return fallback;
-    }
 
     // Es gibt keinen Datenschutzcookie, Consent zeigen
     if (typeof cmCookieAPI.get('consentmanager') === 'undefined') {
