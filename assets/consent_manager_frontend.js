@@ -248,6 +248,13 @@ function safeJSONParse(input, fallback) {
 
     function saveConsent(toSave) {
         debugLog('saveConsent: Start', toSave);
+        
+        // Safety check: consent box must exist
+        if (!consent_managerBox) {
+            console.warn('Consent Manager: saveConsent called but consent_managerBox not initialized');
+            return;
+        }
+        
         consents = [];
         var hasOptionalConsent = false;
         cookieData = {
@@ -543,6 +550,12 @@ function safeJSONParse(input, fallback) {
     }
 
     function showBox() {
+        // Safety check: consent box must exist
+        if (!consent_managerBox) {
+            console.warn('Consent Manager: showBox called but consent_managerBox not initialized');
+            return;
+        }
+        
         consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
             var check = true,
                 cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
