@@ -323,8 +323,8 @@ function loadGoogleMaps() {
 function loadExternalContent() {
     if (consent_manager_hasconsent('external-api')) {
         fetch('/api/external-data')
-            .then(response => response.json())
-            .then(data => console.log(data));
+            .then(function(response) { return response.json(); })
+            .then(function(data) { console.log(data); });
     }
 }
 
