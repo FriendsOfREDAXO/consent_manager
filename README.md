@@ -236,182 +236,42 @@ consent_manager_showBox();
 
 ### 5. Consent-Status abfragen
 
-Der Consent Manager stellt API-Funktionen bereit, um den aktuellen Consent-Status im Frontend (JavaScript) oder Backend (PHP) zu prüfen.
-
-#### JavaScript API
-
-**Grundlegende Consent-Abfrage:**
+**JavaScript:**
 ```javascript
-// Prüfen ob Consent für einen Service erteilt wurde
+// Grundlegende Consent-Abfrage
 if (consent_manager_hasconsent('youtube')) {
-    // YouTube wurde akzeptiert - Video/Inhalt laden
-    console.log('YouTube Consent erteilt');
-} else {
-    // Kein Consent - alternativen Inhalt zeigen
-    console.log('YouTube Consent fehlt');
+    // YouTube wurde akzeptiert
 }
-```
 
-**Praktisches Beispiel: YouTube-Links mit Consent-Check**
-
-Häufiger Anwendungsfall: Links zu YouTube-Videos sollen bei vorhandenem Consent in einem Popup/Modal geöffnet werden, ansonsten normal zur YouTube-Seite weiterleiten.
-
-```javascript
-// Event-Handler für YouTube-Links
-document.querySelectorAll('a[href*="youtube.com"], a[href*="youtu.be"]').forEach(function(link) {
+// Praktisches Beispiel: YouTube-Links mit Consent
+document.querySelectorAll('a[href*="youtube.com"]').forEach(function(link) {
     link.addEventListener('click', function(e) {
-        // Consent-Check
         if (!consent_manager_hasconsent('youtube')) {
-            // Kein Consent: Link normal folgen (zu YouTube weiterleiten)
-            return;
+            return; // Kein Consent: normaler Link
         }
-        
-        // Consent vorhanden: Link abfangen und Video im Modal zeigen
+        // Consent vorhanden: Video im Modal zeigen
         e.preventDefault();
-        e.stopImmediatePropagation();
-        
-        // Video-ID aus URL extrahieren und in Modal/Popup laden
-        var videoId = extractYouTubeID(this.href);
-        showVideoModal(videoId);
+        // ... Video laden
     });
 });
 
-// Hilfsfunktion: YouTube ID aus URL extrahieren
-function extractYouTubeID(url) {
-    var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    var match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
-}
-
-// Hilfsfunktion: Video in Modal anzeigen
-function showVideoModal(videoId) {
-    // Beispiel mit eigenem Modal-System
-    var modal = document.getElementById('video-modal');
-    var iframe = modal.querySelector('iframe');
-    iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
-    modal.style.display = 'block';
-}
-```
-
-**Weitere Anwendungsfälle:**
-
-```javascript
-// Conditional Script Loading
-function initializeAnalytics() {
-    if (consent_manager_hasconsent('google-analytics')) {
-        // Google Analytics initialisieren
-        gtag('config', 'GA_MEASUREMENT_ID');
-    }
-}
-
-// Feature-Gating
-function loadGoogleMaps() {
-    if (consent_manager_hasconsent('google-maps')) {
-        // Google Maps API laden
-        var script = document.createElement('script');
-        script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_KEY';
-        document.head.appendChild(script);
-    } else {
-        // Statische Karte anzeigen
-        document.getElementById('map').innerHTML = 
-            '<p>Für interaktive Karten müssen Sie Google Maps Cookies akzeptieren.</p>' +
-            '<a class="consent_manager-show-box">Cookie-Einstellungen</a>';
-    }
-}
-
-// AJAX-Requests mit Consent-Check
-function loadExternalContent() {
-    if (consent_manager_hasconsent('external-api')) {
-        fetch('/api/external-data')
-            .then(function(response) { return response.json(); })
-            .then(function(data) { console.log(data); });
-    }
-}
-
-// Dynamisches UI basierend auf Consent
-function updateUI() {
-    var hasMarketingConsent = consent_manager_hasconsent('marketing');
-    var newsletterSection = document.getElementById('newsletter');
-    
-    if (hasMarketingConsent) {
-        newsletterSection.style.display = 'block';
-    } else {
-        newsletterSection.style.display = 'none';
-    }
-}
-```
-
-**Event-Listener für Consent-Änderungen:**
-```javascript
 // Reagieren auf Consent-Änderungen
 document.addEventListener('consent_manager-saved', function(e) {
     var consents = JSON.parse(e.detail);
-    
-    // UI aktualisieren wenn sich Consents ändern
-    updateUI();
-    
-    // Bedingt Scripts nachladen
-    if (consents.includes('google-analytics')) {
-        initializeAnalytics();
-    }
+    // Scripts nachladen, UI aktualisieren etc.
 });
 ```
 
-#### PHP API
-
-**Serverseitiger Consent-Check:**
+**PHP:**
 ```php
 <?php
 use FriendsOfRedaxo\ConsentManager\Utility;
 
-// Grundlegende Consent-Abfrage
 if (Utility::has_consent('youtube')) {
-    // YouTube wurde akzeptiert - iframe direkt einbetten
-    echo '<iframe src="https://www.youtube.com/embed/VIDEO_ID"></iframe>';
-} else {
-    // Kein Consent - Platzhalter anzeigen
-    echo '<div class="video-placeholder">';
-    echo '  <p>Für YouTube-Videos ist Ihre Zustimmung erforderlich.</p>';
-    echo '  <a class="consent_manager-show-box-reload">Cookie-Einstellungen</a>';
-    echo '</div>';
+    // YouTube wurde akzeptiert
 }
 ?>
 ```
-
-**Conditional Content Rendering:**
-```php
-<?php
-// Google Maps nur bei Consent rendern
-if (Utility::has_consent('google-maps')) {
-    echo '<div id="google-maps"></div>';
-    echo '<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY"></script>';
-} else {
-    echo '<img src="/assets/static-map.jpg" alt="Standort">';
-}
-
-// Analytics-Code nur bei Consent ausgeben
-if (Utility::has_consent('google-analytics')) {
-    echo '<script async src="https://www.googletagmanager.com/gtag/js?id=GA_ID"></script>';
-}
-?>
-```
-
-**Wichtige Hinweise:**
-
-⚠️ **Service-Keys (UIDs) müssen exakt übereinstimmen:**
-- Die Service-Keys in `consent_manager_hasconsent('youtube')` müssen mit den im Backend konfigurierten UIDs übereinstimmen
-- Groß-/Kleinschreibung beachten! `'youtube'` ≠ `'YouTube'`
-- Verfügbare Service-Keys im Backend unter **Dienste** → **Schlüssel** einsehen
-
-⚠️ **Cookie-Banner Assets müssen geladen sein:**
-- Die JavaScript-Funktion `consent_manager_hasconsent()` ist nur verfügbar, wenn `consent_manager_frontend.js` geladen wurde
-- Integration über `Frontend::getFragment()` im Template erforderlich
-- Siehe Abschnitt **Template-Integration** für Details
-
-⚠️ **Asynchrones Laden beachten:**
-- Bei verzögertem Laden des Consent Managers kann es zu Race Conditions kommen
-- Prüfen Sie ob die Funktion existiert: `if (typeof consent_manager_hasconsent === 'function')`
-- Oder warten Sie auf das Laden: `document.addEventListener('DOMContentLoaded', ...)`
 
 ---
 
