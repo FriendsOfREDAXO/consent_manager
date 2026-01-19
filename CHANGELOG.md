@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.2.0 - unreleased
+## Version 5.2.0 - 19.01.2026
 
 ### 🚀 Features
 
