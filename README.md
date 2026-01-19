@@ -235,17 +235,39 @@ consent_manager_showBox();
 ```
 
 ### 5. Consent-Status abfragen
+
 **JavaScript:**
 ```javascript
+// Grundlegende Consent-Abfrage
 if (consent_manager_hasconsent('youtube')) {
     // YouTube wurde akzeptiert
 }
+
+// Praktisches Beispiel: YouTube-Links mit Consent
+document.querySelectorAll('a[href*="youtube.com"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        if (!consent_manager_hasconsent('youtube')) {
+            return; // Kein Consent: normaler Link
+        }
+        // Consent vorhanden: Video im Modal zeigen
+        e.preventDefault();
+        // ... Video laden
+    });
+});
+
+// Reagieren auf Consent-Änderungen
+document.addEventListener('consent_manager-saved', function(e) {
+    var consents = JSON.parse(e.detail);
+    // Scripts nachladen, UI aktualisieren etc.
+});
 ```
 
 **PHP:**
 ```php
 <?php
-if (FriendsOfRedaxo\ConsentManager\Utility::has_consent('youtube')) {
+use FriendsOfRedaxo\ConsentManager\Utility;
+
+if (Utility::has_consent('youtube')) {
     // YouTube wurde akzeptiert
 }
 ?>

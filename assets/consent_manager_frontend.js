@@ -19,6 +19,18 @@ function debugLog(message, data) {
     }
 }
 
+// Helper: safe JSON parse for potentially-malformed external sources (cookies, attributes etc.)
+// Must be global scope so consent_manager_hasconsent() and consent_manager_showBox() can access it
+function safeJSONParse(input, fallback) {
+    try {
+        if (typeof input === 'string') return JSON.parse(input);
+        if (typeof input === 'object' && input !== null) return input;
+    } catch (e) {
+        console.warn('consent_manager: safeJSONParse failed for input', input, e);
+    }
+    return fallback;
+}
+
 (function () {
     'use strict';
     var show = 0,
@@ -31,17 +43,6 @@ function debugLog(message, data) {
         consent_managerBox;
 
     consent_manager_parameters.no_cookie_set = false;
-
-    // Helper: safe JSON parse for potentially-malformed external sources (cookies, attributes etc.)
-    function safeJSONParse(input, fallback) {
-        try {
-            if (typeof input === 'string') return JSON.parse(input);
-            if (typeof input === 'object' && input !== null) return input;
-        } catch (e) {
-            console.warn('consent_manager: safeJSONParse failed for input', input, e);
-        }
-        return fallback;
-    }
 
     // Es gibt keinen Datenschutzcookie, Consent zeigen
     if (typeof cmCookieAPI.get('consentmanager') === 'undefined') {
@@ -247,6 +248,13 @@ function debugLog(message, data) {
 
     function saveConsent(toSave) {
         debugLog('saveConsent: Start', toSave);
+        
+        // Safety check: consent box must exist
+        if (!consent_managerBox) {
+            console.warn('Consent Manager: saveConsent called but consent_managerBox not initialized');
+            return;
+        }
+        
         consents = [];
         var hasOptionalConsent = false;
         cookieData = {
@@ -542,6 +550,12 @@ function debugLog(message, data) {
     }
 
     function showBox() {
+        // Safety check: consent box must exist
+        if (!consent_managerBox) {
+            console.warn('Consent Manager: showBox called but consent_managerBox not initialized');
+            return;
+        }
+        
         consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
             var check = true,
                 cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
@@ -723,6 +737,14 @@ function mapConsentsToGoogleFlags(consents) {
 }
 
 function consent_manager_showBox() {
+    var consentBox = document.getElementById('consent_manager-background');
+    
+    // Safety check: box must exist in DOM
+    if (!consentBox) {
+        console.warn('Consent Manager: Consent box element not found in DOM');
+        return;
+    }
+    
     var consents = [];
     var cookieValue = cmCookieAPI.get('consentmanager');
     if (typeof cookieValue !== 'undefined') {
@@ -731,8 +753,8 @@ function consent_manager_showBox() {
             consents = cookieData.consents;
         }
     }
-    consent_managerBox = document.getElementById('consent_manager-background');
-    consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+    
+    consentBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
         var check = true,
             cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
         cookieUids.forEach(function (uid) {
@@ -744,11 +766,13 @@ function consent_manager_showBox() {
             el.checked = true;
         }
     });
+    
     if (consent_manager_parameters.hidebodyscrollbar) {
         document.querySelector('body').style.overflow = 'hidden';
     }
-    document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-    document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'false');
+    
+    consentBox.classList.remove('consent_manager-hidden');
+    consentBox.setAttribute('aria-hidden', 'false');
     
     // Focus the dialog wrapper for better accessibility (WCAG 2.1)
     // This allows screen readers to announce the dialog and users can tab to interactive elements
