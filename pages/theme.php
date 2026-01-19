@@ -14,10 +14,14 @@ $clang_id = rex_clang::getStartId();
 if ('' !== $preview) {
     rex_response::cleanOutputBuffers();
 
-    $backgrounds = (array) glob($addon->getAssetsPath('*.jpg'));
-    $backgroundimage = '';
+    // Load background images from preview_images directory (not publicly accessible)
+    $backgrounds = (array) glob($addon->getPath('preview_images/*.jpg'));
+    $backgroundImageData = '';
     if ([] !== $backgrounds) {
-        $backgroundimage = basename((string) $backgrounds[array_rand($backgrounds)]);
+        $randomImage = (string) $backgrounds[array_rand($backgrounds)];
+        // Convert to base64 data URI to embed in CSS (keeps images private)
+        $imageData = base64_encode((string) file_get_contents($randomImage));
+        $backgroundImageData = 'data:image/jpeg;base64,' . $imageData;
     }
 
     $cmtheme = new Theme($preview);
@@ -45,7 +49,9 @@ if ('' !== $preview) {
 }
 html {
     min-height: 100%;
-    background-image: url(../assets/addons/consent_manager/<?= $backgroundimage ?>);
+    <?php if ('' !== $backgroundImageData): ?>
+    background-image: url(<?= $backgroundImageData ?>);
+    <?php endif; ?>
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;

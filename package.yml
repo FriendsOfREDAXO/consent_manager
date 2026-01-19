@@ -86,6 +86,7 @@ installer_ignore:
     - test-results
     - vendor
     - .github/workflows
+    - preview_images
 
 console_commands:
     consent_manager:log-delete: FriendsOfRedaxo\ConsentManager\Command\LogDelete

@@ -1519,15 +1519,8 @@ MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manag
 **Externe Bibliotheken:**
 - [cookie.js](https://github.com/js-cookie/js-cookie) - MIT Lizenz
 
-**Hintergrundbilder (Theme-Vorschau):**
-Alle Bilder von [Unsplash](https://unsplash.com) - kostenlos nutzbar:
-- [Gradienta](https://unsplash.com/@gradienta) - Abstrakte Gradients
-- [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) - Abstrakte Farbwolken
-- [Milad Fakurian](https://unsplash.com/@fakurian) - Weiche Farbübergänge
-- [Steve Johnson](https://unsplash.com/@steve_j) - Abstrakte Texturen
-- [Harley-Davidson](https://unsplash.com/@harleydavidson) - Motorrad
-- [Robert Katzki](https://unsplash.com/@ro_ka) - Wasser/Himmel
-- [Ricardo Gomez Angel](https://unsplash.com/@rgaleriacom) - Berge und Häuser
+**Hintergrundbilder:**
+Theme-Vorschaubilder (nicht öffentlich zugänglich) - siehe [CREDITS.md](CREDITS.md)
 - [Shapelined](https://unsplash.com/@shapelined) - Schwarz-weiß Architektur
 - [Willian West](https://unsplash.com/@willianwest) - Blaue Berge
 
