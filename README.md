@@ -389,17 +389,128 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 - Community-Themes (Olien Dark/Light, Skerbis Glass, XOrange)
 - **🆕 Accessibility Theme** (`consent_manager_frontend_a11y.css`) - Barrierefrei optimiert
 
-**Eigenes Theme erstellen:**
-1. Bestehendes Theme kopieren
-2. In `/project/consent_manager_themes/` ablegen
-3. Dateiname: `consent_manager_frontend_theme_*.scss`
-4. Anpassungen vornehmen
-5. In Theme-Vorschau auswählen
+### 🎨 Media Manager Theme-System (ab Version 5.2.1)
 
-**Theme-Vorschau testen:**
+**Automatische SCSS-Kompilierung:**
+Themes werden jetzt dynamisch über den REDAXO Media Manager kompiliert - keine manuelle Asset-Generierung mehr nötig!
+
+**Vorteile:**
+- ✅ On-the-fly SCSS-Kompilierung beim ersten Aufruf
+- ✅ Automatisches Caching durch Media Manager
+- ✅ Kein manuelles Kompilieren oder Kopieren mehr
+- ✅ Project-Themes werden automatisch erkannt
+- ✅ Fallback auf Inline-CSS wenn Media Manager nicht verfügbar
+
+**Wie es funktioniert:**
+```php
+// Im Frontend wird CSS automatisch über Media Manager geladen:
+<link rel="stylesheet" href="/index.php?rex_media_type=consent_manager_theme&rex_media_file=consent_manager_frontend_custom.scss">
+
+// Bei Project-Themes (prefix 'project:' wird automatisch entfernt):
+<link rel="stylesheet" href="/index.php?rex_media_type=consent_manager_theme&rex_media_file=consent_manager_frontend_custom.scss">
 ```
-/redaxo/index.php?page=consent_manager/theme&preview=project:consent_manager_frontend_mein_theme.scss
+
+**Media Manager Type:** `consent_manager_theme`
+- **Effect:** `consent_manager_scss` - Custom Effect für SCSS-Kompilierung
+- **Suche in:** `/redaxo/src/addons/consent_manager/scss/` und `/project/consent_manager_themes/`
+- **Caching:** Automatisch durch Media Manager Cache-System
+
+### 🌍 Custom Themes pro Domain
+
+**Neu ab Version 5.2.1:** Jede Domain kann jetzt ein eigenes Theme verwenden!
+
+**Konfiguration:**
+1. **Backend** → **Domains** → Domain bearbeiten
+2. **Theme-Auswahl:** Dropdown mit verfügbaren Themes
+   - Leer lassen = Globales Theme aus Konfiguration
+   - Theme wählen = Überschreibt globales Theme für diese Domain
+3. **Speichern** → Cache wird automatisch neu geschrieben
+
+**Vorteile:**
+- 🎯 Individuelles Branding pro Domain/Subdomain
+- 🌐 Perfekt für Multi-Domain-Setups
+- 🎨 Verschiedene Designs für verschiedene Zielgruppen
+- 📱 Responsive-Optimierung pro Domain möglich
+
+**Beispiel Szenario:**
 ```
+www.hauptseite.de    → Standard Accessibility Theme
+shop.hauptseite.de   → Modernes Glass Design Theme  
+blog.hauptseite.de   → Minimalistisches Dark Theme
+```
+
+**Technische Details:**
+- Theme wird in `rex_consent_manager_domain.theme` Spalte gespeichert
+- Frontend lädt Theme aus `$consent_manager->domainInfo['theme']`
+- Fallback auf globales Theme wenn Domain-Theme leer ist
+- Vollständige Cache-Integration für Performance
+
+### 🛠️ Eigenes Theme erstellen
+
+**Voraussetzungen:**
+- REDAXO Project-AddOn muss installiert sein
+- Verzeichnis `/project/consent_manager_themes/` wird automatisch erstellt
+
+**Schritt-für-Schritt Anleitung:**
+
+1. **Theme-Basis wählen:**
+   - Bestehendes Theme aus `/redaxo/src/addons/consent_manager/scss/` kopieren
+   - Oder mit Theme Editor ein Theme erstellen
+
+2. **Datei erstellen:**
+   ```bash
+   /project/consent_manager_themes/consent_manager_frontend_mein_theme.scss
+   ```
+   
+   **Wichtig:** Dateiname muss mit `consent_manager_frontend` beginnen!
+
+3. **SCSS anpassen:**
+   ```scss
+   /* Theme-Informationen (werden im Backend angezeigt) */
+   /*
+   Theme: Mein Custom Theme
+   Author: @deinname
+   Type: Centered Popup
+   Style: Modern
+   Description: Individuelles Theme für meine Website
+   */
+   
+   /* Variablen überschreiben */
+   $consent-accent: #ff6b6b;
+   $consent-bg: #ffffff;
+   $consent-text: #2c3e50;
+   
+   /* Basis-Styles importieren */
+   @import "../../../redaxo/src/addons/consent_manager/scss/_base.scss";
+   
+   /* Custom Styles */
+   .consent_manager-box {
+       border-radius: 20px;
+       box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+   }
+   ```
+
+4. **Theme aktivieren:**
+   - **Global:** Backend → Themes → Theme auswählen
+   - **Pro Domain:** Backend → Domains → Domain bearbeiten → Theme auswählen
+
+5. **Vorschau testen:**
+   ```
+   /redaxo/index.php?page=consent_manager/theme&preview=project:consent_manager_frontend_mein_theme.scss
+   ```
+
+**Theme-Vorschau Features:**
+- 🎨 Zufällige Gradient-Hintergründe (20 Varianten)
+- 🌓 Dark/Light Mode Toggle zum schnellen Testen
+- 📱 Responsive Preview
+- 🔄 Live-Reload beim Theme-Wechsel
+
+**Best Practices:**
+- Verwende SCSS-Variablen für einfache Anpassbarkeit
+- Teste Dark und Light Mode
+- Prüfe Barrierefreiheit (Kontraste, Focus-States)
+- Teste auf verschiedenen Bildschirmgrößen
+- Nutze Theme-Vorschau ausgiebig vor der Aktivierung
 
 ### ♿ Barrierefreiheit (Accessibility)
 

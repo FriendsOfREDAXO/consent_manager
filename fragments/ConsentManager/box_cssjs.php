@@ -128,7 +128,30 @@ if (false === $addon->getConfig('outputowncss', false)) {
     if (rex_addon::get('media_manager')->isAvailable()) {
         // Prüfe erst ob Domain ein Custom-Theme hat, sonst global
         $theme = $consent_manager->domainInfo['theme'] ?? $addon->getConfig('theme', 'consent_manager_frontend.scss');
-        $themeFile = str_replace('project:', '', $theme);
+        
+        // Validierung: Prüfe ob Theme existiert, sonst Fallback
+        if (!empty($theme)) {
+            $themeFile = str_replace('project:', '', $theme);
+            $themeExists = false;
+            
+            // Prüfe Project-Theme
+            if (str_starts_with($theme, 'project:')) {
+                if (rex_addon::exists('project') && rex_addon::get('project')->isAvailable()) {
+                    $themeExists = file_exists(rex_addon::get('project')->getPath('consent_manager_themes/' . $themeFile));
+                }
+            } else {
+                // Prüfe Addon-Theme
+                $themeExists = file_exists($addon->getPath('scss/' . $themeFile)) || 
+                              file_exists($addon->getPath('scss/themes/' . $themeFile));
+            }
+            
+            // Fallback wenn Theme nicht existiert
+            if (!$themeExists) {
+                $theme = $addon->getConfig('theme', 'consent_manager_frontend.scss');
+                $themeFile = str_replace('project:', '', $theme);
+            }
+        }
+        
         $cssUrl = rex_media_manager::getUrl('consent_manager_theme', $themeFile);
         $consentparams['outputcss'] .= '    <link rel="stylesheet" href="' . $cssUrl . '">' . PHP_EOL;
     } else {

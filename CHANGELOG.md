@@ -1,5 +1,70 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.3.0 - 22.01.2026
+
+### 🚀 Features
+
+* **Cookiename kann geändert werden**  
+
+* **Alle Vorschaubilder entfernt**
+
+* **Neue Vorschau mit Dark / Light Switch**
+
+* **Media Manager Integration**: Theme-CSS wird jetzt dynamisch über Media Manager kompiliert
+  - Custom Media Manager Effect `consent_manager_scss` für On-the-fly SCSS-Kompilierung
+  - Automatische Theme-Kompilierung ohne manuelle Asset-Generierung
+  - Unterstützt Project-Themes und Addon-Themes
+  - Fallback auf Inline-CSS wenn Media Manager nicht verfügbar
+* **Custom Themes pro Domain**: Domains können jetzt individuelle Themes verwenden
+  - Neues `theme` Feld in der Domain-Konfiguration
+  - Theme-Auswahl beim Bearbeiten einer Domain
+  - Überschreibt das globale Theme nur für die spezifische Domain
+  - Vollständige Integration in Cache-System
+* **Theme Editor Verbesserungen**:
+  - Fehlende Standardwerte für `details_toggle_border` und `details_toggle_border_width` ergänzt
+  - Behebt "Undefined array key" Warnings im Theme Editor
+* **Theme-Vorschau Redesign**:
+  - 20 zufällige Gradient-Hintergründe (10 Light, 10 Dark) für abwechslungsreiche Vorschau
+  - Dark/Light Mode Toggle-Buttons für schnellen Theme-Test
+  - Buttons links positioniert für bessere Übersicht
+  - Keine Hintergrundbilder mehr erforderlich
+
+### ⚡ Performance & Optimization
+
+* **Smart SCSS Caching**: SCSS wird nur neu kompiliert wenn Quell-Datei geändert wurde
+  - Cache-Key basiert auf Datei-Pfad + Änderungsdatum (mtime)
+  - Reduziert Server-Last durch weniger unnötige Kompilierungen
+  - Intelligente Cache-Invalidierung bei Theme-Änderungen
+* **Optimale Browser-Caching-Header**:
+  - `Cache-Control: public, max-age=31536000, immutable` (1 Jahr)
+  - `ETag` Header für effiziente Conditional Requests
+  - `Last-Modified` Header für 304 Not Modified Responses
+  - Cache-Buster nur im Debug-Modus aktiv
+* **Debug-Kommentare conditionally**: CSS-Debug-Kommentare nur noch im Debug-Modus (`rex::isDebugMode()`)
+  - Produktiv: Sauberes CSS ohne Debug-Overhead
+  - Debug: Ausführliche Informationen über Kompilierung, Pfade, Fehler
+* **UTF-8 Encoding**: Expliziter `charset=utf-8` Header verhindert Encoding-Probleme
+
+### 🛡️ Robustheit & Fehlerbehandlung
+
+* **Theme-Fallback-Mechanismus**: 
+  - Automatische Prüfung ob gewähltes Domain-Theme noch existiert
+  - Graceful Fallback auf globales Theme wenn Domain-Theme gelöscht wurde
+  - Verhindert 404-Fehler oder leere CSS-Ausgaben
+  - Funktioniert für Project-Themes und Addon-Themes
+* **Verbessertes Error-Handling**:
+  - Fehler-CSS wird nicht gecacht (`no-cache` Header)
+  - Produktiv: Minimale generische Fehlermeldungen
+  - Debug: Detaillierte Stack-Traces und Pfad-Informationen
+
+### 🔧 Technical Changes
+
+* **Asset-System**: Migration von statischem Asset-Copying zu dynamischer SCSS-Kompilierung
+* **Theme.php**: Entfernung veralteter Methoden (`generateDefaultAssets()`, `copyAllAssets()`, `generateThemeAssets()`)
+* **Database Schema**: Neue Spalte `theme` in `rex_consent_manager_domain` Tabelle
+
+---
+
 ## Version 5.2.0 - 19.01.2026
 
 ### 🚀 Features

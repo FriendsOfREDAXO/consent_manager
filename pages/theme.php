@@ -26,7 +26,11 @@ if ('' !== $preview) {
     
     // Use Media Manager for CSS - remove project: prefix for filename
     $themeFile = str_replace('project:', '', $preview);
-    $cssUrl = rex_media_manager::getUrl('consent_manager_theme', $themeFile) . '?t=' . time();
+    $cssUrl = rex_media_manager::getUrl('consent_manager_theme', $themeFile);
+    // Cache-Buster nur im Debug-Modus
+    if (rex::isDebugMode()) {
+        $cssUrl .= '?t=' . time();
+    }
 
     ?><!doctype html>
 <html lang="de">

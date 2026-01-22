@@ -5,105 +5,133 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
     public function execute()
     {
         $filename = $this->media->getMediaFilename();
-        $debugInfo = [];
-        $debugInfo[] = "/* === SCSS Compiler Debug Info === */";
-        $debugInfo[] = "/* Requested filename: " . $filename . " */";
+        $isDebug = rex::isDebugMode();
         
         // Determine the source file
         $source = $this->findSourceFile($filename);
         
         if (!$source) {
-            $debugInfo[] = "/* ERROR: Source file not found */";
-            $debugInfo[] = "/* Checked paths: */";
-            
-            if (rex_addon::exists('project') && rex_addon::get('project')->isAvailable()) {
-                $projectPath = rex_addon::get('project')->getPath('consent_manager_themes/' . $filename);
-                $debugInfo[] = "/*   1. Project: " . $projectPath . " [" . (file_exists($projectPath) ? 'EXISTS' : 'NOT FOUND') . "] */";
+            $debugInfo = [];
+            if ($isDebug) {
+                $debugInfo[] = "/* === SCSS Compiler Error === */";
+                $debugInfo[] = "/* ERROR: Source file not found */";
+                $debugInfo[] = "/* Requested: " . $filename . " */";
+                $debugInfo[] = "/* Checked paths: */";
+                
+                if (rex_addon::exists('project') && rex_addon::get('project')->isAvailable()) {
+                    $projectPath = rex_addon::get('project')->getPath('consent_manager_themes/' . $filename);
+                    $debugInfo[] = "/*   1. Project: " . $projectPath . " [" . (file_exists($projectPath) ? 'EXISTS' : 'NOT FOUND') . "] */";
+                }
+                
+                $themePath = rex_addon::get('consent_manager')->getPath('scss/themes/' . $filename);
+                $debugInfo[] = "/*   2. Themes: " . $themePath . " [" . (file_exists($themePath) ? 'EXISTS' : 'NOT FOUND') . "] */";
+                
+                $basePath = rex_addon::get('consent_manager')->getPath('scss/' . $filename);
+                $debugInfo[] = "/*   3. Base: " . $basePath . " [" . (file_exists($basePath) ? 'EXISTS' : 'NOT FOUND') . "] */";
+            } else {
+                $debugInfo[] = "/* Theme not found: " . $filename . " */";
             }
             
-            $themePath = rex_addon::get('consent_manager')->getPath('scss/themes/' . $filename);
-            $debugInfo[] = "/*   2. Themes: " . $themePath . " [" . (file_exists($themePath) ? 'EXISTS' : 'NOT FOUND') . "] */";
-            
-            $basePath = rex_addon::get('consent_manager')->getPath('scss/' . $filename);
-            $debugInfo[] = "/*   3. Base: " . $basePath . " [" . (file_exists($basePath) ? 'EXISTS' : 'NOT FOUND') . "] */";
-            
             $css = implode("\n", $debugInfo);
-            $this->outputDebugCss($css, $filename);
+            $this->outputCss($css, $filename, false);
             return;
         }
         
-        $debugInfo[] = "/* Source found: " . $source . " */";
-        $debugInfo[] = "/* File exists: " . (file_exists($source) ? 'YES' : 'NO') . " */";
-        
         // Compile SCSS
         try {
-            $debugInfo[] = "/* Starting compilation... */";
-            
             $cssFilename = pathinfo($filename, PATHINFO_FILENAME) . '.css';
-            $tempFile = rex_path::addonCache('consent_manager', 'scss_compiled/' . $cssFilename);
-            rex_dir::create(dirname($tempFile));
+            $cacheKey = md5($source . filemtime($source));
+            $tempFile = rex_path::addonCache('consent_manager', 'scss_compiled/' . $cacheKey . '_' . $cssFilename);
             
-            $compiler = new rex_scss_compiler();
-            $compiler->setScssFile($source);
-            $compiler->setCssFile($tempFile);
-            $compiler->compile();
+            // Compile nur wenn Cache nicht existiert oder veraltet ist
+            if (!file_exists($tempFile) || filemtime($source) > filemtime($tempFile)) {
+                rex_dir::create(dirname($tempFile));
+                
+                $compiler = new rex_scss_compiler();
+                $compiler->setScssFile($source);
+                $compiler->setCssFile($tempFile);
+                $compiler->compile();
+            }
             
             // Read the compiled CSS
             $css = rex_file::get($tempFile);
             
             if (false === $css || '' === $css) {
-                $debugInfo[] = "/* ERROR: Compilation produced empty result */";
-                $debugInfo[] = "/* Temp file: " . $tempFile . " */";
-                $debugInfo[] = "/* File exists: " . (file_exists($tempFile) ? 'YES' : 'NO') . " */";
-                if (file_exists($tempFile)) {
-                    $debugInfo[] = "/* File size: " . filesize($tempFile) . " bytes */";
+                $debugInfo = [];
+                if ($isDebug) {
+                    $debugInfo[] = "/* === SCSS Compilation Error === */";
+                    $debugInfo[] = "/* ERROR: Compilation produced empty result */";
+                    $debugInfo[] = "/* Source: " . $source . " */";
+                    $debugInfo[] = "/* Temp file: " . $tempFile . " */";
+                } else {
+                    $debugInfo[] = "/* Compilation error */";
                 }
                 $css = implode("\n", $debugInfo);
-                $this->outputDebugCss($css, $filename);
+                $this->outputCss($css, $filename, false);
                 return;
             }
             
-            $debugInfo[] = "/* Compilation successful! */";
-            $debugInfo[] = "/* CSS length: " . strlen($css) . " bytes */";
+            // Debug-Info nur im Debug-Modus
+            if ($isDebug) {
+                $debugHeader = "/* === SCSS Compiler Debug === */\n";
+                $debugHeader .= "/* Source: " . $source . " */\n";
+                $debugHeader .= "/* Compiled: " . date('Y-m-d H:i:s', filemtime($source)) . " */\n";
+                $debugHeader .= "/* Size: " . number_format(strlen($css)) . " bytes */\n\n";
+                $css = $debugHeader . $css;
+            }
             
-            // Prepend debug info
-            $css = implode("\n", $debugInfo) . "\n\n" . $css;
+            // Output mit Cache-Headern und ETag
+            $etag = md5($css);
+            $lastModified = filemtime($source);
             
-            // Write final CSS with debug info
-            file_put_contents($tempFile, $css);
-            
-            // Set headers and path
-            $this->media->setHeader('Content-Type', 'text/css');
+            $this->media->setHeader('Content-Type', 'text/css; charset=utf-8');
+            $this->media->setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+            $this->media->setHeader('Expires', gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
+            $this->media->setHeader('ETag', '"' . $etag . '"');
+            $this->media->setHeader('Last-Modified', gmdate('D, d M Y H:i:s', $lastModified) . ' GMT');
             $this->media->setFormat('css');
             $this->media->setMediaFilename($cssFilename);
-            $this->media->setMediaPath($tempFile);
+            
+            // Write to temporary output file
+            $outputFile = rex_path::addonCache('consent_manager', 'scss_output/' . $etag . '.css');
+            rex_dir::create(dirname($outputFile));
+            file_put_contents($outputFile, $css);
+            $this->media->setMediaPath($outputFile);
             
             // Cleanup after request
-            register_shutdown_function(static function () use ($tempFile) {
-                if (file_exists($tempFile)) {
-                    unlink($tempFile);
+            register_shutdown_function(static function () use ($outputFile) {
+                if (file_exists($outputFile)) {
+                    unlink($outputFile);
                 }
             });
 
         } catch (Exception $e) {
-            $debugInfo[] = "/* ERROR: Exception during compilation */";
-            $debugInfo[] = "/* Message: " . $e->getMessage() . " */";
-            $debugInfo[] = "/* File: " . $e->getFile() . " */";
-            $debugInfo[] = "/* Line: " . $e->getLine() . " */";
+            $debugInfo = [];
+            if ($isDebug) {
+                $debugInfo[] = "/* === SCSS Compilation Exception === */";
+                $debugInfo[] = "/* Message: " . $e->getMessage() . " */";
+                $debugInfo[] = "/* File: " . $e->getFile() . " */";
+                $debugInfo[] = "/* Line: " . $e->getLine() . " */";
+            } else {
+                $debugInfo[] = "/* Compilation failed */";
+            }
             
             $css = implode("\n", $debugInfo);
-            $this->outputDebugCss($css, $filename);
+            $this->outputCss($css, $filename, false);
         }
     }
     
-    private function outputDebugCss($css, $filename)
+    private function outputCss($css, $filename, $cache = false)
     {
         $cssFilename = pathinfo($filename, PATHINFO_FILENAME) . '.css';
-        $tempFile = rex_path::addonCache('consent_manager', 'scss_compiled/' . $cssFilename);
+        $tempFile = rex_path::addonCache('consent_manager', 'scss_output/' . md5($css) . '.css');
         rex_dir::create(dirname($tempFile));
         file_put_contents($tempFile, $css);
         
-        $this->media->setHeader('Content-Type', 'text/css');
+        $this->media->setHeader('Content-Type', 'text/css; charset=utf-8');
+        if (!$cache) {
+            $this->media->setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        }
         $this->media->setFormat('css');
         $this->media->setMediaFilename($cssFilename);
         $this->media->setMediaPath($tempFile);
