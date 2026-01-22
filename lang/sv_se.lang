@@ -414,3 +414,15 @@ consent_manager_button_inline_allow_all_text_info = Inline-platshållare: Knapp 
 # Tema-editor
 consent_manager_theme_editor_saved = Tema "{0}" har skapats och sparats framgångsrikt!
 consent_manager_theme_editor_project_addon_required = Tema-editorn kräver det installerade "project"-tillägget för att spara anpassade teman. Vänligen installera project-tillägget via installeraren.
+
+consent_manager_stats = Statistik
+consent_manager_stats_title = Samtyckestatistik
+consent_manager_stats_error = Fel vid laddning av statistik.
+consent_manager_stats_total = Totalt antal samtycken (30 dagar):
+consent_manager_stats_top_cookies = Topp cookies/tjänster
+consent_manager_stats_service = Tjänst
+consent_manager_stats_count = Antal
+consent_manager_stats_history = Historik (dagar)
+consent_manager_stats_date = Datum
+consent_manager_config_cookie_name_label = Cookie-namn
+consent_manager_config_cookie_name_notice = Namnet på cookien där samtycket lagras. Standard: consentmanager
