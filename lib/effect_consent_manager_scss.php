@@ -96,7 +96,24 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
             $timestamp = filemtime($source);
             $lastModified = false !== $timestamp ? $timestamp : time();
             
+            // GZIP-Kompression wenn Browser unterstützt
+            $supportsGzip = $this->supportsGzipEncoding();
+            $outputContent = $css;
+            
+            if ($supportsGzip) {
+                $gzipped = gzencode($css, 9, FORCE_GZIP);
+                if (is_string($gzipped)) {
+                    $outputContent = $gzipped;
+                    $this->media->setHeader('Content-Encoding', 'gzip');
+                    $this->media->setHeader('Vary', 'Accept-Encoding');
+                } else {
+                    // Fallback: GZIP failed, use uncompressed
+                    $supportsGzip = false;
+                }
+            }
+            
             $this->media->setHeader('Content-Type', 'text/css; charset=utf-8');
+            $this->media->setHeader('Content-Length', (string) strlen($outputContent));
             $this->media->setHeader('Cache-Control', 'public, max-age=31536000, immutable');
             $expiresTime = time() + 31536000;
             $this->media->setHeader('Expires', gmdate('D, d M Y H:i:s', $expiresTime) . ' GMT');
@@ -105,10 +122,10 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
             $this->media->setFormat('css');
             $this->media->setMediaFilename($cssFilename);
             
-            // Write to temporary output file
-            $outputFile = rex_path::addonCache('consent_manager', 'scss_output/' . $etag . '.css');
+            // Write to temporary output file (mit GZIP wenn aktiviert)
+            $outputFile = rex_path::addonCache('consent_manager', 'scss_output/' . $etag . ($supportsGzip ? '.css.gz' : '.css'));
             rex_dir::create(dirname($outputFile));
-            file_put_contents($outputFile, $css);
+            file_put_contents($outputFile, $outputContent);
             $this->media->setMediaPath($outputFile);
             
             // Cleanup after request
@@ -150,6 +167,7 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
         file_put_contents($tempFile, $css);
         
         $this->media->setHeader('Content-Type', 'text/css; charset=utf-8');
+        $this->media->setHeader('Content-Length', (string) strlen($css));
         if (!$cache) {
             $this->media->setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         }
@@ -162,6 +180,29 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
                 unlink($tempFile);
             }
         });
+    }
+    
+    /**
+     * Check if the client supports GZIP encoding
+     *
+     * @return bool True if GZIP is supported, false otherwise
+     */
+    private function supportsGzipEncoding(): bool
+    {
+        // Check if browser accepts gzip
+        $acceptEncoding = rex_request::server('HTTP_ACCEPT_ENCODING', 'string', '');
+        if ('' === $acceptEncoding) {
+            return false;
+        }
+        
+        $encodings = array_map('trim', explode(',', strtolower($acceptEncoding)));
+        
+        // Check for gzip or x-gzip support
+        // Also check ob_gzhandler exists and zlib compression is not already active
+        $zlibCompression = ini_get('zlib.output_compression');
+        return (in_array('gzip', $encodings, true) || in_array('x-gzip', $encodings, true))
+            && function_exists('ob_gzhandler')
+            && (false === $zlibCompression || '' === $zlibCompression);
     }
     
     /**

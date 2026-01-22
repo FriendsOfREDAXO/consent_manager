@@ -38,10 +38,14 @@
   - Fehlende Standardwerte für `details_toggle_border` und `details_toggle_border_width` ergänzt
   - Behebt "Undefined array key" Warnings im Theme Editor
 * **Theme-Vorschau Redesign**:
-  - 20 zufällige Gradient-Hintergründe (10 Light, 10 Dark) für abwechslungsreiche Vorschau
-  - Dark/Light Mode Toggle-Buttons für schnellen Theme-Test
+  - Website-Blueprint-Mockups zeigen realistische Website-Struktur (Header, Hero, Cards, Footer)
+  - 10 dezente Hintergrund-Gradients in Pastell-Tönen (Hellblau, Rosa, Cyan, Grün, Gelb, Lila, etc.)
+  - Im Light Mode: Farbige Blueprint-Linien passend zum Hintergrund-Gradient
+  - Im Dark Mode: Einheitlich hellgraue Linien (#eee) mit dunklen Gradients für optimalen Kontrast
+  - Dark/Light Mode Toggle-Buttons für schnellen Theme-Test in beiden Modi
+  - Responsive Design: Blueprint passt sich an Bildschirmgröße an
+  - Sanfte Übergänge (0.5s) zwischen Light/Dark Mode
   - Buttons links positioniert für bessere Übersicht
-  - Keine Hintergrundbilder mehr erforderlich
 
 ### ⚡ Performance & Optimization
 
@@ -70,7 +74,16 @@
   - Fehler-CSS wird nicht gecacht (`no-cache` Header)
   - Produktiv: Minimale generische Fehlermeldungen
   - Debug: Detaillierte Stack-Traces und Pfad-Informationen
+### ⚡ Performance
 
+* **SCSS Media Manager Effect**: GZIP-Kompression für CSS-Output
+  - Automatische GZIP-Kompression wenn Browser unterstützt (Content-Encoding: gzip)
+  - Fallback auf unkomprimierte Ausgabe bei GZIP-Fehler
+  - Type-Safe Error Handling (gzencode() kann false zurückgeben)
+  - Vary-Header für Cache-Konsistenz (Accept-Encoding)
+  - Content-Length Header für bessere Browser-Performance
+  - Reduzierung der Bandbreite um ~70% bei typischen CSS-Dateien
+  - Browser-Detection prüft: HTTP_ACCEPT_ENCODING, ob_gzhandler, zlib.output_compression
 ### � Security
 
 * **SCSS Media Manager Effect**: Vollständige Absicherung gegen Path Traversal Angriffe

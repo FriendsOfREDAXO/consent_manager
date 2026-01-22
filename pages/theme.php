@@ -53,31 +53,223 @@ body {
     background-color: #f0f0f0;
     color: #333;
     transition: background 0.5s ease, color 0.3s;
+    position: relative;
+    overflow: auto;
 }
 
-/* Zufällige Hintergrund-Varianten */
-body.bg-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-body.bg-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-body.bg-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-body.bg-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-body.bg-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-body.bg-gradient-6 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
-body.bg-gradient-7 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-body.bg-gradient-8 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
-body.bg-gradient-9 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
-body.bg-gradient-10 { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
 
-body.dark-mode { background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); color: #f0f0f0; }
-body.dark-mode.bg-gradient-1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
-body.dark-mode.bg-gradient-2 { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
-body.dark-mode.bg-gradient-3 { background: linear-gradient(135deg, #141e30 0%, #243b55 100%); }
-body.dark-mode.bg-gradient-4 { background: linear-gradient(135deg, #000000 0%, #434343 100%); }
-body.dark-mode.bg-gradient-5 { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
-body.dark-mode.bg-gradient-6 { background: linear-gradient(135deg, #232526 0%, #414345 100%); }
-body.dark-mode.bg-gradient-7 { background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); }
-body.dark-mode.bg-gradient-8 { background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%); }
-body.dark-mode.bg-gradient-9 { background: linear-gradient(135deg, #373b44 0%, #4286f4 100%); }
-body.dark-mode.bg-gradient-10 { background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%); }
+/* Dezente Hintergrund-Gradients für Blueprint-Varianten */
+body.bg-variant-1 { background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); }
+body.bg-variant-2 { background: linear-gradient(135deg, #fef5fa 0%, #fce8f3 100%); }
+body.bg-variant-3 { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
+body.bg-variant-4 { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); }
+body.bg-variant-5 { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); }
+body.bg-variant-6 { background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); }
+body.bg-variant-7 { background: linear-gradient(135deg, #f5f9fa 0%, #e7f3f5 100%); }
+body.bg-variant-8 { background: linear-gradient(135deg, #fef5f8 0%, #fce7f0 100%); }
+body.bg-variant-9 { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); }
+body.bg-variant-10 { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); }
+
+/* Dark Mode: Dunklere Gradients mit leichtem Farbton */
+body.dark-mode.bg-variant-1 { background: linear-gradient(135deg, #1a1d2e 0%, #212436 100%); }
+body.dark-mode.bg-variant-2 { background: linear-gradient(135deg, #2a1a25 0%, #331f2d 100%); }
+body.dark-mode.bg-variant-3 { background: linear-gradient(135deg, #1a232e 0%, #1f2a36 100%); }
+body.dark-mode.bg-variant-4 { background: linear-gradient(135deg, #1a2e1f 0%, #1f3624 100%); }
+body.dark-mode.bg-variant-5 { background: linear-gradient(135deg, #2e1a1a 0%, #361f1f 100%); }
+body.dark-mode.bg-variant-6 { background: linear-gradient(135deg, #1a2e2a 0%, #1f3633 100%); }
+body.dark-mode.bg-variant-7 { background: linear-gradient(135deg, #1a2528 0%, #1f2d30 100%); }
+body.dark-mode.bg-variant-8 { background: linear-gradient(135deg, #2e1a24 0%, #361f2c 100%); }
+body.dark-mode.bg-variant-9 { background: linear-gradient(135deg, #2e2a1a 0%, #36311f 100%); }
+body.dark-mode.bg-variant-10 { background: linear-gradient(135deg, #251a2e 0%, #2d1f36 100%); }
+
+/* Website Blueprint Mockup Hintergründe */
+.website-blueprint {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1400px;
+    opacity: 0.25;
+    pointer-events: none;
+    transition: opacity 0.3s, color 0.3s ease;
+    z-index: 1;
+}
+
+body.dark-mode .website-blueprint {
+    opacity: 0.15;
+}
+
+/* Blueprint Layout Varianten mit verschiedenen Farben */
+/* Light Mode: Dunklere Farben für besseren Kontrast */
+.website-blueprint.blueprint-variant-1 { color: #4a5dc8 !important; }
+.website-blueprint.blueprint-variant-2 { color: #c7569d !important; }
+.website-blueprint.blueprint-variant-3 { color: #2b7fcc !important; }
+.website-blueprint.blueprint-variant-4 { color: #2fb35f !important; }
+.website-blueprint.blueprint-variant-5 { color: #c85678 !important; }
+.website-blueprint.blueprint-variant-6 { color: #1fa09e !important; }
+.website-blueprint.blueprint-variant-7 { color: #6ba5a5 !important; }
+.website-blueprint.blueprint-variant-8 { color: #cc6f74 !important; }
+.website-blueprint.blueprint-variant-9 { color: #cc8f4a !important; }
+.website-blueprint.blueprint-variant-10 { color: #a896d8 !important; }
+
+/* Dark Mode: Hellere Farben für besseren Kontrast */
+body.dark-mode .website-blueprint.blueprint-variant-1 { color: #eeeeee !important; }
+body.dark-mode .website-blueprint.blueprint-variant-2 { color: #eeeeee !important; }
+body.dark-mode .website-blueprint.blueprint-variant-3 { color: #eeeeee !important; }
+body.dark-mode .website-blueprint.blueprint-variant-4 { color: #eeeeee !important; }
+body.dark-mode .website-blueprint.blueprint-variant-5 { color: #eeeeee !important; }
+body.dark-mode .website-blueprint.blueprint-variant-6 { color: #eeeeee !important; }
+body.dark-mode .website-blueprint.blueprint-variant-7 { color: #eeeeee !important; }
+body.dark-mode .website-blueprint.blueprint-variant-8 { color: #eeeeee !important; }
+body.dark-mode .website-blueprint.blueprint-variant-9 { color: #eeeeee !important; }
+body.dark-mode .website-blueprint.blueprint-variant-10 { color: #eeeeee !important; }
+
+/* Consent Manager Box muss über Blueprint sein */
+.consent_manager-background {
+    position: relative;
+    z-index: 999999 !important;
+}
+
+/* Header mit Logo und Navigation */
+.blueprint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid currentColor;
+    margin-bottom: 30px;
+    background: rgba(255,255,255,0.03);
+}
+
+.blueprint-logo {
+    width: 120px;
+    height: 40px;
+    border: 2px solid currentColor;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.blueprint-nav {
+    display: flex;
+    gap: 15px;
+}
+
+.blueprint-nav-item {
+    width: 60px;
+    height: 30px;
+    border: 2px solid currentColor;
+    border-radius: 3px;
+}
+
+/* Hero Section */
+.blueprint-hero {
+    border: 2px solid currentColor;
+    padding: 60px 40px;
+    margin-bottom: 30px;
+    text-align: center;
+    background: rgba(255,255,255,0.03);
+}
+
+.blueprint-hero-title {
+    width: 60%;
+    height: 40px;
+    margin: 0 auto 20px;
+    border: 2px solid currentColor;
+}
+
+.blueprint-hero-subtitle {
+    width: 80%;
+    height: 20px;
+    margin: 0 auto 30px;
+    border: 2px solid currentColor;
+}
+
+.blueprint-hero-cta {
+    width: 150px;
+    height: 45px;
+    margin: 0 auto;
+    border: 2px solid currentColor;
+    border-radius: 6px;
+    background: currentColor;
+    opacity: 0.2;
+}
+
+/* Content Grid */
+.blueprint-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.blueprint-card {
+    border: 2px solid currentColor;
+    padding: 20px;
+    aspect-ratio: 4/3;
+    background: rgba(255,255,255,0.02);
+}
+
+.blueprint-card-image {
+    width: 100%;
+    height: 60%;
+    border: 2px solid currentColor;
+    margin-bottom: 15px;
+}
+
+.blueprint-card-title {
+    width: 80%;
+    height: 18px;
+    border: 2px solid currentColor;
+    margin-bottom: 10px;
+}
+
+.blueprint-card-text {
+    width: 100%;
+    height: 12px;
+    border: 2px solid currentColor;
+    margin-bottom: 6px;
+}
+
+/* Footer */
+.blueprint-footer {
+    border: 2px solid currentColor;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    background: rgba(255,255,255,0.03);
+}
+
+.blueprint-footer-col {
+    border: 2px solid currentColor;
+    height: 120px;
+}
+
+/* Mobile Layout */
+@media (max-width: 768px) {
+    .website-blueprint {
+        width: 95%;
+        top: 90px;
+    }
+    
+    .blueprint-nav {
+        display: none;
+    }
+    
+    .blueprint-content {
+        grid-template-columns: 1fr;
+    }
+}
 
 #preview-header {
     background: rgba(255,255,255,0.95);
@@ -185,36 +377,106 @@ body {
     </div>
 </div>
 
+<!-- Website Blueprint Mockup -->
+<div class="website-blueprint" id="blueprint-mockup">
+    <!-- Header -->
+    <div class="blueprint-header">
+        <div class="blueprint-logo">LOGO</div>
+        <div class="blueprint-nav">
+            <div class="blueprint-nav-item"></div>
+            <div class="blueprint-nav-item"></div>
+            <div class="blueprint-nav-item"></div>
+            <div class="blueprint-nav-item"></div>
+        </div>
+    </div>
+    
+    <!-- Hero -->
+    <div class="blueprint-hero">
+        <div class="blueprint-hero-title"></div>
+        <div class="blueprint-hero-subtitle"></div>
+        <div class="blueprint-hero-cta"></div>
+    </div>
+    
+    <!-- Content Grid -->
+    <div class="blueprint-content">
+        <div class="blueprint-card">
+            <div class="blueprint-card-image"></div>
+            <div class="blueprint-card-title"></div>
+            <div class="blueprint-card-text"></div>
+            <div class="blueprint-card-text" style="width: 60%;"></div>
+        </div>
+        <div class="blueprint-card">
+            <div class="blueprint-card-image"></div>
+            <div class="blueprint-card-title"></div>
+            <div class="blueprint-card-text"></div>
+            <div class="blueprint-card-text" style="width: 75%;"></div>
+        </div>
+        <div class="blueprint-card">
+            <div class="blueprint-card-image"></div>
+            <div class="blueprint-card-title"></div>
+            <div class="blueprint-card-text"></div>
+            <div class="blueprint-card-text" style="width: 80%;"></div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="blueprint-footer">
+        <div class="blueprint-footer-col"></div>
+        <div class="blueprint-footer-col"></div>
+        <div class="blueprint-footer-col"></div>
+        <div class="blueprint-footer-col"></div>
+    </div>
+</div>
+
 <?= $cmbox ?>
 
 <script>
 window.onload = function() {
-    // Zufälligen Hintergrund auswählen
-    var gradients = ['bg-gradient-1', 'bg-gradient-2', 'bg-gradient-3', 'bg-gradient-4', 'bg-gradient-5', 
-                     'bg-gradient-6', 'bg-gradient-7', 'bg-gradient-8', 'bg-gradient-9', 'bg-gradient-10'];
-    var randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
-    document.body.classList.add(randomGradient);
+    console.log('Preview page loaded');
     
-    // Mode toggle buttons (immer initialisieren)
-    var modeButtons = document.querySelectorAll('.mode-toggle');
+    // Zufällige Blueprint-Variante auswählen
+    var variants = ['blueprint-variant-1', 'blueprint-variant-2', 'blueprint-variant-3', 'blueprint-variant-4', 'blueprint-variant-5', 
+                    'blueprint-variant-6', 'blueprint-variant-7', 'blueprint-variant-8', 'blueprint-variant-9', 'blueprint-variant-10'];
+    var randomIndex = Math.floor(Math.random() * variants.length);
+    var randomVariant = variants[randomIndex];
+    
+    // Blueprint und Body Background gleichzeitig setzen
+    var blueprint = document.getElementById('blueprint-mockup');
+    if (blueprint) {
+        blueprint.classList.add(randomVariant);
+        console.log('Blueprint variant applied:', randomVariant);
+    }
+    
+    // Entsprechende Background-Variante für Body setzen
+    var bgVariant = 'bg-variant-' + (randomIndex + 1);
+    document.body.classList.add(bgVariant);
+    console.log('Body background variant applied:', bgVariant);
+    
+    // Mode toggle buttons - Array.from für bessere Browser-Kompatibilität
+    var modeButtons = Array.from(document.querySelectorAll('.mode-toggle'));
+    console.log('Found mode toggle buttons:', modeButtons.length);
+    
     modeButtons.forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            var mode = this.getAttribute('data-mode');
+            e.stopPropagation();
             
+            var mode = this.getAttribute('data-mode');
             console.log('Mode toggle clicked:', mode);
             
             // Update button states
-            modeButtons.forEach(function(b) { b.classList.remove('active'); });
+            modeButtons.forEach(function(b) { 
+                b.classList.remove('active'); 
+            });
             this.classList.add('active');
             
             // Toggle body class
             if (mode === 'dark') {
                 document.body.classList.add('dark-mode');
-                console.log('Dark mode activated');
+                console.log('Dark mode activated, body classes:', document.body.className);
             } else {
                 document.body.classList.remove('dark-mode');
-                console.log('Light mode activated');
+                console.log('Light mode activated, body classes:', document.body.className);
             }
         });
     });
