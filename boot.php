@@ -181,6 +181,16 @@ if (rex::isFrontend()) {
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
         if (true === rex_request::get('consent_manager_outputjs', 'bool', false)) {
             $consent_manager = new Frontend(0);
+            
+            // Domain und Sprache VORHER setzen
+            $domain = rex_request::get('domain', 'string', '');
+            if ('' === $domain && is_string(rex_request::server('HTTP_HOST'))) {
+                $domain = rex_request::server('HTTP_HOST');
+            }
+            if ('' !== $domain) {
+                $consent_manager->setDomain($domain);
+            }
+            
             $consent_manager->outputJavascript();
             exit;
         }

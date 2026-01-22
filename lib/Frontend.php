@@ -228,7 +228,12 @@ class Frontend
 
         $boxtemplate = '';
         ob_start();
-        echo self::getFragment(0, 0, 'ConsentManager/box.php');
+        // Frontend-Objekt an Fragment übergeben damit nicht neu instantiiert wird
+        echo self::getFragmentWithVars(0, 0, 'ConsentManager/box.php', [
+            'consent_manager' => $this,
+            'domain' => Utility::hostname(),
+            'clang' => $clang,
+        ]);
         $boxtemplate = (string) ob_get_contents();
         ob_end_clean();
         if ('' === $boxtemplate) {

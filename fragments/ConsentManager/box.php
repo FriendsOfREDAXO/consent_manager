@@ -1,22 +1,39 @@
 <?php
 
 /**
- * TODO: hier die Schnittstelle beschreiben:
- * - Welche Vars werden vom Fragment erwartet
- * - Welchen Typ haben die Vars
- * - Welchen Default-Wert haben optionale Vars
- * - Welche Vars sind mandatory und was passiert wenn sie fehlen (return oder Exception)
+ * Fragment-Schnittstelle:
+ * 
+ * @var FriendsOfRedaxo\ConsentManager\Frontend|null $consent_manager Optional: vorkonfiguriertes Frontend-Objekt
+ * @var string|null $domain Optional: Domain-Name für Lookup
+ * @var int|null $clang Optional: Sprach-ID
+ * 
+ * Das Fragment kann entweder mit einem vorkonfigurierten Frontend-Objekt aufgerufen werden
+ * oder erstellt ein neues basierend auf den übergebenen Parametern.
  */
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
-$consent_manager = new Frontend(0);
-if (is_string(rex_request::server('HTTP_HOST'))) {
-    $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
+// Frontend-Objekt aus Fragment-Parametern oder neu erstellen
+if (!isset($consent_manager)) {
+    $consent_manager = new Frontend(0);
+    
+    // Domain setzen - entweder aus Parameter oder vom Request
+    $domain = $this->getVar('domain', is_string(rex_request::server('HTTP_HOST')) ? rex_request::server('HTTP_HOST') : '');
+    if ('' !== $domain) {
+        $consent_manager->setDomain($domain);
+    }
+} elseif (!($consent_manager instanceof Frontend)) {
+    // Fallback wenn falsche Variable gesetzt wurde
+    $consent_manager = new Frontend(0);
+    $domain = $this->getVar('domain', is_string(rex_request::server('HTTP_HOST')) ? rex_request::server('HTTP_HOST') : '');
+    if ('' !== $domain) {
+        $consent_manager->setDomain($domain);
+    }
 }
+
+// Früher Exit wenn keine Texte verfügbar
 if (0 === count($consent_manager->texts)) {
-    // Leeren String zurückgeben statt HTML-Fehlermeldung
-    // Die Warnung wird bereits in Frontend::outputJavascript() geloggt (Zeile 232)
+    // Warnung wird in Frontend::outputJavascript() geloggt
     return;
 }
 if (0 < count($consent_manager->cookiegroups)) : ?>
