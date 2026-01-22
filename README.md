@@ -304,8 +304,7 @@ Jeder externe Dienst (Analytics, Social Media, etc.) wird einzeln angelegt:
 
 Der Consent Manager unterstützt konfigurierbare Cookie-Einstellungen für maximale Sicherheit:
 
-***Hinweis zum Cookie-Namen:***
-*Sollte der Name des Consent-Cookies in den Einstellungen geändert werden, muss man die Dienste (Cookies) und deren Texte (Namen) entsprechend in der Konfiguration anpassen, da dort standardmäßig oft "consentmanager" als Name eingetragen ist.*
+***Hinweis:*** *Bei Änderung des Cookie-Namens müssen Dienste und Texte im Backend angepasst werden.*
 
 **Standardwerte:**
 ```yaml
