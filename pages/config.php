@@ -236,8 +236,3 @@ echo $fragment->parse('ConsentManager/config_layout.php');
 // Quickstart Modal Fragment laden
 $modalFragment = new rex_fragment();
 echo $modalFragment->parse('ConsentManager/quickstart_modal.php');
-
-if ('' !== rex_request::post('_csrf_token', 'string', '')) {
-    Theme::generateDefaultAssets();
-    Theme::copyAllAssets();
-}

@@ -37,7 +37,11 @@ if (rex::isBackend()) {
         $addon = rex_addon::get('consent_manager');
         if (null !== rex::getUser()) {
             if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)) {
-                rex_view::addCssFile($addon->getAssetsUrl('consent_manager_backend.css'));
+                if (rex_addon::get('media_manager')->isAvailable()) {
+                     rex_view::addCssFile(rex_media_manager::getUrl('consent_manager_theme', 'consent_manager_backend.scss'));
+                } else {
+                     rex_view::addCssFile($addon->getAssetsUrl('consent_manager_backend.css'));
+                }
                 rex_view::addJsFile($addon->getAssetsUrl('consent_manager_backend.js'));
 
                 // Quickstart Modal CSS für config-Seite

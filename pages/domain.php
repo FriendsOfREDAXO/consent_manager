@@ -41,6 +41,42 @@ if ('delete' === $func) {
     $field->setLabel(rex_i18n::msg('consent_manager_domain_legal_notice')); /** @phpstan-ignore-line */
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_legal_notic_empty_msg')); /** @phpstan-ignore-line */
 
+    // Theme Selector
+    $field = $form->addSelectField('theme');
+    $field->setLabel('🎨 Custom Theme');
+    $select = $field->getSelect();
+    $select->addOption('Standard (aus globaler Konfiguration)', '');
+    
+    // Get available themes
+    $cmtheme = new FriendsOfRedaxo\ConsentManager\Theme();
+    $addon = rex_addon::get('consent_manager');
+    
+    // Project themes
+    if (rex_addon::exists('project')) {
+        $projectThemes = (array) glob(rex_addon::get('project')->getPath('consent_manager_themes/consent_manager_frontend*.scss'));
+        natsort($projectThemes);
+        foreach ($projectThemes as $themefile) {
+            $themeid = 'project:' . basename((string) $themefile);
+            $theme_options = $cmtheme->getThemeInformation($themeid);
+            if (count($theme_options) > 0) {
+                $select->addOption('📁 ' . $theme_options['name'], $themeid);
+            }
+        }
+    }
+    
+    // Addon themes
+    $addonThemes = (array) glob($addon->getPath('scss/consent_manager_frontend*.scss'));
+    natsort($addonThemes);
+    foreach ($addonThemes as $themefile) {
+        $themeid = basename((string) $themefile);
+        $theme_options = $cmtheme->getThemeInformation($themeid);
+        if (count($theme_options) > 0) {
+            $select->addOption('🎨 ' . $theme_options['name'], $themeid);
+        }
+    }
+    
+    $field->setNotice('Überschreibt das globale Theme nur für diese Domain. Leer lassen für Standard-Theme aus der Konfiguration.');
+
     // Google Consent Mode v2 Configuration
     $field = $form->addSelectField('google_consent_mode_enabled');
     $field->setLabel(rex_i18n::msg('consent_manager_google_mode_title'));

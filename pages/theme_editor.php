@@ -41,6 +41,8 @@ $defaultColors = [
         'link_hover' => '#004499',
         'details_link' => '#0066cc',
         'details_link_hover' => '#004499',
+        'details_toggle_border' => '#0066cc',
+        'details_toggle_border_width' => '2',
         // Details-Bereich (aufgeklappte Ansicht)
         'details_bg' => '#f8f9fa',
         'details_text' => '#1a1a1a',
@@ -358,15 +360,8 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
         $filepath = $themesDir . $filename;
 
         if (rex_file::put($filepath, $scssContent)) {
-            try {
-                Theme::generateThemeAssets('project:' . $filename);
-                Theme::copyAllAssets();
-
-                echo rex_view::success(rex_i18n::msg('consent_manager_theme_editor_saved', $themeName));
-                echo rex_view::info('Theme gespeichert als: <code>' . rex_escape($filename) . '</code><br>Du kannst es jetzt unter "Theme" auswählen.');
-            } catch (Exception $e) {
-                echo rex_view::error('Fehler beim Kompilieren: ' . rex_escape($e->getMessage()));
-            }
+            echo rex_view::success(rex_i18n::msg('consent_manager_theme_editor_saved', $themeName));
+            echo rex_view::info('Theme gespeichert als: <code>' . rex_escape($filename) . '</code><br>Du kannst es jetzt unter "Theme" auswählen.');
         } else {
             echo rex_view::error('Fehler beim Speichern der Datei.');
         }

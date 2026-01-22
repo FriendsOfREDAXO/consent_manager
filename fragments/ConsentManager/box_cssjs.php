@@ -125,9 +125,17 @@ if (true === $inlineMode || 'true' === $inlineMode || '1' === $inlineMode) {
 
 // Standard-CSS ausgeben
 if (false === $addon->getConfig('outputowncss', false)) {
-    $_csscontent = Frontend::getFrontendCss();
-    if ('' !== $_csscontent) {
-        $consentparams['outputcss'] .= '    <style>' . trim($_csscontent) . '</style>' . PHP_EOL;
+    if (rex_addon::get('media_manager')->isAvailable()) {
+        // Prüfe erst ob Domain ein Custom-Theme hat, sonst global
+        $theme = $consent_manager->domainInfo['theme'] ?? $addon->getConfig('theme', 'consent_manager_frontend.scss');
+        $themeFile = str_replace('project:', '', $theme);
+        $cssUrl = rex_media_manager::getUrl('consent_manager_theme', $themeFile);
+        $consentparams['outputcss'] .= '    <link rel="stylesheet" href="' . $cssUrl . '">' . PHP_EOL;
+    } else {
+        $_csscontent = Frontend::getFrontendCss();
+        if ('' !== $_csscontent) {
+            $consentparams['outputcss'] .= '    <style>' . trim($_csscontent) . '</style>' . PHP_EOL;
+        }
     }
 }
 

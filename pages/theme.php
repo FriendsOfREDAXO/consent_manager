@@ -14,157 +14,241 @@ $clang_id = rex_clang::getStartId();
 if ('' !== $preview) {
     rex_response::cleanOutputBuffers();
 
-    $backgrounds = (array) glob($addon->getAssetsPath('*.jpg'));
-    $backgroundimage = '';
-    if ([] !== $backgrounds) {
-        $backgroundimage = basename((string) $backgrounds[array_rand($backgrounds)]);
-    }
-
     $cmtheme = new Theme($preview);
     $theme_options = $cmtheme->getThemeInformation();
+    
+    $cmbox = '';
     if (count($theme_options) > 0) {
-        $cmstyle = $cmtheme->getCompiledStyle();
         $cmbox = Frontend::getFragment(0, 0, 'ConsentManager/box.php');
     } else {
-        $cmstyle = '';
         $cmbox = rex_view::error(rex_i18n::msg('consent_manager_error_css_notfound', $preview));
     }
+    
+    // Use Media Manager for CSS - remove project: prefix for filename
+    $themeFile = str_replace('project:', '', $preview);
+    $cssUrl = rex_media_manager::getUrl('consent_manager_theme', $themeFile) . '?t=' . time();
+
     ?><!doctype html>
 <html lang="de">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title><?= htmlspecialchars($theme_options['name'] ?? $preview) ?></title>
+<link rel="stylesheet" href="<?= $cssUrl ?>">
 <style>
-::-moz-selection {
-  color: inherit;
-  background: transparent;
+/* Basic Reset and Preview Styles */
+::-moz-selection { background: rgba(0,0,0,0.1); }
+::selection { background: rgba(0,0,0,0.1); }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    color: #333;
+    transition: background 0.5s ease, color 0.3s;
 }
 
-::selection {
-  color: inherit;
-  background: transparent;
+/* Zufällige Hintergrund-Varianten */
+body.bg-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+body.bg-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+body.bg-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+body.bg-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+body.bg-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+body.bg-gradient-6 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+body.bg-gradient-7 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+body.bg-gradient-8 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+body.bg-gradient-9 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+body.bg-gradient-10 { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
+
+body.dark-mode { background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); color: #f0f0f0; }
+body.dark-mode.bg-gradient-1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+body.dark-mode.bg-gradient-2 { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
+body.dark-mode.bg-gradient-3 { background: linear-gradient(135deg, #141e30 0%, #243b55 100%); }
+body.dark-mode.bg-gradient-4 { background: linear-gradient(135deg, #000000 0%, #434343 100%); }
+body.dark-mode.bg-gradient-5 { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
+body.dark-mode.bg-gradient-6 { background: linear-gradient(135deg, #232526 0%, #414345 100%); }
+body.dark-mode.bg-gradient-7 { background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); }
+body.dark-mode.bg-gradient-8 { background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%); }
+body.dark-mode.bg-gradient-9 { background: linear-gradient(135deg, #373b44 0%, #4286f4 100%); }
+body.dark-mode.bg-gradient-10 { background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%); }
+
+#preview-header {
+    background: rgba(255,255,255,0.95);
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-html {
-    min-height: 100%;
-    background-image: url(../assets/addons/consent_manager/<?= $backgroundimage ?>);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
+body.dark-mode #preview-header {
+    background: rgba(30,30,30,0.95);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
-body {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: 14px;
-    line-height: 1.5em;
-    padding: 30px;
+
+.preview-header-left {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.theme-meta h1 {
+    margin: 0 0 5px 0;
+    font-size: 1.25rem;
+}
+.theme-meta p {
     margin: 0;
-    min-height: 100%;
-    height: 100%;
+    font-size: 0.85rem;
+    opacity: 0.7;
 }
-h1 {
-    background-color: rgba(255,255,255,.6);
-    padding: 15px 30px;
-    display: inline-block;
-    margin: 0 0 30px 0;
+
+.preview-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
-div.theme_description p {
-    background-color: rgba(255,255,255,.6);
-    padding: 5px 10px 5px 0;
-    margin-bottom: 10px;
+
+.preview-controls button {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
 }
-div.theme_description span {
-    background-color: rgba(255,255,255,.3);
-    display:inline-block;
-    width: 150px;
-    margin-right: 15px;
+
+body.dark-mode .preview-controls button {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #f0f0f0;
 }
-.alert-danger{color:#fff;background-color:#d9534f;border-color:#c9302c;padding: 20px 30px;margin-top:2em;}
-.alert-info{color:#fff;background-color:#4b9ad9;border-color:#2a81c7;padding: 20px 30px;margin-top:2em;}
+
+.preview-controls button:hover {
+    background: #f5f5f5;
+    border-color: #999;
+    transform: translateY(-1px);
+}
+
+body.dark-mode .preview-controls button:hover {
+    background: #333;
+    border-color: #666;
+}
+
+.preview-controls button.active {
+    background: #0066cc;
+    color: #fff;
+    border-color: #0066cc;
+}
+
+/* Consent Manager Box wird normal angezeigt wie im Original */
+.consent_manager-hidden { 
+    display: none !important; 
+}
+
+/* Padding für fixed header */
+body {
+    padding-top: 70px;
+}
 </style>
 </head>
 <body>
 
-<h1 id="previewtitle"> <?= $theme_options['name'] ?? $preview ?></h1>
-
-<?php if (false !== $cmstyle && [] !== $theme_options) { ?>
-<div class="theme_description">
-<p><span><?= rex_i18n::msg('consent_manager_theme_name') ?></span><?= $theme_options['name'] ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_description') ?></span><?= $theme_options['description'] ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_type') ?></span><?= $theme_options['type'] ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_style') ?></span><?= $theme_options['style'] ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_scssfile') ?></span><?= $preview ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_autor') ?></span><?= $theme_options['autor'] ?></p>
+<div id="preview-header">
+    <div class="preview-header-left">
+        <div class="preview-controls">
+            <button type="button" class="mode-toggle active" data-mode="light">☀️ Light</button>
+            <button type="button" class="mode-toggle" data-mode="dark">🌙 Dark</button>
+        </div>
+        <div class="theme-meta">
+            <h1><?= $theme_options['name'] ?? $preview ?></h1>
+            <?php if (!empty($theme_options['description'])): ?>
+                <p><?= $theme_options['description'] ?></p>
+            <?php endif; ?>
+        </div>
+    </div>
 </div>
 
-<?php } ?>
-
-<?php
-        echo '<style>' . $cmstyle . '</style>' . PHP_EOL;
-    echo $cmbox;
-    if ('' !== $cmstyle) {
-        echo rex_view::info(rex_i18n::msg('consent_manager_theme_preview_info'));
-    }
-    ?>
+<?= $cmbox ?>
 
 <script>
-window.onload = function(event) {
-    if (document.getElementById('consent_manager-background')) {
-        consent_managerBox = document.getElementById('consent_manager-background');
-        consent_managerBox.classList.remove('consent_manager-hidden');
-
-        if (window.location.href.indexOf('nofocus') == -1) {
-            var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
-            var firstFocusableEl = focusableEls[0];
-            consent_managerBox.focus();
-            if (firstFocusableEl) {
-                firstFocusableEl.focus();
+window.onload = function() {
+    // Zufälligen Hintergrund auswählen
+    var gradients = ['bg-gradient-1', 'bg-gradient-2', 'bg-gradient-3', 'bg-gradient-4', 'bg-gradient-5', 
+                     'bg-gradient-6', 'bg-gradient-7', 'bg-gradient-8', 'bg-gradient-9', 'bg-gradient-10'];
+    var randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+    document.body.classList.add(randomGradient);
+    
+    // Mode toggle buttons (immer initialisieren)
+    var modeButtons = document.querySelectorAll('.mode-toggle');
+    modeButtons.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var mode = this.getAttribute('data-mode');
+            
+            console.log('Mode toggle clicked:', mode);
+            
+            // Update button states
+            modeButtons.forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            
+            // Toggle body class
+            if (mode === 'dark') {
+                document.body.classList.add('dark-mode');
+                console.log('Dark mode activated');
+            } else {
+                document.body.classList.remove('dark-mode');
+                console.log('Light mode activated');
             }
-        }
+        });
+    });
+    
+    // Consent Manager Box
+    var box = document.getElementById('consent_manager-background');
+    if (box) {
+        box.classList.remove('consent_manager-hidden');
+        
+        // Disable links
+        box.querySelectorAll('.consent_manager-sitelinks a').forEach(function(link) {
+            link.removeAttribute('href');
+            link.style.cursor = 'default';
+        });
 
-        consent_managerBox.querySelectorAll('.consent_manager-sitelinks').forEach(function (el) {
-            el.querySelectorAll('a').forEach(function (link) {
-                link.removeAttribute("href");
+        // Details toggle
+        var detailsToggle = document.getElementById('consent_manager-toggle-details');
+        var detailsDiv = document.getElementById('consent_manager-detail');
+        if (detailsToggle && detailsDiv) {
+            detailsToggle.addEventListener('click', function() {
+                detailsDiv.classList.toggle('consent_manager-hidden');
+            });
+        }
+        
+        // Close buttons
+        var closeBtns = box.querySelectorAll('.consent_manager-close');
+        closeBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                box.classList.add('consent_manager-hidden');
+                setTimeout(function() {
+                    box.classList.remove('consent_manager-hidden');
+                }, 500);
             });
         });
-        if (document.getElementById('consent_manager-toggle-details')) {
-            document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
-                document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-            });
-            document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
-                if (event.key == 'Enter') {
-                    document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-                }
-            });
-        }
-        consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
-            el.addEventListener('click', function () {
-                //document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
-                consent_managerBox.classList.add('consent_manager-hidden');
-
-                if (!document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden')) {
-                    document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-                }
-            });
-        });
-        document.getElementById('previewtitle').onclick = function() {
-            consent_managerBox.classList.remove('consent_manager-hidden');
-        };
-        document.onkeydown = function(evt) {
-            evt = evt || window.event;
-            if (evt.keyCode == 27) {
-                parent.consent_manager_close_preview();
-            }
-            if (evt.keyCode == 13) {
-                consent_managerBox.classList.remove('consent_manager-hidden');
-            }
-        };
-        // for all dom elements on click
-        document.onclick = function(evt) {
-            if (evt.target.closest('.consent_manager-wrapper-inner')) {
-                return;
-            }
-            document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-        }
+    } else {
+        console.error('Consent Manager box not found');
     }
-}
+};
 </script>
 
 </body>
@@ -240,8 +324,6 @@ if ('1' === rex_request::post('formsubmit', 'string') && !$csrfToken->isValid())
     } else {
         $addon->setConfig('theme', $theme);
         echo rex_view::success(rex_i18n::msg('consent_manager_config_saved'));
-        Theme::generateThemeAssets($theme);
-        Theme::copyAllAssets();
     }
 }
 

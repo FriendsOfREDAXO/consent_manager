@@ -53,6 +53,7 @@ rex_sql_table::get(rex::getTable('consent_manager_domain'))
     ->ensureColumn(new rex_sql_column('uid', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('privacy_policy', 'int(10) unsigned'))
     ->ensureColumn(new rex_sql_column('legal_notice', 'int(10) unsigned'))
+    ->ensureColumn(new rex_sql_column('theme', 'varchar(255)', true))
     ->ensureColumn(new rex_sql_column('google_consent_mode_enabled', 'varchar(20)', true, 'disabled'))
     ->ensureColumn(new rex_sql_column('google_consent_mode_config', 'text'))
     ->ensureColumn(new rex_sql_column('google_consent_mode_debug', 'tinyint(1)', true, '0'))
@@ -185,26 +186,47 @@ if (rex_addon::get('media_manager')->isAvailable()) {
         $sql->addGlobalCreateFields();
         $sql->addGlobalUpdateFields();
         $sql->insert();
+    }
+}
 
-        // Optional: Resize-Effect hinzufügen für einheitliche Größe
+// Media Manager Type und Effekt anlegen
+if (rex_addon::get('media_manager')->isAvailable()) {
+    $type = 'consent_manager_theme';
+    
+    // Type anlegen/update
+    $sql = rex_sql::factory();
+    $sql->setTable(rex::getTable('media_manager_type'));
+    $sql->setValue('name', $type);
+    $sql->setValue('description', 'Compiles SCSS themes for Consent Manager');
+    $sql->addGlobalCreateFields();
+    $sql->addGlobalUpdateFields();
+    $sql->insertOrUpdate();
+    $typeId = $sql->getLastId();
+    
+    // ID holen wenn Update
+    if ($typeId == 0) {
+        $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', [$type]);
+        $typeId = $sql->getValue('id');
+    }
+
+    if ($typeId > 0) {
+        // Altes löschen um Duplikate zu vermeiden
+        $sql = rex_sql::factory();
+        $sql->setQuery('DELETE FROM ' . rex::getTable('media_manager_type_effect') . ' WHERE type_id = ?', [$typeId]);
+        
+        // Effekt anlegen
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('media_manager_type_effect'));
         $sql->setValue('type_id', $typeId);
-        $sql->setValue('effect', 'resize');
-        $sql->setValue('priority', 2);
-        $sql->setValue('parameters', json_encode([
-            'rex_effect_resize' => [
-                'rex_effect_resize_width' => '480',
-                'rex_effect_resize_height' => '360',
-                'rex_effect_resize_style' => 'maximum',
-                'rex_effect_resize_allow_enlarge' => 'not_enlarge',
-            ],
-        ]));
+        $sql->setValue('effect', 'consent_manager_scss'); // Maps to class rex_effect_consent_manager_scss
+        $sql->setValue('priority', 1);
+        $sql->setValue('parameters', '[]');
         $sql->addGlobalCreateFields();
         $sql->addGlobalUpdateFields();
         $sql->insert();
     }
 }
+
 
 /**
  * Mit der Umstellung auf Namespace wurde auch die Cronjob-Klasse "rex_cronjob_log_delete" umbenannt in
