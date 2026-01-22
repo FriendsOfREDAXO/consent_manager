@@ -431,3 +431,6 @@ consent_manager_stats_count = Anzahl
 consent_manager_stats_history = Verlauf (Tage)
 consent_manager_stats_date = Datum
 
+# Media Manager Effects
+consent_manager_effect_scss_theme = Theme
+consent_manager_effect_scss_theme_notice = Optional: Theme-Dateiname (z.B. default.scss). Wenn leer, wird der Dateiname aus dem Media Manager Type verwendet.

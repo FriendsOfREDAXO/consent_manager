@@ -303,8 +303,13 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
     public function getParams()
     {
         return [
-            // Keine Parameter erforderlich - der Effekt arbeitet automatisch
-            // basierend auf dem übergebenen Dateinamen
+            [
+                'label' => rex_i18n::msg('consent_manager_effect_scss_theme'),
+                'name' => 'theme',
+                'type' => 'string',
+                'default' => '',
+                'notice' => rex_i18n::msg('consent_manager_effect_scss_theme_notice'),
+            ],
         ];
     }
 

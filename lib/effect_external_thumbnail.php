@@ -314,18 +314,23 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
     /**
      * @api
      * @return list<array{label: string, name: string, type: 'float'|'int'|'media'|'select'|'string', default?: mixed, notice?: string, prefix?: string, suffix?: string, attributes?: array<string, mixed>}>
-     *
-     * TODO: Prüfen,ob die (engl.) Meldungen weiter im Test stehen oder nach .lang übertragen werden
      */
     public function getParams(): array
     {
         return [
             [
-                'label' => 'Cache TTL (Stunden)',
-                'name' => 'cache_ttl',
-                'type' => 'int',
-                'default' => 168,
-                'notice' => 'Wie lange sollen Thumbnails gecacht werden? (Standard: 168h = 1 Woche)',
+                'label' => 'Service',
+                'name' => 'service',
+                'type' => 'select',
+                'options' => ['youtube' => 'YouTube', 'vimeo' => 'Vimeo'],
+                'default' => 'youtube',
+            ],
+            [
+                'label' => 'Video ID',
+                'name' => 'video_id',
+                'type' => 'string',
+                'default' => '',
+                'notice' => 'Lässt du dies leer, wird die Video-ID aus dem Dateinamen ermittelt.',
             ],
         ];
     }

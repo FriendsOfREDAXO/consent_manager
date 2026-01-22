@@ -418,3 +418,7 @@ consent_manager_button_inline_allow_all_text_info = Inline-platshållare: Knapp 
 # Tema-editor
 consent_manager_theme_editor_saved = Tema "{0}" har skapats och sparats framgångsrikt!
 consent_manager_theme_editor_project_addon_required = Tema-editorn kräver det installerade "project"-tillägget för att spara anpassade teman. Vänligen installera project-tillägget via installeraren.
+
+# Media Manager Effects
+consent_manager_effect_scss_theme = Tema
+consent_manager_effect_scss_theme_notice = Valfritt: Tema filnamn (t.ex. default.scss). Om tomt används filnamnet från Media Manager-typen.
