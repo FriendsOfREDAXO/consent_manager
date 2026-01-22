@@ -196,6 +196,7 @@ class Cache
     {
         $configFile = rex_path::addonCache('consent_manager', 'config.json');
 
-        return rex_file::getCache($configFile, []);
+        // rex_file::getCache kann in Realität null zurückgeben trotz PHPDoc
+        return rex_file::getCache($configFile, []) ?? []; // @phpstan-ignore nullCoalesce.expr
     }
 }
