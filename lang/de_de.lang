@@ -423,7 +423,7 @@ consent_manager_stats_top_cookies = Top Cookies/Services
 consent_manager_stats_service = Service
 consent_manager_stats_count = Anzahl
 consent_manager_stats_history = Verlauf (Tage)
-
+consent_manager_stats_date = Datum
 consent_manager_config_cookie_name_label = Cookie-Name
 consent_manager_config_cookie_name_notice = Name des Cookies, in dem die Einwilligung gespeichert wird. Standard: consentmanager
 
