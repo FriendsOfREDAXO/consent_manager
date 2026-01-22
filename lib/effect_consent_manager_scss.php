@@ -300,6 +300,9 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
         return 'Consent Manager SCSS Compiler';
     }
 
+    /**
+     * @return list<array{label: string, name: string, type: 'float'|'int'|'media'|'select'|'string', default?: mixed, notice?: string, prefix?: string, suffix?: string, attributes?: array<mixed>}>
+     */
     public function getParams()
     {
         return [

@@ -338,7 +338,7 @@ class Frontend
             
             // Fallback: Prüfen ob eine kompilierte Datei im Assets-Ordner existiert
             $cssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $themeConfig));
-            if ('' !== $cssfilename && file_exists($addon->getAssetsPath($cssfilename))) {
+            if (file_exists($addon->getAssetsPath($cssfilename))) {
                 $fallbackContent = file_get_contents($addon->getAssetsPath($cssfilename));
                 if (false !== $fallbackContent) {
                     return '/* Theme: ' . $cssfilename . ' (Fallback) */ ' . $fallbackContent;
