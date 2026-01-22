@@ -15,7 +15,8 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
     $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 }
 if (0 === count($consent_manager->texts)) {
-    echo '<div id="consent_manager-background">' . rex_view::error(rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig')) . '</div>';
+    // Leeren String zurückgeben statt HTML-Fehlermeldung
+    // Die Warnung wird bereits in Frontend::outputJavascript() geloggt (Zeile 232)
     return;
 }
 if (0 < count($consent_manager->cookiegroups)) : ?>
