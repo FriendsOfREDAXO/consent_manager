@@ -52,31 +52,63 @@ www.beispiel.de
 
 ### 3. Template-Integration
 
-**Wichtig:** Assets müssen im Template eingebunden werden, damit der Consent Manager und die Inline-Blocker funktionieren!
+**Wichtig:** Assets werden automatisch vom Addon eingebunden. Du musst nur das Fragment aufrufen!
 
 #### 🔧 Standard Integration (Consent Manager Box)
 
-**PHP-Aufruf (empfohlen):**
+**Empfohlene Integration (Standard - External CSS mit GZIP):**
 ```php
 <?php 
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
-// Standard-Integration (alles in einem)
+// Standard-Integration (alles in einem Fragment)
+// CSS wird automatisch als <link> mit GZIP-Kompression eingebunden
 echo Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php'); 
-
-// Oder Komponenten einzeln laden (mehr Flexibilität):
 ?>
-<style><?php echo Frontend::getCSS(); ?></style>
-<script<?php echo Frontend::getNonceAttribute(); ?>>
-    <?php echo Frontend::getJS(); ?>
-</script>
-<?php echo Frontend::getBox(); ?>
+```
 
+**Was passiert automatisch:**
+- ✅ CSS wird als `<link rel="stylesheet">` mit GZIP-Kompression (~70% kleiner) geladen
+- ✅ `<link rel="preload">` für optimale Performance
+- ✅ Browser-Caching mit ETag/Cache-Control Headers
+- ✅ Domain-spezifische Themes werden automatisch berücksichtigt
+- ✅ Fallback auf Inline-CSS wenn Media Manager nicht verfügbar
+
+**Manuelle Integration (mehr Kontrolle):**
+```php
+<?php use FriendsOfRedaxo\ConsentManager\Frontend; ?>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title><?= rex_article::getCurrent()->getName() ?></title>
+    
+    <!-- Option 1: External CSS via Media Manager (EMPFOHLEN) -->
+    <link rel="preload" href="<?= Frontend::getCssUrl() ?>" as="style">
+    <link rel="stylesheet" href="<?= Frontend::getCssUrl() ?>">
+    
+    <!-- Option 2: Inline CSS (falls gewünscht) -->
+    <!-- <style><?= Frontend::getCSS() ?></style> -->
+</head>
+<body>
+    <?= rex_article::getCurrent()->getArticle() ?>
+    
+    <!-- Consent Manager JavaScript & Box -->
+    <script<?= Frontend::getNonceAttribute() ?>>
+        <?= Frontend::getJS() ?>
+    </script>
+    <?= Frontend::getBox() ?>
+</body>
+</html>
+```
+
+**Custom Fragment:**
+```php
 <?php
-// Mit custom Fragment
+// Mit eigenem Fragment
 echo Frontend::getFragment(0, 0, 'my_custom_box.php');
 
-// Mit Inline-Modus
+// Mit Inline-Modus (nur für Inline-Blocker, versteckt Consent-Box)
 echo Frontend::getFragmentWithVars(0, 0, 'ConsentManager/box_cssjs.php', ['inline' => true]);
 ?>
 ```

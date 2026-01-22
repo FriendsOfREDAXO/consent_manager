@@ -281,26 +281,78 @@ class Frontend
     }
 
     /**
+     * Get CSS URL for consent manager theme via Media Manager.
+     * Returns a cacheable URL that serves GZIP-compressed CSS.
+     *
+     * @param array<string,mixed>|null $domainInfo Optional domain info array to use domain-specific theme
+     * @api
+     * @return string Media Manager URL or fallback to static asset
+     */
+    public static function getCssUrl(?array $domainInfo = null): string
+    {
+        $addon = rex_addon::get('consent_manager');
+        
+        // Prüfe erst ob Domain ein Custom-Theme hat, sonst global
+        if (null !== $domainInfo && isset($domainInfo['theme']) && '' !== $domainInfo['theme']) {
+            $themeConfig = $domainInfo['theme'];
+        } else {
+            $themeConfig = $addon->getConfig('theme', false);
+        }
+        
+        // Prüfen ob Media Manager verfügbar ist und ein Theme konfiguriert ist
+        if (rex_addon::get('media_manager')->isAvailable() && false !== $themeConfig && is_string($themeConfig) && '' !== $themeConfig) {
+            // Theme über Media Manager laden (dynamisch kompiliert mit GZIP)
+            return \rex_media_manager::getUrl('consent_manager_theme', $themeConfig);
+        }
+        
+        // Fallback: Statisches CSS aus Assets
+        return $addon->getAssetsUrl('consent_manager_frontend.css');
+    }
+
+    /**
      * @api
      */
     public static function getFrontendCss(): string
     {
         $addon = rex_addon::get('consent_manager');
 
-        $_cssfilename = 'consent_manager_frontend.css';
-        if (false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
-            $_themecssfilename = $addon->getConfig('theme', false);
-            $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $_themecssfilename));
-            if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {
-                $_cssfilename = $_themecssfilename;
+        // Prüfen ob Media Manager verfügbar ist und ein Theme konfiguriert ist
+        $themeConfig = $addon->getConfig('theme', false);
+        
+        if (rex_addon::get('media_manager')->isAvailable() && false !== $themeConfig && is_string($themeConfig) && '' !== $themeConfig) {
+            // Theme über Media Manager laden (dynamisch kompiliert)
+            $mediaManagerUrl = \rex_media_manager::getUrl('consent_manager_theme', $themeConfig);
+            
+            // CSS-Inhalt vom Media Manager abrufen
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 10,
+                ],
+            ]);
+            
+            $csscontent = @file_get_contents(\rex_url::frontendController() . $mediaManagerUrl, false, $context);
+            
+            if (false !== $csscontent && '' !== $csscontent) {
+                return '/* Theme: ' . $themeConfig . ' (via Media Manager) */ ' . $csscontent;
+            }
+            
+            // Fallback: Prüfen ob eine kompilierte Datei im Assets-Ordner existiert
+            $cssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $themeConfig));
+            if ('' !== $cssfilename && file_exists($addon->getAssetsPath($cssfilename))) {
+                $fallbackContent = file_get_contents($addon->getAssetsPath($cssfilename));
+                if (false !== $fallbackContent) {
+                    return '/* Theme: ' . $cssfilename . ' (Fallback) */ ' . $fallbackContent;
+                }
             }
         }
-
-        $_csscontent = file_get_contents($addon->getAssetsPath($_cssfilename));
-        if (false === $_csscontent) {
+        
+        // Standard-CSS laden
+        $cssfilename = 'consent_manager_frontend.css';
+        $csscontent = file_get_contents($addon->getAssetsPath($cssfilename));
+        if (false === $csscontent) {
             return '';
         }
-        return '/*' . $_cssfilename . '*/ ' . $_csscontent;
+        return '/* ' . $cssfilename . ' */ ' . $csscontent;
     }
 
     /**

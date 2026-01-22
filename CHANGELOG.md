@@ -28,7 +28,13 @@
   - Custom Media Manager Effect `consent_manager_scss` für On-the-fly SCSS-Kompilierung
   - Automatische Theme-Kompilierung ohne manuelle Asset-Generierung
   - Unterstützt Project-Themes und Addon-Themes
-  - Fallback auf Inline-CSS wenn Media Manager nicht verfügbar
+  - **Performance**: GZIP-Kompression reduziert CSS-Größe um ~70%
+  - **Caching**: Browser-Cache mit ETag und Cache-Control Headers
+  - **Neue Methode**: `Frontend::getCssUrl()` liefert cacheable Media Manager URL
+  - **Zwei Integrationsvarianten**:
+    - **External CSS (empfohlen)**: `<link rel="stylesheet" href="<?= Frontend::getCssUrl() ?>">` - Mit GZIP und Browser-Caching
+    - **Inline CSS**: `<style><?= Frontend::getCSS() ?></style>` - Für schnellste Darstellung ohne zusätzlichen Request
+  - Fallback auf statische CSS-Datei wenn Media Manager nicht verfügbar
 * **Custom Themes pro Domain**: Domains können jetzt individuelle Themes verwenden
   - Neues `theme` Feld in der Domain-Konfiguration
   - Theme-Auswahl beim Bearbeiten einer Domain
