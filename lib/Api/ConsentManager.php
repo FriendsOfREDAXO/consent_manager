@@ -35,7 +35,7 @@ class ConsentManager extends rex_api_function
         if (strlen($domain) > 255) {
             exit;
         }
-        if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$/', $domain) && !preg_match('/^[a-zA-Z0-9]$/', $domain)) {
+        if (1 !== preg_match('/^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$/', $domain) && 1 !== preg_match('/^[a-zA-Z0-9]$/', $domain)) {
             exit;
         }
         
@@ -44,7 +44,7 @@ class ConsentManager extends rex_api_function
         if (strlen($consentid) > 30) {
             exit;
         }
-        if (!preg_match('/^[a-f0-9.]+$/i', $consentid)) {
+        if (1 !== preg_match('/^[a-f0-9.]+$/i', $consentid)) {
             exit;
         }
         
@@ -63,7 +63,7 @@ class ConsentManager extends rex_api_function
             exit;
         }
         // cachelogid should only contain alphanumeric characters, dots and hyphens
-        if (!preg_match('/^[a-zA-Z0-9._-]+$/', $cachelogid)) {
+        if (1 !== preg_match('/^[a-zA-Z0-9._-]+$/', $cachelogid)) {
             exit;
         }
         
@@ -71,7 +71,7 @@ class ConsentManager extends rex_api_function
         foreach ($consent_manager['consents'] as $consent) {
             // Only allow alphanumeric characters, hyphens and underscores (valid UIDs)
             // Max 50 chars per UID to prevent oversized payloads
-            if (is_string($consent) && strlen($consent) <= 50 && preg_match('/^[a-zA-Z0-9_-]+$/', $consent)) {
+            if (is_string($consent) && strlen($consent) <= 50 && 1 === preg_match('/^[a-zA-Z0-9_-]+$/', $consent)) {
                 $validatedConsents[] = $consent;
             }
             // Invalid consent values are silently dropped

@@ -40,7 +40,8 @@ class ConsentStats
         $totalConsents = count($logs);
         
         foreach ($logs as $log) {
-            $consents = json_decode($log['consents'], true);
+            $consentsJson = is_string($log['consents']) ? $log['consents'] : '';
+            $consents = json_decode($consentsJson, true);
             if (is_array($consents)) {
                 foreach ($consents as $uid) {
                     if (!isset($cookieStats[$uid])) {

@@ -298,6 +298,45 @@ Jeder externe Dienst (Analytics, Social Media, etc.) wird einzeln angelegt:
 **Dienstname:** Wird in der Consent-Box angezeigt
 **Cookie-Definitionen:** YAML-Format für Cookie-Details
 
+### Cookie-Name konfigurieren (seit Version 5.3.0)
+
+**RFC 6265 konforme Cookie-Namen:**
+
+Der Cookie-Name kann über die Konfiguration angepasst werden:
+
+**Konfiguration:**
+- Einstellungen über Backend: **Consent Manager → Einstellungen → Cookie-Name**
+- Standard-Wert: `consentmanager`
+- Wird automatisch mit RFC 6265 validiert
+
+**Erlaubte Zeichen nach RFC 6265:**
+- Buchstaben (a-z, A-Z)
+- Zahlen (0-9)
+- Sonderzeichen: `! # $ % & ' * + - . ^ _ \` | ~`
+
+**Nicht erlaubt:**
+- Leerzeichen, Tabs
+- Sonderzeichen wie: `( ) < > @ , ; : \ " / [ ] ? = { }`
+- Steuerzeichen
+
+**Beispiele gültiger Cookie-Namen:**
+```
+consentmanager      ✓
+consent-manager     ✓
+my_consent_2024     ✓
+consent.mgr         ✓
+```
+
+**Beispiele ungültiger Cookie-Namen:**
+```
+consent manager     ✗ (Leerzeichen)
+consent(mgr)        ✗ (Klammern)
+consent@site        ✗ (At-Zeichen)
+consent;manager     ✗ (Semikolon)
+```
+
+**Wichtig:** Nach Änderung des Cookie-Namens müssen Nutzer ihre Einwilligung neu erteilen, da der alte Cookie-Name nicht mehr gelesen werden kann.
+
 ### Cookie-Einstellungen (SameSite & Secure)
 
 **Konfigurierbare Cookie-Sicherheit** (seit Version 4.5.0):

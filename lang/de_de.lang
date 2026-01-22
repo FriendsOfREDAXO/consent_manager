@@ -395,6 +395,12 @@ consent_manager_quickstart_status_final = Abschluss
 consent_manager_config_inline_only_mode = Nur Inline-Consent verwenden
 consent_manager_config_inline_only_mode_desc = Das globale Consent-Popup wird standardmäßig nicht angezeigt. Consent wird nur bei Bedarf über doConsent() abgefragt.
 
+# Cookie-Namen Konfiguration
+consent_manager_config_cookie_name_label = Cookie-Name
+consent_manager_config_cookie_name_notice = Name des Consent-Cookies (Standard: "consentmanager"). Erlaubt sind nach RFC 6265: Buchstaben, Zahlen und ! # $ % & ' * + - . ^ _ ` | ~ (keine Leerzeichen oder Sonderzeichen wie ()<>@,;:\"/[]?={})
+consent_manager_config_cookie_name_empty = Cookie-Name darf nicht leer sein.
+consent_manager_config_cookie_name_invalid = Cookie-Name enthält ungültige Zeichen nach RFC 6265. Erlaubt sind: Buchstaben, Zahlen und ! # $ % & ' * + - . ^ _ ` | ~
+
 # Domain Inline Consent Einstellungen
 consent_manager_domain_inline_only_mode = Inline-Only Modus
 consent_manager_domain_inline_only_mode_disabled = Standard (mit Popup)

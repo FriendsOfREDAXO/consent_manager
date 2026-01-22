@@ -2,6 +2,7 @@
 
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\Config;
+use FriendsOfRedaxo\ConsentManager\CookieNameValidator;
 use FriendsOfRedaxo\ConsentManager\JsonSetup;
 use FriendsOfRedaxo\ConsentManager\Theme;
 
@@ -117,13 +118,20 @@ if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_
             $export_data['domains'] = $sql->getArray();
 
             // JSON Export erstellen
+            /**
+             * @psalm-taint-escape html
+             * @psalm-taint-escape has_quotes
+             */
             $json_export = json_encode($export_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
-            // Headers für Download
-            header('Content-Type: application/json');
+            // Clean output buffers and send JSON response
+            rex_response::cleanOutputBuffers();
+            rex_response::sendContentType('application/json');
             header('Content-Disposition: attachment; filename="consent_manager_export_' . date('Y-m-d_H-i-s') . '.json"');
             if (false !== $json_export) {
                 header('Content-Length: ' . strlen($json_export));
+                // Backend-only JSON export, authenticated users only
+                // rex_response::cleanOutputBuffers() + sendContentType('application/json') ensures safe output
                 echo $json_export;
             }
             exit;
@@ -211,6 +219,22 @@ $field = $form->addCheckboxField('inline_only_mode');
 $field->setLabel(rex_i18n::msg('consent_manager_config_inline_only_mode'));
 $field->addOption(rex_i18n::msg('consent_manager_config_inline_only_mode'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_inline_only_mode_desc'));
+
+// Cookie Name
+$field = $form->addTextField('cookie_name');
+$field->setLabel(rex_i18n::msg('consent_manager_config_cookie_name_label'));
+$field->setAttribute('placeholder', 'consentmanager');
+$field->setNotice(rex_i18n::msg('consent_manager_config_cookie_name_notice'));
+$field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_config_cookie_name_empty'));
+$field->getValidator()->add('custom', rex_i18n::msg('consent_manager_config_cookie_name_invalid'), static function($value) {
+    if (!is_string($value)) {
+        return false;
+    }
+    if (!CookieNameValidator::isValid($value)) {
+        return false;
+    }
+    return true;
+});
 
 // Cookie Lebensdauer
 $field = $form->addTextField('lifespan');

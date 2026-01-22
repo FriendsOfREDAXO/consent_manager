@@ -222,7 +222,7 @@ class Theme
         
         // Schriftgröße (benutzerdefiniert oder Standard je nach Theme-Typ)
         $customFontSize = $colors['font_size'] ?? null;
-        if ($customFontSize && '' !== $customFontSize) {
+        if (null !== $customFontSize && '' !== $customFontSize) {
             $fontSize = $customFontSize . 'px';
         }
         $buttonFontSize = $colors['button_font_size'] ?? '15';

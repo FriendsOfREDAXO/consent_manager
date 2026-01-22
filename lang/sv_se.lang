@@ -394,7 +394,11 @@ consent_manager_quickstart_status_final = Slutförande
 # Inline Consent-inställningar
 consent_manager_config_inline_only_mode = Använd endast inline-consent
 consent_manager_config_inline_only_mode_desc = Den globala consent-popupen visas inte som standard. Samtycke begärs endast vid behov via doConsent().
-
+# Cookie-namn Konfiguration
+consent_manager_config_cookie_name_label = Cookie-namn
+consent_manager_config_cookie_name_notice = Namn på consent-cookien (standard: "consentmanager"). Tillåtna enligt RFC 6265: bokstäver, siffror och ! # $ % & ' * + - . ^ _ ` | ~ (inga mellanslag eller specialtecken som ()<>@,;:\"/[]?={})
+consent_manager_config_cookie_name_empty = Cookie-namnet får inte vara tomt.
+consent_manager_config_cookie_name_invalid = Cookie-namnet innehåller ogiltiga tecken enligt RFC 6265. Tillåtna: bokstäver, siffror och ! # $ % & ' * + - . ^ _ ` | ~
 # Domän Inline Consent-inställningar
 consent_manager_domain_inline_only_mode = Inline-endast läge
 consent_manager_domain_inline_only_mode_disabled = Standard (med popup)

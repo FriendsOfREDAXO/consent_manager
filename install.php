@@ -105,6 +105,11 @@ if (-1 === $addon->getConfig('justInstalled', -1)) {
     $addon->setConfig('justInstalled', $justinstalled);
 }
 
+// Set default cookie name if not configured
+if (!$addon->hasConfig('cookie_name')) {
+    $addon->setConfig('cookie_name', 'consentmanager');
+}
+
 // Add Text for new Button button_select_none
 if (rex_version::compare($addon->getVersion(), '4.0', '<')) {
     $sql = rex_sql::factory();

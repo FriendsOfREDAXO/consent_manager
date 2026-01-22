@@ -70,7 +70,7 @@ class GoogleConsentMode
         $domainData = ConsentManager::getDomain($domain);
         $mode = 'disabled';
 
-        if ($domainData) {
+        if (null !== $domainData) {
             $mode = $domainData['google_consent_mode_enabled'] ?? 'disabled';
         }
 

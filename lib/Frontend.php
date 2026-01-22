@@ -110,7 +110,7 @@ class Frontend
         $domain = Utility::hostname();
 
         $domains = ConsentManager::getDomains();
-        if (empty($domains)) {
+        if ([] === $domains) {
             return;
         }
 
@@ -218,7 +218,7 @@ class Frontend
         header('Cache-Control: max-age=604800, public');
 
         // Check if client has current version
-        $clientEtag = $_SERVER['HTTP_IF_NONE_MATCH'] ?? '';
+        $clientEtag = rex_request::server('HTTP_IF_NONE_MATCH', 'string', '');
         if (trim($clientEtag, '"') === $etag) {
             http_response_code(304);
             exit;
@@ -258,8 +258,7 @@ class Frontend
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = \'';
         // REXSTAN: meldet «Binary operation "." between array<string>|string and '\';' results in an error.»
-        // Das ist definitiv falsch und eine Fehlinterpretation wegen obigem «$boxtemplate = str_replace(...»
-        echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
+        // Das ist definitiv falsch und eine Fehlinterpretation wegen obigem «$boxtemplate = str_replace(...»        /** @phpstan-ignore-next-line */        echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
 
         $lifespan = $addon->getConfig('lifespan', 365);
         if ('' === $lifespan) {

@@ -7,10 +7,19 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
         $filename = $this->media->getMediaFilename();
         $isDebug = rex::isDebugMode();
         
+        // Security: Validate filename to prevent path traversal attacks
+        if (!$this->isValidFilename($filename)) {
+            $errorMsg = $isDebug 
+                ? "/* Security Error: Invalid filename '" . htmlspecialchars($filename, ENT_QUOTES) . "' */" 
+                : "/* Invalid theme file */";
+            $this->outputCss($errorMsg, $filename, false);
+            return;
+        }
+        
         // Determine the source file
         $source = $this->findSourceFile($filename);
         
-        if (!$source) {
+        if (null === $source) {
             $debugInfo = [];
             if ($isDebug) {
                 $debugInfo[] = "/* === SCSS Compiler Error === */";
@@ -56,7 +65,7 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
             // Read the compiled CSS
             $css = rex_file::get($tempFile);
             
-            if (false === $css || '' === $css) {
+            if (!is_string($css) || '' === $css) {
                 $debugInfo = [];
                 if ($isDebug) {
                     $debugInfo[] = "/* === SCSS Compilation Error === */";
@@ -75,18 +84,22 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
             if ($isDebug) {
                 $debugHeader = "/* === SCSS Compiler Debug === */\n";
                 $debugHeader .= "/* Source: " . $source . " */\n";
-                $debugHeader .= "/* Compiled: " . date('Y-m-d H:i:s', filemtime($source)) . " */\n";
+                $filemtime = filemtime($source);
+                $compiledTime = false !== $filemtime ? date('Y-m-d H:i:s', $filemtime) : 'unknown';
+                $debugHeader .= "/* Compiled: " . $compiledTime . " */\n";
                 $debugHeader .= "/* Size: " . number_format(strlen($css)) . " bytes */\n\n";
                 $css = $debugHeader . $css;
             }
             
             // Output mit Cache-Headern und ETag
             $etag = md5($css);
-            $lastModified = filemtime($source);
+            $timestamp = filemtime($source);
+            $lastModified = false !== $timestamp ? $timestamp : time();
             
             $this->media->setHeader('Content-Type', 'text/css; charset=utf-8');
             $this->media->setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-            $this->media->setHeader('Expires', gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
+            $expiresTime = time() + 31536000;
+            $this->media->setHeader('Expires', gmdate('D, d M Y H:i:s', $expiresTime) . ' GMT');
             $this->media->setHeader('ETag', '"' . $etag . '"');
             $this->media->setHeader('Last-Modified', gmdate('D, d M Y H:i:s', $lastModified) . ' GMT');
             $this->media->setFormat('css');
@@ -121,6 +134,14 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
         }
     }
     
+    /**
+     * Output CSS with appropriate headers
+     *
+     * @param string $css The CSS content to output
+     * @param string $filename The filename for the output
+     * @param bool $cache Whether to send cache headers
+     * @return void
+     */
     private function outputCss($css, $filename, $cache = false)
     {
         $cssFilename = pathinfo($filename, PATHINFO_FILENAME) . '.css';
@@ -143,29 +164,93 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
         });
     }
     
-    private function findSourceFile($filename)
+    /**
+     * Validate filename to prevent path traversal and other security issues
+     *
+     * @param string $filename The filename to validate
+     * @return bool True if valid, false otherwise
+     */
+    private function isValidFilename(string $filename): bool
     {
-        // 1. Check Project Addon
+        // 1. Must end with .scss
+        if (!str_ends_with($filename, '.scss')) {
+            return false;
+        }
+        
+        // 2. Must match pattern: consent_manager_(frontend|backend)[a-z0-9_]*.scss
+        if (1 !== preg_match('/^consent_manager_(frontend|backend)[a-z0-9_]*\.scss$/i', $filename)) {
+            return false;
+        }
+        
+        // 3. No directory traversal characters
+        if (str_contains($filename, '..') || str_contains($filename, '/') || str_contains($filename, '\\')) {
+            return false;
+        }
+        
+        // 4. No null bytes
+        if (str_contains($filename, "\0")) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Find the actual source file path for a given filename
+     *
+     * @param string $filename The filename to search for
+     * @return string|null The full path to the file, or null if not found
+     */
+    private function findSourceFile(string $filename): ?string
+    {
+        // Define allowed base directories
+        $allowedDirs = [];
+        
+        // 1. Project themes directory
         if (rex_addon::exists('project') && rex_addon::get('project')->isAvailable()) {
-            $projectPath = rex_addon::get('project')->getPath('consent_manager_themes/' . $filename);
-            if (file_exists($projectPath)) {
-                return $projectPath;
+            $projectDir = rex_addon::get('project')->getPath('consent_manager_themes/');
+            if (is_dir($projectDir)) {
+                $allowedDirs[] = $projectDir;
             }
-            // Fallback for requests without extension in filename if needed
         }
-
-        // 2. Check Consent Manager Addon (themes folder)
-        $addonPath = rex_addon::get('consent_manager')->getPath('scss/themes/' . $filename);
-        if (file_exists($addonPath)) {
-            return $addonPath;
+        
+        // 2. Consent Manager themes directory
+        $themesDir = rex_addon::get('consent_manager')->getPath('scss/themes/');
+        if (is_dir($themesDir)) {
+            $allowedDirs[] = $themesDir;
         }
-
-        // 3. Fallback to scss root (for base files)
-         $basePath = rex_addon::get('consent_manager')->getPath('scss/' . $filename);
-         if (file_exists($basePath)) {
-             return $basePath;
-         }
-
+        
+        // 3. Consent Manager scss root (for base files like consent_manager_backend.scss)
+        $scssDir = rex_addon::get('consent_manager')->getPath('scss/');
+        if (is_dir($scssDir)) {
+            $allowedDirs[] = $scssDir;
+        }
+        
+        // Check each allowed directory
+        foreach ($allowedDirs as $dir) {
+            $fullPath = $dir . $filename;
+            
+            if (!file_exists($fullPath)) {
+                continue;
+            }
+            
+            // Security: Verify the resolved path is within the allowed directory
+            // This prevents symlink attacks and other path manipulation
+            $realPath = realpath($fullPath);
+            $realDir = realpath($dir);
+            
+            if (false === $realPath || false === $realDir) {
+                continue;
+            }
+            
+            // Ensure the resolved path starts with the allowed directory
+            if (!str_starts_with($realPath, $realDir)) {
+                continue;
+            }
+            
+            return $realPath;
+        }
+        
         return null;
     }
 

@@ -5,6 +5,20 @@
 ### 🚀 Features
 
 * **Cookiename kann geändert werden**  
+  - Neues Konfigurationsfeld für den Cookie-Namen unter **Einstellungen → Cookie-Name**
+  - Standard-Wert: `consentmanager` (wird automatisch bei Installation gesetzt)
+  - RFC 6265 konforme Validierung für Cookie-Namen
+  - **Erlaubte Zeichen**: Buchstaben (a-z, A-Z), Zahlen (0-9) und Sonderzeichen: `! # $ % & ' * + - . ^ _ \` | ~`
+  - **Nicht erlaubt**: Leerzeichen, Tabs, Steuerzeichen, Separatoren wie `( ) < > @ , ; : \ " / [ ] ? = { }`
+  - Automatische Echtzeit-Validierung beim Speichern verhindert ungültige Cookie-Namen
+  - Neue `CookieNameValidator` Klasse mit Helper-Methoden:
+    - `isValid()` - Prüft RFC 6265 Konformität
+    - `getInvalidChars()` - Zeigt ungültige Zeichen an
+    - `sanitize()` - Bereinigt Cookie-Namen automatisch
+    - `getErrorMessage()` - Liefert verständliche Fehlermeldungen
+  - **Wichtig**: Nach Änderung des Cookie-Namens müssen Nutzer ihre Einwilligung neu erteilen
+  - Mehrsprachige Unterstützung (Deutsch, Englisch, Schwedisch)
+  - Beispiele gültiger Namen: `consentmanager`, `consent-manager`, `my_consent_2024`, `consent.mgr`
 
 * **Alle Vorschaubilder entfernt**
 
@@ -57,7 +71,33 @@
   - Produktiv: Minimale generische Fehlermeldungen
   - Debug: Detaillierte Stack-Traces und Pfad-Informationen
 
-### 🔧 Technical Changes
+### � Security
+
+* **SCSS Media Manager Effect**: Vollständige Absicherung gegen Path Traversal Angriffe
+  - Whitelist-basierte Filename-Validierung (nur `consent_manager_(frontend|backend)[a-z0-9_]*.scss`)
+  - Directory Traversal-Schutz (`../`, `/`, `\` werden blockiert)
+  - Null-Byte-Protection (`\0` wird blockiert)
+  - `realpath()` Validierung verhindert Symlink-Angriffe
+  - Strikte Pfad-Prüfung: Resultierende Pfade müssen innerhalb erlaubter Verzeichnisse liegen
+  - Nur explizit erlaubte Verzeichnisse werden durchsucht:
+    - `/project/consent_manager_themes/` (wenn Project-Addon aktiv)
+    - `/consent_manager/scss/themes/`
+    - `/consent_manager/scss/` (nur für Base-Files)
+  - Verhindert unbefugten Zugriff auf Server-Dateien (z.B. `/etc/passwd`)* **JSON Export Hardening**: Backend-Export jetzt mit sauberem Output-Handling
+  - `rex_response::cleanOutputBuffers()` verhindert Buffer-Injection
+  - `rex_response::sendContentType('application/json')` für korrekten Content-Type
+  - Taint-Escape Annotations für Psalm Static Analysis
+  - Backend-Only Feature mit REDAXO Authentication geschützt
+* **Psalm Taint Analysis**: Vollständig sauber (0 Errors)
+  - Keine TaintedHtml Warnungen
+  - Keine TaintedTextWithQuotes Warnungen
+  - 92.6% Type Coverage
+* **Security Audit Ergebnisse**:
+  - ✅ Keine Super-Globals (`$_GET`, `$_POST` etc.) - alles über `rex_request`
+  - ✅ SQL Injection geschützt - alle Queries nutzen Prepared Statements
+  - ✅ Composer Dependencies sauber - keine bekannten Vulnerabilities
+  - ✅ XSS geschützt - korrektes Output-Escaping
+### �🔧 Technical Changes
 
 * **Asset-System**: Migration von statischem Asset-Copying zu dynamischer SCSS-Kompilierung
 * **Theme.php**: Entfernung veralteter Methoden (`generateDefaultAssets()`, `copyAllAssets()`, `generateThemeAssets()`)

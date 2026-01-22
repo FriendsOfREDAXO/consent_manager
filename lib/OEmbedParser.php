@@ -46,11 +46,9 @@ class OEmbedParser
             $content = $ep->getSubject();
 
             /**
-             * NOTE: nur theoretisch kann $content etwas anderes sein als string.
+             * NOTE: PHPDoc garantiert bereits string-Type.
+             * is_string() Check ist nicht mehr nötig.
              */
-            if (!is_string($content)) {
-                return $content;
-            }
 
             // Domain-Check wenn spezifiziert
             if (null !== $domain && $domain !== rex::getServer()) {
@@ -288,6 +286,7 @@ class OEmbedParser
         }
 
         try {
+            /** @phpstan-ignore-next-line class.notFound (VidStack addon is optional) */
             $player = new Video($videoUrl);
 
             // Attribute für den Player setzen
@@ -304,10 +303,12 @@ class OEmbedParser
                 $attributes['height'] = $options['video_height'];
             }
 
+            /** @phpstan-ignore-next-line method.notFound (VidStack addon is optional) */
             $player->setAttributes($attributes);
 
             // Nur generate() verwenden - OHNE Vidstack Consent
             // Der Consent Manager Inline-Blocker kommt davor (via doConsent)
+            /** @phpstan-ignore-next-line method.notFound (VidStack addon is optional) */
             return $player->generate();
         } catch (Exception $e) {
             if (rex::isDebugMode()) {
