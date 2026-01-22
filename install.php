@@ -209,26 +209,36 @@ if (rex_addon::get('media_manager')->isAvailable()) {
     $typeId = $sql->getLastId();
     
     // ID holen wenn Update
-    if ($typeId == 0) {
+    if (0 == $typeId) {
         $sql->setQuery('SELECT id FROM ' . rex::getTable('media_manager_type') . ' WHERE name = ?', [$type]);
-        $typeId = $sql->getValue('id');
+        if ($sql->getRows() > 0) {
+            $typeId = (int) $sql->getValue('id');
+        }
     }
 
     if ($typeId > 0) {
-        // Altes löschen um Duplikate zu vermeiden
+        // Prüfen ob Effekt bereits existiert
         $sql = rex_sql::factory();
-        $sql->setQuery('DELETE FROM ' . rex::getTable('media_manager_type_effect') . ' WHERE type_id = ?', [$typeId]);
+        $sql->setQuery('SELECT COUNT(*) as count FROM ' . rex::getTable('media_manager_type_effect') . ' WHERE type_id = ? AND effect = ?', [$typeId, 'consent_manager_scss']);
+        $effectExists = (int) $sql->getValue('count') > 0;
         
-        // Effekt anlegen
-        $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('media_manager_type_effect'));
-        $sql->setValue('type_id', $typeId);
-        $sql->setValue('effect', 'consent_manager_scss'); // Maps to class rex_effect_consent_manager_scss
-        $sql->setValue('priority', 1);
-        $sql->setValue('parameters', '[]');
-        $sql->addGlobalCreateFields();
-        $sql->addGlobalUpdateFields();
-        $sql->insert();
+        if (!$effectExists) {
+            // Effekt anlegen
+            $sql = rex_sql::factory();
+            $sql->setTable(rex::getTable('media_manager_type_effect'));
+            $sql->setValue('type_id', $typeId);
+            $sql->setValue('effect', 'consent_manager_scss'); // Maps to class rex_effect_consent_manager_scss
+            $sql->setValue('priority', 1);
+            $sql->setValue('parameters', '[]');
+            $sql->addGlobalCreateFields();
+            $sql->addGlobalUpdateFields();
+            $sql->insert();
+        }
+        
+        // Media Manager Cache löschen
+        if (file_exists(rex_path::addonCache('media_manager', 'types.cache'))) {
+            rex_file::delete(rex_path::addonCache('media_manager', 'types.cache'));
+        }
     }
 }
 

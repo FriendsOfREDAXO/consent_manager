@@ -300,4 +300,12 @@ class rex_effect_consent_manager_scss extends rex_effect_abstract
         return 'Consent Manager SCSS Compiler';
     }
 
+    public function getParams()
+    {
+        return [
+            // Keine Parameter erforderlich - der Effekt arbeitet automatisch
+            // basierend auf dem übergebenen Dateinamen
+        ];
+    }
+
 }
