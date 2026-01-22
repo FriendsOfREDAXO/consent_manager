@@ -2,6 +2,14 @@
 
 ## Version 5.3.0 - 22.01.2026
 
+### ⚠️ Breaking Changes
+
+* **Cache-Location geändert**: Cache-Dateien werden jetzt in `cache/addons/consent_manager/` statt `data/addons/consent_manager/` gespeichert
+  - Ermöglicht einfaches Leeren des Caches über REDAXO Backend (**System → Cache**)
+  - Migration erfolgt automatisch beim Update (alte Cache-Datei wird verschoben)
+  - Cache wird bei fehlendem/veraltetem File automatisch neu generiert
+  - **Hinweis für Entwickler**: Falls eigener Code direkt auf Cache-Datei zugreift, Pfad anpassen von `rex_path::addonData()` zu `rex_path::addonCache()`
+
 ### 🚀 Features
 
 * **Cookiename kann geändert werden**  

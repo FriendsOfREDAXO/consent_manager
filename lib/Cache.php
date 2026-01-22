@@ -54,7 +54,7 @@ class Cache
 
     private function writeCache(): void
     {
-        $configFile = rex_path::addonData('consent_manager', 'config.json');
+        $configFile = rex_path::addonCache('consent_manager', 'config.json');
         $this->fetchData();
         foreach (rex_clang::getAllIds() as $clangId) {
             $this->prepareCookie($clangId);
@@ -194,7 +194,7 @@ class Cache
      */
     public static function read(): array
     {
-        $configFile = rex_path::addonData('consent_manager', 'config.json');
+        $configFile = rex_path::addonCache('consent_manager', 'config.json');
 
         return rex_file::getCache($configFile, []);
     }

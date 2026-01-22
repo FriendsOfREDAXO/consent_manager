@@ -9,6 +9,23 @@ use FriendsOfRedaxo\ConsentManager\Cache;
 
 $addon = rex_addon::get('consent_manager');
 $addon->includeFile(__DIR__ . '/install.php');
+
+// Migration: Verschiebe Cache von data/ nach cache/ (seit 5.3.0)
+$oldCacheFile = rex_path::addonData('consent_manager', 'config.json');
+$newCacheFile = rex_path::addonCache('consent_manager', 'config.json');
+
+if (file_exists($oldCacheFile)) {
+    // Alten Cache nach cache/ kopieren (wenn neue Datei nicht existiert)
+    if (!file_exists($newCacheFile)) {
+        $cacheContent = file_get_contents($oldCacheFile);
+        if (false !== $cacheContent) {
+            rex_file::putCache($newCacheFile, json_decode($cacheContent, true));
+        }
+    }
+    // Alten Cache in jedem Fall löschen
+    rex_file::delete($oldCacheFile);
+}
+
 $addon->setConfig('forceCache', true);
 
 // Copy scripts to every language
