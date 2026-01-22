@@ -212,6 +212,12 @@ $field->setLabel(rex_i18n::msg('consent_manager_config_inline_only_mode'));
 $field->addOption(rex_i18n::msg('consent_manager_config_inline_only_mode'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_inline_only_mode_desc'));
 
+// Cookie Name
+$field = $form->addTextField('cookie_name');
+$field->setLabel(rex_i18n::msg('consent_manager_config_cookie_name_label'));
+$field->setAttribute('placeholder', 'consentmanager');
+$field->setNotice(rex_i18n::msg('consent_manager_config_cookie_name_notice'));
+
 // Cookie Lebensdauer
 $field = $form->addTextField('lifespan');
 $field->setLabel(rex_i18n::msg('consent_manager_config_lifespan_label'));

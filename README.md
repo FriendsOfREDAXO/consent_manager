@@ -298,16 +298,20 @@ Jeder externe Dienst (Analytics, Social Media, etc.) wird einzeln angelegt:
 **Dienstname:** Wird in der Consent-Box angezeigt
 **Cookie-Definitionen:** YAML-Format für Cookie-Details
 
-### Cookie-Einstellungen (SameSite & Secure)
+### Cookie-Einstellungen (SameSite & Secure & Cookie-Name)
 
-**Konfigurierbare Cookie-Sicherheit** (seit Version 4.5.0):
+**Konfigurierbare Cookie-Sicherheit und Cookie-Name** (seit Version 4.5.0):
 
 Der Consent Manager unterstützt konfigurierbare Cookie-Einstellungen für maximale Sicherheit:
+
+***Hinweis zum Cookie-Namen:***
+*Sollte der Name des Consent-Cookies in den Einstellungen geändert werden, muss man die Dienste (Cookies) und deren Texte (Namen) entsprechend in der Konfiguration anpassen, da dort standardmäßig oft "consentmanager" als Name eingetragen ist.*
 
 **Standardwerte:**
 ```yaml
 cookie_samesite: 'Lax'    # Standard für gute Kompatibilität
 cookie_secure: false      # false für HTTP-Seiten
+cookie_name: 'consentmanager' # Standardname des Cookies
 ```
 
 **Empfohlene Werte für HTTPS-Seiten:**

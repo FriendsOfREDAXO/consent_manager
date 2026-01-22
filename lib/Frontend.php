@@ -253,6 +253,7 @@ class Frontend
             'cspNonce' => rex_response::getNonce(),
             'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
+            'cookieName' => $addon->getConfig('cookie_name', 'consentmanager'),
         ];
         echo 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES) . ';' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;

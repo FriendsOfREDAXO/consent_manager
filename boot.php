@@ -156,8 +156,10 @@ if (rex::isFrontend()) {
         }
 
         // set sentinel to avoid repeating this check for this visitor
+        /*
         $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
         setcookie($sentinel, '1', time() + 60 * 60 * 24 * 30, '/', $_SERVER['HTTP_HOST'] ?? '', $secure, false);
+        */
     });
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
         if (true === rex_request::get('consent_manager_outputjs', 'bool', false)) {
