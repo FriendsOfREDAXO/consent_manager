@@ -13,6 +13,16 @@ use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $addon = rex_addon::get('consent_manager');
 
+// Media Manager Effekt registrieren
+if (rex_addon::get('media_manager')->isAvailable()) {
+    rex_extension::register('MEDIA_MANAGER_FILTERSET', static function (rex_extension_point $ep) {
+        // Effekt-Klasse registrieren wenn noch nicht vorhanden
+        if (!class_exists('rex_effect_consent_manager_scss')) {
+            require_once __DIR__ . '/lib/effect_consent_manager_scss.php';
+        }
+    });
+}
+
 // Nur im Backend
 if (rex::isBackend()) {
     rex_perm::register('consent_manager[texteditonly]');
