@@ -106,6 +106,15 @@ class Frontend
      */
     public function setDomain(string $domain)
     {
+        // Texte zuerst laden, unabhängig von Domain
+        $clang = rex_request::request('lang', 'integer', 0);
+        if (0 === $clang) {
+            $clang = rex_clang::getCurrent()->getId();
+        }
+        if (isset($this->cache['texts'][$clang])) {
+            $this->texts = $this->cache['texts'][$clang];
+        }
+
         // Domain immer in Kleinbuchstaben normalisieren für den Lookup
         $domain = Utility::hostname();
 
@@ -150,10 +159,6 @@ class Frontend
         $this->links['legal_notice'] = $domainData['legal_notice'] ?? 0;
 
         $article = rex_article::getCurrentId();
-        $clang = rex_request::request('lang', 'integer', 0);
-        if (0 === $clang) {
-            $clang = rex_clang::getCurrent()->getId();
-        }
 
         if (in_array($article, [(int) $this->links['privacy_policy'], (int) $this->links['legal_notice']], true)) {
             $this->boxClass = 'consent_manager-initially-hidden';
@@ -191,9 +196,6 @@ class Frontend
             $this->scripts = array_filter($this->scripts, strlen(...)); // @phpstan-ignore-line
             $this->scriptsUnselect = array_map(trim(...), $this->scriptsUnselect);
             $this->scriptsUnselect = array_filter($this->scriptsUnselect, strlen(...)); // @phpstan-ignore-line
-        }
-        if (isset($this->cache['texts'][$clang])) {
-            $this->texts = $this->cache['texts'][$clang];
         }
     }
 
