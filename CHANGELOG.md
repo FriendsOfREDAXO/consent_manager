@@ -9,11 +9,13 @@ Jede Domain kann nun ein eigenes Theme verwenden:
 - **Live-Preview mit Echtzeit-Aktualisierung**: Theme-Vorschau aktualisiert sich sofort beim Wechsel des Themes im Dropdown
 - **Dynamisch skalierte iframe-Vorschau** passt sich automatisch an die Sidebar-Breite an
 - Theme-Auswahl in der Sidebar mit allen verfügbaren Addon- und Project-Themes
-- Support für Theme-Editor-Themes (Project-Addon) mit ⭐-Markierung
+- Support für Theme-Editor-Themes (Project-Addon) mit Stern-Markierung
 - Frontend lädt Themes mit Priorität: Domain-Theme → Globales Theme → Standard-CSS
 - Neue `theme`-Spalte in der `consent_manager_domain` Tabelle
 - Themes werden im Cache gespeichert für optimale Performance
 - Responsive Design: Sidebar wandert auf mobilen Geräten unter das Formular
+- Sidebar-Widget mit subtilen Schatten und Rahmen, funktioniert in Dark- und Light-Themes
+- CSP-konform: Inline-JavaScript mit REDAXO-Nonce ausgestattet
 
 ### 🎭 Moderne Theme-Preview
 
@@ -26,28 +28,13 @@ Komplett neu gestaltete Preview-Seite ohne Hintergrundbilder:
 - Cookie-Box öffnet automatisch beim Laden der Preview
 - Dynamisches iframe-Management im Modal für stabiles Schließverhalten
 
-### 📊 Consent-Statistiken
-
-Neue Auswertung der Consent-Logs im Backend:
-- Tägliche Consent-Übersicht mit Diagramm
-- Top-Services nach Zustimmungsrate
-- Filtermöglichkeiten nach Zeitraum
-
-### 🚀 Public API
-
-Neue Klasse `FriendsOfRedaxo\ConsentManager\ConsentManager`:
-- Einfacher Zugriff auf gecachte Daten (Cookies, Gruppen, Texte, Domains)
-- Methoden: `getCookieData()`, `getCookieGroups()`, `getTexts()`, `getDomains()`, `getDomain()`
-- Vollständige Dokumentation in der README.md
-
 ### 🔐 Privacy by Design
 
 Dynamische Cookie-Laufzeit:
-- Bei minimaler Zustimmung (nur notwendige Cookies): 14 Tage Laufzeit
+- Bei minimaler Zustimmung (nur notwendige Cookies): 14 Tage Laufzeit (Standard)
 - Bei optionaler Zustimmung: 1 Jahr Laufzeit
 - Cookie-Beschreibung wird automatisch angepasst ("14 Tage / 1 Jahr")
-
-### ⚡ Performance
+- `cookie_lifetime` Standardwert in package.yml: 336 Stunden (14 Tage)
 
 - `Frontend`, `InlineConsent` und `GoogleConsentMode` Klassen nutzen nun gecachte Daten statt direkter SQL-Abfragen
 - Refactoring der `InlineConsent` Klasse zur Vermeidung von Code-Duplizierung
