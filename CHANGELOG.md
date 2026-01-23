@@ -27,27 +27,36 @@ Komplett neu gestaltete Preview-Seite ohne Hintergrundbilder:
 - Cookie-Box öffnet automatisch beim Laden der Preview
 - Dynamisches iframe-Management im Modal für stabiles Schließverhalten
 
-### 🔐 Privacy by Design
-
-Dynamische Cookie-Laufzeit:
-- Bei minimaler Zustimmung (nur notwendige Cookies): 14 Tage Laufzeit (Standard)
-- Bei optionaler Zustimmung: 1 Jahr Laufzeit
-- Cookie-Beschreibung wird automatisch angepasst ("14 Tage / 1 Jahr")
-- `cookie_lifetime` Standardwert in package.yml: 336 Stunden (14 Tage)
-
-### 🛡️ Security & XSS-Schutz
+### �️ Security & XSS-Schutz
 
 Vollständiges Security Audit durchgeführt und alle Inline-Scripts abgesichert:
-- **CSP-Nonce-Schutz** für alle Inline-`<script>`-Tags im Backend
-- config.php: 4 Redirect-Scripts mit Nonce ausgestattet
-- theme.php: Modal-JavaScript mit Nonce
-- theme_preview.php: Preview-Steuerungs-Script mit Nonce
-- domain.php: Live-Preview-Script mit Nonce
-- log.php: Consent-Log-Script mit Nonce
+- **CSP-Nonce-Schutz** für alle Inline-`<script>`-Tags im Backend (config.php, theme.php, theme_preview.php, domain.php, log.php)
 - Alle Inline-Scripts verwenden `rex_response::getNonce()`
 - Konsistente Verwendung von `rex_escape()` und `htmlspecialchars()` für sichere Ausgabe
 - Keine direkte `$_GET`/`$_POST` Verwendung (ausschließlich `rex_request::`)
 - CSRF-Token-Schutz für alle Formular-Aktionen
+
+---
+
+## Version 5.2.0 - 19.01.2026
+
+### 🚀 Features
+
+* **Neue Public API**: Einführung der Klasse `FriendsOfRedaxo\ConsentManager\ConsentManager` für den einfachen Zugriff auf gecachte Daten (Cookies, Gruppen, Texte, Domains)
+* **Performance**: Interne Klassen (`Frontend`, `InlineConsent`, `GoogleConsentMode`) nutzen nun den Cache statt direkter SQL-Abfragen
+* **Code-Qualität**: Refactoring der `InlineConsent` Klasse zur Vermeidung von Code-Duplizierung bei der Video-ID-Erkennung
+* **Statistik**: Neue Auswertung der Consent-Logs im Backend (Tägliche Consents, Top-Services)
+* **Privacy**: Dynamische Cookie-Laufzeit - Bei minimaler Zustimmung (nur notwendige Cookies) wird die Laufzeit auf 14 Tage begrenzt (Privacy by Design). Die Cookie-Beschreibung wird im Setup und Update automatisch angepasst ("14 Tage / 1 Jahr").
+* **API Dokumentation**: Neue Dokumentation der öffentlichen API in der README.md
+
+### 🛡️ Security
+
+* **CSP**: Nonce-Schutz für Inline-Skripte im Backend-Log hinzugefügt
+
+### 🐛 Bugfixes
+
+* **Button-Layout responsive optimiert**: Buttons passen sich jetzt der Textlänge an und nutzen auf Desktop `flex: 1` für gleichmäßige Verteilung
+* **Localization**: Fehlende Übersetzungen im Statistik-Modul ergänzt
 
 ---
 
