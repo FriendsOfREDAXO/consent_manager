@@ -761,14 +761,24 @@
             'Matomo': document.querySelectorAll('script[src*="matomo.js"], script[src*="piwik.js"]')
         };
         
+        // Prüfe ob GTM vorhanden ist (könnte Scripts dynamisch laden)
+        const hasGTM = document.querySelectorAll('script[src*="googletagmanager.com/gtm.js"]').length > 0;
+        
         Object.keys(externalScripts).forEach(scriptName => {
             const scripts = externalScripts[scriptName];
             if (scripts.length > 1) {
+                let solutionText = `Überprüfen Sie Ihre Service-Konfiguration und entfernen Sie doppelte ${scriptName} Einbindungen.`;
+                
+                // Hinweis wenn GTM vorhanden ist
+                if (hasGTM && scriptName !== 'Google Tag Manager') {
+                    solutionText += ` Hinweis: Google Tag Manager ist aktiv und könnte diese Scripts dynamisch laden. Der Consent Manager verhindert nun Duplikate automatisch.`;
+                }
+                
                 issues.push({
                     type: 'warning',
                     title: `Duplikat: ${scriptName}`,
                     message: `${scriptName} wurde ${scripts.length}x geladen. Dies kann zu doppelten Tracking-Events führen.`,
-                    solution: `Überprüfen Sie Ihre Service-Konfiguration und entfernen Sie doppelte ${scriptName} Einbindungen.`
+                    solution: solutionText
                 });
             }
         });

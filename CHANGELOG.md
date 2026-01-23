@@ -36,6 +36,39 @@ Vollständiges Security Audit durchgeführt und alle Inline-Scripts abgesichert:
 - Keine direkte `$_GET`/`$_POST` Verwendung (ausschließlich `rex_request::`)
 - CSRF-Token-Schutz für alle Formular-Aktionen
 
+### 🔍 Debug-Widget Verbesserungen
+
+Umfangreiche Erweiterungen des Debug-Widgets für bessere Fehlerdiagnose:
+- **Cookie-Attribut-Details**: Anzeige von Größe (Bytes), Alter (Tage/Stunden), SameSite, Secure, Path und Domain
+- **Cookie-Größe-Warning**: Automatische Warnung bei Cookies > 4KB (Browser-Limit) mit farblichen Hinweisen
+- **Consent-Alter-Tracking**: Zeigt Alter des Consents an, warnt bei > 365 Tagen (DSGVO-Empfehlung)
+- **Duplicate-Script-Detection**: Erkennt doppelt geladene externe Scripts (GA, GTM, Facebook Pixel, Matomo) mit GTM-Hinweis
+- **Konfigurierter Cookie-Namen-Check**: Debug-Widget verwendet nun den im Backend konfigurierten Cookie-Namen statt hart kodiertem 'consentmanager'
+- **Verbesserte Probleme-Erkennung**: Alle Checks verwenden zentrale Variablen-Deklaration zur Vermeidung von Code-Duplizierung
+
+### 🛡️ Google Consent Mode v2 Optimierungen
+
+Runtime-basierte Implementierung statt localStorage:
+- **Runtime-Daten**: Google Consent Mode arbeitet nun komplett mit JavaScript Runtime-Daten (`currentConsentSettings`) statt localStorage
+- **Neue API**: `window.GoogleConsentModeV2.getCurrentSettings()` für Zugriff auf aktuelle Consent-Flags
+- **Debug-Widget-Integration**: Prüft auf `window.GoogleConsentModeV2` und `window.currentConsentSettings` statt localStorage
+- **Automatische Updates**: `window.currentConsentSettings` wird bei jeder Consent-Änderung aktualisiert
+- **Verbesserte Fehlermeldungen**: Warnung "Runtime-Daten fehlen" statt "localStorage fehlt"
+
+### 🚫 Duplikat-Prävention
+
+Automatische Verhinderung von doppelt geladenen Scripts:
+- **Smart Script Loading**: Externe Scripts werden vor dem Laden auf Duplikate geprüft
+- **DOM-Query-Check**: `document.querySelector('script[src="..."]')` verhindert mehrfaches Laden derselben URL
+- **Console-Warnings**: Bei Duplikaten wird gewarnt: "Script bereits geladen - Duplikat verhindert"
+- **GTM-Kompatibilität**: Verhindert Konflikte wenn Google Tag Manager bereits GA/Facebook Pixel geladen hat
+- **Performance-Optimierung**: Reduziert unnötige HTTP-Requests und verhindert doppeltes Tracking
+
+### 🐛 Bugfixes
+
+- **Rexstan-Konformität**: Type-Check in `GoogleConsentMode::getDomainConfig()` für strikte Typ-Prüfung (0 Rexstan-Fehler)
+- **JavaScript-Syntax**: Behoben doppelte Deklaration von `cookieName` in `consent_debug.js`
+
 ---
 
 ## Version 5.2.0 - 19.01.2026

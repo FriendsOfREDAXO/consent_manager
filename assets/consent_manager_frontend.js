@@ -496,8 +496,18 @@ function safeJSONParse(input, fallback) {
                 
                 // Set src or inline content
                 if (originalScript.src) {
-                    scriptNode.src = originalScript.src;
-                    debugLog('addScript: External script wird geladen', originalScript.src);
+                    // Duplikat-Check für externe Scripts
+                    var scriptSrc = originalScript.src;
+                    var existingScript = document.querySelector('script[src="' + scriptSrc + '"]');
+                    
+                    if (existingScript) {
+                        debugLog('addScript: Script bereits geladen, überspringe', scriptSrc);
+                        console.warn('Consent Manager: Script bereits geladen - Duplikat verhindert: ' + scriptSrc);
+                        continue; // Überspringe dieses Script
+                    }
+                    
+                    scriptNode.src = scriptSrc;
+                    debugLog('addScript: External script wird geladen', scriptSrc);
                 } else {
                     // Set inline script content
                     var inlineContent = originalScript.textContent;
