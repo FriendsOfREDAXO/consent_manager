@@ -83,6 +83,7 @@ class Cache
         foreach ($domains as $v) {
             $domainId = (int) ($v['id'] ?? 0);
             if ($domainId > 0) {
+                // Sicherstellen dass theme-Wert übernommen wird
                 $this->domains[$domainId] = $v;
             }
         }

@@ -58,6 +58,7 @@ default_config:
   outputowncss: false
   skip_consent: ''
   lifespan: 365
+  cookie_lifetime: 336
   theme: false
   first_run_completed: false
 

@@ -288,9 +288,30 @@ class Frontend
     public static function getFrontendCss(): string
     {
         $addon = rex_addon::get('consent_manager');
-
+        
+        // Standard CSS-Datei
         $_cssfilename = 'consent_manager_frontend.css';
-        if (false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
+        
+        // 1. Prüfen ob Domain-spezifisches Theme existiert
+        $domainTheme = null;
+        if (is_string(rex_request::server('HTTP_HOST'))) {
+            $frontend = new self(0);
+            $frontend->setDomain(rex_request::server('HTTP_HOST'));
+            
+            if (!empty($frontend->domainInfo['theme'])) {
+                $domainTheme = $frontend->domainInfo['theme'];
+            }
+        }
+        
+        // 2. Domain-Theme hat Priorität
+        if ($domainTheme) {
+            $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $domainTheme));
+            if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {
+                $_cssfilename = $_themecssfilename;
+            }
+        }
+        // 3. Fallback: Globales Theme
+        elseif (false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
             $_themecssfilename = $addon->getConfig('theme', false);
             $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $_themecssfilename));
             if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {

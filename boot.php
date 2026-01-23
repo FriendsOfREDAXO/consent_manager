@@ -86,6 +86,10 @@ if (rex::isBackend()) {
     });
     rex_extension::register('REX_FORM_SAVED', CLang::formSaved(...));
     rex_extension::register('REX_FORM_SAVED', Cache::write(...));
+    
+    // Domain-Theme: Keine Kompilierung nötig, Theme wird direkt referenziert
+    // Die Frontend-Klasse lädt das passende Theme basierend auf der Domain-Config
+    
     rex_extension::register('CLANG_ADDED', CLang::clangAdded(...));
     rex_extension::register('CLANG_DELETED', CLang::clangDeleted(...));
 

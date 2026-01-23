@@ -44,6 +44,7 @@ $sql->setQuery('UPDATE `' . rex::getTablePrefix() . 'consent_manager_consent_log
 // Ensure inline_only_mode Spalte in Domain-Tabelle
 rex_sql_table::get(rex::getTable('consent_manager_domain'))
     ->ensureColumn(new rex_sql_column('inline_only_mode', 'varchar(20)', true, 'disabled'))
+    ->ensureColumn(new rex_sql_column('theme', 'varchar(255)', true, ''))
     ->ensure();
 
 // Ensure oembed_enabled Spalte in Domain-Tabelle (default: 0 = deaktiviert beim Update)
@@ -57,4 +58,30 @@ rex_sql_table::get(rex::getTable('consent_manager_domain'))
 // Update cookie lifetime text for consent_manager cookie (Privacy by Design)
 $sql = rex_sql::factory();
 $sql->setQuery('UPDATE `' . rex::getTablePrefix() . 'consent_manager_cookie` SET definition = REPLACE(definition, "time: \"1 Jahr\"", "time: \"14 Tage / 1 Jahr\"") WHERE uid = "consent_manager"');
+
+// Cleanup: Remove old background images from assets (no longer needed with new mockup preview)
+$publicAssetsPath = rex_path::addonAssets('consent_manager');
+if (is_dir($publicAssetsPath)) {
+    $imagesToDelete = [
+        'abstract-building-bw.jpg',
+        'abstract-wall-bw.jpg',
+        'blue-mountains.jpg',
+        'gradienta-abstract-1.jpg',
+        'gradienta-abstract-2.jpg',
+        'harley-davidson-motorcycle.jpg',
+        'milad-fakurian-abstract.jpg',
+        'mountains-houses.jpg',
+        'pawel-czerwinski-abstract-1.jpg',
+        'pawel-czerwinski-abstract-2.jpg',
+        'steve-johnson-abstract.jpg',
+        'water-blue-sky.jpg',
+    ];
+    
+    foreach ($imagesToDelete as $image) {
+        $imagePath = $publicAssetsPath . $image;
+        if (file_exists($imagePath)) {
+            rex_file::delete($imagePath);
+        }
+    }
+}
 

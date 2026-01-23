@@ -1,24 +1,61 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.2.0 - 19.01.2026
+## Version 5.2.0 - 23.01.2026
 
-### 🚀 Features
+### 🎨 Domain-spezifische Themes
 
-* **Neue Public API**: Einführung der Klasse `FriendsOfRedaxo\ConsentManager\ConsentManager` für den einfachen Zugriff auf gecachte Daten (Cookies, Gruppen, Texte, Domains)
-* **Performance**: Interne Klassen (`Frontend`, `InlineConsent`, `GoogleConsentMode`) nutzen nun den Cache statt direkter SQL-Abfragen
-* **Code-Qualität**: Refactoring der `InlineConsent` Klasse zur Vermeidung von Code-Duplizierung bei der Video-ID-Erkennung
-* **Statistik**: Neue Auswertung der Consent-Logs im Backend (Tägliche Consents, Top-Services)
-* **Privacy**: Dynamische Cookie-Laufzeit - Bei minimaler Zustimmung (nur notwendige Cookies) wird die Laufzeit auf 14 Tage begrenzt (Privacy by Design). Die Cookie-Beschreibung wird im Setup und Update automatisch angepasst ("14 Tage / 1 Jahr").
-* **API Dokumentation**: Neue Dokumentation der öffentlichen API in der README.md
+Jede Domain kann nun ein eigenes Theme verwenden:
+- **2-Spalten-Layout** im Domain-Formular mit dedizierter Theme-Sidebar
+- **Live-Preview mit Echtzeit-Aktualisierung**: Theme-Vorschau aktualisiert sich sofort beim Wechsel des Themes im Dropdown
+- **Dynamisch skalierte iframe-Vorschau** passt sich automatisch an die Sidebar-Breite an
+- Theme-Auswahl in der Sidebar mit allen verfügbaren Addon- und Project-Themes
+- Support für Theme-Editor-Themes (Project-Addon) mit ⭐-Markierung
+- Frontend lädt Themes mit Priorität: Domain-Theme → Globales Theme → Standard-CSS
+- Neue `theme`-Spalte in der `consent_manager_domain` Tabelle
+- Themes werden im Cache gespeichert für optimale Performance
+- Responsive Design: Sidebar wandert auf mobilen Geräten unter das Formular
+
+### 🎭 Moderne Theme-Preview
+
+Komplett neu gestaltete Preview-Seite ohne Hintergrundbilder:
+- **32 verschiedene Vorschau-Varianten**: Zufällige Kombination aus 8 Pastellfarben (Pink, Blau, Grün, Lavendel, Pfirsich, Gelb, Türkis, Violett) und 4 Layouts (Default, Centered, Sidebar, Split)
+- **Professionelle SVG-Icons** statt Emojis für alle Navigationselemente
+- **Echte Website-Integration**: Cookie-Box, Hell/Dunkel-Toggle und Schließen-Button als Teil der Navigation
+- **Farblich abgestimmte Hintergründe** für harmonisches Gesamtbild
+- **Verbesserte Thumbnail-Darstellung**: Overlay verhindert versehentliches Scrollen in der Vorschau
+- Cookie-Box öffnet automatisch beim Laden der Preview
+- Dynamisches iframe-Management im Modal für stabiles Schließverhalten
+
+### 📊 Consent-Statistiken
+
+Neue Auswertung der Consent-Logs im Backend:
+- Tägliche Consent-Übersicht mit Diagramm
+- Top-Services nach Zustimmungsrate
+- Filtermöglichkeiten nach Zeitraum
+
+### 🚀 Public API
+
+Neue Klasse `FriendsOfRedaxo\ConsentManager\ConsentManager`:
+- Einfacher Zugriff auf gecachte Daten (Cookies, Gruppen, Texte, Domains)
+- Methoden: `getCookieData()`, `getCookieGroups()`, `getTexts()`, `getDomains()`, `getDomain()`
+- Vollständige Dokumentation in der README.md
+
+### 🔐 Privacy by Design
+
+Dynamische Cookie-Laufzeit:
+- Bei minimaler Zustimmung (nur notwendige Cookies): 14 Tage Laufzeit
+- Bei optionaler Zustimmung: 1 Jahr Laufzeit
+- Cookie-Beschreibung wird automatisch angepasst ("14 Tage / 1 Jahr")
+
+### ⚡ Performance
+
+- `Frontend`, `InlineConsent` und `GoogleConsentMode` Klassen nutzen nun gecachte Daten statt direkter SQL-Abfragen
+- Refactoring der `InlineConsent` Klasse zur Vermeidung von Code-Duplizierung
 
 ### 🛡️ Security
 
-* **CSP**: Nonce-Schutz für Inline-Skripte im Backend-Log hinzugefügt
-
-### 🐛 Bugfixes
-
-* **Button-Layout responsive optimiert**: Buttons passen sich jetzt der Textlänge an und nutzen auf Desktop `flex: 1` für gleichmäßige Verteilung
-* **Localization**: Fehlende Übersetzungen im Statistik-Modul ergänzt
+- CSP-Nonce-Schutz für Inline-Skripte im Backend-Log
+- Button-Layout responsive optimiert für bessere Zugänglichkeit
 
 ---
 

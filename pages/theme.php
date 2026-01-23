@@ -13,164 +13,9 @@ $clang_id = rex_clang::getStartId();
 
 if ('' !== $preview) {
     rex_response::cleanOutputBuffers();
-
-    $backgrounds = (array) glob($addon->getAssetsPath('*.jpg'));
-    $backgroundimage = '';
-    if ([] !== $backgrounds) {
-        $backgroundimage = basename((string) $backgrounds[array_rand($backgrounds)]);
-    }
-
-    $cmtheme = new Theme($preview);
-    $theme_options = $cmtheme->getThemeInformation();
-    if (count($theme_options) > 0) {
-        $cmstyle = $cmtheme->getCompiledStyle();
-        $cmbox = Frontend::getFragment(0, 0, 'ConsentManager/box.php');
-    } else {
-        $cmstyle = '';
-        $cmbox = rex_view::error(rex_i18n::msg('consent_manager_error_css_notfound', $preview));
-    }
-    ?><!doctype html>
-<html lang="de">
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-::-moz-selection {
-  color: inherit;
-  background: transparent;
-}
-
-::selection {
-  color: inherit;
-  background: transparent;
-}
-html {
-    min-height: 100%;
-    background-image: url(../assets/addons/consent_manager/<?= $backgroundimage ?>);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-body {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: 14px;
-    line-height: 1.5em;
-    padding: 30px;
-    margin: 0;
-    min-height: 100%;
-    height: 100%;
-}
-h1 {
-    background-color: rgba(255,255,255,.6);
-    padding: 15px 30px;
-    display: inline-block;
-    margin: 0 0 30px 0;
-}
-div.theme_description p {
-    background-color: rgba(255,255,255,.6);
-    padding: 5px 10px 5px 0;
-    margin-bottom: 10px;
-}
-div.theme_description span {
-    background-color: rgba(255,255,255,.3);
-    display:inline-block;
-    width: 150px;
-    margin-right: 15px;
-}
-.alert-danger{color:#fff;background-color:#d9534f;border-color:#c9302c;padding: 20px 30px;margin-top:2em;}
-.alert-info{color:#fff;background-color:#4b9ad9;border-color:#2a81c7;padding: 20px 30px;margin-top:2em;}
-</style>
-</head>
-<body>
-
-<h1 id="previewtitle"> <?= $theme_options['name'] ?? $preview ?></h1>
-
-<?php if (false !== $cmstyle && [] !== $theme_options) { ?>
-<div class="theme_description">
-<p><span><?= rex_i18n::msg('consent_manager_theme_name') ?></span><?= $theme_options['name'] ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_description') ?></span><?= $theme_options['description'] ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_type') ?></span><?= $theme_options['type'] ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_style') ?></span><?= $theme_options['style'] ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_scssfile') ?></span><?= $preview ?></p>
-<p><span><?= rex_i18n::msg('consent_manager_theme_autor') ?></span><?= $theme_options['autor'] ?></p>
-</div>
-
-<?php } ?>
-
-<?php
-        echo '<style>' . $cmstyle . '</style>' . PHP_EOL;
-    echo $cmbox;
-    if ('' !== $cmstyle) {
-        echo rex_view::info(rex_i18n::msg('consent_manager_theme_preview_info'));
-    }
-    ?>
-
-<script>
-window.onload = function(event) {
-    if (document.getElementById('consent_manager-background')) {
-        consent_managerBox = document.getElementById('consent_manager-background');
-        consent_managerBox.classList.remove('consent_manager-hidden');
-
-        if (window.location.href.indexOf('nofocus') == -1) {
-            var focusableEls = consent_managerBox.querySelectorAll('input[type="checkbox"]');//:not([disabled])
-            var firstFocusableEl = focusableEls[0];
-            consent_managerBox.focus();
-            if (firstFocusableEl) {
-                firstFocusableEl.focus();
-            }
-        }
-
-        consent_managerBox.querySelectorAll('.consent_manager-sitelinks').forEach(function (el) {
-            el.querySelectorAll('a').forEach(function (link) {
-                link.removeAttribute("href");
-            });
-        });
-        if (document.getElementById('consent_manager-toggle-details')) {
-            document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
-                document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-            });
-            document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
-                if (event.key == 'Enter') {
-                    document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-                }
-            });
-        }
-        consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
-            el.addEventListener('click', function () {
-                //document.getElementById('consent_manager-background').classList.add('consent_manager-hidden');
-                consent_managerBox.classList.add('consent_manager-hidden');
-
-                if (!document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden')) {
-                    document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-                }
-            });
-        });
-        document.getElementById('previewtitle').onclick = function() {
-            consent_managerBox.classList.remove('consent_manager-hidden');
-        };
-        document.onkeydown = function(evt) {
-            evt = evt || window.event;
-            if (evt.keyCode == 27) {
-                parent.consent_manager_close_preview();
-            }
-            if (evt.keyCode == 13) {
-                consent_managerBox.classList.remove('consent_manager-hidden');
-            }
-        };
-        // for all dom elements on click
-        document.onclick = function(evt) {
-            if (evt.target.closest('.consent_manager-wrapper-inner')) {
-                return;
-            }
-            document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-        }
-    }
-}
-</script>
-
-</body>
-</html>
-<?php
-            exit;
+    // Neue Preview-Seite verwenden
+    include __DIR__ . '/theme_preview.php';
+    exit;
 }
 
 // Eigenes CSS verwenden darf nicht aktiviert sein
@@ -464,9 +309,22 @@ body.rex-theme-dark .cm-theme-grid {
     border: 0;
     opacity: 0;
     transition: opacity 0.3s;
+    pointer-events: none;
 }
 .cm-theme-iframe.loaded {
     opacity: 1;
+}
+/* Overlay über iframe - verhindert Scrollen */
+.cm-theme-preview::after {
+    content: \'\';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    z-index: 10;
+    cursor: pointer;
 }
 .cm-theme-content {
     display: flex;
@@ -547,6 +405,73 @@ body.rex-theme-dark .cm-theme-grid {
     color: var(--cm-text-muted);
     font-size: 13px;
 }
+
+/* Modal Overlay */
+.cm_modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 999999;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.cm_modal-overlay.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.cm_modal-container {
+    position: relative;
+    width: 95vw;
+    height: 95vh;
+    max-width: 1920px;
+    max-height: 1080px;
+}
+
+.cm_modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000001;
+    padding: 10px 20px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.cm_modal-close:hover {
+    background: #fff !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+}
+
+.cm_modal-iframe-wrapper {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 25px 75px rgba(0, 0, 0, 0.6);
+}
+
+.cm_modal-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    background: #fff;
+}
 </style>';
 
 // Ausgabe: Eigene Themes zuerst
@@ -574,35 +499,152 @@ if (count($addonThemes) > 0) {
 }
 ?>
 
-<div class="cm_modal-overlay">
-  <button class="btn btn-default cm_modal-button-close"><i class="fa fa-close"></i></button>
-  <iframe src="about:blank" class="cm_modal-iframe"></iframe>
+<div class="cm_modal-overlay" id="cmModalOverlay">
+    <div class="cm_modal-container">
+        <button class="btn btn-default cm_modal-close" id="cmModalClose" type="button">
+            <i class="fa fa-times"></i> Schließen
+        </button>
+        <div class="cm_modal-iframe-wrapper" id="cmModalIframeWrapper"></div>
+    </div>
 </div>
 
 <script>
-// Scale thumbnails to fit container width
-function scaleThumbnails() {
-    document.querySelectorAll('.cm-theme-preview').forEach(function(container) {
-        var thumbnail = container.querySelector('.cm-theme-thumbnail');
-        if (thumbnail) {
-            var containerWidth = container.offsetWidth;
-            var scale = containerWidth / 1440;
-            thumbnail.style.transform = 'scale(' + scale + ')';
+(function() {
+    'use strict';
+    
+    // === Thumbnail Scaling ===
+    function scaleThumbnails() {
+        document.querySelectorAll('.cm-theme-preview').forEach(function(container) {
+            var thumbnail = container.querySelector('.cm-theme-thumbnail');
+            if (thumbnail) {
+                var containerWidth = container.offsetWidth;
+                var scale = containerWidth / 1440;
+                thumbnail.style.transform = 'scale(' + scale + ')';
+            }
+        });
+    }
+    
+    window.addEventListener('load', scaleThumbnails);
+    window.addEventListener('resize', scaleThumbnails);
+    setTimeout(scaleThumbnails, 100);
+    
+    // Mark thumbnail iframes as loaded
+    document.querySelectorAll('.cm-theme-iframe').forEach(function(iframe) {
+        iframe.addEventListener('load', function() {
+            this.classList.add('loaded');
+            scaleThumbnails();
+        });
+    });
+    
+    // === Modal Preview System ===
+    var modal = {
+        overlay: document.getElementById('cmModalOverlay'),
+        wrapper: document.getElementById('cmModalIframeWrapper'),
+        closeBtn: document.getElementById('cmModalClose'),
+        iframe: null,
+        isOpen: false,
+        isClosing: false,
+        
+        open: function(url) {
+            if (this.isOpen || this.isClosing) return;
+            
+            this.isOpen = true;
+            
+            // Neues Iframe erstellen
+            this.iframe = document.createElement('iframe');
+            this.iframe.className = 'cm_modal-iframe';
+            this.iframe.src = url;
+            this.iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
+            
+            // Iframe einfügen
+            this.wrapper.innerHTML = '';
+            this.wrapper.appendChild(this.iframe);
+            
+            // Modal anzeigen
+            this.overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        },
+        
+        close: function() {
+            if (!this.isOpen || this.isClosing) return;
+            
+            this.isClosing = true;
+            
+            // Sofort active-Klasse entfernen (startet Fade-Out)
+            this.overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Cleanup nach Animation
+            var cleanupTimer = setTimeout(function() {
+                // Iframe sicher entfernen
+                if (modal.iframe) {
+                    try {
+                        modal.iframe.src = 'about:blank';
+                        if (modal.iframe.parentNode) {
+                            modal.wrapper.removeChild(modal.iframe);
+                        }
+                    } catch(e) {
+                        console.warn('Fehler beim Entfernen des Iframes:', e);
+                    }
+                    modal.iframe = null;
+                }
+                
+                // Wrapper komplett leeren
+                modal.wrapper.innerHTML = '';
+                
+                // Display auf none setzen (verhindert Klick-Blocking)
+                modal.overlay.style.display = 'none';
+                
+                // Status zurücksetzen
+                modal.isOpen = false;
+                modal.isClosing = false;
+                
+                // Display-Style nach kurzer Zeit entfernen für CSS-Kontrolle
+                setTimeout(function() {
+                    modal.overlay.style.display = '';
+                }, 50);
+            }, 350);
+        }
+    };
+    
+    // Preview-Buttons
+    document.querySelectorAll('.consent_manager-button-preview').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var url = this.getAttribute('href');
+            if (url) {
+                modal.open(url);
+            }
+        });
+    });
+    
+    // Close-Button
+    modal.closeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        modal.close();
+    });
+    
+    // Overlay-Click (außerhalb des Iframes)
+    modal.overlay.addEventListener('click', function(e) {
+        if (e.target === modal.overlay) {
+            e.preventDefault();
+            modal.close();
         }
     });
-}
-
-// Run on load and resize
-window.addEventListener('load', scaleThumbnails);
-window.addEventListener('resize', scaleThumbnails);
-// Run immediately
-setTimeout(scaleThumbnails, 100);
-
-// Mark iframes as loaded
-document.querySelectorAll('.cm-theme-iframe').forEach(function(iframe) {
-    iframe.addEventListener('load', function() {
-        this.classList.add('loaded');
-        scaleThumbnails();
+    
+    // ESC-Taste
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.isOpen) {
+            e.preventDefault();
+            modal.close();
+        }
     });
-});
+    
+    // Globale Funktion für Iframe-Zugriff
+    window.consent_manager_close_preview = function() {
+        modal.close();
+    };
+})();
 </script>
