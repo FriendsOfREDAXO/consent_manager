@@ -640,6 +640,13 @@
         const googleConsentModeStatus = getGoogleConsentModeStatus();
         const consentManagerStatus = getConsentManagerStatus();
         
+        // Cookie-Namen einmal zentral ermitteln
+        const cookieName = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters.cookieName) 
+            ? consent_manager_parameters.cookieName 
+            : 'consentmanager';
+        const cookies = getCurrentDomainCookies();
+        const consentCookie = cookies.find(c => c.name === cookieName);
+        
         // Problem 1: Google Consent Mode aktiviert aber Script nicht geladen
         if (googleConsentModeStatus.mode !== 'disabled' && !window.GoogleConsentModeV2) {
             issues.push({
@@ -662,9 +669,6 @@
         }
         
         // Problem 3: Consent Manager Cookie fehlt bei erteiltem Consent
-        const cookieName = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters.cookieName) 
-            ? consent_manager_parameters.cookieName 
-            : 'consentmanager';
         const cookiePattern = cookieName + '=';
         if (consentManagerStatus.status !== 'no_consent' && !document.cookie.includes(cookiePattern)) {
             issues.push({
@@ -709,11 +713,6 @@
         }
         
         // Problem 6: Cookie-Größe über 4KB
-        const cookies = getCurrentDomainCookies();
-        const cookieName = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters.cookieName) 
-            ? consent_manager_parameters.cookieName 
-            : 'consentmanager';
-        const consentCookie = cookies.find(c => c.name === cookieName);
         if (consentCookie && consentCookie.size > 4096) {
             issues.push({
                 type: 'error',
