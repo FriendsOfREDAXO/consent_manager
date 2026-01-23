@@ -27,30 +27,33 @@ if ('delete' === $func) {
     RexFormSupport::getId($form, $table);
 
     // Multi-Language Sprach-Switcher (gilt für gesamten Datensatz, daher ganz oben)
-    if ($form->isEditMode() && rex_clang::count() > 1 && 'consent_manager' !== $form->getSql()->getValue('uid')) {
-        $languageSwitcher = '<div class="alert alert-info" style="margin: 15px 0;">';
-        $languageSwitcher .= '<i class="rex-icon fa-language"></i> <strong>' . rex_i18n::msg('consent_manager_cookie_multilang_title') . '</strong><br>';
-        $languageSwitcher .= '<small>' . rex_i18n::msg('consent_manager_cookie_multilang_desc', rex_i18n::rawMsg(rex_clang::get(rex_clang::getStartId())->getName())) . '</small><br><br>';
-        $languageSwitcher .= '<div class="btn-group" role="group">';
-        
-        foreach (rex_clang::getAll() as $clang) {
-            $clangId = $clang->getId();
-            $isActive = $clangId === $clang_id ? 'btn-primary' : 'btn-default';
-            $icon = $clangId === rex_clang::getStartId() ? '<i class="rex-icon fa-star"></i> ' : '';
-            $url = rex_url::currentBackendPage(['func' => 'edit', 'pid' => $pid, 'page' => 'consent_manager/cookie/clang' . $clangId]);
-            $languageSwitcher .= '<a href="' . $url . '" class="btn ' . $isActive . ' btn-sm">' . $icon . rex_escape($clang->getName()) . '</a>';
-        }
-        
-        $languageSwitcher .= '</div>';
-        $languageSwitcher .= '</div>';
-        $field = $form->addRawField($languageSwitcher);
-        
-        // Fallback-Hinweis für Nicht-Start-Sprachen (bezieht sich auf alle Felder)
-        if ($clang_id !== rex_clang::getStartId()) {
-            $startLangName = rex_i18n::rawMsg(rex_clang::get(rex_clang::getStartId())->getName());
-            $fallbackNotice = '<div class="alert alert-warning"><i class="rex-icon fa-info-circle"></i> ' . 
-                rex_i18n::msg('consent_manager_cookie_fallback_notice', $startLangName) . '</div>';
-            $field = $form->addRawField($fallbackNotice);
+    if ($form->isEditMode() && rex_clang::count() > 1) {
+        // Sprach-Switcher für alle Services außer consent_manager (System-Cookie)
+        if ('consent_manager' !== $form->getSql()->getValue('uid')) {
+            $languageSwitcher = '<div class="alert alert-info" style="margin: 15px 0;">';
+            $languageSwitcher .= '<i class="rex-icon fa-language"></i> <strong>' . rex_i18n::msg('consent_manager_cookie_multilang_title') . '</strong><br>';
+            $languageSwitcher .= '<small>' . rex_i18n::msg('consent_manager_cookie_multilang_desc', rex_i18n::rawMsg(rex_clang::get(rex_clang::getStartId())->getName())) . '</small><br><br>';
+            $languageSwitcher .= '<div class="btn-group" role="group">';
+            
+            foreach (rex_clang::getAll() as $clang) {
+                $clangId = $clang->getId();
+                $isActive = $clangId === $clang_id ? 'btn-primary' : 'btn-default';
+                $icon = $clangId === rex_clang::getStartId() ? '<i class="rex-icon fa-star"></i> ' : '';
+                $url = rex_url::currentBackendPage(['func' => 'edit', 'pid' => $pid, 'page' => 'consent_manager/cookie/clang' . $clangId]);
+                $languageSwitcher .= '<a href="' . $url . '" class="btn ' . $isActive . ' btn-sm">' . $icon . rex_escape($clang->getName()) . '</a>';
+            }
+            
+            $languageSwitcher .= '</div>';
+            $languageSwitcher .= '</div>';
+            $field = $form->addRawField($languageSwitcher);
+            
+            // Fallback-Hinweis für Nicht-Start-Sprachen (bezieht sich auf alle Felder)
+            if ($clang_id !== rex_clang::getStartId()) {
+                $startLangName = rex_i18n::rawMsg(rex_clang::get(rex_clang::getStartId())->getName());
+                $fallbackNotice = '<div class="alert alert-warning"><i class="rex-icon fa-info-circle"></i> ' . 
+                    rex_i18n::msg('consent_manager_cookie_fallback_notice', $startLangName) . '</div>';
+                $field = $form->addRawField($fallbackNotice);
+            }
         }
     }
 
