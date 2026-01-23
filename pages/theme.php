@@ -136,7 +136,7 @@ $renderThemeCard = static function (string $themeid, array $theme_options, strin
         
         <div class="cm-theme-preview" title="' . rex_escape($theme_options['name']) . '" data-theme="' . rex_escape($themeid) . '">
             <div class="cm-theme-thumbnail">
-                <iframe loading="lazy" class="cm-theme-iframe" src="?page=consent_manager/theme&preview=' . rex_escape($themeid) . '&nofocus" data-theme="' . rex_escape($themeid) . '"></iframe>
+                <iframe loading="lazy" class="cm-theme-iframe" src="?page=consent_manager/theme&preview=' . urlencode($themeid) . '&nofocus" data-theme="' . rex_escape($themeid) . '"></iframe>
             </div>
         </div>
         

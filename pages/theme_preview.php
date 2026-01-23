@@ -16,8 +16,12 @@ if ('' === $preview) {
     exit('No theme specified');
 }
 
+// Decode URL-encoded theme name first (from iframe src with urlencode())
+$preview = urldecode($preview);
+
 // validate preview against allowed pattern to prevent path traversal
-if (!preg_match('/^[a-zA-Z0-9_-]+$/', $preview)) {
+// Allow dots for .css/.scss extensions and colons for project:theme_name format
+if (!preg_match('/^[a-zA-Z0-9_:.\\-]+$/', $preview)) {
     rex_response::setStatus(400);
     exit('Invalid theme specified');
 }
