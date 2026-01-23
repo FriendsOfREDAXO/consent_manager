@@ -16,15 +16,20 @@ if ('' === $preview) {
     exit('No theme specified');
 }
 
-// Decode URL-encoded theme name first (from iframe src with urlencode())
-$preview = urldecode($preview);
-
 // validate preview against allowed pattern to prevent path traversal
-// Allow dots for .css/.scss extensions and colons for project:theme_name format
-if (!preg_match('/^[a-zA-Z0-9_:.\\-]+$/', $preview)) {
+// Allow dots, colons, slashes for file paths and project: prefix
+// rex_request already does URL decoding, so we get the raw theme name
+if (!preg_match('/^[a-zA-Z0-9_:.\/\\-]+$/', $preview)) {
     rex_response::setStatus(400);
     exit('Invalid theme specified');
 }
+
+// Additional security: prevent directory traversal
+if (str_contains($preview, '..') || str_contains($preview, '//')) {
+    rex_response::setStatus(400);
+    exit('Invalid theme specified');
+}
+
 // Get theme info and compiled CSS
 $cmtheme = new Theme($preview);
 $theme_options = $cmtheme->getThemeInformation();
