@@ -55,7 +55,7 @@ if ('delete' === $func) {
     }
 
     if ('edit' === $func && 'consent_manager' === $form->getSql()->getValue('uid')) {
-        $form->addRawField(RexFormSupport::showInfo(rex_i18n::msg('consent_manager_cookie_consent_manager_info')));
+        $form->addRawField(RexFormSupport::showInfo(rex_i18n::rawMsg('consent_manager_cookie_consent_manager_info')));
         $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), $form->getSql()->getValue('uid')));
     } else {
         if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
