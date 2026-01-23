@@ -50,6 +50,9 @@ consent_manager_cookie_placeholder_text = Platzhalter Text
 consent_manager_cookie_placeholder_text_notice = Nur für Inline-Consent: Hinweistext, der im Platzhalter angezeigt wird (z.B. "Für die Anzeige dieses Videos werden Cookies verwendet."). Leer lassen für globalen Standardtext.
 consent_manager_cookie_placeholder_image = Platzhalter Bild
 consent_manager_cookie_placeholder_image_notice = Nur für Inline-Consent: Vorschaubild aus dem Mediapool, das im Platzhalter angezeigt wird. Bei YouTube/Vimeo wird automatisch ein Thumbnail generiert.
+consent_manager_cookie_multilang_title = Mehrsprachige Scripts
+consent_manager_cookie_multilang_desc = Wechseln Sie zwischen Sprachen um sprachspezifische Scripts einzugeben (z.B. unterschiedliche Tracking-IDs). Leere Script-Felder fallen automatisch auf {0} zurück.
+consent_manager_cookie_fallback_notice = <strong>Hinweis:</strong> Wenn Sie die Script-Felder leer lassen, werden automatisch die Scripts aus <strong>{0}</strong> verwendet (Fallback zur Start-Sprache).
 consent_manager_cookie_malformed_yaml = Definitionen (YAML) sind ungültig! Bitte korrekten YAML-Code eingeben.
 
 consent_manager_cookiegroups = Gruppen

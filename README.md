@@ -13,6 +13,7 @@ Das AddOn stellt eine DSGVO-konforme Lösung für die Einholung von Einverständ
 - Vollständig anpassbare Texte und Designs
 - Google Consent Mode v2 Integration
 - Mehrsprachig und Multi-Domain-fähig
+- Sprachspezifische Scripts mit automatischem Fallback zur Start-Sprache
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
@@ -662,6 +663,65 @@ $mform->setLabel('Dienst');
 echo $mform->show();
 ?>
 ```
+
+### 🌍 Multi-Language: Sprachspezifische Scripts
+
+**Seit Version 5.3.0** können Script-Felder **in allen Sprachen bearbeitet** werden mit automatischem Fallback zur Start-Sprache.
+
+**Use Case:**
+- Unterschiedliche Google Analytics Property-IDs pro Sprache/Land
+- Regionalisierte Facebook Pixel-IDs
+- Sprachspezifische Tracking-Parameter
+- Multi-Market Analytics mit separaten Properties
+
+**Funktionsweise:**
+
+1. **Script-Felder editierbar**: In jeder Sprache können eigene Scripts eingetragen werden
+2. **Automatischer Fallback**: Leere Script-Felder fallen auf die **Start-Sprache** zurück
+3. **Sprach-Switcher**: Im Backend direkt zwischen Sprachen eines Services wechseln (ohne erneute Suche)
+
+**Beispiel-Konfiguration:**
+
+```yaml
+# Deutsch (Start-Sprache): G-63VK6WGL5D
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-63VK6WGL5D"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('config', 'G-63VK6WGL5D');
+</script>
+
+# Niederländisch: G-0FT96PN7YQ (eigene Property)
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0FT96PN7YQ"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('config', 'G-0FT96PN7YQ');
+</script>
+
+# Französisch: Leer → verwendet automatisch die deutsche Property G-63VK6WGL5D
+```
+
+**Workflow im Backend:**
+
+1. **Consent Manager → Dienste** öffnen
+2. Service (z.B. Google Analytics) bearbeiten
+3. **Sprach-Switcher** erscheint automatisch bei Multi-Language-Setup
+4. Zwischen Sprachen wechseln und sprachspezifische Scripts eingeben
+5. **Fallback-Hinweis** zeigt an, welche Sprache bei leeren Feldern verwendet wird
+
+**Vorteile:**
+
+✅ **Flexible Analytics-Struktur**: Separate Properties für verschiedene Märkte  
+✅ **Einfacher Fallback**: Leer lassen = Start-Sprache verwenden  
+✅ **Wartungsfreundlich**: Änderungen in Start-Sprache wirken auf alle leeren Sprachen  
+✅ **DSGVO-konform**: Regionale Analytics-Zuständigkeiten möglich  
+
+**Best Practice:**
+
+- **Start-Sprache als Default**: Immer Scripts in der Start-Sprache hinterlegen
+- **Regionale Analytics**: Nur bei Bedarf sprachspezifische Properties verwenden
+- **Testing**: Nach Änderungen Cache leeren und Frontend in allen Sprachen testen
 
 ### Cookie-Historie anzeigen
 

@@ -64,6 +64,15 @@ Automatische Verhinderung von doppelt geladenen Scripts:
 - **GTM-Kompatibilität**: Verhindert Konflikte wenn Google Tag Manager bereits GA/Facebook Pixel geladen hat
 - **Performance-Optimierung**: Reduziert unnötige HTTP-Requests und verhindert doppeltes Tracking
 
+### 🌍 Multi-Language-Verbesserungen
+
+Script-Felder nun in allen Sprachen editierbar mit automatischem Fallback:
+- **Editierbare Script-Felder**: Script-Felder sind nun in allen Sprachen bearbeitbar (nicht mehr nur Start-Sprache)
+- **Automatischer Fallback**: Leere Script-Felder in Nicht-Start-Sprachen fallen automatisch auf die Start-Sprache zurück
+- **Sprachspezifische Tracking-IDs**: Ermöglicht unterschiedliche Google Analytics Property-IDs oder Facebook Pixel-IDs pro Sprache
+- **Sprach-Switcher im Backend**: Direkter Wechsel zwischen Sprachen eines Services ohne erneute Suche
+- **Use Case**: Perfekt für Multi-Language-Websites mit regionalisierten Analytics-Properties (z.B. DE: G-63VK6WGL5D, NL: G-0FT96PN7YQ)
+
 ### 🐛 Bugfixes
 
 - **Rexstan-Konformität**: Type-Check in `GoogleConsentMode::getDomainConfig()` für strikte Typ-Prüfung (0 Rexstan-Fehler)

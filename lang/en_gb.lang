@@ -49,8 +49,9 @@ consent_manager_cookie_definition = Definitions (YAML)
 consent_manager_cookie_placeholder_text = Placeholder text
 consent_manager_cookie_placeholder_text_notice = Inline consent only: Notice text displayed in the placeholder (e.g. "Cookies are required to display this video."). Leave empty for global default text.
 consent_manager_cookie_placeholder_image = Placeholder image
-consent_manager_cookie_placeholder_image_notice = Inline consent only: Preview image from media pool displayed in the placeholder. YouTube/Vimeo thumbnails are generated automatically.
-consent_manager_cookie_malformed_yaml = Definitions (YAML) are invalid! Please enter correct YAML code.
+consent_manager_cookie_placeholder_image_notice = Inline consent only: Preview image from media pool displayed in the placeholder. YouTube/Vimeo thumbnails are generated automatically.consent_manager_cookie_multilang_title = Multi-language scripts
+consent_manager_cookie_multilang_desc = Switch between languages to enter language-specific scripts (e.g. different tracking IDs). Empty script fields automatically fallback to {0}.
+consent_manager_cookie_fallback_notice = <strong>Note:</strong> If you leave the script fields empty, the scripts from <strong>{0}</strong> will be used automatically (fallback to start language).consent_manager_cookie_malformed_yaml = Definitions (YAML) are invalid! Please enter correct YAML code.
 
 consent_manager_cookiegroups = Groups
 consent_manager_cookiegroup_add = Create group

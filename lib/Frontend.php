@@ -181,8 +181,28 @@ class Frontend
                     if (isset($this->cache['cookies'][$clang][$uid])) {
                         $cookieData = $this->cache['cookies'][$clang][$uid];
                         $this->cookies[$uid] = $cookieData;
-                        $this->scripts[$uid] = $cookieData['script'] ?? '';
-                        $this->scriptsUnselect[$uid] = $cookieData['script_unselect'] ?? '';
+                        
+                        // Fallback zur Start-Sprache wenn Script-Felder leer sind
+                        $script = $cookieData['script'] ?? '';
+                        $scriptUnselect = $cookieData['script_unselect'] ?? '';
+                        
+                        // Wenn aktuelle Sprache leer ist, versuche Fallback zur Start-Sprache
+                        if ('' === trim($script) && $clang !== rex_clang::getStartId()) {
+                            $startLangId = rex_clang::getStartId();
+                            if (isset($this->cache['cookies'][$startLangId][$uid]['script'])) {
+                                $script = $this->cache['cookies'][$startLangId][$uid]['script'];
+                            }
+                        }
+                        
+                        if ('' === trim($scriptUnselect) && $clang !== rex_clang::getStartId()) {
+                            $startLangId = rex_clang::getStartId();
+                            if (isset($this->cache['cookies'][$startLangId][$uid]['script_unselect'])) {
+                                $scriptUnselect = $this->cache['cookies'][$startLangId][$uid]['script_unselect'];
+                            }
+                        }
+                        
+                        $this->scripts[$uid] = $script;
+                        $this->scriptsUnselect[$uid] = $scriptUnselect;
                     }
                 }
             }

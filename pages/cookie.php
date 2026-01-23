@@ -53,43 +53,70 @@ if ('delete' === $func) {
     $field->setNotice(rex_i18n::msg('consent_manager_cookie_notice_provider_link_privacy'));
 
     if ('edit' === $func && 'consent_manager' !== $form->getSql()->getValue('uid')) {
-        if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
-            // Google Consent Mode v2 Helper Fragment verwenden
-            $fragment = new rex_fragment();
-            $googleHelperHtml = $fragment->parse('ConsentManager/google_consent_helper.php');
-            $field = $form->addRawField($googleHelperHtml);
-
-            $field = $form->addTextAreaField('script');
-            $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
-            $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts'));
-            $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
-
-            $field = $form->addTextAreaField('script_unselect');
-            $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
-            $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'));
-            $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
-        } else {
-            $form->addRawField(RexFormSupport::getFakeTextarea(rex_i18n::msg('consent_manager_cookiegroup_scripts'), (string) $form->getSql()->getValue('script')));
-            $form->addRawField(RexFormSupport::getFakeTextarea(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'), (string) $form->getSql()->getValue('script_unselect')));
+        // Multi-Language Sprach-Switcher
+        if (rex_clang::count() > 1) {
+            $currentUid = $form->getSql()->getValue('uid');
+            $languageSwitcher = '<div class="alert alert-info" style="margin: 15px 0;">';
+            $languageSwitcher .= '<i class="rex-icon fa-language"></i> <strong>' . rex_i18n::msg('consent_manager_cookie_multilang_title') . '</strong><br>';
+            $languageSwitcher .= '<small>' . rex_i18n::msg('consent_manager_cookie_multilang_desc') . '</small><br><br>';
+            $languageSwitcher .= '<div class="btn-group" role="group">';
+            
+            foreach (rex_clang::getAll() as $clang) {
+                $clangId = $clang->getId();
+                $isActive = $clangId === $clang_id ? 'btn-primary' : 'btn-default';
+                $icon = $clangId === rex_clang::getStartId() ? '<i class="rex-icon fa-star"></i> ' : '';
+                $url = rex_url::currentBackendPage(['func' => 'edit', 'pid' => $pid, 'page' => 'consent_manager/cookie/clang' . $clangId]);
+                $languageSwitcher .= '<a href="' . $url . '" class="btn ' . $isActive . ' btn-sm">' . $icon . rex_escape($clang->getName()) . '</a>';
+            }
+            
+            $languageSwitcher .= '</div>';
+            $languageSwitcher .= '</div>';
+            $field = $form->addRawField($languageSwitcher);
         }
+        
+        // Script-Felder sind in ALLEN Sprachen editierbar (für unterschiedliche Tracking-IDs etc.)
+        // Leere Felder fallen automatisch auf die Start-Sprache zurück
+        $fallbackNotice = '';
+        if ($clang_id !== rex_clang::getStartId()) {
+            $startLangName = rex_clang::get(rex_clang::getStartId())->getName();
+            $fallbackNotice = '<div class="alert alert-warning" style="margin-top: 10px;"><i class="rex-icon fa-info-circle"></i> ' . 
+                rex_i18n::msg('consent_manager_cookie_fallback_notice', $startLangName) . '</div>';
+        }
+        if ('' !== $fallbackNotice) {
+            $field = $form->addRawField($fallbackNotice);
+        }
+        
+        // Google Consent Mode v2 Helper Fragment verwenden
+        $fragment = new rex_fragment();
+        $googleHelperHtml = $fragment->parse('ConsentManager/google_consent_helper.php');
+        $field = $form->addRawField($googleHelperHtml);
+
+        $field = $form->addTextAreaField('script');
+        $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
+        $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts'));
+        $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
+
+        $field = $form->addTextAreaField('script_unselect');
+        $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
+        $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'));
+        $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
     }
     if ('add' === $func) {
-        if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
-            // Google Consent Mode v2 Helper Fragment verwenden
-            $fragment = new rex_fragment();
-            $googleHelperHtml = $fragment->parse('ConsentManager/google_consent_helper.php');
-            $field = $form->addRawField($googleHelperHtml);
+        // Script-Felder sind in ALLEN Sprachen editierbar (für unterschiedliche Tracking-IDs etc.)
+        // Google Consent Mode v2 Helper Fragment verwenden
+        $fragment = new rex_fragment();
+        $googleHelperHtml = $fragment->parse('ConsentManager/google_consent_helper.php');
+        $field = $form->addRawField($googleHelperHtml);
 
-            $field = $form->addTextAreaField('script');
-            $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
-            $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts'));
-            $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
+        $field = $form->addTextAreaField('script');
+        $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
+        $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts'));
+        $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
 
-            $field = $form->addTextAreaField('script_unselect');
-            $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
-            $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'));
-            $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
-        }
+        $field = $form->addTextAreaField('script_unselect');
+        $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
+        $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'));
+        $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
     }
 
     $field = $form->addTextAreaField('placeholder_text');
