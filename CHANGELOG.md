@@ -1,5 +1,43 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.3.0 - 23.01.2026
+
+### 🎨 Domain-spezifische Themes
+
+Jede Domain kann nun ein eigenes Theme verwenden:
+- **2-Spalten-Layout** im Domain-Formular mit dedizierter Theme-Sidebar
+- **Live-Preview mit Echtzeit-Aktualisierung**: Theme-Vorschau aktualisiert sich sofort beim Wechsel des Themes im Dropdown
+- **Dynamisch skalierte iframe-Vorschau** passt sich automatisch an die Sidebar-Breite an
+- Theme-Auswahl in der Sidebar mit allen verfügbaren Addon- und Project-Themes
+- Support für Theme-Editor-Themes (Project-Addon) mit Stern-Markierung
+- Frontend lädt Themes mit Priorität: Domain-Theme → Globales Theme → Standard-CSS
+- Neue `theme`-Spalte in der `consent_manager_domain` Tabelle
+- Themes werden im Cache gespeichert für optimale Performance
+- Responsive Design: Sidebar wandert auf mobilen Geräten unter das Formular
+- Sidebar-Widget mit subtilen Schatten und Rahmen, funktioniert in Dark- und Light-Themes
+
+### 🎭 Moderne Theme-Preview
+
+Komplett neu gestaltete Preview-Seite ohne Hintergrundbilder:
+- **32 verschiedene Vorschau-Varianten**: Zufällige Kombination aus 8 Pastellfarben (Pink, Blau, Grün, Lavendel, Pfirsich, Gelb, Türkis, Violett) und 4 Layouts (Default, Centered, Sidebar, Split)
+- **Professionelle SVG-Icons** statt Emojis für alle Navigationselemente
+- **Echte Website-Integration**: Cookie-Box, Hell/Dunkel-Toggle und Schließen-Button als Teil der Navigation
+- **Farblich abgestimmte Hintergründe** für harmonisches Gesamtbild
+- **Verbesserte Thumbnail-Darstellung**: Overlay verhindert versehentliches Scrollen in der Vorschau
+- Cookie-Box öffnet automatisch beim Laden der Preview
+- Dynamisches iframe-Management im Modal für stabiles Schließverhalten
+
+### �️ Security & XSS-Schutz
+
+Vollständiges Security Audit durchgeführt und alle Inline-Scripts abgesichert:
+- **CSP-Nonce-Schutz** für alle Inline-`<script>`-Tags im Backend (config.php, theme.php, theme_preview.php, domain.php, log.php)
+- Alle Inline-Scripts verwenden `rex_response::getNonce()`
+- Konsistente Verwendung von `rex_escape()` und `htmlspecialchars()` für sichere Ausgabe
+- Keine direkte `$_GET`/`$_POST` Verwendung (ausschließlich `rex_request::`)
+- CSRF-Token-Schutz für alle Formular-Aktionen
+
+---
+
 ## Version 5.2.0 - 19.01.2026
 
 ### 🚀 Features

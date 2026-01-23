@@ -37,8 +37,6 @@ let GOOGLE_CONSENT_V2_DEFAULTS = {
     'security_storage': 'denied'          // Auch notwendige erst nach Consent
 };
 
-let GOOGLE_CONSENT_V2_STORAGE_KEY = 'consentMode';
-
 let GOOGLE_CONSENT_V2_FIELDS = [
     'ad_storage',           // Google Ads
     'ad_user_data',         // Google Ads
@@ -110,46 +108,12 @@ function array_fill(startIndex, num, mixedVal) {
     return tmpArr;
 }
 
-// Get current settings from localStorage
-// Safe JSON parsing helper for localStorage values
-function __consentSafeParse(value, fallback) {
-    try {
-        if (typeof value === 'string') return JSON.parse(value);
-        if (typeof value === 'object' && value !== null) return value;
-    } catch (e) {
-        console.warn('GoogleConsentModeV2: Invalid JSON in localStorage for', GOOGLE_CONSENT_V2_STORAGE_KEY, value, e);
-    }
-    return fallback;
-}
+// Current runtime settings
+let currentConsentSettings = { ...GOOGLE_CONSENT_V2_DEFAULTS };
 
-let consentStorage = localStorage.getItem(GOOGLE_CONSENT_V2_STORAGE_KEY);
-
-if(consentStorage === null) {
-    // Initialize consent settings mit korrekten Defaults
-    let defaultSettings = GOOGLE_CONSENT_V2_DEFAULTS;
-
-    gtag('consent', 'default', defaultSettings);
-    localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(defaultSettings));
-} else {
-    // Check if array is consistent (if new entries appear in the future)
-    let storedSettings = __consentSafeParse(consentStorage, {});
-
-    // Merge mit neuen Default-Werten falls neue Felder hinzukommen
-    let needsUpdate = false;
-    for (const [field, defaultValue] of Object.entries(GOOGLE_CONSENT_V2_DEFAULTS)) {
-        if (typeof storedSettings[field] === "undefined") {
-            storedSettings[field] = defaultValue;
-            needsUpdate = true;
-        }
-    }
-
-    if (needsUpdate) {
-        gtag('consent', 'default', storedSettings);
-        localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(storedSettings));
-    } else {
-        gtag('consent', 'default', storedSettings);
-    }
-}
+// Initialize with defaults (always denied at start)
+// This ensures that hits sent before consent is granted are tagged as "denied"
+gtag('consent', 'default', currentConsentSettings);
 
 // Set user ID if available
 if(localStorage.getItem('userId') != null) {
@@ -161,38 +125,26 @@ if(localStorage.getItem('userId') != null) {
  * @param {Object} consent - Object with consent settings
  */
 function setConsent(consent) {
-    let consentStorage = localStorage.getItem(GOOGLE_CONSENT_V2_STORAGE_KEY);
-    let consentSettings;
-    
-    if (consentStorage === null) {
-        // Initialize with defaults if not exists
-        consentSettings = { ...GOOGLE_CONSENT_V2_DEFAULTS };
-        debugLog('Initializing with defaults', consentSettings);
-    } else {
-        consentSettings = __consentSafeParse(consentStorage, { ...GOOGLE_CONSENT_V2_DEFAULTS });
-        debugLog('Loaded existing settings', consentSettings);
-    }
-
     debugLog('Updating with consent', consent);
     
-    for (const [key, value] of Object.entries(consentSettings)) {
+    // Merge provided consent into current settings
+    for (const key of Object.keys(currentConsentSettings)) {
         if (typeof consent[key] !== "undefined") {
             // Trigger event handlers if defined
             if(typeof(GOOGLE_CONSENT_V2_FIELDS_EVENTS[key]) != 'undefined') {
-                if(consent[key] === true && consentSettings[key] === 'denied') {
+                if(consent[key] === true && currentConsentSettings[key] === 'denied') {
                     GOOGLE_CONSENT_V2_FIELDS_EVENTS[key]['on_granted']();
-                } else if (consent[key] === false && consentSettings[key] === 'granted') {
+                } else if (consent[key] === false && currentConsentSettings[key] === 'granted') {
                     GOOGLE_CONSENT_V2_FIELDS_EVENTS[key]['on_denied']();
                 }
             }
 
-            consentSettings[key] = (consent[key] === true ? 'granted' : 'denied');
+            currentConsentSettings[key] = (consent[key] === true ? 'granted' : 'denied');
         }
     }
 
-    debugLog('Final settings', consentSettings);
-    gtag('consent', 'update', consentSettings);
-    localStorage.setItem(GOOGLE_CONSENT_V2_STORAGE_KEY, JSON.stringify(consentSettings));
+    debugLog('Final settings', currentConsentSettings);
+    gtag('consent', 'update', currentConsentSettings);
 }
 
 // Expose functions globally in a single namespaced object

@@ -66,6 +66,9 @@ if ('delete' === $func) {
     $select->addOption(rex_i18n::msg('consent_manager_domain_inline_only_mode_enabled'), '1');
     $field->setNotice(rex_i18n::msg('consent_manager_domain_inline_only_mode_notice'));
 
+    // Theme als Hidden Field (wird in Sidebar gesteuert)
+    $field = $form->addHiddenField('theme');
+
     // oEmbed / CKE5 Video Configuration - nur anzeigen wenn CKE5 verfügbar ist
     if (rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {
         $field = $form->addSelectField('oembed_enabled');
@@ -92,7 +95,211 @@ if ('delete' === $func) {
     }
 
     $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_domain_edit') : rex_i18n::msg('consent_manager_domain_add');
-    $content = $form->get();
+    $formContent = $form->get();
+    
+    // Theme-Sidebar erstellen
+    $addon = rex_addon::get('consent_manager');
+    $cmtheme = new \FriendsOfRedaxo\ConsentManager\Theme();
+    $currentTheme = $form->isEditMode() ? $form->getSql()->getValue('theme') : '';
+    $previewId = 'theme-preview-' . uniqid();
+    $initialDisplay = !empty($currentTheme) ? 'block' : 'none';
+    $previewBaseUrl = rex_url::backendPage('consent_manager/theme');
+    
+    // Theme-Optionen sammeln
+    $themeOptions = '<option value="">Standard (globales Theme verwenden)</option>';
+    
+    $themes = (array) glob($addon->getPath('scss/themes/*.scss'));
+    $legacyThemes = (array) glob($addon->getPath('scss/consent_manager_frontend*.scss'));
+    $themes = array_merge($themes, $legacyThemes);
+    natsort($themes);
+    
+    foreach ($themes as $themefile) {
+        $isLegacy = strpos($themefile, '/themes/') === false;
+        $themeid = $isLegacy ? basename((string) $themefile) : 'themes/' . basename((string) $themefile);
+        $theme_options = $cmtheme->getThemeInformation($themeid);
+        if (count($theme_options) > 0) {
+            $label = $theme_options['name'] . ' (' . $theme_options['style'] . ')';
+            $selected = ($currentTheme === $themeid) ? ' selected' : '';
+            $themeOptions .= '<option value="' . rex_escape($themeid) . '"' . $selected . '>' . rex_escape($label) . '</option>';
+        }
+    }
+    
+    if (true === rex_addon::exists('project')) {
+        $projectThemes = (array) glob(rex_addon::get('project')->getPath('consent_manager_themes/*.scss'));
+        natsort($projectThemes);
+        foreach ($projectThemes as $themefile) {
+            $themeid = 'project:' . basename((string) $themefile);
+            $theme_options = $cmtheme->getThemeInformation($themeid);
+            if (count($theme_options) > 0) {
+                $label = '⭐ ' . $theme_options['name'] . ' (Custom)';
+                $selected = ($currentTheme === $themeid) ? ' selected' : '';
+                $themeOptions .= '<option value="' . rex_escape($themeid) . '"' . $selected . '>' . rex_escape($label) . '</option>';
+            }
+        }
+    }
+    
+    $sidebar = '
+    <style>
+    .cm-domain-layout {
+        display: flex;
+        gap: 20px;
+    }
+    .cm-domain-main {
+        flex: 1;
+        min-width: 0;
+    }
+    .cm-domain-sidebar {
+        width: 320px;
+        flex-shrink: 0;
+    }
+    .cm-sidebar-panel {
+        background: rgba(255,255,255,0.1);
+        border: 2px solid rgba(0,0,0,0.1);
+        border-radius: 6px;
+        padding: 18px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05),
+                    0 1px 3px rgba(0,0,0,0.08);
+    }
+    .cm-sidebar-title {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 12px;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+    .cm-theme-select {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+    .cm-domain-theme-preview {
+        display: ' . $initialDisplay . ';
+    }
+    .cm-domain-theme-preview-title {
+        font-weight: 600;
+        margin-bottom: 10px;
+        font-size: 12px;
+        opacity: 0.8;
+        letter-spacing: 0.2px;
+    }
+    .cm-domain-theme-preview-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 62.5%;
+        background: rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+        margin-bottom: 12px;
+    }
+    .cm-domain-theme-preview-iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1440px;
+        height: 900px;
+        border: 0;
+        transform-origin: 0 0;
+        pointer-events: none;
+    }
+    @media (max-width: 992px) {
+        .cm-domain-layout {
+            flex-direction: column;
+        }
+        .cm-domain-sidebar {
+            width: 100%;
+        }
+    }
+    </style>
+    <div class="cm-sidebar-panel">
+        <div class="cm-sidebar-title">' . rex_i18n::msg('consent_manager_domain_theme_title') . '</div>
+        <select class="cm-theme-select" id="cm-theme-select-' . $previewId . '">
+            ' . $themeOptions . '
+        </select>
+        <p style="font-size: 11px; margin: 0 0 15px 0;">' . rex_i18n::msg('consent_manager_domain_theme_notice') . '</p>
+        
+        <div class="cm-domain-theme-preview" id="' . $previewId . '">
+            <div class="cm-domain-theme-preview-title">' . rex_i18n::msg('consent_manager_domain_theme_preview_title') . '</div>
+            <div class="cm-domain-theme-preview-container">
+                <iframe
+                    class="cm-domain-theme-preview-iframe"
+                    id="' . $previewId . '-iframe"
+                    sandbox="allow-scripts allow-same-origin"
+                ></iframe>
+            </div>
+            <a href="#" id="' . $previewId . '-link" target="_blank" class="btn btn-xs btn-default btn-block" style="font-size: 11px;">
+                <i class="fa fa-external-link"></i> ' . rex_i18n::msg('consent_manager_domain_theme_preview_fullscreen') . '
+            </a>
+        </div>
+    </div>
+    <script nonce="' . rex_response::getNonce() . '">
+    (function() {
+        var previewContainer = document.getElementById("' . $previewId . '");
+        var previewIframe = document.getElementById("' . $previewId . '-iframe");
+        var previewLink = document.getElementById("' . $previewId . '-link");
+        var themeSelect = document.getElementById("cm-theme-select-' . $previewId . '");
+        var hiddenThemeInput = document.querySelector(\'input[type="hidden"][id*="theme"]\');
+        var baseUrl = "' . $previewBaseUrl . '";
+        
+        function scalePreview() {
+            if (previewIframe && previewContainer) {
+                var container = previewContainer.querySelector(".cm-domain-theme-preview-container");
+                if (container) {
+                    var containerWidth = container.offsetWidth;
+                    var scale = containerWidth / 1440;
+                    previewIframe.style.transform = "scale(" + scale + ")";
+                }
+            }
+        }
+        
+        function updatePreview() {
+            var theme = themeSelect ? themeSelect.value : "";
+            
+            // Hidden Input synchronisieren
+            if (hiddenThemeInput) {
+                hiddenThemeInput.value = theme;
+            }
+            
+            if (theme) {
+                var url = baseUrl + "&preview=" + encodeURIComponent(theme);
+                previewIframe.src = url;
+                previewLink.href = url;
+                previewContainer.style.display = "block";
+                setTimeout(scalePreview, 100);
+            } else {
+                previewIframe.src = "";
+                previewContainer.style.display = "none";
+            }
+        }
+        
+        // Wait for rex:ready if PJAX is active
+        function init() {
+            // Suche erneut nach hidden input (könnte durch PJAX neu geladen sein)
+            hiddenThemeInput = document.querySelector(\'input[type="hidden"][id*="theme"]\');
+            if (themeSelect) {
+                updatePreview();
+                themeSelect.addEventListener("change", updatePreview);
+                window.addEventListener("resize", scalePreview);
+            }
+        }
+        
+        // Nur entweder direkt ODER im rex:ready-Handler aufrufen, nicht beides
+        if (typeof jQuery !== "undefined" && jQuery(document).data("pjax")) {
+            jQuery(document).on("rex:ready", init);
+        } else {
+            init();
+        }
+    })();
+    </script>';
+    
+    // 2-Spalten-Layout
+    $content = '
+    <div class="cm-domain-layout">
+        <div class="cm-domain-main">' . $formContent . '</div>
+        <div class="cm-domain-sidebar">' . $sidebar . '</div>
+    </div>';
 
     $fragment = new rex_fragment();
     $fragment->setVar('class', 'edit', false);

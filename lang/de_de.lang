@@ -424,4 +424,11 @@ consent_manager_stats_service = Service
 consent_manager_stats_count = Anzahl
 consent_manager_stats_history = Verlauf (Tage)
 consent_manager_stats_date = Datum
+consent_manager_config_cookie_name_label = Cookie-Name
+consent_manager_config_cookie_name_notice = Name des Cookies, in dem die Einwilligung gespeichert wird. Standard: consentmanager
+consent_manager_domain_theme_title = Theme-Auswahl
+consent_manager_domain_theme_notice = Optional: Eigenes Theme für diese Domain. Wenn leer, wird das globale Theme verwendet.
+consent_manager_domain_theme_preview_title = Live-Vorschau
+consent_manager_domain_theme_preview_fullscreen = Vollbild-Vorschau
+consent_manager_theme_modal_close = Schließen
 

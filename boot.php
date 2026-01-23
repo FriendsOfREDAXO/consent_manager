@@ -86,6 +86,10 @@ if (rex::isBackend()) {
     });
     rex_extension::register('REX_FORM_SAVED', CLang::formSaved(...));
     rex_extension::register('REX_FORM_SAVED', Cache::write(...));
+    
+    // Domain-Theme: Keine Kompilierung nötig, Theme wird direkt referenziert
+    // Die Frontend-Klasse lädt das passende Theme basierend auf der Domain-Config
+    
     rex_extension::register('CLANG_ADDED', CLang::clangAdded(...));
     rex_extension::register('CLANG_DELETED', CLang::clangDeleted(...));
 
@@ -156,8 +160,10 @@ if (rex::isFrontend()) {
         }
 
         // set sentinel to avoid repeating this check for this visitor
+        /*
         $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
         setcookie($sentinel, '1', time() + 60 * 60 * 24 * 30, '/', $_SERVER['HTTP_HOST'] ?? '', $secure, false);
+        */
     });
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
         if (true === rex_request::get('consent_manager_outputjs', 'bool', false)) {

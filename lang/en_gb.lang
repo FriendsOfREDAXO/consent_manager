@@ -424,3 +424,5 @@ consent_manager_stats_service = Service
 consent_manager_stats_count = Count
 consent_manager_stats_history = History (Days)
 consent_manager_stats_date = Date
+consent_manager_config_cookie_name_label = Cookie Name
+consent_manager_config_cookie_name_notice = Name of the cookie in which consent is stored. Default: consentmanager

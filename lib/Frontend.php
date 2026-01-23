@@ -253,6 +253,7 @@ class Frontend
             'cspNonce' => rex_response::getNonce(),
             'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
+            'cookieName' => $addon->getConfig('cookie_name', 'consentmanager'),
         ];
         echo 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES) . ';' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
@@ -287,9 +288,37 @@ class Frontend
     public static function getFrontendCss(): string
     {
         $addon = rex_addon::get('consent_manager');
-
+        
+        // Standard CSS-Datei
         $_cssfilename = 'consent_manager_frontend.css';
-        if (false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
+        
+        // 1. Prüfen ob Domain-spezifisches Theme existiert
+        $domainTheme = null;
+        if (is_string(rex_request::server('HTTP_HOST'))) {
+            $frontend = new self(0);
+            $frontend->setDomain(rex_request::server('HTTP_HOST'));
+            
+            if (!empty($frontend->domainInfo['theme'])) {
+                $domainTheme = $frontend->domainInfo['theme'];
+            }
+        }
+        
+        // 2. Domain-Theme hat Priorität
+        if ($domainTheme) {
+            // Validiere Theme-Namen: Erlaube nur alphanumerisch, _, -, / und :
+            // Verhindere Path-Traversal durch ..
+            if (preg_match('/^[a-zA-Z0-9_\-\/:.]+$/', $domainTheme) && !str_contains($domainTheme, '..')) {
+                $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $domainTheme));
+                // Normalisiere Pfad und prüfe dass er im Assets-Verzeichnis liegt
+                $fullPath = $addon->getAssetsPath($_themecssfilename);
+                $assetsPath = $addon->getAssetsPath();
+                if ('' !== $_themecssfilename && file_exists($fullPath) && str_starts_with(realpath($fullPath), realpath($assetsPath))) {
+                    $_cssfilename = $_themecssfilename;
+                }
+            }
+        }
+        // 3. Fallback: Globales Theme
+        elseif (false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
             $_themecssfilename = $addon->getConfig('theme', false);
             $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $_themecssfilename));
             if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {
