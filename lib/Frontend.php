@@ -305,9 +305,16 @@ class Frontend
         
         // 2. Domain-Theme hat Priorität
         if ($domainTheme) {
-            $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $domainTheme));
-            if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {
-                $_cssfilename = $_themecssfilename;
+            // Validiere Theme-Namen: Erlaube nur alphanumerisch, _, -, / und :
+            // Verhindere Path-Traversal durch ..
+            if (preg_match('/^[a-zA-Z0-9_\-\/:.]+$/', $domainTheme) && !str_contains($domainTheme, '..')) {
+                $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $domainTheme));
+                // Normalisiere Pfad und prüfe dass er im Assets-Verzeichnis liegt
+                $fullPath = $addon->getAssetsPath($_themecssfilename);
+                $assetsPath = $addon->getAssetsPath();
+                if ('' !== $_themecssfilename && file_exists($fullPath) && str_starts_with(realpath($fullPath), realpath($assetsPath))) {
+                    $_cssfilename = $_themecssfilename;
+                }
             }
         }
         // 3. Fallback: Globales Theme

@@ -57,7 +57,7 @@ default_config:
   hidebodyscrollbar: false
   outputowncss: false
   skip_consent: ''
-  cookie_name: 'consent_manager'
+  cookie_name: 'consentmanager'
   lifespan: 365
   theme: false
   first_run_completed: false

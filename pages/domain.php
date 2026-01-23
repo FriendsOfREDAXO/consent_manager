@@ -214,14 +214,14 @@ if ('delete' === $func) {
     }
     </style>
     <div class="cm-sidebar-panel">
-        <div class="cm-sidebar-title">Theme-Auswahl</div>
+        <div class="cm-sidebar-title">' . rex_i18n::msg('consent_manager_domain_theme_title') . '</div>
         <select class="cm-theme-select" id="cm-theme-select-' . $previewId . '">
             ' . $themeOptions . '
         </select>
-        <p style="font-size: 11px; margin: 0 0 15px 0;">Optional: Eigenes Theme für diese Domain. Wenn leer, wird das globale Theme verwendet.</p>
+        <p style="font-size: 11px; margin: 0 0 15px 0;">' . rex_i18n::msg('consent_manager_domain_theme_notice') . '</p>
         
         <div class="cm-domain-theme-preview" id="' . $previewId . '">
-            <div class="cm-domain-theme-preview-title">Live-Vorschau</div>
+            <div class="cm-domain-theme-preview-title">' . rex_i18n::msg('consent_manager_domain_theme_preview_title') . '</div>
             <div class="cm-domain-theme-preview-container">
                 <iframe
                     class="cm-domain-theme-preview-iframe"
@@ -230,7 +230,7 @@ if ('delete' === $func) {
                 ></iframe>
             </div>
             <a href="#" id="' . $previewId . '-link" target="_blank" class="btn btn-xs btn-default btn-block" style="font-size: 11px;">
-                <i class="fa fa-external-link"></i> Vollbild-Vorschau
+                <i class="fa fa-external-link"></i> ' . rex_i18n::msg('consent_manager_domain_theme_preview_fullscreen') . '
             </a>
         </div>
     </div>
@@ -260,9 +260,6 @@ if ('delete' === $func) {
             // Hidden Input synchronisieren
             if (hiddenThemeInput) {
                 hiddenThemeInput.value = theme;
-                console.log("Theme synced to hidden input:", theme);
-            } else {
-                console.warn("Hidden theme input not found");
             }
             
             if (theme) {
@@ -288,10 +285,12 @@ if ('delete' === $func) {
             }
         }
         
+        // Nur entweder direkt ODER im rex:ready-Handler aufrufen, nicht beides
         if (typeof jQuery !== "undefined" && jQuery(document).data("pjax")) {
             jQuery(document).on("rex:ready", init);
+        } else {
+            init();
         }
-        init();
     })();
     </script>';
     

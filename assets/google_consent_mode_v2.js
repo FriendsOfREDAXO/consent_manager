@@ -128,7 +128,7 @@ function setConsent(consent) {
     debugLog('Updating with consent', consent);
     
     // Merge provided consent into current settings
-    for (const [key, value] of Object.entries(currentConsentSettings)) {
+    for (const key of Object.keys(currentConsentSettings)) {
         if (typeof consent[key] !== "undefined") {
             // Trigger event handlers if defined
             if(typeof(GOOGLE_CONSENT_V2_FIELDS_EVENTS[key]) != 'undefined') {

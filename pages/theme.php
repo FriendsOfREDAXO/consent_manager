@@ -502,7 +502,7 @@ if (count($addonThemes) > 0) {
 <div class="cm_modal-overlay" id="cmModalOverlay">
     <div class="cm_modal-container">
         <button class="btn btn-default cm_modal-close" id="cmModalClose" type="button">
-            <i class="fa fa-times"></i> Schließen
+            <i class="fa fa-times"></i> <?= rex_i18n::msg('consent_manager_theme_modal_close') ?>
         </button>
         <div class="cm_modal-iframe-wrapper" id="cmModalIframeWrapper"></div>
     </div>
