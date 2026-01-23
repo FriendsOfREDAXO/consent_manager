@@ -89,12 +89,12 @@ if ('delete' === $func) {
         $field = $form->addTextAreaField('script');
         $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
         $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts'));
-        $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
+        $field->setNotice(rex_i18n::rawMsg('consent_manager_cookiegroup_scripts_notice'));
 
         $field = $form->addTextAreaField('script_unselect');
         $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
         $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'));
-        $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
+        $field->setNotice(rex_i18n::rawMsg('consent_manager_cookiegroup_scripts_notice'));
     }
     if ('add' === $func) {
         // Script-Felder sind in ALLEN Sprachen editierbar (für unterschiedliche Tracking-IDs etc.)
@@ -106,17 +106,17 @@ if ('delete' === $func) {
         $field = $form->addTextAreaField('script');
         $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
         $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts'));
-        $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
+        $field->setNotice(rex_i18n::rawMsg('consent_manager_cookiegroup_scripts_notice'));
 
         $field = $form->addTextAreaField('script_unselect');
         $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/html']);
         $field->setLabel(rex_i18n::msg('consent_manager_cookiegroup_scripts_unselect'));
-        $field->setNotice(rex_i18n::msg('consent_manager_cookiegroup_scripts_notice'));
+        $field->setNotice(rex_i18n::rawMsg('consent_manager_cookiegroup_scripts_notice'));
     }
 
     $field = $form->addTextAreaField('placeholder_text');
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_placeholder_text'));
-    $field->setNotice(rex_i18n::msg('consent_manager_cookie_placeholder_text_notice'));
+    $field->setNotice(rex_i18n::rawMsg('consent_manager_cookie_placeholder_text_notice'));
     $field = $form->addMediaField('placeholder_image');
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_placeholder_image'));
     $field->setNotice(rex_i18n::msg('consent_manager_cookie_placeholder_image_notice'));
