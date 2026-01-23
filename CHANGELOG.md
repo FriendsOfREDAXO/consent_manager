@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.3.0 - 23.01.2026
+## Version 5.3.0 - XX.XX.XXXX
 
 ### 🎨 Domain-spezifische Themes
 
