@@ -261,12 +261,26 @@
                         parsedValue = null;
                     }
                     
+                    // Cookie-Größe berechnen
+                    const sizeInBytes = new Blob([cookie]).size;
+                    
+                    // Cookie-Attribute extrahieren (aus parsedValue falls Consent-Cookie)
+                    let consentTime = null;
+                    let consentAge = null;
+                    if (parsedValue && parsedValue.consentTime) {
+                        consentTime = parsedValue.consentTime;
+                        consentAge = Date.now() - consentTime;
+                    }
+                    
                     cookies.push({
                         name: name,
                         value: value || '',
                         decodedValue: decodedValue,
                         parsedValue: parsedValue,
-                        domain: window.location.hostname
+                        domain: window.location.hostname,
+                        size: sizeInBytes,
+                        consentTime: consentTime,
+                        consentAge: consentAge
                     });
                 }
             });
@@ -694,6 +708,35 @@
             }
         }
         
+        // Problem 6: Cookie-Größe über 4KB
+        const cookies = getCurrentDomainCookies();
+        const cookieName = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters.cookieName) 
+            ? consent_manager_parameters.cookieName 
+            : 'consentmanager';
+        const consentCookie = cookies.find(c => c.name === cookieName);
+        if (consentCookie && consentCookie.size > 4096) {
+            issues.push({
+                type: 'error',
+                title: 'Cookie zu groß',
+                message: `Das Consent-Cookie (${consentCookie.size} Bytes) überschreitet die Browser-Grenze von 4KB (4096 Bytes).`,
+                solution: 'Reduzieren Sie die Anzahl der Services oder kürzen Sie Service-UIDs.'
+            });
+        }
+        
+        // Problem 7: Consent älter als 1 Jahr (möglicher Renewal-Bedarf)
+        if (consentCookie && consentCookie.consentAge) {
+            const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
+            if (consentCookie.consentAge > oneYearInMs) {
+                const ageInDays = Math.floor(consentCookie.consentAge / (24 * 60 * 60 * 1000));
+                issues.push({
+                    type: 'info',
+                    title: 'Alter Consent',
+                    message: `Der Consent ist ${ageInDays} Tage alt. DSGVO empfiehlt regelmäßige Erneuerung.`,
+                    solution: 'Erwägen Sie, den Consent nach 1 Jahr automatisch erneut abzufragen.'
+                });
+            }
+        }
+        
         // Problem 8: Mehrere Consent Manager Frontend Scripts geladen
         const consentManagerScripts = document.querySelectorAll('script[src*="consent_manager_frontend"]');
         // Zähle .js und .min.js als ein Script
@@ -710,6 +753,26 @@
                 solution: 'Überprüfen Sie die Template-Integration und entfernen Sie doppelte Einbindungen.'
             });
         }
+        
+        // Problem 9: Duplicate External Scripts (Google Analytics, GTM, etc.)
+        const externalScripts = {
+            'Google Analytics': document.querySelectorAll('script[src*="google-analytics.com/analytics.js"], script[src*="googletagmanager.com/gtag/js"]'),
+            'Google Tag Manager': document.querySelectorAll('script[src*="googletagmanager.com/gtm.js"]'),
+            'Facebook Pixel': document.querySelectorAll('script[src*="connect.facebook.net"]'),
+            'Matomo': document.querySelectorAll('script[src*="matomo.js"], script[src*="piwik.js"]')
+        };
+        
+        Object.keys(externalScripts).forEach(scriptName => {
+            const scripts = externalScripts[scriptName];
+            if (scripts.length > 1) {
+                issues.push({
+                    type: 'warning',
+                    title: `Duplikat: ${scriptName}`,
+                    message: `${scriptName} wurde ${scripts.length}x geladen. Dies kann zu doppelten Tracking-Events führen.`,
+                    solution: `Überprüfen Sie Ihre Service-Konfiguration und entfernen Sie doppelte ${scriptName} Einbindungen.`
+                });
+            }
+        });
         
         return issues;
     }
@@ -867,6 +930,41 @@
             ? cookies.map(cookie => {
                 let displayValue = '';
                 
+                // Cookie-Attribute (Größe, Alter etc.)
+                const cookieName = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters.cookieName) 
+                    ? consent_manager_parameters.cookieName 
+                    : 'consentmanager';
+                const isConsentCookie = cookie.name === cookieName;
+                
+                let attributesHtml = `<div style="font-size: 10px; color: #6c757d; margin-top: 4px;">`;
+                attributesHtml += `<strong>Größe:</strong> ${cookie.size} Bytes`;
+                
+                if (cookie.size > 4096) {
+                    attributesHtml += ` <span style="color: #dc3545; font-weight: bold;">⚠️ Zu groß!</span>`;
+                } else if (cookie.size > 3500) {
+                    attributesHtml += ` <span style="color: #ffc107;">⚠️ Fast am Limit</span>`;
+                }
+                
+                if (isConsentCookie && cookie.consentAge) {
+                    const ageInDays = Math.floor(cookie.consentAge / (24 * 60 * 60 * 1000));
+                    const ageInHours = Math.floor(cookie.consentAge / (60 * 60 * 1000));
+                    const ageDisplay = ageInDays > 0 ? `${ageInDays} Tage` : `${ageInHours} Stunden`;
+                    attributesHtml += ` | <strong>Alter:</strong> ${ageDisplay}`;
+                    
+                    if (ageInDays > 365) {
+                        attributesHtml += ` <span style="color: #ffc107;">⚠️ > 1 Jahr</span>`;
+                    }
+                }
+                
+                // Cookie-Attribute aus consent_manager_parameters
+                if (isConsentCookie && typeof consent_manager_parameters !== 'undefined') {
+                    const sameSite = consent_manager_parameters.cookieSameSite || 'Lax';
+                    const secure = consent_manager_parameters.cookieSecure ? 'Yes' : 'No';
+                    attributesHtml += `<br><strong>SameSite:</strong> ${escapeHtml(sameSite)} | <strong>Secure:</strong> ${secure} | <strong>Path:</strong> / | <strong>Domain:</strong> ${escapeHtml(cookie.domain)}`;
+                }
+                
+                attributesHtml += `</div>`;
+                
                 // Wenn JSON-Daten vorhanden, formatiert anzeigen
                 if (cookie.parsedValue) {
                     displayValue = `<div class="cookie-value">
@@ -890,6 +988,7 @@
                 
                 return `<div class="cookie-item">
                     <div class="cookie-name">${escapeHtml(cookie.name)}</div>
+                    ${attributesHtml}
                     ${displayValue}
                 </div>`;
               }).join('')
