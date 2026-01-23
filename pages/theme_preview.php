@@ -12,9 +12,15 @@ $preview = rex_request::request('preview', 'string', '');
 $clang_id = rex_clang::getStartId();
 
 if ('' === $preview) {
+    rex_response::setStatus(400);
     exit('No theme specified');
 }
 
+// validate preview against allowed pattern to prevent path traversal
+if (!preg_match('/^[a-zA-Z0-9_-]+$/', $preview)) {
+    rex_response::setStatus(400);
+    exit('Invalid theme specified');
+}
 // Get theme info and compiled CSS
 $cmtheme = new Theme($preview);
 $theme_options = $cmtheme->getThemeInformation();
