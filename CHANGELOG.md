@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.2.0 - 23.01.2026
+## Version 5.3.0 - 23.01.2026
 
 ### 🎨 Domain-spezifische Themes
 
@@ -15,7 +15,6 @@ Jede Domain kann nun ein eigenes Theme verwenden:
 - Themes werden im Cache gespeichert für optimale Performance
 - Responsive Design: Sidebar wandert auf mobilen Geräten unter das Formular
 - Sidebar-Widget mit subtilen Schatten und Rahmen, funktioniert in Dark- und Light-Themes
-- CSP-konform: Inline-JavaScript mit REDAXO-Nonce ausgestattet
 
 ### 🎭 Moderne Theme-Preview
 
@@ -36,13 +35,19 @@ Dynamische Cookie-Laufzeit:
 - Cookie-Beschreibung wird automatisch angepasst ("14 Tage / 1 Jahr")
 - `cookie_lifetime` Standardwert in package.yml: 336 Stunden (14 Tage)
 
-- `Frontend`, `InlineConsent` und `GoogleConsentMode` Klassen nutzen nun gecachte Daten statt direkter SQL-Abfragen
-- Refactoring der `InlineConsent` Klasse zur Vermeidung von Code-Duplizierung
+### 🛡️ Security & XSS-Schutz
 
-### 🛡️ Security
-
-- CSP-Nonce-Schutz für Inline-Skripte im Backend-Log
-- Button-Layout responsive optimiert für bessere Zugänglichkeit
+Vollständiges Security Audit durchgeführt und alle Inline-Scripts abgesichert:
+- **CSP-Nonce-Schutz** für alle Inline-`<script>`-Tags im Backend
+- config.php: 4 Redirect-Scripts mit Nonce ausgestattet
+- theme.php: Modal-JavaScript mit Nonce
+- theme_preview.php: Preview-Steuerungs-Script mit Nonce
+- domain.php: Live-Preview-Script mit Nonce
+- log.php: Consent-Log-Script mit Nonce
+- Alle Inline-Scripts verwenden `rex_response::getNonce()`
+- Konsistente Verwendung von `rex_escape()` und `htmlspecialchars()` für sichere Ausgabe
+- Keine direkte `$_GET`/`$_POST` Verwendung (ausschließlich `rex_request::`)
+- CSRF-Token-Schutz für alle Formular-Aktionen
 
 ---
 

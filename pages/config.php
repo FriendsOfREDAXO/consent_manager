@@ -27,7 +27,7 @@ if ('setup_minimal' === $func) {
     }
 
     // Redirect to normal config page without func parameter
-    echo '<script>setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
+    echo '<script nonce="' . rex_response::getNonce() . '">setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
 } elseif ('setup_standard' === $func) {
     // Import standard setup (comprehensive setup with common services)
     $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/default_setup.json';
@@ -45,7 +45,7 @@ if ('setup_minimal' === $func) {
     }
 
     // Redirect to normal config page without func parameter
-    echo '<script>setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
+    echo '<script nonce="' . rex_response::getNonce() . '">setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
 } elseif ('setup_minimal_update' === $func) {
     // Update with minimal setup (only add new, don't overwrite existing)
     $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/minimal_setup.json';
@@ -63,7 +63,7 @@ if ('setup_minimal' === $func) {
     }
 
     // Redirect to normal config page without func parameter
-    echo '<script>setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
+    echo '<script nonce="' . rex_response::getNonce() . '">setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
 } elseif ('setup_standard_update' === $func) {
     // Update with standard setup (only add new, don't overwrite existing)
     $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/default_setup.json';
@@ -81,7 +81,7 @@ if ('setup_minimal' === $func) {
     }
 
     // Redirect to normal config page without func parameter
-    echo '<script>setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
+    echo '<script nonce="' . rex_response::getNonce() . '">setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
 }
 
 // For all other functions CSRF check

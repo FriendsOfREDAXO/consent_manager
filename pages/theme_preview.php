@@ -618,7 +618,7 @@ $layout = $layouts[array_rand($layouts)];
     <!-- Consent Manager Box -->
     <?= $cmbox ?>
 
-    <script>
+    <script nonce="<?= rex_response::getNonce() ?>">
         // Close Preview (go back to theme page)
         function closePreview() {
             if (window.parent && window.parent.consent_manager_close_preview) {

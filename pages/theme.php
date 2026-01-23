@@ -508,7 +508,7 @@ if (count($addonThemes) > 0) {
     </div>
 </div>
 
-<script>
+<script nonce="<?= rex_response::getNonce() ?>">
 (function() {
     'use strict';
     
