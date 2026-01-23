@@ -363,15 +363,13 @@
         const cookies = getCurrentDomainCookies();
         const consentCookie = cookies.find(cookie => cookie.name === 'consentmanager');
         
-        // Google Consent Mode aus localStorage laden
+        // Google Consent Mode aus Runtime-Daten laden (kein localStorage mehr)
         let googleConsentMode = null;
-        try {
-            const storedConsent = localStorage.getItem('consentMode');
-            if (storedConsent) {
-                googleConsentMode = JSON.parse(storedConsent);
-            }
-        } catch (e) {
-            // localStorage nicht verfügbar oder defekt
+        if (window.GoogleConsentModeV2 && window.GoogleConsentModeV2.getCurrentSettings) {
+            googleConsentMode = window.GoogleConsentModeV2.getCurrentSettings();
+        } else if (window.currentConsentSettings) {
+            // Fallback: direkt auf currentConsentSettings zugreifen
+            googleConsentMode = window.currentConsentSettings;
         }
         
         // Wenn Google Consent Mode vorhanden ist, verwende das als primäre Quelle
@@ -655,21 +653,26 @@
             });
         }
         
-        // Problem 4: Google Consent Mode localStorage fehlt bei aktiviertem Modus
-        if (googleConsentModeStatus.mode !== 'disabled' && !localStorage.getItem('consentMode')) {
+        // Problem 4: Google Consent Mode Runtime-Daten fehlen bei aktiviertem Modus
+        if (googleConsentModeStatus.mode !== 'disabled' && !window.GoogleConsentModeV2 && !window.currentConsentSettings) {
             issues.push({
                 type: 'warning',
-                title: 'Google Consent Mode localStorage fehlt',
-                message: 'Google Consent Mode ist aktiviert, aber keine Daten in localStorage gefunden.',
-                solution: 'Stellen Sie sicher, dass localStorage verfügbar ist und das Script korrekt initialisiert wurde.'
+                title: 'Google Consent Mode Runtime-Daten fehlen',
+                message: 'Google Consent Mode ist aktiviert, aber keine Runtime-Daten gefunden.',
+                solution: 'Stellen Sie sicher, dass das google_consent_mode_v2.js Script korrekt geladen und initialisiert wurde.'
             });
         }
         
         // Problem 5: Auto-Mapping aktiviert aber keine Google Consent Mode Updates
         if (googleConsentModeStatus.autoMapping && consentManagerStatus.status !== 'no_consent') {
-            const googleConsentData = localStorage.getItem('consentMode');
-            if (googleConsentData) {
-                const googleConsent = JSON.parse(googleConsentData);
+            let googleConsent = null;
+            if (window.GoogleConsentModeV2 && window.GoogleConsentModeV2.getCurrentSettings) {
+                googleConsent = window.GoogleConsentModeV2.getCurrentSettings();
+            } else if (window.currentConsentSettings) {
+                googleConsent = window.currentConsentSettings;
+            }
+            
+            if (googleConsent) {
                 const hasGrantedFlags = Object.values(googleConsent).some(value => value === 'granted');
                 
                 if (!hasGrantedFlags) {

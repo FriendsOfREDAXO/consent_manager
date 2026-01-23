@@ -143,6 +143,9 @@ function setConsent(consent) {
         }
     }
 
+    // Update global debugging copy
+    window.currentConsentSettings = { ...currentConsentSettings };
+
     debugLog('Final settings', currentConsentSettings);
     gtag('consent', 'update', currentConsentSettings);
 }
@@ -150,12 +153,18 @@ function setConsent(consent) {
 // Expose functions globally in a single namespaced object
 window.GoogleConsentModeV2 = {
     setConsent: setConsent,
+    getCurrentSettings: function() {
+        return { ...currentConsentSettings };
+    },
     fields: GOOGLE_CONSENT_V2_FIELDS,
     events: GOOGLE_CONSENT_V2_FIELDS_EVENTS
 };
 
 // Keep backwards compatibility with old global function name
 window.setConsent = setConsent;
+
+// Expose current settings for debugging (read-only copy)
+window.currentConsentSettings = { ...currentConsentSettings };
 
 if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
     console.log('Google Consent Mode v2 initialized');
