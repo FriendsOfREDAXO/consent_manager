@@ -361,7 +361,11 @@
     // Consent Status aus Consent Manager Cookie ermitteln
     function getConsentManagerStatus() {
         const cookies = getCurrentDomainCookies();
-        const consentCookie = cookies.find(cookie => cookie.name === 'consentmanager');
+        // Hole konfigurierten Cookie-Namen (aus Backend oder Default)
+        const cookieName = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters.cookieName) 
+            ? consent_manager_parameters.cookieName 
+            : 'consentmanager';
+        const consentCookie = cookies.find(cookie => cookie.name === cookieName);
         
         // Google Consent Mode aus Runtime-Daten laden (kein localStorage mehr)
         let googleConsentMode = null;
@@ -644,11 +648,15 @@
         }
         
         // Problem 3: Consent Manager Cookie fehlt bei erteiltem Consent
-        if (consentManagerStatus.status !== 'no_consent' && !document.cookie.includes('consentmanager=')) {
+        const cookieName = (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters.cookieName) 
+            ? consent_manager_parameters.cookieName 
+            : 'consentmanager';
+        const cookiePattern = cookieName + '=';
+        if (consentManagerStatus.status !== 'no_consent' && !document.cookie.includes(cookiePattern)) {
             issues.push({
                 type: 'warning',
                 title: 'Consent Cookie fehlt',
-                message: 'Consent wurde erteilt, aber das Consent-Manager Cookie ist nicht vorhanden.',
+                message: `Consent wurde erteilt, aber das Consent-Manager Cookie (${cookieName}) ist nicht vorhanden.`,
                 solution: 'Überprüfen Sie Cookie-Einstellungen und SameSite-Attribute.'
             });
         }
