@@ -57,7 +57,7 @@ default_config:
   hidebodyscrollbar: false
   outputowncss: false
   skip_consent: ''
-  lifespan: 365
+  lifespan: 14
   theme: false
   first_run_completed: false
 

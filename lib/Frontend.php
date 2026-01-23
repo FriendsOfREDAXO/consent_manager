@@ -106,44 +106,77 @@ class Frontend
      */
     public function setDomain(string $domain)
     {
+        // DEBUG START
+        $debugLog = [
+            'timestamp' => date('Y-m-d H:i:s'),
+            'input_domain' => $domain,
+            'cache_exists' => !empty($this->cache),
+            'cache_keys' => array_keys($this->cache),
+        ];
+        
         // Texte zuerst laden, unabhängig von Domain
         $clang = rex_request::request('lang', 'integer', 0);
         if (0 === $clang) {
             $clang = rex_clang::getCurrent()->getId();
         }
+        
+        $debugLog['clang'] = $clang;
+        $debugLog['texts_available'] = isset($this->cache['texts'][$clang]);
+        
         if (isset($this->cache['texts'][$clang])) {
             $this->texts = $this->cache['texts'][$clang];
+            $debugLog['texts_count'] = count($this->texts);
         }
 
         // Domain immer in Kleinbuchstaben normalisieren für den Lookup
         $domain = Utility::hostname();
+        $debugLog['utility_hostname'] = $domain;
 
         $domains = ConsentManager::getDomains();
+        $debugLog['domains_available'] = array_keys($domains);
+        $debugLog['domains_count'] = count($domains);
+        
         if ([] === $domains) {
+            $debugLog['error'] = 'No domains configured';
+            rex_logger::logError(1, 'Consent Manager setDomain Debug: ' . json_encode($debugLog), __FILE__, __LINE__);
             return;
         }
 
         // Zuerst exakte Domain suchen
         if (isset($domains[$domain])) {
             $this->domainName = $domain;
+            $debugLog['domain_match'] = 'exact';
         } else {
             // Dann HTTP_HOST versuchen (für Fälle mit Port oder Subdomain)
             $httpHost = strtolower(rex_request::server('HTTP_HOST'));
+            $debugLog['http_host'] = $httpHost;
+            
             if (isset($domains[$httpHost])) {
                 $this->domainName = $httpHost;
+                $debugLog['domain_match'] = 'http_host';
             } else {
                 // Domain ohne Port versuchen
                 $httpHostNoPort = preg_replace('/:\d+$/', '', $httpHost);
+                $debugLog['http_host_no_port'] = $httpHostNoPort;
+                
                 if (isset($domains[$httpHostNoPort])) {
                     $this->domainName = $httpHostNoPort;
+                    $debugLog['domain_match'] = 'http_host_no_port';
                 } else {
+                    $debugLog['error'] = 'Domain not found in configured domains';
+                    $debugLog['domainName_result'] = '';
+                    rex_logger::logError(1, 'Consent Manager setDomain Debug: ' . json_encode($debugLog), __FILE__, __LINE__);
                     return;
                 }
             }
         }
+        
+        $debugLog['domainName_result'] = $this->domainName;
 
         // Zusätzliche Sicherheitsabfrage
         if ('' === $this->domainName || !isset($domains[$this->domainName])) {
+            $debugLog['error'] = 'Domain validation failed';
+            rex_logger::logError(1, 'Consent Manager setDomain Debug: ' . json_encode($debugLog), __FILE__, __LINE__);
             return;
         }
 
@@ -151,8 +184,17 @@ class Frontend
 
         // Sicherstellen, dass Domain-Daten ein Array sind
         if (!is_array($domainData)) {
+            $debugLog['error'] = 'Domain data is not an array';
+            rex_logger::logError(1, 'Consent Manager setDomain Debug: ' . json_encode($debugLog), __FILE__, __LINE__);
             return;
         }
+        
+        $debugLog['domain_data_keys'] = array_keys($domainData);
+        $debugLog['cookiegroups_in_domain'] = $domainData['cookiegroups'] ?? [];
+        $debugLog['success'] = true;
+        
+        // DEBUG: Log erfolgreicher Aufruf
+        rex_logger::factory()->log('info', 'Consent Manager setDomain Success: ' . json_encode($debugLog), [], __FILE__, __LINE__);
 
         $this->domainInfo = $domainData;
         $this->links['privacy_policy'] = $domainData['privacy_policy'] ?? 0;
@@ -225,6 +267,9 @@ class Frontend
             http_response_code(304);
             exit;
         }
+
+        // Domain setzen damit Texte und Cookiegroups geladen werden
+        $this->setDomain(Utility::hostname());
 
         $boxtemplate = '';
         ob_start();

@@ -56,11 +56,28 @@ class Cache
     {
         $configFile = rex_path::addonCache('consent_manager', 'config.json');
         $this->fetchData();
+        
+        // DEBUG: Log initial data fetch
+        $debugInfo = [
+            'timestamp' => date('Y-m-d H:i:s'),
+            'domains_count' => count($this->domains),
+            'domains' => array_keys($this->domains),
+            'clang_ids' => rex_clang::getAllIds(),
+        ];
+        
         foreach (rex_clang::getAllIds() as $clangId) {
             $this->prepareCookie($clangId);
             $this->prepareCookieGroups($clangId);
             $this->setConfig($clangId);
+            
+            // DEBUG: Log per language
+            $debugInfo['clang_' . $clangId] = [
+                'cookiegroups_count' => isset($this->cookiegroups[$clangId]) ? count($this->cookiegroups[$clangId]) : 0,
+                'cookies_count' => isset($this->cookies[$clangId]) ? count($this->cookies[$clangId]) : 0,
+                'texts_count' => isset($this->texts[$clangId]) ? count($this->texts[$clangId]) : 0,
+            ];
         }
+        
         $db = rex_sql::factory();
         $db->setTable(rex::getTable('consent_manager_cache_log'));
         $db->setValue('consent', json_encode($this->config));
@@ -69,6 +86,10 @@ class Cache
         $db->setRawValue('createdate', 'NOW()');
         $db->insert();
         $this->config['cacheLogId'] = $db->getLastId();
+        
+        // DEBUG: Add debug info to config
+        $this->config['_debug'] = $debugInfo;
+        
         if (!rex_file::putCache($configFile, $this->config)) {
             rex_logger::logError(1, rex_i18n::msg('consent_manager_cache_write_failed'), __FILE__, __LINE__);
         }
