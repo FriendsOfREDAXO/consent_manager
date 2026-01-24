@@ -480,3 +480,4 @@ consent_manager_wizard_step_customize = Texte und Design nach Bedarf anpassen
 consent_manager_wizard_step_services = Weitere Dienste hinzufügen falls benötigt
 consent_manager_wizard_step_test = Im Frontend testen
 consent_manager_wizard_error_domain_required = Bitte Domain eingeben
+consent_manager_wizard_theme_preview_hint = Live-Vorschau des gewählten Themes

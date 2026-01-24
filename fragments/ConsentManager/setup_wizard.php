@@ -48,10 +48,13 @@ if (rex_addon::exists('project') && rex_addon::get('project')->isAvailable()) {
 
 ?>
 
-<div class="modal fade" id="setup-wizard-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="setup-wizard-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <h4 class="modal-title">
                     <i class="rex-icon fa-magic"></i> <?= rex_i18n::msg('consent_manager_wizard_title') ?>
                 </h4>
@@ -130,6 +133,16 @@ if (rex_addon::exists('project') && rex_addon::get('project')->isAvailable()) {
                                 <option value="<?= rex_escape($theme['uid']) ?>"><?= rex_escape($theme['name']) ?></option>
                                 <?php endforeach ?>
                             </select>
+                            
+                            <!-- Theme Preview -->
+                            <div id="wizard-theme-preview" style="margin-top: 15px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: #f5f5f5;">
+                                <iframe id="wizard-theme-preview-iframe" 
+                                        style="width: 100%; height: 300px; border: 0; display: block; background: transparent;" 
+                                        src="about:blank"></iframe>
+                            </div>
+                            <p class="help-block">
+                                <i class="fa fa-info-circle"></i> <?= rex_i18n::msg('consent_manager_wizard_theme_preview_hint') ?>
+                            </p>
                         </div>
                         <?php endif ?>
 
@@ -191,6 +204,9 @@ if (rex_addon::exists('project') && rex_addon::get('project')->isAvailable()) {
 
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="rex-icon fa-times"></i> <?= rex_i18n::msg('consent_manager_wizard_close') ?>
+                </button>
                 <button type="button" id="wizard-btn-start" class="btn btn-primary">
                     <i class="rex-icon fa-magic"></i> <?= rex_i18n::msg('consent_manager_wizard_start') ?>
                 </button>
@@ -216,6 +232,27 @@ jQuery(function($) {
     });
     <?php endif ?>
     
+    // Theme Preview laden
+    <?php if (count($themes) > 0): ?>
+    function loadThemePreview(themeUid) {
+        if (themeUid) {
+            var previewUrl = '<?= rex_url::backendPage('consent_manager/theme') ?>&preview=' + encodeURIComponent(themeUid) + '&nofocus';
+            $('#wizard-theme-preview-iframe').attr('src', previewUrl);
+        }
+    }
+    
+    // Initial Preview laden
+    var initialTheme = $('#wizard-theme').val();
+    if (initialTheme) {
+        loadThemePreview(initialTheme);
+    }
+    
+    // Bei Theme-Wechsel Preview aktualisieren
+    $('#wizard-theme').on('change', function() {
+        loadThemePreview($(this).val());
+    });
+    <?php endif ?>
+    
     // Start Button
     $('#wizard-btn-start').on('click', function() {
         var domain = $('#wizard-domain-input').val().trim();
@@ -224,6 +261,9 @@ jQuery(function($) {
             alert('<?= rex_i18n::msg('consent_manager_wizard_error_domain_required') ?>');
             return;
         }
+        
+        // Schließen-Button verstecken während Setup läuft
+        $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').hide();
         
         startWizard(domain);
     });
@@ -308,6 +348,8 @@ jQuery(function($) {
             if (eventSource) {
                 eventSource.close();
             }
+            // Schließen-Button wieder anzeigen bei Fehler
+            $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').show();
             $('#wizard-btn-close').show();
         });
     }
@@ -339,6 +381,9 @@ jQuery(function($) {
         $('#wizard-progress').hide();
         $('#wizard-success').show();
         $('#wizard-success-message').text(data.message);
+        // Schließen-Button wieder anzeigen
+        $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').show();
+        
         $('#wizard-btn-close').show();
         $('#wizard-btn-config').show();
         
