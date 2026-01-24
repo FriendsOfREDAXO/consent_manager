@@ -91,6 +91,17 @@ JavaScript-Dateien umfassend optimiert für bessere Performance:
 - **jQuery-Optimierungen im Backend**: DOM-Elemente gecacht, `one()` statt `on()`/`off()` für einmalige Events
 - **Cookie-Parse-Optimierung**: Cookie-Wert wird einmalig geparst und wiederverwendet
 
+### 🚀 Automatische Frontend-Einbindung
+
+Neues Feature für einfachere Integration ohne Template-Anpassung:
+- **Auto-Inject Option**: Pro Domain aktivierbare automatische Einbindung im Frontend
+- **OUTPUT_FILTER Integration**: Consent Manager wird automatisch vor `</head>` eingefügt
+- **Keine Template-Änderung nötig**: Aktivierung per Checkbox in der Domain-Konfiguration
+- **Intelligente Erkennung**: Nur bei HTML-Seiten mit `</head>` Tag aktiv
+- **Kompatibel mit manueller Einbindung**: Kann parallel zu bestehenden Integrationen genutzt werden
+- **Backend-UI**: Neue Spalte "🚀 Auto-Inject" in der Domain-Übersicht
+- **Neue Datenbank-Spalte**: `auto_inject` in `consent_manager_domain` Tabelle
+
 ---
 
 ## Version 5.2.0 - 19.01.2026

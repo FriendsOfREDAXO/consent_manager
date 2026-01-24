@@ -173,6 +173,49 @@ if (rex::isFrontend()) {
         }
     });
 
+    // Automatische Einbindung im Frontend (wenn pro Domain aktiviert)
+    rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+        $content = $ep->getSubject();
+        
+        // Nur wenn HTML-Inhalt (</head> Tag vorhanden)
+        if (!is_string($content) || !str_contains($content, '</head>')) {
+            return $content;
+        }
+        
+        // Domain-Konfiguration prüfen
+        $domain = rex_request::server('HTTP_HOST', 'string', '');
+        if ('' === $domain) {
+            return $content;
+        }
+        
+        $domain = strtolower($domain);
+        
+        $sql = rex_sql::factory();
+        $sql->setQuery(
+            'SELECT auto_inject FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
+            [$domain],
+        );
+        
+        // Nur einbinden wenn explizit aktiviert
+        if ($sql->getRows() === 0 || (int) $sql->getValue('auto_inject') !== 1) {
+            return $content;
+        }
+        
+        // Consent Manager CSS und JS generieren
+        $frontend = new Frontend(0);
+        $frontend->setDomain($domain);
+        
+        // CSS/JS Fragmente rendern
+        $cssFragment = new rex_fragment();
+        $cssFragment->setVar('consent_manager', $frontend);
+        $css = $cssFragment->parse('ConsentManager/box_cssjs.php');
+        
+        // Vor </head> einbinden
+        $content = str_replace('</head>', $css . '</head>', $content);
+        
+        return $content;
+    }, rex_extension::LATE);
+
     // Debug Helper über OUTPUT_FILTER - einfach und zuverlässig
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
         // User für Frontend initialisieren

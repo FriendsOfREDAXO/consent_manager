@@ -66,6 +66,14 @@ if ('delete' === $func) {
     $select->addOption(rex_i18n::msg('consent_manager_domain_inline_only_mode_enabled'), '1');
     $field->setNotice(rex_i18n::msg('consent_manager_domain_inline_only_mode_notice'));
 
+    // Auto-Inject Configuration
+    $field = $form->addSelectField('auto_inject');
+    $field->setLabel('🚀 Automatische Frontend-Einbindung');
+    $select = $field->getSelect();
+    $select->addOption('Deaktiviert (manuelle Einbindung erforderlich)', '0');
+    $select->addOption('Aktiviert (automatische Einbindung im Frontend)', '1');
+    $field->setNotice('Wenn aktiviert, wird das Consent Manager Script automatisch im Frontend eingebunden. Keine manuelle Integration im Template erforderlich.');
+
     // Theme als Hidden Field (wird in Sidebar gesteuert)
     $field = $form->addHiddenField('theme');
 
@@ -358,6 +366,16 @@ if ($showlist) {
             return '<span class="label label-info"><i class="fa fa-hand-pointer-o" style="margin-right: 5px;"></i>' . rex_i18n::msg('consent_manager_domain_inline_only_mode_enabled') . '</span>';
         }
         return '<span class="label label-default"><i class="fa fa-window-maximize" style="margin-right: 5px;"></i>' . rex_i18n::msg('consent_manager_domain_inline_only_mode_disabled') . '</span>';
+    });
+
+    // Auto-Inject Status Spalte
+    $list->setColumnLabel('auto_inject', '🚀 Auto-Inject');
+    $list->setColumnFormat('auto_inject', 'custom', static function ($params) {
+        $value = (int) $params['value'];
+        if (1 === $value) {
+            return '<span class="label label-success"><i class="fa fa-magic" style="margin-right: 5px;"></i>Aktiviert</span>';
+        }
+        return '<span class="label label-default"><i class="fa fa-code" style="margin-right: 5px;"></i>Manuell</span>';
     });
 
     // oEmbed Status Spalte - nur anzeigen wenn CKE5 verfügbar ist
