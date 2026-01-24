@@ -459,7 +459,7 @@ body.rex-theme-dark .cm-theme-grid {
 .cm_modal-iframe-wrapper {
     width: 100%;
     height: 100%;
-    background: transparent;
+    background: #fff;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 25px 75px rgba(0, 0, 0, 0.6);
@@ -470,7 +470,8 @@ body.rex-theme-dark .cm-theme-grid {
     height: 100%;
     border: none;
     display: block;
-    background: transparent;
+    background: none;
+    opacity: 1;
 }
 </style>';
 
@@ -548,6 +549,7 @@ if (count($addonThemes) > 0) {
         open: function(url) {
             if (this.isOpen || this.isClosing) return;
             
+            console.log('Modal öffnen:', url);
             this.isOpen = true;
             
             // Neues Iframe erstellen
@@ -556,9 +558,18 @@ if (count($addonThemes) > 0) {
             this.iframe.src = url;
             // Kein sandbox-Attribut mehr - verhindert white-screen-Probleme
             
+            // Load-Event für Debugging
+            this.iframe.addEventListener('load', function() {
+                console.log('Iframe geladen:', url);
+            });
+            this.iframe.addEventListener('error', function(e) {
+                console.error('Iframe Fehler:', e);
+            });
+            
             // Iframe einfügen
             this.wrapper.innerHTML = '';
             this.wrapper.appendChild(this.iframe);
+            console.log('Iframe eingefügt', this.iframe);
             
             // Modal anzeigen
             this.overlay.classList.add('active');
