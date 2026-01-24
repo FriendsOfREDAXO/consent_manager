@@ -100,7 +100,30 @@ Neues Feature für einfachere Integration ohne Template-Anpassung:
 - **Intelligente Erkennung**: Nur bei HTML-Seiten mit `</head>` Tag aktiv
 - **Kompatibel mit manueller Einbindung**: Kann parallel zu bestehenden Integrationen genutzt werden
 - **Backend-UI**: Neue Spalte "🚀 Auto-Inject" in der Domain-Übersicht
-- **Neue Datenbank-Spalte**: `auto_inject` in `consent_manager_domain` Tabelle
+- **Neue Datenbank-Spalten**: 
+  - `auto_inject` - Aktivierung der automatischen Einbindung (tinyint)
+  - `auto_inject_reload_on_consent` - Seite bei Consent-Änderung neu laden (tinyint)
+  - `auto_inject_delay` - Verzögerung bis zur Anzeige in Sekunden (int)
+  - `auto_inject_focus` - Fokus auf Consent-Box setzen (Barrierefreiheit) (tinyint)
+
+#### Auto-Inject Konfigurationsoptionen
+
+**🔄 Reload bei Consent-Änderung**
+- Automatisches Neuladen der Seite nach Consent-Speicherung
+- Optimale Integration von Drittanbieter-Scripts die Reload benötigen
+- Default: Deaktiviert
+
+**⏱️ Verzögerte Anzeige**
+- Optional: Verzögerung in Sekunden bis zur Consent-Box-Anzeige
+- Verbessert First-Paint Performance
+- Nützlich für bessere User Experience
+- Default: 0 (sofortige Anzeige)
+
+**♿ Fokus-Management**
+- Automatischer Fokus auf Consent-Box (WCAG 2.1 konform)
+- Verbessert Barrierefreiheit und Keyboard-Navigation
+- Screen-Reader-freundlich
+- Default: Aktiviert
 
 ---
 

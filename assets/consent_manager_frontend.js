@@ -44,6 +44,12 @@ function safeJSONParse(input, fallback) {
         consent_managerBox;
 
     consent_manager_parameters.no_cookie_set = false;
+    
+    // Auto-Inject Options (from backend configuration)
+    var autoInjectOptions = window.consentManagerOptions || {};
+    var reloadOnConsent = autoInjectOptions.reloadOnConsent || false;
+    var showDelay = parseInt(autoInjectOptions.showDelay, 10) || 0;
+    var autoFocus = autoInjectOptions.autoFocus !== false; // default true
 
     // Es gibt keinen Datenschutzcookie, Consent zeigen
     if (typeof cmCookieAPI.get(cmCookieName) === 'undefined') {
@@ -132,7 +138,14 @@ function safeJSONParse(input, fallback) {
     }
 
     if (show) {
-        showBox();
+        // Apply delay if configured
+        if (showDelay > 0) {
+            setTimeout(function() {
+                showBox();
+            }, showDelay * 1000);
+        } else {
+            showBox();
+        }
     }
 
     consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
@@ -361,7 +374,7 @@ function safeJSONParse(input, fallback) {
             });
         }
 
-        if (document.querySelectorAll('.consent_manager-show-box-reload').length || consent_manager_parameters.forcereload === 1) {
+        if (document.querySelectorAll('.consent_manager-show-box-reload').length || consent_manager_parameters.forcereload === 1 || reloadOnConsent) {
             location.reload();
         } else {
             document.dispatchEvent(new CustomEvent('consent_manager-saved', { detail: JSON.stringify(consents) }));
@@ -591,7 +604,7 @@ function safeJSONParse(input, fallback) {
         // This allows screen readers to announce the dialog and users can tab to interactive elements
         // Focusing a button directly would bias user choice and is not recommended
         var dialogWrapper = document.getElementById('consent_manager-wrapper');
-        if (dialogWrapper) {
+        if (dialogWrapper && autoFocus) {
             // Use setTimeout to ensure DOM is ready
             setTimeout(function() {
                 dialogWrapper.focus();

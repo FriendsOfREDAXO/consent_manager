@@ -74,6 +74,27 @@ if ('delete' === $func) {
     $select->addOption('Aktiviert (automatische Einbindung im Frontend)', '1');
     $field->setNotice('Wenn aktiviert, wird das Consent Manager Script automatisch im Frontend eingebunden. Keine manuelle Integration im Template erforderlich.');
 
+    // Auto-Inject: Reload on Consent
+    $field = $form->addSelectField('auto_inject_reload_on_consent');
+    $field->setLabel('🔄 Seite neu laden bei Consent-Änderung');
+    $select = $field->getSelect();
+    $select->addOption('Nein (nur Consent-Cookie setzen)', '0');
+    $select->addOption('Ja (Seite automatisch neu laden)', '1');
+    $field->setNotice('Wenn aktiviert, wird die Seite automatisch neu geladen, sobald der Nutzer seine Consent-Einstellungen ändert. Empfohlen für optimale Integration von Drittanbieter-Scripts.');
+
+    // Auto-Inject: Delay
+    $field = $form->addTextField('auto_inject_delay');
+    $field->setLabel('⏱️ Verzögerung bis Anzeige (Sekunden)');
+    $field->setNotice('Optional: Verzögerung in Sekunden bis zur Anzeige der Consent-Box (0 = sofort). Nützlich um First-Paint zu verbessern.');
+    
+    // Auto-Inject: Focus Management
+    $field = $form->addSelectField('auto_inject_focus');
+    $field->setLabel('♿ Fokus auf Consent-Box setzen');
+    $select = $field->getSelect();
+    $select->addOption('Nein (kein automatischer Fokus)', '0');
+    $select->addOption('Ja (Fokus für Barrierefreiheit)', '1');
+    $field->setNotice('Wenn aktiviert, wird der Fokus automatisch auf die Consent-Box gesetzt (empfohlen für Barrierefreiheit gemäß WCAG).');
+
     // Theme als Hidden Field (wird in Sidebar gesteuert)
     $field = $form->addHiddenField('theme');
 

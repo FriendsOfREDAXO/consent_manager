@@ -197,7 +197,9 @@ if (rex::isFrontend()) {
         
         $sql = rex_sql::factory();
         $sql->setQuery(
-            'SELECT auto_inject FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
+            'SELECT auto_inject, auto_inject_reload_on_consent, auto_inject_delay, auto_inject_focus 
+             FROM ' . rex::getTable('consent_manager_domain') . ' 
+             WHERE uid = ?',
             [$domain],
         );
         
@@ -205,6 +207,11 @@ if (rex::isFrontend()) {
         if ($sql->getRows() === 0 || (int) $sql->getValue('auto_inject') !== 1) {
             return $content;
         }
+        
+        // Auto-Inject Optionen auslesen
+        $reloadOnConsent = (int) $sql->getValue('auto_inject_reload_on_consent') === 1;
+        $delay = (int) $sql->getValue('auto_inject_delay');
+        $focus = (int) $sql->getValue('auto_inject_focus') === 1;
         
         // Consent Manager CSS und JS generieren
         $frontend = new Frontend(0);
@@ -215,8 +222,20 @@ if (rex::isFrontend()) {
         $cssFragment->setVar('consent_manager', $frontend);
         $css = $cssFragment->parse('ConsentManager/box_cssjs.php');
         
+        // JavaScript-Optionen als data-Attribute oder Inline-Script hinzufügen
+        $optionsScript = '';
+        if ($reloadOnConsent || $delay > 0 || !$focus) {
+            $optionsScript = '<script nonce="' . rex_response::getNonce() . '">
+    window.consentManagerOptions = {
+        reloadOnConsent: ' . ($reloadOnConsent ? 'true' : 'false') . ',
+        showDelay: ' . $delay . ',
+        autoFocus: ' . ($focus ? 'true' : 'false') . '
+    };
+</script>';
+        }
+        
         // Vor </head> einbinden
-        $content = str_replace('</head>', $css . '</head>', $content);
+        $content = str_replace('</head>', $optionsScript . $css . '</head>', $content);
         
         return $content;
     }, rex_extension::LATE);
