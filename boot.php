@@ -177,6 +177,11 @@ if (rex::isFrontend()) {
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
         $content = $ep->getSubject();
         
+        // Nur im echten Frontend, nicht im Backend
+        if (rex::isBackend()) {
+            return $content;
+        }
+        
         // Nur wenn HTML-Inhalt (</head> Tag vorhanden)
         if (!is_string($content) || !str_contains($content, '</head>')) {
             return $content;
