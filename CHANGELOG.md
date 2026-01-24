@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.3.0 - XX.XX.XXXX
+## Version 5.3.0 - 24.01.2026
 
 ### 🎨 Domain-spezifische Themes
 
@@ -77,6 +77,19 @@ Script-Felder nun in allen Sprachen editierbar mit automatischem Fallback:
 
 - **Rexstan-Konformität**: Type-Check in `GoogleConsentMode::getDomainConfig()` für strikte Typ-Prüfung (0 Rexstan-Fehler)
 - **JavaScript-Syntax**: Behoben doppelte Deklaration von `cookieName` in `consent_debug.js`
+
+### ⚡ Performance-Optimierungen
+
+JavaScript-Dateien umfassend optimiert für bessere Performance:
+- **Event-Listener dedupliziert**: Redundante `keydown`-Event-Listener zusammengeführt (von 2 auf 1 globaler Listener)
+- **DOM-Query-Caching**: Wiederholte `getElementById`/`querySelector`-Aufrufe durch Variablen-Caching ersetzt
+- **Set statt indexOf**: `consents.indexOf()` durch `Set.has()` ersetzt für O(1) statt O(n) Lookup-Performance
+- **Optimierte Schleifen**: `forEach` mit `every` kombiniert für frühen Abbruch bei negativen Checks
+- **Reduziertes Debug-Logging**: Debug-Ausgaben nur noch bei aktiviertem Debug-Modus
+- **Script-Duplikat-Check verbessert**: Externes Script-Set wird einmalig erstellt statt pro Script-Check
+- **Event-Namespace für Preview**: Keydown-Listener für Theme-Preview nutzt Namespace `.consentPreview` für sauberes Cleanup
+- **jQuery-Optimierungen im Backend**: DOM-Elemente gecacht, `one()` statt `on()`/`off()` für einmalige Events
+- **Cookie-Parse-Optimierung**: Cookie-Wert wird einmalig geparst und wiederverwendet
 
 ---
 

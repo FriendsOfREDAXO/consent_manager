@@ -118,8 +118,9 @@ function safeJSONParse(input, fallback) {
         // array mit cookie uids
         var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
 
+        var consentsSet = new Set(consents);
         cookieUids.forEach(function (uid) {
-            if(!consents.includes(uid)) {
+            if(!consentsSet.has(uid)) {
                 removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
                 addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
             }
@@ -160,61 +161,57 @@ function safeJSONParse(input, fallback) {
         });
     });
 
-    if (document.getElementById('consent_manager-toggle-details')) {
-        document.getElementById('consent_manager-toggle-details').addEventListener('click', function () {
-            document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-            // Update aria-expanded for accessibility
-            var isExpanded = !document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden');
-            this.setAttribute('aria-expanded', isExpanded);
+    var toggleDetailsBtn = document.getElementById('consent_manager-toggle-details');
+    if (toggleDetailsBtn) {
+        var detailElement = document.getElementById('consent_manager-detail');
+        
+        var toggleDetails = function() {
+            detailElement.classList.toggle('consent_manager-hidden');
+            var isExpanded = !detailElement.classList.contains('consent_manager-hidden');
+            toggleDetailsBtn.setAttribute('aria-expanded', isExpanded);
+        };
+        
+        toggleDetailsBtn.addEventListener('click', function () {
+            toggleDetails();
             return false;
         });
-    }
-
-    if (document.getElementById('consent_manager-toggle-details')) {
-        document.getElementById('consent_manager-toggle-details').addEventListener('keydown', function (event) {
-            if (event.key == 'Enter') {
+        
+        toggleDetailsBtn.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
-                document.getElementById('consent_manager-detail').classList.toggle('consent_manager-hidden');
-                // Update aria-expanded
-                var isExpanded = !document.getElementById('consent_manager-detail').classList.contains('consent_manager-hidden');
-                this.setAttribute('aria-expanded', isExpanded);
+                toggleDetails();
                 return false;
             }
         });
     }
 
-    // ESC key to close consent box (Issue #326)
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' || event.key === 'Esc') {
-            var consentBox = document.getElementById('consent_manager-background');
-            if (consentBox && !consentBox.classList.contains('consent_manager-hidden')) {
-                event.preventDefault();
-                event.stopPropagation();
-                if (consent_manager_parameters.hidebodyscrollbar) {
-                    document.querySelector('body').style.overflow = 'auto';
-                }
-                consentBox.classList.add('consent_manager-hidden');
-                consentBox.setAttribute('aria-hidden', 'true');
-                // Trigger close event
-                document.dispatchEvent(new CustomEvent('consent_manager-close'));
-            }
-        }
-    }, true); // Use capture phase for priority
-
-    // Focus Trap: Keep focus within modal dialog (Issue #326)
+    // Combined keyboard handler: ESC key + Focus Trap (Issue #326)
     document.addEventListener('keydown', function(event) {
         var consentBox = document.getElementById('consent_manager-background');
         if (!consentBox || consentBox.classList.contains('consent_manager-hidden')) {
             return;
         }
-
-        // Check if focus is actually inside the consent box
-        var wrapper = document.getElementById('consent_manager-wrapper');
-        if (!wrapper || !wrapper.contains(document.activeElement)) {
+        
+        // ESC key to close
+        if (event.key === 'Escape' || event.key === 'Esc') {
+            event.preventDefault();
+            event.stopPropagation();
+            if (consent_manager_parameters.hidebodyscrollbar) {
+                document.querySelector('body').style.overflow = 'auto';
+            }
+            consentBox.classList.add('consent_manager-hidden');
+            consentBox.setAttribute('aria-hidden', 'true');
+            document.dispatchEvent(new CustomEvent('consent_manager-close'));
             return;
         }
 
+        // Focus Trap: Keep focus within modal dialog
         if (event.key === 'Tab') {
+            var wrapper = document.getElementById('consent_manager-wrapper');
+            if (!wrapper || !wrapper.contains(document.activeElement)) {
+                return;
+            }
+            
             var focusableElements = wrapper.querySelectorAll(
                 'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
             );
@@ -223,14 +220,12 @@ function safeJSONParse(input, fallback) {
             var lastFocusable = focusableArray[focusableArray.length - 1];
 
             if (event.shiftKey) {
-                // Shift + Tab: Wenn auf erstem Element, springe zu letztem
                 if (document.activeElement === firstFocusable) {
                     event.preventDefault();
                     event.stopPropagation();
                     lastFocusable.focus();
                 }
             } else {
-                // Tab: Wenn auf letztem Element, springe zu erstem
                 if (document.activeElement === lastFocusable) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -257,6 +252,7 @@ function safeJSONParse(input, fallback) {
         }
         
         consents = [];
+        var consentsSet = new Set(); // Verwende Set für schnellere Lookups
         var hasOptionalConsent = false;
         cookieData = {
             consents: [],
@@ -276,6 +272,7 @@ function safeJSONParse(input, fallback) {
                     debugLog('saveConsent: Consent erteilt für', cookieUids);
                     cookieUids.forEach(function (uid) {
                         consents.push(uid);
+                        consentsSet.add(uid);
                         debugLog('saveConsent: Führe Script aus für UID', uid);
                         var scriptElement = consent_managerBox.querySelector('[data-uid="script-' + uid + '"]');
                         var unselectElement = consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]');
@@ -567,13 +564,11 @@ function safeJSONParse(input, fallback) {
             return;
         }
         
+        var consentsSet = new Set(consents);
         consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
-            var check = true,
-                cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
-            cookieUids.forEach(function (uid) {
-                if (consents.indexOf(uid) === -1) {
-                    check = false;
-                }
+            var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
+            var check = cookieUids.every(function(uid) {
+                return consentsSet.has(uid);
             });
             if (check) {
                 el.checked = true;
@@ -582,8 +577,9 @@ function safeJSONParse(input, fallback) {
         if (consent_manager_parameters.hidebodyscrollbar) {
             document.querySelector('body').style.overflow = 'hidden';
         }
-        document.getElementById('consent_manager-background').classList.remove('consent_manager-hidden');
-        document.getElementById('consent_manager-background').setAttribute('aria-hidden', 'false');
+        var consentBg = document.getElementById('consent_manager-background');
+        consentBg.classList.remove('consent_manager-hidden');
+        consentBg.setAttribute('aria-hidden', 'false');
         
         // Initialize aria-expanded for toggle button (A11y)
         var toggleBtn = document.getElementById('consent_manager-toggle-details');
@@ -759,19 +755,17 @@ function consent_manager_showBox() {
     var consents = [];
     var cookieValue = cmCookieAPI.get(cmCookieName);
     if (typeof cookieValue !== 'undefined') {
-        cookieData = safeJSONParse(cookieValue, {});
+        var cookieData = safeJSONParse(cookieValue, {});
         if (cookieData.hasOwnProperty('version')) {
             consents = cookieData.consents;
         }
     }
     
+    var consentsSet = new Set(consents);
     consentBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
-        var check = true,
-            cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
-        cookieUids.forEach(function (uid) {
-            if (consents.indexOf(uid) === -1) {
-                check = false;
-            }
+        var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
+        var check = cookieUids.every(function(uid) {
+            return consentsSet.has(uid);
         });
         if (check) {
             el.checked = true;
@@ -786,8 +780,6 @@ function consent_manager_showBox() {
     consentBox.setAttribute('aria-hidden', 'false');
     
     // Focus the dialog wrapper for better accessibility (WCAG 2.1)
-    // This allows screen readers to announce the dialog and users can tab to interactive elements
-    // Focusing a button directly would bias user choice and is not recommended
     var dialogWrapper = document.getElementById('consent_manager-wrapper');
     if (dialogWrapper) {
         setTimeout(function() {
@@ -797,8 +789,10 @@ function consent_manager_showBox() {
 }
 
 function consent_manager_hasconsent(id) {
-    if (typeof cmCookieAPI.get(cmCookieName) !== 'undefined') {
-        return safeJSONParse(cmCookieAPI.get(cmCookieName), {consents: []}).consents.indexOf(id) !== -1;
+    var cookieValue = cmCookieAPI.get(cmCookieName);
+    if (typeof cookieValue === 'undefined') {
+        return false;
     }
-    return false;
+    var cookieData = safeJSONParse(cookieValue, {consents: []});
+    return cookieData.consents.indexOf(id) !== -1;
 }
