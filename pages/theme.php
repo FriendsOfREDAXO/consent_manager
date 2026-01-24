@@ -459,7 +459,7 @@ body.rex-theme-dark .cm-theme-grid {
 .cm_modal-iframe-wrapper {
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: transparent;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 25px 75px rgba(0, 0, 0, 0.6);
@@ -470,7 +470,7 @@ body.rex-theme-dark .cm-theme-grid {
     height: 100%;
     border: none;
     display: block;
-    background: #fff;
+    background: transparent;
 }
 </style>';
 
