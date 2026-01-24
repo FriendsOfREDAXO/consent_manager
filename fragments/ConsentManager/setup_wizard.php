@@ -236,7 +236,8 @@ jQuery(function($) {
     <?php if (count($themes) > 0): ?>
     function loadThemePreview(themeUid) {
         if (themeUid) {
-            var previewUrl = '<?= rex_url::backendPage('consent_manager/theme') ?>&preview=' + encodeURIComponent(themeUid) + '&nofocus';
+            // Dummy-Domain für Preview verwenden (Setup läuft ja bevor Domain existiert)
+            var previewUrl = '<?= rex_url::backendPage('consent_manager/theme') ?>&preview=' + encodeURIComponent(themeUid) + '&preview_domain=preview.local&nofocus';
             $('#wizard-theme-preview-iframe').attr('src', previewUrl);
         }
     }
