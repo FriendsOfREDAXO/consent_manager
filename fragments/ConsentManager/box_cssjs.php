@@ -22,7 +22,8 @@ if (true === rex_request::get('consent_manager_outputjs', 'bool', false)) {
 $addon = rex_addon::get('consent_manager');
 $forceCache = $this->getVar('forceCache');
 $forceReload = $this->getVar('forceReload');
-$inlineMode = $this->getVar('inline', false);
+// Default null statt false: nur true/'true'/'1' wird später geprüft, false würde zu Verwirrung führen
+$inlineMode = $this->getVar('inline', null);
 
 $consentparams = [];
 $consentparams['article'] = rex_article::getCurrentId();
@@ -85,8 +86,8 @@ if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->
     }
 }
 
-// Prüfe explizite inline-Parameter (default: false wenn nicht gesetzt)
-$inlineParam = $this->getVar('inline', false);
+// Prüfe explizite inline-Parameter (default: null wenn nicht gesetzt)
+$inlineParam = $this->getVar('inline', null);
 $explicitInlineParam = (true === $inlineParam || false === $inlineParam);
 
 // Consent ausblenden wenn inline-Modus aktiviert ist
