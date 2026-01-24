@@ -10,16 +10,24 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
 
     public function execute()
     {
+        // Output Buffer SOFORT leeren - noch vor allen anderen Operationen!
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+        
         // Berechtigungsprüfung
         if (!rex::getUser() || !rex::getUser()->isAdmin()) {
-            throw new rex_api_exception('Keine Berechtigung - nur Admins dürfen den Setup-Wizard ausführen');
+            // SSE Headers setzen vor Fehler
+            header('Content-Type: text/event-stream');
+            header('Cache-Control: no-cache');
+            echo "event: error\n";
+            echo 'data: ' . json_encode(['message' => 'Keine Berechtigung - nur Admins']) . "\n\n";
+            flush();
+            exit;
         }
 
         // Session schließen damit andere Requests nicht blockiert werden
         session_write_close();
-
-        // Output Buffer leeren - wichtig für SSE!
-        rex_response::cleanOutputBuffers();
         
         // SSE Headers setzen
         header('Content-Type: text/event-stream');
@@ -30,18 +38,18 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         // Execution Time erhöhen
         set_time_limit(120);
 
-        // Parameter auslesen
-        $domain = rex_request::post('domain', 'string', '');
-        $setupType = rex_request::post('setup_type', 'string', 'standard'); // standard oder minimal
-        $themeUid = rex_request::post('theme_uid', 'string', '');
-        $autoInject = rex_request::post('auto_inject', 'bool', false);
+        // Parameter auslesen (GET weil EventSource kein POST unterstützt)
+        $domain = rex_request::get('domain', 'string', '');
+        $setupType = rex_request::get('setup_type', 'string', 'standard'); // standard oder minimal
+        $themeUid = rex_request::get('theme_uid', 'string', '');
+        $autoInject = rex_request::get('auto_inject', 'int', 0) === 1;
 
         // Domain bereinigen (Protokoll entfernen)
         $domain = $this->cleanDomain($domain);
 
         // Validierung
         if ('' === $domain) {
-            $this->sendError('Domain fehlt');
+            $this->sendError('Domain fehlt (Eingabe: "' . rex_request::get('domain', 'string', '') . '")');
             exit;
         }
 
