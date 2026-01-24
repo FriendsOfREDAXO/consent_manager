@@ -200,6 +200,124 @@ REX_CONSENT_MANAGER[fragment=my_custom_box.php]
 - Im `<head>`-Bereich oder vor `</body>` (empfohlen für Performance)
 - Für Inline-Consent-Modus: `['inline' => true]` als Parameter übergeben
 
+---
+
+## 🚀 Automatische Frontend-Einbindung (Auto-Inject)
+
+**Seit Version 5.3.0:** Consent Manager kann automatisch im Frontend eingebunden werden - ohne manuelle Template-Integration!
+
+### Aktivierung
+
+**Backend:** `Consent Manager → Domains → Domain bearbeiten`
+
+1. **🚀 Automatische Frontend-Einbindung:** `Aktiviert`
+2. **Erweiterte Optionen konfigurieren** (optional)
+3. **Speichern**
+
+✅ **Fertig!** Consent Manager wird automatisch vor `</head>` eingefügt.
+
+### Konfigurationsoptionen
+
+#### 🔄 Reload bei Consent-Änderung
+
+**Zweck:** Seite automatisch neu laden wenn User Consent-Einstellungen ändert
+
+**Wann aktivieren:**
+- Wenn Drittanbieter-Scripts (z.B. Google Analytics, Facebook Pixel) einen Page-Reload benötigen
+- Wenn Scripts nur beim Seitenaufruf initialisiert werden
+- Für optimale Integration mit externen Services
+
+**Default:** Deaktiviert
+
+**Backend-Einstellung:**
+```
+🔄 Seite neu laden bei Consent-Änderung: Ja
+```
+
+#### ⏱️ Verzögerte Anzeige (Delay)
+
+**Zweck:** Consent-Box erst nach X Sekunden anzeigen
+
+**Vorteile:**
+- Verbessert First-Paint Performance
+- Reduziert wahrgenommene Ladezeit
+- Bessere User Experience
+- Nützlich für Content-fokussierte Websites
+
+**Default:** 0 (sofortige Anzeige)
+
+**Backend-Einstellung:**
+```
+⏱️ Verzögerung bis Anzeige (Sekunden): 2
+```
+
+**Empfohlene Werte:**
+- `0` - Sofort (Standard, rechtlich sicher)
+- `1-2` - Kurze Verzögerung (guter Kompromiss)
+- `3-5` - Längere Verzögerung (nur wenn rechtlich abgesichert)
+
+⚠️ **Rechtlicher Hinweis:** Verzögerung kann rechtliche Implikationen haben - mit Datenschutzbeauftragten klären!
+
+#### ♿ Fokus auf Consent-Box setzen
+
+**Zweck:** Automatischer Fokus auf Consent-Box für Barrierefreiheit
+
+**Vorteile:**
+- WCAG 2.1 konform
+- Screen-Reader-freundlich
+- Bessere Keyboard-Navigation
+- Fokus auf Dialog statt Buttons (unbiased)
+
+**Default:** Aktiviert (empfohlen)
+
+**Backend-Einstellung:**
+```
+♿ Fokus auf Consent-Box setzen: Ja
+```
+
+**Technische Details:**
+- Fokus wird auf Dialog-Wrapper gesetzt (nicht auf Buttons)
+- Verhindert ungewollte Vorauswahl
+- Screen-Reader können Dialog vollständig erfassen
+
+### Manuelle Optionen (für Template-Integration)
+
+**Bei manueller Einbindung** können die Auto-Inject-Optionen auch programmatisch gesetzt werden:
+
+```php
+<?php
+use FriendsOfRedaxo\ConsentManager\Frontend;
+?>
+<script nonce="<?= rex_response::getNonce() ?>">
+    // Consent Manager Optionen setzen (vor Frontend-JS!)
+    window.consentManagerOptions = {
+        reloadOnConsent: true,    // Seite bei Consent-Änderung neu laden
+        showDelay: 2,              // 2 Sekunden Verzögerung bis Anzeige
+        autoFocus: true            // Fokus auf Box setzen (Barrierefreiheit)
+    };
+</script>
+<?php
+// Standard Consent Manager Integration
+echo Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php');
+?>
+```
+
+**Wichtig:** `window.consentManagerOptions` **VOR** dem Consent Manager Script setzen!
+
+### Kompatibilität
+
+✅ **Funktioniert parallel:**
+- Auto-Inject **UND** manuelle Template-Integration möglich
+- `window.consentManagerOptions` überschreibt Auto-Inject-Optionen
+- Keine Konflikte bei doppelter Einbindung
+
+✅ **Intelligent:**
+- Nur im Frontend aktiv (Backend ignoriert)
+- Nur bei HTML-Seiten mit `</head>` Tag
+- Kein Overhead wenn deaktiviert
+
+---
+
 ### 4. Cookie-Einstellungen nachträglich aufrufen
 
 **⚠️ Wichtig:** Cookie-Einstellungen jederzeit wieder aufrufbar machen (rechtliche Anforderung).

@@ -125,6 +125,12 @@ Neues Feature für einfachere Integration ohne Template-Anpassung:
 - Screen-Reader-freundlich
 - Default: Aktiviert
 
+**✨ Manuelle Integration unterstützt**
+- Optionen auch bei Template-Integration nutzbar
+- `window.consentManagerOptions` Object vor Frontend-JS setzen
+- Überschreibt Auto-Inject-Einstellungen
+- Vollständige Kontrolle über Verhalten
+
 ---
 
 ## Version 5.2.0 - 19.01.2026
