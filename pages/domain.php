@@ -234,7 +234,6 @@ if ('delete' === $func) {
                 <iframe
                     class="cm-domain-theme-preview-iframe"
                     id="' . $previewId . '-iframe"
-                    sandbox="allow-scripts allow-same-origin"
                 ></iframe>
             </div>
             <a href="#" id="' . $previewId . '-link" target="_blank" class="btn btn-xs btn-default btn-block" style="font-size: 11px;">
