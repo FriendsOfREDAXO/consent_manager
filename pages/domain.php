@@ -250,6 +250,13 @@ if ('delete' === $func) {
         var hiddenThemeInput = document.querySelector(\'input[type="hidden"][id*="theme"]\');
         var baseUrl = "' . $previewBaseUrl . '";
         
+        console.log("Theme Preview Init", {
+            previewContainer: !!previewContainer,
+            previewIframe: !!previewIframe,
+            themeSelect: !!themeSelect,
+            baseUrl: baseUrl
+        });
+        
         function scalePreview() {
             if (previewIframe && previewContainer) {
                 var container = previewContainer.querySelector(".cm-domain-theme-preview-container");
@@ -263,6 +270,7 @@ if ('delete' === $func) {
         
         function updatePreview() {
             var theme = themeSelect ? themeSelect.value : "";
+            console.log("updatePreview called", theme);
             
             // Hidden Input synchronisieren
             if (hiddenThemeInput) {
@@ -271,6 +279,7 @@ if ('delete' === $func) {
             
             if (theme) {
                 var url = baseUrl + "&preview=" + encodeURIComponent(theme);
+                console.log("Loading preview URL:", url);
                 previewIframe.src = url;
                 previewLink.href = url;
                 previewContainer.style.display = "block";
@@ -283,18 +292,30 @@ if ('delete' === $func) {
         
         // Wait for rex:ready if PJAX is active
         function init() {
+            console.log("Theme Preview init() called");
             // Suche erneut nach hidden input (könnte durch PJAX neu geladen sein)
             hiddenThemeInput = document.querySelector(\'input[type="hidden"][id*="theme"]\');
             if (themeSelect) {
+                console.log("ThemeSelect found, current value:", themeSelect.value);
                 updatePreview();
                 themeSelect.addEventListener("change", updatePreview);
                 window.addEventListener("resize", scalePreview);
+            } else {
+                console.error("ThemeSelect not found!");
             }
         }
         
-        // Nur entweder direkt ODER im rex:ready-Handler aufrufen, nicht beides
-        if (typeof jQuery !== "undefined" && jQuery(document).data("pjax")) {
-            jQuery(document).on("rex:ready", init);
+        // Immer sowohl direkt als auch per rex:ready aufrufen
+        if (typeof jQuery !== "undefined") {
+            jQuery(document).on("rex:ready", function() {
+                console.log("rex:ready triggered");
+                init();
+            });
+        }
+        
+        // Auch direkt aufrufen für Nicht-PJAX-Szenario
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", init);
         } else {
             init();
         }
