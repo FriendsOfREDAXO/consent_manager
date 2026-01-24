@@ -20,16 +20,112 @@ $form = $this->getVar('form');
 /** @var ?rex_csrf_token $csrf */
 $csrf = $this->getVar('csrf');
 
+// Prüfen ob bereits Domains konfiguriert sind
+$sql = rex_sql::factory();
+$sql->setQuery('SELECT COUNT(*) as cnt FROM ' . rex::getTable('consent_manager_domain'));
+$hasDomains = (int) $sql->getValue('cnt') > 0;
+
 ?>
 
 <div class="rex-addon-output">
-    <!-- Setup Wizard Button -->
+    <!-- Setup Wizard / Domain Setup Button -->
+    <style>
+        .quickstart-btn, .setup-domain-btn {
+            padding: 15px 30px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: visible;
+        }
+        
+        .quickstart-btn::before, .setup-domain-btn::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(90deg, #337ab7, #5bc0de, #5cb85c, #337ab7);
+            background-size: 300% 300%;
+            border-radius: 10px;
+            z-index: -1;
+            opacity: 0;
+            animation: gradient-border 4s ease infinite;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Setup Domain Button - permanente Animation */
+        .setup-domain-btn::before {
+            opacity: 1;
+        }
+        
+        .quickstart-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .quickstart-btn:hover, .setup-domain-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(51, 122, 183, 0.3);
+        }
+        
+        /* Setup Domain Button - pulsierende Animation */
+        .setup-domain-btn {
+            animation: pulse-scale 2s ease-in-out infinite;
+        }
+        
+        @keyframes gradient-border {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes pulse-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        /* Dark Mode Support für Button-Text */
+        body.rex-theme-dark button.setup-domain-btn,
+        body.rex-theme-dark button.setup-domain-btn *,
+        body.rex-theme-dark button.quickstart-btn,
+        body.rex-theme-dark button.quickstart-btn *,
+        body.rex-theme-dark .btn-primary.quickstart-btn,
+        body.rex-theme-dark .btn-primary.quickstart-btn *,
+        body.rex-theme-dark .btn-success.setup-domain-btn,
+        body.rex-theme-dark .btn-success.setup-domain-btn * {
+            color: #ffffff !important;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body:not(.rex-theme-light) button.setup-domain-btn,
+            body:not(.rex-theme-light) button.setup-domain-btn *,
+            body:not(.rex-theme-light) button.quickstart-btn,
+            body:not(.rex-theme-light) button.quickstart-btn *,
+            body:not(.rex-theme-light) .btn-primary.quickstart-btn,
+            body:not(.rex-theme-light) .btn-primary.quickstart-btn *,
+            body:not(.rex-theme-light) .btn-success.setup-domain-btn,
+            body:not(.rex-theme-light) .btn-success.setup-domain-btn * {
+                color: #ffffff !important;
+            }
+        }
+    </style>
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-md-12 text-right">
-            <button type="button" class="btn btn-warning btn-lg" data-toggle="modal" data-target="#setup-wizard-modal" style="padding: 12px 25px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 6px;">
-                <i class="rex-icon fa-magic" style="margin-right: 8px; font-size: 18px;"></i> 
-                <strong><?= rex_i18n::msg('consent_manager_wizard_button') ?></strong>
+            <?php if ($hasDomains): ?>
+            <button type="button" class="btn btn-primary btn-lg quickstart-btn" data-toggle="modal" data-target="#setup-wizard-modal">
+                <i class="rex-icon fa-magic" style="margin-right: 10px;"></i>
+                <strong>Setup Wizard</strong>
+                <i class="rex-icon fa-chevron-right" style="margin-left: 10px; font-size: 14px; opacity: 0.8;"></i>
             </button>
+            <?php else: ?>
+            <button type="button" class="btn btn-success btn-lg setup-domain-btn" data-toggle="modal" data-target="#setup-wizard-modal">
+                <i class="rex-icon fa-rocket" style="margin-right: 10px;"></i>
+                <strong><?= rex_i18n::msg('consent_manager_setup_first_domain') ?></strong>
+                <i class="rex-icon fa-chevron-right" style="margin-left: 10px; font-size: 14px; opacity: 0.8;"></i>
+            </button>
+            <?php endif ?>
         </div>
     </div>
 
@@ -149,41 +245,9 @@ $csrf = $this->getVar('csrf');
             </div>
         </div>
     </div>
-    
-    <!-- Nach dem Import - Nächste Schritte -->
-    <div class="row" style="margin-top: 30px;">
-        <div class="col-md-12">
-            <div class="alert alert-info">
-                <h4><i class="rex-icon fa-info-circle"></i> <?= rex_i18n::msg('consent_manager_config_after_import_title') ?></h4>
-                <div class="row">
-                    <div class="col-md-3">
-                        <strong><?= rex_i18n::msg('consent_manager_config_step_domains') ?></strong><br>
-                        <a href="<?= rex_url::currentBackendPage(['page' => 'consent_manager/domain']) ?>">
-                            <i class="rex-icon fa-globe"></i> Zu Domains
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <strong><?= rex_i18n::msg('consent_manager_config_step_services') ?></strong><br>
-                        <a href="<?= rex_url::currentBackendPage(['page' => 'consent_manager/cookie']) ?>">
-                            <i class="rex-icon fa-cog"></i> Zu Services
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <strong><?= rex_i18n::msg('consent_manager_config_step_texts') ?></strong><br>
-                        <a href="<?= rex_url::currentBackendPage(['page' => 'consent_manager/text']) ?>">
-                            <i class="rex-icon fa-edit"></i> Zu Texte
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <strong><?= rex_i18n::msg('consent_manager_config_step_theme') ?></strong><br>
-                        <a href="<?= rex_url::currentBackendPage(['page' => 'consent_manager/theme']) ?>">
-                            <i class="rex-icon fa-paint-brush"></i> Zu Themes
-                        </a>
-                    </div>
-                </div>
-                <hr>
-                <p><?= rex_i18n::msg('consent_manager_config_template_info') ?></p>
-            </div>
-        </div>
-    </div>
 </div>
+<?php
+// Setup Wizard Modal einbinden
+$fragment = new rex_fragment();
+echo $fragment->parse('ConsentManager/setup_wizard.php');
+?>

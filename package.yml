@@ -14,17 +14,22 @@ page:
       icon: rex-icon fa-cog
     cookiegroup:
       title: "translate:consent_manager_cookiegroups"
+      icon: rex-icon fa-folder-open
     cookie:
       title: "translate:consent_manager_cookies"
+      icon: rex-icon fa-cog
     text:
       title: "translate:consent_manager_texts"
+      icon: rex-icon fa-file-text-o
     domain:
       title: "translate:consent_manager_domains"
+      icon: rex-icon fa-globe
     theme:
       title: "translate:consent_manager_theme"
+      icon: rex-icon fa-paint-brush
     theme_editor:
       title: "Theme Editor"
-      icon: rex-icon fa-paint-brush
+      icon: rex-icon fa-magic
     log:
       title: "translate:consent_manager_log"
     help:

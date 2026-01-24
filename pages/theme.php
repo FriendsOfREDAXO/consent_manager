@@ -24,6 +24,36 @@ if ('|1|' === $addon->getConfig('outputowncss', false)) {
     echo rex_view::error(rex_i18n::msg('consent_manager_config_owncss_active'));
 }
 
+// Prüfen ob mindestens eine Domain angelegt wurde
+$domainCount = rex_sql::factory();
+$domainCount->setQuery('SELECT COUNT(*) as cnt FROM ' . rex::getTable('consent_manager_domain'));
+$hasDomains = (int) $domainCount->getValue('cnt') > 0;
+
+if (!$hasDomains) {
+    echo rex_view::warning(
+        '<h3><i class="fa fa-globe"></i> Keine Domains konfiguriert</h3>' .
+        '<p>Bitte legen Sie zuerst mindestens eine Domain an, bevor Sie Themes konfigurieren.</p>' .
+        '<p><a href="' . rex_url::backendPage('consent_manager/domain') . '" class="btn btn-primary">' .
+        '<i class="fa fa-plus"></i> Domain anlegen</a></p>'
+    );
+    return;
+}
+
+// Prüfen ob Cookie-Gruppen einer Domain zugeordnet sind
+$groupCount = rex_sql::factory();
+$groupCount->setQuery('SELECT COUNT(*) as cnt FROM ' . rex::getTable('consent_manager_cookiegroup') . ' WHERE domain IS NOT NULL AND domain != ""');
+$hasGroups = (int) $groupCount->getValue('cnt') > 0;
+
+if (!$hasGroups) {
+    echo rex_view::warning(
+        '<h3><i class="fa fa-list"></i> Keine Cookie-Gruppen konfiguriert</h3>' .
+        '<p>Cookie-Gruppen müssen einer Domain zugeordnet sein, bevor Sie Themes verwenden können.</p>' .
+        '<p><a href="' . rex_url::backendPage('consent_manager/cookiegroup') . '" class="btn btn-primary">' .
+        '<i class="fa fa-plus"></i> Cookie-Gruppen verwalten</a></p>'
+    );
+    return;
+}
+
 // check Konfiguration
 if (false === Utility::consentConfigured()) {
     echo rex_view::warning(rex_i18n::msg('consent_manager_cookiegroup_nodomain_notice'));

@@ -2,6 +2,24 @@
 
 ## Version 5.3.0 - 24.01.2026
 
+**🚀 Release-Highlights:**  
+Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option, erweiterte Debug-Tools mit Cookie-Analyse und Performance-Optimierungen.
+
+---
+
+### 🧙 Setup-Wizard (NEU)
+
+Interaktiver Setup-Assistent für schnelle Erstkonfiguration:
+- **Quickstart-Button** mit animiertem Farbverlauf-Rahmen auf der Konfigurationsseite
+- **4-Schritt-Wizard**: Domain einrichten → Services importieren → Theme auswählen → Fertig
+- **SSE-basierte Fortschrittsanzeige** mit Echtzeit-Feedback
+- **YRewrite-Integration**: Automatische Auswahl aus vorhandenen YRewrite-Domains
+- **Auto-Inject-Option**: Toggle-Switch für automatische Frontend-Einbindung
+- **Standard/Minimal Setup**: Auswahl zwischen 25 vorkonfigurierten Services oder nur notwendigen Cookies
+- **Duplikat-Prävention**: Überspringt bereits vorhandene Services automatisch
+- **Success-Screen**: Übersichtliche Navigation zu Cookie-Gruppen, Domain, Services, Theme und Texte
+- **Required Group Assignment**: Die "Technisch notwendig"-Gruppe wird automatisch der neuen Domain zugeordnet
+
 ### 🎨 Domain-spezifische Themes
 
 Jede Domain kann nun ein eigenes Theme verwenden:

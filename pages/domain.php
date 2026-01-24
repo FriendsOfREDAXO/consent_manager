@@ -24,14 +24,77 @@ if ('delete' === $func) {
     $form->addParam('start', rex_request::request('start', 'int', 0));
     $form->setApplyUrl(rex_url::currentBackendPage());
 
+    // YRewrite Domains laden falls verfügbar
+    $yrewriteDomains = [];
+    $existingDomains = [];
+    
+    // Bereits konfigurierte Domains laden (außer der aktuellen beim Edit)
+    $sql = rex_sql::factory();
+    $whereClause = $form->isEditMode() ? 'id != ' . $id : '1=1';
+    $sql->setQuery('SELECT uid FROM ' . rex::getTable('consent_manager_domain') . ' WHERE ' . $whereClause);
+    foreach ($sql as $row) {
+        $existingDomains[] = $row->getValue('uid');
+    }
+    
+    $yrewriteSelectHtml = '';
+    if (rex_addon::exists('yrewrite') && rex_addon::get('yrewrite')->isAvailable()) {
+        foreach (rex_yrewrite::getDomains() as $domain) {
+            $cleanDomain = preg_replace('#^https?://#i', '', $domain->getUrl());
+            $cleanDomain = rtrim($cleanDomain, '/');
+            $cleanDomain = strtolower($cleanDomain);
+            
+            // Nur nicht-konfigurierte Domains anbieten
+            if (!in_array($cleanDomain, $existingDomains, true)) {
+                $yrewriteDomains[] = $cleanDomain;
+            }
+        }
+        
+        // HTML für YRewrite Select generieren (nur im Add-Modus)
+        if (!$form->isEditMode() && count($yrewriteDomains) > 0) {
+            $yrewriteSelectHtml = '
+            <div class="form-group">
+                <label class="control-label">
+                    <i class="rex-icon fa-globe"></i> ' . rex_i18n::msg('consent_manager_domain') . ' 
+                    <small class="text-muted">(aus YRewrite wählen - ' . count($yrewriteDomains) . ' verfügbar)</small>
+                </label>
+                <select id="yrewrite-domain-select" class="form-control selectpicker" data-live-search="true" data-size="8">
+                    <option value="">-- Oder eigene Domain eingeben --</option>';
+            foreach ($yrewriteDomains as $domain) {
+                $yrewriteSelectHtml .= '<option value="' . rex_escape($domain) . '">' . rex_escape($domain) . '</option>';
+            }
+            $yrewriteSelectHtml .= '
+                </select>
+                <p class="help-block"><i class="fa fa-info-circle"></i> Wählen Sie eine Domain aus YRewrite oder geben Sie eine eigene ein.</p>
+            </div>';
+        } elseif (!$form->isEditMode() && count($yrewriteDomains) === 0) {
+            // Debug-Info wenn keine Domains verfügbar
+            $debugMsg = 'YRewrite ist aktiv, aber keine Domains verfügbar. ';
+            if (count($existingDomains) > 0) {
+                $debugMsg .= 'Bereits konfiguriert: ' . implode(', ', $existingDomains);
+            } else {
+                $debugMsg .= 'Keine YRewrite-Domains angelegt.';
+            }
+            $yrewriteSelectHtml = '<!-- ' . $debugMsg . ' -->';
+        }
+    } elseif (!$form->isEditMode()) {
+        // YRewrite nicht verfügbar
+        $yrewriteSelectHtml = '<!-- YRewrite ist nicht installiert oder nicht aktiviert -->';
+    }
+
+    // YRewrite Select als HTML-Feld einfügen (wird nicht in DB gespeichert)
+    if ($yrewriteSelectHtml !== '') {
+        $field = $form->addRawField($yrewriteSelectHtml);
+    }
+
     $field = $form->addTextField('uid');
-    $field->setLabel(rex_i18n::msg('consent_manager_domain'));
+    $field->setLabel(count($yrewriteDomains) > 0 && !$form->isEditMode() ? '<small class="text-muted">Oder eigene Domain eingeben:</small>' : rex_i18n::msg('consent_manager_domain'));
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_empty_msg'));
     $field->getValidator()->add('custom', rex_i18n::msg('consent_manager_domain_malformed_msg'), RexFormSupport::validateHostname(...));
     $field->getValidator()->add('custom', 'Domain muss in Kleinbuchstaben eingegeben werden (z.B. "example.com" statt "Example.com")', static function ($value) {
         return RexFormSupport::validateLowercase($value);
     });
     $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
+    $field->setAttribute('id', 'domain-uid-field');
 
     $field = $form->addLinkmapField('privacy_policy');
     $field->setLabel(rex_i18n::msg('consent_manager_domain_privacy_policy')); /** @phpstan-ignore-line */
@@ -342,6 +405,57 @@ if ('delete' === $func) {
         }
     })();
     </script>';
+    
+    // YRewrite Domain Select → TextField Sync Script
+    if (!$form->isEditMode() && count($yrewriteDomains) > 0) {
+        $sidebar .= '
+        <script nonce="' . rex_response::getNonce() . '">
+        (function() {
+            function initYRewriteSync() {
+                var yrewriteSelect = document.getElementById("yrewrite-domain-select");
+                var domainField = document.getElementById("domain-uid-field");
+                
+                if (yrewriteSelect && domainField) {
+                    // Bootstrap Selectpicker initialisieren falls verfügbar
+                    if (typeof jQuery !== "undefined" && jQuery.fn.selectpicker) {
+                        jQuery(yrewriteSelect).selectpicker({
+                            liveSearch: true,
+                            size: 8
+                        });
+                    }
+                    
+                    // Sync: Select → TextField
+                    yrewriteSelect.addEventListener("change", function() {
+                        if (this.value) {
+                            domainField.value = this.value;
+                            domainField.focus();
+                        }
+                    });
+                    
+                    // Wenn TextField geändert wird, Select zurücksetzen
+                    domainField.addEventListener("input", function() {
+                        if (yrewriteSelect.value !== this.value) {
+                            yrewriteSelect.value = "";
+                            if (typeof jQuery !== "undefined" && jQuery.fn.selectpicker) {
+                                jQuery(yrewriteSelect).selectpicker("refresh");
+                            }
+                        }
+                    });
+                }
+            }
+            
+            // Init mit rex:ready und DOMContentLoaded
+            if (typeof jQuery !== "undefined") {
+                jQuery(document).on("rex:ready", initYRewriteSync);
+            }
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", initYRewriteSync);
+            } else {
+                initYRewriteSync();
+            }
+        })();
+        </script>';
+    }
     
     // 2-Spalten-Layout
     $content = '

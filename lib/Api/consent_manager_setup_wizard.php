@@ -4,6 +4,9 @@
  * SSE API: Setup Wizard mit Live-Feedback
  * Führt automatisches Setup durch: Domain, Import, Theme, Auto-Inject
  */
+
+use FriendsOfRedaxo\ConsentManager\JsonSetup;
+
 class rex_api_consent_manager_setup_wizard extends rex_api_function
 {
     protected $published = true;
@@ -41,8 +44,16 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         // Parameter auslesen (GET weil EventSource kein POST unterstützt)
         $domain = rex_request::get('domain', 'string', '');
         $setupType = rex_request::get('setup_type', 'string', 'standard'); // standard oder minimal
-        $themeUid = rex_request::get('theme_uid', 'string', '');
         $autoInject = rex_request::get('auto_inject', 'int', 0) === 1;
+        $privacyPolicy = rex_request::get('privacy_policy', 'int', 0);
+        $legalNotice = rex_request::get('legal_notice', 'int', 0);
+        
+        // Theme wird nicht mehr übergeben - immer Default-Theme verwenden
+        
+        // Prüfen ob bereits Services existieren
+        $existingServicesCount = rex_sql::factory();
+        $existingServicesCount->setQuery('SELECT COUNT(*) as cnt FROM ' . rex::getTable('consent_manager_cookie'));
+        $hasExistingServices = (int) $existingServicesCount->getValue('cnt') > 0;
 
         // Domain bereinigen (Protokoll entfernen)
         $domain = $this->cleanDomain($domain);
@@ -59,26 +70,41 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         try {
             // Schritt 1: Domain anlegen/aktualisieren
             $this->sendProgress(10, 'Domain-Konfiguration erstellen...');
-            $domainId = $this->createOrUpdateDomain($domain, $autoInject);
+            $this->sendEvent('debug', ['step' => 'before_domain', 'domain' => $domain, 'auto_inject' => $autoInject]);
+            
+            $domainId = $this->createOrUpdateDomain($domain, $autoInject, $privacyPolicy, $legalNotice);
+            
+            $this->sendEvent('debug', ['step' => 'after_domain', 'domain_id' => $domainId]);
             $this->sendEvent('domain_created', ['id' => $domainId, 'domain' => $domain]);
             usleep(500000); // 0.5s Pause für UX
 
-            // Schritt 2: Standard-Setup importieren
-            if ('standard' === $setupType) {
-                $this->sendProgress(30, 'Standard-Setup importieren (Google Analytics, YouTube, Vimeo, ...)');
-                $this->importStandardSetup();
-                $this->sendEvent('import_complete', ['type' => 'standard']);
+            // Schritt 2: Standard-Setup importieren (nur wenn noch keine Services)
+            if ($hasExistingServices) {
+                $this->sendProgress(30, 'Services bereits vorhanden - Import übersprungen');
+                $this->sendEvent('import_skipped', ['reason' => 'services_exist']);
+                usleep(500000);
             } else {
-                $this->sendProgress(30, 'Minimal-Setup importieren (nur Cookie-Gruppen)');
-                $this->importMinimalSetup();
-                $this->sendEvent('import_complete', ['type' => 'minimal']);
+                if ('standard' === $setupType) {
+                    $this->sendProgress(30, 'Standard-Setup importieren (Google Analytics, YouTube, Vimeo, ...)');
+                    $this->importStandardSetup();
+                    $this->sendEvent('import_complete', ['type' => 'standard']);
+                } else {
+                    $this->sendProgress(30, 'Minimal-Setup importieren (nur Cookie-Gruppen)');
+                    $this->importMinimalSetup();
+                    $this->sendEvent('import_complete', ['type' => 'minimal']);
+                }
+                usleep(500000);
             }
-            usleep(800000); // 0.8s Pause
 
-            // Schritt 3: Theme zuweisen
-            $this->sendProgress(60, 'Theme konfigurieren...');
-            $themeAssigned = $this->assignTheme($domain, $themeUid);
-            $this->sendEvent('theme_assigned', ['theme' => $themeUid, 'success' => $themeAssigned]);
+            // Schritt 2.5: Cookie-Gruppen der Domain zuordnen
+            $this->sendProgress(50, 'Cookie-Gruppen der Domain zuordnen...');
+            $this->assignGroupsToDomain($domainId);
+            $this->sendEvent('groups_assigned', ['domain_id' => $domainId]);
+            usleep(500000);
+
+            // Schritt 3: Default-Theme setzen (konfiguriert nicht pro Domain)
+            $this->sendProgress(60, 'Default-Theme wird verwendet...');
+            $this->sendEvent('theme_assigned', ['theme' => 'Default']);
             usleep(500000);
 
             // Schritt 4: Cache leeren
@@ -99,7 +125,6 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
                 'message' => 'Consent Manager erfolgreich eingerichtet!',
                 'domain' => $domain,
                 'setup_type' => $setupType,
-                'theme' => $themeUid,
                 'auto_inject' => $autoInject,
                 'url' => rex_url::backendPage('consent_manager/domain'),
             ]);
@@ -112,7 +137,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
     }
 
     /**
-     * Domain bereinigen - entfernt Protokoll und Trailing Slashes
+     * Domain bereinigen - entfernt Protokoll und Trailing Slashes, behält Port
      */
     private function cleanDomain(string $domain): string
     {
@@ -125,11 +150,14 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         // Trailing Slashes entfernen
         $domain = rtrim($domain, '/');
         
-        // Port entfernen falls vorhanden
-        $domain = preg_replace('#:\d+$#', '', $domain);
+        // Port BEIBEHALTEN (z.B. localhost:8443)
+        // $domain = preg_replace('#:\d+$#', '', $domain);
         
-        // Pfade entfernen falls vorhanden
-        $domain = strtok($domain, '/');
+        // Pfade entfernen falls vorhanden (aber Port behalten)
+        // Nur bis zum ersten Slash, aber nach dem Port
+        if (false !== ($pos = strpos($domain, '/'))) {
+            $domain = substr($domain, 0, $pos);
+        }
         
         // Zu lowercase
         $domain = strtolower($domain);
@@ -140,36 +168,70 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
     /**
      * Domain in Datenbank anlegen oder aktualisieren
      */
-    private function createOrUpdateDomain(string $domain, bool $autoInject): int
+    private function createOrUpdateDomain(string $domain, bool $autoInject, int $privacyPolicy = 0, int $legalNotice = 0): int
     {
-        $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('consent_manager_domain'));
-        
-        // Prüfen ob Domain bereits existiert
-        $existing = rex_sql::factory();
-        $existing->setQuery('SELECT id FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?', [$domain]);
-        
-        if ($existing->getRows() > 0) {
-            // Update
-            $sql->setWhere(['uid' => $domain]);
+        try {
+            $sql = rex_sql::factory();
+            $sql->setTable(rex::getTable('consent_manager_domain'));
+            
+            // Prüfen ob Domain bereits existiert
+            $existing = rex_sql::factory();
+            $existing->setQuery('SELECT id FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?', [$domain]);
+            
+            $domainExists = $existing->getRows() > 0;
+            $this->sendEvent('debug', ['check_domain' => $domain, 'exists' => $domainExists, 'rows' => $existing->getRows()]);
+            
+            if ($domainExists) {
+                // Update existierende Domain
+                $existingId = (int) $existing->getValue('id');
+                $this->sendEvent('debug', ['action' => 'update', 'id' => $existingId]);
+                
+                $sql->setWhere(['uid' => $domain]);
+                $sql->setValue('auto_inject', $autoInject ? 1 : 0);
+                $sql->setValue('auto_inject_reload_on_consent', 0);
+                $sql->setValue('auto_inject_delay', 0);
+                $sql->setValue('auto_inject_focus', 1);
+                if ($privacyPolicy > 0) {
+                    $sql->setValue('privacy_policy', $privacyPolicy);
+                }
+                if ($legalNotice > 0) {
+                    $sql->setValue('legal_notice', $legalNotice);
+                }
+                $sql->update();
+                
+                $this->sendEvent('debug', ['action' => 'updated', 'id' => $existingId]);
+                return $existingId;
+            }
+            
+            // Insert neue Domain
+            $this->sendEvent('debug', ['action' => 'insert', 'domain' => $domain]);
+            
+            $sql->setValue('uid', $domain);
             $sql->setValue('auto_inject', $autoInject ? 1 : 0);
             $sql->setValue('auto_inject_reload_on_consent', 0);
             $sql->setValue('auto_inject_delay', 0);
             $sql->setValue('auto_inject_focus', 1);
-            $sql->update();
+            if ($privacyPolicy > 0) {
+                $sql->setValue('privacy_policy', $privacyPolicy);
+            }
+            if ($legalNotice > 0) {
+                $sql->setValue('legal_notice', $legalNotice);
+            }
+            $sql->insert();
             
-            return (int) $existing->getValue('id');
+            $domainId = (int) $sql->getLastId();
+            $this->sendEvent('debug', ['action' => 'inserted', 'id' => $domainId, 'last_id' => $sql->getLastId()]);
+            
+            if (0 === $domainId) {
+                throw new \Exception('Domain konnte nicht angelegt werden - keine ID zurückgegeben');
+            }
+            
+            return $domainId;
+            
+        } catch (\Exception $e) {
+            $this->sendEvent('debug', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            throw new \Exception('Fehler beim Anlegen der Domain: ' . $e->getMessage());
         }
-        
-        // Insert
-        $sql->setValue('uid', $domain);
-        $sql->setValue('auto_inject', $autoInject ? 1 : 0);
-        $sql->setValue('auto_inject_reload_on_consent', 0);
-        $sql->setValue('auto_inject_delay', 0);
-        $sql->setValue('auto_inject_focus', 1);
-        $sql->insert();
-        
-        return (int) $sql->getLastId();
     }
 
     /**
@@ -177,8 +239,16 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
      */
     private function importStandardSetup(): void
     {
-        $importer = new \FriendsOfRedaxo\ConsentManager\Importer();
-        $importer->importStandard();
+        try {
+            $jsonSetupFile = rex_path::addon('consent_manager', 'setup/default_setup.json');
+            if (!file_exists($jsonSetupFile)) {
+                throw new \Exception('Setup-Datei nicht gefunden: ' . $jsonSetupFile);
+            }
+            // false = deleteExisting NICHT aktivieren (Domain behalten!)
+            JsonSetup::importSetup($jsonSetupFile, false, 'update');
+        } catch (\Exception $e) {
+            throw new \Exception('Import fehlgeschlagen: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -186,8 +256,16 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
      */
     private function importMinimalSetup(): void
     {
-        $importer = new \FriendsOfRedaxo\ConsentManager\Importer();
-        $importer->importMinimal();
+        try {
+            $jsonSetupFile = rex_path::addon('consent_manager', 'setup/minimal_setup.json');
+            if (!file_exists($jsonSetupFile)) {
+                throw new \Exception('Setup-Datei nicht gefunden: ' . $jsonSetupFile);
+            }
+            // false = deleteExisting NICHT aktivieren (Domain behalten!)
+            JsonSetup::importSetup($jsonSetupFile, false, 'update');
+        } catch (\Exception $e) {
+            throw new \Exception('Import fehlgeschlagen: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -209,7 +287,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('consent_manager_domain'));
         $sql->setWhere(['uid' => $domain]);
-        $sql->setValue('theme_uid', $themeUid);
+        $sql->setValue('theme', $themeUid);
         $sql->update();
 
         return true;
@@ -221,6 +299,40 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
     private function clearCache(): void
     {
         \FriendsOfRedaxo\ConsentManager\Cache::forceWrite();
+    }
+
+    /**
+     * Cookie-Gruppen einer Domain zuordnen
+     */
+    private function assignGroupsToDomain(int $domainId): void
+    {
+        $sql = rex_sql::factory();
+        
+        // Nur die "required" Gruppe finden (uid = 'required')
+        // Zuordnung erfolgt über das domain-Feld mit Pipe-Format |domainId|
+        $sql->setQuery('SELECT id, domain FROM ' . rex::getTable('consent_manager_cookiegroup') . ' WHERE uid = ?', ['required']);
+        
+        if ($sql->getRows() > 0) {
+            $groupId = $sql->getValue('id');
+            $currentDomain = $sql->getValue('domain');
+            
+            // Domain-String im Format |17|18| aufbauen
+            $domainString = trim((string) $currentDomain, '|');
+            $domainIds = array_filter(explode('|', $domainString));
+            
+            // Nur hinzufügen wenn noch nicht vorhanden
+            if (!in_array((string) $domainId, $domainIds, true)) {
+                $domainIds[] = $domainId;
+                $newDomainString = '|' . implode('|', $domainIds) . '|';
+                
+                // Required-Gruppe der Domain zuordnen
+                $update = rex_sql::factory();
+                $update->setTable(rex::getTable('consent_manager_cookiegroup'));
+                $update->setWhere(['id' => $groupId]);
+                $update->setValue('domain', $newDomainString);
+                $update->update();
+            }
+        }
     }
 
     /**
@@ -237,10 +349,10 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
 
         // Domain prüfen
         $sql = rex_sql::factory();
-        $sql->setQuery('SELECT theme_uid FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?', [$domain]);
+        $sql->setQuery('SELECT theme FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?', [$domain]);
         if ($sql->getRows() > 0) {
             $validation['domain_exists'] = true;
-            $validation['theme_assigned'] = '' !== $sql->getValue('theme_uid');
+            $validation['theme_assigned'] = '' !== $sql->getValue('theme');
         }
 
         // Cookies zählen

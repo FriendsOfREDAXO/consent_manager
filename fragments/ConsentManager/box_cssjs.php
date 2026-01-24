@@ -150,6 +150,20 @@ $_params['v'] = $consent_manager->version;
 $_params['r'] = $forceReload;
 $_params['t'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
 
+// JavaScript-Konfiguration für Frontend
+$jsConfig = [
+    'cookieSameSite' => 'Lax',
+    'cookieSecure' => rex_request::isHttps(),
+    'cookieName' => 'consentmanager',
+    'cookieLifetime' => 14, // Tage
+    'domain' => rex_request::server('HTTP_HOST', 'string', ''),
+    'version' => $consent_manager->version,
+    'cacheLogId' => $consent_manager->cacheLogId,
+    'focus' => isset($consent_manager->domainInfo['auto_inject_focus']) ? $consent_manager->domainInfo['auto_inject_focus'] : 1,
+    'mode' => 'opt-in',
+];
+
+$consentparams['outputjs'] .= '    <script>var consent_manager_parameters = ' . json_encode($jsConfig, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';</script>' . PHP_EOL;
 $consentparams['outputjs'] .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script" defer></script>' . PHP_EOL;
 
 // Ausgabe Google Consent Mode v2 (vor allem anderen)

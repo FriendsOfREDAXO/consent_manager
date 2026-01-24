@@ -17,7 +17,7 @@
       "required": "|1|",
       "name": "Notwendig",
       "description": "Notwendige Cookies ermöglichen grundlegende Funktionen und sind für die einwandfreie Funktion der Website erforderlich.",
-      "cookie": "|consent_manager|phpsessid|",
+      "cookie": "|consent_manager|",
       "script": "",
       "createdate": "0000-00-00 00:00:00",
       "updatedate": "0000-00-00 00:00:00"
@@ -111,7 +111,7 @@
       "updatedate": "0000-00-00 00:00:00"
     },
     {
-      "id": 3,
+      "id": 4,
       "clang_id": 1,
       "uid": "matomo-self-hosted",
       "service_name": "Matomo Analytics (Self-hosted)",

@@ -34,14 +34,6 @@ if (str_contains($preview, '..') || str_contains($preview, '//')) {
 $cmtheme = new Theme($preview);
 $theme_options = $cmtheme->getThemeInformation();
 $cmstyle = $cmtheme->getCompiledStyle();
-
-// Für Setup-Wizard: Dummy-Domain verwenden wenn keine Domain vorhanden
-$previewDomain = rex_request::get('preview_domain', 'string', '');
-if ('' !== $previewDomain) {
-    // Temporäre Dummy-Domain für Preview
-    $_SERVER['HTTP_HOST'] = $previewDomain;
-}
-
 $cmbox = Frontend::getFragment(0, 0, 'ConsentManager/box.php');
 
 // Pastel color schemes for mockup variety
