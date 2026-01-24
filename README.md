@@ -301,8 +301,6 @@ Jeder externe Dienst (Analytics, Social Media, etc.) wird einzeln angelegt:
 
 ### Cookie-Einstellungen (SameSite & Secure & Cookie-Name)
 
-**Konfigurierbare Cookie-Sicherheit und Cookie-Name** (seit Version 4.5.0):
-
 Der Consent Manager unterstützt konfigurierbare Cookie-Einstellungen für maximale Sicherheit:
 
 ***Hinweis zum Cookie-Namen:***
@@ -337,7 +335,7 @@ cookie_secure: true
 ```
 
 **⚠️ Wichtig für Subdomains:**
-Seit Version 4.5.0 werden **keine Wildcard-Cookies** mehr gesetzt. Jede (Sub-)Domain erhält eigenen Consent-Cookie. DSGVO-konform:
+Der Consent Manager setzt **keine Wildcard-Cookies**. Jede (Sub-)Domain erhält einen eigenen Consent-Cookie. DSGVO-konform:
 - `example.com` und `shop.example.com` sind separate Domains
 - Consent für jede Domain einzeln einholen
 - Cookie gilt nur für exakte Domain, nicht für Subdomains
@@ -396,7 +394,7 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 
 ### 🌐 Domain-spezifische Themes
 
-**Ab Version 5.3.0:** Individuelles Theme pro Domain wählbar.
+Individuelles Theme pro Domain wählbar.
 
 **Konfiguration:**
 1. **Consent Manager → Domains** öffnen
@@ -435,15 +433,13 @@ Das AddOn bietet verschiedene vorgefertigte Themes:
 
 ### ♿ Barrierefreiheit (Accessibility)
 
-**Issues #326, #304 - Optimierungen für Barrierefreiheit:**
-
-Das neue **A11y-Theme** (`consent_manager_frontend_a11y.scss`) bietet umfassende Barrierefreiheit:
+Das **A11y-Theme** (`consent_manager_frontend_a11y.scss`) bietet umfassende Barrierefreiheit:
 
 **WCAG 2.1 AA Konformität:**
 - ✅ **Kontrastverhältnisse:** 4.5:1 für Text, 3:1 für UI-Komponenten
 - ✅ **Focus-Indikatoren:** 3px blaue Umrandung für alle interaktiven Elemente
 - ✅ **Touch-Targets:** Mindestens 44x44px für alle Buttons und Links
-- ✅ **Screen Reader:** Korrekte ARIA-Attribute (Issue #304)
+- ✅ **Screen Reader:** Korrekte ARIA-Attribute
   - `role="dialog"` nur auf consent_manager-wrapper
   - `aria-modal="true"` für modalen Dialog
   - `aria-labelledby` verknüpft mit Überschrift
@@ -452,12 +448,12 @@ Das neue **A11y-Theme** (`consent_manager_frontend_a11y.scss`) bietet umfassende
 - ✅ **Focus Trap:** Tab-Navigation bleibt innerhalb des Modals
 - ✅ **DSGVO-konform:** Alle 3 Buttons (ablehnen/auswählen/alle) visuell gleichwertig
 
-**Modales Verhalten (Issue #326):**
+**Modales Verhalten:**
 - **Auto-Focus:** Beim Öffnen wird automatisch der erste Button fokussiert
 - **Focus Trap:** Tab/Shift+Tab bleiben innerhalb des Consent-Dialogs
 - **ESC funktioniert immer:** Schließt Dialog von jedem Element aus
 - **Tastatur-Zugänglichkeit:** Kein Entkommen nur mit Maus nötig
-- **ARIA-Management:** Hintergrund-Container ist für Screen Reader unsichtbar (Issue #304)
+- **ARIA-Management:** Hintergrund-Container ist für Screen Reader unsichtbar
 
 **Tastatursteuerung:**
 ```
@@ -474,9 +470,6 @@ Enter           → Buttons aktivieren
 3. **Accessibility Green** - Grüner Akzent (#025335)
 4. **Accessibility Compact** - Platzsparende Version, Grau
 5. **Accessibility Compact Blue** - Platzsparend mit blauem Akzent
-Enter / Space   → Details ein-/ausklappen (Issue #326)
-Enter           → Buttons aktivieren
-```
 
 **Implementierte Features:**
 - **ESC-Taste:** Schließt die Consent Box ohne durch alle Felder zu tabben
@@ -666,7 +659,7 @@ echo $mform->show();
 
 ### 🌍 Multi-Language: Sprachspezifische Scripts
 
-**Seit Version 5.3.0** können Script-Felder **in allen Sprachen bearbeitet** werden mit automatischem Fallback zur Start-Sprache.
+Script-Felder können **in allen Sprachen bearbeitet** werden mit automatischem Fallback zur Start-Sprache.
 
 **Use Case:**
 - Unterschiedliche Google Analytics Property-IDs pro Sprache/Land
@@ -770,7 +763,8 @@ https://beispiel.de/seite.html?skip_consent=MEINTOKEN
 ```
 
 **CSP (Content Security Policy) Kompatibilität:**
-✅ **Gelöst ab Version 4.5.0:** Das Consent-Manager AddOn ist jetzt CSP-kompatibel!
+
+Das Consent-Manager AddOn ist CSP-kompatibel und funktioniert mit modernen Content Security Policies.
 
 **Implementierte Lösung:**
 - **Automatische Nonce-Übergabe**: Nonce wird automatisch von `rex_response::getNonce()` geholt
@@ -814,22 +808,17 @@ Für maximale CSP-Kompatibilität externe Scripts mit `src` Attribut verwenden:
 </script>
 ```
 
-**Hinweis zu Issue #320:**
-Das ursprünglich gemeldete Problem mit dynamischen Script-Injektionen ist behoben. Die Lösung verwendet:
+**Technische Details:**
 - `createElement()` statt `innerHTML`
 - `textContent` statt `innerHTML` für Script-Content
 - Automatische Nonce-Propagierung
 - Anhängen an `document.body` statt versteckte Container
 
-**Subdomain-Probleme und DSGVO-Konformität:**
-✅ **Gelöst ab Version 4.5.0:** Subdomain-spezifische Consent-Verwaltung (Issue #317)
+**Subdomain-Behandlung:**
 
-**Problem:**
-- Alte Versionen verwendeten Wildcard-Cookies (`.example.com`)
-- Consent von `example.com` galt fälschlicherweise auch für `shop.example.com`
-- **DSGVO-Verstoß**: Consent domain-spezifisch einholen!
+Der Consent Manager behandelt Subdomains korrekt und DSGVO-konform.
 
-**Lösung:**
+**Funktionsweise:**
 - **Domain-spezifische Cookies**: Jede (Sub-)Domain erhält eigenen Consent
 - **Keine Wildcard-Domains**: Cookie gilt nur für exakte Domain
 - **Korrekte Subdomain-Erkennung**: `shop.example.com` wird als vollständige Domain behandelt
@@ -1021,9 +1010,9 @@ Die Services sind bereits strukturiert in Kategorien wie Analytics, Marketing, e
 
 ## 🛠️ Erweiterte Integration
 
-### API-Methoden (Issue #282)
+### API-Methoden
 
-Seit Version 5.x stehen separate Methoden für CSS, JavaScript und Box-HTML zur Verfügung:
+Separate Methoden für CSS, JavaScript und Box-HTML stehen zur Verfügung für flexible Integrationen:
 
 **`Frontend::getCSS()`**
 ```php
@@ -1445,7 +1434,7 @@ Der Inline-Consent generiert ansprechende Platzhalter:
 
 ## 🔍 Debug-Modus
 
-**Consent-Debug-Panel:** Seit Version 4.4.0 verfügbar für Entwickler und Troubleshooting.
+**Consent-Debug-Panel** steht für Entwickler und Troubleshooting zur Verfügung.
 
 **Aktivierung:**
 ```
@@ -1457,7 +1446,7 @@ Der Inline-Consent generiert ansprechende Platzhalter:
 - Google Consent Mode Integration
 - LocalStorage-Übersicht
 - Service-Status-Monitor
-- **Neu:** Inline-Consent-Tracking
+- Inline-Consent-Tracking
 
 ---
 
@@ -1610,17 +1599,6 @@ MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manag
 **Externe Bibliotheken:**
 - [cookie.js](https://github.com/js-cookie/js-cookie) - MIT Lizenz
 
-**Hintergrundbilder (Theme-Vorschau):**
-Alle Bilder von [Unsplash](https://unsplash.com) - kostenlos nutzbar:
-- [Gradienta](https://unsplash.com/@gradienta) - Abstrakte Gradients
-- [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) - Abstrakte Farbwolken
-- [Milad Fakurian](https://unsplash.com/@fakurian) - Weiche Farbübergänge
-- [Steve Johnson](https://unsplash.com/@steve_j) - Abstrakte Texturen
-- [Harley-Davidson](https://unsplash.com/@harleydavidson) - Motorrad
-- [Robert Katzki](https://unsplash.com/@ro_ka) - Wasser/Himmel
-- [Ricardo Gomez Angel](https://unsplash.com/@rgaleriacom) - Berge und Häuser
-- [Shapelined](https://unsplash.com/@shapelined) - Schwarz-weiß Architektur
-- [Willian West](https://unsplash.com/@willianwest) - Blaue Berge
 
 ---
 
