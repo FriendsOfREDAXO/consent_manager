@@ -19,41 +19,21 @@ Das AddOn stellt eine DSGVO-konforme Lösung für die Einholung von Einverständ
 
 ## ⚠️ Rechtlicher Hinweis
 
-**Wichtiger Haftungsausschluss:** Die mitgelieferten Texte und Cookie-Definitionen sind ausschließlich Beispiele und können unvollständig oder nicht aktuell sein. 
-
-**Rechtliche Verantwortung:** Website-Betreiber und Entwickler sind eigenverantwortlich dafür zuständig, dass:
-- Die Funktionalität der Abfrage den rechtlichen Anforderungen entspricht
-- Alle Texte, Dienste und Cookie-Beschreibungen korrekt und vollständig sind
-- Die Integration ordnungsgemäß erfolgt
-- Die Lösung der geltenden Rechtslage und den Datenschutzbestimmungen entspricht
-
-**Empfehlung:** Texte und Cookie-Listen von Datenschutzbeauftragten oder Rechtsabteilung prüfen lassen.
+**Haftungsausschluss:** Mitgelieferte Texte und Cookie-Definitionen sind Beispiele ohne Gewähr. Website-Betreiber sind eigenverantwortlich für rechtskonforme Integration und müssen alle Inhalte durch Datenschutzbeauftragte prüfen lassen.
 
 ---
 
 ## 🚀 Schnellstart
 
-### 1. Installation und Setup-Assistent
-```bash
-# AddOn über REDAXO Installer herunterladen und installieren
-```
+### 1. Installation
+AddOn über REDAXO Installer installieren. Der **7-stufige Setup-Assistent** führt durch die Konfiguration.
 
-**Quickstart-Assistent:** Ein **7-stufiger Assistent** führt beim ersten Aufruf durch das komplette Setup - von der Domain-Konfiguration bis zur Theme-Auswahl.
+**Setup-Varianten:** Minimal (essentieller Service) oder Standard (vollständige Service-Sammlung)
 
-**Setup-Varianten:**
-- **Minimal:** Essentieller Service für datenschutz-minimale Websites  
-- **Standard:** Vollständige Service-Sammlung für umfassende Cookie-Verwaltung
-
-### 2. Domain konfigurieren
-Unter **Domains** die Website-Domain hinterlegen (ohne Protokoll):
-```
-beispiel.de
-www.beispiel.de
-```
+### 2. Domain
+Unter **Domains** die Website-Domain ohne Protokoll hinterlegen: `beispiel.de`
 
 ### 3. Template-Integration
-
-**Wichtig:** Assets im Template einbinden, damit Consent Manager und Inline-Blocker funktionieren!
 
 #### 🔧 Standard Integration (Consent Manager Box)
 
@@ -220,101 +200,36 @@ REX_CONSENT_MANAGER[fragment=my_custom_box.php]
 
 #### 🔄 Reload bei Consent-Änderung
 
-**Zweck:** Seite automatisch neu laden wenn User Consent-Einstellungen ändert
-
-**Wann aktivieren:**
-- Wenn Drittanbieter-Scripts (z.B. Google Analytics, Facebook Pixel) einen Page-Reload benötigen
-- Wenn Scripts nur beim Seitenaufruf initialisiert werden
-- Für optimale Integration mit externen Services
-
-**Default:** Deaktiviert
-
-**Backend-Einstellung:**
-```
-🔄 Seite neu laden bei Consent-Änderung: Ja
-```
+Seite automatisch neu laden wenn Consent-Einstellungen geändert werden. Nützlich für Scripts die Page-Reload benötigen (Analytics, Tracking). **Default:** Deaktiviert
 
 #### ⏱️ Verzögerte Anzeige (Delay)
 
-**Zweck:** Consent-Box erst nach X Sekunden anzeigen
+Consent-Box erst nach X Sekunden anzeigen. Verbessert First-Paint Performance. **Empfohlen:** 0-2 Sekunden. **Default:** 0 (sofort)
 
-**Vorteile:**
-- Verbessert First-Paint Performance
-- Reduziert wahrgenommene Ladezeit
-- Bessere User Experience
-- Nützlich für Content-fokussierte Websites
+⚠️ Verzögerung kann rechtliche Implikationen haben - mit Datenschutzbeauftragten klären!
 
-**Default:** 0 (sofortige Anzeige)
+#### ♿ Fokus-Management
 
-**Backend-Einstellung:**
-```
-⏱️ Verzögerung bis Anzeige (Sekunden): 2
-```
+Automatischer Fokus auf Consent-Box für Barrierefreiheit (WCAG 2.1, Screen-Reader-freundlich). **Default:** Aktiviert
 
-**Empfohlene Werte:**
-- `0` - Sofort (Standard, rechtlich sicher)
-- `1-2` - Kurze Verzögerung (guter Kompromiss)
-- `3-5` - Längere Verzögerung (nur wenn rechtlich abgesichert)
+### Manuelle Integration
 
-⚠️ **Rechtlicher Hinweis:** Verzögerung kann rechtliche Implikationen haben - mit Datenschutzbeauftragten klären!
-
-#### ♿ Fokus auf Consent-Box setzen
-
-**Zweck:** Automatischer Fokus auf Consent-Box für Barrierefreiheit
-
-**Vorteile:**
-- WCAG 2.1 konform
-- Screen-Reader-freundlich
-- Bessere Keyboard-Navigation
-- Fokus auf Dialog statt Buttons (unbiased)
-
-**Default:** Aktiviert (empfohlen)
-
-**Backend-Einstellung:**
-```
-♿ Fokus auf Consent-Box setzen: Ja
-```
-
-**Technische Details:**
-- Fokus wird auf Dialog-Wrapper gesetzt (nicht auf Buttons)
-- Verhindert ungewollte Vorauswahl
-- Screen-Reader können Dialog vollständig erfassen
-
-### Manuelle Optionen (für Template-Integration)
-
-**Bei manueller Einbindung** können die Auto-Inject-Optionen auch programmatisch gesetzt werden:
+Optionen auch bei Template-Integration verfügbar:
 
 ```php
-<?php
-use FriendsOfRedaxo\ConsentManager\Frontend;
-?>
 <script nonce="<?= rex_response::getNonce() ?>">
-    // Consent Manager Optionen setzen (vor Frontend-JS!)
     window.consentManagerOptions = {
-        reloadOnConsent: true,    // Seite bei Consent-Änderung neu laden
-        showDelay: 2,              // 2 Sekunden Verzögerung bis Anzeige
-        autoFocus: true            // Fokus auf Box setzen (Barrierefreiheit)
+        reloadOnConsent: true,  // Reload aktivieren
+        showDelay: 2,           // 2 Sek. Delay
+        autoFocus: true         // Fokus setzen
     };
 </script>
-<?php
-// Standard Consent Manager Integration
-echo Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php');
-?>
+<?php echo Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php'); ?>
 ```
 
-**Wichtig:** `window.consentManagerOptions` **VOR** dem Consent Manager Script setzen!
+`window.consentManagerOptions` **vor** Consent Manager Script setzen!
 
-### Kompatibilität
-
-✅ **Funktioniert parallel:**
-- Auto-Inject **UND** manuelle Template-Integration möglich
-- `window.consentManagerOptions` überschreibt Auto-Inject-Optionen
-- Keine Konflikte bei doppelter Einbindung
-
-✅ **Intelligent:**
-- Nur im Frontend aktiv (Backend ignoriert)
-- Nur bei HTML-Seiten mit `</head>` Tag
-- Kein Overhead wenn deaktiviert
+**Kompatibilität:** Funktioniert parallel mit Template-Integration. Nur im Frontend aktiv, kein Overhead wenn deaktiviert.
 
 ---
 
@@ -398,51 +313,17 @@ if (Utility::has_consent('youtube')) {
 
 ### Domain-Verwaltung
 
-Jede Domain der REDAXO-Instanz einzeln konfigurieren:
-- Domain ohne Protokoll hinterlegen (z.B. `www.beispiel.de`)
-- Datenschutzerklärung und Impressum je Domain
-- Automatischer Abgleich mit `$_SERVER['HTTP_HOST']`
+Domains ohne Protokoll hinterlegen (z.B. `beispiel.de`). Datenschutzerklärung und Impressum je Domain. Google Consent Mode v2 optional aktivierbar.
 
-**Google Consent Mode v2 Integration:**
-- Pro Domain aktivierbar
-- GDPR-konforme Standard-Einstellungen
-- Automatische Script-Integration
-- Debug-Konsole verfügbar
+### Dienste
 
-### Dienste konfigurieren
+Externe Dienste einzeln anlegen mit Schlüssel, Dienstname und Cookie-Definitionen (YAML).
 
-Jeder externe Dienst (Analytics, Social Media, etc.) wird einzeln angelegt:
+### Cookie-Einstellungen
 
-**Schlüssel:** Interne Bezeichnung ohne Sonderzeichen
-**Dienstname:** Wird in der Consent-Box angezeigt
-**Cookie-Definitionen:** YAML-Format für Cookie-Details
+Konfigurierbare Cookie-Attribute: `cookie_samesite` (Lax/Strict/None), `cookie_secure` (true für HTTPS), `cookie_name` (Standard: 'consentmanager').
 
-### Cookie-Einstellungen (SameSite & Secure & Cookie-Name)
-
-Der Consent Manager unterstützt konfigurierbare Cookie-Einstellungen für maximale Sicherheit:
-
-***Hinweis zum Cookie-Namen:***
-*Bei Änderung des Consent-Cookie-Namens: Dienste (Cookies) und Texte entsprechend anpassen, da standardmäßig "consentmanager" eingetragen ist.*
-
-**Standardwerte:**
-```yaml
-cookie_samesite: 'Lax'    # Standard für gute Kompatibilität
-cookie_secure: false      # false für HTTP-Seiten
-cookie_name: 'consentmanager' # Standardname des Cookies
-```
-
-**Empfohlene Werte für HTTPS-Seiten:**
-```yaml
-cookie_samesite: 'Strict' # Maximale Sicherheit
-cookie_secure: true       # Nur über HTTPS übertragen
-```
-
-**SameSite Optionen:**
-- `Strict`: Cookies werden nur bei direktem Besuch der Domain gesendet (höchste Sicherheit)
-- `Lax`: Cookies werden auch bei Top-Level-Navigation gesendet (Standard, guter Kompromiss)
-- `None`: Cookies werden immer gesendet (⚠️ erfordert `secure: true`)
-
-**Secure Flag:**
+⚠️ Bei Änderung des Cookie-Namens: Dienste und Texte entsprechend anpassen.
 - `true`: Cookie wird nur über HTTPS übertragen (empfohlen für Produktiv-Sites)
 - `false`: Cookie wird auch über HTTP übertragen (nur für Entwicklung)
 
@@ -499,40 +380,15 @@ Dienste werden in Gruppen zusammengefasst, die einzeln akzeptiert werden können
 
 ## 🎨 Design und Anpassung
 
-### Theme-System
+### Themes
 
-Das AddOn bietet verschiedene vorgefertigte Themes:
-
-![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/themes.png?raw=true)
-
-**Verfügbare Themes:**
-- Standard-Themes (Hell, Dunkel, Bottom Bar, Bottom Right)
-- Community-Themes (Olien Dark/Light, Skerbis Glass, XOrange)
-- **🆕 Accessibility Theme** (`consent_manager_frontend_a11y.css`) - Barrierefrei optimiert
+Vorgefertigte Themes: Standard (Hell, Dunkel, Bottom Bar), Community (Olien, Glass, XOrange), Accessibility.
 
 ### 🌐 Domain-spezifische Themes
 
-Individuelles Theme pro Domain wählbar.
+Pro Domain individuelles Theme wählbar. **Konfiguration:** Consent Manager → Domains → Domain bearbeiten → Theme-Sidebar.
 
-**Konfiguration:**
-1. **Consent Manager → Domains** öffnen
-2. Domain bearbeiten
-3. **Rechte Sidebar:** Theme-Auswahl
-4. Theme aus Dropdown wählen
-5. **Live-Vorschau** prüfen
-6. Speichern
-
-**Features der Domain-Theme-Auswahl:**
-- ✨ **Live-Preview mit Echtzeit-Aktualisierung**: Theme-Vorschau aktualisiert sich sofort beim Wechsel
-- 📱 **Responsive Sidebar**: Auf mobilen Geräten wandert die Sidebar unter das Formular
-- 🎯 **Alle Themes verfügbar**: Addon-Themes und Project-Themes werden angezeigt
-- ⭐ **Project-Themes markiert**: Custom-Themes aus dem Theme-Editor sind mit Stern gekennzeichnet
-- 🔄 **Theme-Priorität**: Domain-Theme → Globales Theme → Standard-CSS
-
-**Anwendungsfälle:**
-- Unterschiedliche Designs für verschiedene Subdomains
-- A/B-Testing verschiedener Theme-Varianten
-- Marken-spezifische Designs bei Multi-Domain-Setups
+**Features:** Live-Preview, Responsive Sidebar, Project-Themes markiert. **Theme-Priorität:** Domain → Global → Standard-CSS.
 - Testumgebungen mit anderem Design als Produktiv-Domain
 
 **Hinweis:** Theme-Feld leer lassen für globales Theme aus den Einstellungen.
