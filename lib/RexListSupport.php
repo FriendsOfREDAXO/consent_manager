@@ -41,11 +41,26 @@ class RexListSupport
      */
     public static function formatCookie($params): string
     {
-        if (isset($params['value'])) {
-            $uids = array_map(trim(...), explode('|', $params['value']));
+        $value = $params['value'] ?? '';
+        if ('' !== $value) {
+            $uids = array_map(trim(...), explode('|', $value));
             $uids = array_filter($uids, strlen(...)); // @phpstan-ignore-line));
             if ([] !== $uids) {
-                return implode('<br>', $uids);
+                // Service-Namen und Varianten aus DB laden (nur für aktuelle Sprache)
+                $services = [];
+                $db = rex_sql::factory();
+                $db->setTable(rex::getTable('consent_manager_cookie'));
+                $clangId = \rex_clang::getCurrentId();
+                $db->setWhere('uid IN(' . $db->in($uids) . ') AND clang_id = ' . (int) $clangId . ' ORDER BY uid ASC');
+                $db->select('uid, service_name, variant');
+                foreach ($db->getArray() as $v) {
+                    $display = '<strong>' . rex_escape($v['service_name']) . '</strong>';
+                    if ('' !== $v['variant'] && null !== $v['variant']) {
+                        $display .= '<br><small style="color: #6c757d; font-style: italic;">→ ' . rex_escape($v['variant']) . '</small>';
+                    }
+                    $services[] = $display;
+                }
+                return implode('<br>', $services);
             }
         }
         return '-';

@@ -43,8 +43,8 @@ if ('delete' === $func) {
             $cleanDomain = rtrim($cleanDomain, '/');
             $cleanDomain = strtolower($cleanDomain);
             
-            // Nur nicht-konfigurierte Domains anbieten
-            if (!in_array($cleanDomain, $existingDomains, true)) {
+            // Duplikate vermeiden (z.B. wenn eine Domain sowohl als Standard als auch regulär existiert)
+            if (!in_array($cleanDomain, $yrewriteDomains, true) && !in_array($cleanDomain, $existingDomains, true)) {
                 $yrewriteDomains[] = $cleanDomain;
             }
         }
@@ -54,7 +54,7 @@ if ('delete' === $func) {
             $yrewriteSelectHtml = '
             <div class="form-group">
                 <label class="control-label">
-                    <i class="rex-icon fa-globe"></i> ' . rex_i18n::msg('consent_manager_domain') . ' 
+                    ' . rex_i18n::msg('consent_manager_domain') . ' 
                     <small class="text-muted">(aus YRewrite wählen - ' . count($yrewriteDomains) . ' verfügbar)</small>
                 </label>
                 <select id="yrewrite-domain-select" class="form-control selectpicker" data-live-search="true" data-size="8">
@@ -96,6 +96,18 @@ if ('delete' === $func) {
     $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
     $field->setAttribute('id', 'domain-uid-field');
 
+    // Rechtliche Seiten Panel
+    $legalPanelStart = '
+    <div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.2); margin: 20px 0; padding: 15px;">
+        <div style="display: flex; align-items: start;">
+            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #5bc0de; line-height: 1;">
+                <i class="fa fa-file-text-o"></i>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Rechtliche Seiten</h4>
+    ';
+    $field = $form->addRawField($legalPanelStart);
+    
     $field = $form->addLinkmapField('privacy_policy');
     $field->setLabel(rex_i18n::msg('consent_manager_domain_privacy_policy')); /** @phpstan-ignore-line */
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_privacy_policy_empty_msg')); /** @phpstan-ignore-line */
@@ -103,8 +115,26 @@ if ('delete' === $func) {
     $field = $form->addLinkmapField('legal_notice');
     $field->setLabel(rex_i18n::msg('consent_manager_domain_legal_notice')); /** @phpstan-ignore-line */
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_legal_notic_empty_msg')); /** @phpstan-ignore-line */
+    
+    $legalPanelEnd = '
+            </div>
+        </div>
+    </div>
+    ';
+    $field = $form->addRawField($legalPanelEnd);
 
-    // Google Consent Mode v2 Configuration
+    // Google Consent Mode Panel
+    $googlePanelStart = '
+    <div class="panel panel-primary" style="border-left: 4px solid #4285f4; background: rgba(66, 133, 244, 0.2); margin: 20px 0; padding: 15px;">
+        <div style="display: flex; align-items: start;">
+            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #4285f4; line-height: 1;">
+                <i class="fa fa-google"></i>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Google Consent Mode v2</h4>
+    ';
+    $field = $form->addRawField($googlePanelStart);
+    
     $field = $form->addSelectField('google_consent_mode_enabled');
     $field->setLabel(rex_i18n::msg('consent_manager_google_mode_title'));
     $select = $field->getSelect();
@@ -113,33 +143,68 @@ if ('delete' === $func) {
     $select->addOption(rex_i18n::msg('consent_manager_google_mode_manual'), 'manual');
     $field->setNotice(rex_i18n::msg('consent_manager_google_mode_notice'));
 
-    // Debug Mode Configuration
     $field = $form->addSelectField('google_consent_mode_debug');
-    $field->setLabel('🔍 Debug-Modus');
+    $field->setLabel('Debug-Modus');
     $select = $field->getSelect();
     $select->addOption('Deaktiviert', '0');
     $select->addOption('Aktiviert', '1');
     $field->setNotice('Debug-Panel im Frontend anzeigen. Zeigt Cookie-Status und Consent-Informationen für angemeldete Backend-Benutzer an.');
+    
+    $googlePanelEnd = '
+            </div>
+        </div>
+    </div>
+    ';
+    $field = $form->addRawField($googlePanelEnd);
 
-    // Inline-Only Mode Configuration
+    // Inline-Only Mode Panel
+    $inlinePanelStart = '
+    <div class="panel panel-default" style="border-left: 4px solid #777; background: rgba(119, 119, 119, 0.2); margin: 20px 0; padding: 15px;">
+        <div style="display: flex; align-items: start;">
+            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #777; line-height: 1;">
+                <i class="fa fa-eye-slash"></i>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Inline-Only Modus</h4>
+    ';
+    $field = $form->addRawField($inlinePanelStart);
+    
     $field = $form->addSelectField('inline_only_mode');
     $field->setLabel(rex_i18n::msg('consent_manager_domain_inline_only_mode'));
     $select = $field->getSelect();
     $select->addOption(rex_i18n::msg('consent_manager_domain_inline_only_mode_disabled'), '0');
     $select->addOption(rex_i18n::msg('consent_manager_domain_inline_only_mode_enabled'), '1');
     $field->setNotice(rex_i18n::msg('consent_manager_domain_inline_only_mode_notice'));
+    
+    $inlinePanelEnd = '
+            </div>
+        </div>
+    </div>
+    ';
+    $field = $form->addRawField($inlinePanelEnd);
 
-    // Auto-Inject Configuration
+    // Auto-Inject Configuration - Hervorgehoben als Panel
+    $autoInjectPanelStart = '
+    <div class="panel panel-warning" style="border-left: 4px solid #f0ad4e; background: rgba(240, 173, 78, 0.2); margin: 20px 0; padding: 15px;">
+        <div style="display: flex; align-items: start;">
+            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #f0ad4e; line-height: 1;">
+                <i class="fa fa-plug"></i>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Automatische Frontend-Einbindung</h4>
+    ';
+    $field = $form->addRawField($autoInjectPanelStart);
+    
     $field = $form->addSelectField('auto_inject');
-    $field->setLabel('🚀 Automatische Frontend-Einbindung');
+    $field->setLabel('Status');
     $select = $field->getSelect();
     $select->addOption('Deaktiviert (manuelle Einbindung erforderlich)', '0');
     $select->addOption('Aktiviert (automatische Einbindung im Frontend)', '1');
-    $field->setNotice('Wenn aktiviert, wird das Consent Manager Script automatisch im Frontend eingebunden. Keine manuelle Integration im Template erforderlich.');
+    $field->setNotice('<i class="fa fa-info-circle" style="color: #f0ad4e;"></i> Wenn aktiviert, wird das Consent Manager Script automatisch im Frontend eingebunden. Keine manuelle Integration im Template erforderlich.');
 
     // Auto-Inject: Reload on Consent
     $field = $form->addSelectField('auto_inject_reload_on_consent');
-    $field->setLabel('🔄 Seite neu laden bei Consent-Änderung');
+    $field->setLabel('Seite neu laden bei Consent-Änderung');
     $select = $field->getSelect();
     $select->addOption('Nein (nur Consent-Cookie setzen)', '0');
     $select->addOption('Ja (Seite automatisch neu laden)', '1');
@@ -147,43 +212,69 @@ if ('delete' === $func) {
 
     // Auto-Inject: Delay
     $field = $form->addTextField('auto_inject_delay');
-    $field->setLabel('⏱️ Verzögerung bis Anzeige (Sekunden)');
+    $field->setLabel('Verzögerung bis Anzeige (Sekunden)');
     $field->setNotice('Optional: Verzögerung in Sekunden bis zur Anzeige der Consent-Box (0 = sofort). Nützlich um First-Paint zu verbessern.');
     
     // Auto-Inject: Focus Management
     $field = $form->addSelectField('auto_inject_focus');
-    $field->setLabel('♿ Fokus auf Consent-Box setzen');
+    $field->setLabel('Fokus auf Consent-Box setzen');
     $select = $field->getSelect();
     $select->addOption('Nein (kein automatischer Fokus)', '0');
     $select->addOption('Ja (Fokus für Barrierefreiheit)', '1');
     $field->setNotice('Wenn aktiviert, wird der Fokus automatisch auf die Consent-Box gesetzt (empfohlen für Barrierefreiheit gemäß WCAG).');
+    
+    // Auto-Inject Panel Ende
+    $autoInjectPanelEnd = '
+            </div>
+        </div>
+    </div>
+    ';
+    $field = $form->addRawField($autoInjectPanelEnd);
 
     // Theme als Hidden Field (wird in Sidebar gesteuert)
     $field = $form->addHiddenField('theme');
 
     // oEmbed / CKE5 Video Configuration - nur anzeigen wenn CKE5 verfügbar ist
     if (rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {
+        $oembedPanelStart = '
+        <div class="panel panel-primary" style="border-left: 4px solid #9b59b6; background: rgba(155, 89, 182, 0.2); margin: 20px 0; padding: 15px;">
+            <div style="display: flex; align-items: start;">
+                <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #9b59b6; line-height: 1;">
+                    <i class="fa fa-video-camera"></i>
+                </div>
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">CKE5 oEmbed Integration</h4>
+        ';
+        $field = $form->addRawField($oembedPanelStart);
+        
         $field = $form->addSelectField('oembed_enabled');
-        $field->setLabel('🎬 CKE5 oEmbed Integration');
+        $field->setLabel('Status');
         $select = $field->getSelect();
         $select->addOption('Aktiviert (automatische Umwandlung)', '1');
         $select->addOption('Deaktiviert (keine automatische Umwandlung)', '0');
         $field->setNotice('Legt fest, ob CKE5 oEmbed-Tags (YouTube, Vimeo) automatisch in Consent-Blocker umgewandelt werden.');
 
         $field = $form->addTextField('oembed_video_width');
-        $field->setLabel('📐 oEmbed Video-Breite (px)');
+        $field->setLabel('Video-Breite (px)');
         $field->setNotice('Standard-Breite für CKE5 oEmbed-Videos (Default: 640)');
 
         $field = $form->addTextField('oembed_video_height');
-        $field->setLabel('📏 oEmbed Video-Höhe (px)');
+        $field->setLabel('Video-Höhe (px)');
         $field->setNotice('Standard-Höhe für CKE5 oEmbed-Videos (Default: 360)');
 
         $field = $form->addSelectField('oembed_show_allow_all');
-        $field->setLabel('🔘 oEmbed Drei-Button-Variante');
+        $field->setLabel('Drei-Button-Variante');
         $select = $field->getSelect();
         $select->addOption('Zwei Buttons (Einmal laden, Alle Einstellungen)', '0');
         $select->addOption('Drei Buttons (Einmal laden, Alle zulassen, Alle Einstellungen)', '1');
         $field->setNotice('Drei-Button-Variante zeigt zusätzlich "Alle zulassen" Button zum sofortigen Freischalten aller Services einer Gruppe.');
+        
+        $oembedPanelEnd = '
+                </div>
+            </div>
+        </div>
+        ';
+        $field = $form->addRawField($oembedPanelEnd);
     }
 
     $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_domain_edit') : rex_i18n::msg('consent_manager_domain_add');
@@ -472,6 +563,71 @@ if ('delete' === $func) {
 }
 echo $msg;
 if ($showlist) {
+    // Setup Wizard Button
+    echo '
+    <style nonce="' . rex_response::getNonce() . '">
+        .domain-wizard-btn {
+            padding: 15px 30px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: visible;
+        }
+        
+        .domain-wizard-btn::before {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(90deg, #337ab7, #5bc0de, #5cb85c, #337ab7);
+            background-size: 300% 300%;
+            border-radius: 10px;
+            z-index: -1;
+            opacity: 0;
+            animation: gradient-border 4s ease infinite;
+            transition: opacity 0.3s ease;
+        }
+        
+        .domain-wizard-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .domain-wizard-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(51, 122, 183, 0.3);
+        }
+        
+        @keyframes gradient-border {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Dark Mode Support */
+        body.rex-theme-dark button.domain-wizard-btn,
+        body.rex-theme-dark button.domain-wizard-btn * {
+            color: #ffffff !important;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body:not(.rex-theme-light) button.domain-wizard-btn,
+            body:not(.rex-theme-light) button.domain-wizard-btn * {
+                color: #ffffff !important;
+            }
+        }
+    </style>
+    <div style="text-align: right; margin-bottom: 20px;">
+        <button type="button" class="btn btn-primary btn-lg domain-wizard-btn" data-toggle="modal" data-target="#setup-wizard-modal">
+            <i class="rex-icon fa-magic" style="margin-right: 10px;"></i>
+            <strong>Setup Wizard</strong>
+            <i class="rex-icon fa-chevron-right" style="margin-left: 10px; font-size: 14px; opacity: 0.8;"></i>
+        </button>
+    </div>';
+    
     $listDebug = false;
 
     // oembed_enabled nur laden wenn CKE5 verfügbar ist
@@ -566,3 +722,7 @@ if ($showlist) {
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
+
+// Setup Wizard Modal einbinden
+$wizardFragment = new rex_fragment();
+echo $wizardFragment->parse('ConsentManager/setup_wizard.php');

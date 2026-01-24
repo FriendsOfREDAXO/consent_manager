@@ -26,7 +26,7 @@ page:
       icon: rex-icon fa-globe
     theme:
       title: "translate:consent_manager_theme"
-      icon: rex-icon fa-paint-brush
+      icon: rex-icon fa-grip
     theme_editor:
       title: "Theme Editor"
       icon: rex-icon fa-magic

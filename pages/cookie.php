@@ -14,9 +14,85 @@ $msg = '';
 if ('delete' === $func) {
     $msg = CLang::deleteCookie($pid);
     Cache::forceWrite();
+} elseif ('duplicate' === $func) {
+    // Dienst duplizieren
+    if (!$csrf->isValid()) {
+        $msg = rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+    } else {
+        $sql = rex_sql::factory();
+        $sql->setQuery('SELECT * FROM ' . $table . ' WHERE pid = ?', [$pid]);
+        
+        if (1 === $sql->getRows()) {
+            $newSql = rex_sql::factory();
+            $newSql->setTable($table);
+            
+            // Alle Felder kopieren außer pid
+            foreach ($sql->getFieldnames() as $fieldname) {
+                if ('pid' !== $fieldname) {
+                    $newSql->setValue($fieldname, $sql->getValue($fieldname));
+                }
+            }
+            
+            // UID und service_name anpassen
+            $originalUid = $sql->getValue('uid');
+            $originalName = $sql->getValue('service_name');
+            $counter = 1;
+            $newUid = $originalUid . '-copy';
+            
+            // Prüfen ob UID bereits existiert, dann Suffix erhöhen
+            $checkSql = rex_sql::factory();
+            while (true) {
+                $checkSql->setQuery('SELECT pid FROM ' . $table . ' WHERE uid = ? AND clang_id = ?', [$newUid, $clang_id]);
+                if (0 === $checkSql->getRows()) {
+                    break;
+                }
+                $counter++;
+                $newUid = $originalUid . '-copy-' . $counter;
+            }
+            
+            $newSql->setValue('uid', $newUid);
+            $newSql->setValue('service_name', $originalName . ' (Kopie)');
+            $newSql->setValue('createdate', date('Y-m-d H:i:s'));
+            $newSql->setValue('updatedate', date('Y-m-d H:i:s'));
+            
+            try {
+                $newSql->insert();
+                $newPid = $newSql->getLastId();
+                Cache::forceWrite();
+                
+                // Zur Edit-Seite des neuen Eintrags weiterleiten mit Hinweis
+                $msg = rex_view::warning(rex_i18n::msg('consent_manager_cookie_duplicated_edit_uid'));
+                // Redirect zur Edit-Seite
+                header('Location: ' . rex_url::currentBackendPage(['func' => 'edit', 'pid' => $newPid, 'msg' => 'duplicated']));
+                exit;
+            } catch (rex_sql_exception $e) {
+                $msg = rex_view::error(rex_i18n::msg('consent_manager_cookie_duplicate_error') . ': ' . $e->getMessage());
+            }
+        } else {
+            $msg = rex_view::error(rex_i18n::msg('consent_manager_cookie_not_found'));
+        }
+    }
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
+    
+    // Warnung anzeigen wenn von duplicate weitergeleitet (nur einmalig)
+    if ('duplicated' === rex_request::request('msg', 'string', '')) {
+        echo rex_view::warning(
+            '<strong>' . rex_i18n::msg('consent_manager_cookie_duplicated_edit_uid_title') . '</strong><br>' .
+            rex_i18n::msg('consent_manager_cookie_duplicated_edit_uid_desc')
+        );
+        
+        // URL ohne msg-Parameter neu laden um Reload-Sperre zu aktivieren
+        echo '<script nonce="' . rex_response::getNonce() . '">';
+        echo 'if (window.history.replaceState) {';
+        echo '  var url = new URL(window.location);';
+        echo '  url.searchParams.delete("msg");';
+        echo '  window.history.replaceState({}, document.title, url);';
+        echo '}';
+        echo '</script>';
+    }
+    
     $form = rex_form::factory($table, '', 'pid = ' . $pid, 'post', $formDebug);
     $form->addParam('pid', $pid);
     $form->addParam('sort', rex_request::request('sort', 'string', ''));
@@ -72,6 +148,11 @@ if ('delete' === $func) {
     }
     $field = $form->addTextField('service_name');
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_service_name'));
+    
+    $field = $form->addTextField('variant');
+    $field->setLabel(rex_i18n::msg('consent_manager_cookie_variant'));
+    $field->setNotice(rex_i18n::msg('consent_manager_cookie_variant_notice'));
+    
     $field = $form->addTextAreaField('definition');
     $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_definition'));
@@ -136,7 +217,7 @@ if ('delete' === $func) {
 echo $msg;
 if ($showlist) {
     $listDebug = false;
-    $sql = 'SELECT pid,uid,service_name,provider FROM ' . $table . ' WHERE clang_id = ' . $clang_id . ' ORDER BY uid';
+    $sql = 'SELECT pid,uid,service_name,variant,provider FROM ' . $table . ' WHERE clang_id = ' . $clang_id . ' ORDER BY uid';
 
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
@@ -153,20 +234,38 @@ if ($showlist) {
     $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
     $list->setColumnSortable('uid');
 
+    // Variant-Spalte entfernen (wird in service_name integriert)
+    $list->removeColumn('variant');
+
     $list->setColumnLabel('service_name', rex_i18n::msg('consent_manager_cookie_service_name'));
     $list->setColumnSortable('service_name');
+    $list->setColumnFormat('service_name', 'custom', static function (array $params): string {
+        $value = $params['value'];
+        $list = $params['list'];
+        $variant = $list->getValue('variant');
+        $html = '<strong>' . rex_escape($value) . '</strong>';
+        if ('' !== $variant && null !== $variant) {
+            $html .= '<br><small style="color: #6c757d; font-style: italic;">→ ' . rex_escape($variant) . '</small>';
+        }
+        return $html;
+    });
 
     $list->setColumnLabel('provider', rex_i18n::msg('consent_manager_cookie_provider'));
     $list->setColumnSortable('provider');
 
     $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
-    $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
+    $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="3">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('function'), ['pid' => '###pid###', 'func' => 'edit', 'start' => rex_request::request('start', 'string')]);
+
+    $list->addColumn(rex_i18n::msg('consent_manager_duplicate'), '<i class="rex-icon rex-icon-duplicate"></i> ' . rex_i18n::msg('consent_manager_duplicate'));
+    $list->setColumnLayout(rex_i18n::msg('consent_manager_duplicate'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+    $list->setColumnParams(rex_i18n::msg('consent_manager_duplicate'), ['pid' => '###pid###', 'func' => 'duplicate', 'start' => rex_request::request('start', 'string')] + $csrf->getUrlParams());
 
     $list->addColumn(rex_i18n::msg('delete'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete'), ['', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('delete'), ['pid' => '###pid###', 'func' => 'delete'] + $csrf->getUrlParams());
     $list->addLinkAttribute(rex_i18n::msg('delete'), 'onclick', 'return confirm(\' ###service_name### ' . rex_i18n::msg('delete') . ' ?\')');
+
 
     $content = $list->get();
 

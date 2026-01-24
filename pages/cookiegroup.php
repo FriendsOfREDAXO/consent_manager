@@ -14,9 +14,84 @@ $table = rex::getTable('consent_manager_cookiegroup');
 $msg = '';
 if ('delete' === $func) {
     $msg = CLang::deleteDataset($table, $pid);
+} elseif ('duplicate' === $func) {
+    // Cookie-Gruppe duplizieren
+    if (!$csrf->isValid()) {
+        $msg = rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+    } else {
+        $sql = rex_sql::factory();
+        $sql->setQuery('SELECT * FROM ' . $table . ' WHERE pid = ?', [$pid]);
+        
+        if (1 === $sql->getRows()) {
+            $newSql = rex_sql::factory();
+            $newSql->setTable($table);
+            
+            // Alle Felder kopieren außer pid
+            foreach ($sql->getFieldnames() as $fieldname) {
+                if ('pid' !== $fieldname) {
+                    $newSql->setValue($fieldname, $sql->getValue($fieldname));
+                }
+            }
+            
+            // UID und Name anpassen
+            $originalUid = $sql->getValue('uid');
+            $originalName = $sql->getValue('name');
+            $counter = 1;
+            $newUid = $originalUid . '-copy';
+            
+            // Prüfen ob UID bereits existiert, dann Suffix erhöhen
+            $checkSql = rex_sql::factory();
+            while (true) {
+                $checkSql->setQuery('SELECT pid FROM ' . $table . ' WHERE uid = ? AND clang_id = ?', [$newUid, $clang_id]);
+                if (0 === $checkSql->getRows()) {
+                    break;
+                }
+                $counter++;
+                $newUid = $originalUid . '-copy-' . $counter;
+            }
+            
+            $newSql->setValue('uid', $newUid);
+            $newSql->setValue('name', $originalName . ' (Kopie)');
+            $newSql->setValue('createdate', date('Y-m-d H:i:s'));
+            $newSql->setValue('updatedate', date('Y-m-d H:i:s'));
+            
+            try {
+                $newSql->insert();
+                $newPid = $newSql->getLastId();
+                
+                // Zur Edit-Seite des neuen Eintrags weiterleiten mit Hinweis
+                $msg = rex_view::warning(rex_i18n::msg('consent_manager_cookiegroup_duplicated_edit_uid'));
+                // Redirect zur Edit-Seite
+                header('Location: ' . rex_url::currentBackendPage(['func' => 'edit', 'pid' => $newPid, 'msg' => 'duplicated']));
+                exit;
+            } catch (rex_sql_exception $e) {
+                $msg = rex_view::error(rex_i18n::msg('consent_manager_cookiegroup_duplicate_error') . ': ' . $e->getMessage());
+            }
+        } else {
+            $msg = rex_view::error(rex_i18n::msg('consent_manager_cookiegroup_not_found'));
+        }
+    }
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
+    
+    // Warnung anzeigen wenn von duplicate weitergeleitet (nur einmalig)
+    if ('duplicated' === rex_request::request('msg', 'string', '')) {
+        echo rex_view::warning(
+            '<strong>' . rex_i18n::msg('consent_manager_cookiegroup_duplicated_edit_uid_title') . '</strong><br>' .
+            rex_i18n::msg('consent_manager_cookiegroup_duplicated_edit_uid_desc')
+        );
+        
+        // URL ohne msg-Parameter neu laden um Reload-Sperre zu aktivieren
+        echo '<script nonce="' . rex_response::getNonce() . '">';
+        echo 'if (window.history.replaceState) {';
+        echo '  var url = new URL(window.location);';
+        echo '  url.searchParams.delete("msg");';
+        echo '  window.history.replaceState({}, document.title, url);';
+        echo '}';
+        echo '</script>';
+    }
+    
     $form = rex_form::factory($table, '', 'pid = ' . $pid, 'post', $formDebug);
     $form->addParam('pid', $pid);
     $form->addParam('sort', rex_request::request('sort', 'string', ''));
@@ -79,16 +154,14 @@ if ('delete' === $func) {
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('consent_manager_cookie'));
     $db->setWhere('clang_id = ' . $clang_id . ' AND uid != "consent_manager" ORDER BY uid ASC');
-    $db->select('DISTINCT uid');
+    $db->select('DISTINCT uid, service_name, variant');
     $cookies = $db->getArray();
 
     if ($clang_id === rex_clang::getStartId() || true !== $form->isEditMode()) {
         if ([] !== $cookies) {
-            $field = $form->addCheckboxField('cookie');
-            $field->setLabel(rex_i18n::msg('consent_manager_cookies'));
-            foreach ($cookies as $v) {
-                $field->addOption((string) $v['uid'], (string) $v['uid']);
-            }
+            // Eigene HTML-Darstellung mit Toggles und Config-Buttons
+            $serviceHtml = RexFormSupport::getActiveServiceToggleList(rex_i18n::msg('consent_manager_cookies'), $cookies, $clang_id, 'cookie', $form);
+            $form->addRawField($serviceHtml);
         }
     } else {
         if ([] !== $cookies) {
@@ -104,7 +177,7 @@ if ('delete' === $func) {
                 $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
                 $checkboxes[] = [$checked, $v['uid']];
             }
-            $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
+            $form->addRawField(RexFormSupport::getServiceToggleList(rex_i18n::msg('consent_manager_cookies'), $checkboxes, $clang_id)); /** @phpstan-ignore-line */
         }
     }
 
@@ -153,8 +226,12 @@ if ($showlist) {
     $list->setColumnParams($thIcon, ['func' => 'edit', 'pid' => '###pid###']);
 
     $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
-    $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
+    $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="3">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('function'), ['pid' => '###pid###', 'func' => 'edit', 'start' => rex_request::request('start', 'string')]);
+
+    $list->addColumn(rex_i18n::msg('consent_manager_duplicate'), '<i class="rex-icon rex-icon-duplicate"></i> ' . rex_i18n::msg('consent_manager_duplicate'));
+    $list->setColumnLayout(rex_i18n::msg('consent_manager_duplicate'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+    $list->setColumnParams(rex_i18n::msg('consent_manager_duplicate'), ['pid' => '###pid###', 'func' => 'duplicate', 'start' => rex_request::request('start', 'string')] + $csrf->getUrlParams());
 
     $list->addColumn(rex_i18n::msg('delete'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete'), ['', '<td class="rex-table-action">###VALUE###</td>']);
