@@ -188,10 +188,11 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
     private function assignTheme(string $domain, string $themeUid): bool
     {
         if ('' === $themeUid) {
-            // Erstes verfügbares Theme wählen
-            $themes = \FriendsOfRedaxo\ConsentManager\Theme::getAll();
-            if (count($themes) > 0) {
-                $themeUid = $themes[0]['uid'];
+            // Erstes verfügbares Theme wählen (Standard-Theme)
+            $themeFiles = (array) glob(rex_addon::get('consent_manager')->getPath('scss/consent_manager_frontend*.scss'));
+            if (count($themeFiles) > 0) {
+                natsort($themeFiles);
+                $themeUid = basename((string) reset($themeFiles));
             } else {
                 return false;
             }

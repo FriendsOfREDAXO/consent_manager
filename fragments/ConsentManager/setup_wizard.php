@@ -19,7 +19,32 @@ if (rex_addon::exists('yrewrite') && rex_addon::get('yrewrite')->isAvailable()) 
 }
 
 // Verfügbare Themes laden
-$themes = \FriendsOfRedaxo\ConsentManager\Theme::getAll();
+$themes = [];
+$cmtheme = new \FriendsOfRedaxo\ConsentManager\Theme();
+
+// Addon-Themes
+$themeFiles = (array) glob(rex_addon::get('consent_manager')->getPath('scss/consent_manager_frontend*.scss'));
+natsort($themeFiles);
+foreach ($themeFiles as $themefile) {
+    $themeid = basename((string) $themefile);
+    $theme_options = $cmtheme->getThemeInformation($themeid);
+    if (count($theme_options) > 0) {
+        $themes[] = ['uid' => $themeid, 'name' => $theme_options['name']];
+    }
+}
+
+// Project-Themes
+if (rex_addon::exists('project') && rex_addon::get('project')->isAvailable()) {
+    $projectThemeFiles = (array) glob(rex_addon::get('project')->getPath('consent_manager_themes/consent_manager_frontend*.scss'));
+    natsort($projectThemeFiles);
+    foreach ($projectThemeFiles as $themefile) {
+        $themeid = 'project:' . basename((string) $themefile);
+        $theme_options = $cmtheme->getThemeInformation($themeid);
+        if (count($theme_options) > 0) {
+            $themes[] = ['uid' => $themeid, 'name' => $theme_options['name'] . ' (Custom)'];
+        }
+    }
+}
 
 ?>
 
