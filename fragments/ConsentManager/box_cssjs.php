@@ -22,7 +22,8 @@ if (true === rex_request::get('consent_manager_outputjs', 'bool', false)) {
 $addon = rex_addon::get('consent_manager');
 $forceCache = $this->getVar('forceCache');
 $forceReload = $this->getVar('forceReload');
-$inlineMode = $this->getVar('inline', false);
+// Default null statt false: nur true/'true'/'1' wird später geprüft, false würde zu Verwirrung führen
+$inlineMode = $this->getVar('inline', null);
 
 $consentparams = [];
 $consentparams['article'] = rex_article::getCurrentId();
