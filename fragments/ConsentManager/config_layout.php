@@ -23,12 +23,12 @@ $csrf = $this->getVar('csrf');
 ?>
 
 <div class="rex-addon-output">
-    <!-- Schnellstart Button über beiden Panels -->
+    <!-- Setup Wizard Button -->
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-md-12 text-right">
-            <button type="button" class="btn btn-warning btn-lg" data-toggle="modal" data-target="#quickstart-modal" style="padding: 12px 25px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 6px;">
-                <i class="rex-icon fa-rocket" style="margin-right: 8px; font-size: 18px;"></i> 
-                <strong><?= rex_i18n::msg('consent_manager_quickstart_button') ?></strong>
+            <button type="button" class="btn btn-warning btn-lg" data-toggle="modal" data-target="#setup-wizard-modal" style="padding: 12px 25px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 6px;">
+                <i class="rex-icon fa-magic" style="margin-right: 8px; font-size: 18px;"></i> 
+                <strong><?= rex_i18n::msg('consent_manager_wizard_button') ?></strong>
             </button>
         </div>
     </div>

@@ -435,3 +435,48 @@ consent_manager_domain_theme_preview_title = Live-Vorschau
 consent_manager_domain_theme_preview_fullscreen = Vollbild-Vorschau
 consent_manager_theme_modal_close = Schließen
 
+
+# Setup Wizard (SSE-basiert)
+consent_manager_wizard_button = Setup-Assistent
+consent_manager_wizard_title = Setup-Assistent
+consent_manager_wizard_welcome = Willkommen beim Setup-Assistenten
+consent_manager_wizard_intro = In wenigen Schritten zum fertigen Consent Manager mit Live-Feedback
+consent_manager_wizard_domain = Website-Domain
+consent_manager_wizard_domain_select = Domain aus YRewrite wählen...
+consent_manager_wizard_domain_hint = Domain ohne https:// eingeben, z.B. example.com
+consent_manager_wizard_or = – oder –
+consent_manager_wizard_setup_type = Welche Dienste importieren?
+consent_manager_wizard_theme = Design-Theme
+consent_manager_wizard_auto_inject = Automatische Frontend-Einbindung aktivieren
+consent_manager_wizard_auto_inject_hint = Consent Manager wird automatisch auf allen Seiten geladen (empfohlen)
+consent_manager_wizard_start = Setup starten
+consent_manager_wizard_close = Schließen
+cons# Setup Wizard (SSE-basiert)
+consent_manager_wizard_button = Setup-Assistent
+conse Setup wird gestaconsent_manager_wizard_buttarconsent_manager_wizard_title = Setup-Assistentarconsent_manager_wizard_welcome = Willkommen bosconsent_manager_wizard_intro = In wenigen Schritten zum fertigen t_consent_manager_wizard_domain = Website-Domain
+consent_manager_wizard_domain_select = Domain aus _sconsent_manager_wizard_domain_select = Domainenconsent_manager_wizard_domain_hint = Domain ohne https:// eingeben, _mconsent_manad_error_domain_required = Bitte Domain eingeben
+
+# Setup Wizard (SSE-basiert)
+consent_manager_wizard_button = Setup-Assistent
+consent_manager_wizard_title = Setup-Assistent
+consent_manager_wizard_welcome = Willkommen beim Setup-Assistenten
+consent_manager_wizard_intro = In wenigen Schritten zum fertigen Consent Manager mit Live-Feedback
+consent_manager_wizard_domain = Website-Domain
+consent_manager_wizard_domain_select = Domain aus YRewrite wählen...
+consent_manager_wizard_domain_hint = Domain ohne https:// eingeben, z.B. example.com
+consent_manager_wizard_or = – oder –
+consent_manager_wizard_setup_type = Welche Dienste importieren?
+consent_manager_wizard_theme = Design-Theme
+consent_manager_wizard_auto_inject = Automatische Frontend-Einbindung aktivieren
+consent_manager_wizard_auto_inject_hint = Consent Manager wird automatisch auf allen Seiten geladen (empfohlen)
+consent_manager_wizard_start = Setup starten
+consent_manager_wizard_close = Schließen
+consent_manager_wizard_to_config = Zur Konfiguration
+consent_manager_wizard_starting = Setup wird gestartet...
+consent_manager_wizard_log = Ereignis-Protokoll
+consent_manager_wizard_complete_title = Setup erfolgreich abgeschlossen!
+consent_manager_wizard_next_steps = Nächste Schritte
+consent_manager_wizard_step_customize = Texte und Design nach Bedarf anpassen
+consent_manager_wizard_step_services = Weitere Dienste hinzufügen falls benötigt
+consent_manager_wizard_step_test = Im Frontend testen
+consent_manager_wizard_error_domain_required = Bitte Domain eingeben
