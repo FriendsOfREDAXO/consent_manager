@@ -554,7 +554,7 @@ if (count($addonThemes) > 0) {
             this.iframe = document.createElement('iframe');
             this.iframe.className = 'cm_modal-iframe';
             this.iframe.src = url;
-            this.iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
+            // Kein sandbox-Attribut mehr - verhindert white-screen-Probleme
             
             // Iframe einfügen
             this.wrapper.innerHTML = '';
