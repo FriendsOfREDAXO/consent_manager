@@ -32,9 +32,14 @@ $consentparams['outputjs'] = '';
 $consentparams['lang'] = rex_clang::getCurrentId();
 $consentparams['initially_hidden'] = 'false';
 
-$consent_manager = new Frontend($forceCache);
-if (is_string(rex_request::server('HTTP_HOST'))) {
-    $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
+// Wenn consent_manager bereits per Fragment-Var übergeben wurde, verwenden
+$consent_manager = $this->getVar('consent_manager');
+if (!$consent_manager instanceof Frontend) {
+    $consent_manager = new Frontend((int) $forceCache);
+    // Domain nur setzen, wenn Frontend-Objekt neu erstellt wurde
+    if (is_string(rex_request::server('HTTP_HOST'))) {
+        $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
+    }
 }
 
 // Google Consent Mode v2 Integration - muss vor dem Consent Manager geladen werden
