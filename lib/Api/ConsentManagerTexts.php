@@ -3,100 +3,95 @@
 namespace FriendsOfRedaxo\ConsentManager\Api;
 
 use FriendsOfRedaxo\ConsentManager\ConsentManager;
+use FriendsOfRedaxo\ConsentManager\Fragment;
 use FriendsOfRedaxo\ConsentManager\Utility;
-use rex_addon;
+use rex_api_exception;
 use rex_api_function;
 use rex_api_result;
 use rex_clang;
-use rex_fragment;
-use rex_logger;
 use rex_request;
 use rex_response;
-use rex_server;
 
 /**
- * API Endpoint für Lazy Loading von Texten und Box-Template.
+ * API endpoint für Lazy Loading von Consent Manager Texten und Box-Template.
  *
- * Lädt nur die tatsächlich benötigten Texte on-demand,
- * reduziert initiale JavaScript-Größe um ~33%.
+ * Dieser Endpoint liefert:
+ * - Alle übersetzten Texte für die aktuelle Sprache
+ * - Das gerenderte Box-Template (HTML)
+ * - Cache-Metadaten für Client-seitiges Caching
+ *
+ * Aufruf: ?rex-api-call=consent_manager_texts&clang=1
+ * Registrierung erfolgt in boot.php via rex_api_function::register()
  *
  * @api
  */
 class ConsentManagerTexts extends rex_api_function
 {
-    protected $published = true;
-
-    public function execute(): rex_api_result
+    /**
+     * @throws rex_api_exception
+     * @return rex_api_result
+     */
+    public function execute()
     {
         rex_response::cleanOutputBuffers();
 
+        // Clang aus Request (mit Fallback auf Standard-Sprache)
         $clangId = rex_request::get('clang', 'int', rex_clang::getCurrentId());
-        $domain = rex_request::get('domain', 'string', '');
 
-        // Cache-Header setzen
-        $addon = rex_addon::get('consent_manager');
-        $cacheLogId = ConsentManager::getCacheLogId();
+        // Validiere Clang
+        if (!rex_clang::exists($clangId)) {
+            throw new rex_api_exception('Invalid clang parameter', 400);
+        }
+
+        // ETag für Client-seitiges Caching (basierend auf Version + Cache-Log)
         $version = ConsentManager::getVersion();
-        $etag = md5($version . '-' . $cacheLogId . '-' . $clangId);
+        $cacheLogId = ConsentManager::getCacheLogId();
+        $etag = md5($version . '-' . $cacheLogId . '-lazy-' . $clangId);
 
-        header('Content-Type: application/json; charset=utf-8');
-        header('ETag: "' . $etag . '"');
-        header('Cache-Control: max-age=86400, public'); // 24h Cache
-
-        // 304 Not Modified Support
-        $clientEtag = rex_server('HTTP_IF_NONE_MATCH', 'string', '');
-        if (trim($clientEtag, '"') === $etag) {
-            http_response_code(304);
+        // Prüfe If-None-Match Header (Client hat bereits gecachte Version)
+        $clientEtag = rex_request::server('HTTP_IF_NONE_MATCH', 'string', '');
+        if ('' !== $clientEtag && $clientEtag === '"' . $etag . '"') {
+            rex_response::setStatus(rex_response::HTTP_NOT_MODIFIED);
+            rex_response::sendCacheControl('max-age=86400, public, immutable'); // 24h Cache
+            header('ETag: "' . $etag . '"');
             exit;
         }
 
-        // Texte holen
+        // Lade Texte für Sprache
         $texts = ConsentManager::getTexts($clangId);
 
-        // Box-Template rendern
+        // Rendere Box-Template
         $boxTemplate = $this->renderBoxTemplate($clangId);
 
+        // Bereite Antwort vor
         $data = [
             'texts' => $texts,
             'boxTemplate' => $boxTemplate,
             'cache' => [
-                'version' => $version,
-                'logId' => $cacheLogId,
                 'etag' => $etag,
-            ],
-            'meta' => [
-                'clang' => $clangId,
-                'domain' => $domain,
-                'timestamp' => time(),
+                'version' => $version,
+                'cacheLogId' => $cacheLogId,
             ],
         ];
 
+        // Setze HTTP Headers für Caching
+        rex_response::sendCacheControl('max-age=86400, public, immutable'); // 24h Cache
+        header('ETag: "' . $etag . '"');
+        header('Content-Type: application/json; charset=utf-8');
+
+        // Sende JSON Response
         rex_response::sendJson($data);
         exit;
     }
 
-    private function renderBoxTemplate(int $clangId): string
+    /**
+     * Rendert das Box-Template für die angegebene Sprache.
+     *
+     * @param int $clangId
+     * @return string
+     */
+    private function renderBoxTemplate($clangId)
     {
-        ob_start();
-        $fragment = new rex_fragment();
-        $fragment->setVar('forceCache', 0);
-        $fragment->setVar('forceReload', 0);
-        $fragment->setVar('cspNonce', rex_response::getNonce());
-        echo $fragment->parse('ConsentManager/box.php');
-        $boxTemplate = (string) ob_get_contents();
-        ob_end_clean();
-
-        if ('' === $boxTemplate) {
-            rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . Utility::hostname() . ')');
-            return '';
-        }
-
-        // Markdown-Processing (Sprog)
-        if (rex_addon::exists('sprog') && rex_addon::get('sprog')->isAvailable() && function_exists('sprogdown')) {
-            /** @phpstan-ignore-next-line */
-            $boxTemplate = \sprogdown($boxTemplate, $clangId);
-        }
-
-        return $boxTemplate;
+        return Fragment::renderBoxTemplate(['clang' => $clangId]);
     }
 }

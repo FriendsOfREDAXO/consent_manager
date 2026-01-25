@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\Api\ConsentManager;
+use FriendsOfRedaxo\ConsentManager\Api\ConsentManagerTexts;
 use FriendsOfRedaxo\ConsentManager\Api\ConsentStatsApi;
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
@@ -12,6 +13,9 @@ use FriendsOfRedaxo\ConsentManager\OEmbedParser;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
 $addon = rex_addon::get('consent_manager');
+
+// Registriere API-Funktionen (REDAXO 5.17+)
+rex_api_function::register('consent_manager_texts', ConsentManagerTexts::class);
 
 // Nur im Backend
 if (rex::isBackend()) {
