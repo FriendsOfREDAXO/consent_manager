@@ -34,6 +34,24 @@ Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview,
 - **Realpath-Prüfung**: Validiert dass Theme-Datei innerhalb des Assets-Verzeichnisses liegt
 - **Security-Audit compliant**: Alle Theme-Zugriffe sind gegen Directory-Traversal abgesichert
 
+### 👩‍💻 Für Developer
+
+**Neue/Geänderte APIs:**
+- **`Frontend::getFrontendCss()`** - Gibt jetzt automatisch minifiziertes und gecachtes CSS zurück
+- **Neuer API-Endpoint** `index.php?rex-api-call=consent_manager_texts` für Lazy Loading:
+  - Parameter: `clang` (int, required), `domain` (string, optional)
+  - Response: JSON mit `texts`, `boxTemplate` und `cache` Informationen
+  - Unterstützt HTTP-Caching (ETag, 304 Not Modified)
+- **Neue JavaScript-API** `window.GoogleConsentModeV2.getCurrentSettings()` für Runtime-Zugriff auf Consent-Flags
+- **Cache-Struktur**: Neue Dateien unter `/redaxo/cache/addons/consent_manager/css_*.css`
+
+**Breaking Changes:** Keine
+
+**Empfehlungen:**
+- Theme-CSS wird automatisch minifiziert - keine Anpassungen nötig
+- Lazy Loading ist standardmäßig aktiv - Box-Template wird on-demand geladen
+- Custom Themes sollten die neue Theme-Editor-Funktion nutzen statt direkte Datei-Manipulation
+
 ---
 
 ### 🧙 Setup-Wizard (NEU)
