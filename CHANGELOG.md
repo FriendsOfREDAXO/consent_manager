@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.3.0 - 24.01.2026
+## Version 5.3.0 - 25.01.2026
 
 **🚀 Release-Highlights:**  
 Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse und Performance-Optimierungen.
@@ -15,10 +15,11 @@ Interaktiver Setup-Assistent für schnelle Erstkonfiguration:
 - **SSE-basierte Fortschrittsanzeige** mit Echtzeit-Feedback
 - **YRewrite-Integration**: Automatische Auswahl aus vorhandenen YRewrite-Domains
 - **Auto-Inject-Option**: Toggle-Switch für automatische Frontend-Einbindung
-- **Template-Positivliste (NEU)**: Multi-Select für Auswahl aktiver Templates, in denen Consent Manager eingebunden werden soll
+- **Template-Positivliste**: Multi-Select für Auswahl aktiver Templates, in denen Consent Manager eingebunden werden soll
 - **Standard/Minimal Setup**: Auswahl zwischen 25 vorkonfigurierten Services oder nur notwendigen Cookies
 - **Duplikat-Prävention**: Überspringt bereits vorhandene Services automatisch
-- **Success-Screen**: Übersichtliche Navigation zu Cookie-Gruppen, Domain, Services, Theme und Texte
+- **Success-Screen mit Animation**: "HEUREKA!"-Banner mit Blau-Grün-Gradient und animiertem Emoji
+- **Code-Generator**: Fertiger Footer-Link-Code zum Kopieren mit Klasse `consent-settings-link`
 - **Required Group Assignment**: Die "Technisch notwendig"-Gruppe wird automatisch der neuen Domain zugeordnet
 
 ### 🎨 Domain-spezifische Themes
@@ -100,7 +101,9 @@ Script-Felder nun in allen Sprachen editierbar mit automatischem Fallback:
 ### ⚡ Performance-Optimierungen
 
 JavaScript-Dateien umfassend optimiert für bessere Performance:
-- **Event-Listener dedupliziert**: Redundante `keydown`-Event-Listener zusammengeführt (von 2 auf 1 globaler Listener)
+- **Event-Listener optimiert**: Cookie-Link-Handler verwendet jetzt Event-Delegation statt mehrfacher `querySelectorAll`
+- **Automatisches Link-Handling**: Links mit Klasse `consent-settings-link` oder `data-consent-action="settings"` öffnen automatisch Cookie-Box
+- **Legacy-Support**: Bestehende Klassen `.consent_manager-show-box` und `.consent_manager-show-box-reload` funktionieren weiterhin
 - **DOM-Query-Caching**: Wiederholte `getElementById`/`querySelector`-Aufrufe durch Variablen-Caching ersetzt
 - **Set statt indexOf**: `consents.indexOf()` durch `Set.has()` ersetzt für O(1) statt O(n) Lookup-Performance
 - **Optimierte Schleifen**: `forEach` mit `every` kombiniert für frühen Abbruch bei negativen Checks
@@ -114,7 +117,31 @@ JavaScript-Dateien umfassend optimiert für bessere Performance:
 
 Neues Feature für einfachere Integration ohne Template-Anpassung:
 - **Auto-Inject Option**: Pro Domain aktivierbare automatische Einbindung im Frontend
-- **Template-Positivliste (NEU)**: Multi-Select zur Auswahl aktiver Templates für gezielte Einbindung
+- **Template-Positivliste**: Multi-Select zur Auswahl aktiver Templates für gezielte Einbindung
+  - Leer lassen = Consent Manager wird in allen Templates eingebunden (Standardverhalten)
+  - Templates auswählen = nur in ausgewählten Templates wird eingebunden
+  - Live-Search, Select All/Deselect All, Count-Display
+  - Sinnvoll für Websites mit API-Endpoints, AJAX-Templates, Print-Versionen, RSS-Feeds
+  - Neue Datenbankspalte: `auto_inject_include_templates` (TEXT, kommagetrennte Template-IDs)
+- **OUTPUT_FILTER Integration**: Consent Manager wird automatisch vor `</head>` eingefügt
+- **Keine Template-Änderung nötig**: Aktivierung per Checkbox in der Domain-Konfiguration
+- **Intelligente Erkennung**: Nur bei HTML-Seiten mit `</head>` Tag aktiv
+- **Kompatibel mit manueller Einbindung**: Kann parallel zu bestehenden Integrationen genutzt werden
+- **Backend-UI**: Neue Spalte "Auto-Inject" in der Domain-Übersicht
+- **Neue Datenbank-Spalten**: 
+  - `auto_inject` - Aktivierung der automatischen Einbindung (tinyint)
+  - `auto_inject_reload_on_consent` - Seite bei Consent-Änderung neu laden (tinyint)
+  - `auto_inject_delay` - Verzögerung bis zur Anzeige in Sekunden (int)
+  - `auto_inject_focus` - Fokus auf Consent-Box setzen (Barrierefreiheit) (tinyint)
+  - `auto_inject_include_templates` - Template-IDs für Positivliste (text)
+
+### 📝 Dokumentation
+
+- **README kompakter**: Emojis aus Überschriften entfernt (außer deprecated-Warnung)
+- **Cookie-Liste**: Nur noch PHP-Integration dokumentiert (`Frontend::getCookieList()`)
+- **Footer-Link**: Dokumentation vereinfacht für class-basiertes Auto-Handling
+- **Cookie-Einstellungen-Link**: Neue Klasse `consent-settings-link` für automatisches Öffnen der Cookie-Box ohne onclick
+- **Alternative**: Data-Attribut `data-consent-action="settings"` als Variante dokumentiert
   - Leer lassen = Consent Manager wird in allen Templates eingebunden (Standardverhalten)
   - Templates auswählen = nur in ausgewählten Templates wird eingebunden
   - Live-Search, Select All/Deselect All, Count-Display
