@@ -15,18 +15,31 @@ This is the **REDAXO Consent Manager AddOn** - a comprehensive GDPR/DSGVO-compli
 ```
 ├── boot.php              # AddOn bootstrap file
 ├── package.yml           # AddOn configuration
-├── lib/                  # Core PHP classes
-│   ├── consent_manager_frontend.php    # Frontend controller
-│   ├── consent_manager_theme.php       # Theme system
-│   ├── consent_manager_inline.php      # Inline consent system
-│   └── consent_manager_*.php           # Various utility classes
+├── lib/                  # Core PHP classes (namespaced)
+│   ├── Frontend.php      # Frontend controller (FriendsOfRedaxo\ConsentManager\Frontend)
+│   ├── Theme.php         # Theme system
+│   ├── InlineConsent.php # Inline consent system
+│   ├── Api/              # API endpoints
+│   ├── Cronjob/          # Cronjob classes
+│   ├── deprecated/       # Deprecated old class names for BC
+│   └── *.php             # Various utility classes
 ├── pages/                # Backend administration pages
+│   ├── config.php        # General settings
+│   ├── cookie.php        # Cookie/Service management (UI calls it "Services")
+│   ├── cookiegroup.php   # Cookie group management
+│   ├── text.php          # Text management
+│   ├── domain.php        # Domain configuration
 │   ├── theme.php         # Theme selection and preview
 │   ├── theme_editor.php  # A11y theme editor with color picker
-│   └── *.php            # Domain, service, text management
-├── fragments/            # Template fragments
-│   ├── consent_manager_box.php         # Main consent dialog
-│   └── consent_inline_placeholder.php  # Inline consent placeholder
+│   ├── theme_preview.php # Theme preview rendering
+│   └── log.php           # Consent log viewer
+├── fragments/            # Template fragments (in ConsentManager subdirectory)
+│   └── ConsentManager/
+│       ├── box.php                 # Main consent dialog
+│       ├── inline_placeholder.php  # Inline consent placeholder
+│       ├── setup_wizard.php        # Setup wizard
+│       ├── theme_editor.php        # Theme editor fragment
+│       └── *.php                   # Other fragments
 ├── assets/              # Frontend assets
 │   ├── *.js             # JavaScript files (main, polyfills, debug)
 │   └── *.css            # Compiled CSS themes
@@ -39,19 +52,22 @@ This is the **REDAXO Consent Manager AddOn** - a comprehensive GDPR/DSGVO-compli
 
 ### Database Schema
 - `rex_consent_manager_domain` - Domain configurations
-- `rex_consent_manager_domain_service` - Service assignments  
-- `rex_consent_manager_service` - Service definitions
+- `rex_consent_manager_cookie` - Cookie/Service definitions (what the UI calls "Services")
+- `rex_consent_manager_cookiegroup` - Cookie groups for organizing services
 - `rex_consent_manager_text` - Multilingual texts
-- `rex_consent_manager_log` - Consent logging
+- `rex_consent_manager_cache_log` - Cache for consent data
+- `rex_consent_manager_consent_log` - User consent logging
 
 ## Development Guidelines
 
 ### Code Standards
-- **PHP:** Follow REDAXO conventions, use `rex_` prefixes for classes
-- **Naming:** Use snake_case for files, camelCase for methods
+- **PHP:** Use namespace `FriendsOfRedaxo\ConsentManager\*` for all classes (see Namespace-Guide.md)
+- **Naming:** Use PascalCase for class names, camelCase for methods, snake_case for files
 - **Security:** Always use `rex_escape()` for output, `rex_request()` for input
 - **i18n:** Use `$addon->i18n('key')` for all translatable strings
 - **Database:** Use `rex_sql` class, never direct SQL queries
+- **Backwards Compatibility:** Old `consent_manager_*` class names exist in `lib/deprecated/` but are deprecated
+- **Namespace Migration:** Version 5.0+ uses namespaces - see `Namespace-Guide.md` for full mapping of old to new class names
 
 ### Commit Messages
 Use **Conventional Commits** format (configured in `.gitmessage`):
@@ -87,8 +103,8 @@ Scopes: theme, inline, a11y, frontend, backend, config
 
 ### Setup Files and UIDs
 **Important:** New text UIDs must be added to ALL setup files:
-- `setup/minimal_setup.json` - Basic setup with essential services
-- `setup/default_setup.json` - Standard setup with 25+ preconfigured services  
+- `setup/minimal_setup.json` - Basic setup (1 service, 30 text UIDs)
+- `setup/default_setup.json` - Standard setup (25 services, 35 text UIDs)
 - `setup/business_setup.json` - Business-oriented services
 - `setup/contribution_template.json` - Template for community contributions
 
@@ -135,6 +151,7 @@ chore(i18n): Update German translations
 - **Service Detection:** YouTube, Vimeo, Google Maps auto-detection
 - **Thumbnail Cache:** Local caching system for external media
 - **Domain-specific:** Per-domain inline-only mode
+- **Function:** `doConsent()` helper function available globally
 
 ### 2. Theme System
 - **SCSS-based:** Compile-time theme generation
@@ -156,13 +173,25 @@ chore(i18n): Update German translations
 
 ## API & Integration
 
-### REX_VARS (Deprecated in 5.x)
+### PHP API (Current - Version 5.x)
 ```php
-// OLD (deprecated)
-REX_CONSENT_MANAGER[service=youtube]
+use FriendsOfRedaxo\ConsentManager\Frontend;
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
 
-// NEW (recommended)  
-<?php echo consent_manager_frontend::getFragment(); ?>
+// Get consent box fragment
+echo Frontend::getFragment();
+
+// Inline consent with doConsent helper
+echo doConsent('youtube', '<iframe src="..."></iframe>');
+
+// Or with namespaced class
+echo InlineConsent::doConsent('youtube', '<iframe src="..."></iframe>');
+```
+
+### Deprecated API (Version 4.x - Still works but discouraged)
+```php
+// OLD (deprecated but still functional via lib/deprecated/)
+echo consent_manager_frontend::getFragment();
 ```
 
 ### JavaScript API
@@ -195,24 +224,27 @@ consentManagerDebug.show();
 5. Compile and test in preview
 
 ### Adding New Services
-1. Add service in backend under "Services"
+1. Add service in backend under "Cookies" page (UI label says "Services")
 2. Configure cookies and scripts
-3. Test with inline consent system
-4. Add service-specific handlers if needed
+3. Assign to cookie groups
+4. Test with inline consent system
+5. Add service-specific handlers if needed
 
 ### Text Management & Setup Files
 - **Text UIDs**: All texts stored in database with UID system
-- **Backend interface**: For editing individual texts
+- **Backend interface**: For editing individual texts (pages/text.php)
 - **Setup Files**: JSON-based export/import system
-  - `setup/minimal_setup.json` - Basic setup (2 services, 30 text UIDs)
-  - `setup/default_setup.json` - Standard setup (25+ services, 27 text UIDs) 
+  - `setup/minimal_setup.json` - Basic setup (1 service, 30 text UIDs)
+  - `setup/default_setup.json` - Standard setup (25 services, 35 text UIDs)
   - `setup/business_setup.json` - Business-focused services
   - `setup/contribution_template.json` - Template for community contributions
+- **Structure**: Each setup file contains `meta`, `cookiegroups`, `cookies` (services), and `texts` arrays
 - **New Text UIDs**: Must be added to ALL setup files with consistent structure
 - **Fallback**: English if German translation missing
 
 ## Important Notes
 
+- **Namespace**: All new code should use `FriendsOfRedaxo\ConsentManager\*` namespace
 - **Always test accessibility** with keyboard navigation and screen readers
 - **Use `rex_escape()`** for ALL user output to prevent XSS
 - **Follow REDAXO patterns** - don't reinvent existing functionality  
@@ -222,6 +254,8 @@ consentManagerDebug.show();
 - **Setup Files**: When adding new text UIDs, update ALL 4 setup JSON files
 - **SCSS Auto-Compilation**: Themes compile automatically when selected in backend
 - **GitHub Copilot Reviews**: Address all review comments in PRs before merging
+- **Fragments**: Located in `fragments/ConsentManager/` subdirectory
+- **Database**: Tables use `rex_consent_manager_` prefix (cookie, cookiegroup, domain, text, cache_log, consent_log)
 
 ## Debugging
 
@@ -239,14 +273,16 @@ consentManagerDebug.show();
 
 ## Files to Always Check When Making Changes
 
-1. **Fragments:** May need updates for new features
+1. **Fragments:** Located in `fragments/ConsentManager/` - may need updates for new features
 2. **JavaScript:** Check browser compatibility  
 3. **SCSS:** Auto-compiles when theme selected, no manual compilation needed
-4. **Database:** Check migrations in `install.php`
-5. **i18n:** Update language files for new strings
+4. **Database:** Check migrations in `install.php` and `update.php`
+5. **i18n:** Update language files in `lang/` for new strings
 6. **Setup Files:** Add new text UIDs to ALL 4 JSON files (minimal, default, business, contribution_template)
 7. **CHANGELOG.md:** Document all changes
 8. **README.md:** Update if public API changes
 9. **Pull Requests:** Address all GitHub Copilot review comments
+10. **Namespace-Guide.md:** Update if adding new classes or changing class structure
+11. **Deprecated Classes:** If removing deprecated features, check `lib/deprecated/`
 
 Trust these instructions and refer to existing code patterns before exploring. The codebase follows consistent REDAXO conventions throughout.
