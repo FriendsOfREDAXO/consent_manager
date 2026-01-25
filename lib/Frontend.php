@@ -340,32 +340,54 @@ class Frontend
 
         // Caching mit Datei-mtime als Cache-Key
         $cssPath = $addon->getAssetsPath($_cssfilename);
+        
+        // Prüfe ob Datei existiert
+        if (!file_exists($cssPath)) {
+            return '';
+        }
+        
         $mtime = filemtime($cssPath);
+        if (false === $mtime) {
+            return '';
+        }
+        
         $cacheFile = rex_path::addonCache('consent_manager', 'css_' . md5($_cssfilename) . '_' . $mtime . '.css');
         
         // Versuche aus Cache zu lesen
         if (file_exists($cacheFile)) {
             $cached = rex_file::get($cacheFile);
-            if ('' !== $cached) {
+            if (false !== $cached && '' !== $cached) {
                 return $cached;
             }
         }
         
         // CSS-Datei lesen
         $_csscontent = rex_file::get($cssPath);
-        if ('' === $_csscontent) {
+        if (false === $_csscontent || '' === $_csscontent) {
             return '';
         }
         
         // CSS minifizieren
         // 1. Kommentare entfernen
-        $_csscontent = (string) preg_replace('/\/\*.*?\*\//s', '', $_csscontent);
+        $minified = preg_replace('/\/\*.*?\*\//s', '', $_csscontent);
+        if (null === $minified) {
+            return '/*' . $_cssfilename . '*/ ' . $_csscontent; // Fallback: unminifiziert
+        }
+        $_csscontent = $minified;
         
         // 2. Mehrfaches Whitespace durch einzelnes Leerzeichen ersetzen
-        $_csscontent = (string) preg_replace('/\s+/', ' ', $_csscontent);
+        $minified = preg_replace('/\s+/', ' ', $_csscontent);
+        if (null === $minified) {
+            return '/*' . $_cssfilename . '*/ ' . $_csscontent;
+        }
+        $_csscontent = $minified;
         
         // 3. Whitespace um CSS-Zeichen entfernen
-        $_csscontent = (string) preg_replace('/\s*([{}:;,>~+])\s*/', '$1', $_csscontent);
+        $minified = preg_replace('/\s*([{}:;,>~+])\s*/', '$1', $_csscontent);
+        if (null === $minified) {
+            return '/*' . $_cssfilename . '*/ ' . $_csscontent;
+        }
+        $_csscontent = $minified;
         
         // 4. Führendes/Abschließendes Whitespace entfernen
         $_csscontent = trim($_csscontent);
