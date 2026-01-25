@@ -15,8 +15,6 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
 
     public function execute()
     {
-        rex_response::cleanOutputBuffers();
-        
         // Berechtigungsprüfung
         if (!rex::getUser() || !rex::getUser()->isAdmin()) {
             rex_response::sendJson([
@@ -263,8 +261,12 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
     private function importStandardSetup()
     {
         try {
-            $jsonSetup = new JsonSetup();
-            $jsonSetup->importFromFile('standard');
+            $jsonSetupFile = rex_path::addon('consent_manager', 'setup/default_setup.json');
+            if (!file_exists($jsonSetupFile)) {
+                throw new Exception('Setup-Datei nicht gefunden: ' . $jsonSetupFile);
+            }
+            // false = deleteExisting NICHT aktivieren (Domain behalten!)
+            JsonSetup::importSetup($jsonSetupFile, false, 'update');
         } catch (Exception $e) {
             throw new Exception('Standard-Setup konnte nicht importiert werden: ' . $e->getMessage());
         }
@@ -276,8 +278,12 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
     private function importMinimalSetup()
     {
         try {
-            $jsonSetup = new JsonSetup();
-            $jsonSetup->importFromFile('minimal');
+            $jsonSetupFile = rex_path::addon('consent_manager', 'setup/minimal_setup.json');
+            if (!file_exists($jsonSetupFile)) {
+                throw new Exception('Setup-Datei nicht gefunden: ' . $jsonSetupFile);
+            }
+            // false = deleteExisting NICHT aktivieren (Domain behalten!)
+            JsonSetup::importSetup($jsonSetupFile, false, 'update');
         } catch (Exception $e) {
             throw new Exception('Minimal-Setup konnte nicht importiert werden: ' . $e->getMessage());
         }
