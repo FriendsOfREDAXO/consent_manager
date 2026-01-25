@@ -340,12 +340,15 @@ class Frontend
 
         // Caching mit Datei-mtime als Cache-Key
         $cssPath = $addon->getAssetsPath($_cssfilename);
-        $cacheKey = 'consent_manager_css_' . md5($_cssfilename . filemtime($cssPath));
+        $mtime = filemtime($cssPath);
+        $cacheFile = rex_path::addonCache('consent_manager', 'css_' . md5($_cssfilename) . '_' . $mtime . '.css');
         
         // Versuche aus Cache zu lesen
-        $cached = rex_file::getCache($cacheKey);
-        if (null !== $cached) {
-            return $cached;
+        if (file_exists($cacheFile)) {
+            $cached = rex_file::get($cacheFile);
+            if ('' !== $cached) {
+                return $cached;
+            }
         }
         
         // CSS-Datei lesen
@@ -371,7 +374,16 @@ class Frontend
         $output = '/*' . $_cssfilename . '*/ ' . $_csscontent;
         
         // In Cache schreiben
-        rex_file::putCache($cacheKey, $output);
+        rex_file::put($cacheFile, $output);
+        
+        // Alte Cache-Dateien löschen (cleanup)
+        $cacheDir = rex_path::addonCache('consent_manager');
+        $prefix = 'css_' . md5($_cssfilename) . '_';
+        foreach (glob($cacheDir . $prefix . '*.css') ?: [] as $oldCache) {
+            if ($oldCache !== $cacheFile) {
+                @unlink($oldCache);
+            }
+        }
         
         return $output;
     }
