@@ -33,14 +33,11 @@ use rex_response;
  */
 class ConsentManagerTexts extends rex_api_function
 {
-    /** @var bool Erlaubt Frontend-Aufrufe (published API) */
+    /** Erlaubt Frontend-Aufrufe (published API) */
     protected $published = true;
 
-    /**
-     * @throws rex_api_exception
-     * @return never
-     */
-    public function execute()
+    #[\Override]
+    public function execute(): never
     {
         rex_response::cleanOutputBuffers();
 
