@@ -368,28 +368,23 @@ class Frontend
         }
         
         // CSS minifizieren
+        // PCRE Limits erhöhen für große CSS-Dateien
+        ini_set('pcre.backtrack_limit', '5000000');
+        ini_set('pcre.recursion_limit', '5000000');
+        
         // 1. Kommentare entfernen
-        $minified = preg_replace('/\/\*.*?\*\//s', '', $_csscontent);
-        if (null === $minified) {
-            return '/*' . $_cssfilename . '*/ ' . $_csscontent; // Fallback: unminifiziert
-        }
-        $_csscontent = $minified;
+        $_csscontent = (string) preg_replace('/\/\*.*?\*\//s', '', $_csscontent);
         
-        // 2. Mehrfaches Whitespace durch einzelnes Leerzeichen ersetzen
-        $minified = preg_replace('/\s+/', ' ', $_csscontent);
-        if (null === $minified) {
-            return '/*' . $_cssfilename . '*/ ' . $_csscontent;
-        }
-        $_csscontent = $minified;
+        // 2. Zeilenumbrüche und Tabs durch Leerzeichen ersetzen
+        $_csscontent = str_replace(["\r\n", "\r", "\n", "\t"], ' ', $_csscontent);
         
-        // 3. Whitespace um CSS-Zeichen entfernen
-        $minified = preg_replace('/\s*([{}:;,>~+])\s*/', '$1', $_csscontent);
-        if (null === $minified) {
-            return '/*' . $_cssfilename . '*/ ' . $_csscontent;
-        }
-        $_csscontent = $minified;
+        // 3. Mehrfaches Leerzeichen durch einzelnes ersetzen
+        $_csscontent = (string) preg_replace('/  +/', ' ', $_csscontent);
         
-        // 4. Führendes/Abschließendes Whitespace entfernen
+        // 4. Whitespace um CSS-Zeichen entfernen
+        $_csscontent = (string) preg_replace('/\s*([{}:;,>~+])\s*/', '$1', $_csscontent);
+        
+        // 5. Führendes/Abschließendes Whitespace entfernen
         $_csscontent = trim($_csscontent);
         
         // Mit Dateinamen-Kommentar (für Debugging)
