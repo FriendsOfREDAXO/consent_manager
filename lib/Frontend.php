@@ -110,7 +110,7 @@ class Frontend
         $domain = Utility::hostname();
 
         $domains = ConsentManager::getDomains();
-        if (empty($domains)) {
+        if ($domains === []) {
             return;
         }
 

@@ -12,10 +12,10 @@ class ConsentManager
 
     private static function initCache(): void
     {
-        if (empty(self::$cache)) {
+        if (self::$cache === []) {
             self::$cache = Cache::read();
             // Ensure cache is populated if empty or version mismatch
-            if (empty(self::$cache) || (rex_addon::get('consent_manager')->getVersion() !== (self::$cache['majorVersion'] ?? null))) {
+            if (self::$cache === [] || (rex_addon::get('consent_manager')->getVersion() !== (self::$cache['majorVersion'] ?? null))) {
                 Cache::forceWrite();
                 self::$cache = Cache::read();
             }

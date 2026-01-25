@@ -52,6 +52,15 @@ Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview,
 - Lazy Loading ist standardmäßig aktiv - Box-Template wird on-demand geladen
 - Custom Themes sollten die neue Theme-Editor-Funktion nutzen statt direkte Datei-Manipulation
 
+**Code-Qualität:**
+- PHP 8.3+ als Minimum-Requirement (package.yml)
+- `#[\Override]` Attribute für bessere IDE-Unterstützung
+- Moderne PHP-Syntax: `str_starts_with()`, `str_contains()` statt `strpos()`
+- Rexstan-konform: ConsentManagerTexts API ohne Fehler
+- Error-Logging für API-Fehler (debugging-freundlich ohne Information Disclosure)
+- i18n-ready Error-Messages im JavaScript-Fallback
+- RFC-konforme Domain-Validierung im Setup-Wizard (Port 1-65535)
+
 ---
 
 ### 🧙 Setup-Wizard (NEU)
