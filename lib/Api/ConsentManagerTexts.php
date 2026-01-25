@@ -28,6 +28,16 @@ use rex_response;
 class ConsentManagerTexts extends rex_api_function
 {
     /**
+     * Erlaubt Frontend-Aufrufe (published API).
+     *
+     * @return bool
+     */
+    protected function requiresCsrfToken()
+    {
+        return false;
+    }
+
+    /**
      * @throws rex_api_exception
      * @return rex_api_result
      */
