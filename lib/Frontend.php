@@ -310,7 +310,7 @@ class Frontend
             $frontend = new self(0);
             $frontend->setDomain(rex_request::server('HTTP_HOST'));
             
-            if (!empty($frontend->domainInfo['theme'])) {
+            if (isset($frontend->domainInfo['theme']) && '' !== $frontend->domainInfo['theme']) {
                 $domainTheme = $frontend->domainInfo['theme'];
             }
         }
