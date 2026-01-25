@@ -367,22 +367,29 @@ class Frontend
             return '';
         }
         
-        // CSS minifizieren
-        // PCRE Limits erhöhen für große CSS-Dateien
-        ini_set('pcre.backtrack_limit', '5000000');
-        ini_set('pcre.recursion_limit', '5000000');
+        // CSS minifizieren - verwende str_replace statt Regex (zuverlässiger)
         
-        // 1. Kommentare entfernen
-        $_csscontent = (string) preg_replace('/\/\*.*?\*\//s', '', $_csscontent);
+        // 1. Kommentare entfernen (einfache Variante ohne Regex)
+        while (false !== ($start = strpos($_csscontent, '/*'))) {
+            $end = strpos($_csscontent, '*/', $start + 2);
+            if (false === $end) {
+                break;
+            }
+            $_csscontent = substr($_csscontent, 0, $start) . substr($_csscontent, $end + 2);
+        }
         
-        // 2. Zeilenumbrüche und Tabs durch Leerzeichen ersetzen
+        // 2. Alle Newlines und Tabs durch Leerzeichen ersetzen
         $_csscontent = str_replace(["\r\n", "\r", "\n", "\t"], ' ', $_csscontent);
         
-        // 3. Mehrfaches Leerzeichen durch einzelnes ersetzen
-        $_csscontent = (string) preg_replace('/  +/', ' ', $_csscontent);
+        // 3. Mehrfache Leerzeichen durch einzelnes ersetzen (iterativ)
+        while (str_contains($_csscontent, '  ')) {
+            $_csscontent = str_replace('  ', ' ', $_csscontent);
+        }
         
         // 4. Whitespace um CSS-Zeichen entfernen
-        $_csscontent = (string) preg_replace('/\s*([{}:;,>~+])\s*/', '$1', $_csscontent);
+        $_csscontent = str_replace([' {', '{ ', ' }', '} ', ' :', ': ', ' ;', '; ', ' ,', ', ', ' >', '> ', ' ~', '~ ', ' +', '+ '], 
+                                   ['{', '{', '}', '}', ':', ':', ';', ';', ',', ',', '>', '>', '~', '~', '+', '+'], 
+                                   $_csscontent);
         
         // 5. Führendes/Abschließendes Whitespace entfernen
         $_csscontent = trim($_csscontent);
