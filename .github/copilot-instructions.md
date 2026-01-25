@@ -151,7 +151,7 @@ chore(i18n): Update German translations
 - **Service Detection:** YouTube, Vimeo, Google Maps auto-detection
 - **Thumbnail Cache:** Local caching system for external media
 - **Domain-specific:** Per-domain inline-only mode
-- **Function:** `doConsent()` helper function available globally
+- **Helpers:** Use `InlineConsent::doConsent()` (recommended) or the namespaced function `\FriendsOfRedaxo\ConsentManager\doConsent()`; the global `doConsent()` helper is deprecated.
 
 ### 2. Theme System
 - **SCSS-based:** Compile-time theme generation
