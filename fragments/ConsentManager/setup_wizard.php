@@ -1288,7 +1288,10 @@ jQuery(function($) {
     function updateProgress(percent, message) {
         $('#wizard-progress-bar').css('width', percent + '%');
         $('#wizard-progress-text').text(percent + '%');
-        $('#wizard-status-text').text(message);
+        
+        // Spinner entfernen und nur Text anzeigen
+        var statusText = $('#wizard-status-text');
+        statusText.html(message);
     }
     
     function logEvent(message, type) {
