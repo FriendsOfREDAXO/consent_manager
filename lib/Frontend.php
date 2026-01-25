@@ -393,7 +393,7 @@ class Frontend
         $_csscontent = trim($_csscontent);
         
         // Mit Dateinamen-Kommentar (für Debugging)
-        $output = '/*' . $_cssfilename . '*/ ' . $_csscontent;
+        $output = '/* MINIFIED ' . $_cssfilename . ' at ' . date('Y-m-d H:i:s') . ' */ ' . $_csscontent;
         
         // In Cache schreiben
         rex_file::put($cacheFile, $output);
