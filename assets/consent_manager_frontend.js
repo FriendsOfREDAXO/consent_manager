@@ -32,6 +32,90 @@ function safeJSONParse(input, fallback) {
     return fallback;
 }
 
+// Lazy Loading Support
+var consentManagerContentLoaded = false;
+var consentManagerContentPromise = null;
+
+/**
+ * Lädt Texte und Box-Template on-demand via API.
+ * Wird automatisch gecacht nach erstem Aufruf.
+ */
+function loadConsentManagerContent() {
+    // Bereits geladen? Return cached Promise
+    if (consentManagerContentLoaded && consent_manager_box_template !== null) {
+        debugLog('Content already loaded');
+        return Promise.resolve();
+    }
+    
+    // Request läuft bereits? Return existing Promise
+    if (consentManagerContentPromise) {
+        debugLog('Content loading in progress');
+        return consentManagerContentPromise;
+    }
+    
+    // Lazy Loading nicht aktiviert? Skip
+    if (!consent_manager_parameters.lazyLoad) {
+        debugLog('Lazy loading not enabled');
+        consentManagerContentLoaded = true;
+        return Promise.resolve();
+    }
+    
+    debugLog('Loading content via API (lazy loading)...');
+    
+    var apiUrl = consent_manager_parameters.apiEndpoint + 
+        '&clang=' + encodeURIComponent(consent_manager_parameters.clang) + 
+        '&domain=' + encodeURIComponent(consent_manager_parameters.domain);
+    
+    consentManagerContentPromise = fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        },
+        cache: 'default', // Browser-Cache nutzen
+    })
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error('API request failed: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        debugLog('Content loaded successfully', data);
+        
+        // Box-Template setzen
+        consent_manager_box_template = data.boxTemplate || '';
+        
+        // Texte in globale Variablen übernehmen (falls benötigt)
+        if (typeof window.consent_manager_texts === 'undefined') {
+            window.consent_manager_texts = data.texts;
+        }
+        
+        // Cache-Info aktualisieren
+        if (data.cache) {
+            consent_manager_parameters.cachelogid = parseInt(data.cache.logId) || consent_manager_parameters.cachelogid;
+            consent_manager_parameters.version = data.cache.version || consent_manager_parameters.version;
+        }
+        
+        consentManagerContentLoaded = true;
+        consentManagerContentPromise = null;
+        
+        return data;
+    })
+    .catch(function(error) {
+        console.error('Consent Manager: Failed to load content', error);
+        consentManagerContentPromise = null;
+        
+        // Fallback: Leeres Template (verhindert Fehler)
+        if (!consent_manager_box_template) {
+            consent_manager_box_template = '<div id="consent_manager-background" class="consent_manager-hidden"><div class="consent-error">Consent Manager konnte nicht geladen werden.</div></div>';
+        }
+        
+        throw error;
+    });
+    
+    return consentManagerContentPromise;
+}
+
 (function () {
     'use strict';
     var show = 0,
@@ -77,9 +161,35 @@ function safeJSONParse(input, fallback) {
         console.warn('Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' + location.hostname + ')');
         return;
     }
-    consent_managerBox = new DOMParser().parseFromString(consent_manager_box_template, 'text/html');
-    consent_managerBox = consent_managerBox.getElementById('consent_manager-background');
-    document.querySelectorAll('body')[0].appendChild(consent_managerBox);
+    
+    // Lazy Loading: Template erst laden wenn benötigt
+    if (consent_manager_box_template === null) {
+        debugLog('Box template not loaded yet, will load on-demand');
+    } else {
+        // Template bereits vorhanden (alte Version oder inline geladen)
+        initConsentBox();
+    }
+
+    function initConsentBox() {
+        if (!consent_manager_box_template || consent_manager_box_template === '') {
+            console.warn('Addon consent_manager: Box template ist leer!');
+            return;
+        }
+        
+        consent_managerBox = new DOMParser().parseFromString(consent_manager_box_template, 'text/html');
+        consent_managerBox = consent_managerBox.getElementById('consent_manager-background');
+        
+        if (!consent_managerBox) {
+            console.error('Addon consent_manager: consent_manager-background element nicht gefunden!');
+            return;
+        }
+        
+        document.querySelectorAll('body')[0].appendChild(consent_managerBox);
+        debugLog('Consent box initialized and appended to DOM');
+        
+        // Scripts für bereits erteilte Consents triggern
+        triggerConsentScripts();
+    }
 
     // aktuelle Major-AddOn-Version auslesen
     addonVersion = parseInt(consent_manager_parameters.version);
@@ -98,40 +208,53 @@ function safeJSONParse(input, fallback) {
 
     // on startup trigger scripts of enabled consents
     debugLog('Startup: Triggering scripts for enabled consents', consents);
-    consents.forEach(function (uid) {
-        debugLog('Startup: Processing consent UID', uid);
-        var scriptElement = consent_managerBox.querySelector('[data-uid="script-' + uid + '"]');
-        var unselectElement = consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]');
-        debugLog('Startup: Elements found', {
-            scriptElement: !!scriptElement,
-            unselectElement: !!unselectElement
+    
+    function triggerConsentScripts() {
+        if (!consent_managerBox) {
+            debugLog('Startup: consent_managerBox not yet initialized, skipping script trigger');
+            return;
+        }
+        
+        consents.forEach(function (uid) {
+            debugLog('Startup: Processing consent UID', uid);
+            var scriptElement = consent_managerBox.querySelector('[data-uid="script-' + uid + '"]');
+            var unselectElement = consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]');
+            debugLog('Startup: Elements found', {
+                scriptElement: !!scriptElement,
+                unselectElement: !!unselectElement
+            });
+            addScript(scriptElement);
+            removeScript(unselectElement);
         });
-        addScript(scriptElement);
-        removeScript(unselectElement);
-    });
 
-    // on startup trigger Google Consent Mode v2 update if consents exist
-    if (consents.length > 0 && typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
-        var googleConsentFlags = mapConsentsToGoogleFlags(consents);
-        debugLog('Auto-mapping Google Consent Mode flags', consents, googleConsentFlags);
-        window.GoogleConsentModeV2.setConsent(googleConsentFlags);
-    } else {
-        debugLog('Auto-mapping skipped', {consents: consents, hasGCM: typeof window.GoogleConsentModeV2 !== 'undefined', hasSetConsent: typeof window.GoogleConsentModeV2?.setConsent === 'function'});
+        // on startup trigger Google Consent Mode v2 update if consents exist
+        if (consents.length > 0 && typeof window.GoogleConsentModeV2 !== 'undefined' && typeof window.GoogleConsentModeV2.setConsent === 'function') {
+            var googleConsentFlags = mapConsentsToGoogleFlags(consents);
+            debugLog('Auto-mapping Google Consent Mode flags', consents, googleConsentFlags);
+            window.GoogleConsentModeV2.setConsent(googleConsentFlags);
+        } else {
+            debugLog('Auto-mapping skipped', {consents: consents, hasGCM: typeof window.GoogleConsentModeV2 !== 'undefined', hasSetConsent: typeof window.GoogleConsentModeV2?.setConsent === 'function'});
+        }
+
+        // on startup trigger unselect-scripts of disabled consents
+        consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
+            // array mit cookie uids
+            var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
+
+            var consentsSet = new Set(consents);
+            cookieUids.forEach(function (uid) {
+                if(!consentsSet.has(uid)) {
+                    removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
+                    addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
+                }
+            });
+        });
     }
-
-    // on startup trigger unselect-scripts of disabled consents
-    consent_managerBox.querySelectorAll('[data-cookie-uids]').forEach(function (el) {
-        // array mit cookie uids
-        var cookieUids = safeJSONParse(el.getAttribute('data-cookie-uids'), []);
-
-        var consentsSet = new Set(consents);
-        cookieUids.forEach(function (uid) {
-            if(!consentsSet.has(uid)) {
-                removeScript(consent_managerBox.querySelector('[data-uid="script-' + uid + '"]'));
-                addScript(consent_managerBox.querySelector('[data-uid="script-unselect-' + uid + '"]'));
-            }
-        });
-    });
+    
+    // Trigger scripts nur wenn Box bereits initialisiert (nicht bei Lazy Loading)
+    if (consent_managerBox) {
+        triggerConsentScripts();
+    }
 
     if (consent_manager_parameters.initially_hidden || consent_manager_parameters.no_cookie_set) {
         show = 0;
@@ -807,6 +930,26 @@ function mapConsentsToGoogleFlags(consents) {
 }
 
 function consent_manager_showBox() {
+    // Lazy Loading: Content erst laden wenn Box angezeigt werden soll
+    if (consent_manager_parameters.lazyLoad && !consentManagerContentLoaded) {
+        debugLog('Lazy loading triggered for consent box');
+        loadConsentManagerContent()
+            .then(function() {
+                debugLog('Content ready, initializing and showing box');
+                initConsentBox();
+                consent_manager_showBox_internal();
+            })
+            .catch(function(error) {
+                console.error('Cannot show consent box:', error);
+            });
+        return;
+    }
+    
+    // Direkt anzeigen (Template bereits geladen oder Lazy Loading deaktiviert)
+    consent_manager_showBox_internal();
+}
+
+function consent_manager_showBox_internal() {
     var consentBox = document.getElementById('consent_manager-background');
     
     // Safety check: box must exist in DOM

@@ -231,42 +231,32 @@ class Frontend
         rex_response::cleanOutputBuffers();
         header_remove();
         header('Content-Type: application/javascript; charset=utf-8');
-        // Use ETag based on version and timestamp for proper caching
-        $cacheVersion = rex_request::get('t', 'string', time());
-        $etag = md5($addon->getVersion() . '-' . $cacheVersion);
+        
+        // Stabiler Cache-Key basierend auf tatsächlichen Änderungen
+        $cacheLogId = ConsentManager::getCacheLogId();
+        $version = ConsentManager::getVersion();
+        $cacheKey = $version . '-' . $cacheLogId . '-lazy';
+        $etag = md5($cacheKey);
+        
         header('ETag: "' . $etag . '"');
-        header('Cache-Control: max-age=604800, public');
+        header('Cache-Control: max-age=2592000, public, immutable'); // 30 Tage
 
-        // Check if client has current version
-        $clientEtag = $_SERVER['HTTP_IF_NONE_MATCH'] ?? '';
+        // 304 Not Modified Support
+        $clientEtag = rex_server('HTTP_IF_NONE_MATCH', 'string', '');
         if (trim($clientEtag, '"') === $etag) {
             http_response_code(304);
             exit;
         }
 
-        $boxtemplate = '';
-        ob_start();
-        echo self::getFragment(0, 0, 'ConsentManager/box.php');
-        $boxtemplate = (string) ob_get_contents();
-        ob_end_clean();
-        if ('' === $boxtemplate) {
-            rex_logger::factory()->log('warning', 'Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' . Utility::hostname() . ')');
-        }
-        if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable() && function_exists('sprogdown')) {
-            /** @phpstan-ignore-next-line */
-            $boxtemplate = \sprogdown($boxtemplate, $clang);
-        }
-        $boxtemplate = str_replace("'", "\\'", $boxtemplate);
-        $boxtemplate = str_replace("\r", '', $boxtemplate);
-        $boxtemplate = str_replace("\n", ' ', $boxtemplate);
+        // Box-Template wird nicht mehr inline geladen (Lazy Loading via API)
 
         echo '/* --- Parameters --- */' . PHP_EOL;
         $consent_manager_parameters = [
             'initially_hidden' => 'true' === rex_request::get('i', 'string', 'false'),
             'domain' => Utility::hostname(),
             'consentid' => uniqid('', true),
-            'cachelogid' => rex_request::get('cid', 'string', ''),
-            'version' => rex_request::get('v', 'string', ''),
+            'cachelogid' => $cacheLogId,
+            'version' => $version,
             'fe_controller' => rex_url::frontend(),
             'forcereload' => rex_request::get('r', 'int', 0),
             'hidebodyscrollbar' => 'true' === rex_request::get('h', 'string', 'false'),
@@ -274,13 +264,15 @@ class Frontend
             'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
             'cookieName' => $addon->getConfig('cookie_name', 'consentmanager'),
+            'lazyLoad' => true,
+            'apiEndpoint' => rex_url::frontend() . '?rex-api-call=consent_manager_texts',
+            'clang' => $clang,
         ];
         echo 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES) . ';' . PHP_EOL . PHP_EOL;
-        echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
-        echo 'var consent_manager_box_template = \'';
-        // REXSTAN: meldet «Binary operation "." between array<string>|string and '\';' results in an error.»
-        // Das ist definitiv falsch und eine Fehlinterpretation wegen obigem «$boxtemplate = str_replace(...»
-        echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
+        
+        echo '/* --- Lazy Loading aktiviert (Box-Template wird on-demand geladen) --- */' . PHP_EOL;
+        echo 'var consent_manager_box_template = null;' . PHP_EOL . PHP_EOL;
+        // Box-Template wird via API geladen (siehe consent_manager_box_template = null)
 
         $lifespan = $addon->getConfig('lifespan', 365);
         if ('' === $lifespan) {
