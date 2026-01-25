@@ -181,11 +181,12 @@ use FriendsOfRedaxo\ConsentManager\InlineConsent;
 // Get consent box fragment
 echo Frontend::getFragment();
 
-// Inline consent with doConsent helper
-echo doConsent('youtube', '<iframe src="..."></iframe>');
-
-// Or with namespaced class
+// Inline consent (recommended pattern)
 echo InlineConsent::doConsent('youtube', '<iframe src="..."></iframe>');
+
+// Alternative: Use namespaced function (requires explicit import)
+use function FriendsOfRedaxo\ConsentManager\doConsent;
+echo doConsent('youtube', '<iframe src="..."></iframe>');
 ```
 
 ### Deprecated API (Version 4.x - Still works but discouraged)
