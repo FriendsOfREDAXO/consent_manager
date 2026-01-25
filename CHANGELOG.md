@@ -1,9 +1,38 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.3.0 - 25.01.2026
+## Version 5.3.0-beta5 - 25.01.2026
 
 **🚀 Release-Highlights:**  
-Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse und Performance-Optimierungen.
+Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse, Lazy Loading der Consent-Box, CSS-Minifizierung mit Caching und umfassende Performance-Optimierungen.
+
+---
+
+### ⚡ Performance-Optimierungen (NEU)
+
+**Lazy Loading der Consent-Box:**
+- **On-Demand-Laden**: Box-Template wird erst bei Bedarf über API-Endpoint geladen
+- **Reduzierte initiale Payload**: JavaScript-Datei ~40% kleiner beim ersten Seitenaufruf
+- **HTTP-Caching**: API-Response nutzt ETag und Cache-Control für optimale Browser-Caching
+- **304 Not Modified Support**: Browser-Cache wird automatisch validiert
+- **Neuer API-Endpoint**: `index.php?rex-api-call=consent_manager_texts` liefert Texte und Box-Template als JSON
+- **Cache-Log-ID basiertes Caching**: Stabiler Cache-Key verhindert unnötige Re-Downloads
+- **Automatische Aktivierung**: Lazy Loading ist standardmäßig aktiv, keine Konfiguration nötig
+
+**CSS-Minifizierung:**
+- **Automatische Minifizierung**: Alle Theme-CSS-Dateien werden automatisch minifiziert
+- **String-basierte Minifizierung**: Verwendet `str_replace()` statt Regex für maximale Zuverlässigkeit (kein PCRE Backtrack Limit)
+- **Datei-basiertes Caching**: Minifiziertes CSS wird mit mtime-Hash gecacht
+- **Automatische Cache-Invalidierung**: Bei CSS-Änderungen wird Cache automatisch neu generiert
+- **~40-50% kleineres CSS**: Entfernt Kommentare, Whitespace und Zeilenumbrüche
+- **Alte Cache-Cleanup**: Veraltete Cache-Dateien werden automatisch gelöscht
+- **Keine Konfiguration nötig**: Funktioniert out-of-the-box für alle Themes
+
+### 🛡️ Security-Verbesserungen
+
+**Path-Traversal-Schutz für Themes:**
+- **Theme-Namen-Validierung**: Regex-Prüfung gegen schädliche Zeichen (`..`, etc.)
+- **Realpath-Prüfung**: Validiert dass Theme-Datei innerhalb des Assets-Verzeichnisses liegt
+- **Security-Audit compliant**: Alle Theme-Zugriffe sind gegen Directory-Traversal abgesichert
 
 ---
 
