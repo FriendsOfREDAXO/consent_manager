@@ -338,11 +338,42 @@ class Frontend
             }
         }
 
-        $_csscontent = file_get_contents($addon->getAssetsPath($_cssfilename));
-        if (false === $_csscontent) {
+        // Caching mit Datei-mtime als Cache-Key
+        $cssPath = $addon->getAssetsPath($_cssfilename);
+        $cacheKey = 'consent_manager_css_' . md5($_cssfilename . filemtime($cssPath));
+        
+        // Versuche aus Cache zu lesen
+        $cached = rex_file::getCache($cacheKey);
+        if (null !== $cached) {
+            return $cached;
+        }
+        
+        // CSS-Datei lesen
+        $_csscontent = rex_file::get($cssPath);
+        if ('' === $_csscontent) {
             return '';
         }
-        return '/*' . $_cssfilename . '*/ ' . $_csscontent;
+        
+        // CSS minifizieren
+        // 1. Kommentare entfernen
+        $_csscontent = (string) preg_replace('/\/\*.*?\*\//s', '', $_csscontent);
+        
+        // 2. Mehrfaches Whitespace durch einzelnes Leerzeichen ersetzen
+        $_csscontent = (string) preg_replace('/\s+/', ' ', $_csscontent);
+        
+        // 3. Whitespace um CSS-Zeichen entfernen
+        $_csscontent = (string) preg_replace('/\s*([{}:;,>~+])\s*/', '$1', $_csscontent);
+        
+        // 4. Führendes/Abschließendes Whitespace entfernen
+        $_csscontent = trim($_csscontent);
+        
+        // Mit Dateinamen-Kommentar (für Debugging)
+        $output = '/*' . $_cssfilename . '*/ ' . $_csscontent;
+        
+        // In Cache schreiben
+        rex_file::putCache($cacheKey, $output);
+        
+        return $output;
     }
 
     /**
