@@ -871,25 +871,145 @@ body.rex-theme-dark details > div code {
 
                 <!-- Progress-Screen (initial hidden) -->
                 <div id="wizard-progress" style="display:none;">
-                    <div class="form-group">
-                        <div class="progress" style="height: 30px;">
-                            <div id="wizard-progress-bar" 
-                                 class="progress-bar progress-bar-striped active" 
-                                 role="progressbar" 
-                                 style="width: 0%; line-height: 30px;">
-                                <span id="wizard-progress-text">0%</span>
-                            </div>
+                    <style>
+                        .wizard-loader-container {
+                            text-align: center;
+                            padding: 60px 20px;
+                        }
+                        .wizard-spinner {
+                            width: 80px;
+                            height: 80px;
+                            margin: 0 auto 30px;
+                            position: relative;
+                        }
+                        .wizard-spinner div {
+                            position: absolute;
+                            width: 6px;
+                            height: 6px;
+                            background: #3498db;
+                            border-radius: 50%;
+                            animation: wizard-bounce 1.2s infinite ease-in-out both;
+                        }
+                        .wizard-spinner div:nth-child(1) {
+                            left: 8px;
+                            top: 8px;
+                            animation-delay: -0.36s;
+                        }
+                        .wizard-spinner div:nth-child(2) {
+                            left: 8px;
+                            top: 37px;
+                            animation-delay: -0.24s;
+                        }
+                        .wizard-spinner div:nth-child(3) {
+                            left: 8px;
+                            top: 66px;
+                            animation-delay: -0.12s;
+                        }
+                        .wizard-spinner div:nth-child(4) {
+                            left: 37px;
+                            top: 8px;
+                            animation-delay: -0.36s;
+                        }
+                        .wizard-spinner div:nth-child(5) {
+                            left: 37px;
+                            top: 37px;
+                            animation-delay: -0.24s;
+                        }
+                        .wizard-spinner div:nth-child(6) {
+                            left: 37px;
+                            top: 66px;
+                            animation-delay: -0.12s;
+                        }
+                        .wizard-spinner div:nth-child(7) {
+                            left: 66px;
+                            top: 8px;
+                            animation-delay: 0s;
+                        }
+                        .wizard-spinner div:nth-child(8) {
+                            left: 66px;
+                            top: 37px;
+                            animation-delay: 0.12s;
+                        }
+                        .wizard-spinner div:nth-child(9) {
+                            left: 66px;
+                            top: 66px;
+                            animation-delay: 0.24s;
+                        }
+                        @keyframes wizard-bounce {
+                            0%, 40%, 100% {
+                                transform: scale(1);
+                                opacity: 1;
+                            }
+                            20% {
+                                transform: scale(1.5);
+                                opacity: 0.5;
+                            }
+                        }
+                        .wizard-waves {
+                            position: relative;
+                            width: 100%;
+                            height: 80px;
+                            margin-top: 30px;
+                        }
+                        .wizard-wave {
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            opacity: 0.4;
+                        }
+                        .wizard-wave:before {
+                            content: '';
+                            position: absolute;
+                            width: 200%;
+                            height: 100%;
+                            top: 0;
+                            left: 50%;
+                            transform: translate(-50%, 0);
+                            background: linear-gradient(90deg, transparent, #3498db, transparent);
+                            animation: wizard-wave 3s linear infinite;
+                        }
+                        .wizard-wave:nth-child(2):before {
+                            animation-delay: -1s;
+                            opacity: 0.5;
+                        }
+                        .wizard-wave:nth-child(3):before {
+                            animation-delay: -2s;
+                            opacity: 0.3;
+                        }
+                        @keyframes wizard-wave {
+                            0% {
+                                transform: translate(-50%, 0) translateX(-100%);
+                            }
+                            100% {
+                                transform: translate(-50%, 0) translateX(100%);
+                            }
+                        }
+                    </style>
+                    
+                    <div class="wizard-loader-container">
+                        <div class="wizard-spinner">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
                         </div>
-                    </div>
-
-                    <div id="wizard-status" class="alert alert-info">
-                        <i class="fa fa-spinner fa-spin"></i> <span id="wizard-status-text"><?= rex_i18n::msg('consent_manager_wizard_starting') ?></span>
-                    </div>
-
-                    <div id="wizard-log" style="margin-top: 20px;">
-                        <label><?= rex_i18n::msg('consent_manager_wizard_log') ?>:</label>
-                        <div style="background: #f5f5f5; padding: 15px; border-radius: 4px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px; line-height: 1.8;">
-                            <div id="wizard-log-content"></div>
+                        
+                        <h3 id="wizard-message" style="color: #3498db; margin: 0 0 10px 0; font-size: 20px;">
+                            Setup wird durchgeführt...
+                        </h3>
+                        <p style="color: #7f8c8d; margin: 0;">
+                            Bitte warten, während wir Ihre Domain konfigurieren
+                        </p>
+                        
+                        <div class="wizard-waves">
+                            <div class="wizard-wave"></div>
+                            <div class="wizard-wave"></div>
+                            <div class="wizard-wave"></div>
                         </div>
                     </div>
                 </div>
@@ -1200,7 +1320,7 @@ jQuery(function($) {
         var privacyPolicy = $('#REX_LINK_wizard_privacy').val() || '0';
         var legalNotice = $('#REX_LINK_wizard_imprint').val() || '0';
         
-        // AJAX Request zum Setup starten
+        // AJAX Request - synchron, Setup läuft komplett durch
         var url = '<?= rex_url::backendController() ?>?rex-api-call=consent_manager_setup_wizard';
         
         $.ajax({
@@ -1208,7 +1328,6 @@ jQuery(function($) {
             method: 'POST',
             dataType: 'json',
             data: {
-                action: 'start',
                 domain: domain,
                 setup_type: setupType,
                 auto_inject: autoInject ? 1 : 0,
@@ -1217,16 +1336,55 @@ jQuery(function($) {
                 legal_notice: legalNotice
             },
             success: function(response) {
-                console.log('Setup gestartet:', response);
-                logEvent('✓ Setup gestartet', 'success');
+                console.log('Setup Response:', response);
                 
-                // Polling starten
-                startPolling();
+                if (response.status === 'success') {
+                    // Zum Abschluss-Screen wechseln
+                    $('#wizard-progress').hide();
+                    $('#wizard-success').show();
+                    
+                    // Optional: Domain-Informationen anzeigen falls vorhanden
+                    if (response.data && response.data.domain) {
+                        console.log('Setup erfolgreich für Domain:', response.data.domain);
+                    }
+                } else {
+                    $('#wizard-status').removeClass('alert-info').addClass('alert-danger');
+                    $('#wizard-message').html('<i class="rex-icon fa-times"></i> <strong>Fehler!</strong> ' + response.message);
+                    $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').show();
+                    $('#wizard-btn-reset').show();
+                }
             },
             error: function(xhr, status, error) {
-                console.error('Setup-Start fehlgeschlagen:', error);
+                console.error('Setup fehlgeschlagen:', error);
                 console.log('Response:', xhr.responseText);
-                logEvent('✗ Fehler beim Starten: ' + error, 'error');
+                
+                $('#wizard-status').removeClass('alert-info').addClass('alert-danger');
+                $('#wizard-message').html('<i class="rex-icon fa-times"></i> <strong>Fehler!</strong> ' + error);
+                $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').show();
+                $('#wizard-btn-reset').show();
+            }
+        });
+    }
+    
+    function triggerProcessing() {
+        var url = '<?= rex_url::backendController() ?>?rex-api-call=consent_manager_setup_wizard';
+        
+        // Separaten Request für Processing senden - KEINE JSON Response erwartet
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                action: 'process'
+            },
+            success: function(response) {
+                console.log('Processing gestartet');
+                // Kein logEvent hier - wird vom Polling erfasst
+            },
+            error: function(xhr, status, error) {
+                console.error('Processing fehlgeschlagen:', error);
+                console.log('Response:', xhr.responseText);
+                logEvent('✗ Processing-Fehler: ' + error, 'error');
+                clearInterval(pollingInterval);
                 $('#wizard-status').removeClass('alert-info').addClass('alert-danger');
                 $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').show();
                 $('#wizard-btn-reset').show();

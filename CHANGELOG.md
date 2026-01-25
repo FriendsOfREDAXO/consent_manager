@@ -12,7 +12,7 @@ Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview,
 Interaktiver Setup-Assistent für schnelle Erstkonfiguration:
 - **Quickstart-Button** mit animiertem Farbverlauf-Rahmen auf der Konfigurationsseite
 - **4-Schritt-Wizard**: Domain einrichten → Services importieren → Theme auswählen → Fertig
-- **SSE-basierte Fortschrittsanzeige** mit Echtzeit-Feedback
+- **Animierte Loading-Anzeige** mit Wellen-Animation und pulsierenden Punkten
 - **YRewrite-Integration**: Automatische Auswahl aus vorhandenen YRewrite-Domains
 - **Auto-Inject-Option**: Toggle-Switch für automatische Frontend-Einbindung
 - **Template-Positivliste**: Multi-Select für Auswahl aktiver Templates, in denen Consent Manager eingebunden werden soll

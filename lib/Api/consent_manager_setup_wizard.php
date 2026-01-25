@@ -15,6 +15,8 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
 
     public function execute()
     {
+        rex_response::cleanOutputBuffers();
+        
         // Berechtigungsprüfung
         if (!rex::getUser() || !rex::getUser()->isAdmin()) {
             rex_response::sendJson([
@@ -24,36 +26,35 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             exit;
         }
 
-        // Action auslesen: start (Setup starten) oder status (Progress abrufen)
-        $action = rex_request::request('action', 'string', 'start');
+        // Parameter auslesen
+        $domain = rex_request::request('domain', 'string', '');
+        $setupType = rex_request::request('setup_type', 'string', 'standard');
+        $autoInject = rex_request::request('auto_inject', 'int', 0) === 1;
+        $includeTemplates = rex_request::request('include_templates', 'string', '');
+        $privacyPolicy = rex_request::request('privacy_policy', 'int', 0);
+        $legalNotice = rex_request::request('legal_notice', 'int', 0);
         
-        if ($action === 'status') {
-            // Progress Status zurückgeben
-            $this->getProgress();
-            // getProgress() ruft exit auf, wird nie erreicht
+        // Domain bereinigen und validieren
+        $cleanDomain = $this->cleanDomain($domain);
+        
+        if (empty($cleanDomain)) {
+            rex_response::sendJson([
+                'status' => 'error',
+                'message' => 'Domain ist erforderlich'
+            ]);
+            exit;
         }
         
-        // Setup starten
-        $this->startSetup();
-        // startSetup() ruft exit auf, wird nie erreicht
+        // Setup ausführen
+        $this->runSetup($cleanDomain, $setupType, $autoInject, $includeTemplates, $privacyPolicy, $legalNotice);
     }
 
     /**
-     * Progress aus Session holen und zurückgeben
+     * Setup ausführen - komplett synchron
      */
-    private function getProgress()
+    private function runSetup(string $domain, string $setupType, bool $autoInject, string $includeTemplates, int $privacyPolicy, int $legalNotice)
     {
-        $progress = rex_session(self::SESSION_KEY, 'array', []);
-        
-        rex_response::sendJson($progress);
-        exit;
-    }
-
-    /**
-     * Setup starten (läuft asynchron weiter)
-     */
-    private function startSetup()
-    {
+        try {
         // Parameter auslesen
         $domain = rex_request::request('domain', 'string', '');
         $setupType = rex_request::request('setup_type', 'string', 'standard');
@@ -72,97 +73,51 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             exit;
         }
 
-        // Domain bereinigen
-        $cleanDomain = $this->cleanDomain($domain);
-
-        // Progress initialisieren
-        $this->updateProgress(0, 'running', 'Setup wird gestartet...');
-        
-        // Sofort Bestätigung zurückgeben
-        rex_response::sendJson([
-            'status' => 'started',
-            'message' => 'Setup wurde gestartet'
-        ]);
-        
-        // Output Buffer schließen damit Response sofort gesendet wird
-        if (ob_get_level()) {
-            ob_end_flush();
-        }
-        flush();
-        
-        // Ab hier läuft Setup asynchron weiter
-        try {
             // Prüfen ob bereits Services vorhanden sind
             $existingServices = rex_sql::factory();
             $existingServices->setQuery('SELECT COUNT(*) as cnt FROM ' . rex::getTable('consent_manager_cookie'));
             $hasExistingServices = $existingServices->getValue('cnt') > 0;
 
-            // Schritt 1: Domain anlegen/aktualisieren
-            $this->updateProgress(10, 'running', 'Domain wird konfiguriert: ' . $cleanDomain);
-            sleep(1); // Pause damit Polling Updates sieht
-            $domainId = $this->createOrUpdateDomain($cleanDomain, $autoInject, $includeTemplates, $privacyPolicy, $legalNotice);
-            $this->updateProgress(20, 'running', 'Domain erstellt (ID: ' . $domainId . ')');
-            sleep(1);
+            // Domain anlegen/aktualisieren  
+            $domainId = $this->createOrUpdateDomain($domain, $autoInject, $includeTemplates, $privacyPolicy, $legalNotice);
 
-            // Schritt 2: Standard-Setup importieren (nur wenn noch keine Services)
-            if ($hasExistingServices) {
-                $this->updateProgress(30, 'running', 'Services bereits vorhanden - Import übersprungen');
-                sleep(1);
-            } else {
+            // Standard-Setup importieren (wenn noch keine Services vorhanden)
+            if (!$hasExistingServices) {
                 if ('standard' === $setupType) {
-                    $this->updateProgress(30, 'running', 'Standard-Setup importieren (Google Analytics, YouTube, Vimeo, ...)');
-                    sleep(1);
                     $this->importStandardSetup();
-                    $this->updateProgress(40, 'running', 'Standard-Services importiert');
-                    sleep(1);
                 } else {
-                    $this->updateProgress(30, 'running', 'Minimal-Setup importieren (nur Cookie-Gruppen)');
-                    sleep(1);
                     $this->importMinimalSetup();
-                    $this->updateProgress(40, 'running', 'Minimal-Setup importiert');
-                    sleep(1);
                 }
             }
 
-            // Schritt 3: Cookie-Gruppen der Domain zuordnen
-            $this->updateProgress(50, 'running', 'Cookie-Gruppen der Domain zuordnen...');
-            sleep(1);
+            // Cookie-Gruppen zuordnen
             $this->assignGroupsToDomain($domainId);
-            $this->updateProgress(60, 'running', 'Cookie-Gruppen zugeordnet');
-            sleep(1);
 
-            // Schritt 4: Default-Theme wird verwendet
-            $this->updateProgress(70, 'running', 'Default-Theme wird verwendet...');
-            sleep(1);
-
-            // Schritt 5: Cache leeren
-            $this->updateProgress(80, 'running', 'Cache aufwärmen...');
-            sleep(1);
+            // Cache leeren
             $this->clearCache();
-            $this->updateProgress(90, 'running', 'Cache geleert');
-            sleep(1);
 
-            // Schritt 6: Validierung
-            $this->updateProgress(95, 'running', 'Konfiguration validieren...');
-            sleep(1);
-            $validation = $this->validateSetup($cleanDomain);
-            $this->updateProgress(98, 'running', 'Validierung abgeschlossen - ' . $validation['cookies_count'] . ' Services, ' . $validation['groups_count'] . ' Gruppen');
+            // Validierung
+            $validation = $this->validateSetup($domain);
             
-            // Letzte Pause damit User das Ergebnis sehen kann
-            sleep(2);
-            
-            // Abschluss
-            $this->updateProgress(100, 'complete', 'Setup abgeschlossen!', [
-                'domain' => $cleanDomain,
-                'domain_id' => $domainId,
-                'setup_type' => $setupType,
-                'auto_inject' => $autoInject,
-                'url' => rex_url::backendPage('consent_manager/domain'),
-                'validation' => $validation
+            // Erfolgreiche Response
+            rex_response::sendJson([
+                'status' => 'success',
+                'message' => 'Setup erfolgreich abgeschlossen!',
+                'data' => [
+                    'domain' => $domain,
+                    'domain_id' => $domainId,
+                    'setup_type' => $setupType,
+                    'auto_inject' => $autoInject,
+                    'url' => rex_url::backendPage('consent_manager/domain'),
+                    'validation' => $validation
+                ]
             ]);
-
+            
         } catch (Exception $e) {
-            $this->updateProgress(0, 'error', 'Fehler: ' . $e->getMessage());
+            rex_response::sendJson([
+                'status' => 'error',
+                'message' => 'Fehler: ' . $e->getMessage()
+            ]);
         }
         
         exit;
