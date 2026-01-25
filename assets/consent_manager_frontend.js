@@ -189,6 +189,9 @@ function loadConsentManagerContent() {
         
         // Scripts für bereits erteilte Consents triggern
         triggerConsentScripts();
+        
+        // Event-Listener registrieren
+        registerEventListeners();
     }
 
     // aktuelle Major-AddOn-Version auslesen
@@ -274,17 +277,36 @@ function loadConsentManagerContent() {
     }
 
     if (show && !hasDontShow) {
-        // Apply delay if configured
-        if (showDelay > 0) {
-            setTimeout(function() {
+        // Bei Lazy Loading: Content erst laden, dann Box zeigen
+        if (consent_manager_parameters.lazyLoad && !consentManagerContentLoaded) {
+            debugLog('Initial show triggered, loading content first');
+            if (showDelay > 0) {
+                setTimeout(function() {
+                    showBox();
+                }, showDelay * 1000);
+            } else {
                 showBox();
-            }, showDelay * 1000);
+            }
         } else {
-            showBox();
+            // Template bereits geladen oder Lazy Loading deaktiviert
+            if (showDelay > 0) {
+                setTimeout(function() {
+                    showBox();
+                }, showDelay * 1000);
+            } else {
+                showBox();
+            }
         }
     }
 
-    consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
+    // Event-Listener nur registrieren wenn Box bereits initialisiert
+    function registerEventListeners() {
+        if (!consent_managerBox) {
+            debugLog('registerEventListeners: consent_managerBox not initialized yet');
+            return;
+        }
+
+        consent_managerBox.querySelectorAll('.consent_manager-close').forEach(function (el) {
         el.addEventListener('click', function () {
             if (el.classList.contains('consent_manager-save-selection')) {
                 saveConsent('selection');
@@ -333,7 +355,8 @@ function loadConsentManagerContent() {
             }
         });
     }
-
+    
+    // Keyboard handler wird global registriert (benötigt keine Box-Initialisierung)
     // Combined keyboard handler: ESC key + Focus Trap (Issue #326)
     document.addEventListener('keydown', function(event) {
         var consentBox = document.getElementById('consent_manager-background');
@@ -383,8 +406,14 @@ function loadConsentManagerContent() {
             }
         }
     }, true); // Use capture phase for priority
+    } // Ende registerEventListeners()
+    
+    // Event-Listener registrieren wenn Box bereits initialisiert ist
+    if (consent_managerBox) {
+        registerEventListeners();
+    }
 
-    // Kombinierter Click-Handler für alle Consent-Box-Trigger
+    // Kombinierter Click-Handler für alle Consent-Box-Trigger (global, außerhalb der Funktion)
     // Verwendet Event-Delegation statt mehrere querySelectorAll
     document.addEventListener('click', function(e) {
         var target = e.target;
@@ -744,9 +773,33 @@ function loadConsentManagerContent() {
     }
 
     function showBox() {
+        // Bei Lazy Loading: Content erst laden wenn noch nicht vorhanden
+        if (consent_manager_parameters.lazyLoad && !consentManagerContentLoaded) {
+            debugLog('showBox: Lazy loading triggered');
+            loadConsentManagerContent()
+                .then(function() {
+                    debugLog('showBox: Content loaded, initializing box');
+                    initConsentBox();
+                    showBoxInternal();
+                })
+                .catch(function(error) {
+                    console.error('Cannot show consent box:', error);
+                });
+            return;
+        }
+        
         // Safety check: consent box must exist
         if (!consent_managerBox) {
             console.warn('Consent Manager: showBox called but consent_managerBox not initialized');
+            return;
+        }
+        
+        showBoxInternal();
+    }
+    
+    function showBoxInternal() {
+        if (!consent_managerBox) {
+            console.warn('Consent Manager: showBoxInternal called but consent_managerBox not initialized');
             return;
         }
         
