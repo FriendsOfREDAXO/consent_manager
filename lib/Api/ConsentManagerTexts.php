@@ -3,7 +3,7 @@
 namespace FriendsOfRedaxo\ConsentManager\Api;
 
 use FriendsOfRedaxo\ConsentManager\ConsentManager;
-use FriendsOfRedaxo\ConsentManager\Fragment;
+use FriendsOfRedaxo\ConsentManager\Frontend;
 use FriendsOfRedaxo\ConsentManager\Utility;
 use rex_api_exception;
 use rex_api_function;
@@ -95,6 +95,16 @@ class ConsentManagerTexts extends rex_api_function
      */
     private function renderBoxTemplate($clangId)
     {
-        return Fragment::renderBoxTemplate(['clang' => $clangId]);
+        // Setze temporär die aktuelle Sprache für Fragment-Rendering
+        $originalClang = rex_clang::getCurrentId();
+        rex_clang::setCurrentId($clangId);
+        
+        // Rendere Box via Fragment
+        $boxTemplate = Frontend::getFragment(0, 0, 'ConsentManager/box.php');
+        
+        // Stelle Original-Sprache wieder her
+        rex_clang::setCurrentId($originalClang);
+        
+        return $boxTemplate;
     }
 }
