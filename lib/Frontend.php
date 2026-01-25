@@ -481,4 +481,130 @@ class Frontend
     {
         return self::getFragment(0, 0, 'ConsentManager/box.php');
     }
+
+    /**
+     * Get formatted cookie list for privacy policy pages.
+     * Returns HTML table or definition list of all cookies used on the domain.
+     *
+     * @param string $format 'table' for HTML table, 'dl' for definition list
+     * @param string|null $domainName Optional specific domain, null for current domain
+     * @return string HTML output
+     * @api
+     */
+    public static function getCookieList(string $format = 'table', ?string $domainName = null): string
+    {
+        $consent = new self(0);
+        
+        if (null === $domainName) {
+            // Aktuelle Domain verwenden
+            if (is_string(rex_request::server('HTTP_HOST'))) {
+                $consent->setDomain(rex_request::server('HTTP_HOST'));
+            }
+        } else {
+            // Spezifische Domain verwenden
+            $consent->setDomain($domainName);
+        }
+        
+        if (0 === count($consent->cookiegroups)) {
+            return '<div class="alert alert-info"><i class="fa fa-info-circle"></i> Keine Cookie-Informationen verfügbar.</div>';
+        }
+        
+        $clang = rex_clang::getCurrentId();
+        $output = '';
+        
+        if ('dl' === $format) {
+            // Definition List Format
+            $output .= '<dl class="consent-manager-cookie-list">' . PHP_EOL;
+            
+            foreach ($consent->cookiegroups as $group) {
+                if (!isset($group['cookie_uids']) || 0 === count($group['cookie_uids'])) {
+                    continue;
+                }
+                
+                $output .= '<dt class="consent-group-name"><strong>' . rex_escape($group['name']) . '</strong></dt>' . PHP_EOL;
+                $output .= '<dd class="consent-group-description">' . $group['description'] . '</dd>' . PHP_EOL;
+                
+                foreach ($group['cookie_uids'] as $cookieUid) {
+                    if (!isset($consent->cookies[$cookieUid])) {
+                        continue;
+                    }
+                    
+                    $cookie = $consent->cookies[$cookieUid];
+                    
+                    if (isset($cookie['definition']) && is_array($cookie['definition'])) {
+                        foreach ($cookie['definition'] as $def) {
+                            $output .= '<dt class="consent-cookie-name">' . rex_escape($def['cookie_name'] ?? '') . '</dt>' . PHP_EOL;
+                            $output .= '<dd class="consent-cookie-details">' . PHP_EOL;
+                            
+                            if ('' !== ($cookie['service_name'] ?? '')) {
+                                $output .= '<strong>Service:</strong> ' . rex_escape($cookie['service_name']) . '<br>' . PHP_EOL;
+                            }
+                            
+                            if ('' !== ($def['cookie_purpose'] ?? '')) {
+                                $output .= '<strong>Zweck:</strong> ' . rex_escape($def['cookie_purpose']) . '<br>' . PHP_EOL;
+                            }
+                            
+                            if ('' !== ($def['cookie_lifetime'] ?? '')) {
+                                $output .= '<strong>Laufzeit:</strong> ' . rex_escape($def['cookie_lifetime']) . '<br>' . PHP_EOL;
+                            }
+                            
+                            if ('' !== ($cookie['provider'] ?? '')) {
+                                $output .= '<strong>Anbieter:</strong> ' . rex_escape($cookie['provider']) . PHP_EOL;
+                            }
+                            
+                            $output .= '</dd>' . PHP_EOL;
+                        }
+                    }
+                }
+            }
+            
+            $output .= '</dl>' . PHP_EOL;
+        } else {
+            // Table Format (default)
+            $output .= '<table class="consent-manager-cookie-list table table-striped">' . PHP_EOL;
+            $output .= '<thead>' . PHP_EOL;
+            $output .= '<tr>' . PHP_EOL;
+            $output .= '<th>Cookie-Name</th>' . PHP_EOL;
+            $output .= '<th>Service</th>' . PHP_EOL;
+            $output .= '<th>Zweck</th>' . PHP_EOL;
+            $output .= '<th>Laufzeit</th>' . PHP_EOL;
+            $output .= '<th>Anbieter</th>' . PHP_EOL;
+            $output .= '<th>Kategorie</th>' . PHP_EOL;
+            $output .= '</tr>' . PHP_EOL;
+            $output .= '</thead>' . PHP_EOL;
+            $output .= '<tbody>' . PHP_EOL;
+            
+            foreach ($consent->cookiegroups as $group) {
+                if (!isset($group['cookie_uids']) || 0 === count($group['cookie_uids'])) {
+                    continue;
+                }
+                
+                foreach ($group['cookie_uids'] as $cookieUid) {
+                    if (!isset($consent->cookies[$cookieUid])) {
+                        continue;
+                    }
+                    
+                    $cookie = $consent->cookies[$cookieUid];
+                    
+                    if (isset($cookie['definition']) && is_array($cookie['definition'])) {
+                        foreach ($cookie['definition'] as $def) {
+                            $output .= '<tr>' . PHP_EOL;
+                            $output .= '<td>' . rex_escape($def['cookie_name'] ?? '') . '</td>' . PHP_EOL;
+                            $output .= '<td>' . rex_escape($cookie['service_name'] ?? '') . '</td>' . PHP_EOL;
+                            $output .= '<td>' . rex_escape($def['cookie_purpose'] ?? '') . '</td>' . PHP_EOL;
+                            $output .= '<td>' . rex_escape($def['cookie_lifetime'] ?? '') . '</td>' . PHP_EOL;
+                            $output .= '<td>' . rex_escape($cookie['provider'] ?? '') . '</td>' . PHP_EOL;
+                            $output .= '<td>' . rex_escape($group['name']) . '</td>' . PHP_EOL;
+                            $output .= '</tr>' . PHP_EOL;
+                        }
+                    }
+                }
+            }
+            
+            $output .= '</tbody>' . PHP_EOL;
+            $output .= '</table>' . PHP_EOL;
+        }
+        
+        return $output;
+    }
 }

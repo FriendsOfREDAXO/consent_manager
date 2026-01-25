@@ -17,6 +17,15 @@ if ('delete' === $func) {
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
+    
+    // Debug: POST-Daten anzeigen wenn Debug-Modus aktiv
+    if (rex::isDebugMode() && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        dump('=== POST Request Data ===');
+        dump($_POST);
+        dump('=== auto_inject_include_templates ===');
+        dump($_POST['auto_inject_include_templates'] ?? 'NOT SET');
+    }
+    
     $form = rex_form::factory($table, '', 'id = ' . $id, 'post', $formDebug);
     $form->addParam('id', $id);
     $form->addParam('sort', rex_request::request('sort', 'string', ''));
@@ -86,6 +95,18 @@ if ('delete' === $func) {
         $field = $form->addRawField($yrewriteSelectHtml);
     }
 
+    // Domain Panel
+    $domainPanelStart = '
+    <div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.2); margin: 20px 0; padding: 15px;">
+        <div style="display: flex; align-items: start;">
+            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #5bc0de; line-height: 1;">
+                <i class="fa fa-globe"></i>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Domain</h4>
+    ';
+    $field = $form->addRawField($domainPanelStart);
+
     $field = $form->addTextField('uid');
     $field->setLabel(count($yrewriteDomains) > 0 && !$form->isEditMode() ? '<small class="text-muted">Oder eigene Domain eingeben:</small>' : rex_i18n::msg('consent_manager_domain'));
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_empty_msg'));
@@ -95,6 +116,13 @@ if ('delete' === $func) {
     });
     $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
     $field->setAttribute('id', 'domain-uid-field');
+    
+    $domainPanelEnd = '
+            </div>
+        </div>
+    </div>
+    ';
+    $field = $form->addRawField($domainPanelEnd);
 
     // Rechtliche Seiten Panel
     $legalPanelStart = '
@@ -104,7 +132,7 @@ if ('delete' === $func) {
                 <i class="fa fa-file-text-o"></i>
             </div>
             <div style="flex: 1;">
-                <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Rechtliche Seiten</h4>
+                <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Rechtliche Seiten</h4>
     ';
     $field = $form->addRawField($legalPanelStart);
     
@@ -185,12 +213,12 @@ if ('delete' === $func) {
 
     // Auto-Inject Configuration - Hervorgehoben als Panel
     $autoInjectPanelStart = '
-    <div class="panel panel-warning" style="border-left: 4px solid #f0ad4e; background: rgba(240, 173, 78, 0.2); margin: 20px 0; padding: 15px;">
+    <div class="panel panel-warning" style="border-left: 4px solid #f0ad4e; background: rgba(240, 173, 78, 0.2); margin: 20px 0; padding: 15px; position: relative; overflow: visible; contain: layout;">
         <div style="display: flex; align-items: start;">
             <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #f0ad4e; line-height: 1;">
                 <i class="fa fa-plug"></i>
             </div>
-            <div style="flex: 1;">
+            <div style="flex: 1; position: relative; overflow: visible;">
                 <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Automatische Frontend-Einbindung</h4>
     ';
     $field = $form->addRawField($autoInjectPanelStart);
@@ -222,6 +250,86 @@ if ('delete' === $func) {
     $select->addOption('Nein (kein automatischer Fokus)', '0');
     $select->addOption('Ja (Fokus für Barrierefreiheit)', '1');
     $field->setNotice('Wenn aktiviert, wird der Fokus automatisch auf die Consent-Box gesetzt (empfohlen für Barrierefreiheit gemäß WCAG).');
+    
+    // Auto-Inject: Template-Whitelist (Positivliste) - Multi-Select
+    // Alle aktiven Templates laden
+    $templateOptions = [];
+    if (rex_addon::get('structure')->getPlugin('content')->isAvailable()) {
+        $sql = rex_sql::factory();
+        $sql->setQuery('SELECT id, name FROM ' . rex::getTable('template') . ' WHERE active = 1 ORDER BY name');
+        foreach ($sql as $row) {
+            $templateId = $row->getValue('id');
+            $templateName = $row->getValue('name');
+            $templateOptions[$templateId] = $templateName . ' [ID: ' . $templateId . ']';
+        }
+    }
+    
+    if (count($templateOptions) > 0) {
+        // Aktuell gespeicherte Template-IDs laden
+        $savedTemplates = [];
+        if ($func === 'edit' && $id > 0) {
+            $sql = rex_sql::factory();
+            $sql->setQuery('SELECT auto_inject_include_templates FROM ' . rex::getTable('consent_manager_domain') . ' WHERE id = ?', [$id]);
+            if ($sql->getRows() > 0) {
+                $saved = $sql->getValue('auto_inject_include_templates');
+                if (null !== $saved && '' !== $saved) {
+                    $savedTemplates = array_map('intval', array_filter(array_map('trim', explode(',', $saved))));
+                }
+            }
+        }
+        
+        // Checkbox-Liste für Templates
+        $checkboxesHtml = '<div class="form-group">' .
+            '<label class="control-label">Nur in diesen Templates einbinden</label>' .
+            '<div style="border: 1px solid #ddd; border-radius: 4px; padding: 10px; max-height: 250px; overflow-y: auto; background-color: #fff;">' .
+            '<div style="padding-bottom: 10px; border-bottom: 1px solid #eee; margin-bottom: 10px;">' .
+            '<label style="font-weight: normal; margin: 0;">' .
+            '<input type="checkbox" id="domain-templates-select-all" style="margin-right: 5px;"> ' .
+            '<strong>Alle auswählen</strong>' .
+            '</label>' .
+            '</div>';
+        
+        // Template-Checkboxen hinzufügen
+        foreach ($templateOptions as $tplId => $tplName) {
+            $checked = in_array($tplId, $savedTemplates, true) ? ' checked' : '';
+            $checkboxesHtml .= '<div style="padding: 3px 0;">' .
+                '<label style="font-weight: normal; margin: 0;">' .
+                '<input type="checkbox" class="domain-template-checkbox" value="' . $tplId . '"' . $checked . ' style="margin-right: 5px;"> ' .
+                rex_escape($tplName) .
+                '</label>' .
+                '</div>';
+        }
+        
+        // Initialer Wert für Hidden Field (gespeicherte Templates)
+        $initialValue = count($savedTemplates) > 0 ? implode(',', $savedTemplates) : '';
+        
+        $checkboxesHtml .= '</div>' .
+            '<p class="help-block">' .
+            '<i class="fa fa-info-circle"></i> <strong>Nichts auswählen = in allen Templates einbinden</strong> (Standardverhalten). ' .
+            'Template(s) auswählen = nur in diesen Templates wird der Consent Manager automatisch eingebunden. ' .
+            'Sinnvoll für Websites mit vielen Spezial-Templates (API, AJAX, Print, RSS).' .
+            '</p>' .
+            '</div>';
+        
+        $field = $form->addRawField($checkboxesHtml);
+        
+        // Hidden Field als echtes rex_form-Feld damit es richtig gespeichert wird
+        $field = $form->addHiddenField('auto_inject_include_templates');
+        $field->setAttribute('id', 'domain-templates-hidden');
+        if ($func === 'edit' && $id > 0) {
+            $field->setValue($initialValue);
+        }
+    } else {
+        // Fallback: Kein Template gefunden
+        $field = $form->addRawField(
+            '<div class="form-group">' .
+            '<label class="control-label">Nur in diesen Templates einbinden</label>' .
+            '<p class="help-block text-warning">' .
+            '<i class="fa fa-exclamation-triangle"></i> Keine aktiven Templates gefunden. Der Consent Manager wird in allen Templates eingebunden.' .
+            '</p>' .
+            '</div>'
+        );
+    }
     
     // Auto-Inject Panel Ende
     $autoInjectPanelEnd = '
@@ -278,7 +386,92 @@ if ('delete' === $func) {
     }
 
     $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_domain_edit') : rex_i18n::msg('consent_manager_domain_add');
+    
     $formContent = $form->get();
+    
+    // JavaScript: Checkbox-Liste → kommagetrennte Liste beim Submit
+    $formContent .= '
+    <script nonce="' . rex_response::getNonce() . '">
+    (function() {
+        // "Alle auswählen" Checkbox-Logik
+        var selectAllCheckbox = document.getElementById(\'domain-templates-select-all\');
+        var templateCheckboxes = document.querySelectorAll(\'.domain-template-checkbox\');
+        
+        if (selectAllCheckbox && templateCheckboxes.length > 0) {
+            // "Alle auswählen" Checkbox Event
+            selectAllCheckbox.addEventListener(\'change\', function() {
+                templateCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            });
+            
+            // Einzelne Checkbox Events: "Alle auswählen" aktualisieren
+            templateCheckboxes.forEach(function(checkbox) {
+                checkbox.addEventListener(\'change\', function() {
+                    var allChecked = Array.from(templateCheckboxes).every(function(cb) {
+                        return cb.checked;
+                    });
+                    selectAllCheckbox.checked = allChecked;
+                });
+            });
+            
+            // Initial state: "Alle auswählen" prüfen
+            var allChecked = Array.from(templateCheckboxes).every(function(cb) {
+                return cb.checked;
+            });
+            selectAllCheckbox.checked = allChecked;
+        }
+        
+        // Template Checkboxes: Werte sammeln beim Submit
+        // Suche Formular (rex_form kann verschiedene Namen generieren)
+        var form = document.querySelector(\'form[name="rex-form-consent_manager_domain"]\') || 
+                   document.querySelector(\'form\');
+        
+        console.log(\'[Domain Templates Init]\', {
+            form: form,
+            formName: form ? form.getAttribute(\'name\') : \'NOT FOUND\',
+            checkboxCount: templateCheckboxes.length
+        });
+        
+        if (form) {
+            // Aktualisiere Hidden Field bei jeder Checkbox-Änderung
+            var updateHiddenField = function() {
+                var hiddenField = document.getElementById(\'domain-templates-hidden\');
+                var checkboxes = document.querySelectorAll(\'.domain-template-checkbox:checked\');
+                
+                if (hiddenField) {
+                    var selectedIds = [];
+                    checkboxes.forEach(function(checkbox) {
+                        selectedIds.push(checkbox.value);
+                    });
+                    var newValue = selectedIds.join(\',\');
+                    hiddenField.value = newValue;
+                    
+                    console.log(\'[Domain Template Update]\', {
+                        checkedCount: checkboxes.length,
+                        selectedIds: selectedIds,
+                        hiddenFieldValue: newValue
+                    });
+                }
+            };
+            
+            // Bei jeder Checkbox-Änderung Hidden Field aktualisieren
+            templateCheckboxes.forEach(function(checkbox) {
+                checkbox.addEventListener(\'change\', updateHiddenField);
+            });
+            
+            // Initial einmal aufrufen
+            updateHiddenField();
+            
+            // Zusätzlich beim Submit nochmal aufrufen
+            form.addEventListener(\'submit\', function(e) {
+                updateHiddenField();
+                console.log(\'[Domain Template Submit] Final value:\', document.getElementById(\'domain-templates-hidden\').value);
+            }, false);
+        }
+    })();
+    </script>
+    ';
     
     // Theme-Sidebar erstellen
     $addon = rex_addon::get('consent_manager');

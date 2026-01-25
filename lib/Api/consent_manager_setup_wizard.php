@@ -45,6 +45,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         $domain = rex_request::get('domain', 'string', '');
         $setupType = rex_request::get('setup_type', 'string', 'standard'); // standard oder minimal
         $autoInject = rex_request::get('auto_inject', 'int', 0) === 1;
+        $includeTemplates = rex_request::get('include_templates', 'string', ''); // Kommagetrennte Template-IDs
         $privacyPolicy = rex_request::get('privacy_policy', 'int', 0);
         $legalNotice = rex_request::get('legal_notice', 'int', 0);
         
@@ -72,7 +73,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             $this->sendProgress(10, 'Domain-Konfiguration erstellen...');
             $this->sendEvent('debug', ['step' => 'before_domain', 'domain' => $domain, 'auto_inject' => $autoInject]);
             
-            $domainId = $this->createOrUpdateDomain($domain, $autoInject, $privacyPolicy, $legalNotice);
+            $domainId = $this->createOrUpdateDomain($domain, $autoInject, $includeTemplates, $privacyPolicy, $legalNotice);
             
             $this->sendEvent('debug', ['step' => 'after_domain', 'domain_id' => $domainId]);
             $this->sendEvent('domain_created', ['id' => $domainId, 'domain' => $domain]);
@@ -168,7 +169,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
     /**
      * Domain in Datenbank anlegen oder aktualisieren
      */
-    private function createOrUpdateDomain(string $domain, bool $autoInject, int $privacyPolicy = 0, int $legalNotice = 0): int
+    private function createOrUpdateDomain(string $domain, bool $autoInject, string $includeTemplates = '', int $privacyPolicy = 0, int $legalNotice = 0): int
     {
         try {
             $sql = rex_sql::factory();
@@ -191,6 +192,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
                 $sql->setValue('auto_inject_reload_on_consent', 0);
                 $sql->setValue('auto_inject_delay', 0);
                 $sql->setValue('auto_inject_focus', 1);
+                $sql->setValue('auto_inject_include_templates', $includeTemplates);
                 if ($privacyPolicy > 0) {
                     $sql->setValue('privacy_policy', $privacyPolicy);
                 }
@@ -211,6 +213,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             $sql->setValue('auto_inject_reload_on_consent', 0);
             $sql->setValue('auto_inject_delay', 0);
             $sql->setValue('auto_inject_focus', 1);
+            $sql->setValue('auto_inject_include_templates', $includeTemplates);
             if ($privacyPolicy > 0) {
                 $sql->setValue('privacy_policy', $privacyPolicy);
             }

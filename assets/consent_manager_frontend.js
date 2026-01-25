@@ -248,11 +248,37 @@ function safeJSONParse(input, fallback) {
         }
     }, true); // Use capture phase for priority
 
-    document.querySelectorAll('.consent_manager-show-box, .consent_manager-show-box-reload').forEach(function (el) {
-        el.addEventListener('click', function () {
-            showBox();
-            return false;
-        });
+    // Kombinierter Click-Handler für alle Consent-Box-Trigger
+    // Verwendet Event-Delegation statt mehrere querySelectorAll
+    document.addEventListener('click', function(e) {
+        var target = e.target;
+        
+        // Bubble up durch DOM-Tree bis wir einen passenden Link/Element finden
+        while (target && target !== document) {
+            // Legacy-Klassen für bestehende Implementierungen
+            if (target.classList && (target.classList.contains('consent_manager-show-box') || 
+                target.classList.contains('consent_manager-show-box-reload'))) {
+                e.preventDefault();
+                showBox();
+                return false;
+            }
+            
+            // Neue Klasse für vereinfachtes Handling
+            if (target.tagName === 'A' && target.classList && target.classList.contains('consent-settings-link')) {
+                e.preventDefault();
+                consent_manager_showBox();
+                return false;
+            }
+            
+            // Data-Attribut Alternative
+            if (target.tagName === 'A' && target.getAttribute('data-consent-action') === 'settings') {
+                e.preventDefault();
+                consent_manager_showBox();
+                return false;
+            }
+            
+            target = target.parentElement;
+        }
     });
 
     function saveConsent(toSave) {

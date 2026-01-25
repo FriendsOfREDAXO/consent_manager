@@ -49,6 +49,9 @@ rex_sql_table::get(rex::getTable('consent_manager_domain'))
     ->ensureColumn(new rex_sql_column('auto_inject_reload_on_consent', 'tinyint(1)', true, '0'))
     ->ensureColumn(new rex_sql_column('auto_inject_delay', 'int(10) unsigned', true, '0'))
     ->ensureColumn(new rex_sql_column('auto_inject_focus', 'tinyint(1)', true, '1'))
+    ->ensureColumn(new rex_sql_column('auto_inject_include_templates', 'text'))
+    ->ensure();
+    ->ensureColumn(new rex_sql_column('auto_inject_focus', 'tinyint(1)', true, '1'))
     ->ensure();
 
 // Ensure oembed_enabled Spalte in Domain-Tabelle (default: 0 = deaktiviert beim Update)

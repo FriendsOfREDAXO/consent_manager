@@ -3,7 +3,7 @@
 ## Version 5.3.0 - 24.01.2026
 
 **🚀 Release-Highlights:**  
-Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option, erweiterte Debug-Tools mit Cookie-Analyse und Performance-Optimierungen.
+Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse und Performance-Optimierungen.
 
 ---
 
@@ -15,6 +15,7 @@ Interaktiver Setup-Assistent für schnelle Erstkonfiguration:
 - **SSE-basierte Fortschrittsanzeige** mit Echtzeit-Feedback
 - **YRewrite-Integration**: Automatische Auswahl aus vorhandenen YRewrite-Domains
 - **Auto-Inject-Option**: Toggle-Switch für automatische Frontend-Einbindung
+- **Template-Positivliste (NEU)**: Multi-Select für Auswahl aktiver Templates, in denen Consent Manager eingebunden werden soll
 - **Standard/Minimal Setup**: Auswahl zwischen 25 vorkonfigurierten Services oder nur notwendigen Cookies
 - **Duplikat-Prävention**: Überspringt bereits vorhandene Services automatisch
 - **Success-Screen**: Übersichtliche Navigation zu Cookie-Gruppen, Domain, Services, Theme und Texte
@@ -113,6 +114,12 @@ JavaScript-Dateien umfassend optimiert für bessere Performance:
 
 Neues Feature für einfachere Integration ohne Template-Anpassung:
 - **Auto-Inject Option**: Pro Domain aktivierbare automatische Einbindung im Frontend
+- **Template-Positivliste (NEU)**: Multi-Select zur Auswahl aktiver Templates für gezielte Einbindung
+  - Leer lassen = Consent Manager wird in allen Templates eingebunden (Standardverhalten)
+  - Templates auswählen = nur in ausgewählten Templates wird eingebunden
+  - Live-Search, Select All/Deselect All, Count-Display
+  - Sinnvoll für Websites mit API-Endpoints, AJAX-Templates, Print-Versionen, RSS-Feeds
+  - Neue Datenbankspalte: `auto_inject_include_templates` (TEXT, kommagetrennte Template-IDs)
 - **OUTPUT_FILTER Integration**: Consent Manager wird automatisch vor `</head>` eingefügt
 - **Keine Template-Änderung nötig**: Aktivierung per Checkbox in der Domain-Konfiguration
 - **Intelligente Erkennung**: Nur bei HTML-Seiten mit `</head>` Tag aktiv
@@ -123,6 +130,7 @@ Neues Feature für einfachere Integration ohne Template-Anpassung:
   - `auto_inject_reload_on_consent` - Seite bei Consent-Änderung neu laden (tinyint)
   - `auto_inject_delay` - Verzögerung bis zur Anzeige in Sekunden (int)
   - `auto_inject_focus` - Fokus auf Consent-Box setzen (Barrierefreiheit) (tinyint)
+  - `auto_inject_include_templates` - Template-IDs für Positivliste (text)
 
 #### Auto-Inject Konfigurationsoptionen
 

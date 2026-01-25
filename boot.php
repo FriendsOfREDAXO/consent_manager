@@ -197,7 +197,7 @@ if (rex::isFrontend()) {
         
         $sql = rex_sql::factory();
         $sql->setQuery(
-            'SELECT auto_inject, auto_inject_reload_on_consent, auto_inject_delay, auto_inject_focus 
+            'SELECT auto_inject, auto_inject_reload_on_consent, auto_inject_delay, auto_inject_focus, auto_inject_include_templates 
              FROM ' . rex::getTable('consent_manager_domain') . ' 
              WHERE uid = ?',
             [$domain],
@@ -207,6 +207,31 @@ if (rex::isFrontend()) {
         if ($sql->getRows() === 0 || (int) $sql->getValue('auto_inject') !== 1) {
             return $content;
         }
+        
+        // Template-Whitelist prüfen (Positivliste)
+        $includeTemplates = $sql->getValue('auto_inject_include_templates');
+        if (null !== $includeTemplates && '' !== trim((string) $includeTemplates)) {
+            // Template-IDs aus kommagetrennte Liste in Array umwandeln
+            $includedIds = array_map('intval', array_filter(
+                array_map('trim', explode(',', (string) $includeTemplates)),
+                static fn($val) => '' !== $val
+            ));
+            
+            // Aktuelles Template-ID ermitteln
+            $article = rex_article::getCurrent();
+            if (null !== $article) {
+                $currentTemplateId = $article->getTemplateId();
+                
+                // Nur einbinden wenn aktuelles Template in der Positivliste ist
+                if (!in_array($currentTemplateId, $includedIds, true)) {
+                    return $content;
+                }
+            } else {
+                // Wenn kein Artikel gefunden wurde (z.B. bei Fehlern), nicht einbinden
+                return $content;
+            }
+        }
+        // Wenn Positivliste leer ist, in allen Templates einbinden
         
         // Auto-Inject Optionen auslesen
         $reloadOnConsent = (int) $sql->getValue('auto_inject_reload_on_consent') === 1;

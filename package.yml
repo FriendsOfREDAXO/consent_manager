@@ -7,7 +7,7 @@ page:
   title: "translate:consent_manager_title"
   perm: consent_manager[]
   pjax: true
-  icon: rex-icon fa fa-coffee
+  icon: rex-icon fa-solid fa-cookie-bite
   subpages:
     config:
       title: "Settings"
