@@ -99,45 +99,57 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
 
             // Schritt 1: Domain anlegen/aktualisieren
             $this->updateProgress(10, 'running', 'Domain wird konfiguriert: ' . $cleanDomain);
+            sleep(1); // Pause damit Polling Updates sieht
             $domainId = $this->createOrUpdateDomain($cleanDomain, $autoInject, $includeTemplates, $privacyPolicy, $legalNotice);
             $this->updateProgress(20, 'running', 'Domain erstellt (ID: ' . $domainId . ')');
-            usleep(300000); // 0.3s
+            sleep(1);
 
             // Schritt 2: Standard-Setup importieren (nur wenn noch keine Services)
             if ($hasExistingServices) {
                 $this->updateProgress(30, 'running', 'Services bereits vorhanden - Import übersprungen');
+                sleep(1);
             } else {
                 if ('standard' === $setupType) {
                     $this->updateProgress(30, 'running', 'Standard-Setup importieren (Google Analytics, YouTube, Vimeo, ...)');
+                    sleep(1);
                     $this->importStandardSetup();
                     $this->updateProgress(40, 'running', 'Standard-Services importiert');
+                    sleep(1);
                 } else {
                     $this->updateProgress(30, 'running', 'Minimal-Setup importieren (nur Cookie-Gruppen)');
+                    sleep(1);
                     $this->importMinimalSetup();
                     $this->updateProgress(40, 'running', 'Minimal-Setup importiert');
+                    sleep(1);
                 }
             }
-            usleep(300000);
 
             // Schritt 3: Cookie-Gruppen der Domain zuordnen
             $this->updateProgress(50, 'running', 'Cookie-Gruppen der Domain zuordnen...');
+            sleep(1);
             $this->assignGroupsToDomain($domainId);
             $this->updateProgress(60, 'running', 'Cookie-Gruppen zugeordnet');
-            usleep(300000);
+            sleep(1);
 
             // Schritt 4: Default-Theme wird verwendet
             $this->updateProgress(70, 'running', 'Default-Theme wird verwendet...');
-            usleep(200000);
+            sleep(1);
 
             // Schritt 5: Cache leeren
             $this->updateProgress(80, 'running', 'Cache aufwärmen...');
+            sleep(1);
             $this->clearCache();
             $this->updateProgress(90, 'running', 'Cache geleert');
-            usleep(200000);
+            sleep(1);
 
             // Schritt 6: Validierung
             $this->updateProgress(95, 'running', 'Konfiguration validieren...');
+            sleep(1);
             $validation = $this->validateSetup($cleanDomain);
+            $this->updateProgress(98, 'running', 'Validierung abgeschlossen - ' . $validation['cookies_count'] . ' Services, ' . $validation['groups_count'] . ' Gruppen');
+            
+            // Letzte Pause damit User das Ergebnis sehen kann
+            sleep(2);
             
             // Abschluss
             $this->updateProgress(100, 'complete', 'Setup abgeschlossen!', [
