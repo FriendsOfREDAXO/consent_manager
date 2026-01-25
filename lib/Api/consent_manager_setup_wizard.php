@@ -48,6 +48,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
         header('X-Accel-Buffering: no'); // Nginx: Buffering deaktivieren
+        header('Content-Encoding: none'); // Apache Gzip/mod_deflate deaktivieren
         
         // Apache mod_deflate deaktivieren für SSE
         if (function_exists('apache_setenv')) {
@@ -65,8 +66,8 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         @ini_set('implicit_flush', '1');
         @ob_implicit_flush(1);
 
-        // Execution Time erhöhen
-        set_time_limit(120);
+        // Execution Time auf unbegrenzt setzen (SSE kann lange laufen)
+        set_time_limit(0);
 
         // Parameter auslesen (GET weil EventSource kein POST unterstützt)
         $domain = rex_request::get('domain', 'string', '');
@@ -105,6 +106,11 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             $this->sendEvent('debug', ['step' => 'after_domain', 'domain_id' => $domainId]);
             $this->sendEvent('domain_created', ['id' => $domainId, 'domain' => $domain]);
             usleep(500000); // 0.5s Pause für UX
+            
+            // Verbindung prüfen (bricht ab wenn Browser Tab geschlossen wurde)
+            if (connection_aborted()) {
+                exit;
+            }
 
             // Schritt 2: Standard-Setup importieren (nur wenn noch keine Services)
             if ($hasExistingServices) {
@@ -123,12 +129,22 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
                 }
                 usleep(500000);
             }
+            
+            // Verbindung prüfen
+            if (connection_aborted()) {
+                exit;
+            }
 
             // Schritt 2.5: Cookie-Gruppen der Domain zuordnen
             $this->sendProgress(50, 'Cookie-Gruppen der Domain zuordnen...');
             $this->assignGroupsToDomain($domainId);
             $this->sendEvent('groups_assigned', ['domain_id' => $domainId]);
             usleep(500000);
+            
+            // Verbindung prüfen
+            if (connection_aborted()) {
+                exit;
+            }
 
             // Schritt 3: Default-Theme setzen (konfiguriert nicht pro Domain)
             $this->sendProgress(60, 'Default-Theme wird verwendet...');
@@ -140,6 +156,11 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             $this->clearCache();
             $this->sendEvent('cache_cleared', ['success' => true]);
             usleep(300000);
+            
+            // Verbindung prüfen
+            if (connection_aborted()) {
+                exit;
+            }
 
             // Schritt 5: Finale Prüfung
             $this->sendProgress(95, 'Konfiguration validieren...');

@@ -1294,20 +1294,28 @@ jQuery(function($) {
     }
     
     function logEvent(message, type) {
+        console.log('logEvent called:', message, type); // Debug
+        
         var icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '→';
         var color = type === 'success' ? '#5cb85c' : type === 'error' ? '#d9534f' : '#666';
         var time = new Date().toLocaleTimeString('de-DE');
         
-        $('#wizard-log-content').append(
-            '<div style="color: ' + color + '; margin-bottom: 5px;">' +
+        var logContent = $('#wizard-log-content');
+        console.log('wizard-log-content exists:', logContent.length > 0); // Debug
+        
+        var logEntry = '<div style="color: ' + color + '; margin-bottom: 5px;">' +
             '<span style="color: #999;">[' + time + ']</span> ' +
             message +
-            '</div>'
-        );
+            '</div>';
+        
+        console.log('Appending:', logEntry); // Debug
+        logContent.append(logEntry);
         
         // Auto-scroll
-        var logContainer = $('#wizard-log-content').parent();
-        logContainer.scrollTop(logContainer[0].scrollHeight);
+        var logContainer = logContent.parent();
+        if (logContainer.length > 0 && logContainer[0]) {
+            logContainer.scrollTop(logContainer[0].scrollHeight);
+        }
     }
     
     function showSuccess(data) {
