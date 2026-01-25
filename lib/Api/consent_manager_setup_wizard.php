@@ -47,10 +47,8 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
 
     public function execute()
     {
-        // Output Buffer SOFORT leeren - noch vor allen anderen Operationen!
-        while (ob_get_level() > 0) {
-            ob_end_clean();
-        }
+        // Output Buffer SOFORT leeren - wichtig für SSE!
+        rex_response::cleanOutputBuffers();
         
         // Security: Strikte Berechtigungsprüfung
         if (!rex::getUser() || !rex::getUser()->isAdmin()) {
