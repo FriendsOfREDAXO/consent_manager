@@ -1,6 +1,6 @@
 <?php
 /**
- * Fragment: Setup Wizard mit SSE
+ * Fragment: Setup Wizard mit AJAX Polling
  * Reaktiver Setup-Assistent für erste Einrichtung
  */
 
@@ -1122,7 +1122,7 @@ body.rex-theme-dark details > div code {
 
 <script nonce="<?= rex_response::getNonce() ?>">
 jQuery(function($) {
-    var eventSource = null;
+    var pollingInterval = null;
     
     // Template Checkboxen: "Alle auswählen/abwählen"
     $('#wizard-templates-select-all').on('change', function() {
@@ -1200,91 +1200,84 @@ jQuery(function($) {
         var privacyPolicy = $('#REX_LINK_wizard_privacy').val() || '0';
         var legalNotice = $('#REX_LINK_wizard_imprint').val() || '0';
         
-        // SSE Connection aufbauen (Theme wird nicht mehr übergeben - nutzt Default)
-        var url = '<?= rex_url::backendController() ?>?rex-api-call=consent_manager_setup_wizard&' +
-                  'domain=' + encodeURIComponent(domain) +
-                  '&setup_type=' + encodeURIComponent(setupType) +
-                  '&auto_inject=' + (autoInject ? '1' : '0') +
-                  '&include_templates=' + encodeURIComponent(includeTemplates) +
-                  '&privacy_policy=' + encodeURIComponent(privacyPolicy) +
-                  '&legal_notice=' + encodeURIComponent(legalNotice);
+        // AJAX Request zum Setup starten
+        var url = '<?= rex_url::backendController() ?>?rex-api-call=consent_manager_setup_wizard';
         
-        eventSource = new EventSource(url);
-        
-        // Init Event
-        eventSource.addEventListener('init', function(e) {
-            var data = JSON.parse(e.data);
-            console.log('INIT:', JSON.stringify(data, null, 2));
-            logEvent('✓ Verbindung hergestellt', 'success');
-            logEvent('→ Domain: ' + data.domain, 'info');
-        });
-        
-        // Debug Event
-        eventSource.addEventListener('debug', function(e) {
-            var data = JSON.parse(e.data);
-            console.log('DEBUG:', JSON.stringify(data, null, 2));
-        });
-        
-        // Progress Event
-        eventSource.addEventListener('progress', function(e) {
-            var data = JSON.parse(e.data);
-            console.log('PROGRESS:', data.percent + '% - ' + data.message);
-            updateProgress(data.percent, data.message);
-            logEvent('⏳ ' + data.message, 'info');
-        });
-        
-        // Domain Created Event
-        eventSource.addEventListener('domain_created', function(e) {
-            var data = JSON.parse(e.data);
-            console.log('DOMAIN_CREATED:', JSON.stringify(data, null, 2));
-            logEvent('✓ Domain angelegt: ' + data.domain, 'success');
-        });
-        
-        // Import Complete Event
-        eventSource.addEventListener('import_complete', function(e) {
-            var data = JSON.parse(e.data);
-            logEvent('✓ ' + (data.type === 'standard' ? 'Standard' : 'Minimal') + '-Setup importiert', 'success');
-        });
-        
-        // Theme Assigned Event
-        eventSource.addEventListener('theme_assigned', function(e) {
-            var data = JSON.parse(e.data);
-            logEvent('✓ Theme zugewiesen: ' + data.theme, 'success');
-        });
-        
-        // Cache Cleared Event
-        eventSource.addEventListener('cache_cleared', function(e) {
-            logEvent('✓ Cache geleert', 'success');
-        });
-        
-        // Validation Event
-        eventSource.addEventListener('validation', function(e) {
-            var data = JSON.parse(e.data);
-            logEvent('✓ Validierung: ' + data.cookies_count + ' Services, ' + data.groups_count + ' Gruppen', 'success');
-        });
-        
-        // Complete Event
-        eventSource.addEventListener('complete', function(e) {
-            var data = JSON.parse(e.data);
-            eventSource.close();
-            showSuccess(data);
-        });
-        
-        // Error Event
-        eventSource.addEventListener('error', function(e) {
-            if (e.data) {
-                var data = JSON.parse(e.data);
-                logEvent('✗ Fehler: ' + data.message, 'error');
+        $.ajax({
+            url: url,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                action: 'start',
+                domain: domain,
+                setup_type: setupType,
+                auto_inject: autoInject ? 1 : 0,
+                include_templates: includeTemplates,
+                privacy_policy: privacyPolicy,
+                legal_notice: legalNotice
+            },
+            success: function(response) {
+                console.log('Setup gestartet:', response);
+                logEvent('✓ Setup gestartet', 'success');
+                
+                // Polling starten
+                startPolling();
+            },
+            error: function(xhr, status, error) {
+                console.error('Setup-Start fehlgeschlagen:', error);
+                console.log('Response:', xhr.responseText);
+                logEvent('✗ Fehler beim Starten: ' + error, 'error');
                 $('#wizard-status').removeClass('alert-info').addClass('alert-danger');
-                $('#wizard-status-text').html('<i class="fa fa-exclamation-triangle"></i> ' + data.message);
+                $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').show();
+                $('#wizard-btn-reset').show();
             }
-            if (eventSource) {
-                eventSource.close();
-            }
-            // Reset-Button anzeigen bei Fehler
-            $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').show();
-            $('#wizard-btn-reset').show();
         });
+    }
+    
+    function startPolling() {
+        var url = '<?= rex_url::backendController() ?>?rex-api-call=consent_manager_setup_wizard';
+        
+        pollingInterval = setInterval(function() {
+            $.ajax({
+                url: url,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'status'
+                },
+                success: function(progress) {
+                    if (!progress || !progress.status) {
+                        return;
+                    }
+                    
+                    console.log('Progress:', progress);
+                    
+                    // UI Update
+                    updateProgress(progress.percent || 0, progress.message || '');
+                    
+                    // Status auswerten
+                    if (progress.status === 'complete') {
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+                        showSuccess({
+                            message: progress.message,
+                            domain: progress.data?.domain || '',
+                            url: progress.data?.url || ''
+                        });
+                    } else if (progress.status === 'error') {
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+                        logEvent('✗ Fehler: ' + progress.message, 'error');
+                        $('#wizard-status').removeClass('alert-info').addClass('alert-danger');
+                        $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').show();
+                        $('#wizard-btn-reset').show();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Polling-Fehler:', error);
+                }
+            });
+        }, 500); // Poll alle 500ms
     }
     
     function updateProgress(percent, message) {
@@ -1418,10 +1411,10 @@ jQuery(function($) {
         // Close Button sichtbar machen
         $('#setup-wizard-modal .modal-header .close, #setup-wizard-modal .modal-footer .btn-default:first').show();
         
-        // EventSource schließen falls noch aktiv
-        if (eventSource) {
-            eventSource.close();
-            eventSource = null;
+        // Polling stoppen falls noch aktiv
+        if (pollingInterval) {
+            clearInterval(pollingInterval);
+            pollingInterval = null;
         }
     }
     
