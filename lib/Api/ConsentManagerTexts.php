@@ -27,15 +27,8 @@ use rex_response;
  */
 class ConsentManagerTexts extends rex_api_function
 {
-    /**
-     * Erlaubt Frontend-Aufrufe (published API).
-     *
-     * @return bool
-     */
-    public function published()
-    {
-        return true;
-    }
+    /** @var bool Erlaubt Frontend-Aufrufe (published API) */
+    protected $published = true;
 
     /**
      * @throws rex_api_exception
