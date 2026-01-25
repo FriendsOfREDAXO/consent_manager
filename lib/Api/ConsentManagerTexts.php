@@ -38,7 +38,7 @@ class ConsentManagerTexts extends rex_api_function
 
     /**
      * @throws rex_api_exception
-     * @return rex_api_result
+     * @return never
      */
     public function execute()
     {
@@ -49,12 +49,12 @@ class ConsentManagerTexts extends rex_api_function
 
         // Validiere dass Clang existiert (verhindert SQL Injection bei ungültigen IDs)
         if (!rex_clang::exists($clangId)) {
-            throw new rex_api_exception('Invalid language parameter', 400);
+            throw new rex_api_exception('Invalid language parameter');
         }
 
         // Security: Verhindere zu große clang-Werte
         if ($clangId < 0 || $clangId > 999) {
-            throw new rex_api_exception('Language parameter out of range', 400);
+            throw new rex_api_exception('Language parameter out of range');
         }
 
         // ETag für Client-seitiges Caching (basierend auf Version + Cache-Log)
@@ -123,6 +123,7 @@ class ConsentManagerTexts extends rex_api_function
         } catch (\Exception $e) {
             // Fehler beim Rendering - gebe leeren String zurück statt Exception
             // (verhindert Information Disclosure)
+            \rex_logger::factory()->log('warning', 'Consent Manager API: Failed to render box template: ' . $e->getMessage());
             return '';
         }
     }

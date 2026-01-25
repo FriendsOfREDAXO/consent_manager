@@ -105,9 +105,16 @@ function loadConsentManagerContent() {
         console.error('Consent Manager: Failed to load content', error);
         consentManagerContentPromise = null;
         
-        // Fallback: Leeres Template (verhindert Fehler)
+        // Fallback: Error template with i18n-ready message
         if (!consent_manager_box_template) {
-            consent_manager_box_template = '<div id="consent_manager-background" class="consent_manager-hidden"><div class="consent-error">Consent Manager konnte nicht geladen werden.</div></div>';
+            var errorMessage = 'Consent Manager could not be loaded.';
+            // Try to use localized error message if available
+            if (typeof window !== 'undefined' && 
+                window.consent_manager_texts && 
+                window.consent_manager_texts.error_loading) {
+                errorMessage = window.consent_manager_texts.error_loading;
+            }
+            consent_manager_box_template = '<div id="consent_manager-background" class="consent_manager-hidden"><div class="consent-error">' + errorMessage + '</div></div>';
         }
         
         throw error;

@@ -208,13 +208,6 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         // Zu lowercase
         $domain = strtolower($domain);
         
-        // Security: Validiere Domain-Format
-        // Erlaubt: alphanumerisch, Punkte, Bindestriche, Port
-        // Verhindert: .., //, SQL-Injection Zeichen, etc.
-        if (!preg_match('/^[a-z0-9.-]+(:[0-9]{1,5})?$/i', $domain)) {
-            throw new \Exception('Invalid domain format');
-        }
-        
         // Security: Verhindere Path Traversal
         if (str_contains($domain, '..')) {
             throw new \Exception('Path traversal detected');
@@ -223,6 +216,43 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         // Security: Verhindere leere Domain
         if ('' === $domain) {
             throw new \Exception('Empty domain not allowed');
+        }
+        
+        // Security: Strikte Domain- und Port-Validierung
+        // - Erlaubt Hostname mit Labels (a-z, 0-9, -), getrennt durch Punkte
+        // - Keine führenden/abschließenden Punkte oder Bindestriche
+        // - Keine aufeinanderfolgenden Punkte
+        // - Optionaler Port: :1-65535
+        $host = $domain;
+        $port = null;
+        
+        // Host und optionalen Port trennen
+        $posPort = strrpos($domain, ':');
+        if (false !== $posPort) {
+            $host = substr($domain, 0, $posPort);
+            $portStr = substr($domain, $posPort + 1);
+            
+            // Port muss numerisch sein
+            if ('' === $portStr || !ctype_digit($portStr)) {
+                throw new \Exception('Invalid domain port format');
+            }
+            
+            $port = (int) $portStr;
+            if ($port < 1 || $port > 65535) {
+                throw new \Exception('Invalid domain port range (1-65535)');
+            }
+        }
+        
+        // Host darf nicht leer sein
+        if ('' === $host) {
+            throw new \Exception('Invalid domain format');
+        }
+        
+        // Strenge Hostname-Validierung nach RFC-ähnlichen Regeln
+        // - Labels 1-63 Zeichen, beginnen/enden mit alphanumerischem Zeichen
+        // - Dazwischen alphanumerisch oder Bindestrich
+        if (!preg_match('/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)(?:\.(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?))*$/i', $host)) {
+            throw new \Exception('Invalid domain format');
         }
         
         return $domain;
