@@ -137,7 +137,20 @@ function safeJSONParse(input, fallback) {
         show = 0;
     }
 
-    if (show) {
+    // Check if any element with data-consent-action="...,dontshow,..." exists
+    // If yes, prevent automatic display of consent box
+    var dontShowElements = document.querySelectorAll('[data-consent-action]');
+    var hasDontShow = false;
+    for (var i = 0; i < dontShowElements.length; i++) {
+        var actions = (dontShowElements[i].getAttribute('data-consent-action') || '').split(',').map(function(a) { return a.trim(); });
+        if (actions.indexOf('dontshow') !== -1) {
+            hasDontShow = true;
+            debugLog('Found element with dontshow flag, suppressing automatic box display');
+            break;
+        }
+    }
+
+    if (show && !hasDontShow) {
         // Apply delay if configured
         if (showDelay > 0) {
             setTimeout(function() {
@@ -263,18 +276,29 @@ function safeJSONParse(input, fallback) {
                 return false;
             }
             
-            // Neue Klasse für vereinfachtes Handling
-            if (target.tagName === 'A' && target.classList && target.classList.contains('consent_manager-open-box')) {
-                e.preventDefault();
-                consent_manager_showBox();
-                return false;
-            }
-            
-            // Data-Attribut Alternative
-            if (target.tagName === 'A' && target.getAttribute('data-consent-action') === 'settings') {
-                e.preventDefault();
-                consent_manager_showBox();
-                return false;
+            // Data-Attribut (primäre Lösung)
+            var consentAction = target.getAttribute('data-consent-action');
+            if (target.tagName === 'A' && consentAction) {
+                // Parse action values (kann "settings", "settings,reload" oder "settings,dontshow" sein)
+                var actions = consentAction.split(',').map(function(a) { return a.trim(); });
+                
+                // "dontshow" Flag unterdrückt nur die automatische Anzeige, nicht den Click-Handler
+                if (actions.indexOf('settings') !== -1) {
+                    e.preventDefault();
+                    consent_manager_showBox();
+                    
+                    // Optional: Reload nach Consent
+                    if (actions.indexOf('reload') !== -1) {
+                        // Warte auf Box-Close und reload dann
+                        var checkClose = setInterval(function() {
+                            if (!document.querySelector('.consent_manager-box')) {
+                                clearInterval(checkClose);
+                                location.reload();
+                            }
+                        }, 100);
+                    }
+                    return false;
+                }
             }
             
             target = target.parentElement;

@@ -19,7 +19,7 @@ Interaktiver Setup-Assistent für schnelle Erstkonfiguration:
 - **Standard/Minimal Setup**: Auswahl zwischen 25 vorkonfigurierten Services oder nur notwendigen Cookies
 - **Duplikat-Prävention**: Überspringt bereits vorhandene Services automatisch
 - **Success-Screen mit Animation**: "HEUREKA!"-Banner mit Blau-Grün-Gradient und animiertem Emoji
-- **Code-Generator**: Fertiger Footer-Link-Code zum Kopieren mit Klasse `consent_manager-open-box`
+- **Code-Generator**: Fertiger Footer-Link-Code zum Kopieren mit `data-consent-action="settings"` (empfohlen)
 - **Required Group Assignment**: Die "Technisch notwendig"-Gruppe wird automatisch der neuen Domain zugeordnet
 
 ### 🎨 Domain-spezifische Themes
@@ -102,7 +102,8 @@ Script-Felder nun in allen Sprachen editierbar mit automatischem Fallback:
 
 JavaScript-Dateien umfassend optimiert für bessere Performance:
 - **Event-Listener optimiert**: Cookie-Link-Handler verwendet jetzt Event-Delegation statt mehrfacher `querySelectorAll`
-- **Automatisches Link-Handling**: Links mit Klasse `consent_manager-open-box` oder `data-consent-action="settings"` öffnen automatisch Cookie-Box
+- **Automatisches Link-Handling**: Links mit `data-consent-action="settings"` (empfohlen) oder `data-consent-action="settings,reload"` (mit Auto-Reload) öffnen automatisch Cookie-Box
+- **dontshow Flag**: `data-consent-action="settings,dontshow"` verhindert automatisches Öffnen der Box beim ersten Besuch, Link funktioniert weiterhin per Klick
 - **Legacy-Support**: Bestehende Klassen `.consent_manager-show-box` und `.consent_manager-show-box-reload` funktionieren weiterhin
 - **DOM-Query-Caching**: Wiederholte `getElementById`/`querySelector`-Aufrufe durch Variablen-Caching ersetzt
 - **Set statt indexOf**: `consents.indexOf()` durch `Set.has()` ersetzt für O(1) statt O(n) Lookup-Performance
@@ -139,9 +140,11 @@ Neues Feature für einfachere Integration ohne Template-Anpassung:
 
 - **README kompakter**: Emojis aus Überschriften entfernt (außer deprecated-Warnung)
 - **Cookie-Liste**: Nur noch PHP-Integration dokumentiert (`Frontend::getCookieList()`)
-- **Footer-Link**: Dokumentation vereinfacht für class-basiertes Auto-Handling
-- **Cookie-Einstellungen-Link**: Neue Klasse `consent_manager-open-box` für automatisches Öffnen der Cookie-Box ohne onclick
-- **Alternative**: Data-Attribut `data-consent-action="settings"` als Variante dokumentiert
+- **Footer-Link**: Dokumentation vereinfacht für data-attribute-basiertes Auto-Handling
+- **Cookie-Einstellungen-Link**: `data-consent-action="settings"` (empfohlen) für automatisches Öffnen der Cookie-Box ohne onclick
+- **Mit Auto-Reload**: `data-consent-action="settings,reload"` lädt Seite nach Consent-Änderung neu
+- **dontshow Flag**: `data-consent-action="settings,dontshow"` verhindert Auto-Display beim ersten Besuch, Link funktioniert per Klick
+- **Legacy-Support**: Bestehende Klassen `.consent_manager-show-box` und `.consent_manager-show-box-reload` weiterhin dokumentiert
   - Leer lassen = Consent Manager wird in allen Templates eingebunden (Standardverhalten)
   - Templates auswählen = nur in ausgewählten Templates wird eingebunden
   - Live-Search, Select All/Deselect All, Count-Display

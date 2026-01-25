@@ -149,10 +149,10 @@ Für DSGVO-Konformität muss ein Link zu den Cookie-Einstellungen im Footer plat
 
 ```html
 <!-- Cookie-Einstellungen Link (empfohlen) -->
-<a href="#" class="consent_manager-open-box">Cookie-Einstellungen</a>
+<a href="#" data-consent-action="settings">Cookie-Einstellungen</a>
 ```
 
-**💡 Tipp:** Die Klasse `consent_manager-open-box` wird automatisch vom Consent Manager JavaScript erkannt. Das Script öffnet beim Klick automatisch die Cookie-Box - kein manueller `onclick`-Handler nötig!
+**💡 Tipp:** Das Data-Attribut `data-consent-action="settings"` wird automatisch vom Consent Manager JavaScript erkannt. Das Script öffnet beim Klick automatisch die Cookie-Box - kein manueller `onclick`-Handler nötig!
 
 **📖 Ausführliche Dokumentation** mit weiteren Optionen → [Siehe unten](#cookie-einstellungen-link-im-footer)
 
@@ -419,38 +419,44 @@ REX_CONSENT_MANAGER[fragment=my_custom_box.php]
 
 #### Unterstützte Klassen und Attribute
 
-| Klasse/Attribut | Funktion | Reload nach Consent |
-|-----------------|----------|---------------------|
-| `consent_manager-open-box` | Öffnet Cookie-Box | Nein |
-| `data-consent-action="settings"` | Öffnet Cookie-Box | Nein |
-| `consent_manager-show-box` | Öffnet Cookie-Box (Legacy) | Nein |
-| `consent_manager-show-box-reload` | Öffnet Cookie-Box mit Auto-Reload | **Ja** |
+| Klasse/Attribut | Funktion | Auto-Display | Reload |
+|-----------------|----------|--------------|--------|
+| `data-consent-action="settings"` | Öffnet Cookie-Box **(empfohlen)** | Ja | Nein |
+| `data-consent-action="settings,reload"` | Öffnet Cookie-Box mit Auto-Reload | Ja | **Ja** |
+| `data-consent-action="settings,dontshow"` | Nur per Klick, kein Auto-Display | **Nein** | Nein |
+| `data-consent-action="settings,reload,dontshow"` | Nur per Klick mit Auto-Reload | **Nein** | **Ja** |
+| `consent_manager-show-box` | Öffnet Cookie-Box (Legacy) | Ja | Nein |
+| `consent_manager-show-box-reload` | Öffnet Cookie-Box mit Auto-Reload (Legacy) | Ja | **Ja** |
 
-**Force Reload:** Die Klasse `consent_manager-show-box-reload` lädt die Seite nach dem Speichern der Einstellungen automatisch neu. Nützlich wenn externe Scripts (wie Analytics) einen Reload benötigen, um korrekt zu laden. Dies ist aktuell die **einzige Möglichkeit** für automatisches Reload - eine modernere Variante existiert noch nicht.
+**Auto-Display:** Wenn kein Consent vorhanden ist, öffnet sich die Box automatisch beim Seitenaufruf.
+
+**dontshow Flag:** Verhindert das automatische Öffnen der Box beim ersten Besuch. Der Link funktioniert weiterhin per Klick. Nützlich für Websites, die dem User mehr Kontrolle geben möchten.
+
+**Reload-Funktion:** Bei `data-consent-action="settings,reload"` oder der Legacy-Klasse `consent_manager-show-box-reload` wird die Seite nach dem Speichern automatisch neu geladen. Nützlich wenn externe Scripts (wie Analytics) einen Reload benötigen.
 
 #### Beispiele
 
 ```html
 <!-- Einfach (empfohlen) -->
-<a href="#" class="consent_manager-open-box">Cookie-Einstellungen</a>
+<a href="#" data-consent-action="settings">Cookie-Einstellungen</a>
 
 <!-- Mit Icon -->
-<a href="#" class="consent_manager-open-box">
+<a href="#" data-consent-action="settings">
     <i class="fa fa-cookie-bite"></i> Cookie-Einstellungen
 </a>
 
-<!-- Data-Attribut -->
-<a href="#" data-consent-action="settings">Cookie-Einstellungen</a>
+<!-- Ohne automatisches Öffnen beim ersten Besuch -->
+<a href="#" data-consent-action="settings,dontshow">Cookie-Einstellungen</a>
 
 <!-- Mit Reload nach Consent-Änderung -->
-<a href="#" class="consent_manager-show-box-reload">Cookie-Einstellungen</a>
+<a href="#" data-consent-action="settings,reload">Cookie-Einstellungen</a>
 
 <!-- In Navigation -->
 <nav>
     <ul>
         <li><a href="/datenschutz/">Datenschutz</a></li>
         <li><a href="/impressum/">Impressum</a></li>
-        <li><a href="#" class="consent_manager-open-box">Cookie-Einstellungen</a></li>
+        <li><a href="#" data-consent-action="settings">Cookie-Einstellungen</a></li>
     </ul>
 </nav>
 ```
@@ -459,10 +465,6 @@ REX_CONSENT_MANAGER[fragment=my_custom_box.php]
 
 ```javascript
 window.consentManager.showBox();
-```
-
-```html
-<a href="#" class="consent_manager-open-box">Cookie-Einstellungen</a>
 ```
 
 ---
@@ -759,68 +761,48 @@ $legalId = 6;   // ID der Impressumsseite
 
 ### JavaScript API
 
-#### Manueller Consent-Request
-
 ```javascript
-// Consent für bestimmte Gruppe anfordern
+// Consent-Status prüfen
+if (consent_manager_hasconsent('youtube')) {
+    // YouTube wurde akzeptiert
+}
+
+// Event bei Consent-Änderung
+document.addEventListener('consent_manager-saved', function(e) {
+    var consents = JSON.parse(e.detail);
+    // Scripts nachladen, UI aktualisieren etc.
+});
+
+// Box öffnen
+consent_manager_showBox();
+
+// Erweiterte API
 window.consentManager.doConsent('youtube', {
-    groupUid: 'marketing',
-    serviceUid: 'youtube',
     callback: function(consentGiven) {
-        if (consentGiven) {
-            // Nutzer hat zugestimmt
-            loadYouTubeVideo();
-        }
+        if (consentGiven) loadYouTubeVideo();
     }
 });
 ```
 
-#### Event Listener
-
-```javascript
-// Event wenn Consent geändert wurde
-document.addEventListener('consentManager:consentChanged', function(event) {
-    console.log('Consent changed:', event.detail);
-    // Seite neu laden oder Scripts nachladen
-});
-```
-
-#### Cookie-Status prüfen
-
-```javascript
-// Prüfen ob Gruppe akzeptiert wurde
-if (window.consentManager.hasConsent('marketing')) {
-    // Marketing-Cookies sind erlaubt
-    initializeTracking();
-}
-```
-
 ### PHP API
 
-#### Consent-Status im Backend
-
 ```php
-use FriendsOfRedaxo\ConsentManager\Domain;
+<?php
+use FriendsOfRedaxo\ConsentManager\{Utility, Domain, Cookie, CookieGroup};
 
-// Aktuelle Domain laden
+// Consent-Status prüfen
+if (Utility::has_consent('youtube')) {
+    echo '<iframe src="https://youtube.com/..."></iframe>';
+}
+
+// Domain-Konfiguration
 $domain = Domain::getCurrentDomain();
+$autoInject = $domain->getValue('auto_inject');
 
-// Domain-Konfiguration abfragen
-$autoInject = $domain->getValue('auto_inject'); // 0 oder 1
-$googleMode = $domain->getValue('google_consent_mode_enabled'); // disabled, auto, manual
-```
-
-#### Eigene Dienste programmtisch hinzufügen
-
-```php
-use FriendsOfRedaxo\ConsentManager\Cookie;
-
-$cookie = Cookie::create();
-$cookie->setValue('uid', 'my-custom-service');
-$cookie->setValue('service_name', 'Mein Custom Service');
-$cookie->setValue('provider', 'Mein Unternehmen');
-$cookie->setValue('cookies', 'my_cookie_name');
-$cookie->save();
+// Services und Gruppen
+$services = Cookie::getByDomain('example.com');
+$groups = CookieGroup::getByDomain('example.com');
+?>
 ```
 
 ### Custom Fragments erstellen
@@ -850,213 +832,216 @@ echo Frontend::getFragment(0, 0, 'my_custom_box.php');
 
 ### Hooks und Extension Points
 
-#### rex_consent_manager_before_output
-
 ```php
-rex_extension::register('rex_consent_manager_before_output', function(rex_extension_point $ep) {
+// Vor Output-Generierung
+rex_extension::register('rex_consent_manager_before_output', function($ep) {
     $output = $ep->getSubject();
-    // $output anpassen
+    // Output anpassen
     return $output;
 });
-```
 
-#### rex_consent_manager_after_save
-
-```php
-rex_extension::register('rex_consent_manager_after_save', function(rex_extension_point $ep) {
+// Nach Speichern
+rex_extension::register('rex_consent_manager_after_save', function($ep) {
     $type = $ep->getParam('type'); // 'cookie', 'cookiegroup', 'domain'
     $id = $ep->getParam('id');
-    // Custom-Logik nach dem Speichern
 });
 ```
 
 ---
 
-## Eigenes Theme
+## 🎨 Design und Themes
 
-### Theme-Struktur
+### Verfügbare Themes
 
-Themes werden als SCSS-Dateien gespeichert:
+**Standard-Themes:**
+- Light/Dark
+- Bottom Bar/Bottom Right
+- Accessibility (A11y)
+
+**Theme auswählen:** `Consent Manager → Domains → Theme`
+
+### Eigenes Theme erstellen
 
 **Pfad:** `redaxo/src/addons/project/consent_manager_themes/my_theme.scss`
 
-### Theme erstellen
-
-**Backend:** `Consent Manager → Themes → Theme Editor`
-
-1. **Theme-Name** eingeben
-2. **Style auswählen** (Standard, Minimalistisch, Modern)
-3. **Farben anpassen** (Primärfarbe, Hintergrund, Text)
-4. **Speichern** - Theme wird automatisch kompiliert
-
-### Theme manuell erstellen
-
 ```scss
-/* my_theme.scss */
 $consent-primary-color: #667eea;
 $consent-background: #ffffff;
-$consent-text-color: #333333;
 
 @import "base";
 
-.consent-manager-box {
+.consent_manager-box {
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.consent-manager-button-primary {
-    background: linear-gradient(135deg, $consent-primary-color, darken($consent-primary-color, 10%));
-    transition: transform 0.2s;
-    
-    &:hover {
-        transform: translateY(-2px);
-    }
 }
 ```
 
-### Theme zuweisen
+**Theme zuweisen:** Domain-Einstellungen → Theme auswählen
 
-**Backend:** `Consent Manager → Domains → Domain bearbeiten → Theme auswählen`
+---
+
+## Dienste und Gruppen konfigurieren
+
+### Dienste anlegen
+
+**Backend:** `Consent Manager → Dienste`
+
+| Feld | Beschreibung |
+|------|--------------|
+| **Schlüssel** | Eindeutiger Key ohne Sonderzeichen (z.B. `youtube`) |
+| **Dienstname** | Anzeigename (z.B. "YouTube Videos") |
+| **Anbieter** | Firmenname (z.B. "Google LLC") |
+| **Cookies** | YAML-Liste der Cookies |
+| **Script** | JavaScript-Code (lädt bei Consent) |
+
+### Cookie-Definition (YAML)
+
+```yaml
+-
+ name: _ga
+ time: 2 Jahre
+ desc: "Google Analytics ID"
+-
+ name: _gid
+ time: 24 Stunden
+ desc: "Session-Tracking"
+```
+
+### Gruppen erstellen
+
+**Backend:** `Consent Manager → Gruppen`
+
+- **Technisch notwendig:** Immer aktiv, nicht deaktivierbar
+- **Dienste zuweisen:** Mehrere Services pro Gruppe
+- **Domain:** Zuordnung zur Domain
 
 ---
 
 ## ✨ Best Practices
 
-### Performance-Optimierung
+### Performance
 
-**1. Auto-Inject mit Verzögerung**
-```
-Verzögerung: 500ms (verbessert First Paint)
-```
-
-**2. defer-Attribut nutzen**
-```html
-<script defer src="consent_inline.js"></script>
-```
-
-**3. Cache aktivieren**
 ```php
-// Cache für 1 Stunde
+// Cache aktivieren (Produktion)
 echo Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php');
+
+// defer-Attribut
+<script defer src="consent_inline.js"></script>
+
+// Auto-Inject mit Verzögerung
+Domain → Auto-Inject → Verzögerung: 500ms
 ```
-
-### Barrierefreiheit (A11y)
-
-**1. Fokus-Management aktivieren**
-```
-Auto-Inject → Fokus setzen: Ja
-```
-
-**2. Tastatur-Navigation testen**
-- Tab/Shift+Tab für Navigation
-- Enter/Space für Auswahl
-- Escape zum Schließen
-
-**3. Screen-Reader-freundlich**
-- Alle Buttons haben aria-labels
-- Checkboxen haben accessible Namen
-- Modal-Dialog hat korrekte ARIA-Attribute
 
 ### DSGVO-Konformität
 
-**1. Opt-In vor Tracking**
-```javascript
-// Tracking erst nach Consent laden
-document.addEventListener('consentManager:consentChanged', function(event) {
-    if (window.consentManager.hasConsent('marketing')) {
-        // Google Analytics laden
-    }
-});
-```
+- ✅ Opt-In vor Tracking
+- ✅ Cookie-Listen aktuell halten
+- ✅ Link zu Einstellungen im Footer
+- ✅ Datenschutzerklärung synchron
 
-**2. Cookie-Listen aktuell halten**
-- Regelmäßig prüfen welche Cookies tatsächlich gesetzt werden
-- Cookie-Namen und Laufzeiten dokumentieren
-- Datenschutzerklärung synchron halten
+### Barrierefreiheit
 
-**3. Protokollierung**
-```php
-// Consent-Änderungen loggen (optional)
-rex_extension::register('rex_consent_manager_consent_changed', function($ep) {
-    rex_logger::logInfo('Consent changed', $ep->getParams());
-});
-```
-
-### Multi-Domain-Szenarien
-
-**Verschiedene Domains, gleiche Dienste:**
-```
-domain1.de → Standard Setup
-subdomain.domain1.de → Standard Setup (geerbt)
-domain2.com → Minimal Setup
-```
-
-**Staging vs. Produktion:**
-```
-staging.example.com → Debug-Modus: An
-example.com → Debug-Modus: Aus
-```
+- ✅ Accessibility Theme verwenden
+- ✅ Fokus-Management aktivieren (`autoInjectFocus: true`)
+- ✅ Tastatur-Navigation testen (Tab, Enter, Escape)
+- ✅ Screen-Reader testen (NVDA, JAWS)
 
 ---
 
-## Tipps
+## 🔧 Tipps und Tricks
 
-### CKE5 oEmbed optimal nutzen
+### CKE5 oEmbed
+1. Inline-Assets im Template einbinden
+2. Videos via URL in CKE5 einfügen
+3. Automatische Blocker-Umwandlung
 
-**YouTube/Vimeo automatisch blocken:**
-1. CKE5 oEmbed Integration aktivieren
-2. Inline-Assets im Template einbinden
-3. Videos via URL in CKE5 einfügen
-4. Automatische Umwandlung in Blocker
-
-### Custom Blocker erstellen
+### Custom Blocker
 
 ```html
 <div class="consent-blocker" 
-     data-consent-group="marketing" 
-     data-consent-service="custom-service">
+     data-consent-group="marketing">
     <div class="consent-blocker-overlay">
-        <p>Dieser Inhalt erfordert Marketing-Cookies</p>
-        <button class="consent-blocker-button" data-consent-action="load">
-            Einmal laden
-        </button>
-    </div>
-    <div class="consent-blocker-content">
-        <!-- Inhalt wird nach Consent geladen -->
+        <button data-consent-action="load">Einmal laden</button>
     </div>
 </div>
 ```
 
-### Testing-Checkliste
-
-- [ ] Consent-Box erscheint beim ersten Besuch
-- [ ] Checkboxen funktionieren
-- [ ] "Alle akzeptieren" aktiviert alle Gruppen
-- [ ] "Alle ablehnen" deaktiviert nicht-essentielle
-- [ ] "Speichern" speichert Auswahl
-- [ ] Cookie wird korrekt gesetzt
-- [ ] Reload nach Consent-Änderung (wenn aktiviert)
-- [ ] Videos/Maps laden nach Consent
-- [ ] Einstellungen können nachträglich geändert werden
-- [ ] Dark Mode Theme funktioniert
-- [ ] Mobile Darstellung korrekt
-- [ ] Tastatur-Navigation möglich
-
 ### Debugging
 
-**Console-Logs aktivieren:**
 ```javascript
-// Im Browser Console
+// Console-Logs aktivieren
 localStorage.setItem('consentManager.debug', 'true');
 location.reload();
+
+// Backend: Domain → Debug-Modus aktivieren
 ```
 
-**Debug-Infos anzeigen:**
-```
-Domain-Einstellungen → Debug-Modus: Aktiviert
+### Testing-Checkliste
+
+- [ ] Box erscheint beim ersten Besuch
+- [ ] Alle Buttons funktionieren
+- [ ] Cookie wird gesetzt
+- [ ] Videos/Maps laden nach Consent
+- [ ] Einstellungen änderbar
+- [ ] Mobile Darstellung OK
+- [ ] Tastatur-Navigation funktioniert
+
+---
+
+## 🔒 Content Security Policy (CSP)
+
+**CSP-Nonce-Unterstützung** für sichere Inline-Scripts:
+
+### Frontend Integration
+
+```php
+<?php
+use FriendsOfREDAXO\ConsentManager\Frontend;
+
+// Automatisch mit Nonce-Attribut
+echo Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php');
+
+// Oder manuell:
+?>
+<script<?php echo Frontend::getNonceAttribute(); ?>>
+    <?php echo Frontend::getJS(); ?>
+</script>
 ```
 
-Zeigt Consent-Status und Cookie-Informationen im Frontend (nur für angemeldete Backend-Nutzer).
+### CSP Header konfigurieren
+
+**Apache (.htaccess):**
+```apache
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy "script-src 'self' 'nonce-<?php echo rex_response::getNonce(); ?>'"
+</IfModule>
+```
+
+**Nginx:**
+```nginx
+add_header Content-Security-Policy "script-src 'self' 'nonce-$nonce'";
+```
+
+**PHP (im Template):**
+```php
+<?php
+header("Content-Security-Policy: script-src 'self' 'nonce-" . rex_response::getNonce() . "'");
+?>
+```
+
+### Externe Dienste in CSP erlauben
+
+```
+Content-Security-Policy: 
+  script-src 'self' 'nonce-xyz123' 
+    https://www.googletagmanager.com 
+    https://www.google-analytics.com;
+  img-src 'self' data: 
+    https://www.google-analytics.com;
+  connect-src 'self' 
+    https://www.google-analytics.com;
+```
+
+**Wichtig:** Externe Scripts (Google Analytics, Facebook Pixel etc.) müssen explizit erlaubt werden.
 
 ---
 
