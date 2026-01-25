@@ -32,6 +32,19 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         return false;
     }
 
+    /**
+     * CSRF-Protection deaktiviert für EventSource (SSE)
+     * 
+     * EventSource kann nur GET-Requests senden und unterstützt keine CSRF-Tokens.
+     * Security ist durch Admin-Check in execute() gewährleistet.
+     *
+     * @return bool
+     */
+    protected function requiresCsrfToken()
+    {
+        return false;
+    }
+
     public function execute()
     {
         // Output Buffer SOFORT leeren - noch vor allen anderen Operationen!
