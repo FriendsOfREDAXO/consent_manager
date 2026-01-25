@@ -394,8 +394,8 @@ class Frontend
         // 5. Führendes/Abschließendes Whitespace entfernen
         $_csscontent = trim($_csscontent);
         
-        // Mit Dateinamen-Kommentar (für Debugging)
-        $output = '/* MINIFIED ' . $_cssfilename . ' at ' . date('Y-m-d H:i:s') . ' */ ' . $_csscontent;
+        // Mit Dateinamen-Kommentar
+        $output = '/*' . $_cssfilename . '*/ ' . $_csscontent;
         
         // In Cache schreiben
         rex_file::put($cacheFile, $output);
