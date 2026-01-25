@@ -32,9 +32,9 @@ class ConsentManagerTexts extends rex_api_function
      *
      * @return bool
      */
-    protected function requiresCsrfToken()
+    public function published()
     {
-        return false;
+        return true;
     }
 
     /**
