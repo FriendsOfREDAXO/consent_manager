@@ -47,7 +47,23 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         header('Content-Type: text/event-stream');
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
-        header('X-Accel-Buffering: no');
+        header('X-Accel-Buffering: no'); // Nginx: Buffering deaktivieren
+        
+        // Apache mod_deflate deaktivieren für SSE
+        if (function_exists('apache_setenv')) {
+            apache_setenv('no-gzip', '1');
+        }
+        
+        // PHP Output Buffering komplett deaktivieren
+        @ini_set('output_buffering', 'off');
+        @ini_set('zlib.output_compression', 'off');
+        
+        // Implicit Flush aktivieren
+        if (function_exists('apache_setenv')) {
+            apache_setenv('no-gzip', '1');
+        }
+        @ini_set('implicit_flush', '1');
+        @ob_implicit_flush(1);
 
         // Execution Time erhöhen
         set_time_limit(120);
@@ -408,6 +424,21 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
     {
         echo "event: {$event}\n";
         echo 'data: ' . json_encode($data) . "\n\n";
+        
+        // AGGRESSIVE FLUSH für Remote-Server mit mehreren Buffer-Ebenen
+        // Manche Server (Apache mod_fcgid, Nginx fastcgi) buffern trotz Headers
+        if (ob_get_level() > 0) {
+            ob_flush();
+        }
         flush();
+        
+        // Zusätzliches Padding für manche Proxies (nginx needs 2kb)
+        // Aber nur bei ersten Events, nicht bei jedem
+        static $paddingSent = false;
+        if (!$paddingSent) {
+            echo str_repeat(' ', 2048) . "\n";
+            flush();
+            $paddingSent = true;
+        }
     }
 }
