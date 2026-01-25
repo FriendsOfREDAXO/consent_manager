@@ -1255,6 +1255,11 @@ jQuery(function($) {
                     // UI Update
                     updateProgress(progress.percent || 0, progress.message || '');
                     
+                    // Log-Eintrag für laufendes Setup
+                    if (progress.status === 'running' && progress.message) {
+                        logEvent('⏳ ' + progress.message, 'info');
+                    }
+                    
                     // Status auswerten
                     if (progress.status === 'complete') {
                         clearInterval(pollingInterval);
