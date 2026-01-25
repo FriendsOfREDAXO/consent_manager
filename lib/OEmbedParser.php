@@ -6,6 +6,12 @@
  * CKE5 Integration for automatic oEmbed → Inline Blocker conversion
  * Mit optionaler Vidstack-Player Integration
  *
+ * Security:
+ * - No external HTTP requests (only local pattern matching)
+ * - Whitelist-based platform detection (YouTube, Vimeo)
+ * - SQL Injection Prevention via Prepared Statements
+ * - XSS Prevention via htmlspecialchars()
+ *
  * @package redaxo\consent-manager
  * @author Friends Of REDAXO
  */
@@ -146,11 +152,16 @@ class OEmbedParser
     /**
      * Plattform aus URL erkennen.
      *
+     * Security: Whitelist-based detection (nur YouTube & Vimeo)
+     * Kein SSRF-Risiko da keine externen Requests
+     *
      * @api
      * @return array{service: string, id: string, platform: string}|null
      */
     private static function detectPlatform(string $videoUrl): ?array
     {
+        // Security: Whitelist-based platform detection
+        
         // YouTube
         if ((bool) preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/', $videoUrl, $matches)) {
             return [
@@ -171,6 +182,7 @@ class OEmbedParser
             ];
         }
 
+        // Unsupported platform - kein SSRF-Risiko da nur Pattern Matching
         return null;
     }
 

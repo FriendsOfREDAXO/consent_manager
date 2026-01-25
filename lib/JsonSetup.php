@@ -26,10 +26,16 @@ class JsonSetup
     /**
      * Import setup from JSON file.
      *
+     * Security:
+     * - Path Traversal Prevention
+     * - JSON Validation
+     * - Mode Whitelist
+     * - File within addon directory check
+     *
      * @api
      * @param string $jsonFile Path to JSON setup file
      * @param bool $clearExisting Clear existing data before import
-     * @param string $mode Import mode: 'replace' (default), 'update' (only add new)
+     * @param string $mode Import mode: 'replace' (default), 'update' (only add new), 'insert'
      * @return array{success: bool, message: string} Result array with success status and message
      *
      * TODO: Texte via .lang erzeugen?
@@ -37,8 +43,30 @@ class JsonSetup
     public static function importSetup(string $jsonFile, bool $clearExisting = true, string $mode = 'replace'): array
     {
         try {
+            // Security: Whitelist für $mode
+            if (!in_array($mode, ['insert', 'update', 'replace'], true)) {
+                return ['success' => false, 'message' => 'Invalid mode: ' . $mode . '. Allowed: insert, update, replace'];
+            }
+            
+            // Security: Prüfe dass Datei existiert und lesbar ist
             if (!file_exists($jsonFile)) {
                 return ['success' => false, 'message' => 'JSON setup file not found: ' . $jsonFile];
+            }
+            
+            if (!is_readable($jsonFile)) {
+                return ['success' => false, 'message' => 'JSON setup file not readable: ' . $jsonFile];
+            }
+            
+            // Security: Path Traversal Prevention - prüfe dass Datei im AddOn-Pfad liegt
+            $realPath = realpath($jsonFile);
+            $addonPath = realpath(rex_path::addon('consent_manager'));
+            
+            if (false === $realPath || false === $addonPath) {
+                return ['success' => false, 'message' => 'Could not resolve file paths'];
+            }
+            
+            if (!str_starts_with($realPath, $addonPath)) {
+                return ['success' => false, 'message' => 'JSON file must be within addon directory (Path Traversal Prevention)'];
             }
 
             $jsonContent = file_get_contents($jsonFile);
