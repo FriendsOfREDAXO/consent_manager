@@ -149,10 +149,10 @@ Für DSGVO-Konformität muss ein Link zu den Cookie-Einstellungen im Footer plat
 
 ```html
 <!-- Cookie-Einstellungen Link (empfohlen) -->
-<a href="#" class="consent-settings-link">Cookie-Einstellungen</a>
+<a href="#" class="consent_manager-open-box">Cookie-Einstellungen</a>
 ```
 
-**💡 Tipp:** Die Klasse `consent-settings-link` wird automatisch vom Consent Manager JavaScript erkannt. Das Script öffnet beim Klick automatisch die Cookie-Box - kein manueller `onclick`-Handler nötig!
+**💡 Tipp:** Die Klasse `consent_manager-open-box` wird automatisch vom Consent Manager JavaScript erkannt. Das Script öffnet beim Klick automatisch die Cookie-Box - kein manueller `onclick`-Handler nötig!
 
 **📖 Ausführliche Dokumentation** mit weiteren Optionen → [Siehe unten](#cookie-einstellungen-link-im-footer)
 
@@ -413,85 +413,56 @@ REX_CONSENT_MANAGER[fragment=my_custom_box.php]
 
 ### Cookie-Einstellungen Link im Footer
 
-**DSGVO-Pflicht:** Nutzer müssen ihre Cookie-Einwilligung jederzeit ändern können. Daher ist ein Link zu den Cookie-Einstellungen im Footer erforderlich.
+### Cookie-Einstellungen Link im Footer
 
-**Automatisches Handling:** Das JavaScript des Consent Managers erkennt automatisch Links mit der Klasse `consent-settings-link` oder dem Attribut `data-consent-action="settings"` und öffnet die Cookie-Box. Ein manueller Event-Handler ist nicht notwendig.
+**DSGVO-Pflicht:** Link zu Cookie-Einstellungen im Footer erforderlich, damit Nutzer ihre Einwilligung jederzeit ändern können.
 
-#### 1. Einfacher Link
+#### Unterstützte Klassen und Attribute
+
+| Klasse/Attribut | Funktion | Reload nach Consent |
+|-----------------|----------|---------------------|
+| `consent_manager-open-box` | Öffnet Cookie-Box | Nein |
+| `data-consent-action="settings"` | Öffnet Cookie-Box | Nein |
+| `consent_manager-show-box` | Öffnet Cookie-Box (Legacy) | Nein |
+| `consent_manager-show-box-reload` | Öffnet Cookie-Box mit Auto-Reload | **Ja** |
+
+**Force Reload:** Die Klasse `consent_manager-show-box-reload` lädt die Seite nach dem Speichern der Einstellungen automatisch neu. Nützlich wenn externe Scripts (wie Analytics) einen Reload benötigen, um korrekt zu laden. Dies ist aktuell die **einzige Möglichkeit** für automatisches Reload - eine modernere Variante existiert noch nicht.
+
+#### Beispiele
 
 ```html
-<a href="#" class="consent-settings-link">Cookie-Einstellungen</a>
-```
+<!-- Einfach (empfohlen) -->
+<a href="#" class="consent_manager-open-box">Cookie-Einstellungen</a>
 
-#### 2. Mit Icon
-
-```html
-<a href="#" class="consent-settings-link">
-    <i class="fa fa-cookie-bite" aria-hidden="true"></i>
-    <span>Cookie-Einstellungen</span>
+<!-- Mit Icon -->
+<a href="#" class="consent_manager-open-box">
+    <i class="fa fa-cookie-bite"></i> Cookie-Einstellungen
 </a>
-```
 
-#### 3. In Navigation
+<!-- Data-Attribut -->
+<a href="#" data-consent-action="settings">Cookie-Einstellungen</a>
 
-```html
+<!-- Mit Reload nach Consent-Änderung -->
+<a href="#" class="consent_manager-show-box-reload">Cookie-Einstellungen</a>
+
+<!-- In Navigation -->
 <nav>
     <ul>
         <li><a href="/datenschutz/">Datenschutz</a></li>
         <li><a href="/impressum/">Impressum</a></li>
-        <li><a href="#" class="consent-settings-link">Cookie-Einstellungen</a></li>
+        <li><a href="#" class="consent_manager-open-box">Cookie-Einstellungen</a></li>
     </ul>
 </nav>
 ```
 
-**Alternative mit Data-Attribut:**
-
-Statt der CSS-Klasse kannst du auch ein Data-Attribut verwenden:
-
-```html
-<a href="#" data-consent-action="settings">Cookie-Einstellungen</a>
-```
-
-Beide Varianten funktionieren identisch und verhindern automatisch das Standard-Link-Verhalten.
-
-/* Fokus-Indikator für Tastatur-Navigation */
-.consent-settings-link:focus {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-}
-```
-
-**💡 Warum Link statt Button?**
-**💡 Barrierefreiheit:**
-
-Optional können weitere ARIA-Attribute für bessere Zugänglichkeit ergänzt werden:
-
-```html
-<a href="#" 
-   class="consent-settings-link"
-   role="button"
-   aria-label="Cookie-Einstellungen öffnen">
-    Cookie-Einstellungen
-</a>
-```
-
 **JavaScript-Aufruf (für Custom-Implementierungen):**
 
-Falls du das JavaScript manuell triggern möchtest:
-
 ```javascript
-// Direkt aufrufen
 window.consentManager.showBox();
-
-// Oder mit Custom Event-Handler
-document.getElementById('my-custom-button').addEventListener('click', function(e) {
-    e.preventDefault();
-    window.consentManager.showBox();
-});
 ```
 
 ```html
-<a href="#" class="consent-settings-link">Cookie-Einstellungen</a>
+<a href="#" class="consent_manager-open-box">Cookie-Einstellungen</a>
 ```
 
 ---

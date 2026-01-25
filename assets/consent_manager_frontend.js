@@ -264,7 +264,7 @@ function safeJSONParse(input, fallback) {
             }
             
             // Neue Klasse für vereinfachtes Handling
-            if (target.tagName === 'A' && target.classList && target.classList.contains('consent-settings-link')) {
+            if (target.tagName === 'A' && target.classList && target.classList.contains('consent_manager-open-box')) {
                 e.preventDefault();
                 consent_manager_showBox();
                 return false;

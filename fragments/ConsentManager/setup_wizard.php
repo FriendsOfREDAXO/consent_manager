@@ -928,7 +928,7 @@ body.rex-theme-dark details > div code {
                             
                             <div style="position: relative;">
                                 <pre id="wizard-generated-code-footer" style="padding: 15px; border-radius: 4px; border: 1px solid #ddd; font-size: 12px; line-height: 1.6; overflow-x: auto;"><code class="language-html">&lt;!-- Cookie-Einstellungen Link (empfohlen) --&gt;
-&lt;a href="#" class="consent-settings-link"&gt;Cookie-Einstellungen&lt;/a&gt;</code></pre>
+&lt;a href="#" class="consent_manager-open-box"&gt;Cookie-Einstellungen&lt;/a&gt;</code></pre>
                                 <button type="button" class="btn btn-sm btn-default" 
                                         onclick="copyWizardCode('wizard-generated-code-footer')" 
                                         style="position: absolute; top: 10px; right: 10px;">
