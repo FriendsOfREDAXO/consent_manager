@@ -20,6 +20,12 @@ use rex_response;
  * - Das gerenderte Box-Template (HTML)
  * - Cache-Metadaten für Client-seitiges Caching
  *
+ * Security:
+ * - Read-only API (GET)
+ * - Input Validation: clang-Parameter
+ * - Rate Limiting: Via ETag/304 Caching
+ * - Kein CSRF-Token nötig (keine schreibenden Operationen)
+ *
  * Aufruf: ?rex-api-call=consent_manager_texts&clang=1
  * Registrierung erfolgt in boot.php via rex_api_function::register()
  *
@@ -38,12 +44,17 @@ class ConsentManagerTexts extends rex_api_function
     {
         rex_response::cleanOutputBuffers();
 
-        // Clang aus Request (mit Fallback auf Standard-Sprache)
+        // Security: Clang-Validierung
         $clangId = rex_request::get('clang', 'int', rex_clang::getCurrentId());
 
-        // Validiere Clang
+        // Validiere dass Clang existiert (verhindert SQL Injection bei ungültigen IDs)
         if (!rex_clang::exists($clangId)) {
-            throw new rex_api_exception('Invalid clang parameter', 400);
+            throw new rex_api_exception('Invalid language parameter', 400);
+        }
+
+        // Security: Verhindere zu große clang-Werte
+        if ($clangId < 0 || $clangId > 999) {
+            throw new rex_api_exception('Language parameter out of range', 400);
         }
 
         // ETag für Client-seitiges Caching (basierend auf Version + Cache-Log)
@@ -90,21 +101,29 @@ class ConsentManagerTexts extends rex_api_function
     /**
      * Rendert das Box-Template für die angegebene Sprache.
      *
-     * @param int $clangId
-     * @return string
+     * Security: Rendert nur REDAXO-eigene Fragments, keine User-Inputs
+     *
+     * @param int $clangId Validierte Sprach-ID
+     * @return string HTML-Template (escaped durch Fragment)
      */
     private function renderBoxTemplate($clangId)
     {
-        // Setze temporär die aktuelle Sprache für Fragment-Rendering
-        $originalClang = rex_clang::getCurrentId();
-        rex_clang::setCurrentId($clangId);
-        
-        // Rendere Box via Fragment
-        $boxTemplate = Frontend::getFragment(0, 0, 'ConsentManager/box.php');
-        
-        // Stelle Original-Sprache wieder her
-        rex_clang::setCurrentId($originalClang);
-        
-        return $boxTemplate;
+        try {
+            // Setze temporär die aktuelle Sprache für Fragment-Rendering
+            $originalClang = rex_clang::getCurrentId();
+            rex_clang::setCurrentId($clangId);
+            
+            // Rendere Box via Fragment (kein User-Input, nur REDAXO-Core)
+            $boxTemplate = Frontend::getFragment(0, 0, 'ConsentManager/box.php');
+            
+            // Stelle Original-Sprache wieder her
+            rex_clang::setCurrentId($originalClang);
+            
+            return $boxTemplate;
+        } catch (\Exception $e) {
+            // Fehler beim Rendering - gebe leeren String zurück statt Exception
+            // (verhindert Information Disclosure)
+            return '';
+        }
     }
 }

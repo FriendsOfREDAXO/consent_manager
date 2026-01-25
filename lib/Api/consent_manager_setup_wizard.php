@@ -3,13 +3,31 @@
 /**
  * SSE API: Setup Wizard mit Live-Feedback
  * Führt automatisches Setup durch: Domain, Import, Theme, Auto-Inject
+ *
+ * Security:
+ * - Backend-only (Admin-Berechtigung erforderlich)
+ * - CSRF-Protection durch requiresCsrfToken()
+ * - Input Validation für alle Parameter
+ * - SQL Injection Prevention via rex_sql Prepared Statements
+ * - Path Traversal Prevention in cleanDomain()
  */
 
 use FriendsOfRedaxo\ConsentManager\JsonSetup;
 
 class rex_api_consent_manager_setup_wizard extends rex_api_function
 {
-    protected $published = true;
+    /** @var bool Backend-only API - nur für eingeloggte Admins */
+    protected $published = false;
+
+    /**
+     * CSRF-Protection aktivieren (schreibende Operation)
+     *
+     * @return bool
+     */
+    protected function requiresCsrfToken()
+    {
+        return true;
+    }
 
     public function execute()
     {
@@ -18,13 +36,13 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             ob_end_clean();
         }
         
-        // Berechtigungsprüfung
+        // Security: Strikte Berechtigungsprüfung
         if (!rex::getUser() || !rex::getUser()->isAdmin()) {
             // SSE Headers setzen vor Fehler
             header('Content-Type: text/event-stream');
             header('Cache-Control: no-cache');
             echo "event: error\n";
-            echo 'data: ' . json_encode(['message' => 'Keine Berechtigung - nur Admins']) . "\n\n";
+            echo 'data: ' . json_encode(['message' => 'Access denied - Admin rights required']) . "\n\n";
             flush();
             exit;
         }
@@ -41,13 +59,33 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         // Execution Time erhöhen
         set_time_limit(120);
 
-        // Parameter auslesen (GET weil EventSource kein POST unterstützt)
+        // Security: Parameter-Validierung (GET weil EventSource kein POST unterstützt)
         $domain = rex_request::get('domain', 'string', '');
-        $setupType = rex_request::get('setup_type', 'string', 'standard'); // standard oder minimal
+        
+        // Whitelist-Validierung für setupType
+        $setupType = rex_request::get('setup_type', 'string', 'standard');
+        if (!in_array($setupType, ['standard', 'minimal'], true)) {
+            $this->sendError('Invalid setup type - allowed: standard, minimal');
+            exit;
+        }
+        
         $autoInject = rex_request::get('auto_inject', 'int', 0) === 1;
-        $includeTemplates = rex_request::get('include_templates', 'string', ''); // Kommagetrennte Template-IDs
+        
+        // Security: Template-IDs validieren (nur Zahlen und Kommas erlaubt)
+        $includeTemplates = rex_request::get('include_templates', 'string', '');
+        if ('' !== $includeTemplates && !preg_match('/^[0-9,]+$/', $includeTemplates)) {
+            $this->sendError('Invalid template IDs format');
+            exit;
+        }
+        
+        // Security: Integer-Validierung für Artikel-IDs
         $privacyPolicy = rex_request::get('privacy_policy', 'int', 0);
         $legalNotice = rex_request::get('legal_notice', 'int', 0);
+        
+        if ($privacyPolicy < 0 || $legalNotice < 0) {
+            $this->sendError('Invalid article IDs');
+            exit;
+        }
         
         // Theme wird nicht mehr übergeben - immer Default-Theme verwenden
         
@@ -139,23 +177,30 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
 
     /**
      * Domain bereinigen - entfernt Protokoll und Trailing Slashes, behält Port
+     *
+     * Security: Verhindert Path Traversal und Invalid Hostnames
+     *
+     * @param string $domain Unvalidierte Domain-Eingabe
+     * @return string Bereinigte Domain
+     * @throws \Exception Bei ungültiger Domain
      */
     private function cleanDomain(string $domain): string
     {
+        // Security: Trimme Whitespace
+        $domain = trim($domain);
+        
+        // Security: Max-Länge prüfen (RFC 1035: 255 Zeichen)
+        if (strlen($domain) > 255) {
+            throw new \Exception('Domain exceeds maximum length');
+        }
+        
         // Protokoll entfernen
         $domain = preg_replace('#^https?://#i', '', $domain);
-        
-        // www. optional entfernen (User entscheidet)
-        // $domain = preg_replace('#^www\.#i', '', $domain);
         
         // Trailing Slashes entfernen
         $domain = rtrim($domain, '/');
         
-        // Port BEIBEHALTEN (z.B. localhost:8443)
-        // $domain = preg_replace('#:\d+$#', '', $domain);
-        
         // Pfade entfernen falls vorhanden (aber Port behalten)
-        // Nur bis zum ersten Slash, aber nach dem Port
         if (false !== ($pos = strpos($domain, '/'))) {
             $domain = substr($domain, 0, $pos);
         }
@@ -163,11 +208,38 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         // Zu lowercase
         $domain = strtolower($domain);
         
+        // Security: Validiere Domain-Format
+        // Erlaubt: alphanumerisch, Punkte, Bindestriche, Port
+        // Verhindert: .., //, SQL-Injection Zeichen, etc.
+        if (!preg_match('/^[a-z0-9.-]+(:[0-9]{1,5})?$/i', $domain)) {
+            throw new \Exception('Invalid domain format');
+        }
+        
+        // Security: Verhindere Path Traversal
+        if (str_contains($domain, '..')) {
+            throw new \Exception('Path traversal detected');
+        }
+        
+        // Security: Verhindere leere Domain
+        if ('' === $domain) {
+            throw new \Exception('Empty domain not allowed');
+        }
+        
         return $domain;
     }
 
     /**
      * Domain in Datenbank anlegen oder aktualisieren
+     *
+     * Security: SQL Injection Prevention via Prepared Statements
+     *
+     * @param string $domain Validierte Domain
+     * @param bool $autoInject Auto-Inject aktivieren
+     * @param string $includeTemplates Validierte Template-IDs (kommagetrennt)
+     * @param int $privacyPolicy Validierte Artikel-ID
+     * @param int $legalNotice Validierte Artikel-ID
+     * @return int Domain-ID
+     * @throws \Exception
      */
     private function createOrUpdateDomain(string $domain, bool $autoInject, string $includeTemplates = '', int $privacyPolicy = 0, int $legalNotice = 0): int
     {
@@ -175,7 +247,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             $sql = rex_sql::factory();
             $sql->setTable(rex::getTable('consent_manager_domain'));
             
-            // Prüfen ob Domain bereits existiert
+            // Security: Prüfen ob Domain bereits existiert (Prepared Statement)
             $existing = rex_sql::factory();
             $existing->setQuery('SELECT id FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?', [$domain]);
             
