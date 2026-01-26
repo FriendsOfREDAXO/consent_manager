@@ -21,24 +21,24 @@ if ('delete' === $func) {
     } else {
         $sql = rex_sql::factory();
         $sql->setQuery('SELECT * FROM ' . $table . ' WHERE pid = ?', [$pid]);
-        
+
         if (1 === $sql->getRows()) {
             $newSql = rex_sql::factory();
             $newSql->setTable($table);
-            
+
             // Alle Felder kopieren außer pid
             foreach ($sql->getFieldnames() as $fieldname) {
                 if ('pid' !== $fieldname) {
                     $newSql->setValue($fieldname, $sql->getValue($fieldname));
                 }
             }
-            
+
             // UID und Name anpassen
             $originalUid = $sql->getValue('uid');
             $originalName = $sql->getValue('name');
             $counter = 1;
             $newUid = $originalUid . '-copy';
-            
+
             // Prüfen ob UID bereits existiert, dann Suffix erhöhen
             $checkSql = rex_sql::factory();
             while (true) {
@@ -46,19 +46,19 @@ if ('delete' === $func) {
                 if (0 === $checkSql->getRows()) {
                     break;
                 }
-                $counter++;
+                ++$counter;
                 $newUid = $originalUid . '-copy-' . $counter;
             }
-            
+
             $newSql->setValue('uid', $newUid);
             $newSql->setValue('name', $originalName . ' (Kopie)');
             $newSql->setValue('createdate', date('Y-m-d H:i:s'));
             $newSql->setValue('updatedate', date('Y-m-d H:i:s'));
-            
+
             try {
                 $newSql->insert();
                 $newPid = $newSql->getLastId();
-                
+
                 // Zur Edit-Seite des neuen Eintrags weiterleiten mit Hinweis
                 $msg = rex_view::warning(rex_i18n::msg('consent_manager_cookiegroup_duplicated_edit_uid'));
                 // Redirect zur Edit-Seite
@@ -74,14 +74,14 @@ if ('delete' === $func) {
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
-    
+
     // Warnung anzeigen wenn von duplicate weitergeleitet (nur einmalig)
     if ('duplicated' === rex_request::request('msg', 'string', '')) {
         echo rex_view::warning(
             '<strong>' . rex_i18n::msg('consent_manager_cookiegroup_duplicated_edit_uid_title') . '</strong><br>' .
-            rex_i18n::msg('consent_manager_cookiegroup_duplicated_edit_uid_desc')
+            rex_i18n::msg('consent_manager_cookiegroup_duplicated_edit_uid_desc'),
         );
-        
+
         // URL ohne msg-Parameter neu laden um Reload-Sperre zu aktivieren
         echo '<script nonce="' . rex_response::getNonce() . '">';
         echo 'if (window.history.replaceState) {';
@@ -91,7 +91,7 @@ if ('delete' === $func) {
         echo '}';
         echo '</script>';
     }
-    
+
     $form = rex_form::factory($table, '', 'pid = ' . $pid, 'post', $formDebug);
     $form->addParam('pid', $pid);
     $form->addParam('sort', rex_request::request('sort', 'string', ''));

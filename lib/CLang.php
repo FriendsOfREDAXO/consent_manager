@@ -98,7 +98,7 @@ class CLang
      */
     public static function formSaved(rex_extension_point $ep): bool
     {
-        /** @var rex_form $form $form*/
+        /** @var rex_form $form $form */
         $form = $ep->getParams()['form'];
         $params = $ep->getParams();
         if (!in_array($form->getTableName(), Config::getTables(true), true)) {

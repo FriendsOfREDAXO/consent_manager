@@ -29,7 +29,7 @@ $list = rex_list::factory(
     ',
     30,
     'Consent-Log',
-    false
+    false,
 );
 
 if ('' !== $searchvalue) {
@@ -89,7 +89,7 @@ echo $fragment->parse('core/page/section.php');
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title"><?php echo rex_i18n::msg('consent_manager_stats_title'); ?></h4>
+        <h4 class="modal-title"><?= rex_i18n::msg('consent_manager_stats_title') ?></h4>
       </div>
       <div class="modal-body" id="consent-stats-body">
         <div class="text-center"><i class="rex-icon fa-spinner fa-spin fa-3x"></i></div>
@@ -113,7 +113,7 @@ function loadConsentStats() {
             renderStats(data);
         },
         error: function() {
-            $('#consent-stats-body').html('<div class="alert alert-danger"><?php echo rex_i18n::msg('consent_manager_stats_error'); ?></div>');
+            $('#consent-stats-body').html('<div class="alert alert-danger"><?= rex_i18n::msg('consent_manager_stats_error') ?></div>');
         }
     });
 }
@@ -122,14 +122,14 @@ function renderStats(data) {
     var html = '';
     
     // Summary
-    html += '<div class="row"><div class="col-md-12"><h4><?php echo rex_i18n::msg('consent_manager_stats_total'); ?> ' + data.total + '</h4></div></div>';
+    html += '<div class="row"><div class="col-md-12"><h4><?= rex_i18n::msg('consent_manager_stats_total') ?> ' + data.total + '</h4></div></div>';
     html += '<hr>';
 
     // Cookies
     html += '<div class="row"><div class="col-md-6">';
-    html += '<h5><?php echo rex_i18n::msg('consent_manager_stats_top_cookies'); ?></h5>';
+    html += '<h5><?= rex_i18n::msg('consent_manager_stats_top_cookies') ?></h5>';
     html += '<table class="table table-striped table-condensed">';
-    html += '<thead><tr><th><?php echo rex_i18n::msg('consent_manager_stats_service'); ?></th><th><?php echo rex_i18n::msg('consent_manager_stats_count'); ?></th><th>%</th></tr></thead><tbody>';
+    html += '<thead><tr><th><?= rex_i18n::msg('consent_manager_stats_service') ?></th><th><?= rex_i18n::msg('consent_manager_stats_count') ?></th><th>%</th></tr></thead><tbody>';
     
     $.each(data.cookies, function(uid, count) {
         var percent = data.total > 0 ? Math.round((count / data.total) * 100) : 0;
@@ -144,9 +144,9 @@ function renderStats(data) {
 
     // Daily
     html += '<div class="col-md-6">';
-    html += '<h5><?php echo rex_i18n::msg('consent_manager_stats_history'); ?></h5>';
+    html += '<h5><?= rex_i18n::msg('consent_manager_stats_history') ?></h5>';
     html += '<table class="table table-striped table-condensed">';
-    html += '<thead><tr><th><?php echo rex_i18n::msg('consent_manager_stats_date'); ?></th><th><?php echo rex_i18n::msg('consent_manager_stats_count'); ?></th></tr></thead><tbody>';
+    html += '<thead><tr><th><?= rex_i18n::msg('consent_manager_stats_date') ?></th><th><?= rex_i18n::msg('consent_manager_stats_count') ?></th></tr></thead><tbody>';
     $.each(data.daily, function(i, day) {
         html += '<tr>';
         html += '<td>' + day.date + '</td>';

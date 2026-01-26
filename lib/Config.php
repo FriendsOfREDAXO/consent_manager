@@ -29,7 +29,7 @@ class Config
      * get consent_manager keys.
      *
      * @api
-     * @return string[]
+     * @return array<string>
      */
     public static function getKeys()
     {

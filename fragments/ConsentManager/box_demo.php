@@ -1,7 +1,7 @@
 <?php
 /**
  * Demo Consent Box für Theme-Preview
- * Verwendet hart-kodierte Demo-Daten ohne DB-Zugriff
+ * Verwendet hart-kodierte Demo-Daten ohne DB-Zugriff.
  */
 
 // Demo-Daten für Preview (aus minimal_setup.json)
@@ -121,7 +121,7 @@ $boxClass = '';
                                             $countDefs += count($defs);
                                         }
                                     }
-                                    
+
                                     echo '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
                                     echo rex_escape($cookiegroup['name']) . ' <span class="consent_manager-cookiegroup-number">(' . $countDefs . ')</span>';
                                     echo '</div>';
@@ -129,7 +129,7 @@ $boxClass = '';
                                     echo rex_escape($cookiegroup['description']);
                                     echo '</div>';
                                     echo '<div class="consent_manager-cookiegroup">';
-                                    
+
                                     foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
                                         if (isset($demo_cookies[$cookieUid])) {
                                             $cookie = $demo_cookies[$cookieUid];
@@ -142,7 +142,7 @@ $boxClass = '';
                                                 // Definition als YAML-Liste parsen
                                                 $definitions = explode("\n-", $cookie['definition']);
                                                 foreach ($definitions as $def) {
-                                                    if (trim($def) !== '' && trim($def) !== '-') {
+                                                    if ('' !== trim($def) && '-' !== trim($def)) {
                                                         echo '<span>' . nl2br(rex_escape(trim($def, "- \n\r"))) . '</span>';
                                                     }
                                                 }

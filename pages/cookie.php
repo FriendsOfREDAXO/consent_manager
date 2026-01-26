@@ -21,24 +21,24 @@ if ('delete' === $func) {
     } else {
         $sql = rex_sql::factory();
         $sql->setQuery('SELECT * FROM ' . $table . ' WHERE pid = ?', [$pid]);
-        
+
         if (1 === $sql->getRows()) {
             $newSql = rex_sql::factory();
             $newSql->setTable($table);
-            
+
             // Alle Felder kopieren außer pid
             foreach ($sql->getFieldnames() as $fieldname) {
                 if ('pid' !== $fieldname) {
                     $newSql->setValue($fieldname, $sql->getValue($fieldname));
                 }
             }
-            
+
             // UID und service_name anpassen
             $originalUid = $sql->getValue('uid');
             $originalName = $sql->getValue('service_name');
             $counter = 1;
             $newUid = $originalUid . '-copy';
-            
+
             // Prüfen ob UID bereits existiert, dann Suffix erhöhen
             $checkSql = rex_sql::factory();
             while (true) {
@@ -46,20 +46,20 @@ if ('delete' === $func) {
                 if (0 === $checkSql->getRows()) {
                     break;
                 }
-                $counter++;
+                ++$counter;
                 $newUid = $originalUid . '-copy-' . $counter;
             }
-            
+
             $newSql->setValue('uid', $newUid);
             $newSql->setValue('service_name', $originalName . ' (Kopie)');
             $newSql->setValue('createdate', date('Y-m-d H:i:s'));
             $newSql->setValue('updatedate', date('Y-m-d H:i:s'));
-            
+
             try {
                 $newSql->insert();
                 $newPid = $newSql->getLastId();
                 Cache::forceWrite();
-                
+
                 // Zur Edit-Seite des neuen Eintrags weiterleiten mit Hinweis
                 $msg = rex_view::warning(rex_i18n::msg('consent_manager_cookie_duplicated_edit_uid'));
                 // Redirect zur Edit-Seite
@@ -75,14 +75,14 @@ if ('delete' === $func) {
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
-    
+
     // Warnung anzeigen wenn von duplicate weitergeleitet (nur einmalig)
     if ('duplicated' === rex_request::request('msg', 'string', '')) {
         echo rex_view::warning(
             '<strong>' . rex_i18n::msg('consent_manager_cookie_duplicated_edit_uid_title') . '</strong><br>' .
-            rex_i18n::msg('consent_manager_cookie_duplicated_edit_uid_desc')
+            rex_i18n::msg('consent_manager_cookie_duplicated_edit_uid_desc'),
         );
-        
+
         // URL ohne msg-Parameter neu laden um Reload-Sperre zu aktivieren
         echo '<script nonce="' . rex_response::getNonce() . '">';
         echo 'if (window.history.replaceState) {';
@@ -92,7 +92,7 @@ if ('delete' === $func) {
         echo '}';
         echo '</script>';
     }
-    
+
     $form = rex_form::factory($table, '', 'pid = ' . $pid, 'post', $formDebug);
     $form->addParam('pid', $pid);
     $form->addParam('sort', rex_request::request('sort', 'string', ''));
@@ -110,7 +110,7 @@ if ('delete' === $func) {
             $languageSwitcher .= '<i class="rex-icon fa-language"></i> <strong>' . rex_i18n::msg('consent_manager_cookie_multilang_title') . '</strong><br>';
             $languageSwitcher .= '<small>' . rex_i18n::msg('consent_manager_cookie_multilang_desc', rex_i18n::rawMsg(rex_clang::get(rex_clang::getStartId())->getName())) . '</small><br><br>';
             $languageSwitcher .= '<div class="btn-group" role="group">';
-            
+
             foreach (rex_clang::getAll() as $clang) {
                 $clangId = $clang->getId();
                 $isActive = $clangId === $clang_id ? 'btn-primary' : 'btn-default';
@@ -118,15 +118,15 @@ if ('delete' === $func) {
                 $url = rex_url::currentBackendPage(['func' => 'edit', 'pid' => $pid, 'page' => 'consent_manager/cookie/clang' . $clangId]);
                 $languageSwitcher .= '<a href="' . $url . '" class="btn ' . $isActive . ' btn-sm">' . $icon . rex_escape($clang->getName()) . '</a>';
             }
-            
+
             $languageSwitcher .= '</div>';
             $languageSwitcher .= '</div>';
             $field = $form->addRawField($languageSwitcher);
-            
+
             // Fallback-Hinweis für Nicht-Start-Sprachen (bezieht sich auf alle Felder)
             if ($clang_id !== rex_clang::getStartId()) {
                 $startLangName = rex_i18n::rawMsg(rex_clang::get(rex_clang::getStartId())->getName());
-                $fallbackNotice = '<div class="alert alert-warning"><i class="rex-icon fa-info-circle"></i> ' . 
+                $fallbackNotice = '<div class="alert alert-warning"><i class="rex-icon fa-info-circle"></i> ' .
                     rex_i18n::msg('consent_manager_cookie_fallback_notice', $startLangName) . '</div>';
                 $field = $form->addRawField($fallbackNotice);
             }
@@ -148,11 +148,11 @@ if ('delete' === $func) {
     }
     $field = $form->addTextField('service_name');
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_service_name'));
-    
+
     $field = $form->addTextField('variant');
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_variant'));
     $field->setNotice(rex_i18n::msg('consent_manager_cookie_variant_notice'));
-    
+
     $field = $form->addTextAreaField('definition');
     $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_definition'));
@@ -265,7 +265,6 @@ if ($showlist) {
     $list->setColumnLayout(rex_i18n::msg('delete'), ['', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('delete'), ['pid' => '###pid###', 'func' => 'delete'] + $csrf->getUrlParams());
     $list->addLinkAttribute(rex_i18n::msg('delete'), 'onclick', 'return confirm(\' ###service_name### ' . rex_i18n::msg('delete') . ' ?\')');
-
 
     $content = $list->get();
 

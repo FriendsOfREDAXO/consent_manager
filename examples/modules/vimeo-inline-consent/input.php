@@ -1,12 +1,8 @@
-<?php
-
-/**
- * Demo-Modul: Inline-Consent für Vimeo Videos
+<?=/**
+ * Demo-Modul: Inline-Consent für Vimeo Videos.
  *
  * Eingabe-Teil des Moduls
- */
-
-echo '
+ */ '
 <fieldset>
     <legend>Vimeo Video Inline-Consent Demo</legend>
     

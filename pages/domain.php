@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
+use FriendsOfRedaxo\ConsentManager\Theme;
 
 $showlist = true;
 $id = rex_request::request('id', 'int', 0);
@@ -17,15 +18,15 @@ if ('delete' === $func) {
 } elseif ('add' === $func || 'edit' === $func) {
     $formDebug = false;
     $showlist = false;
-    
+
     // Debug: POST-Daten anzeigen wenn Debug-Modus aktiv
-    if (rex::isDebugMode() && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (rex::isDebugMode() && 'POST' === $_SERVER['REQUEST_METHOD']) {
         dump('=== POST Request Data ===');
         dump($_POST);
         dump('=== auto_inject_include_templates ===');
         dump($_POST['auto_inject_include_templates'] ?? 'NOT SET');
     }
-    
+
     $form = rex_form::factory($table, '', 'id = ' . $id, 'post', $formDebug);
     $form->addParam('id', $id);
     $form->addParam('sort', rex_request::request('sort', 'string', ''));
@@ -36,7 +37,7 @@ if ('delete' === $func) {
     // YRewrite Domains laden falls verfügbar
     $yrewriteDomains = [];
     $existingDomains = [];
-    
+
     // Bereits konfigurierte Domains laden (außer der aktuellen beim Edit)
     $sql = rex_sql::factory();
     $whereClause = $form->isEditMode() ? 'id != ' . $id : '1=1';
@@ -44,20 +45,20 @@ if ('delete' === $func) {
     foreach ($sql as $row) {
         $existingDomains[] = $row->getValue('uid');
     }
-    
+
     $yrewriteSelectHtml = '';
     if (rex_addon::exists('yrewrite') && rex_addon::get('yrewrite')->isAvailable()) {
         foreach (rex_yrewrite::getDomains() as $domain) {
             $cleanDomain = preg_replace('#^https?://#i', '', $domain->getUrl());
             $cleanDomain = rtrim($cleanDomain, '/');
             $cleanDomain = strtolower($cleanDomain);
-            
+
             // Duplikate vermeiden (z.B. wenn eine Domain sowohl als Standard als auch regulär existiert)
             if (!in_array($cleanDomain, $yrewriteDomains, true) && !in_array($cleanDomain, $existingDomains, true)) {
                 $yrewriteDomains[] = $cleanDomain;
             }
         }
-        
+
         // HTML für YRewrite Select generieren (nur im Add-Modus)
         if (!$form->isEditMode() && count($yrewriteDomains) > 0) {
             $yrewriteSelectHtml = '
@@ -75,7 +76,7 @@ if ('delete' === $func) {
                 </select>
                 <p class="help-block"><i class="fa fa-info-circle"></i> Wählen Sie eine Domain aus YRewrite oder geben Sie eine eigene ein.</p>
             </div>';
-        } elseif (!$form->isEditMode() && count($yrewriteDomains) === 0) {
+        } elseif (!$form->isEditMode() && 0 === count($yrewriteDomains)) {
             // Debug-Info wenn keine Domains verfügbar
             $debugMsg = 'YRewrite ist aktiv, aber keine Domains verfügbar. ';
             if (count($existingDomains) > 0) {
@@ -91,7 +92,7 @@ if ('delete' === $func) {
     }
 
     // YRewrite Select als HTML-Feld einfügen (wird nicht in DB gespeichert)
-    if ($yrewriteSelectHtml !== '') {
+    if ('' !== $yrewriteSelectHtml) {
         $field = $form->addRawField($yrewriteSelectHtml);
     }
 
@@ -116,7 +117,7 @@ if ('delete' === $func) {
     });
     $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
     $field->setAttribute('id', 'domain-uid-field');
-    
+
     $domainPanelEnd = '
             </div>
         </div>
@@ -135,7 +136,7 @@ if ('delete' === $func) {
                 <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Rechtliche Seiten</h4>
     ';
     $field = $form->addRawField($legalPanelStart);
-    
+
     $field = $form->addLinkmapField('privacy_policy');
     $field->setLabel(rex_i18n::msg('consent_manager_domain_privacy_policy')); /** @phpstan-ignore-line */
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_privacy_policy_empty_msg')); /** @phpstan-ignore-line */
@@ -143,7 +144,7 @@ if ('delete' === $func) {
     $field = $form->addLinkmapField('legal_notice');
     $field->setLabel(rex_i18n::msg('consent_manager_domain_legal_notice')); /** @phpstan-ignore-line */
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_legal_notic_empty_msg')); /** @phpstan-ignore-line */
-    
+
     $legalPanelEnd = '
             </div>
         </div>
@@ -162,7 +163,7 @@ if ('delete' === $func) {
                 <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Google Consent Mode v2</h4>
     ';
     $field = $form->addRawField($googlePanelStart);
-    
+
     $field = $form->addSelectField('google_consent_mode_enabled');
     $field->setLabel(rex_i18n::msg('consent_manager_google_mode_title'));
     $select = $field->getSelect();
@@ -177,7 +178,7 @@ if ('delete' === $func) {
     $select->addOption('Deaktiviert', '0');
     $select->addOption('Aktiviert', '1');
     $field->setNotice('Debug-Panel im Frontend anzeigen. Zeigt Cookie-Status und Consent-Informationen für angemeldete Backend-Benutzer an.');
-    
+
     $googlePanelEnd = '
             </div>
         </div>
@@ -196,14 +197,14 @@ if ('delete' === $func) {
                 <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Inline-Only Modus</h4>
     ';
     $field = $form->addRawField($inlinePanelStart);
-    
+
     $field = $form->addSelectField('inline_only_mode');
     $field->setLabel(rex_i18n::msg('consent_manager_domain_inline_only_mode'));
     $select = $field->getSelect();
     $select->addOption(rex_i18n::msg('consent_manager_domain_inline_only_mode_disabled'), '0');
     $select->addOption(rex_i18n::msg('consent_manager_domain_inline_only_mode_enabled'), '1');
     $field->setNotice(rex_i18n::msg('consent_manager_domain_inline_only_mode_notice'));
-    
+
     $inlinePanelEnd = '
             </div>
         </div>
@@ -222,7 +223,7 @@ if ('delete' === $func) {
                 <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Automatische Frontend-Einbindung</h4>
     ';
     $field = $form->addRawField($autoInjectPanelStart);
-    
+
     $field = $form->addSelectField('auto_inject');
     $field->setLabel('Status');
     $select = $field->getSelect();
@@ -242,7 +243,7 @@ if ('delete' === $func) {
     $field = $form->addTextField('auto_inject_delay');
     $field->setLabel('Verzögerung bis Anzeige (Sekunden)');
     $field->setNotice('Optional: Verzögerung in Sekunden bis zur Anzeige der Consent-Box (0 = sofort). Nützlich um First-Paint zu verbessern.');
-    
+
     // Auto-Inject: Focus Management
     $field = $form->addSelectField('auto_inject_focus');
     $field->setLabel('Fokus auf Consent-Box setzen');
@@ -250,7 +251,7 @@ if ('delete' === $func) {
     $select->addOption('Nein (kein automatischer Fokus)', '0');
     $select->addOption('Ja (Fokus für Barrierefreiheit)', '1');
     $field->setNotice('Wenn aktiviert, wird der Fokus automatisch auf die Consent-Box gesetzt (empfohlen für Barrierefreiheit gemäß WCAG).');
-    
+
     // Auto-Inject: Template-Whitelist (Positivliste) - Multi-Select
     // Alle aktiven Templates laden
     $templateOptions = [];
@@ -263,11 +264,11 @@ if ('delete' === $func) {
             $templateOptions[$templateId] = $templateName . ' [ID: ' . $templateId . ']';
         }
     }
-    
+
     if (count($templateOptions) > 0) {
         // Aktuell gespeicherte Template-IDs laden
         $savedTemplates = [];
-        if ($func === 'edit' && $id > 0) {
+        if ('edit' === $func && $id > 0) {
             $sql = rex_sql::factory();
             $sql->setQuery('SELECT auto_inject_include_templates FROM ' . rex::getTable('consent_manager_domain') . ' WHERE id = ?', [$id]);
             if ($sql->getRows() > 0) {
@@ -277,7 +278,7 @@ if ('delete' === $func) {
                 }
             }
         }
-        
+
         // Checkbox-Liste für Templates
         $checkboxesHtml = '<div class="form-group">' .
             '<label class="control-label">Nur in diesen Templates einbinden</label>' .
@@ -288,7 +289,7 @@ if ('delete' === $func) {
             '<strong>Alle auswählen</strong>' .
             '</label>' .
             '</div>';
-        
+
         // Template-Checkboxen hinzufügen
         foreach ($templateOptions as $tplId => $tplName) {
             $checked = in_array($tplId, $savedTemplates, true) ? ' checked' : '';
@@ -299,10 +300,10 @@ if ('delete' === $func) {
                 '</label>' .
                 '</div>';
         }
-        
+
         // Initialer Wert für Hidden Field (gespeicherte Templates)
         $initialValue = count($savedTemplates) > 0 ? implode(',', $savedTemplates) : '';
-        
+
         $checkboxesHtml .= '</div>' .
             '<p class="help-block">' .
             '<i class="fa fa-info-circle"></i> <strong>Nichts auswählen = in allen Templates einbinden</strong> (Standardverhalten). ' .
@@ -310,13 +311,13 @@ if ('delete' === $func) {
             'Sinnvoll für Websites mit vielen Spezial-Templates (API, AJAX, Print, RSS).' .
             '</p>' .
             '</div>';
-        
+
         $field = $form->addRawField($checkboxesHtml);
-        
+
         // Hidden Field als echtes rex_form-Feld damit es richtig gespeichert wird
         $field = $form->addHiddenField('auto_inject_include_templates');
         $field->setAttribute('id', 'domain-templates-hidden');
-        if ($func === 'edit' && $id > 0) {
+        if ('edit' === $func && $id > 0) {
             $field->setValue($initialValue);
         }
     } else {
@@ -327,10 +328,10 @@ if ('delete' === $func) {
             '<p class="help-block text-warning">' .
             '<i class="fa fa-exclamation-triangle"></i> Keine aktiven Templates gefunden. Der Consent Manager wird in allen Templates eingebunden.' .
             '</p>' .
-            '</div>'
+            '</div>',
         );
     }
-    
+
     // Auto-Inject Panel Ende
     $autoInjectPanelEnd = '
             </div>
@@ -354,7 +355,7 @@ if ('delete' === $func) {
                     <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">CKE5 oEmbed Integration</h4>
         ';
         $field = $form->addRawField($oembedPanelStart);
-        
+
         $field = $form->addSelectField('oembed_enabled');
         $field->setLabel('Status');
         $select = $field->getSelect();
@@ -376,7 +377,7 @@ if ('delete' === $func) {
         $select->addOption('Zwei Buttons (Einmal laden, Alle Einstellungen)', '0');
         $select->addOption('Drei Buttons (Einmal laden, Alle zulassen, Alle Einstellungen)', '1');
         $field->setNotice('Drei-Button-Variante zeigt zusätzlich "Alle zulassen" Button zum sofortigen Freischalten aller Services einer Gruppe.');
-        
+
         $oembedPanelEnd = '
                 </div>
             </div>
@@ -386,9 +387,9 @@ if ('delete' === $func) {
     }
 
     $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_domain_edit') : rex_i18n::msg('consent_manager_domain_add');
-    
+
     $formContent = $form->get();
-    
+
     // JavaScript: Checkbox-Liste → kommagetrennte Liste beim Submit
     $formContent .= '
     <script nonce="' . rex_response::getNonce() . '">
@@ -472,25 +473,25 @@ if ('delete' === $func) {
     })();
     </script>
     ';
-    
+
     // Theme-Sidebar erstellen
     $addon = rex_addon::get('consent_manager');
-    $cmtheme = new \FriendsOfRedaxo\ConsentManager\Theme();
+    $cmtheme = new Theme();
     $currentTheme = $form->isEditMode() ? $form->getSql()->getValue('theme') : '';
     $previewId = 'theme-preview-' . uniqid();
     $initialDisplay = !empty($currentTheme) ? 'block' : 'none';
     $previewBaseUrl = rex_url::backendPage('consent_manager/theme');
-    
+
     // Theme-Optionen sammeln
     $themeOptions = '<option value="">Standard (globales Theme verwenden)</option>';
-    
+
     $themes = (array) glob($addon->getPath('scss/themes/*.scss'));
     $legacyThemes = (array) glob($addon->getPath('scss/consent_manager_frontend*.scss'));
     $themes = array_merge($themes, $legacyThemes);
     natsort($themes);
-    
+
     foreach ($themes as $themefile) {
-        $isLegacy = strpos($themefile, '/themes/') === false;
+        $isLegacy = !str_contains($themefile, '/themes/');
         $themeid = $isLegacy ? basename((string) $themefile) : 'themes/' . basename((string) $themefile);
         $theme_options = $cmtheme->getThemeInformation($themeid);
         if (count($theme_options) > 0) {
@@ -499,7 +500,7 @@ if ('delete' === $func) {
             $themeOptions .= '<option value="' . rex_escape($themeid) . '"' . $selected . '>' . rex_escape($label) . '</option>';
         }
     }
-    
+
     if (true === rex_addon::exists('project')) {
         $projectThemes = (array) glob(rex_addon::get('project')->getPath('consent_manager_themes/*.scss'));
         natsort($projectThemes);
@@ -513,7 +514,7 @@ if ('delete' === $func) {
             }
         }
     }
-    
+
     $sidebar = '
     <style>
     .cm-domain-layout {
@@ -689,7 +690,7 @@ if ('delete' === $func) {
         }
     })();
     </script>';
-    
+
     // YRewrite Domain Select → TextField Sync Script
     if (!$form->isEditMode() && count($yrewriteDomains) > 0) {
         $sidebar .= '
@@ -740,7 +741,7 @@ if ('delete' === $func) {
         })();
         </script>';
     }
-    
+
     // 2-Spalten-Layout
     $content = '
     <div class="cm-domain-layout">
@@ -820,7 +821,7 @@ if ($showlist) {
             <i class="rex-icon fa-chevron-right" style="margin-left: 10px; font-size: 14px; opacity: 0.8;"></i>
         </button>
     </div>';
-    
+
     $listDebug = false;
 
     // oembed_enabled nur laden wenn CKE5 verfügbar ist

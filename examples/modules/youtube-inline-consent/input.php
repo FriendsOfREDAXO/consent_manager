@@ -1,12 +1,8 @@
-<?php
-
-/**
- * Demo-Modul: Inline-Consent für YouTube Videos
+<?=/**
+ * Demo-Modul: Inline-Consent für YouTube Videos.
  *
  * Eingabe-Teil des Moduls
- */
-
-echo '
+ */ '
 <fieldset>
     <legend>YouTube Video Inline-Consent Demo</legend>
     

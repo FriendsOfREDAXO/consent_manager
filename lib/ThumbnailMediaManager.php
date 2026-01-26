@@ -178,7 +178,7 @@ class ThumbnailMediaManager
 
     /**
      * Thumbnail-URL aus Video-URL (YouTube oder Vimeo) generieren.
-     * NULL bei ungültiger URL
+     * NULL bei ungültiger URL.
      *
      * @api
      * @param array<string, mixed> $options Zusätzliche Optionen

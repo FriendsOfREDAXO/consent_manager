@@ -212,11 +212,24 @@ $field->setLabel(rex_i18n::msg('consent_manager_config_inline_only_mode'));
 $field->addOption(rex_i18n::msg('consent_manager_config_inline_only_mode'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_inline_only_mode_desc'));
 
+// Auto-Blocking für manuell eingefügtes HTML
+$field = $form->addCheckboxField('auto_blocking_enabled');
+$field->setLabel(rex_i18n::msg('consent_manager_config_auto_blocking'));
+$field->addOption(rex_i18n::msg('consent_manager_config_auto_blocking_enable'), 1);
+$field->setNotice(rex_i18n::msg('consent_manager_config_auto_blocking_desc'));
+
+// Redakteur-Hinweise (wird nur auf Editorial-Seite angezeigt)
+$field = $form->addTextAreaField('editorial_info');
+$field->setLabel(rex_i18n::msg('consent_manager_config_editorial_info'));
+$field->setAttribute('rows', '4');
+$field->setAttribute('placeholder', rex_i18n::msg('consent_manager_config_editorial_info_placeholder'));
+$field->setNotice(rex_i18n::msg('consent_manager_config_editorial_info_notice'));
+
 // Cookie Name
 $field = $form->addTextField('cookie_name');
 $field->setLabel(rex_i18n::msg('consent_manager_config_cookie_name_label'));
 $field->setAttribute('placeholder', 'consentmanager');
-$field->setAttribute('pattern', '^[A-Za-z0-9_-]+$');
+$field->setAttribute('pattern', '^[A-Za-z0-9_\\-]+$');
 $field->setNotice(rex_i18n::msg('consent_manager_config_cookie_name_notice'));
 
 // Cookie Lebensdauer

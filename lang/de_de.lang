@@ -360,3 +360,93 @@ consent_manager_wizard_link_theme = Theme anpassen
 consent_manager_wizard_link_theme_desc = Farben, Schriften und Layout individuell gestalten
 consent_manager_wizard_link_texts = Texte bearbeiten
 consent_manager_wizard_link_texts_desc = Überschriften, Beschreibungen und Button-Texte anpassen
+
+# Auto-Blocking Feature
+consent_manager_config_auto_blocking = Auto-Blocking für manuell eingefügtes HTML
+consent_manager_config_auto_blocking_enable = Auto-Blocking aktivieren
+consent_manager_config_auto_blocking_desc = Scannt HTML-Code automatisch und blockiert Scripts/iframes mit data-consent-Attributen. Scripts müssen mit data-consent-block="true" und data-consent-service="servicekey" markiert sein.
+consent_manager_auto_blocking_assistant_title = Auto-Blocking Code-Assistent
+consent_manager_auto_blocking_assistant_intro = Dieser Assistent hilft Ihnen, externen Code (Scripts, iframes) für das Auto-Blocking vorzubereiten.
+consent_manager_auto_blocking_assistant_open = Code-Assistent öffnen
+consent_manager_auto_blocking_assistant_input_label = Originalcode einfügen
+consent_manager_auto_blocking_assistant_input_placeholder = <script src="https://example.com/widget.js"></script>
+consent_manager_auto_blocking_assistant_service_label = Service-Schlüssel
+consent_manager_auto_blocking_assistant_service_select = -- Service auswählen --
+consent_manager_auto_blocking_assistant_service_custom = Eigenen Service-Schlüssel eingeben
+consent_manager_auto_blocking_assistant_service_notice = Muss in "Consent Manager → Dienste" angelegt sein
+consent_manager_auto_blocking_assistant_provider_label = Anbieter-Name (optional)
+consent_manager_auto_blocking_assistant_privacy_label = Datenschutz-URL (optional)
+consent_manager_auto_blocking_assistant_title_label = Titel (optional)
+consent_manager_auto_blocking_assistant_text_label = Platzhalter-Text (optional)
+consent_manager_auto_blocking_assistant_text_placeholder = z.B. Zur Buchung verwenden wir diesen Dienst. Bitte stimmen Sie zu.
+consent_manager_auto_blocking_assistant_text_notice = Individueller Text, der im Consent-Blocker angezeigt wird
+consent_manager_auto_blocking_assistant_generate = Code generieren
+consent_manager_auto_blocking_assistant_output_label = Generierter Code (kopieren und einfügen)
+consent_manager_auto_blocking_assistant_copy = In Zwischenablage kopieren
+consent_manager_auto_blocking_assistant_copied = Code kopiert!
+consent_manager_auto_blocking_assistant_input_help = Fügen Sie hier Ihren externen Script- oder iframe-Code ein
+
+# Editorial Page
+consent_manager_editorial_title = Redaktions-Bereich
+consent_manager_editorial_welcome_title = Skripte im Inhalt datenschutzkonform einbinden
+consent_manager_editorial_welcome_intro = Hier haben Sie die Möglichkeit, externe Skripte und Inhalte die laut Anbieter <strong>im Text/Content eingefügt werden müssen</strong>, DSGVO-konform einzubinden (z.B. YouTube-Videos, Buchungswidgets, Kalender).
+consent_manager_editorial_important_title = Wichtig: Nicht für Head/Footer-Skripte!
+consent_manager_editorial_important_text = Sollen Skripte im <code>&lt;head&gt;</code> oder am Ende der Seite (vor <code>&lt;/body&gt;</code>) eingebunden werden, ist dies <strong>nicht der richtige Platz</strong>. Solche globalen Skripte müssen von einem Administrator direkt ins Template eingebaut werden.
+consent_manager_editorial_important_contact = Bitte informieren Sie in diesem Fall einen Administrator oder wenden Sie sich an die zuständige technische Ansprechperson.
+consent_manager_editorial_welcome_why_title = Warum ist das wichtig?
+consent_manager_editorial_welcome_reason1 = <strong>Gesetzliche Pflicht:</strong> DSGVO verlangt, dass Nutzer externen Diensten aktiv zustimmen müssen, bevor Daten übertragen werden.
+consent_manager_editorial_welcome_reason2 = <strong>Schutz der Nutzer:</strong> Dienste wie Google, Facebook & Co. tracken Nutzer - oft ohne deren Wissen.
+consent_manager_editorial_welcome_reason3 = <strong>Rechtssicherheit:</strong> Ohne korrekte Einbindung drohen Abmahnungen und hohe Bußgelder.
+consent_manager_editorial_howto_title = So funktioniert's
+consent_manager_editorial_step1_title = Code kopieren
+consent_manager_editorial_step1_desc = Kopieren Sie den Embed-Code des externen Dienstes (z.B. aus YouTube, Google Maps, Calendly).
+consent_manager_editorial_step2_title = Code-Assistent öffnen
+consent_manager_editorial_step2_desc = Klicken Sie auf den Button "Code-Assistent öffnen" und fügen Sie den Code ein.
+consent_manager_editorial_step3_title = Service auswählen
+consent_manager_editorial_step3_desc = Wählen Sie den passenden Dienst aus der Liste (z.B. YouTube, Google Maps). Falls nicht vorhanden, beantragen Sie ihn beim Administrator.
+consent_manager_editorial_step4_title = Generierten Code verwenden
+consent_manager_editorial_step4_desc = Kopieren Sie den generierten Code und fügen Sie ihn in Ihren Artikel oder Ihre Seite ein - fertig!
+consent_manager_editorial_step4_how_title = Wie füge ich den Code ein?
+consent_manager_editorial_step4_how_cke5 = <strong>Im CKE5 Editor:</strong> Nutzen Sie die HTML-Embed Funktion (Button "Source" oder "HTML-Code einfügen")
+consent_manager_editorial_step4_how_other = <strong>In anderen Editoren:</strong> Wechseln Sie in den Source-Editing Modus (meist über Button "<>" oder "Quellcode")
+consent_manager_editorial_step4_how_custom = <strong>In vorbereiteten Feldern:</strong> Fügen Sie den Code direkt in Text-/Textarea-Felder ein (z.B. in YForm oder MForm)
+consent_manager_editorial_open_assistant = Code-Assistent öffnen
+consent_manager_editorial_snippets_title = Gespeicherte Code-Snippets
+consent_manager_editorial_snippets_empty = Noch keine Snippets gespeichert. Generieren Sie einen Code und speichern Sie ihn als Snippet.
+consent_manager_editorial_snippets_save = Als Snippet speichern
+consent_manager_editorial_snippets_name = Snippet-Name
+consent_manager_editorial_snippets_name_placeholder = z.B. "YouTube Standard-Video" oder "Calendly Buchung"
+consent_manager_editorial_snippets_load = Snippet laden
+consent_manager_editorial_snippets_delete = Löschen
+consent_manager_editorial_snippets_delete_confirm = Snippet wirklich löschen?
+consent_manager_editorial_privacy_title = Datenschutzerklärung nicht vergessen!
+consent_manager_editorial_privacy_intro = Wenn Sie externe Dienste einbinden, müssen diese in Ihrer Datenschutzerklärung erwähnt werden.
+consent_manager_editorial_privacy_what_title = Was muss in die Datenschutzerklärung?
+consent_manager_editorial_privacy_what_service = Name und Zweck des Dienstes (z.B. "YouTube für Video-Einbettungen")
+consent_manager_editorial_privacy_what_data = Welche Daten übertragen werden (z.B. IP-Adresse, Cookies)
+consent_manager_editorial_privacy_what_provider = Link zur Datenschutzerklärung des Anbieters
+consent_manager_editorial_privacy_issue_title = Datenschutzerklärung aktualisieren lassen
+consent_manager_editorial_privacy_issue_desc = Sie können die Aktualisierung der Datenschutzerklärung über den Issue Tracker beauftragen.
+consent_manager_editorial_privacy_contact_desc = Bitte kontaktieren Sie die zuständige Person für die Datenschutzerklärung und teilen Sie mit, welche Dienste Sie eingebunden haben.
+consent_manager_editorial_admin_info_title = Wichtige Hinweise
+consent_manager_config_editorial_info = Hinweise für Redakteure
+consent_manager_config_editorial_info_notice = Dieser Text wird Redakteuren oben auf der Editorial-Seite angezeigt. Nutzen Sie ihn für wichtige Hinweise, z.B. "Keine YouTube-Codes manuell eingeben" oder Links zu internen Anleitungen.
+consent_manager_config_editorial_info_placeholder = z.B.: Bitte keine YouTube/Vimeo Codes manuell eingeben - das System kümmert sich automatisch darum. Bei Fragen wenden Sie sich an max@beispiel.de
+consent_manager_editorial_missing_service_title = Service nicht in der Liste?
+consent_manager_editorial_missing_service_desc = Wenn der benötigte Dienst nicht in der Dropdown-Liste erscheint, muss er erst von einem Benutzer mit der Berechtigung "Consent Manager → Config" angelegt werden.
+consent_manager_editorial_issue_tracker_available = Issue Tracker verfügbar
+consent_manager_editorial_issue_tracker_desc = Sie können einen neuen Dienst direkt über den Issue Tracker beantragen. Geben Sie dabei den Namen und die URL des Dienstes an.
+consent_manager_editorial_request_service = Neuen Dienst beantragen
+consent_manager_editorial_contact_admin = Benutzer mit Config-Berechtigung kontaktieren
+consent_manager_editorial_contact_admin_desc = Bitte kontaktieren Sie einen Benutzer mit der Berechtigung "Consent Manager → Config" und teilen Sie mit, welchen Dienst Sie benötigen (Name und URL).
+consent_manager_editorial_examples_title = Code-Beispiele (zum Ausklappen)
+consent_manager_editorial_example_youtube = YouTube Video
+consent_manager_editorial_example_youtube_desc = So sieht ein korrekt markiertes YouTube-Video aus:
+consent_manager_editorial_example_custom = Custom Widget mit eigenem Text
+consent_manager_editorial_example_custom_desc = Mit eigenem Platzhalter-Text:
+
+# Auto-Blocking Warnung
+consent_manager_editorial_autoblock_warning_title = Auto-Blocking ist nicht aktiviert
+consent_manager_editorial_autoblock_warning_intro = Die automatische Blockierung externer Inhalte ist derzeit deaktiviert.
+consent_manager_editorial_autoblock_warning_admin = Damit die hier generierten Codes funktionieren, muss Auto-Blocking in den <a href="{0}"><strong>Einstellungen aktiviert werden</strong></a>. Ohne diese Funktion werden externe Inhalte direkt geladen und umgehen den Consent-Mechanismus.
+consent_manager_editorial_autoblock_warning_user = Damit die hier generierten Codes funktionieren, muss Auto-Blocking in den Einstellungen aktiviert werden. <strong>Bitte kontaktieren Sie einen Administrator oder Benutzer mit Config-Berechtigung</strong>, um diese Funktion zu aktivieren. Ohne Auto-Blocking werden externe Inhalte direkt geladen und umgehen den Consent-Mechanismus.

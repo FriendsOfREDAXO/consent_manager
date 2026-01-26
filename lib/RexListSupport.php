@@ -3,6 +3,7 @@
 namespace FriendsOfRedaxo\ConsentManager;
 
 use rex;
+use rex_clang;
 use rex_sql;
 
 class RexListSupport
@@ -50,7 +51,7 @@ class RexListSupport
                 $services = [];
                 $db = rex_sql::factory();
                 $db->setTable(rex::getTable('consent_manager_cookie'));
-                $clangId = \rex_clang::getCurrentId();
+                $clangId = rex_clang::getCurrentId();
                 $db->setWhere('uid IN(' . $db->in($uids) . ') AND clang_id = ' . (int) $clangId . ' ORDER BY uid ASC');
                 $db->select('uid, service_name, variant');
                 foreach ($db->getArray() as $v) {

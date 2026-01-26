@@ -9,7 +9,9 @@ use rex_sql;
 
 use function count;
 use function is_array;
+use function is_scalar;
 use function is_string;
+use function strlen;
 
 class ConsentManager extends rex_api_function
 {
@@ -29,7 +31,7 @@ class ConsentManager extends rex_api_function
         if (false === $domain || false === $consentid || false === $consent_manager) {
             exit;
         }
-        
+
         // Security: Validate domain format (basic hostname validation)
         // Only allow valid hostname characters and limit length (DNS max = 255)
         if (strlen($domain) > 255) {
@@ -38,7 +40,7 @@ class ConsentManager extends rex_api_function
         if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$/', $domain) && !preg_match('/^[a-zA-Z0-9]$/', $domain)) {
             exit;
         }
-        
+
         // Security: Validate consentid format (uniqid generates alphanumeric with dots)
         // consentid format: uniqid('', true) produces something like "5f3a3e1b2c3d4.12345678" (max 30 chars)
         if (strlen($consentid) > 30) {
@@ -47,13 +49,13 @@ class ConsentManager extends rex_api_function
         if (!preg_match('/^[a-f0-9.]+$/i', $consentid)) {
             exit;
         }
-        
+
         // Security: Validate consents array - only allow valid UID strings
         // This prevents XSS attacks via malicious consent values
         if (!isset($consent_manager['consents']) || !is_array($consent_manager['consents'])) {
             exit;
         }
-        
+
         // Security: Validate cachelogid - must be numeric or valid format (max 50 chars)
         if (!isset($consent_manager['cachelogid']) || !is_scalar($consent_manager['cachelogid'])) {
             exit;
@@ -66,7 +68,7 @@ class ConsentManager extends rex_api_function
         if (!preg_match('/^[a-zA-Z0-9._-]+$/', $cachelogid)) {
             exit;
         }
-        
+
         $validatedConsents = [];
         foreach ($consent_manager['consents'] as $consent) {
             // Only allow alphanumeric characters, hyphens and underscores (valid UIDs)
@@ -76,7 +78,7 @@ class ConsentManager extends rex_api_function
             }
             // Invalid consent values are silently dropped
         }
-        
+
         if ($consent_manager['consentid'] === $consentid) {
             $anonymizedIp = '';
             if (is_string(rex_request::server('REMOTE_ADDR'))) {

@@ -123,7 +123,7 @@ if (str_starts_with($iconClass, 'uk-icon:')) {
         
         <script type="text/plain" class="consent-content-data" 
                 data-consent-code="<?= rex_escape($serviceKey) ?>">
-<?= $content ?>
+<?= str_replace('</script>', '<\/script>', $content) ?>
         </script>
     </div>
 </div>

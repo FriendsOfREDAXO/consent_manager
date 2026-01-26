@@ -417,3 +417,93 @@ consent_manager_theme_editor_project_addon_required = Tema-editorn kräver det i
 
 consent_manager_config_cookie_name_label = Cookie-namn
 consent_manager_config_cookie_name_notice = Namnet på cookie där samtycket lagras. Standard: consentmanager
+
+# Auto-Blocking Funktion
+consent_manager_config_auto_blocking = Auto-Blocking för manuellt infogad HTML
+consent_manager_config_auto_blocking_enable = Aktivera Auto-Blocking
+consent_manager_config_auto_blocking_desc = Skannar HTML-kod automatiskt och blockerar skript/iframes med data-consent-attribut. Skript måste markeras med data-consent-block="true" och data-consent-service="servicekey".
+consent_manager_auto_blocking_assistant_title = Auto-Blocking Kodassistent
+consent_manager_auto_blocking_assistant_intro = Denna assistent hjälper dig att förbereda extern kod (skript, iframes) för auto-blocking.
+consent_manager_auto_blocking_assistant_open = Öppna kodassistent
+consent_manager_auto_blocking_assistant_input_label = Klistra in originalkod
+consent_manager_auto_blocking_assistant_input_placeholder = <script src="https://example.com/widget.js"></script>
+consent_manager_auto_blocking_assistant_service_label = Tjänst-nyckel
+consent_manager_auto_blocking_assistant_service_select = -- Välj tjänst --
+consent_manager_auto_blocking_assistant_service_custom = Ange anpassad tjänst-nyckel
+consent_manager_auto_blocking_assistant_service_notice = Måste skapas i "Consent Manager → Tjänster"
+consent_manager_auto_blocking_assistant_provider_label = Leverantörsnamn (valfritt)
+consent_manager_auto_blocking_assistant_privacy_label = Integritets-URL (valfritt)
+consent_manager_auto_blocking_assistant_title_label = Titel (valfritt)
+consent_manager_auto_blocking_assistant_text_label = Platshållartext (valfritt)
+consent_manager_auto_blocking_assistant_text_placeholder = t.ex. Vi använder denna tjänst för bokning. Vänligen samtycke.
+consent_manager_auto_blocking_assistant_text_notice = Anpassad text som visas i samtyckes-blockeraren
+consent_manager_auto_blocking_assistant_generate = Generera kod
+consent_manager_auto_blocking_assistant_output_label = Genererad kod (kopiera och klistra in)
+consent_manager_auto_blocking_assistant_copy = Kopiera till urklipp
+consent_manager_auto_blocking_assistant_copied = Kod kopierad!
+consent_manager_auto_blocking_assistant_input_help = Klistra in ditt externa skript eller iframe-kod här
+
+# Redaktörssida
+consent_manager_editorial_title = Redaktör
+consent_manager_editorial_welcome_title = Bädda in skript i innehåll på ett integritetsvänligt sätt
+consent_manager_editorial_welcome_intro = Här har du möjlighet att bädda in externa skript och innehåll som <strong>måste infogas i texten/innehållet</strong> enligt leverantören på ett GDPR-kompatibelt sätt (t.ex. YouTube-videor, bokningswidgets, kalendrar).
+consent_manager_editorial_important_title = Viktigt: Inte för Head/Footer-skript!
+consent_manager_editorial_important_text = Om skript ska bäddas in i <code>&lt;head&gt;</code> eller i slutet av sidan (före <code>&lt;/body&gt;</code>), är detta <strong>inte rätt plats</strong>. Sådana globala skript måste installeras direkt i mallen av en administratör.
+consent_manager_editorial_important_contact = Informera i detta fall en administratör eller kontakta ansvarig teknisk kontaktperson.
+consent_manager_editorial_welcome_why_title = Varför är detta viktigt?
+consent_manager_editorial_welcome_reason1 = <strong>Juridisk skyldighet:</strong> GDPR kräver att användare aktivt måste samtycka till externa tjänster innan data överförs.
+consent_manager_editorial_welcome_reason2 = <strong>Skydd av användare:</strong> Tjänster som Google, Facebook & Co. spårar användare - ofta utan deras vetskap.
+consent_manager_editorial_welcome_reason3 = <strong>Rättslig säkerhet:</strong> Utan korrekt integration hotar varningar och höga böter.
+consent_manager_editorial_howto_title = Så här fungerar det
+consent_manager_editorial_step1_title = Kopiera kod
+consent_manager_editorial_step1_desc = Kopiera inbäddningskoden från den externa tjänsten (t.ex. från YouTube, Google Maps, Calendly).
+consent_manager_editorial_step2_title = Öppna kodassistent
+consent_manager_editorial_step2_desc = Klicka på knappen "Öppna kodassistent" och klistra in koden.
+consent_manager_editorial_step3_title = Välj tjänst
+consent_manager_editorial_step3_desc = Välj lämplig tjänst från listan (t.ex. YouTube, Google Maps). Om den inte finns tillgänglig, begär den från administratören.
+consent_manager_editorial_step4_title = Använd genererad kod
+consent_manager_editorial_step4_desc = Kopiera den genererade koden och klistra in den i din artikel eller sida - klart!
+consent_manager_editorial_step4_how_title = Hur sätter jag in koden?
+consent_manager_editorial_step4_how_cke5 = <strong>I CKE5-editorn:</strong> Använd HTML-inbäddningsfunktionen ("Source"-knappen eller "Infoga HTML-kod")
+consent_manager_editorial_step4_how_other = <strong>I andra editorer:</strong> Byt till källkodsredigeringsläge (vanligtvis via "<>" eller "Källkod"-knappen)
+consent_manager_editorial_step4_how_custom = <strong>I förberedda fält:</strong> Klistra in koden direkt i text-/textareafält (t.ex. i YForm eller MForm)
+consent_manager_editorial_open_assistant = Öppna kodassistent
+consent_manager_editorial_snippets_title = Sparade kodsnuttar
+consent_manager_editorial_snippets_empty = Inga snuttar sparade ännu. Generera en kod och spara den som en snutt.
+consent_manager_editorial_snippets_save = Spara som snutt
+consent_manager_editorial_snippets_name = Snuttnamn
+consent_manager_editorial_snippets_name_placeholder = t.ex. "YouTube standardvideo" eller "Calendly bokning"
+consent_manager_editorial_snippets_load = Ladda snutt
+consent_manager_editorial_snippets_delete = Radera
+consent_manager_editorial_snippets_delete_confirm = Vill du verkligen radera snutten?
+consent_manager_editorial_privacy_title = Glöm inte integritetspolicyn!
+consent_manager_editorial_privacy_intro = Om du bäddar in externa tjänster måste de nämnas i din integritetspolicy.
+consent_manager_editorial_privacy_what_title = Vad måste finnas i integritetspolicyn?
+consent_manager_editorial_privacy_what_service = Namn och syfte med tjänsten (t.ex. "YouTube för videoinbäddningar")
+consent_manager_editorial_privacy_what_data = Vilken data som överförs (t.ex. IP-adress, cookies)
+consent_manager_editorial_privacy_what_provider = Länk till leverantörens integritetspolicy
+consent_manager_editorial_privacy_issue_title = Låt uppdatera integritetspolicyn
+consent_manager_editorial_privacy_issue_desc = Du kan beställa uppdatering av integritetspolicyn via Issue Tracker.
+consent_manager_editorial_privacy_contact_desc = Kontakta ansvarig person för integritetspolicyn och meddela vilka tjänster du har bäddat in.
+consent_manager_editorial_admin_info_title = Viktiga anteckningar
+consent_manager_config_editorial_info = Anteckningar för redaktörer
+consent_manager_config_editorial_info_notice = Denna text visas för redaktörer överst på redaktörssidan. Använd den för viktiga anteckningar, t.ex. "Ange inte YouTube-koder manuellt" eller länkar till interna instruktioner.
+consent_manager_config_editorial_info_placeholder = t.ex.: Ange inte YouTube/Vimeo-koder manuellt - systemet tar hand om det automatiskt. Vid frågor, kontakta max@example.com
+consent_manager_editorial_missing_service_title = Tjänst inte i listan?
+consent_manager_editorial_missing_service_desc = Om den nödvändiga tjänsten inte visas i rullgardinsmenyn måste den först skapas av en användare med "Consent Manager → Config"-behörighet.
+consent_manager_editorial_issue_tracker_available = Issue Tracker tillgänglig
+consent_manager_editorial_issue_tracker_desc = Du kan begära en ny tjänst direkt via Issue Tracker. Ange tjänstens namn och URL.
+consent_manager_editorial_request_service = Begär ny tjänst
+consent_manager_editorial_contact_admin = Kontakta användare med config-behörighet
+consent_manager_editorial_contact_admin_desc = Kontakta en användare med "Consent Manager → Config"-behörighet och meddela vilken tjänst du behöver (namn och URL).
+consent_manager_editorial_examples_title = Kodexempel (klicka för att expandera)
+consent_manager_editorial_example_youtube = YouTube-video
+consent_manager_editorial_example_youtube_desc = Så här ser en korrekt markerad YouTube-video ut:
+consent_manager_editorial_example_custom = Anpassad widget med egen text
+consent_manager_editorial_example_custom_desc = Med egen platshållartext:
+
+# Auto-Blocking Varning
+consent_manager_editorial_autoblock_warning_title = Auto-Blocking är inte aktiverat
+consent_manager_editorial_autoblock_warning_intro = Automatisk blockering av externt innehåll är för närvarande inaktiverad.
+consent_manager_editorial_autoblock_warning_admin = För att koderna som genereras här ska fungera måste auto-blocking <a href="{0}"><strong>aktiveras i inställningarna</strong></a>. Utan denna funktion laddas externt innehåll direkt och kringgår samtyckes-mekanismen.
+consent_manager_editorial_autoblock_warning_user = För att koderna som genereras här ska fungera måste auto-blocking aktiveras i inställningarna. <strong>Kontakta en administratör eller användare med config-behörighet</strong> för att aktivera denna funktion. Utan auto-blocking laddas externt innehåll direkt och kringgår samtyckes-mekanismen.

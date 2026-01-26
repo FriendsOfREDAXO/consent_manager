@@ -12,15 +12,14 @@
 namespace FriendsOfRedaxo\ConsentManager;
 
 use rex;
-use rex_clang;
 use rex_fragment;
-use rex_sql;
-use rex_sql_exception;
 use rex_url;
 use rex_view;
 
 use function is_array;
 use function strlen;
+
+use const ENT_QUOTES;
 
 class InlineConsent
 {
@@ -129,6 +128,12 @@ class InlineConsent
      */
     private static function renderYouTubePlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
+        // Wenn bereits ein kompletter iframe übergeben wurde (z.B. von scanAndReplaceConsentElements),
+        // diesen direkt als generischen Placeholder verwenden
+        if (str_starts_with(trim($videoId), '<iframe')) {
+            return self::renderGenericPlaceholder($serviceKey, $videoId, $options, $consentId, $service);
+        }
+
         // Video ID extrahieren falls komplette URL übergeben wurde
         $extractedId = self::extractYouTubeId($videoId);
         if (null !== $extractedId) {
@@ -180,6 +185,12 @@ class InlineConsent
      */
     private static function renderVimeoPlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
+        // Wenn bereits ein kompletter iframe übergeben wurde (z.B. von scanAndReplaceConsentElements),
+        // diesen direkt als generischen Placeholder verwenden
+        if (str_starts_with(trim($videoId), '<iframe')) {
+            return self::renderGenericPlaceholder($serviceKey, $videoId, $options, $consentId, $service);
+        }
+
         // Video ID extrahieren
         $extractedId = self::extractVimeoId($videoId);
         if (null !== $extractedId) {
@@ -234,6 +245,12 @@ class InlineConsent
      */
     private static function renderGoogleMapsPlaceholder(string $serviceKey, string $embedUrl, array $options, string $consentId, array $service): string
     {
+        // Wenn bereits ein kompletter iframe übergeben wurde (z.B. von scanAndReplaceConsentElements),
+        // diesen direkt als generischen Placeholder verwenden
+        if (str_starts_with(trim($embedUrl), '<iframe')) {
+            return self::renderGenericPlaceholder($serviceKey, $embedUrl, $options, $consentId, $service);
+        }
+
         $iframe = '<iframe src="' . rex_escape($embedUrl) . '" 
                    width="' . ($options['width'] ?? '100%') . '" height="' . ($options['height'] ?? '450') . '" 
                    style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
@@ -410,5 +427,98 @@ class InlineConsent
         // CSS-Datei laden
         $cssPath = rex_url::addonAssets('consent_manager', 'consent_inline.css');
         return '<link rel="stylesheet" href="' . $cssPath . '">';
+    }
+
+    /**
+     * Scannt HTML-Code und ersetzt Scripts/iframes mit data-consent-Attributen
+     * durch Inline-Consent-Placeholder.
+     *
+     * @api
+     * @param string $html HTML-Content der gescannt werden soll
+     * @return string Bearbeiteter HTML-Content
+     */
+    public static function scanAndReplaceConsentElements(string $html): string
+    {
+        // Performance: Early Return wenn kein data-consent-block vorhanden
+        if (false === stripos($html, 'data-consent-block')) {
+            return $html;
+        }
+
+        // Pattern für script und iframe Tags mit data-consent-block="true"
+        $pattern = '/<(script|iframe|div)([^>]*data-consent-block=["\']true["\'][^>]*)>(.*?)<\/\1>/is';
+
+        $result = preg_replace_callback($pattern, static function ($matches) {
+            $tag = $matches[1]; // script, iframe oder div
+            $attributes = $matches[2]; // Alle Attribute
+            $content = $matches[3]; // Tag-Inhalt
+
+            // data-consent-service extrahieren (Pflichtfeld)
+            if (1 !== preg_match("/data-consent-service=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $serviceMatch)) {
+                // Kein Service definiert - Element nicht ersetzen
+                return $matches[0];
+            }
+            $serviceKeyRaw = $serviceMatch[1];
+
+            // XSS-Schutz: Service-Key validieren (nur erlaubte Zeichen)
+            if (1 !== preg_match('/^[a-zA-Z0-9_-]+$/', $serviceKeyRaw)) {
+                // Ungültiger Service-Key - Element nicht ersetzen, um XSS zu verhindern
+                return $matches[0];
+            }
+            $serviceKey = $serviceKeyRaw;
+
+            // Optional: data-consent-provider
+            $provider = '';
+            if (1 === preg_match("/data-consent-provider=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $providerMatch)) {
+                $provider = $providerMatch[1];
+            }
+
+            // Optional: data-consent-privacy (Datenschutz-URL)
+            $privacyUrl = '';
+            if (1 === preg_match("/data-consent-privacy=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $privacyMatch)) {
+                $privacyUrl = $privacyMatch[1];
+            }
+
+            // Optional: data-consent-title
+            $title = '' !== $provider ? $provider : ucfirst($serviceKey);
+            if (1 === preg_match("/data-consent-title=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $titleMatch)) {
+                $title = $titleMatch[1];
+            }
+
+            // Optional: data-consent-text (Custom Placeholder Text)
+            $customText = '';
+            if (1 === preg_match("/data-consent-text=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $textMatch)) {
+                $customText = $textMatch[1];
+            }
+
+            // Original-Tag rekonstruieren
+            $originalTag = '<' . $tag . $attributes . '>' . $content . '</' . $tag . '>';
+
+            // Optionen zusammenstellen
+            $options = [
+                'title' => $title,
+            ];
+
+            if ('' !== $provider) {
+                $options['provider_name'] = $provider;
+            }
+
+            if ('' !== $privacyUrl) {
+                $options['privacy_url'] = $privacyUrl;
+            }
+
+            if ('' !== $customText) {
+                $options['privacy_notice'] = $customText;
+            }
+
+            // Inline-Consent generieren
+            return self::doConsent($serviceKey, $originalTag, $options);
+        }, $html);
+
+        // Error Handling: preg_replace_callback kann null bei PCRE-Fehlern zurückgeben
+        if (null === $result || false === $result) {
+            return $html;
+        }
+
+        return $result;
     }
 }

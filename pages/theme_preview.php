@@ -1,7 +1,7 @@
 <?php
 /**
  * Modern Theme Preview with Website Mockup
- * Shows consent manager themes in a realistic browser mockup with switchable dark/light mode
+ * Shows consent manager themes in a realistic browser mockup with switchable dark/light mode.
  */
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
@@ -442,7 +442,7 @@ $layout = $layouts[array_rand($layouts)];
 
     <?php if ($cmstyle): ?>
         <style><?= $cmstyle ?></style>
-    <?php endif; ?>
+    <?php endif ?>
 </head>
 <body class="layout-<?= $layout ?>">
     <!-- Navigation -->
@@ -478,7 +478,7 @@ $layout = $layouts[array_rand($layouts)];
 
     <!-- Main Content -->
     <main class="main-content">
-        <?php if ($layout === 'sidebar'): ?>
+        <?php if ('sidebar' === $layout): ?>
             <!-- Sidebar Layout -->
             <div class="sidebar-wrapper">
                 <section class="theme-info-section">
@@ -529,7 +529,7 @@ $layout = $layouts[array_rand($layouts)];
                     </div>
                 </section>
             </div>
-        <?php elseif ($layout === 'split'): ?>
+        <?php elseif ('split' === $layout): ?>
             <!-- Split Layout -->
             <div class="left-column">
                 <section class="theme-info-section">
@@ -627,7 +627,7 @@ $layout = $layouts[array_rand($layouts)];
                     <p>Das Theme kann individuell angepasst werden. Farben, Schriften und Layout werden über den Theme-Editor konfiguriert.</p>
                 </div>
             </section>
-        <?php endif; ?>
+        <?php endif ?>
     </main>
 
     <!-- Consent Manager Box -->

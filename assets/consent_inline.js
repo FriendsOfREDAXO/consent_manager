@@ -269,15 +269,85 @@ if (typeof window.consentManagerInline !== 'undefined') {
             
             this.debug('📦 Wrapper children:', {count: wrapper.children.length, children: wrapper.children});
             
+            // Funktion zum rekursiven Finden aller <script>-Tags (auch verschachtelte)
+            function collectAllScripts(element) {
+                var scripts = [];
+                var scriptTags = element.querySelectorAll('script');
+                for (var i = 0; i < scriptTags.length; i++) {
+                    scripts.push(scriptTags[i]);
+                }
+                return scripts;
+            }
+            
+            // Alle Scripts sammeln (inkl. verschachtelte) und durch Platzhalter ersetzen
+            var allScripts = collectAllScripts(wrapper);
+            var scriptPlaceholders = [];
+            
+            allScripts.forEach(function(script) {
+                var placeholder = document.createComment('SCRIPT_PLACEHOLDER_' + scriptPlaceholders.length);
+                script.parentNode.replaceChild(placeholder, script);
+                scriptPlaceholders.push({
+                    placeholder: placeholder,
+                    script: script
+                });
+            });
+            
             // Inhalte vor Container einfügen
             var insertedCount = 0;
             while (wrapper.firstChild) {
-                this.debug('➡️ Inserting child:', wrapper.firstChild);
-                container.parentNode.insertBefore(wrapper.firstChild, container);
+                var child = wrapper.firstChild;
+                this.debug('➡️ Processing child:', child);
+                
+                // Entferne data-consent-* Attribute von allen Elementen
+                if (child.nodeType === 1) { // Element node
+                    var attrsToRemove = [];
+                    for (var i = 0; i < child.attributes.length; i++) {
+                        if (child.attributes[i].name.startsWith('data-consent-')) {
+                            attrsToRemove.push(child.attributes[i].name);
+                        }
+                    }
+                    attrsToRemove.forEach(function(attrName) {
+                        child.removeAttribute(attrName);
+                    });
+                }
+                
+                this.debug('➡️ Inserting child:', child);
+                container.parentNode.insertBefore(child, container);
                 insertedCount++;
             }
             
             this.debug('✅ Inserted ' + insertedCount + ' elements');
+            
+            // Jetzt alle Script-Platzhalter durch neue Script-Tags ersetzen
+            scriptPlaceholders.forEach(function(item) {
+                console.log('🔧 Processing collected SCRIPT tag');
+                var originalScript = item.script;
+                var placeholder = item.placeholder;
+                var newScript = document.createElement('script');
+                
+                // Alle Attribute kopieren AUSSER data-consent-* (sonst würde es wieder blockiert)
+                for (var i = 0; i < originalScript.attributes.length; i++) {
+                    var attr = originalScript.attributes[i];
+                    if (attr.name.indexOf('data-consent-') !== 0) {
+                        newScript.setAttribute(attr.name, attr.value);
+                    }
+                }
+                
+                // Inline-Code kopieren (falls vorhanden)
+                if (originalScript.textContent && originalScript.textContent.trim()) {
+                    console.log('  📝 Copying inline script content');
+                    newScript.textContent = originalScript.textContent;
+                }
+                
+                console.log('🔄 Inserting recreated script tag:', newScript);
+                console.log('  src:', newScript.src);
+                console.log('  Attributes after creation:', newScript.attributes);
+                
+                // Platzhalter durch neues Script ersetzen
+                if (placeholder.parentNode) {
+                    placeholder.parentNode.replaceChild(newScript, placeholder);
+                }
+            });
             
             // Container jetzt entfernen
             container.remove();

@@ -1,7 +1,7 @@
 <?php
 /**
- * Theme Editor Fragment
- * 
+ * Theme Editor Fragment.
+ *
  * Variablen:
  * @var string $themeBase
  * @var array<string, string> $themeBases
@@ -41,7 +41,7 @@ $csrfToken = $this->getVar('csrfToken');
             <p class="text-info"><i class="rex-icon fa-info-circle"></i> <strong>Empfehlung:</strong> Setze die Hintergrund-Transparenz auf mindestens 85-90% für bessere Lesbarkeit. Das generierte Theme respektiert automatisch <code>prefers-reduced-transparency</code> und zeigt dann einen undurchsichtigen Hintergrund.</p>
         </div>
     </div>
-    <?php endif; ?>
+    <?php endif ?>
     
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -53,7 +53,7 @@ $csrfToken = $this->getVar('csrfToken');
                    class="btn <?= $themeBase === $key ? 'btn-primary' : 'btn-default' ?>">
                     <?= rex_escape($label) ?>
                 </a>
-            <?php endforeach; ?>
+            <?php endforeach ?>
         </div>
     </div>
 
@@ -105,7 +105,7 @@ $csrfToken = $this->getVar('csrfToken');
                                 <input type="range" class="form-control" id="background_opacity" name="background_opacity" min="0" max="100" value="<?= rex_escape($colors['background_opacity'] ?? '100') ?>">
                                 <small class="help-block">Für Glaseffekt empfohlen: 70-90%</small>
                             </div>
-                            <?php endif; ?>
+                            <?php endif ?>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -243,7 +243,7 @@ $csrfToken = $this->getVar('csrfToken');
                                 <label for="details_bg_opacity">Hintergrund-Transparenz: <span id="details_bg_opacity_value"><?= rex_escape($colors['details_bg_opacity'] ?? '100') ?>%</span></label>
                                 <input type="range" class="form-control" id="details_bg_opacity" name="details_bg_opacity" min="0" max="100" value="<?= rex_escape($colors['details_bg_opacity'] ?? '100') ?>">
                             </div>
-                            <?php endif; ?>
+                            <?php endif ?>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">

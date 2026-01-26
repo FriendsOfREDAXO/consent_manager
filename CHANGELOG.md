@@ -1,26 +1,43 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.3.0 - 25.01.2026
+## Version 5.3.0 - 26.01.2026
 
 **🚀 Release-Highlights:**  
-Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse und Performance-Optimierungen.
+Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse, Performance-Optimierungen, und neue Editorial-Seite für Redakteure mit Snippet-Manager und Auto-Blocking-Assistent.
 
 ---
 
-### 🧙 Setup-Wizard (NEU)
+### 📝 Editorial-Seite für Redakteure (NEU)
 
-Interaktiver Setup-Assistent für schnelle Erstkonfiguration:
-- **Quickstart-Button** mit animiertem Farbverlauf-Rahmen auf der Konfigurationsseite
-- **4-Schritt-Wizard**: Domain einrichten → Services importieren → Theme auswählen → Fertig
-- **Animierte Loading-Anzeige** mit Wellen-Animation und pulsierenden Punkten
-- **YRewrite-Integration**: Automatische Auswahl aus vorhandenen YRewrite-Domains
-- **Auto-Inject-Option**: Toggle-Switch für automatische Frontend-Einbindung
-- **Template-Positivliste**: Multi-Select für Auswahl aktiver Templates, in denen Consent Manager eingebunden werden soll
-- **Standard/Minimal Setup**: Auswahl zwischen 25 vorkonfigurierten Services oder nur notwendigen Cookies
-- **Duplikat-Prävention**: Überspringt bereits vorhandene Services automatisch
-- **Success-Screen mit Animation**: "HEUREKA!"-Banner mit Blau-Grün-Gradient und animiertem Emoji
-- **Code-Generator**: Fertiger Footer-Link-Code zum Kopieren mit `data-consent-action="settings"` (empfohlen)
-- **Required Group Assignment**: Die "Technisch notwendig"-Gruppe wird automatisch der neuen Domain zugeordnet
+Neue dedizierte Seite für Redakteure ohne Admin-Rechte:
+- **Moderne Card-basierte UI** mit Bootstrap 3 Farben und REDAXO-Design
+- **Code-Snippet-Manager**: Speichern, Laden und Verwalten von häufig genutzten Consent-Codes im Browser LocalStorage
+- **Auto-Blocking-Assistent**: Interaktives Modal zum automatischen Hinzufügen von data-consent-Attributen zu externem Code (YouTube, Maps, Calendly, etc.)
+- **Service-Dropdown**: Auswahl aus bereits konfigurierten Services + Custom-Option für neue Services
+- **Metadata-Felder**: Provider, Datenschutz-URL, Titel und Custom-Text für Platzhalter
+- **Copy-to-Clipboard**: Ein-Klick-Kopieren des generierten Codes
+- **Snippet-Verwaltung**: Benennung, Metadaten und Löschfunktion für gespeicherte Snippets
+- **Akkordeon-Bereiche**: "So funktioniert's", "Service nicht in Liste?", "Datenschutzerklärung nicht vergessen!"
+- **Issue-Tracker-Integration**: Falls installiert, direkte Links zum Melden fehlender Services
+- **Admin-Info-Panel**: Admins können wichtige Hinweise für Redakteure hinterlegen (HTML-Support)
+- **CKE5-Integration-Anleitung**: Schritt-für-Schritt-Anleitung für die Nutzung im Editor
+- **Responsive Layout**: 2/3 Snippets, 1/3 Service/Datenschutz auf Desktop
+- **Dark Theme Support**: Vollständige Unterstützung für REDAXO Dark Theme und prefers-color-scheme
+- **Berechtigung**: `consent_manager[editorial]` für Zugriff ohne Admin-Rechte
+- **Benutzerführung**: Klare Hinweise zu richtiger vs. falscher Verwendung (Content vs. Head/Footer)
+
+### 🔧 Inline-Consent & Auto-Blocking
+
+Erweiterte Funktionen für manuelle Content-Integration:
+- **data-consent-text Attribut**: Individueller Platzhalter-Text pro Element (z.B. "Wir wollen was buchen")
+- **Custom Privacy Notice**: Wird in Fragment `inline_placeholder.php` als `$options['privacy_notice']` übergeben
+- **Script-Ausführung-Fix**: Recreate-Strategie für <script>-Tags nach Consent (Browser Security Workaround)
+- **data-consent-* Attribute-Entfernung**: Verhindert Re-Blocking durch OUTPUT_FILTER nach Consent
+- **Regex-basiertes Scanning**: `scanAndReplaceConsentElements()` findet automatisch blockierte Elemente
+- **UIKit-Theme-Kompatibilität**: Transparent Backgrounds, currentColor, inherit für .uk-light/.uk-dark Support
+- **Backdrop-Filter**: Moderner Glaseffekt für Platzhalter
+- **Console Debugging**: Detaillierte Logs für Script-Ausführung und Consent-Events
+- **Rexstan-konform**: Alle Checks bestanden, strikte Boolean-Vergleiche, Long Ternary
 
 ### 🎨 Domain-spezifische Themes
 

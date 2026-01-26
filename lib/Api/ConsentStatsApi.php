@@ -14,7 +14,7 @@ class ConsentStatsApi extends rex_api_function
     {
         $days = rex_request('days', 'int', 30);
         $stats = ConsentStats::getStats($days);
-        
+
         rex_response::cleanOutputBuffers();
         rex_response::sendJson($stats);
         exit;

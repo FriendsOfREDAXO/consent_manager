@@ -13,7 +13,10 @@ use rex_request;
 use rex_response;
 use rex_url;
 
+use function count;
+use function function_exists;
 use function in_array;
+use function is_array;
 use function is_string;
 
 use const ENT_QUOTES;
@@ -26,32 +29,32 @@ use const PHP_EOL;
 
 class Frontend
 {
-    /** @var array<array<string,mixed>> $cookiegroups */
+    /** @var array<array<string,mixed>> */
     public array $cookiegroups = [];
 
-    /** @var array<array<string,mixed>> $cookies */
+    /** @var array<array<string,mixed>> */
     public array $cookies = [];
 
-    /** @var array<string,string> $texts */
+    /** @var array<string,string> */
     public array $texts = [];
 
     public string $domainName = '';
 
-    /** @var array<string,mixed> $domainInfo */
+    /** @var array<string,mixed> */
     public array $domainInfo = [];
 
-    /** @var array<string,int> $links */
+    /** @var array<string,int> */
     public array $links = [];
 
-    /** @var array<string,string> $scripts */
+    /** @var array<string,string> */
     public array $scripts = [];
 
-    /** @var array<string,string> $scriptsUnselect */
+    /** @var array<string,string> */
     public array $scriptsUnselect = [];
 
     public string $boxClass = '';
 
-    /** @var array<int|string,mixed> $cache */
+    /** @var array<int|string,mixed> */
     public array $cache = [];
 
     public string $version = '';
@@ -181,11 +184,11 @@ class Frontend
                     if (isset($this->cache['cookies'][$clang][$uid])) {
                         $cookieData = $this->cache['cookies'][$clang][$uid];
                         $this->cookies[$uid] = $cookieData;
-                        
+
                         // Fallback zur Start-Sprache wenn Script-Felder leer sind
                         $script = $cookieData['script'] ?? '';
                         $scriptUnselect = $cookieData['script_unselect'] ?? '';
-                        
+
                         // Wenn aktuelle Sprache leer ist, versuche Fallback zur Start-Sprache
                         if ('' === trim($script) && $clang !== rex_clang::getStartId()) {
                             $startLangId = rex_clang::getStartId();
@@ -193,14 +196,14 @@ class Frontend
                                 $script = $this->cache['cookies'][$startLangId][$uid]['script'];
                             }
                         }
-                        
+
                         if ('' === trim($scriptUnselect) && $clang !== rex_clang::getStartId()) {
                             $startLangId = rex_clang::getStartId();
                             if (isset($this->cache['cookies'][$startLangId][$uid]['script_unselect'])) {
                                 $scriptUnselect = $this->cache['cookies'][$startLangId][$uid]['script_unselect'];
                             }
                         }
-                        
+
                         $this->scripts[$uid] = $script;
                         $this->scriptsUnselect[$uid] = $scriptUnselect;
                     }
@@ -254,7 +257,7 @@ class Frontend
         }
         if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable() && function_exists('sprogdown')) {
             /** @phpstan-ignore-next-line */
-            $boxtemplate = \sprogdown($boxtemplate, $clang);
+            $boxtemplate = sprogdown($boxtemplate, $clang);
         }
         $boxtemplate = str_replace("'", "\\'", $boxtemplate);
         $boxtemplate = str_replace("\r", '', $boxtemplate);
@@ -311,21 +314,21 @@ class Frontend
     {
         // Remove comments (using # as delimiter to avoid conflicts with ! in CSS)
         $css = preg_replace('#/\*.*?\*/#s', '', $css);
-        
+
         // Remove whitespace and newlines
         $css = preg_replace('/\s+/', ' ', $css);
-        
+
         // Remove spaces around CSS syntax characters
         // Note: + and - are NOT included to preserve calc() expressions
         $css = preg_replace('/\s*([{}:;,>~])\s*/', '$1', $css);
-        
+
         // Remove space after opening parenthesis and before closing parenthesis
         $css = preg_replace('/\(\s+/', '(', $css);
         $css = preg_replace('/\s+\)/', ')', $css);
-        
+
         // Remove trailing semicolons before closing braces
         $css = preg_replace('/;+}/', '}', $css);
-        
+
         return trim($css);
     }
 
@@ -335,17 +338,17 @@ class Frontend
     public static function getFrontendCss(): string
     {
         $addon = rex_addon::get('consent_manager');
-        
+
         // Standard CSS-Datei
         $_cssfilename = 'consent_manager_frontend.css';
-        
+
         // 1. Prüfen ob Domain-spezifisches Theme existiert
         $domainTheme = null;
         $hasDomainConfig = false;
         if (is_string(rex_request::server('HTTP_HOST'))) {
             $frontend = new self(0);
             $frontend->setDomain(rex_request::server('HTTP_HOST'));
-            
+
             // Prüfen ob Domain konfiguriert ist
             if ('' !== $frontend->domainName) {
                 $hasDomainConfig = true;
@@ -355,7 +358,7 @@ class Frontend
                 }
             }
         }
-        
+
         // 2. Domain-Theme hat Priorität (wenn Domain konfiguriert ist und Theme nicht leer)
         if ($hasDomainConfig && null !== $domainTheme && '' !== $domainTheme) {
             // Validiere Theme-Namen: Erlaube nur alphanumerisch, _, -, / und :
@@ -371,7 +374,7 @@ class Frontend
             }
         }
         // 3. Fallback: Globales Theme (wenn kein Domain-Theme gesetzt oder "Standard" gewählt)
-        if ($_cssfilename === 'consent_manager_frontend.css' && false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
+        if ('consent_manager_frontend.css' === $_cssfilename && false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
             $_themecssfilename = $addon->getConfig('theme', false);
             $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $_themecssfilename));
             if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {
@@ -383,7 +386,7 @@ class Frontend
         if (false === $_csscontent) {
             return '';
         }
-        
+
         // Minify CSS and prepend filename comment for debugging
         return '/*' . $_cssfilename . '*/' . self::minifyCss($_csscontent);
     }
@@ -447,7 +450,7 @@ class Frontend
         // Process with sprog if available
         if (rex_addon::get('sprog')->isInstalled() && rex_addon::get('sprog')->isAvailable() && function_exists('sprogdown')) {
             // @phpstan-ignore-next-line (sprogdown is optional dependency from sprog addon)
-            $sprogResult = \sprogdown($boxtemplate, $clang);
+            $sprogResult = sprogdown($boxtemplate, $clang);
             $boxtemplate = is_string($sprogResult) ? $sprogResult : $boxtemplate;
         }
 
@@ -529,7 +532,7 @@ class Frontend
     public static function getCookieList(string $format = 'table', ?string $domainName = null): string
     {
         $consent = new self(0);
-        
+
         if (null === $domainName) {
             // Aktuelle Domain verwenden
             if (is_string(rex_request::server('HTTP_HOST'))) {
@@ -539,60 +542,60 @@ class Frontend
             // Spezifische Domain verwenden
             $consent->setDomain($domainName);
         }
-        
+
         if (0 === count($consent->cookiegroups)) {
             return '<div class="alert alert-info"><i class="fa fa-info-circle"></i> Keine Cookie-Informationen verfügbar.</div>';
         }
-        
+
         $clang = rex_clang::getCurrentId();
         $output = '';
-        
+
         if ('dl' === $format) {
             // Definition List Format
             $output .= '<dl class="consent-manager-cookie-list">' . PHP_EOL;
-            
+
             foreach ($consent->cookiegroups as $group) {
                 if (!isset($group['cookie_uids']) || 0 === count($group['cookie_uids'])) {
                     continue;
                 }
-                
+
                 $output .= '<dt class="consent-group-name"><strong>' . rex_escape($group['name']) . '</strong></dt>' . PHP_EOL;
                 $output .= '<dd class="consent-group-description">' . $group['description'] . '</dd>' . PHP_EOL;
-                
+
                 foreach ($group['cookie_uids'] as $cookieUid) {
                     if (!isset($consent->cookies[$cookieUid])) {
                         continue;
                     }
-                    
+
                     $cookie = $consent->cookies[$cookieUid];
-                    
+
                     if (isset($cookie['definition']) && is_array($cookie['definition'])) {
                         foreach ($cookie['definition'] as $def) {
                             $output .= '<dt class="consent-cookie-name">' . rex_escape($def['cookie_name'] ?? '') . '</dt>' . PHP_EOL;
                             $output .= '<dd class="consent-cookie-details">' . PHP_EOL;
-                            
+
                             if ('' !== ($cookie['service_name'] ?? '')) {
                                 $output .= '<strong>Service:</strong> ' . rex_escape($cookie['service_name']) . '<br>' . PHP_EOL;
                             }
-                            
+
                             if ('' !== ($def['cookie_purpose'] ?? '')) {
                                 $output .= '<strong>Zweck:</strong> ' . rex_escape($def['cookie_purpose']) . '<br>' . PHP_EOL;
                             }
-                            
+
                             if ('' !== ($def['cookie_lifetime'] ?? '')) {
                                 $output .= '<strong>Laufzeit:</strong> ' . rex_escape($def['cookie_lifetime']) . '<br>' . PHP_EOL;
                             }
-                            
+
                             if ('' !== ($cookie['provider'] ?? '')) {
                                 $output .= '<strong>Anbieter:</strong> ' . rex_escape($cookie['provider']) . PHP_EOL;
                             }
-                            
+
                             $output .= '</dd>' . PHP_EOL;
                         }
                     }
                 }
             }
-            
+
             $output .= '</dl>' . PHP_EOL;
         } else {
             // Table Format (default)
@@ -608,19 +611,19 @@ class Frontend
             $output .= '</tr>' . PHP_EOL;
             $output .= '</thead>' . PHP_EOL;
             $output .= '<tbody>' . PHP_EOL;
-            
+
             foreach ($consent->cookiegroups as $group) {
                 if (!isset($group['cookie_uids']) || 0 === count($group['cookie_uids'])) {
                     continue;
                 }
-                
+
                 foreach ($group['cookie_uids'] as $cookieUid) {
                     if (!isset($consent->cookies[$cookieUid])) {
                         continue;
                     }
-                    
+
                     $cookie = $consent->cookies[$cookieUid];
-                    
+
                     if (isset($cookie['definition']) && is_array($cookie['definition'])) {
                         foreach ($cookie['definition'] as $def) {
                             $output .= '<tr>' . PHP_EOL;
@@ -635,11 +638,11 @@ class Frontend
                     }
                 }
             }
-            
+
             $output .= '</tbody>' . PHP_EOL;
             $output .= '</table>' . PHP_EOL;
         }
-        
+
         return $output;
     }
 }

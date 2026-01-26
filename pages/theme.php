@@ -1,6 +1,5 @@
 <?php
 
-use FriendsOfRedaxo\ConsentManager\Frontend;
 use FriendsOfRedaxo\ConsentManager\Theme;
 use FriendsOfRedaxo\ConsentManager\Utility;
 
@@ -34,7 +33,7 @@ if (!$hasDomains) {
         '<h3><i class="fa fa-globe"></i> Keine Domains konfiguriert</h3>' .
         '<p>Bitte legen Sie zuerst mindestens eine Domain an, bevor Sie Themes konfigurieren.</p>' .
         '<p><a href="' . rex_url::backendPage('consent_manager/domain') . '" class="btn btn-primary">' .
-        '<i class="fa fa-plus"></i> Domain anlegen</a></p>'
+        '<i class="fa fa-plus"></i> Domain anlegen</a></p>',
     );
     return;
 }
@@ -49,7 +48,7 @@ if (!$hasGroups) {
         '<h3><i class="fa fa-list"></i> Keine Cookie-Gruppen konfiguriert</h3>' .
         '<p>Cookie-Gruppen müssen einer Domain zugeordnet sein, bevor Sie Themes verwenden können.</p>' .
         '<p><a href="' . rex_url::backendPage('consent_manager/cookiegroup') . '" class="btn btn-primary">' .
-        '<i class="fa fa-plus"></i> Cookie-Gruppen verwalten</a></p>'
+        '<i class="fa fa-plus"></i> Cookie-Gruppen verwalten</a></p>',
     );
     return;
 }
@@ -75,12 +74,12 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
 if ('1' === rex_request::post('formsubmit', 'string') && '1' === rex_request::post('delete', 'string') && $csrfToken->isValid()) {
     $themeToDelete = rex_request::post('theme', 'string', '');
     $currentTheme = $addon->getConfig('theme', 'consent_manager_frontend.scss');
-    
+
     // Nur project-Themes löschen und nicht das aktive Theme
     if (str_starts_with($themeToDelete, 'project:') && $themeToDelete !== $currentTheme) {
         $scssFile = rex_addon::get('project')->getPath('consent_manager_themes/' . str_replace('project:', '', $themeToDelete));
         $cssFile = $addon->getAssetsPath(str_replace(['project:', '.scss'], ['project_', '.css'], $themeToDelete));
-        
+
         $deleted = false;
         if (file_exists($scssFile)) {
             rex_file::delete($scssFile);
@@ -94,7 +93,7 @@ if ('1' === rex_request::post('formsubmit', 'string') && '1' === rex_request::po
         if (file_exists($publicCss)) {
             rex_file::delete($publicCss);
         }
-        
+
         if ($deleted) {
             echo rex_view::success(rex_i18n::msg('consent_manager_theme_deleted'));
         } else {

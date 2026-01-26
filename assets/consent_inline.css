@@ -1,7 +1,8 @@
 .consent-inline-placeholder {
     /* CSS Custom Properties für individuelle Anpassung */
-    --consent-bg-color: #f8f9fa;
-    --consent-border-color: #dee2e6;
+    --consent-bg-color: transparent;
+    --consent-border-color: currentColor;
+    --consent-border-opacity: 0.3;
     --consent-border-radius: 8px;
     --consent-border-width: 2px;
     --consent-margin: 1rem 0;
@@ -9,10 +10,26 @@
     
     position: relative;
     background: var(--consent-bg-color);
-    border: var(--consent-border-width) dashed var(--consent-border-color);
+    border: var(--consent-border-width) dashed rgba(128, 128, 128, var(--consent-border-opacity));
     border-radius: var(--consent-border-radius);
     overflow: hidden;
     margin: var(--consent-margin);
+    /* Nutze currentColor vom Parent-Element */
+    color: inherit;
+}
+
+/* UIKit uk-light/uk-dark Unterstützung */
+.uk-light .consent-inline-placeholder,
+.uk-section-primary .consent-inline-placeholder,
+.uk-section-secondary .consent-inline-placeholder,
+.uk-card-primary .consent-inline-placeholder,
+.uk-overlay-primary .consent-inline-placeholder {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.uk-dark .consent-inline-placeholder,
+.uk-section-muted .consent-inline-placeholder {
+    border-color: rgba(0, 0, 0, 0.3);
 }
 
 .consent-inline-content {
@@ -42,41 +59,61 @@
 
 .consent-inline-overlay {
     /* Overlay Design Variablen */
-    --consent-overlay-bg: rgba(255, 255, 255, 0.95);
+    --consent-overlay-bg: rgba(255, 255, 255, 0.1);
+    --consent-overlay-backdrop: blur(10px);
     --consent-overlay-padding: 2rem;
     --consent-overlay-border-radius: 8px;
-    --consent-overlay-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --consent-overlay-border: 1px solid rgba(128, 128, 128, 0.2);
+    --consent-overlay-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     --consent-overlay-max-width: 90%;
     
     position: relative;
     z-index: 2;
     background: var(--consent-overlay-bg);
+    backdrop-filter: var(--consent-overlay-backdrop);
+    -webkit-backdrop-filter: var(--consent-overlay-backdrop);
+    border: var(--consent-overlay-border);
     padding: var(--consent-overlay-padding);
     border-radius: var(--consent-overlay-border-radius);
     text-align: center;
     box-shadow: var(--consent-overlay-shadow);
     max-width: var(--consent-overlay-max-width);
     width: auto;
+    color: inherit !important;
+}
+
+/* UIKit Anpassungen für Overlay */
+.uk-light .consent-inline-overlay {
+    background: rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.uk-dark .consent-inline-overlay {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
 }
 
 .consent-inline-icon {
     /* Icon Variablen */
     --consent-icon-size: 3rem;
-    --consent-icon-color: #6c757d;
+    --consent-icon-color: inherit;
     --consent-icon-margin: 1rem;
+    --consent-icon-opacity: 0.7;
     
     font-size: var(--consent-icon-size);
     margin-bottom: var(--consent-icon-margin);
-    color: var(--consent-icon-color);
+    color: var(--consent-icon-color) !important;
+    opacity: var(--consent-icon-opacity);
     line-height: 1;
 }
 
 .consent-inline-icon i {
     font-size: inherit;
+    color: inherit !important;
 }
 
 .consent-inline-icon [uk-icon] {
-    color: inherit;
+    color: inherit !important;
 }
 
 .consent-inline-title {
@@ -89,17 +126,19 @@
     margin: var(--consent-title-margin);
     font-size: var(--consent-title-size);
     font-weight: var(--consent-title-weight);
-    color: var(--consent-title-color);
+    color: var(--consent-title-color) !important;
 }
 
 .consent-inline-notice {
     /* Notice Text Variablen */
-    --consent-notice-color: #6c757d;
+    --consent-notice-color: inherit;
+    --consent-notice-opacity: 0.8;
     --consent-notice-size: 0.9rem;
     --consent-notice-margin: 0 0 1rem 0;
     
     margin: var(--consent-notice-margin);
-    color: var(--consent-notice-color);
+    color: var(--consent-notice-color) !important;
+    opacity: var(--consent-notice-opacity);
     font-size: var(--consent-notice-size);
 }
 
@@ -108,8 +147,9 @@
 }
 
 .consent-inline-privacy-link a {
-    color: #007bff;
-    text-decoration: none;
+    color: inherit !important;
+    opacity: 0.9;
+    text-decoration: underline;
     font-size: 0.85rem;
     display: inline-flex;
     align-items: center;
@@ -117,21 +157,24 @@
 }
 
 .consent-inline-privacy-link a:hover {
-    color: #0056b3;
+    opacity: 1;
     text-decoration: underline;
 }
 
 .consent-inline-privacy-link [uk-icon] {
     margin-right: 0.3rem;
+    opacity: 0.7;
 }
 
 .consent-inline-privacy-link i {
     margin-right: 0.3rem;
+    opacity: 0.7;
 }
 
 .consent-inline-action-text {
     font-size: 0.9rem;
-    color: var(--consent-notice-color, #6c757d);
+    color: inherit !important;
+    opacity: 0.8;
     margin: 0.5rem 0 1rem 0;
     text-align: center;
     font-weight: 500;
@@ -151,17 +194,20 @@
     --consent-btn-min-width: 100px;
 }
 
-/* Alle Buttons mit neutralen, identischen Farben */
+/* Alle Buttons mit adaptiven Farben */
 .btn-consent-once,
 .btn-consent-allow-all,
 .btn-consent-details {
-    --consent-btn-neutral-bg: #6c757d;
-    --consent-btn-neutral-hover-bg: #5a6268;
-    --consent-btn-neutral-color: white;
+    --consent-btn-neutral-bg: rgba(128, 128, 128, 0.2);
+    --consent-btn-neutral-hover-bg: rgba(128, 128, 128, 0.3);
+    --consent-btn-neutral-color: inherit;
+    --consent-btn-border: 1px solid currentColor;
+    --consent-btn-border-opacity: 0.3;
     
-    background: var(--consent-btn-neutral-bg);
-    color: var(--consent-btn-neutral-color);
-    border: none;
+    background: var(--consent-btn-neutral-bg) !important;
+    color: var(--consent-btn-neutral-color) !important;
+    border: var(--consent-btn-border);
+    border-color: rgba(128, 128, 128, var(--consent-btn-border-opacity)) !important;
     padding: var(--consent-btn-padding);
     border-radius: var(--consent-btn-border-radius);
     cursor: pointer;
@@ -174,7 +220,24 @@
 .btn-consent-once:hover,
 .btn-consent-allow-all:hover,
 .btn-consent-details:hover {
-    background: var(--consent-btn-neutral-hover-bg);
+    background: var(--consent-btn-neutral-hover-bg) !important;
+    border-color: rgba(128, 128, 128, 0.5) !important;
+}
+
+/* UIKit uk-light Anpassung */
+.uk-light .btn-consent-once,
+.uk-light .btn-consent-allow-all,
+.uk-light .btn-consent-details {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: white !important;
+}
+
+.uk-light .btn-consent-once:hover,
+.uk-light .btn-consent-allow-all:hover,
+.uk-light .btn-consent-details:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
 }
 
 .sr-only {
