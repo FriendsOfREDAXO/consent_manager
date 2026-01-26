@@ -44,25 +44,26 @@ page:
     log:
       title: "translate:consent_manager_log"
     help:
-      {
-        title: "translate:consent_manager_help",
-        icon: rex-icon fa-question-circle,
-        subPath: README.md,
-        itemClass: pull-right,
-      }
-    inline:
-      {
-        title: "Inline Consent",
-        icon: rex-icon fa-play-circle,
-        subPath: inline.md,
-        itemClass: pull-right,
-      }
-    changelog:
-      {
-        title: "translate:consent_manager_changelog",
-        subPath: CHANGELOG.md,
-        itemClass: pull-right,
-      }
+      title: "translate:consent_manager_help"
+      icon: rex-icon fa-question-circle
+      itemClass: pull-right
+      subpages:
+        readme:
+          title: "Dokumentation"
+          icon: rex-icon fa-book
+          subPath: README.md
+        inline:
+          title: "Inline Consent"
+          icon: rex-icon fa-play-circle
+          subPath: inline.md
+        api:
+          title: "API"
+          icon: rex-icon fa-code
+          subPath: api.md
+        changelog:
+          title: "translate:consent_manager_changelog"
+          icon: rex-icon fa-list
+          subPath: CHANGELOG.md
 
 requires:
   redaxo: "^5.15"
