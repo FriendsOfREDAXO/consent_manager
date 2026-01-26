@@ -277,22 +277,30 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 
                 // Spezielle Behandlung für Script-Tags (müssen neu erstellt werden um ausgeführt zu werden)
                 if (child.nodeName === 'SCRIPT') {
+                    console.log('🔧 Processing SCRIPT tag');
                     var newScript = document.createElement('script');
                     
                     // Alle Attribute kopieren AUSSER data-consent-* (sonst würde es wieder blockiert)
                     for (var i = 0; i < child.attributes.length; i++) {
                         var attr = child.attributes[i];
+                        console.log('  Attribute:', attr.name, '=', attr.value);
                         if (!attr.name.startsWith('data-consent-')) {
+                            console.log('    ✅ Copying attribute:', attr.name);
                             newScript.setAttribute(attr.name, attr.value);
+                        } else {
+                            console.log('    ❌ Skipping consent attribute:', attr.name);
                         }
                     }
                     
                     // Inline-Code kopieren (falls vorhanden)
-                    if (child.innerHTML) {
+                    if (child.innerHTML && child.innerHTML.trim()) {
+                        console.log('  📝 Copying inline script content');
                         newScript.innerHTML = child.innerHTML;
                     }
                     
-                    this.debug('🔄 Inserting recreated script tag');
+                    console.log('🔄 Inserting recreated script tag:', newScript);
+                    console.log('  src:', newScript.src);
+                    console.log('  Attributes after creation:', newScript.attributes);
                     container.parentNode.insertBefore(newScript, container);
                     wrapper.removeChild(child);
                 } else {
