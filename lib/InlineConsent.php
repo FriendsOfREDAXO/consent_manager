@@ -12,15 +12,14 @@
 namespace FriendsOfRedaxo\ConsentManager;
 
 use rex;
-use rex_clang;
 use rex_fragment;
-use rex_sql;
-use rex_sql_exception;
 use rex_url;
 use rex_view;
 
 use function is_array;
 use function strlen;
+
+use const ENT_QUOTES;
 
 class InlineConsent
 {
@@ -431,7 +430,7 @@ class InlineConsent
             $content = $matches[3]; // Tag-Inhalt
 
             // data-consent-service extrahieren (Pflichtfeld)
-            if (!preg_match('/data-consent-service=["\']([^"\']+)["\']/', $attributes, $serviceMatch)) {
+            if (1 !== preg_match("/data-consent-service=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $serviceMatch)) {
                 // Kein Service definiert - Element nicht ersetzen
                 return $matches[0];
             }
@@ -439,25 +438,25 @@ class InlineConsent
 
             // Optional: data-consent-provider
             $provider = '';
-            if (preg_match('/data-consent-provider=["\']([^"\']+)["\']/', $attributes, $providerMatch)) {
+            if (1 === preg_match("/data-consent-provider=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $providerMatch)) {
                 $provider = $providerMatch[1];
             }
 
             // Optional: data-consent-privacy (Datenschutz-URL)
             $privacyUrl = '';
-            if (preg_match('/data-consent-privacy=["\']([^"\']+)["\']/', $attributes, $privacyMatch)) {
+            if (1 === preg_match("/data-consent-privacy=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $privacyMatch)) {
                 $privacyUrl = $privacyMatch[1];
             }
 
             // Optional: data-consent-title
-            $title = $provider ?: ucfirst($serviceKey);
-            if (preg_match('/data-consent-title=["\']([^"\']+)["\']/', $attributes, $titleMatch)) {
+            $title = '' !== $provider ? $provider : ucfirst($serviceKey);
+            if (1 === preg_match("/data-consent-title=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $titleMatch)) {
                 $title = $titleMatch[1];
             }
 
             // Optional: data-consent-text (Custom Placeholder Text)
             $customText = '';
-            if (preg_match('/data-consent-text=["\']([^"\']+)["\']/', $attributes, $textMatch)) {
+            if (1 === preg_match("/data-consent-text=[\"']([^\"'\u{a0}]+)[\"']/", $attributes, $textMatch)) {
                 $customText = $textMatch[1];
             }
 
@@ -485,6 +484,6 @@ class InlineConsent
             return self::doConsent($serviceKey, $originalTag, $options);
         }, $html);
 
-        return $html ?: '';
+        return '' !== $html ? $html : '';
     }
 }

@@ -2,7 +2,7 @@
 
 /**
  * Editorial-Seite für Redakteure
- * Zugriff nur mit consent_manager[editorial] Berechtigung
+ * Zugriff nur mit consent_manager[editorial] Berechtigung.
  */
 
 $addon = rex_addon::get('consent_manager');
@@ -304,7 +304,7 @@ body.rex-theme-dark .panel-default .panel-body {
 
 <div class="rex-addon-output consent-editorial-container">
     <!-- Admin-Hinweise (Full Width wenn vorhanden) -->
-    <?php if (!empty($adminInfo)): ?>
+    <?php if ('' !== $adminInfo): ?>
     <div class="consent-editorial-card card-primary consent-editorial-card-full" style="margin-bottom: 20px;">
         <div class="consent-editorial-card-header">
             <i class="rex-icon fa-info-circle"></i>
@@ -314,7 +314,7 @@ body.rex-theme-dark .panel-default .panel-body {
             <div><?= $adminInfo ?></div>
         </div>
     </div>
-    <?php endif; ?>
+    <?php endif ?>
     
     <!-- Top Grid: Info + Warning -->
     <div class="consent-editorial-grid">
@@ -432,7 +432,7 @@ body.rex-theme-dark .panel-default .panel-body {
                     <div class="consent-highlight-compact" style="margin: 0; padding: 10px; font-size: 12px;">
                         <i class="rex-icon fa-envelope"></i> <?= rex_i18n::rawMsg('consent_manager_editorial_contact_admin_desc') ?>
                     </div>
-                <?php endif; ?>
+                <?php endif ?>
             </div>
         </div>
 
@@ -456,7 +456,7 @@ body.rex-theme-dark .panel-default .panel-body {
                     <a href="<?= rex_url::backendPage('issue_tracker/issues', ['func' => 'add']) ?>" class="btn btn-info btn-block btn-sm">
                         <i class="rex-icon fa-pencil"></i> <?= $addon->i18n('consent_manager_editorial_privacy_issue_title') ?>
                     </a>
-                <?php endif; ?>
+                <?php endif ?>
             </div>
         </div>
         </div>
