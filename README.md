@@ -17,6 +17,8 @@ Das AddOn stellt eine **DSGVO-konforme Lösung** für die Einholung von Einverst
 - ✅ CKE5 oEmbed Integration (YouTube, Vimeo, etc.)
 - ✅ Sprachspezifische Scripts mit automatischem Fallback
 - ✅ Auto-Blocking für manuell eingefügtes HTML (Scripts, iFrames, Embeds)
+- ✅ **Editorial-Seite** für Redakteure mit Code-Assistent und Snippet-Manager (NEU)
+- ✅ **Custom Platzhalter-Texte** pro Element mit `data-consent-text` Attribut (NEU)
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
@@ -191,13 +193,43 @@ Für DSGVO-Konformität muss ein Link zu den Cookie-Einstellungen im Footer plat
 
 **Aktivierung:** `Consent Manager → Einstellungen → Auto-Blocking für manuelles HTML aktivieren`
 
-**📝 Code-Assistent:** Direkt in den Einstellungen über den Button **"Code-Assistent öffnen"** - Interaktives Modal zum Generieren des richtigen Markups mit Copy-to-Clipboard Funktion.
+**🎯 Für Redakteure:** Dedizierte Editorial-Seite unter `Consent Manager → Redaktions-Bereich` mit:
+- **📝 Code-Assistent**: Interaktives Modal zum automatischen Hinzufügen von data-consent-Attributen
+- **💾 Snippet-Manager**: Speichern und Laden häufig genutzter Consent-Codes (Browser LocalStorage)
+- **📚 CKE5-Integration**: Schritt-für-Schritt-Anleitung für die Nutzung im Editor
+- **🔧 Service-Dropdown**: Auswahl aus konfigurierten Services + Custom-Option
+- **📋 Copy-to-Clipboard**: Ein-Klick-Kopieren des generierten Codes
+- **Keine Admin-Rechte nötig**: Zugriff mit Berechtigung `consent_manager[editorial]`
+
+**Beispiel-Workflow für Redakteure:**
+
+1. **Code kopieren** (z.B. von YouTube, Google Maps, Calendly)
+2. **Code-Assistent öffnen** → Code einfügen
+3. **Service auswählen** (YouTube, Maps, etc.)
+4. **Optional**: Provider, Datenschutz-URL, Custom-Text ergänzen
+5. **Code generieren** → `data-consent-*` Attribute werden automatisch hinzugefügt
+6. **Als Snippet speichern** für spätere Wiederverwendung
+7. **In CKE5 einfügen** → Platzhalter erscheint automatisch im Frontend
+
+**Unterstützte Attribute:**
+```html
+<iframe src="https://www.youtube.com/embed/VIDEO_ID"
+        data-consent-block="true"
+        data-consent-service="youtube"
+        data-consent-provider="YouTube"
+        data-consent-privacy="https://policies.google.com/privacy"
+        data-consent-title="Video abspielen"
+        data-consent-text="Wir wollen ein Video zeigen">
+</iframe>
+```
 
 **📖 Ausführliche Dokumentation:** [AUTO_BLOCKING.md](AUTO_BLOCKING.md)
 
 **Anwendungsfall:**
-- Manuell eingefügte Scripts in Templates oder Modulen
-- Legacy-Code mit externen Ressourcen
+- Redakteure ohne Programmierkenntnisse
+- Manuell eingefügte Scripts in CKE5/Redactor
+- Content-Embeds (YouTube, Maps, Calendly, etc.)
+- Wiederkehrende Consent-Elemente
 - Custom Embeds (Analytics, Newsletter-Tools, etc.)
 
 ### CKE5 oEmbed Integration
