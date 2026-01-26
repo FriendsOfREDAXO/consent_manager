@@ -8,7 +8,6 @@
 
 namespace FriendsOfRedaxo\ConsentManager\Api;
 
-use rex;
 use rex_addon;
 use rex_api_function;
 use rex_request;
@@ -22,10 +21,7 @@ class InlineConsentValidate extends rex_api_function
 {
     protected $published = true; // Public API - Frontend needs access
 
-    /**
-     * @return rex_api_result
-     */
-    public function execute()
+    public function execute(): void
     {
         rex_response::cleanOutputBuffers();
 
@@ -83,3 +79,4 @@ class InlineConsentValidate extends rex_api_function
         ]);
         exit;
     }
+}

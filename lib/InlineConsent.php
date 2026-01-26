@@ -12,6 +12,7 @@
 namespace FriendsOfRedaxo\ConsentManager;
 
 use rex;
+use rex_addon;
 use rex_fragment;
 use rex_url;
 use rex_view;
@@ -274,15 +275,15 @@ class InlineConsent
 
         // HMAC-Signatur für Content erstellen
         $encodedContent = base64_encode($content);
-        $addon = \rex_addon::get('consent_manager');
+        $addon = rex_addon::get('consent_manager');
         $secret = $addon->getConfig('hmac_secret', '');
-        
+
         // Secret initialisieren falls noch nicht vorhanden
         if ('' === $secret) {
             $secret = bin2hex(random_bytes(32));
             $addon->setConfig('hmac_secret', $secret);
         }
-        
+
         $hmac = hash_hmac('sha256', $encodedContent, $secret);
 
         // Fragment verwenden für bessere Anpassbarkeit
