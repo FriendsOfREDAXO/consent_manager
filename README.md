@@ -17,8 +17,8 @@ Das AddOn stellt eine **DSGVO-konforme Lösung** für die Einholung von Einverst
 - ✅ CKE5 oEmbed Integration (YouTube, Vimeo, etc.)
 - ✅ Sprachspezifische Scripts mit automatischem Fallback
 - ✅ Auto-Blocking für manuell eingefügtes HTML (Scripts, iFrames, Embeds)
-- ✅ **Editorial-Seite** für Redakteure mit Code-Assistent und Snippet-Manager (NEU)
-- ✅ **Custom Platzhalter-Texte** pro Element mit `data-consent-text` Attribut (NEU)
+- ✅ **Editorial-Seite** für Redakteure mit Code-Assistent und Snippet-Manager und Editor-Recht. 
+- ✅ **Custom Platzhalter-Texte** pro Element mit `data-consent-text` Attribut 
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
@@ -197,7 +197,7 @@ Für DSGVO-Konformität muss ein Link zu den Cookie-Einstellungen im Footer plat
 - **📝 Code-Assistent**: Interaktives Modal zum automatischen Hinzufügen von data-consent-Attributen
 - **💾 Snippet-Manager**: Speichern und Laden häufig genutzter Consent-Codes (Browser LocalStorage)
 - **📚 CKE5-Integration**: Schritt-für-Schritt-Anleitung für die Nutzung im Editor
-- **🔧 Service-Dropdown**: Auswahl aus konfigurierten Services + Custom-Option
+- **🔧 Service-Dropdown**: Auswahl aus konfigurierten Services
 - **📋 Copy-to-Clipboard**: Ein-Klick-Kopieren des generierten Codes
 - **Keine Admin-Rechte nötig**: Zugriff mit Berechtigung `consent_manager[editorial]`
 

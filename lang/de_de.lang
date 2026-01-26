@@ -384,6 +384,7 @@ consent_manager_auto_blocking_assistant_generate = Code generieren
 consent_manager_auto_blocking_assistant_output_label = Generierter Code (kopieren und einfügen)
 consent_manager_auto_blocking_assistant_copy = In Zwischenablage kopieren
 consent_manager_auto_blocking_assistant_copied = Code kopiert!
+consent_manager_auto_blocking_assistant_input_help = Fügen Sie hier Ihren externen Script- oder iframe-Code ein
 
 # Editorial Page
 consent_manager_editorial_title = Redaktions-Bereich

@@ -439,10 +439,15 @@ class InlineConsent
      */
     public static function scanAndReplaceConsentElements(string $html): string
     {
+        // Performance: Early Return wenn kein data-consent-block vorhanden
+        if (false === stripos($html, 'data-consent-block')) {
+            return $html;
+        }
+
         // Pattern für script und iframe Tags mit data-consent-block="true"
         $pattern = '/<(script|iframe|div)([^>]*data-consent-block=["\']true["\'][^>]*)>(.*?)<\/\1>/is';
 
-        $html = preg_replace_callback($pattern, static function ($matches) {
+        $result = preg_replace_callback($pattern, static function ($matches) {
             $tag = $matches[1]; // script, iframe oder div
             $attributes = $matches[2]; // Alle Attribute
             $content = $matches[3]; // Tag-Inhalt
@@ -452,7 +457,14 @@ class InlineConsent
                 // Kein Service definiert - Element nicht ersetzen
                 return $matches[0];
             }
-            $serviceKey = $serviceMatch[1];
+            $serviceKeyRaw = $serviceMatch[1];
+
+            // XSS-Schutz: Service-Key validieren (nur erlaubte Zeichen)
+            if (1 !== preg_match('/^[a-zA-Z0-9_-]+$/', $serviceKeyRaw)) {
+                // Ungültiger Service-Key - Element nicht ersetzen, um XSS zu verhindern
+                return $matches[0];
+            }
+            $serviceKey = $serviceKeyRaw;
 
             // Optional: data-consent-provider
             $provider = '';
@@ -502,6 +514,11 @@ class InlineConsent
             return self::doConsent($serviceKey, $originalTag, $options);
         }, $html);
 
-        return '' !== $html ? $html : '';
+        // Error Handling: preg_replace_callback kann null bei PCRE-Fehlern zurückgeben
+        if (null === $result || false === $result) {
+            return $html;
+        }
+
+        return $result;
     }
 }

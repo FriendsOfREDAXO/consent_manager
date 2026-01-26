@@ -347,7 +347,7 @@ body.rex-theme-dark .panel-default .panel-body {
             <span><?= $addon->i18n('consent_manager_editorial_admin_info_title') ?></span>
         </div>
         <div class="consent-editorial-card-body" style="background: #fff; color: #333;">
-            <div><?= rex_escape($adminInfo, 'html') ?></div>
+            <div><?= $adminInfo ?></div>
         </div>
     </div>
     <?php endif ?>
@@ -552,7 +552,7 @@ body.rex-theme-dark .panel-default .panel-body {
                         <label for="original_code"><?= $addon->i18n('consent_manager_auto_blocking_assistant_input_label') ?></label>
                         <textarea class="form-control" id="original_code" rows="4" 
                                   placeholder="<?= $addon->i18n('consent_manager_auto_blocking_assistant_input_placeholder') ?>"></textarea>
-                        <p class="help-block">Fügen Sie hier Ihren externen Script- oder iframe-Code ein</p>
+                        <p class="help-block"><?= $addon->i18n('consent_manager_auto_blocking_assistant_input_help') ?></p>
                     </div>
 
                     <div class="row">
