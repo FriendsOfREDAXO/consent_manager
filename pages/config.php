@@ -229,7 +229,7 @@ $field->setNotice(rex_i18n::msg('consent_manager_config_editorial_info_notice'))
 $field = $form->addTextField('cookie_name');
 $field->setLabel(rex_i18n::msg('consent_manager_config_cookie_name_label'));
 $field->setAttribute('placeholder', 'consentmanager');
-$field->setAttribute('pattern', '^[A-Za-z0-9_-]+$');
+$field->setAttribute('pattern', '^[A-Za-z0-9_\\-]+$');
 $field->setNotice(rex_i18n::msg('consent_manager_config_cookie_name_notice'));
 
 // Cookie Lebensdauer
