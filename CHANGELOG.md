@@ -26,7 +26,7 @@ Neue dedizierte Seite für Redakteure ohne Admin-Rechte:
 - **Berechtigung**: `consent_manager[editorial]` für Zugriff ohne Admin-Rechte
 - **Benutzerführung**: Klare Hinweise zu richtiger vs. falscher Verwendung (Content vs. Head/Footer)
 
-### 🔧 Inline-Consent & Auto-Blocking
+### 🔧 Inline-Consent & Auto-Blocking (NEU)
 
 Erweiterte Funktionen für manuelle Content-Integration:
 - **data-consent-text Attribut**: Individueller Platzhalter-Text pro Element (z.B. "Wir wollen was buchen")
@@ -39,7 +39,7 @@ Erweiterte Funktionen für manuelle Content-Integration:
 - **Console Debugging**: Detaillierte Logs für Script-Ausführung und Consent-Events
 - **Rexstan-konform**: Alle Checks bestanden, strikte Boolean-Vergleiche, Long Ternary
 
-### 🎨 Domain-spezifische Themes
+### 🎨 Domain-spezifische Themes (NEU)
 
 Jede Domain kann nun ein eigenes Theme verwenden:
 - **2-Spalten-Layout** im Domain-Formular mit dedizierter Theme-Sidebar
@@ -53,7 +53,7 @@ Jede Domain kann nun ein eigenes Theme verwenden:
 - Responsive Design: Sidebar wandert auf mobilen Geräten unter das Formular
 - Sidebar-Widget mit subtilen Schatten und Rahmen, funktioniert in Dark- und Light-Themes
 
-### 🎭 Moderne Theme-Preview
+### 🎭 Moderne Theme-Preview (NEU)
 
 Komplett neu gestaltete Preview-Seite ohne Hintergrundbilder:
 - **32 verschiedene Vorschau-Varianten**: Zufällige Kombination aus 8 Pastellfarben (Pink, Blau, Grün, Lavendel, Pfirsich, Gelb, Türkis, Violett) und 4 Layouts (Default, Centered, Sidebar, Split)
@@ -131,7 +131,7 @@ JavaScript-Dateien umfassend optimiert für bessere Performance:
 - **jQuery-Optimierungen im Backend**: DOM-Elemente gecacht, `one()` statt `on()`/`off()` für einmalige Events
 - **Cookie-Parse-Optimierung**: Cookie-Wert wird einmalig geparst und wiederverwendet
 
-### 🚀 Automatische Frontend-Einbindung
+### 🚀 Automatische Frontend-Einbindung (NEU)
 
 Neues Feature für einfachere Integration ohne Template-Anpassung:
 - **Auto-Inject Option**: Pro Domain aktivierbare automatische Einbindung im Frontend
@@ -153,7 +153,7 @@ Neues Feature für einfachere Integration ohne Template-Anpassung:
   - `auto_inject_focus` - Fokus auf Consent-Box setzen (Barrierefreiheit) (tinyint)
   - `auto_inject_include_templates` - Template-IDs für Positivliste (text)
 
-### 📝 Dokumentation
+### 📝 Dokumentation (NEU)
 
 - **README kompakter**: Emojis aus Überschriften entfernt (außer deprecated-Warnung)
 - **Cookie-Liste**: Nur noch PHP-Integration dokumentiert (`Frontend::getCookieList()`)
@@ -179,7 +179,7 @@ Neues Feature für einfachere Integration ohne Template-Anpassung:
   - `auto_inject_focus` - Fokus auf Consent-Box setzen (Barrierefreiheit) (tinyint)
   - `auto_inject_include_templates` - Template-IDs für Positivliste (text)
 
-#### Auto-Inject Konfigurationsoptionen
+#### Auto-Inject Konfigurationsoptionen (NEU)
 
 **🔄 Reload bei Consent-Änderung**
 - Automatisches Neuladen der Seite nach Consent-Speicherung
