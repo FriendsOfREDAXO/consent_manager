@@ -411,4 +411,70 @@ class InlineConsent
         $cssPath = rex_url::addonAssets('consent_manager', 'consent_inline.css');
         return '<link rel="stylesheet" href="' . $cssPath . '">';
     }
+
+    /**
+     * Scannt HTML-Code und ersetzt Scripts/iframes mit data-consent-Attributen
+     * durch Inline-Consent-Placeholder.
+     *
+     * @api
+     * @param string $html HTML-Content der gescannt werden soll
+     * @return string Bearbeiteter HTML-Content
+     */
+    public static function scanAndReplaceConsentElements(string $html): string
+    {
+        // Pattern für script und iframe Tags mit data-consent-block="true"
+        $pattern = '/<(script|iframe|div)([^>]*data-consent-block=["\']true["\'][^>]*)>(.*?)<\/\1>/is';
+
+        $html = preg_replace_callback($pattern, static function ($matches) {
+            $tag = $matches[1]; // script, iframe oder div
+            $attributes = $matches[2]; // Alle Attribute
+            $content = $matches[3]; // Tag-Inhalt
+
+            // data-consent-service extrahieren (Pflichtfeld)
+            if (!preg_match('/data-consent-service=["\']([^"\']+)["\']/', $attributes, $serviceMatch)) {
+                // Kein Service definiert - Element nicht ersetzen
+                return $matches[0];
+            }
+            $serviceKey = $serviceMatch[1];
+
+            // Optional: data-consent-provider
+            $provider = '';
+            if (preg_match('/data-consent-provider=["\']([^"\']+)["\']/', $attributes, $providerMatch)) {
+                $provider = $providerMatch[1];
+            }
+
+            // Optional: data-consent-privacy (Datenschutz-URL)
+            $privacyUrl = '';
+            if (preg_match('/data-consent-privacy=["\']([^"\']+)["\']/', $attributes, $privacyMatch)) {
+                $privacyUrl = $privacyMatch[1];
+            }
+
+            // Optional: data-consent-title
+            $title = $provider ?: ucfirst($serviceKey);
+            if (preg_match('/data-consent-title=["\']([^"\']+)["\']/', $attributes, $titleMatch)) {
+                $title = $titleMatch[1];
+            }
+
+            // Original-Tag rekonstruieren
+            $originalTag = '<' . $tag . $attributes . '>' . $content . '</' . $tag . '>';
+
+            // Optionen zusammenstellen
+            $options = [
+                'title' => $title,
+            ];
+
+            if ('' !== $provider) {
+                $options['provider_name'] = $provider;
+            }
+
+            if ('' !== $privacyUrl) {
+                $options['privacy_url'] = $privacyUrl;
+            }
+
+            // Inline-Consent generieren
+            return self::doConsent($serviceKey, $originalTag, $options);
+        }, $html);
+
+        return $html ?: '';
+    }
 }

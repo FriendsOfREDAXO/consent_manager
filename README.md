@@ -16,6 +16,7 @@ Das AddOn stellt eine **DSGVO-konforme Lösung** für die Einholung von Einverst
 - ✅ Automatische Frontend-Einbindung (Auto-Inject)
 - ✅ CKE5 oEmbed Integration (YouTube, Vimeo, etc.)
 - ✅ Sprachspezifische Scripts mit automatischem Fallback
+- ✅ Auto-Blocking für manuell eingefügtes HTML (Scripts, iFrames, Embeds)
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
@@ -183,6 +184,21 @@ Für DSGVO-Konformität muss ein Link zu den Cookie-Einstellungen im Footer plat
 - Landing Pages ohne Tracking
 - Einzelne Unterseiten mit Videos/Maps
 - Progressive Consent (nur bei Bedarf)
+
+### Auto-Blocking für manuell eingefügtes HTML
+
+**Auto-Blocking** scannt automatisch das Frontend-HTML und wandelt externe Scripts, iFrames und Embeds mit speziellen Attributen in Consent-Blocker um.
+
+**Aktivierung:** `Consent Manager → Einstellungen → Auto-Blocking für manuelles HTML aktivieren`
+
+**📝 Code-Assistent:** Direkt in den Einstellungen über den Button **"Code-Assistent öffnen"** - Interaktives Modal zum Generieren des richtigen Markups mit Copy-to-Clipboard Funktion.
+
+**📖 Ausführliche Dokumentation:** [AUTO_BLOCKING.md](AUTO_BLOCKING.md)
+
+**Anwendungsfall:**
+- Manuell eingefügte Scripts in Templates oder Modulen
+- Legacy-Code mit externen Ressourcen
+- Custom Embeds (Analytics, Newsletter-Tools, etc.)
 
 ### CKE5 oEmbed Integration
 

@@ -105,6 +105,19 @@ if (rex::isBackend()) {
 
 // Nur im Frontend
 if (rex::isFrontend()) {
+    // Auto-Blocking: Scannt HTML und ersetzt Scripts/iframes mit data-consent-Attributen
+    rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+        $content = $ep->getSubject();
+        
+        // Nur wenn Auto-Blocking aktiviert ist
+        if (rex_addon::get('consent_manager')->getConfig('auto_blocking_enabled', false)) {
+            if (class_exists('\FriendsOfRedaxo\ConsentManager\InlineConsent')) {
+                $content = \FriendsOfRedaxo\ConsentManager\InlineConsent::scanAndReplaceConsentElements($content);
+                $ep->setSubject($content);
+            }
+        }
+    }, rex_extension::EARLY);
+    
     // One-time server-side cookie migration / cleanup for malformed or old cookies (v < 4)
     // This runs only once per visitor (per browser) thanks to the sentinel cookie 'consent_migrated_sent'.
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {

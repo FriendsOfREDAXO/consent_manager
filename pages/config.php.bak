@@ -289,20 +289,7 @@ if ('' !== rex_request::post('_csrf_token', 'string', '')) {
                             <!-- Service Key -->
                             <div class="form-group">
                                 <label for="service_key"><?= $addon->i18n('consent_manager_auto_blocking_assistant_service_label') ?> *</label>
-                                <select class="form-control" id="service_key">
-                                    <option value=""><?= $addon->i18n('consent_manager_auto_blocking_assistant_service_select') ?></option>
-                                    <?php
-                                    // Lade alle verfügbaren Dienste aus der aktuellen Sprache
-                                    $sql = rex_sql::factory();
-                                    $clang_id = rex_clang::getCurrentId();
-                                    $services = $sql->getArray('SELECT uid, service_name FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE clang_id = ? ORDER BY service_name', [$clang_id]);
-                                    foreach ($services as $service) {
-                                        echo '<option value="' . rex_escape($service['uid']) . '">' . rex_escape($service['service_name']) . ' (' . rex_escape($service['uid']) . ')</option>';
-                                    }
-                                    ?>
-                                    <option value="__custom__"><?= $addon->i18n('consent_manager_auto_blocking_assistant_service_custom') ?></option>
-                                </select>
-                                <input type="text" class="form-control" id="service_key_custom" placeholder="z.B. calendly, youtube" style="display: none; margin-top: 10px;">
+                                <input type="text" class="form-control" id="service_key" placeholder="z.B. calendly, youtube">
                                 <p class="help-block"><?= $addon->i18n('consent_manager_auto_blocking_assistant_service_notice') ?></p>
                             </div>
                         </div>
@@ -329,22 +316,7 @@ if ('' !== rex_request::post('_csrf_token', 'string', '')) {
                                 <label for="consent_title"><?= $addon->i18n('consent_manager_auto_blocking_assistant_title_label') ?></label>
                                 <input type="text" class="form-control" id="consent_title" placeholder="z.B. Termin buchen">
                             </div>
-
-                    <!-- Custom Text -->
-                    <div class="form-group">
-                        <label for="consent_text"><?= $addon->i18n('consent_manager_auto_blocking_assistant_text_label') ?></label>
-                        <textarea class="form-control" id="consent_text" rows="2" placeholder="<?= $addon->i18n('consent_manager_auto_blocking_assistant_text_placeholder') ?>"></textarea>
-                        <p class="help-block"><?= $addon->i18n('consent_manager_auto_blocking_assistant_text_notice') ?></p>
-                    </div>
                         </div>
-                    </div>
-
-
-                    <!-- Custom Text -->
-                    <div class="form-group">
-                        <label for="consent_text"><?= $addon->i18n('consent_manager_auto_blocking_assistant_text_label') ?></label>
-                        <textarea class="form-control" id="consent_text" rows="2" placeholder="<?= $addon->i18n('consent_manager_auto_blocking_assistant_text_placeholder') ?>"></textarea>
-                        <p class="help-block"><?= $addon->i18n('consent_manager_auto_blocking_assistant_text_notice') ?></p>
                     </div>
 
                     <!-- Generate Button -->
@@ -400,27 +372,12 @@ if ('' !== rex_request::post('_csrf_token', 'string', '')) {
 jQuery(function($) {
     'use strict';
     
-    // Toggle custom service input
-    $('#service_key').on('change', function() {
-        if ($(this).val() === '__custom__') {
-            $('#service_key_custom').slideDown();
-        } else {
-            $('#service_key_custom').slideUp();
-        }
-    });
-    
     $('#generate_code').on('click', function() {
         var originalCode = $('#original_code').val().trim();
         var serviceKey = $('#service_key').val().trim();
-        
-        // Wenn "Custom" ausgewählt, nutze das Custom-Eingabefeld
-        if (serviceKey === '__custom__') {
-            serviceKey = $('#service_key_custom').val().trim();
-        }
         var providerName = $('#provider_name').val().trim();
         var privacyUrl = $('#privacy_url').val().trim();
         var title = $('#consent_title').val().trim();
-        var customText = $('#consent_text').val().trim();
         
         if (!originalCode) {
             alert('Bitte Original-Code eingeben!');
@@ -454,9 +411,6 @@ jQuery(function($) {
         }
         if (title) {
             $element.attr('data-consent-title', title);
-        }
-        if (customText) {
-            $element.attr('data-consent-text', customText);
         }
         
         // Generierter Code
@@ -525,20 +479,7 @@ jQuery(function($) {
                             <!-- Service Key -->
                             <div class="form-group">
                                 <label for="service_key"><?= $addon->i18n('consent_manager_auto_blocking_assistant_service_label') ?> *</label>
-                                <select class="form-control" id="service_key">
-                                    <option value=""><?= $addon->i18n('consent_manager_auto_blocking_assistant_service_select') ?></option>
-                                    <?php
-                                    // Lade alle verfügbaren Dienste aus der aktuellen Sprache
-                                    $sql = rex_sql::factory();
-                                    $clang_id = rex_clang::getCurrentId();
-                                    $services = $sql->getArray('SELECT uid, service_name FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE clang_id = ? ORDER BY service_name', [$clang_id]);
-                                    foreach ($services as $service) {
-                                        echo '<option value="' . rex_escape($service['uid']) . '">' . rex_escape($service['service_name']) . ' (' . rex_escape($service['uid']) . ')</option>';
-                                    }
-                                    ?>
-                                    <option value="__custom__"><?= $addon->i18n('consent_manager_auto_blocking_assistant_service_custom') ?></option>
-                                </select>
-                                <input type="text" class="form-control" id="service_key_custom" placeholder="z.B. calendly, youtube" style="display: none; margin-top: 10px;">
+                                <input type="text" class="form-control" id="service_key" placeholder="z.B. calendly, youtube">
                                 <p class="help-block"><?= $addon->i18n('consent_manager_auto_blocking_assistant_service_notice') ?></p>
                             </div>
                         </div>
@@ -621,27 +562,12 @@ jQuery(function($) {
 jQuery(function($) {
     'use strict';
     
-    // Toggle custom service input
-    $('#service_key').on('change', function() {
-        if ($(this).val() === '__custom__') {
-            $('#service_key_custom').slideDown();
-        } else {
-            $('#service_key_custom').slideUp();
-        }
-    });
-    
     $('#generate_code').on('click', function() {
         var originalCode = $('#original_code').val().trim();
         var serviceKey = $('#service_key').val().trim();
-        
-        // Wenn "Custom" ausgewählt, nutze das Custom-Eingabefeld
-        if (serviceKey === '__custom__') {
-            serviceKey = $('#service_key_custom').val().trim();
-        }
         var providerName = $('#provider_name').val().trim();
         var privacyUrl = $('#privacy_url').val().trim();
         var title = $('#consent_title').val().trim();
-        var customText = $('#consent_text').val().trim();
         
         if (!originalCode) {
             alert('Bitte Original-Code eingeben!');
@@ -675,9 +601,6 @@ jQuery(function($) {
         }
         if (title) {
             $element.attr('data-consent-title', title);
-        }
-        if (customText) {
-            $element.attr('data-consent-text', customText);
         }
         
         // Generierter Code
