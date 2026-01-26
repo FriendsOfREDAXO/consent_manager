@@ -15,32 +15,176 @@ $adminInfo = $addon->getConfig('editorial_info', '');
 
 ?>
 
+<style>
+/* Editorial Page Styling - Setup Wizard Style */
+.consent-editorial-panel {
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    border: none;
+    overflow: hidden;
+}
+
+.consent-editorial-panel .panel-heading {
+    border-radius: 0;
+    padding: 18px 25px;
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+}
+
+.consent-editorial-panel .panel-body {
+    padding: 25px;
+}
+
+.consent-editorial-panel.panel-primary .panel-heading {
+    background: linear-gradient(135deg, #337ab7 0%, #2e6da4 100%);
+    color: #fff;
+}
+
+.consent-editorial-panel.panel-info .panel-heading {
+    background: linear-gradient(135deg, #5bc0de 0%, #46b8da 100%);
+    color: #fff;
+}
+
+.consent-editorial-panel.panel-warning .panel-heading {
+    background: linear-gradient(135deg, #f0ad4e 0%, #ec971f 100%);
+    color: #fff;
+    border-left: 4px solid #d58512;
+}
+
+.consent-editorial-panel.panel-success .panel-heading {
+    background: linear-gradient(135deg, #5cb85c 0%, #4cae4c 100%);
+    color: #fff;
+}
+
+.consent-editorial-panel.panel-default .panel-heading {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    color: #333;
+}
+
+.consent-editorial-panel .panel-heading .panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.consent-editorial-panel .panel-heading .rex-icon {
+    font-size: 20px;
+}
+
+.consent-editorial-highlight-box {
+    background: rgba(91, 192, 222, 0.1);
+    border-left: 4px solid #5bc0de;
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+.consent-editorial-highlight-box strong {
+    color: #337ab7;
+}
+
+.consent-editorial-list {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.consent-editorial-list li {
+    padding: 10px 0;
+    padding-left: 35px;
+    position: relative;
+}
+
+.consent-editorial-list li:before {
+    content: "\f00c";
+    font-family: FontAwesome;
+    position: absolute;
+    left: 0;
+    color: #5cb85c;
+    font-size: 16px;
+}
+
+/* Dark Theme Support */
+body.rex-theme-dark .consent-editorial-panel {
+    background-color: #374151;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+body.rex-theme-dark .consent-editorial-panel .panel-body {
+    color: #e5e7eb;
+}
+
+body.rex-theme-dark .consent-editorial-highlight-box {
+    background: rgba(91, 192, 222, 0.15);
+    border-left-color: #60a5fa;
+}
+</style>
+
 <div class="rex-addon-output">
     <!-- Admin-Hinweise (wenn vorhanden) -->
     <?php if ('' !== trim($adminInfo)): ?>
-    <div class="panel panel-primary">
+    <div class="panel panel-primary consent-editorial-panel">
         <header class="panel-heading">
             <div class="panel-title">
-                <i class="rex-icon fa-info-circle"></i> <?= $addon->i18n('consent_manager_editorial_admin_info_title') ?>
+                <i class="rex-icon fa-info-circle"></i> 
+                <span><?= $addon->i18n('consent_manager_editorial_admin_info_title') ?></span>
             </div>
         </header>
         <div class="panel-body">
-            <div style="white-space: pre-wrap;"><?= rex_escape($adminInfo) ?></div>
+            <div style="white-space: pre-wrap; line-height: 1.6;"><?= rex_escape($adminInfo) ?></div>
         </div>
     </div>
     <?php endif; ?>
     
     <!-- Willkommens-Info -->
-    <div class="panel panel-info">
+    <div class="panel panel-info consent-editorial-panel">
         <header class="panel-heading">
             <div class="panel-title">
-                <i class="rex-icon fa-info-circle"></i> <?= $addon->i18n('consent_manager_editorial_welcome_title') ?>
+                <i class="rex-icon fa-code"></i>
+                <span><?= $addon->i18n('consent_manager_editorial_welcome_title') ?></span>
             </div>
         </header>
         <div class="panel-body">
-            <p><?= $addon->i18n('consent_manager_editorial_welcome_intro') ?></p>
-            <p><strong><?= $addon->i18n('consent_manager_editorial_welcome_why_title') ?></strong></p>
-            <ul>
+            <p style="font-size: 15px; line-height: 1.6; margin-bottom: 0;"><?= rex_i18n::rawMsg('consent_manager_editorial_welcome_intro') ?></p>
+        </div>
+    </div>
+
+    <!-- Wichtiger Hinweis: Verwendungszweck -->
+    <div class="panel panel-warning consent-editorial-panel">
+        <header class="panel-heading">
+            <div class="panel-title">
+                <i class="rex-icon fa-exclamation-triangle"></i>
+                <span><?= $addon->i18n('consent_manager_editorial_important_title') ?></span>
+            </div>
+        </header>
+        <div class="panel-body">
+            <p style="font-size: 15px; line-height: 1.6;"><?= rex_i18n::rawMsg('consent_manager_editorial_important_text') ?></p>
+            <p style="font-size: 15px; line-height: 1.6;"><strong><?= $addon->i18n('consent_manager_editorial_important_contact') ?></strong></p>
+            
+            <div class="consent-editorial-highlight-box">
+                <p style="margin: 0 0 10px 0;"><strong>✓ Beispiele für RICHTIGE Verwendung:</strong></p>
+                <ul class="consent-editorial-list" style="margin: 0; padding-left: 20px; list-style: disc;">
+                    <li style="padding: 5px 0; padding-left: 0;">YouTube-Video im Artikel einbetten</li>
+                    <li style="padding: 5px 0; padding-left: 0;">Buchungs-Widget von Calendly im Text</li>
+                    <li style="padding: 5px 0; padding-left: 0;">Google Maps Karte in einer Seite</li>
+                    <li style="padding: 5px 0; padding-left: 0;">Instagram-Post im Blog-Beitrag</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warum wichtig? -->
+    <div class="panel panel-default consent-editorial-panel">
+        <header class="panel-heading">
+            <div class="panel-title">
+                <i class="rex-icon fa-question-circle"></i>
+                <span><?= $addon->i18n('consent_manager_editorial_welcome_why_title') ?></span>
+            </div>
+        </header>
+        <div class="panel-body">
+            <ul class="consent-editorial-list">
                 <li><?= rex_i18n::rawMsg('consent_manager_editorial_welcome_reason1') ?></li>
                 <li><?= rex_i18n::rawMsg('consent_manager_editorial_welcome_reason2') ?></li>
                 <li><?= rex_i18n::rawMsg('consent_manager_editorial_welcome_reason3') ?></li>
@@ -49,10 +193,11 @@ $adminInfo = $addon->getConfig('editorial_info', '');
     </div>
 
     <!-- Anleitung -->
-    <div class="panel panel-default">
+    <div class="panel panel-default consent-editorial-panel">
         <header class="panel-heading">
             <div class="panel-title">
-                <i class="rex-icon fa-book"></i> <?= $addon->i18n('consent_manager_editorial_howto_title') ?>
+                <i class="rex-icon fa-book"></i>
+                <span><?= $addon->i18n('consent_manager_editorial_howto_title') ?></span>
             </div>
         </header>
         <div class="panel-body">
@@ -86,10 +231,11 @@ $adminInfo = $addon->getConfig('editorial_info', '');
     </div>
 
     <!-- Gespeicherte Snippets -->
-    <div class="panel panel-default">
+    <div class="panel panel-default consent-editorial-panel">
         <header class="panel-heading">
             <div class="panel-title">
-                <i class="rex-icon fa-bookmark"></i> <?= $addon->i18n('consent_manager_editorial_snippets_title') ?>
+                <i class="rex-icon fa-bookmark"></i>
+                <span><?= $addon->i18n('consent_manager_editorial_snippets_title') ?></span>
             </div>
         </header>
         <div class="panel-body">
@@ -103,11 +249,11 @@ $adminInfo = $addon->getConfig('editorial_info', '');
     </div>
 
     <!-- Service fehlt? -->
-    <div class="panel panel-<?= $hasIssueTracker ? 'success' : 'warning' ?>">
+    <div class="panel panel-<?= $hasIssueTracker ? 'success' : 'warning' ?> consent-editorial-panel">
         <header class="panel-heading">
             <div class="panel-title">
-                <i class="rex-icon fa-<?= $hasIssueTracker ? 'lightbulb-o' : 'exclamation-triangle' ?>"></i> 
-                <?= $addon->i18n('consent_manager_editorial_missing_service_title') ?>
+                <i class="rex-icon fa-<?= $hasIssueTracker ? 'lightbulb-o' : 'exclamation-triangle' ?>"></i>
+                <span><?= $addon->i18n('consent_manager_editorial_missing_service_title') ?></span>
             </div>
         </header>
         <div class="panel-body">
@@ -131,10 +277,11 @@ $adminInfo = $addon->getConfig('editorial_info', '');
     </div>
 
     <!-- Datenschutzerklärung Hinweis -->
-    <div class="panel panel-info">
+    <div class="panel panel-info consent-editorial-panel">
         <header class="panel-heading">
             <div class="panel-title">
-                <i class="rex-icon fa-shield"></i> <?= $addon->i18n('consent_manager_editorial_privacy_title') ?>
+                <i class="rex-icon fa-shield"></i>
+                <span><?= $addon->i18n('consent_manager_editorial_privacy_title') ?></span>
             </div>
         </header>
         <div class="panel-body">
@@ -164,10 +311,11 @@ $adminInfo = $addon->getConfig('editorial_info', '');
     </div>
 
     <!-- Beispiel-Showcase -->
-    <div class="panel panel-default">
+    <div class="panel panel-default consent-editorial-panel">
         <header class="panel-heading collapsed" data-toggle="collapse" data-target="#example-showcase">
             <div class="panel-title" style="cursor: pointer;">
-                <i class="rex-icon fa-code"></i> <?= $addon->i18n('consent_manager_editorial_examples_title') ?>
+                <i class="rex-icon fa-code"></i>
+                <span><?= $addon->i18n('consent_manager_editorial_examples_title') ?></span>
                 <span class="pull-right"><i class="rex-icon fa-chevron-down"></i></span>
             </div>
         </header>

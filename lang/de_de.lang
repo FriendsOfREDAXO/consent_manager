@@ -387,8 +387,11 @@ consent_manager_auto_blocking_assistant_copied = Code kopiert!
 
 # Editorial Page
 consent_manager_editorial_title = Redaktions-Bereich
-consent_manager_editorial_welcome_title = Willkommen im Consent Manager Redaktions-Bereich
-consent_manager_editorial_welcome_intro = Hier können Sie externe Dienste und Inhalte (z.B. YouTube-Videos, Buchungswidgets, Newsletter-Formulare) datenschutzkonform in Ihre Website einbinden.
+consent_manager_editorial_welcome_title = Skripte im Inhalt datenschutzkonform einbinden
+consent_manager_editorial_welcome_intro = Hier haben Sie die Möglichkeit, externe Skripte und Inhalte die laut Anbieter <strong>im Text/Content eingefügt werden müssen</strong>, DSGVO-konform einzubinden (z.B. YouTube-Videos, Buchungswidgets, Kalender).
+consent_manager_editorial_important_title = Wichtig: Nicht für Head/Footer-Skripte!
+consent_manager_editorial_important_text = Sollen Skripte im <code>&lt;head&gt;</code> oder am Ende der Seite (vor <code>&lt;/body&gt;</code>) eingebunden werden, ist dies <strong>nicht der richtige Platz</strong>. Solche globalen Skripte müssen von einem Administrator direkt ins Template eingebaut werden.
+consent_manager_editorial_important_contact = Bitte informieren Sie in diesem Fall einen Administrator oder wenden Sie sich an die zuständige technische Ansprechperson.
 consent_manager_editorial_welcome_why_title = Warum ist das wichtig?
 consent_manager_editorial_welcome_reason1 = <strong>Gesetzliche Pflicht:</strong> DSGVO verlangt, dass Nutzer externen Diensten aktiv zustimmen müssen, bevor Daten übertragen werden.
 consent_manager_editorial_welcome_reason2 = <strong>Schutz der Nutzer:</strong> Dienste wie Google, Facebook & Co. tracken Nutzer - oft ohne deren Wissen.
