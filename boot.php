@@ -16,8 +16,11 @@ $addon = rex_addon::get('consent_manager');
 
 // Nur im Backend
 if (rex::isBackend()) {
+    // Berechtigungen registrieren
     rex_perm::register('consent_manager[texteditonly]');
     rex_perm::register('consent_manager[editor]');
+    rex_perm::register('consent_manager[editorial]');
+    rex_perm::register('consent_manager[config]');
 
     if (null !== rex::getUser()) {
         // Eingeschränkter Zugriff für Nur-Text-Bearbeiter
