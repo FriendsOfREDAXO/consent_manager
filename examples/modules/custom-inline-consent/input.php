@@ -1,12 +1,8 @@
-<?php
-
-/**
- * Demo-Modul: Inline-Consent für Custom iframes/Scripts
+<?=/**
+ * Demo-Modul: Inline-Consent für Custom iframes/Scripts.
  *
  * Eingabe-Teil des Moduls
- */
-
-echo '
+ */ '
 <fieldset>
     <legend>Custom Inline-Consent Demo</legend>
     

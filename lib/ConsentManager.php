@@ -39,7 +39,7 @@ class ConsentManager
      *
      * @param string $uid The cookie uid
      * @param int|null $clangId The clang id (optional, defaults to current clang)
-     * @return array<string, mixed>|null Returns the cookie data array, or null if not found.
+     * @return array<string, mixed>|null returns the cookie data array, or null if not found
      * @api
      */
     public static function getCookieData(string $uid, ?int $clangId = null): ?array
@@ -68,7 +68,6 @@ class ConsentManager
     /**
      * Returns data for a specific domain.
      *
-     * @param string $domain
      * @return array<string, mixed>|null
      * @api
      */
@@ -81,7 +80,6 @@ class ConsentManager
     /**
      * Returns cookie groups for a language.
      *
-     * @param int|null $clangId
      * @return array<string, mixed>
      * @api
      */
@@ -97,7 +95,6 @@ class ConsentManager
     /**
      * Returns cookies for a language.
      *
-     * @param int|null $clangId
      * @return array<string, mixed>
      * @api
      */
@@ -113,7 +110,6 @@ class ConsentManager
     /**
      * Returns texts for a language.
      *
-     * @param int|null $clangId
      * @return array<string, string>
      * @api
      */
@@ -129,7 +125,6 @@ class ConsentManager
     /**
      * Returns the version from cache.
      *
-     * @return string
      * @api
      */
     public static function getVersion(): string
@@ -141,7 +136,6 @@ class ConsentManager
     /**
      * Returns the cache log ID.
      *
-     * @return string
      * @api
      */
     public static function getCacheLogId(): string
@@ -150,13 +144,12 @@ class ConsentManager
         return (string) (self::$cache['cacheLogId'] ?? '');
     }
 
-
     /**
      * Returns the placeholder data for a given cookie uid.
      *
      * @param string $uid The cookie uid
      * @param int|null $clangId The clang id (optional, defaults to current clang)
-     * @return array{image: string, text: string}|null Returns an array with 'image' and 'text' keys, or null if not found.
+     * @return array{image: string, text: string}|null returns an array with 'image' and 'text' keys, or null if not found
      * @api
      */
     public static function getPlaceholderData(string $uid, ?int $clangId = null): ?array

@@ -8,6 +8,7 @@ use FriendsOfRedaxo\ConsentManager\Cronjob\LogDelete;
 use FriendsOfRedaxo\ConsentManager\Cronjob\ThumbnailCleanup;
 use FriendsOfRedaxo\ConsentManager\Frontend;
 use FriendsOfRedaxo\ConsentManager\GoogleConsentMode;
+use FriendsOfRedaxo\ConsentManager\InlineConsent;
 use FriendsOfRedaxo\ConsentManager\OEmbedParser;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 
@@ -86,10 +87,10 @@ if (rex::isBackend()) {
     });
     rex_extension::register('REX_FORM_SAVED', CLang::formSaved(...));
     rex_extension::register('REX_FORM_SAVED', Cache::write(...));
-    
+
     // Domain-Theme: Keine Kompilierung nötig, Theme wird direkt referenziert
     // Die Frontend-Klasse lädt das passende Theme basierend auf der Domain-Config
-    
+
     rex_extension::register('CLANG_ADDED', CLang::clangAdded(...));
     rex_extension::register('CLANG_DELETED', CLang::clangDeleted(...));
 
@@ -108,29 +109,29 @@ if (rex::isFrontend()) {
     // Auto-Blocking: Scannt HTML und ersetzt Scripts/iframes mit data-consent-Attributen
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
         $content = $ep->getSubject();
-        
+
         // Nur wenn Auto-Blocking aktiviert ist
         if (rex_addon::get('consent_manager')->getConfig('auto_blocking_enabled', false)) {
             if (class_exists('\FriendsOfRedaxo\ConsentManager\InlineConsent')) {
-                $content = \FriendsOfRedaxo\ConsentManager\InlineConsent::scanAndReplaceConsentElements($content);
-                
+                $content = InlineConsent::scanAndReplaceConsentElements($content);
+
                 // CSS und JavaScript für Inline-Consent vor </head> einfügen
                 if (false !== stripos($content, '</head>')) {
-                    $assets = \FriendsOfRedaxo\ConsentManager\InlineConsent::getCSS();
-                    $assets .= \FriendsOfRedaxo\ConsentManager\InlineConsent::getJavaScript();
+                    $assets = InlineConsent::getCSS();
+                    $assets .= InlineConsent::getJavaScript();
                     $content = str_ireplace('</head>', $assets . '</head>', $content);
                 }
-                
+
                 $ep->setSubject($content);
             }
         }
     }, rex_extension::EARLY);
-    
+
     // One-time server-side cookie migration / cleanup for malformed or old cookies (v < 4)
     // This runs only once per visitor (per browser) thanks to the sentinel cookie 'consent_migrated_sent'.
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
         // Only attempt migration for real HTTP requests
-        if (php_sapi_name() === 'cli') {
+        if (PHP_SAPI === 'cli') {
             return;
         }
 
@@ -156,7 +157,7 @@ if (rex::isFrontend()) {
             $addonObj = rex_addon::get('consent_manager');
             $ver = (string) $addonObj->getVersion();
             if (preg_match('/^([0-9]+)/', $ver, $m)) {
-                $addonMajor = intval($m[1]);
+                $addonMajor = (int) $m[1];
             }
         } catch (Throwable $e) {
             // ignore and fallback to default major
@@ -165,7 +166,7 @@ if (rex::isFrontend()) {
         if ($raw) {
             $data = json_decode($raw, true);
             // malformed or missing required keys OR cookie major version not equal to current add-on major
-            if (!is_array($data) || empty($data['consents']) || !isset($data['version']) || intval($data['version']) !== $addonMajor) {
+            if (!is_array($data) || empty($data['consents']) || !isset($data['version']) || (int) $data['version'] !== $addonMajor) {
                 $mustDelete = true;
             }
         }
@@ -173,7 +174,7 @@ if (rex::isFrontend()) {
         // delete server-side (works also for HttpOnly cookies)
         if ($mustDelete) {
             $host = $_SERVER['HTTP_HOST'] ?? '';
-            $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+            $secure = (!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS']);
             // expire for current host/path
             setcookie($cookieName, '', time() - 3600, '/', $host, $secure, true);
             // also try shorter flags (some older cookies may differ)
@@ -197,25 +198,25 @@ if (rex::isFrontend()) {
     // Automatische Einbindung im Frontend (wenn pro Domain aktiviert)
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
         $content = $ep->getSubject();
-        
+
         // Nur im echten Frontend, nicht im Backend
         if (rex::isBackend()) {
             return $content;
         }
-        
+
         // Nur wenn HTML-Inhalt (</head> Tag vorhanden)
         if (!is_string($content) || !str_contains($content, '</head>')) {
             return $content;
         }
-        
+
         // Domain-Konfiguration prüfen
         $domain = rex_request::server('HTTP_HOST', 'string', '');
         if ('' === $domain) {
             return $content;
         }
-        
+
         $domain = strtolower($domain);
-        
+
         $sql = rex_sql::factory();
         $sql->setQuery(
             'SELECT auto_inject, auto_inject_reload_on_consent, auto_inject_delay, auto_inject_focus, auto_inject_include_templates 
@@ -223,26 +224,26 @@ if (rex::isFrontend()) {
              WHERE uid = ?',
             [$domain],
         );
-        
+
         // Nur einbinden wenn explizit aktiviert
-        if ($sql->getRows() === 0 || (int) $sql->getValue('auto_inject') !== 1) {
+        if (0 === $sql->getRows() || 1 !== (int) $sql->getValue('auto_inject')) {
             return $content;
         }
-        
+
         // Template-Whitelist prüfen (Positivliste)
         $includeTemplates = $sql->getValue('auto_inject_include_templates');
         if (null !== $includeTemplates && '' !== trim((string) $includeTemplates)) {
             // Template-IDs aus kommagetrennte Liste in Array umwandeln
             $includedIds = array_map('intval', array_filter(
                 array_map('trim', explode(',', (string) $includeTemplates)),
-                static fn($val) => '' !== $val
+                static fn ($val) => '' !== $val,
             ));
-            
+
             // Aktuelles Template-ID ermitteln
             $article = rex_article::getCurrent();
             if (null !== $article) {
                 $currentTemplateId = $article->getTemplateId();
-                
+
                 // Nur einbinden wenn aktuelles Template in der Positivliste ist
                 if (!in_array($currentTemplateId, $includedIds, true)) {
                     return $content;
@@ -253,21 +254,21 @@ if (rex::isFrontend()) {
             }
         }
         // Wenn Positivliste leer ist, in allen Templates einbinden
-        
+
         // Auto-Inject Optionen auslesen
-        $reloadOnConsent = (int) $sql->getValue('auto_inject_reload_on_consent') === 1;
+        $reloadOnConsent = 1 === (int) $sql->getValue('auto_inject_reload_on_consent');
         $delay = (int) $sql->getValue('auto_inject_delay');
-        $focus = (int) $sql->getValue('auto_inject_focus') === 1;
-        
+        $focus = 1 === (int) $sql->getValue('auto_inject_focus');
+
         // Consent Manager CSS und JS generieren
         $frontend = new Frontend(0);
         $frontend->setDomain($domain);
-        
+
         // CSS/JS Fragmente rendern
         $cssFragment = new rex_fragment();
         $cssFragment->setVar('consent_manager', $frontend);
         $css = $cssFragment->parse('ConsentManager/box_cssjs.php');
-        
+
         // JavaScript-Optionen als data-Attribute oder Inline-Script hinzufügen
         $optionsScript = '';
         if ($reloadOnConsent || $delay > 0 || !$focus) {
@@ -279,10 +280,10 @@ if (rex::isFrontend()) {
     };
 </script>';
         }
-        
+
         // Vor </head> einbinden
         $content = str_replace('</head>', $optionsScript . $css . '</head>', $content);
-        
+
         return $content;
     }, rex_extension::LATE);
 

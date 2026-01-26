@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Demo-Modul: Inline-Consent für Custom iframes/Scripts
+ * Demo-Modul: Inline-Consent für Custom iframes/Scripts.
  *
  * Ausgabe-Teil des Moduls
  */
@@ -20,7 +20,6 @@ $privacyNotice = '' !== $privacyNotice ? $privacyNotice : 'Für diesen Inhalt we
 
 // Nur ausgeben wenn Service-Key und Code vorhanden
 if ('' < $serviceKey && '' < $embedCode) {
-
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
     if (class_exists(InlineConsent::class)) {
         echo InlineConsent::getCSS();
@@ -31,9 +30,8 @@ if ('' < $serviceKey && '' < $embedCode) {
     echo InlineConsent::doConsent($serviceKey, $embedCode, [
         'title' => $contentTitle,
         'placeholder_text' => $buttonText,
-        'privacy_notice' => $privacyNotice
+        'privacy_notice' => $privacyNotice,
     ]);
-
 } else {
     // Backend-Preview falls Daten fehlen
     if (rex::isBackend()) {

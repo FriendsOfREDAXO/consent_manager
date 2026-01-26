@@ -13,6 +13,7 @@ use rex_path;
 use rex_url;
 
 use function function_exists;
+use function is_string;
 use function strlen;
 
 use const CURLINFO_HTTP_CODE;
@@ -68,7 +69,7 @@ class ThumbnailCache
         foreach ($thumbnailUrls as $url) {
             try {
                 $imageData = self::downloadImage($url);
-                if ($imageData !== '' && strlen($imageData) > 1000) { // Mindestgröße prüfen
+                if ('' !== $imageData && strlen($imageData) > 1000) { // Mindestgröße prüfen
                     file_put_contents($cacheFile, $imageData);
 
                     // Auch in public assets kopieren für Web-Zugriff
@@ -112,13 +113,13 @@ class ThumbnailCache
             $apiUrl = "https://vimeo.com/api/v2/video/{$videoId}.json";
             $apiResponse = self::downloadImage($apiUrl);
 
-            if ($apiResponse !== '') {
+            if ('' !== $apiResponse) {
                 $data = json_decode($apiResponse, true);
                 if (isset($data[0]['thumbnail_large'])) {
                     $thumbnailUrl = $data[0]['thumbnail_large'];
                     $imageData = self::downloadImage($thumbnailUrl);
 
-                    if ($imageData !== '') {
+                    if ('' !== $imageData) {
                         file_put_contents($cacheFile, $imageData);
 
                         // In public assets kopieren
@@ -145,7 +146,7 @@ class ThumbnailCache
     private static function downloadImage(string $url): string
     {
         // cURL verwenden wenn verfügbar
-        if (function_exists('curl_init') && $url !== '') {
+        if (function_exists('curl_init') && '' !== $url) {
             $ch = curl_init();
             /** @var non-empty-string $url */
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -217,7 +218,7 @@ class ThumbnailCache
 
     /**
      * Cache aufräumen (alte Dateien löschen).
-     * Default: 30 Tage
+     * Default: 30 Tage.
      *
      * @api
      */

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Demo-Modul: Inline-Consent für Vimeo Videos
+ * Demo-Modul: Inline-Consent für Vimeo Videos.
  *
  * Ausgabe-Teil des Moduls
  */
@@ -20,7 +20,6 @@ $customThumbnail = trim('REX_VALUE[5]');
 
 // Nur ausgeben wenn Video-ID vorhanden
 if ('' < $videoId) {
-
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
     if (class_exists(InlineConsent::class)) {
         echo InlineConsent::getCSS();
@@ -32,7 +31,7 @@ if ('' < $videoId) {
         'title' => $videoTitle,
         'width' => $videoWidth,
         'height' => $videoHeight,
-        'privacy_notice' => 'Für Vimeo werden Cookies für erweiterte Player-Funktionen benötigt.'
+        'privacy_notice' => 'Für Vimeo werden Cookies für erweiterte Player-Funktionen benötigt.',
     ];
 
     // Custom Thumbnail falls angegeben
@@ -42,7 +41,6 @@ if ('' < $videoId) {
 
     // Inline-Consent für Vimeo generieren
     echo InlineConsent::doConsent('vimeo', $videoId, $options);
-
 } else {
     // Backend-Preview falls keine Video-ID eingegeben
     if (rex::isBackend()) {

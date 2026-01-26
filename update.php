@@ -19,7 +19,7 @@ if (count(rex_clang::getAllIds()) > 1) {
         . 'LEFT JOIN `' . rex::getTablePrefix() . 'consent_manager_cookie` AS `other_lang` ON `start_lang`.uid = `other_lang`.uid '
         . 'WHERE `start_lang`.clang_id = ? AND `start_lang`.script <> ? AND `other_lang`.script = ? '
         . 'GROUP BY uid, script',
-        [rex_clang::getStartId(), '', '']
+        [rex_clang::getStartId(), '', ''],
     );
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $db = rex_sql::factory();
@@ -81,7 +81,7 @@ if (is_dir($publicAssetsPath)) {
         'steve-johnson-abstract.jpg',
         'water-blue-sky.jpg',
     ];
-    
+
     foreach ($imagesToDelete as $image) {
         $imagePath = $publicAssetsPath . $image;
         if (file_exists($imagePath)) {
@@ -89,4 +89,3 @@ if (is_dir($publicAssetsPath)) {
         }
     }
 }
-

@@ -2,10 +2,13 @@
 
 namespace FriendsOfRedaxo\ConsentManager;
 
+use rex;
 use rex_extension_point;
 use rex_form;
+use rex_response;
 use rex_sql;
 use rex_string;
+use rex_url;
 use rex_view;
 use rex_yaml_parse_exception;
 
@@ -68,7 +71,7 @@ class RexFormSupport
     }
 
     /**
-     * Enhanced service list with toggle switches and config buttons
+     * Enhanced service list with toggle switches and config buttons.
      * @api
      * @param array<array{0: string, 1: string}> $services Array of [checked, uid] pairs
      */
@@ -80,7 +83,7 @@ class RexFormSupport
             $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
         }
         $html .= '<dd>';
-        $html .= '<style nonce="' . \rex_response::getNonce() . '">
+        $html .= '<style nonce="' . rex_response::getNonce() . '">
             .consent_manager-service-list .service-item {
                 display: flex;
                 align-items: center;
@@ -177,12 +180,12 @@ class RexFormSupport
                 }
             }
         </style>';
-        
+
         foreach ($services as $service) {
             $checked = '|1|' === $service[0] ? 'checked' : '';
-            $uid = \rex_escape($service[1]);
-            $configUrl = \rex_url::backendPage('consent_manager/cookie', ['func' => 'edit', 'pid' => self::getCookiePidByUid($uid, $clangId)]);
-            
+            $uid = rex_escape($service[1]);
+            $configUrl = rex_url::backendPage('consent_manager/cookie', ['func' => 'edit', 'pid' => self::getCookiePidByUid($uid, $clangId)]);
+
             $html .= '<div class="service-item">';
             $html .= '<div class="service-left">';
             $html .= '<label class="service-toggle">';
@@ -196,24 +199,24 @@ class RexFormSupport
             $html .= '</a>';
             $html .= '</div>';
         }
-        
+
         $html .= '</dd>';
         $html .= '</dl>';
         return $html;
     }
 
     /**
-     * Helper to get cookie PID by UID
+     * Helper to get cookie PID by UID.
      */
     private static function getCookiePidByUid(string $uid, int $clangId): int
     {
         $sql = rex_sql::factory();
-        $sql->setQuery('SELECT pid FROM ' . \rex::getTable('consent_manager_cookie') . ' WHERE uid = ? AND clang_id = ?', [$uid, $clangId]);
+        $sql->setQuery('SELECT pid FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE uid = ? AND clang_id = ?', [$uid, $clangId]);
         return (int) $sql->getValue('pid');
     }
 
     /**
-     * Active service list with real checkboxes (for add/edit mode)
+     * Active service list with real checkboxes (for add/edit mode).
      * @param array<array{uid: string}> $services Array of service records
      */
     public static function getActiveServiceToggleList(string $label, array $services, int $clangId, string $fieldName, rex_form $form): string
@@ -225,27 +228,27 @@ class RexFormSupport
                 return '' !== $value;
             });
         }
-        
+
         $html = '';
         $html .= '<dl class="rex-form-group form-group consent_manager-service-list-active">';
         if ('' !== $label) {
             $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
         }
         $html .= '<dd>';
-        
+
         // Alle auswählen/abwählen Buttons
         $html .= '<div style="margin-bottom: 10px;">';
         $html .= '<button type="button" class="btn btn-xs btn-info select-all-services" style="margin-right: 5px;"><i class="fa fa-check-square-o"></i> Alle auswählen</button>';
         $html .= '<button type="button" class="btn btn-xs btn-default deselect-all-services"><i class="fa fa-square-o"></i> Alle abwählen</button>';
         $html .= '</div>';
-        
+
         // Live-Suchfeld
         $html .= '<div class="input-group" style="margin-bottom: 12px;">';
         $html .= '<span class="input-group-addon"><i class="fa fa-search"></i></span>';
         $html .= '<input type="text" class="form-control service-search" placeholder="Service suchen..." autocomplete="off">';
         $html .= '</div>';
-        
-        $html .= '<style nonce="' . \rex_response::getNonce() . '">
+
+        $html .= '<style nonce="' . rex_response::getNonce() . '">
             .consent_manager-service-list-active .service-item {
                 display: flex;
                 align-items: center;
@@ -402,18 +405,18 @@ class RexFormSupport
                 }
             }
         </style>';
-        
+
         foreach ($services as $service) {
             $uid = $service['uid'];
             $serviceName = $service['service_name'] ?? $uid;
             $variant = $service['variant'] ?? '';
             $isChecked = in_array($uid, $selectedValues, true);
             $checked = $isChecked ? ' checked' : '';
-            $escapedUid = \rex_escape($uid);
-            $escapedServiceName = \rex_escape($serviceName);
-            $escapedVariant = \rex_escape($variant);
-            $configUrl = \rex_url::backendPage('consent_manager/cookie', ['func' => 'edit', 'pid' => self::getCookiePidByUid($uid, $clangId)]);
-            
+            $escapedUid = rex_escape($uid);
+            $escapedServiceName = rex_escape($serviceName);
+            $escapedVariant = rex_escape($variant);
+            $configUrl = rex_url::backendPage('consent_manager/cookie', ['func' => 'edit', 'pid' => self::getCookiePidByUid($uid, $clangId)]);
+
             $html .= '<div class="service-item" data-uid="' . $escapedUid . '" data-name="' . $escapedServiceName . '" data-variant="' . $escapedVariant . '">';
             $html .= '<div class="service-left">';
             $html .= '<label class="service-toggle">';
@@ -433,8 +436,8 @@ class RexFormSupport
             $html .= '</a>';
             $html .= '</div>';
         }
-        
-        $html .= '<script nonce="' . \rex_response::getNonce() . '">
+
+        $html .= '<script nonce="' . rex_response::getNonce() . '">
         jQuery(function($) {
             // Live-Suche
             $(".consent_manager-service-list-active .service-search").on("keyup", function() {
@@ -464,7 +467,7 @@ class RexFormSupport
             });
         });
         </script>';
-        
+
         $html .= '</dd>';
         $html .= '</dl>';
         return $html;
@@ -511,7 +514,6 @@ class RexFormSupport
 
     /**
      * @api
-     * @param string $hostname
      */
     public static function validateHostname(string $hostname): bool|string
     {
@@ -523,7 +525,7 @@ class RexFormSupport
     }
 
     /**
-     * Prüft ob der Wert nur Kleinbuchstaben enthält
+     * Prüft ob der Wert nur Kleinbuchstaben enthält.
      *
      * @api
      */

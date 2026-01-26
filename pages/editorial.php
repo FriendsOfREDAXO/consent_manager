@@ -15,7 +15,7 @@ $adminInfo = $addon->getConfig('editorial_info', '');
 
 ?>
 
-<style>
+<style nonce="<?= rex_response::getNonce() ?>">
 /* Editorial Page - Modern Card Layout */
 .consent-editorial-container {
     max-width: 1400px;
@@ -643,16 +643,15 @@ jQuery(function($) {
     'use strict';
     
     // LocalStorage Key
-    const STORAGE_KEY = 'consent_manager_snippets';
+    var STORAGE_KEY = 'consent_manager_snippets';
     
     // Snippet-Verwaltung
     const snippetManager = {
         load: function() {
             try {
-                const data = localStorage.getItem(STORAGE_KEY);
+                var data = localStorage.getItem(STORAGE_KEY);
                 return data ? JSON.parse(data) : [];
             } catch (e) {
-                console.error('Fehler beim Laden der Snippets:', e);
                 return [];
             }
         },
@@ -662,14 +661,13 @@ jQuery(function($) {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(snippets));
                 return true;
             } catch (e) {
-                console.error('Fehler beim Speichern der Snippets:', e);
                 alert('Fehler beim Speichern des Snippets. Möglicherweise ist der LocalStorage voll.');
                 return false;
             }
         },
         
         add: function(name, code, metadata) {
-            const snippets = this.load();
+            var snippets = this.load();
             snippets.push({
                 id: Date.now(),
                 name: name,
@@ -681,14 +679,14 @@ jQuery(function($) {
         },
         
         delete: function(id) {
-            const snippets = this.load().filter(s => s.id !== id);
+            var snippets = this.load().filter(function(s) { return s.id !== id; });
             return this.save(snippets);
         },
         
         render: function() {
-            const snippets = this.load();
-            const $container = $('#snippets-list');
-            const $emptyState = $('#snippets-empty-state');
+            var snippets = this.load();
+            var $container = $('#snippets-list');
+            var $emptyState = $('#snippets-empty-state');
             
             if (snippets.length === 0) {
                 $container.hide();
@@ -699,29 +697,29 @@ jQuery(function($) {
             $emptyState.hide();
             $container.empty().show();
             
-            snippets.forEach(snippet => {
-                const date = new Date(snippet.created).toLocaleDateString('de-DE');
-                const $item = $(`
-                    <div class="panel panel-default" data-snippet-id="${snippet.id}">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <strong><i class="rex-icon fa-bookmark"></i> ${$('<div>').text(snippet.name).html()}</strong>
-                                    <br><small class="text-muted">Erstellt: ${date}</small>
-                                    ${snippet.metadata.service ? '<br><small>Service: ' + $('<div>').text(snippet.metadata.service).html() + '</small>' : ''}
-                                </div>
-                                <div class="col-sm-4 text-right">
-                                    <button class="btn btn-primary btn-sm load-snippet" data-snippet-id="${snippet.id}">
-                                        <i class="rex-icon fa-download"></i> <?= $addon->i18n('consent_manager_editorial_snippets_load') ?>
-                                    </button>
-                                    <button class="btn btn-danger btn-sm delete-snippet" data-snippet-id="${snippet.id}">
-                                        <i class="rex-icon fa-trash"></i> <?= $addon->i18n('consent_manager_editorial_snippets_delete') ?>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `);
+            snippets.forEach(function(snippet) {
+                var date = new Date(snippet.created).toLocaleDateString('de-DE');
+                var $item = $(
+                    '<div class="panel panel-default" data-snippet-id="' + snippet.id + '">' +
+                        '<div class="panel-body">' +
+                            '<div class="row">' +
+                                '<div class="col-sm-8">' +
+                                    '<strong><i class="rex-icon fa-bookmark"></i> ' + $('<div>').text(snippet.name).html() + '</strong>' +
+                                    '<br><small class="text-muted">Erstellt: ' + date + '</small>' +
+                                    (snippet.metadata.service ? '<br><small>Service: ' + $('<div>').text(snippet.metadata.service).html() + '</small>' : '') +
+                                '</div>' +
+                                '<div class="col-sm-4 text-right">' +
+                                    '<button class="btn btn-primary btn-sm load-snippet" data-snippet-id="' + snippet.id + '">' +
+                                        '<i class="rex-icon fa-download"></i> <?= $addon->i18n('consent_manager_editorial_snippets_load') ?>' +
+                                    '</button>' +
+                                    '<button class="btn btn-danger btn-sm delete-snippet" data-snippet-id="' + snippet.id + '">' +
+                                        '<i class="rex-icon fa-trash"></i> <?= $addon->i18n('consent_manager_editorial_snippets_delete') ?>' +
+                                    '</button>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>'
+                );
                 $container.append($item);
             });
         }
@@ -732,9 +730,9 @@ jQuery(function($) {
     
     // Snippet laden
     $(document).on('click', '.load-snippet', function() {
-        const id = parseInt($(this).data('snippet-id'));
-        const snippets = snippetManager.load();
-        const snippet = snippets.find(s => s.id === id);
+        var id = parseInt($(this).data('snippet-id'));
+        var snippets = snippetManager.load();
+        var snippet = snippets.find(function(s) { return s.id === id; });
         
         if (!snippet) {
             alert('Snippet nicht gefunden!');
@@ -745,7 +743,7 @@ jQuery(function($) {
         $('#auto-blocking-assistant-modal').modal('show');
         
         // Kurze Verzögerung, damit Modal geladen ist
-        setTimeout(() => {
+        setTimeout(function() { {
             $('#output_code').val(snippet.code);
             $('#output_container').show();
             
@@ -774,7 +772,7 @@ jQuery(function($) {
             return;
         }
         
-        const id = parseInt($(this).data('snippet-id'));
+        var id = parseInt($(this).data('snippet-id'));
         if (snippetManager.delete(id)) {
             snippetManager.render();
         }
@@ -782,9 +780,7 @@ jQuery(function($) {
     
     // Snippet speichern - Modal öffnen
     $('#save_snippet').on('click', function() {
-        console.log('Save snippet clicked');
-        const code = $('#output_code').val();
-        console.log('Code:', code ? code.substring(0, 50) + '...' : 'LEER');
+        var code = $('#output_code').val();
         
         if (!code) {
             alert('Kein Code zum Speichern vorhanden!');
@@ -798,16 +794,15 @@ jQuery(function($) {
     
     // Snippet speichern bestätigen
     $('#confirm_save_snippet').on('click', function() {
-        const name = $('#snippet_name_input').val().trim();
-        console.log('Snippet Name:', name);
+        var name = $('#snippet_name_input').val().trim();
         
         if (!name) {
             alert('Bitte geben Sie einen Namen ein!');
             return;
         }
         
-        const code = $('#output_code').val();
-        const metadata = {
+        var code = $('#output_code').val();
+        var metadata = {
             service: $('#service_key').val(),
             provider: $('#provider_name').val(),
             privacy: $('#privacy_url').val(),
@@ -815,15 +810,10 @@ jQuery(function($) {
             text: $('#consent_text').val()
         };
         
-        console.log('Metadata:', metadata);
-        
         if (snippetManager.add(name, code, metadata)) {
             snippetManager.render();
             $('#snippet-name-modal').modal('hide');
             alert('Snippet erfolgreich gespeichert!');
-            console.log('Snippet gespeichert!');
-        } else {
-            console.error('Fehler beim Speichern des Snippets!');
         }
     });
     
@@ -835,23 +825,9 @@ jQuery(function($) {
         }
     });
     
-    // Toggle custom service input
-    $('#service_key').on('change', function() {
-        if ($(this).val() === '__custom__') {
-            $('#service_key_custom').slideDown();
-        } else {
-            $('#service_key_custom').slideUp();
-        }
-    });
-    
     $('#generate_code').on('click', function() {
         var originalCode = $('#original_code').val().trim();
         var serviceKey = $('#service_key').val().trim();
-        
-        // Wenn "Custom" ausgewählt, nutze das Custom-Eingabefeld
-        if (serviceKey === '__custom__') {
-            serviceKey = $('#service_key_custom').val().trim();
-        }
         var providerName = $('#provider_name').val().trim();
         var privacyUrl = $('#privacy_url').val().trim();
         var title = $('#consent_title').val().trim();

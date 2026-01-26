@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Demo-Modul: Inline-Consent für YouTube Videos
+ * Demo-Modul: Inline-Consent für YouTube Videos.
  *
  * Ausgabe-Teil des Moduls
  */
@@ -19,7 +19,6 @@ $videoHeight = '' !== $videoHeight ? (int) $videoHeight : 315;
 
 // Nur ausgeben wenn Video-ID vorhanden
 if ('' < $videoId) {
-
     // CSS/JS für Inline-Consent einbinden (falls noch nicht geschehen)
     if (class_exists(InlineConsent::class)) {
         echo InlineConsent::getCSS();
@@ -30,12 +29,11 @@ if ('' < $videoId) {
             'title' => $videoTitle,
             'width' => $videoWidth,
             'height' => $videoHeight,
-            'thumbnail' => 'auto'
+            'thumbnail' => 'auto',
         ]);
     } else {
         echo '<div class="alert alert-danger">InlineConsent-Klasse nicht gefunden!</div>';
     }
-
 } else {
     // Backend-Preview falls keine Video-ID eingegeben
     if (rex::isBackend()) {

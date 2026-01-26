@@ -12,7 +12,6 @@
 namespace FriendsOfRedaxo\ConsentManager;
 
 use rex;
-use rex_addon;
 use rex_fragment;
 use rex_url;
 use rex_view;

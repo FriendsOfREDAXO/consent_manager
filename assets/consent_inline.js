@@ -283,12 +283,8 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     // Alle Attribute kopieren AUSSER data-consent-* (sonst würde es wieder blockiert)
                     for (var i = 0; i < child.attributes.length; i++) {
                         var attr = child.attributes[i];
-                        console.log('  Attribute:', attr.name, '=', attr.value);
-                        if (!attr.name.startsWith('data-consent-')) {
-                            console.log('    ✅ Copying attribute:', attr.name);
+                        if (attr.name.indexOf('data-consent-') !== 0) {
                             newScript.setAttribute(attr.name, attr.value);
-                        } else {
-                            console.log('    ❌ Skipping consent attribute:', attr.name);
                         }
                     }
                     

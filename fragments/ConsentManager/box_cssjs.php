@@ -61,7 +61,7 @@ if (0 < count($consent_manager->domainInfo)
         && 1 === $consent_manager->domainInfo['google_consent_mode_debug']) {
         // User für Frontend initialisieren
         rex_backend_login::createUser();
-        
+
         // Nur für eingeloggte Backend-Benutzer
         if (rex_backend_login::hasSession() && null !== rex::getUser()) {
             $debugScriptUrl = $addon->getAssetsUrl('consent_debug.js');
@@ -71,7 +71,7 @@ if (0 < count($consent_manager->domainInfo)
             $googleConsentModeOutput .= '    <script>' . PHP_EOL;
             $googleConsentModeOutput .= '        window.consentManagerDebugConfig = ' . json_encode([
                 'mode' => $consent_manager->domainInfo['google_consent_mode_enabled'],
-                'auto_mapping' => $consent_manager->domainInfo['google_consent_mode_enabled'] === 'auto',
+                'auto_mapping' => 'auto' === $consent_manager->domainInfo['google_consent_mode_enabled'],
                 'debug_enabled' => true,
                 'domain' => rex_request::server('HTTP_HOST'),
                 'cache_log_id' => $consent_manager->cacheLogId,
@@ -159,7 +159,7 @@ $jsConfig = [
     'domain' => rex_request::server('HTTP_HOST', 'string', ''),
     'version' => $consent_manager->version,
     'cacheLogId' => $consent_manager->cacheLogId,
-    'focus' => isset($consent_manager->domainInfo['auto_inject_focus']) ? $consent_manager->domainInfo['auto_inject_focus'] : 1,
+    'focus' => $consent_manager->domainInfo['auto_inject_focus'] ?? 1,
     'mode' => 'opt-in',
 ];
 

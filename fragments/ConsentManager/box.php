@@ -54,12 +54,12 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                     	<?php
                         foreach ($consent_manager->cookiegroups as $cookiegroup) {
                             if (count($cookiegroup['cookie_uids']) >= 1) {
-                                $countDefs	= 0;
-                                $countAll 	= 0;
+                                $countDefs = 0;
+                                $countAll = 0;
                                 if (isset($cookiegroup['cookie_uids'])) {
                                     foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
                                         $countDefs = count($consent_manager->cookies[$cookieUid]['definition'] ?? []);
-                                        $countAll = $countAll + $countDefs;
+                                        $countAll += $countDefs;
                                     }
                                 }
                                 echo '<div class="consent_manager-cookiegroup-title consent_manager-headline">';
@@ -75,26 +75,26 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                                         $cookie = $consent_manager->cookies[$cookieUid];
                                         if (isset($cookie['definition'])) {
                                             foreach ($cookie['definition'] as $def) {
-                                                $serviceName		= '';
+                                                $serviceName = '';
                                                 if ('' !== ($cookie['service_name'] ?? '')) {
                                                     // XSS-Schutz: Service-Name escapen
                                                     $serviceName = '(' . rex_escape($cookie['service_name']) . ')';
                                                 }
 
-                                                $linkTarget		=  '';
-                                                $linkRel		=  '';
-                                                $cookProvider	= strtolower($cookie['provider']);
+                                                $linkTarget = '';
+                                                $linkRel = '';
+                                                $cookProvider = strtolower($cookie['provider']);
 
                                                 /** - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                                                    TODO (!):
-                                                    This is used to detect, if a link targets to a foreign website or is an internal link. If foreign
-                                                    we add rel="noopener noreferrer nofollow" to the link.
-                                                    Beside of German and English the $expressionsAry is not completed for all maybe also used languages yet.
-                                                    Please add for all the other supported languages (in small letters) the used language dependend expressions
-                                                    identifying "this website" in the specific language.
-                                                    For example: "esta pagina" or whatever is used in each language ...
-                                                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - **/
-                                                $expressionsAry = ['diese website','this website'];
+                                                 * TODO (!):
+                                                 * This is used to detect, if a link targets to a foreign website or is an internal link. If foreign
+                                                 * we add rel="noopener noreferrer nofollow" to the link.
+                                                 * Beside of German and English the $expressionsAry is not completed for all maybe also used languages yet.
+                                                 * Please add for all the other supported languages (in small letters) the used language dependend expressions
+                                                 * identifying "this website" in the specific language.
+                                                 * For example: "esta pagina" or whatever is used in each language ...
+                                                 * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+                                                $expressionsAry = ['diese website', 'this website'];
 
                                                 echo '<div class="consent_manager-cookie">';
                                                 // XSS-Schutz: Cookie-Name und Service-Name escapen
@@ -108,12 +108,12 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
 
                                                 if (!in_array($cookProvider, $expressionsAry, true)) {
                                                     $linkTarget = 'target="_blank"';
-                                                    $linkRel	= 'rel="noopener noreferrer nofollow"';
+                                                    $linkRel = 'rel="noopener noreferrer nofollow"';
                                                 }
-                                                echo '<span class="consent_manager-cookie-link-privacy-policy">'.PHP_EOL;
+                                                echo '<span class="consent_manager-cookie-link-privacy-policy">' . PHP_EOL;
                                                 // XSS-Schutz: Provider-Link escapen
-                                                echo '	<a href="' . rex_escape($cookie['provider_link_privacy']) . '" ' . $linkTarget . ' ' . $linkRel . '>' . $consent_manager->texts['link_privacy'] . '</a>'.PHP_EOL;
-                                                echo '</span>'.PHP_EOL;
+                                                echo '	<a href="' . rex_escape($cookie['provider_link_privacy']) . '" ' . $linkTarget . ' ' . $linkRel . '>' . $consent_manager->texts['link_privacy'] . '</a>' . PHP_EOL;
+                                                echo '</span>' . PHP_EOL;
                                                 echo '</div>' . PHP_EOL;
                                             }
                                         }
@@ -164,4 +164,4 @@ foreach ($consent_manager->scriptsUnselect as $uid => $script) {
 }
 ?>
         </div>
-<?php endif; ?>
+<?php endif ?>

@@ -1,12 +1,8 @@
-<?php
-
-/**
- * Demo-Modul: Inline-Consent für Google Maps
+<?=/**
+ * Demo-Modul: Inline-Consent für Google Maps.
  *
  * Eingabe-Teil des Moduls
- */
-
-echo '
+ */ '
 <fieldset>
     <legend>Google Maps Inline-Consent Demo</legend>
     

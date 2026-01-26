@@ -1,5 +1,7 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Cache;
+
 // Cache-Klasse wird ggf. direkt eingebunden, da beim Install/Update der Autoloader nicht aktiv ist
 if (!class_exists('FriendsOfRedaxo\ConsentManager\Cache')) {
     require_once __DIR__ . '/lib/Cache.php';
@@ -229,7 +231,7 @@ if (rex_addon::get('cronjob')->isAvailable()) {
 
 // Rewrite
 // Cache-Klasse wurde oben bereits eingebunden
-FriendsOfRedaxo\ConsentManager\Cache::forceWrite();
+Cache::forceWrite();
 
 // Delete Template cache
 rex_dir::delete(rex_path::cache('addons/templates'));

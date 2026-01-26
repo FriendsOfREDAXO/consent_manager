@@ -1,7 +1,7 @@
 <?php
 /**
  * Fragment: Setup Wizard mit AJAX Polling
- * Reaktiver Setup-Assistent für erste Einrichtung
+ * Reaktiver Setup-Assistent für erste Einrichtung.
  */
 
 /** @var rex_fragment $this */
@@ -34,21 +34,21 @@ if (rex_addon::exists('yrewrite') && rex_addon::get('yrewrite')->isAvailable()) 
         $cleanDomain = preg_replace('#^https?://#i', '', $domain->getUrl());
         $cleanDomain = rtrim($cleanDomain, '/');
         $cleanDomain = strtolower($cleanDomain);
-        
+
         // Duplikate vermeiden (z.B. wenn eine Domain sowohl als Standard als auch regulär existiert)
         if (!in_array($cleanDomain, $allYRewriteDomains, true)) {
             $allYRewriteDomains[] = $cleanDomain;
         }
-        
+
         // Nur nicht-konfigurierte Domains anbieten
         if (!in_array($cleanDomain, $configuredDomains, true) && !in_array($cleanDomain, $yrewriteDomains, true)) {
             $yrewriteDomains[] = $cleanDomain;
         }
     }
-    
+
     // Debug-Info generieren
-    if (count($yrewriteDomains) === 0) {
-        if (count($allYRewriteDomains) === 0) {
+    if (0 === count($yrewriteDomains)) {
+        if (0 === count($allYRewriteDomains)) {
             $yrewriteDebugInfo = '<div class="alert alert-info"><i class="fa fa-info-circle"></i> <strong>YRewrite ist aktiv, aber keine Domains angelegt.</strong><br>Legen Sie zuerst Domains in YRewrite an.</div>';
         } else {
             $yrewriteDebugInfo = '<div class="alert alert-warning"><i class="fa fa-check-circle"></i> <strong>Alle YRewrite-Domains bereits konfiguriert:</strong> ' . implode(', ', $configuredDomains) . '</div>';
@@ -698,7 +698,7 @@ body.rex-theme-dark details > div code {
                                                 <label class="control-label" style="font-weight: normal;">
                                                     <?= rex_i18n::msg('consent_manager_wizard_privacy_policy') ?>
                                                 </label>
-                                                <?= rex_var_link::getWidget('wizard_privacy', 'privacy_policy', '', []); ?>
+                                                <?= rex_var_link::getWidget('wizard_privacy', 'privacy_policy', '', []) ?>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -706,7 +706,7 @@ body.rex-theme-dark details > div code {
                                                 <label class="control-label" style="font-weight: normal;">
                                                     <?= rex_i18n::msg('consent_manager_wizard_legal_notice') ?>
                                                 </label>
-                                                <?= rex_var_link::getWidget('wizard_imprint', 'legal_notice', '', []); ?>
+                                                <?= rex_var_link::getWidget('wizard_imprint', 'legal_notice', '', []) ?>
                                             </div>
                                         </div>
                                     </div>
@@ -1502,7 +1502,7 @@ jQuery(function($) {
         $('#wizard-progress-bar').css('width', '0%');
         $('#wizard-progress-text').text('0%');
         $('#wizard-status').removeClass('alert-danger alert-success').addClass('alert-info');
-        $('#wizard-status-text').html('<i class="fa fa-spinner fa-spin"></i> <?= rex_i18n::msg("consent_manager_wizard_starting") ?>');
+        $('#wizard-status-text').html('<i class="fa fa-spinner fa-spin"></i> <?= rex_i18n::msg('consent_manager_wizard_starting') ?>');
         
         // Log leeren
         $('#wizard-log-content').empty();

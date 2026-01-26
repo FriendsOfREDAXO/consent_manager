@@ -1,8 +1,8 @@
 <?php
 
 /**
- * A11y Theme Editor Page
- * 
+ * A11y Theme Editor Page.
+ *
  * Backend-Seite zum Erstellen von barrierefreien Themes.
  */
 
