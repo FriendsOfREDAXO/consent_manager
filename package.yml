@@ -9,14 +9,14 @@ page:
   pjax: true
   icon: rex-icon fa-solid fa-cookie-bite
   subpages:
-    editorial:
-      title: "translate:consent_manager_editorial_title"
-      icon: rex-icon fa-edit
-      perm: consent_manager[editorial]
     config:
       title: "Settings"
       icon: rex-icon fa-cog
       perm: consent_manager[config]
+    editorial:
+      title: "translate:consent_manager_editorial_title"
+      icon: rex-icon fa-edit
+      perm: consent_manager[editorial]
     cookiegroup:
       title: "translate:consent_manager_cookiegroups"
       icon: rex-icon fa-folder-open
