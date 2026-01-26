@@ -341,17 +341,23 @@ class Frontend
         
         // 1. Prüfen ob Domain-spezifisches Theme existiert
         $domainTheme = null;
+        $hasDomainConfig = false;
         if (is_string(rex_request::server('HTTP_HOST'))) {
             $frontend = new self(0);
             $frontend->setDomain(rex_request::server('HTTP_HOST'));
             
-            if (!empty($frontend->domainInfo['theme'])) {
-                $domainTheme = $frontend->domainInfo['theme'];
+            // Prüfen ob Domain konfiguriert ist
+            if ('' !== $frontend->domainName) {
+                $hasDomainConfig = true;
+                // Theme auslesen - auch wenn leer (= "Standard" gewählt)
+                if (isset($frontend->domainInfo['theme'])) {
+                    $domainTheme = $frontend->domainInfo['theme'];
+                }
             }
         }
         
-        // 2. Domain-Theme hat Priorität
-        if ($domainTheme) {
+        // 2. Domain-Theme hat Priorität (wenn Domain konfiguriert ist und Theme nicht leer)
+        if ($hasDomainConfig && null !== $domainTheme && '' !== $domainTheme) {
             // Validiere Theme-Namen: Erlaube nur alphanumerisch, _, -, / und :
             // Verhindere Path-Traversal durch ..
             if (preg_match('/^[a-zA-Z0-9_\-\/:.]+$/', $domainTheme) && !str_contains($domainTheme, '..')) {
@@ -364,8 +370,8 @@ class Frontend
                 }
             }
         }
-        // 3. Fallback: Globales Theme
-        elseif (false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
+        // 3. Fallback: Globales Theme (wenn kein Domain-Theme gesetzt oder "Standard" gewählt)
+        if ($_cssfilename === 'consent_manager_frontend.css' && false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
             $_themecssfilename = $addon->getConfig('theme', false);
             $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $_themecssfilename));
             if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {
