@@ -129,6 +129,12 @@ class InlineConsent
      */
     private static function renderYouTubePlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
+        // Wenn bereits ein kompletter iframe übergeben wurde (z.B. von scanAndReplaceConsentElements),
+        // diesen direkt als generischen Placeholder verwenden
+        if (str_starts_with(trim($videoId), '<iframe')) {
+            return self::renderGenericPlaceholder($serviceKey, $videoId, $options, $consentId, $service);
+        }
+
         // Video ID extrahieren falls komplette URL übergeben wurde
         $extractedId = self::extractYouTubeId($videoId);
         if (null !== $extractedId) {
@@ -180,6 +186,12 @@ class InlineConsent
      */
     private static function renderVimeoPlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
+        // Wenn bereits ein kompletter iframe übergeben wurde (z.B. von scanAndReplaceConsentElements),
+        // diesen direkt als generischen Placeholder verwenden
+        if (str_starts_with(trim($videoId), '<iframe')) {
+            return self::renderGenericPlaceholder($serviceKey, $videoId, $options, $consentId, $service);
+        }
+
         // Video ID extrahieren
         $extractedId = self::extractVimeoId($videoId);
         if (null !== $extractedId) {
@@ -234,6 +246,12 @@ class InlineConsent
      */
     private static function renderGoogleMapsPlaceholder(string $serviceKey, string $embedUrl, array $options, string $consentId, array $service): string
     {
+        // Wenn bereits ein kompletter iframe übergeben wurde (z.B. von scanAndReplaceConsentElements),
+        // diesen direkt als generischen Placeholder verwenden
+        if (str_starts_with(trim($embedUrl), '<iframe')) {
+            return self::renderGenericPlaceholder($serviceKey, $embedUrl, $options, $consentId, $service);
+        }
+
         $iframe = '<iframe src="' . rex_escape($embedUrl) . '" 
                    width="' . ($options['width'] ?? '100%') . '" height="' . ($options['height'] ?? '450') . '" 
                    style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
