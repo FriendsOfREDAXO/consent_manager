@@ -308,14 +308,20 @@ class Frontend
      */
     private static function minifyCss(string $css): string
     {
-        // Remove comments
-        $css = preg_replace('!/\*.*?\*/!s', '', $css);
+        // Remove comments (using # as delimiter to avoid conflicts with ! in CSS)
+        $css = preg_replace('#/\*.*?\*/#s', '', $css);
         
         // Remove whitespace and newlines
         $css = preg_replace('/\s+/', ' ', $css);
         
-        // Remove spaces around CSS syntax characters
-        $css = preg_replace('/\s*([{}:;,>+~()])\s*/', '$1', $css);
+        // Remove spaces around CSS syntax characters, but NOT inside parentheses
+        // to preserve calc() and other CSS functions
+        $css = preg_replace('/\s*([{}:;,>+~])\s*/', '$1', $css);
+        
+        // Remove space after opening parenthesis and before closing parenthesis
+        // but preserve spaces between operators in calc() expressions
+        $css = preg_replace('/\(\s+/', '(', $css);
+        $css = preg_replace('/\s+\)/', ')', $css);
         
         // Remove trailing semicolons before closing braces
         $css = preg_replace('/;+}/', '}', $css);
@@ -372,8 +378,8 @@ class Frontend
             return '';
         }
         
-        // Minify CSS before output
-        return self::minifyCss($_csscontent);
+        // Minify CSS and prepend filename comment for debugging
+        return '/*' . $_cssfilename . '*/' . self::minifyCss($_csscontent);
     }
 
     /**
