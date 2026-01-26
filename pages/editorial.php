@@ -16,327 +16,479 @@ $adminInfo = $addon->getConfig('editorial_info', '');
 ?>
 
 <style>
-/* Editorial Page Styling - Setup Wizard Style */
-.consent-editorial-panel {
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    margin-bottom: 25px;
-    border: none;
-    overflow: hidden;
+/* Editorial Page - Modern Card Layout */
+.consent-editorial-container {
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.consent-editorial-panel .panel-heading {
+.consent-editorial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.consent-editorial-card {
+    background: #fff;
     border-radius: 0;
-    padding: 18px 25px;
-    border-bottom: 2px solid rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: all 0.2s ease;
+    border: 1px solid #ddd;
 }
 
-.consent-editorial-panel .panel-body {
-    padding: 25px;
+.consent-editorial-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
 }
 
-.consent-editorial-panel.panel-primary .panel-heading {
-    background: linear-gradient(135deg, #337ab7 0%, #2e6da4 100%);
-    color: #fff;
-}
-
-.consent-editorial-panel.panel-info .panel-heading {
-    background: linear-gradient(135deg, #5bc0de 0%, #46b8da 100%);
-    color: #fff;
-}
-
-.consent-editorial-panel.panel-warning .panel-heading {
-    background: linear-gradient(135deg, #f0ad4e 0%, #ec971f 100%);
-    color: #fff;
-    border-left: 4px solid #d58512;
-}
-
-.consent-editorial-panel.panel-success .panel-heading {
-    background: linear-gradient(135deg, #5cb85c 0%, #4cae4c 100%);
-    color: #fff;
-}
-
-.consent-editorial-panel.panel-default .panel-heading {
-    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
-    color: #333;
-}
-
-.consent-editorial-panel .panel-heading .panel-title {
-    font-size: 16px;
+.consent-editorial-card-header {
+    padding: 15px 20px;
     font-weight: 600;
+    font-size: 15px;
     display: flex;
     align-items: center;
     gap: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
-.consent-editorial-panel .panel-heading .rex-icon {
-    font-size: 20px;
+.consent-editorial-card-header i {
+    font-size: 18px;
+    opacity: 0.9;
 }
 
-.consent-editorial-highlight-box {
-    background: rgba(91, 192, 222, 0.1);
-    border-left: 4px solid #5bc0de;
-    padding: 15px 20px;
-    border-radius: 4px;
-    margin: 15px 0;
+.consent-editorial-card-body {
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
-.consent-editorial-highlight-box strong {
-    color: #337ab7;
+/* Card Variants - Bootstrap 3 Standard Colors */
+.card-primary .consent-editorial-card-header {
+    background: #337ab7;
+    color: #fff;
+    border-color: #2e6da4;
 }
 
-.consent-editorial-list {
+.card-info .consent-editorial-card-header {
+    background: #5bc0de;
+    color: #fff;
+    border-color: #46b8da;
+}
+
+.card-warning .consent-editorial-card-header {
+    background: #f0ad4e;
+    color: #fff;
+    border-color: #eea236;
+}
+
+.card-success .consent-editorial-card-header {
+    background: #5cb85c;
+    color: #fff;
+    border-color: #4cae4c;
+}
+
+.card-default .consent-editorial-card-header {
+    background: #f5f5f5;
+    color: #333;
+    border-color: #ddd;
+}
+
+/* Full Width Cards */
+.consent-editorial-card-full {
+    grid-column: 1 / -1;
+}
+
+/* Two-Thirds Width Cards */
+.consent-editorial-card-twothirds {
+    grid-column: span 2;
+}
+
+/* Compact Lists */
+.consent-compact-list {
     list-style: none;
     padding: 0;
-    margin: 15px 0;
+    margin: 0;
 }
 
-.consent-editorial-list li {
-    padding: 10px 0;
-    padding-left: 35px;
+.consent-compact-list li {
+    padding: 8px 0;
+    padding-left: 25px;
     position: relative;
+    font-size: 13px;
 }
 
-.consent-editorial-list li:before {
-    content: "\f00c";
-    font-family: FontAwesome;
+.consent-compact-list li:before {
+    content: "✓";
     position: absolute;
     left: 0;
     color: #5cb85c;
-    font-size: 16px;
+    font-weight: bold;
 }
 
-/* Dark Theme Support */
-body.rex-theme-dark .consent-editorial-panel {
-    background-color: #374151;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+/* Highlight Box - Compact */
+.consent-highlight-compact {
+    background: rgba(91, 192, 222, 0.08);
+    border-left: 3px solid #5bc0de;
+    padding: 12px 15px;
+    border-radius: 0;
+    margin: 12px 0;
+    font-size: 13px;
 }
 
-body.rex-theme-dark .consent-editorial-panel .panel-body {
+/* Steps - Compact */
+.consent-steps-compact {
+    counter-reset: step-counter;
+    list-style: none;
+    padding: 0;
+}
+
+.consent-steps-compact li {
+    counter-increment: step-counter;
+    padding: 10px 0;
+    padding-left: 40px;
+    position: relative;
+    font-size: 13px;
+}
+
+.consent-steps-compact li:before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 28px;
+    height: 28px;
+    background: #337ab7;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.consent-steps-compact li strong {
+    display: block;
+    margin-bottom: 3px;
+    color: #337ab7;
+}
+
+/* CTA Button */
+.consent-cta-button {
+    display: inline-block;
+    margin-top: 15px;
+    width: 100%;
+}
+
+/* Dark Theme Support - REDAXO Theme & System Preference */
+@media (prefers-color-scheme: dark) {
+    body:not(.rex-theme-light) .consent-editorial-card,
+    body.rex-theme-dark .consent-editorial-card {
+        background: #1f2937;
+        border-color: rgba(255,255,255,0.1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    body:not(.rex-theme-light) .consent-editorial-card:hover,
+    body.rex-theme-dark .consent-editorial-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    
+    body:not(.rex-theme-light) .consent-editorial-card-body,
+    body.rex-theme-dark .consent-editorial-card-body {
+        color: #e5e7eb !important;
+        background: #1f2937 !important;
+    }
+    
+    body:not(.rex-theme-light) .card-default .consent-editorial-card-header,
+    body.rex-theme-dark .card-default .consent-editorial-card-header {
+        background: #374151;
+        color: #e5e7eb;
+        border-bottom-color: rgba(255,255,255,0.1);
+    }
+    
+    body:not(.rex-theme-light) .consent-highlight-compact,
+    body.rex-theme-dark .consent-highlight-compact {
+        background: rgba(91, 192, 222, 0.15);
+        border-color: rgba(91, 192, 222, 0.3);
+    }
+    
+    body:not(.rex-theme-light) .consent-steps-compact li strong,
+    body.rex-theme-dark .consent-steps-compact li strong {
+        color: #60a5fa;
+    }
+    
+    body:not(.rex-theme-light) .consent-compact-list li:before,
+    body.rex-theme-dark .consent-compact-list li:before {
+        color: #60a5fa;
+    }
+    
+    body:not(.rex-theme-light) .alert-info,
+    body.rex-theme-dark .alert-info {
+        background: rgba(91, 192, 222, 0.15);
+        border-color: rgba(91, 192, 222, 0.3);
+        color: #e5e7eb;
+    }
+    
+    body:not(.rex-theme-light) .panel-default,
+    body.rex-theme-dark .panel-default {
+        background: #374151;
+        border-color: rgba(255,255,255,0.1);
+    }
+    
+    body:not(.rex-theme-light) .panel-default .panel-body,
+    body.rex-theme-dark .panel-default .panel-body {
+        color: #e5e7eb;
+    }
+}
+
+/* Forced Dark Theme */
+body.rex-theme-dark .consent-editorial-card {
+    background: #1f2937;
+    border-color: rgba(255,255,255,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+body.rex-theme-dark .consent-editorial-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+body.rex-theme-dark .consent-editorial-card-body {
+    color: #e5e7eb !important;
+    background: #1f2937 !important;
+}
+
+body.rex-theme-dark .card-default .consent-editorial-card-header {
+    background: #374151;
+    color: #e5e7eb;
+    border-bottom-color: rgba(255,255,255,0.1);
+}
+
+body.rex-theme-dark .consent-highlight-compact {
+    background: rgba(91, 192, 222, 0.15);
+    border-color: rgba(91, 192, 222, 0.3);
+}
+
+body.rex-theme-dark .consent-steps-compact li strong {
+    color: #60a5fa;
+}
+
+body.rex-theme-dark .consent-compact-list li:before {
+    color: #60a5fa;
+}
+
+body.rex-theme-dark .alert-info {
+    background: rgba(91, 192, 222, 0.15);
+    border-color: rgba(91, 192, 222, 0.3);
     color: #e5e7eb;
 }
 
-body.rex-theme-dark .consent-editorial-highlight-box {
-    background: rgba(91, 192, 222, 0.15);
-    border-left-color: #60a5fa;
+body.rex-theme-dark .panel-default {
+    background: #374151;
+    border-color: rgba(255,255,255,0.1);
+}
+
+body.rex-theme-dark .panel-default .panel-body {
+    color: #e5e7eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .consent-editorial-grid {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 
-<div class="rex-addon-output">
-    <!-- Admin-Hinweise (wenn vorhanden) -->
-    <?php if ('' !== trim($adminInfo)): ?>
-    <div class="panel panel-primary consent-editorial-panel">
-        <header class="panel-heading">
-            <div class="panel-title">
-                <i class="rex-icon fa-info-circle"></i> 
-                <span><?= $addon->i18n('consent_manager_editorial_admin_info_title') ?></span>
-            </div>
-        </header>
-        <div class="panel-body">
-            <div style="white-space: pre-wrap; line-height: 1.6;"><?= rex_escape($adminInfo) ?></div>
+<div class="rex-addon-output consent-editorial-container">
+    <!-- Admin-Hinweise (Full Width wenn vorhanden) -->
+    <?php if (!empty($adminInfo)): ?>
+    <div class="consent-editorial-card card-primary consent-editorial-card-full" style="margin-bottom: 20px;">
+        <div class="consent-editorial-card-header">
+            <i class="rex-icon fa-info-circle"></i>
+            <span><?= $addon->i18n('consent_manager_editorial_admin_info_title') ?></span>
+        </div>
+        <div class="consent-editorial-card-body" style="background: #fff; color: #333;">
+            <div><?= $adminInfo ?></div>
         </div>
     </div>
     <?php endif; ?>
     
-    <!-- Willkommens-Info -->
-    <div class="panel panel-info consent-editorial-panel">
-        <header class="panel-heading">
-            <div class="panel-title">
+    <!-- Top Grid: Info + Warning -->
+    <div class="consent-editorial-grid">
+        <!-- Willkommen Card -->
+        <div class="consent-editorial-card card-info">
+            <div class="consent-editorial-card-header">
                 <i class="rex-icon fa-code"></i>
                 <span><?= $addon->i18n('consent_manager_editorial_welcome_title') ?></span>
             </div>
-        </header>
-        <div class="panel-body">
-            <p style="font-size: 15px; line-height: 1.6; margin-bottom: 0;"><?= rex_i18n::rawMsg('consent_manager_editorial_welcome_intro') ?></p>
+            <div class="consent-editorial-card-body">
+                <p style="margin: 0;"><?= rex_i18n::rawMsg('consent_manager_editorial_welcome_intro') ?></p>
+            </div>
         </div>
-    </div>
 
-    <!-- Wichtiger Hinweis: Verwendungszweck -->
-    <div class="panel panel-warning consent-editorial-panel">
-        <header class="panel-heading">
-            <div class="panel-title">
+        <!-- Wichtig Card -->
+        <div class="consent-editorial-card card-warning">
+            <div class="consent-editorial-card-header">
                 <i class="rex-icon fa-exclamation-triangle"></i>
                 <span><?= $addon->i18n('consent_manager_editorial_important_title') ?></span>
             </div>
-        </header>
-        <div class="panel-body">
-            <p style="font-size: 15px; line-height: 1.6;"><?= rex_i18n::rawMsg('consent_manager_editorial_important_text') ?></p>
-            <p style="font-size: 15px; line-height: 1.6;"><strong><?= $addon->i18n('consent_manager_editorial_important_contact') ?></strong></p>
-            
-            <div class="consent-editorial-highlight-box">
-                <p style="margin: 0 0 10px 0;"><strong>✓ Beispiele für RICHTIGE Verwendung:</strong></p>
-                <ul class="consent-editorial-list" style="margin: 0; padding-left: 20px; list-style: disc;">
-                    <li style="padding: 5px 0; padding-left: 0;">YouTube-Video im Artikel einbetten</li>
-                    <li style="padding: 5px 0; padding-left: 0;">Buchungs-Widget von Calendly im Text</li>
-                    <li style="padding: 5px 0; padding-left: 0;">Google Maps Karte in einer Seite</li>
-                    <li style="padding: 5px 0; padding-left: 0;">Instagram-Post im Blog-Beitrag</li>
-                </ul>
+            <div class="consent-editorial-card-body">
+                <p style="margin: 0 0 10px 0; font-size: 13px;"><?= rex_i18n::rawMsg('consent_manager_editorial_important_text') ?></p>
+                <div class="consent-highlight-compact">
+                    <strong style="display: block; margin-bottom: 5px;">✓ Richtige Verwendung:</strong>
+                    YouTube/Maps/Calendly im Content
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Warum wichtig? -->
-    <div class="panel panel-default consent-editorial-panel">
-        <header class="panel-heading">
-            <div class="panel-title">
-                <i class="rex-icon fa-question-circle"></i>
-                <span><?= $addon->i18n('consent_manager_editorial_welcome_why_title') ?></span>
+        <!-- Assistent Button Card -->
+        <div class="consent-editorial-card card-primary">
+            <div class="consent-editorial-card-header">
+                <i class="rex-icon fa-magic"></i>
+                <span><?= $addon->i18n('consent_manager_editorial_open_assistant') ?></span>
             </div>
-        </header>
-        <div class="panel-body">
-            <ul class="consent-editorial-list">
-                <li><?= rex_i18n::rawMsg('consent_manager_editorial_welcome_reason1') ?></li>
-                <li><?= rex_i18n::rawMsg('consent_manager_editorial_welcome_reason2') ?></li>
-                <li><?= rex_i18n::rawMsg('consent_manager_editorial_welcome_reason3') ?></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Anleitung -->
-    <div class="panel panel-default consent-editorial-panel">
-        <header class="panel-heading">
-            <div class="panel-title">
-                <i class="rex-icon fa-book"></i>
-                <span><?= $addon->i18n('consent_manager_editorial_howto_title') ?></span>
-            </div>
-        </header>
-        <div class="panel-body">
-            <ol>
-                <li><strong><?= $addon->i18n('consent_manager_editorial_step1_title') ?></strong><br>
-                    <?= $addon->i18n('consent_manager_editorial_step1_desc') ?></li>
-                <li><strong><?= $addon->i18n('consent_manager_editorial_step2_title') ?></strong><br>
-                    <?= $addon->i18n('consent_manager_editorial_step2_desc') ?></li>
-                <li><strong><?= $addon->i18n('consent_manager_editorial_step3_title') ?></strong><br>
-                    <?= $addon->i18n('consent_manager_editorial_step3_desc') ?></li>
-                <li><strong><?= $addon->i18n('consent_manager_editorial_step4_title') ?></strong><br>
-                    <?= $addon->i18n('consent_manager_editorial_step4_desc') ?>
-                    
-                    <div class="alert alert-info" style="margin-top: 10px;">
-                        <p><strong><?= $addon->i18n('consent_manager_editorial_step4_how_title') ?></strong></p>
-                        <ul style="margin-bottom: 0;">
-                            <li><?= rex_i18n::rawMsg('consent_manager_editorial_step4_how_cke5') ?></li>
-                            <li><?= rex_i18n::rawMsg('consent_manager_editorial_step4_how_other') ?></li>
-                            <li><?= rex_i18n::rawMsg('consent_manager_editorial_step4_how_custom') ?></li>
-                        </ul>
-                    </div>
-                </li>
-            </ol>
-
-            <div class="text-center" style="margin-top: 20px;">
-                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#auto-blocking-assistant-modal">
+            <div class="consent-editorial-card-body" style="background: #fff; color: #333; text-align: center; padding: 30px 20px;">
+                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#auto-blocking-assistant-modal" style="padding: 15px 40px; font-size: 16px;">
                     <i class="rex-icon fa-magic"></i> <?= $addon->i18n('consent_manager_editorial_open_assistant') ?>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Gespeicherte Snippets -->
-    <div class="panel panel-default consent-editorial-panel">
-        <header class="panel-heading">
-            <div class="panel-title">
+    <!-- Anleitung - Akkordeon -->
+    <div class="consent-editorial-card card-default consent-editorial-card-full" style="margin-bottom: 20px;">
+        <div class="consent-editorial-card-header collapsed" data-toggle="collapse" data-target="#howto-content" style="cursor: pointer;">
+            <i class="rex-icon fa-list-ol"></i>
+            <span><?= $addon->i18n('consent_manager_editorial_howto_title') ?></span>
+            <span class="pull-right"><i class="rex-icon fa-chevron-down"></i></span>
+        </div>
+        <div class="consent-editorial-card-body collapse" id="howto-content" style="background: #fff; color: #333;">
+            <ol class="consent-steps-compact">
+                <li>
+                    <strong><?= $addon->i18n('consent_manager_editorial_step1_title') ?></strong>
+                    <?= $addon->i18n('consent_manager_editorial_step1_desc') ?>
+                </li>
+                <li>
+                    <strong><?= $addon->i18n('consent_manager_editorial_step2_title') ?></strong>
+                    <?= $addon->i18n('consent_manager_editorial_step2_desc') ?>
+                </li>
+                <li>
+                    <strong><?= $addon->i18n('consent_manager_editorial_step3_title') ?></strong>
+                    <?= $addon->i18n('consent_manager_editorial_step3_desc') ?>
+                </li>
+                <li>
+                    <strong><?= $addon->i18n('consent_manager_editorial_step4_title') ?></strong>
+                    <?= $addon->i18n('consent_manager_editorial_step4_desc') ?>
+                    <div class="consent-highlight-compact" style="margin-top: 8px;">
+                        <strong><?= $addon->i18n('consent_manager_editorial_step4_how_title') ?></strong>
+                        <ul style="margin: 5px 0 0 20px; font-size: 12px;">
+                            <li><?= rex_i18n::rawMsg('consent_manager_editorial_step4_how_cke5') ?></li>
+                            <li><?= rex_i18n::rawMsg('consent_manager_editorial_step4_how_other') ?></li>
+                        </ul>
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Bottom Grid: Snippets (2/3) + Service/Privacy (1/3) -->
+    <div class="consent-editorial-grid" style="grid-template-columns: 2fr 1fr;">
+        <!-- Snippets Card - 2/3 Breite -->
+        <div class="consent-editorial-card card-primary">
+            <div class="consent-editorial-card-header">
                 <i class="rex-icon fa-bookmark"></i>
                 <span><?= $addon->i18n('consent_manager_editorial_snippets_title') ?></span>
             </div>
-        </header>
-        <div class="panel-body">
-            <div id="snippets-container">
-                <div class="alert alert-info" id="snippets-empty-state">
-                    <i class="rex-icon fa-info-circle"></i> <?= $addon->i18n('consent_manager_editorial_snippets_empty') ?>
+            <div class="consent-editorial-card-body" style="background: #fff; color: #333;">
+                <div id="snippets-container">
+                    <div class="alert alert-info" id="snippets-empty-state" style="margin: 0; padding: 10px; font-size: 13px;">
+                        <i class="rex-icon fa-info-circle"></i> <?= $addon->i18n('consent_manager_editorial_snippets_empty') ?>
+                    </div>
+                    <div id="snippets-list" style="display: none;"></div>
                 </div>
-                <div id="snippets-list" style="display: none;"></div>
             </div>
         </div>
-    </div>
 
-    <!-- Service fehlt? -->
-    <div class="panel panel-<?= $hasIssueTracker ? 'success' : 'warning' ?> consent-editorial-panel">
-        <header class="panel-heading">
-            <div class="panel-title">
-                <i class="rex-icon fa-<?= $hasIssueTracker ? 'lightbulb-o' : 'exclamation-triangle' ?>"></i>
-                <span><?= $addon->i18n('consent_manager_editorial_missing_service_title') ?></span>
-            </div>
-        </header>
-        <div class="panel-body">
-            <p><?= $addon->i18n('consent_manager_editorial_missing_service_desc') ?></p>
-            
-            <?php if ($hasIssueTracker): ?>
-                <div class="alert alert-success">
-                    <p><strong><i class="rex-icon fa-check-circle"></i> <?= $addon->i18n('consent_manager_editorial_issue_tracker_available') ?></strong></p>
-                    <p><?= rex_i18n::rawMsg('consent_manager_editorial_issue_tracker_desc') ?></p>
-                    <a href="<?= rex_url::backendPage('issue_tracker/issues', ['func' => 'add']) ?>" class="btn btn-success">
+        <!-- Rechte Spalte: Service + Datenschutz als Akkordeons -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Service fehlt - Akkordeon -->
+            <div class="consent-editorial-card card-<?= $hasIssueTracker ? 'success' : 'warning' ?>">
+                <div class="consent-editorial-card-header collapsed" data-toggle="collapse" data-target="#service-content" style="cursor: pointer;">
+                    <i class="rex-icon fa-<?= $hasIssueTracker ? 'lightbulb-o' : 'exclamation-triangle' ?>"></i>
+                    <span><?= $addon->i18n('consent_manager_editorial_missing_service_title') ?></span>
+                    <span class="pull-right"><i class="rex-icon fa-chevron-down"></i></span>
+                </div>
+                <div class="consent-editorial-card-body collapse" id="service-content" style="background: #fff; color: #333;">
+                <p style="margin: 0 0 10px 0; font-size: 13px;"><?= $addon->i18n('consent_manager_editorial_missing_service_desc') ?></p>
+                
+                <?php if ($hasIssueTracker): ?>
+                    <a href="<?= rex_url::backendPage('issue_tracker/issues', ['func' => 'add']) ?>" class="btn btn-success btn-block btn-sm">
                         <i class="rex-icon fa-plus-circle"></i> <?= $addon->i18n('consent_manager_editorial_request_service') ?>
                     </a>
-                </div>
-            <?php else: ?>
-                <div class="alert alert-warning">
-                    <p><strong><i class="rex-icon fa-envelope"></i> <?= $addon->i18n('consent_manager_editorial_contact_admin') ?></strong></p>
-                    <p><?= rex_i18n::rawMsg('consent_manager_editorial_contact_admin_desc') ?></p>
-                </div>
-            <?php endif; ?>
+                <?php else: ?>
+                    <div class="consent-highlight-compact" style="margin: 0; padding: 10px; font-size: 12px;">
+                        <i class="rex-icon fa-envelope"></i> <?= rex_i18n::rawMsg('consent_manager_editorial_contact_admin_desc') ?>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
-    </div>
 
-    <!-- Datenschutzerklärung Hinweis -->
-    <div class="panel panel-info consent-editorial-panel">
-        <header class="panel-heading">
-            <div class="panel-title">
+        <!-- Datenschutz - Akkordeon -->
+        <div class="consent-editorial-card card-info">
+            <div class="consent-editorial-card-header collapsed" data-toggle="collapse" data-target="#privacy-content" style="cursor: pointer;">
                 <i class="rex-icon fa-shield"></i>
                 <span><?= $addon->i18n('consent_manager_editorial_privacy_title') ?></span>
+                <span class="pull-right"><i class="rex-icon fa-chevron-down"></i></span>
             </div>
-        </header>
-        <div class="panel-body">
-            <p><strong><?= $addon->i18n('consent_manager_editorial_privacy_intro') ?></strong></p>
-            
-            <p><?= $addon->i18n('consent_manager_editorial_privacy_what_title') ?></p>
-            <ul>
-                <li><?= $addon->i18n('consent_manager_editorial_privacy_what_service') ?></li>
-                <li><?= $addon->i18n('consent_manager_editorial_privacy_what_data') ?></li>
-                <li><?= $addon->i18n('consent_manager_editorial_privacy_what_provider') ?></li>
-            </ul>
-            
-            <?php if ($hasIssueTracker): ?>
-                <div class="alert alert-info">
-                    <p><strong><i class="rex-icon fa-file-text-o"></i> <?= $addon->i18n('consent_manager_editorial_privacy_issue_title') ?></strong></p>
-                    <p><?= $addon->i18n('consent_manager_editorial_privacy_issue_desc') ?></p>
-                    <a href="<?= rex_url::backendPage('issue_tracker/issues', ['func' => 'add']) ?>" class="btn btn-info">
-                        <i class="rex-icon fa-pencil"></i> Datenschutzerklärung-Update beauftragen
+            <div class="consent-editorial-card-body collapse" id="privacy-content" style="background: #fff; color: #333;">
+                <p style="margin: 0 0 10px 0; font-size: 13px;"><strong><?= $addon->i18n('consent_manager_editorial_privacy_intro') ?></strong></p>
+                
+                <ul class="consent-compact-list" style="margin-bottom: 10px;">
+                    <li><?= $addon->i18n('consent_manager_editorial_privacy_what_service') ?></li>
+                    <li><?= $addon->i18n('consent_manager_editorial_privacy_what_data') ?></li>
+                    <li><?= $addon->i18n('consent_manager_editorial_privacy_what_provider') ?></li>
+                </ul>
+                
+                <?php if ($hasIssueTracker): ?>
+                    <a href="<?= rex_url::backendPage('issue_tracker/issues', ['func' => 'add']) ?>" class="btn btn-info btn-block btn-sm">
+                        <i class="rex-icon fa-pencil"></i> <?= $addon->i18n('consent_manager_editorial_privacy_issue_title') ?>
                     </a>
-                </div>
-            <?php else: ?>
-                <div class="alert alert-info">
-                    <p><i class="rex-icon fa-envelope"></i> <?= $addon->i18n('consent_manager_editorial_privacy_contact_desc') ?></p>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
         </div>
     </div>
 
-    <!-- Beispiel-Showcase -->
-    <div class="panel panel-default consent-editorial-panel">
-        <header class="panel-heading collapsed" data-toggle="collapse" data-target="#example-showcase">
-            <div class="panel-title" style="cursor: pointer;">
-                <i class="rex-icon fa-code"></i>
-                <span><?= $addon->i18n('consent_manager_editorial_examples_title') ?></span>
-                <span class="pull-right"><i class="rex-icon fa-chevron-down"></i></span>
-            </div>
-        </header>
-        <div class="panel-body collapse" id="example-showcase">
-            <h4><?= $addon->i18n('consent_manager_editorial_example_youtube') ?></h4>
-            <p><?= $addon->i18n('consent_manager_editorial_example_youtube_desc') ?></p>
-            <pre><code>&lt;iframe src="https://www.youtube.com/embed/VIDEO_ID" 
+    <!-- Beispiel-Showcase - Collapsible Card -->
+    <div class="consent-editorial-card card-default consent-editorial-card-full">
+        <div class="consent-editorial-card-header collapsed" data-toggle="collapse" data-target="#example-showcase" style="cursor: pointer;">
+            <i class="rex-icon fa-code"></i>
+            <span><?= $addon->i18n('consent_manager_editorial_examples_title') ?></span>
+            <span class="pull-right"><i class="rex-icon fa-chevron-down"></i></span>
+        </div>
+        <div class="consent-editorial-card-body collapse" id="example-showcase">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div>
+                    <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #337ab7;"><?= $addon->i18n('consent_manager_editorial_example_youtube') ?></h4>
+                    <p style="margin: 0 0 10px 0; font-size: 12px;"><?= $addon->i18n('consent_manager_editorial_example_youtube_desc') ?></p>
+                    <pre style="font-size: 11px; padding: 10px; background: #f5f5f5; border-radius: 0;"><code>&lt;iframe src="https://www.youtube.com/embed/VIDEO_ID" 
         width="560" height="315"
         data-consent-block="true"
-        data-consent-service="youtube"
-        data-consent-provider="YouTube"
-        data-consent-privacy="https://policies.google.com/privacy"&gt;&lt;/iframe&gt;</code></pre>
+        data-consent-service="youtube"&gt;&lt;/iframe&gt;</code></pre>
+                </div>
 
-            <hr>
-
-            <h4><?= $addon->i18n('consent_manager_editorial_example_custom') ?></h4>
-            <p><?= $addon->i18n('consent_manager_editorial_example_custom_desc') ?></p>
-            <pre><code>&lt;script src="https://example.com/widget.js"
+                <div>
+                    <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #337ab7;"><?= $addon->i18n('consent_manager_editorial_example_custom') ?></h4>
+                    <p style="margin: 0 0 10px 0; font-size: 12px;"><?= $addon->i18n('consent_manager_editorial_example_custom_desc') ?></p>
+                    <pre style="font-size: 11px; padding: 10px; background: #f5f5f5; border-radius: 0;"><code>&lt;script src="https://example.com/widget.js"
         data-consent-block="true"
-        data-consent-service="example-widget"
-        data-consent-text="Zur Nutzung dieser Funktion benötigen wir Ihre Zustimmung."&gt;&lt;/script&gt;</code></pre>
+        data-consent-service="example"
+        data-consent-text="Ihr Text"&gt;&lt;/script&gt;</code></pre>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -448,6 +600,38 @@ body.rex-theme-dark .consent-editorial-highlight-box {
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     <i class="rex-icon fa-times"></i> Schließen
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Snippet Name Modal -->
+<div class="modal fade" id="snippet-name-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">
+                    <i class="rex-icon fa-bookmark"></i> <?= $addon->i18n('consent_manager_editorial_snippets_save') ?>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="snippet_name_input"><?= $addon->i18n('consent_manager_editorial_snippets_name') ?></label>
+                    <input type="text" class="form-control" id="snippet_name_input" 
+                           placeholder="<?= $addon->i18n('consent_manager_editorial_snippets_name_placeholder') ?>" 
+                           autofocus>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="rex-icon fa-times"></i> Abbrechen
+                </button>
+                <button type="button" class="btn btn-primary" id="confirm_save_snippet">
+                    <i class="rex-icon fa-save"></i> Speichern
                 </button>
             </div>
         </div>
@@ -596,19 +780,33 @@ jQuery(function($) {
         }
     });
     
-    // Snippet speichern
+    // Snippet speichern - Modal öffnen
     $('#save_snippet').on('click', function() {
+        console.log('Save snippet clicked');
         const code = $('#output_code').val();
+        console.log('Code:', code ? code.substring(0, 50) + '...' : 'LEER');
+        
         if (!code) {
             alert('Kein Code zum Speichern vorhanden!');
             return;
         }
         
-        const name = prompt('<?= $addon->i18n('consent_manager_editorial_snippets_name') ?>', '<?= $addon->i18n('consent_manager_editorial_snippets_name_placeholder') ?>');
+        // Modal öffnen
+        $('#snippet_name_input').val('');
+        $('#snippet-name-modal').modal('show');
+    });
+    
+    // Snippet speichern bestätigen
+    $('#confirm_save_snippet').on('click', function() {
+        const name = $('#snippet_name_input').val().trim();
+        console.log('Snippet Name:', name);
+        
         if (!name) {
+            alert('Bitte geben Sie einen Namen ein!');
             return;
         }
         
+        const code = $('#output_code').val();
         const metadata = {
             service: $('#service_key').val(),
             provider: $('#provider_name').val(),
@@ -617,9 +815,23 @@ jQuery(function($) {
             text: $('#consent_text').val()
         };
         
+        console.log('Metadata:', metadata);
+        
         if (snippetManager.add(name, code, metadata)) {
             snippetManager.render();
+            $('#snippet-name-modal').modal('hide');
             alert('Snippet erfolgreich gespeichert!');
+            console.log('Snippet gespeichert!');
+        } else {
+            console.error('Fehler beim Speichern des Snippets!');
+        }
+    });
+    
+    // Enter-Taste im Modal
+    $('#snippet_name_input').on('keypress', function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            $('#confirm_save_snippet').click();
         }
     });
     
