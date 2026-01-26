@@ -315,7 +315,7 @@ class Frontend
         $css = preg_replace('/\s+/', ' ', $css);
         
         // Remove spaces around CSS syntax characters
-        $css = preg_replace('/\s*([{}:;,>+~])\s*/', '$1', $css);
+        $css = preg_replace('/\s*([{}:;,>+~()])\s*/', '$1', $css);
         
         // Remove trailing semicolons before closing braces
         $css = preg_replace('/;+}/', '}', $css);
