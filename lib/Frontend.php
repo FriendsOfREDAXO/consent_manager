@@ -303,6 +303,33 @@ class Frontend
     }
 
     /**
+     * Minify CSS content.
+     * Removes comments, unnecessary whitespace, and optimizes syntax spacing.
+     * Preserves spaces around + and - operators in calc() expressions as required by CSS spec.
+     */
+    private static function minifyCss(string $css): string
+    {
+        // Remove comments (using # as delimiter to avoid conflicts with ! in CSS)
+        $css = preg_replace('#/\*.*?\*/#s', '', $css);
+        
+        // Remove whitespace and newlines
+        $css = preg_replace('/\s+/', ' ', $css);
+        
+        // Remove spaces around CSS syntax characters
+        // Note: + and - are NOT included to preserve calc() expressions
+        $css = preg_replace('/\s*([{}:;,>~])\s*/', '$1', $css);
+        
+        // Remove space after opening parenthesis and before closing parenthesis
+        $css = preg_replace('/\(\s+/', '(', $css);
+        $css = preg_replace('/\s+\)/', ')', $css);
+        
+        // Remove trailing semicolons before closing braces
+        $css = preg_replace('/;+}/', '}', $css);
+        
+        return trim($css);
+    }
+
+    /**
      * @api
      */
     public static function getFrontendCss(): string
@@ -356,7 +383,9 @@ class Frontend
         if (false === $_csscontent) {
             return '';
         }
-        return '/*' . $_cssfilename . '*/ ' . $_csscontent;
+        
+        // Minify CSS and prepend filename comment for debugging
+        return '/*' . $_cssfilename . '*/' . self::minifyCss($_csscontent);
     }
 
     /**
