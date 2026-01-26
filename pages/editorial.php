@@ -320,23 +320,19 @@ body.rex-theme-dark .panel-default .panel-body {
     <div class="consent-editorial-card card-danger consent-editorial-card-full" style="margin-bottom: 20px;">
         <div class="consent-editorial-card-header">
             <i class="rex-icon fa-exclamation-triangle"></i>
-            <span>Auto-Blocking ist nicht aktiviert</span>
+            <span><?= $addon->i18n('consent_manager_editorial_autoblock_warning_title') ?></span>
         </div>
         <div class="consent-editorial-card-body" style="background: #fff; color: #333;">
             <p style="margin: 0 0 10px 0;">
-                <strong>Die automatische Blockierung externer Inhalte ist derzeit deaktiviert.</strong>
+                <strong><?= $addon->i18n('consent_manager_editorial_autoblock_warning_intro') ?></strong>
             </p>
             <?php if ($hasConfigPermission): ?>
             <p style="margin: 0;">
-                Damit die hier generierten Codes funktionieren, muss Auto-Blocking in den 
-                <a href="<?= rex_url::backendPage('consent_manager/config') ?>"><strong>Einstellungen aktiviert werden</strong></a>.
-                Ohne diese Funktion werden externe Inhalte direkt geladen und umgehen den Consent-Mechanismus.
+                <?= rex_i18n::rawMsg('consent_manager_editorial_autoblock_warning_admin', rex_url::backendPage('consent_manager/config')) ?>
             </p>
             <?php else: ?>
             <p style="margin: 0;">
-                Damit die hier generierten Codes funktionieren, muss Auto-Blocking in den Einstellungen aktiviert werden.
-                <strong>Bitte kontaktieren Sie einen Administrator oder Benutzer mit Config-Berechtigung</strong>, 
-                um diese Funktion zu aktivieren. Ohne Auto-Blocking werden externe Inhalte direkt geladen und umgehen den Consent-Mechanismus.
+                <?= rex_i18n::rawMsg('consent_manager_editorial_autoblock_warning_user') ?>
             </p>
             <?php endif ?>
         </div>

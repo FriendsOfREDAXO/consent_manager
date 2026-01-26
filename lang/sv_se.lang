@@ -476,3 +476,15 @@ consent_manager_editorial_example_youtube = YouTube-video
 consent_manager_editorial_example_youtube_desc = Så här ser en korrekt markerad YouTube-video ut:
 consent_manager_editorial_example_custom = Anpassad widget med egen text
 consent_manager_editorial_example_custom_desc = Med egen platshållartext:
+
+# Auto-Blocking Varning
+consent_manager_editorial_autoblock_warning_title = Auto-Blocking är inte aktiverat
+consent_manager_editorial_autoblock_warning_intro = Automatisk blockering av externt innehåll är för närvarande inaktiverad.
+consent_manager_editorial_autoblock_warning_admin = För att koderna som genereras här ska fungera måste auto-blocking <a href="{0}"><strong>aktiveras i inställningarna</strong></a>. Utan denna funktion laddas externt innehåll direkt och kringgår samtyckes-mekanismen.
+consent_manager_editorial_autoblock_warning_user = För att koderna som genereras här ska fungera måste auto-blocking aktiveras i inställningarna. <strong>Kontakta en administratör eller användare med config-behörighet</strong> för att aktivera denna funktion. Utan auto-blocking laddas externt innehåll direkt och kringgår samtyckes-mekanismen.
+
+# Auto-Blocking Varning
+consent_manager_editorial_autoblock_warning_title = Auto-Blocking är inte aktiverat
+consent_manager_editorial_autoblock_warning_intro = Automatisk blockering av externt innehåll är för närvarande inaktiverad.
+consent_manager_editorial_autoblock_warning_admin = För att koderna som genereras här ska fungera måste auto-blocking <a href="{0}"><strong>aktiveras i inställningarna</strong></a>. Utan denna funktion laddas externt innehåll direkt och kringgår samtyckes-mekanismen.
+consent_manager_editorial_autoblock_warning_user = För att koderna som genereras här ska fungera måste auto-blocking aktiveras i inställningarna. <strong>Kontakta en administratör eller användare med config-behörighet</strong> för att aktivera denna funktion. Utan auto-blocking laddas externt innehåll direkt och kringgår samtyckes-mekanismen.

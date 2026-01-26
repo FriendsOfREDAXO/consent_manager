@@ -488,3 +488,15 @@ consent_manager_editorial_example_youtube = YouTube video
 consent_manager_editorial_example_youtube_desc = This is what a correctly marked YouTube video looks like:
 consent_manager_editorial_example_custom = Custom widget with own text
 consent_manager_editorial_example_custom_desc = With own placeholder text:
+
+# Auto-Blocking Warning
+consent_manager_editorial_autoblock_warning_title = Auto-Blocking is not enabled
+consent_manager_editorial_autoblock_warning_intro = Automatic blocking of external content is currently disabled.
+consent_manager_editorial_autoblock_warning_admin = For the codes generated here to work, auto-blocking must be <a href="{0}"><strong>enabled in the settings</strong></a>. Without this feature, external content will be loaded directly and bypass the consent mechanism.
+consent_manager_editorial_autoblock_warning_user = For the codes generated here to work, auto-blocking must be enabled in the settings. <strong>Please contact an administrator or user with config permission</strong> to enable this feature. Without auto-blocking, external content will be loaded directly and bypass the consent mechanism.
+
+# Auto-Blocking Warning
+consent_manager_editorial_autoblock_warning_title = Auto-Blocking is not enabled
+consent_manager_editorial_autoblock_warning_intro = Automatic blocking of external content is currently disabled.
+consent_manager_editorial_autoblock_warning_admin = For the codes generated here to work, auto-blocking must be <a href="{0}"><strong>enabled in the settings</strong></a>. Without this feature, external content will be loaded directly and bypass the consent mechanism.
+consent_manager_editorial_autoblock_warning_user = For the codes generated here to work, auto-blocking must be enabled in the settings. <strong>Please contact an administrator or user with config permission</strong> to enable this feature. Without auto-blocking, external content will be loaded directly and bypass the consent mechanism.
