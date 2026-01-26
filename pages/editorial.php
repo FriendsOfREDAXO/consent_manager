@@ -113,6 +113,39 @@ $hasIssueTracker = rex_addon::exists('issue_tracker') && rex_addon::get('issue_t
         </div>
     </div>
 
+    <!-- Datenschutzerklärung Hinweis -->
+    <div class="panel panel-info">
+        <header class="panel-heading">
+            <div class="panel-title">
+                <i class="rex-icon fa-shield"></i> <?= $addon->i18n('consent_manager_editorial_privacy_title') ?>
+            </div>
+        </header>
+        <div class="panel-body">
+            <p><strong><?= $addon->i18n('consent_manager_editorial_privacy_intro') ?></strong></p>
+            
+            <p><?= $addon->i18n('consent_manager_editorial_privacy_what_title') ?></p>
+            <ul>
+                <li><?= $addon->i18n('consent_manager_editorial_privacy_what_service') ?></li>
+                <li><?= $addon->i18n('consent_manager_editorial_privacy_what_data') ?></li>
+                <li><?= $addon->i18n('consent_manager_editorial_privacy_what_provider') ?></li>
+            </ul>
+            
+            <?php if ($hasIssueTracker): ?>
+                <div class="alert alert-info">
+                    <p><strong><i class="rex-icon fa-file-text-o"></i> <?= $addon->i18n('consent_manager_editorial_privacy_issue_title') ?></strong></p>
+                    <p><?= $addon->i18n('consent_manager_editorial_privacy_issue_desc') ?></p>
+                    <a href="<?= rex_url::backendPage('issue_tracker/issues', ['func' => 'add']) ?>" class="btn btn-info">
+                        <i class="rex-icon fa-pencil"></i> Datenschutzerklärung-Update beauftragen
+                    </a>
+                </div>
+            <?php else: ?>
+                <div class="alert alert-info">
+                    <p><i class="rex-icon fa-envelope"></i> <?= $addon->i18n('consent_manager_editorial_privacy_contact_desc') ?></p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
     <!-- Beispiel-Showcase -->
     <div class="panel panel-default">
         <header class="panel-heading collapsed" data-toggle="collapse" data-target="#example-showcase">
