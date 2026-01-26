@@ -305,6 +305,7 @@ class Frontend
     /**
      * Minify CSS content.
      * Removes comments, unnecessary whitespace, and optimizes syntax spacing.
+     * Preserves spaces around + and - operators in calc() expressions as required by CSS spec.
      */
     private static function minifyCss(string $css): string
     {
@@ -314,12 +315,11 @@ class Frontend
         // Remove whitespace and newlines
         $css = preg_replace('/\s+/', ' ', $css);
         
-        // Remove spaces around CSS syntax characters, but NOT inside parentheses
-        // to preserve calc() and other CSS functions
-        $css = preg_replace('/\s*([{}:;,>+~])\s*/', '$1', $css);
+        // Remove spaces around CSS syntax characters
+        // Note: + and - are NOT included to preserve calc() expressions
+        $css = preg_replace('/\s*([{}:;,>~])\s*/', '$1', $css);
         
         // Remove space after opening parenthesis and before closing parenthesis
-        // but preserve spaces between operators in calc() expressions
         $css = preg_replace('/\(\s+/', '(', $css);
         $css = preg_replace('/\s+\)/', ')', $css);
         
