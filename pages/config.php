@@ -218,6 +218,13 @@ $field->setLabel(rex_i18n::msg('consent_manager_config_auto_blocking'));
 $field->addOption(rex_i18n::msg('consent_manager_config_auto_blocking_enable'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_auto_blocking_desc') . ' <a href="#" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#auto-blocking-assistant-modal"><i class="rex-icon fa-magic"></i> ' . rex_i18n::msg('consent_manager_auto_blocking_assistant_open') . '</a>');
 
+// Redakteur-Hinweise (wird nur auf Editorial-Seite angezeigt)
+$field = $form->addTextAreaField('editorial_info');
+$field->setLabel(rex_i18n::msg('consent_manager_config_editorial_info'));
+$field->setAttribute('rows', '4');
+$field->setAttribute('placeholder', rex_i18n::msg('consent_manager_config_editorial_info_placeholder'));
+$field->setNotice(rex_i18n::msg('consent_manager_config_editorial_info_notice'));
+
 // Cookie Name
 $field = $form->addTextField('cookie_name');
 $field->setLabel(rex_i18n::msg('consent_manager_config_cookie_name_label'));

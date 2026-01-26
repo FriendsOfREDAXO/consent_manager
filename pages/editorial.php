@@ -10,9 +10,26 @@ $addon = rex_addon::get('consent_manager');
 // Prüfe ob Issue Tracker installiert ist
 $hasIssueTracker = rex_addon::exists('issue_tracker') && rex_addon::get('issue_tracker')->isAvailable();
 
+// Admin-Info Text laden
+$adminInfo = $addon->getConfig('editorial_info', '');
+
 ?>
 
 <div class="rex-addon-output">
+    <!-- Admin-Hinweise (wenn vorhanden) -->
+    <?php if ('' !== trim($adminInfo)): ?>
+    <div class="panel panel-primary">
+        <header class="panel-heading">
+            <div class="panel-title">
+                <i class="rex-icon fa-info-circle"></i> <?= $addon->i18n('consent_manager_editorial_admin_info_title') ?>
+            </div>
+        </header>
+        <div class="panel-body">
+            <div style="white-space: pre-wrap;"><?= rex_escape($adminInfo) ?></div>
+        </div>
+    </div>
+    <?php endif; ?>
+    
     <!-- Willkommens-Info -->
     <div class="panel panel-info">
         <header class="panel-heading">
