@@ -418,6 +418,31 @@ consent_manager_theme_editor_project_addon_required = Tema-editorn kräver det i
 consent_manager_config_cookie_name_label = Cookie-namn
 consent_manager_config_cookie_name_notice = Namnet på cookie där samtycket lagras. Standard: consentmanager
 
+# Auto-Blocking Funktion
+consent_manager_config_auto_blocking = Auto-Blocking för manuellt infogad HTML
+consent_manager_config_auto_blocking_enable = Aktivera Auto-Blocking
+consent_manager_config_auto_blocking_desc = Skannar HTML-kod automatiskt och blockerar skript/iframes med data-consent-attribut. Skript måste markeras med data-consent-block="true" och data-consent-service="servicekey".
+consent_manager_auto_blocking_assistant_title = Auto-Blocking Kodassistent
+consent_manager_auto_blocking_assistant_intro = Denna assistent hjälper dig att förbereda extern kod (skript, iframes) för auto-blocking.
+consent_manager_auto_blocking_assistant_open = Öppna kodassistent
+consent_manager_auto_blocking_assistant_input_label = Klistra in originalkod
+consent_manager_auto_blocking_assistant_input_placeholder = <script src="https://example.com/widget.js"></script>
+consent_manager_auto_blocking_assistant_service_label = Tjänst-nyckel
+consent_manager_auto_blocking_assistant_service_select = -- Välj tjänst --
+consent_manager_auto_blocking_assistant_service_custom = Ange anpassad tjänst-nyckel
+consent_manager_auto_blocking_assistant_service_notice = Måste skapas i "Consent Manager → Tjänster"
+consent_manager_auto_blocking_assistant_provider_label = Leverantörsnamn (valfritt)
+consent_manager_auto_blocking_assistant_privacy_label = Integritets-URL (valfritt)
+consent_manager_auto_blocking_assistant_title_label = Titel (valfritt)
+consent_manager_auto_blocking_assistant_text_label = Platshållartext (valfritt)
+consent_manager_auto_blocking_assistant_text_placeholder = t.ex. Vi använder denna tjänst för bokning. Vänligen samtycke.
+consent_manager_auto_blocking_assistant_text_notice = Anpassad text som visas i samtyckes-blockeraren
+consent_manager_auto_blocking_assistant_generate = Generera kod
+consent_manager_auto_blocking_assistant_output_label = Genererad kod (kopiera och klistra in)
+consent_manager_auto_blocking_assistant_copy = Kopiera till urklipp
+consent_manager_auto_blocking_assistant_copied = Kod kopierad!
+consent_manager_auto_blocking_assistant_input_help = Klistra in ditt externa skript eller iframe-kod här
+
 # Redaktörssida
 consent_manager_editorial_title = Redaktör
 consent_manager_editorial_welcome_title = Bädda in skript i innehåll på ett integritetsvänligt sätt
@@ -476,12 +501,6 @@ consent_manager_editorial_example_youtube = YouTube-video
 consent_manager_editorial_example_youtube_desc = Så här ser en korrekt markerad YouTube-video ut:
 consent_manager_editorial_example_custom = Anpassad widget med egen text
 consent_manager_editorial_example_custom_desc = Med egen platshållartext:
-
-# Auto-Blocking Varning
-consent_manager_editorial_autoblock_warning_title = Auto-Blocking är inte aktiverat
-consent_manager_editorial_autoblock_warning_intro = Automatisk blockering av externt innehåll är för närvarande inaktiverad.
-consent_manager_editorial_autoblock_warning_admin = För att koderna som genereras här ska fungera måste auto-blocking <a href="{0}"><strong>aktiveras i inställningarna</strong></a>. Utan denna funktion laddas externt innehåll direkt och kringgår samtyckes-mekanismen.
-consent_manager_editorial_autoblock_warning_user = För att koderna som genereras här ska fungera måste auto-blocking aktiveras i inställningarna. <strong>Kontakta en administratör eller användare med config-behörighet</strong> för att aktivera denna funktion. Utan auto-blocking laddas externt innehåll direkt och kringgår samtyckes-mekanismen.
 
 # Auto-Blocking Varning
 consent_manager_editorial_autoblock_warning_title = Auto-Blocking är inte aktiverat

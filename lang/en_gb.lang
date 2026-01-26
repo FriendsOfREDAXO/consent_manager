@@ -430,6 +430,31 @@ consent_manager_stats_date = Date
 consent_manager_config_cookie_name_label = Cookie Name
 consent_manager_config_cookie_name_notice = Name of the cookie in which consent is stored. Default: consentmanager
 
+# Auto-Blocking Feature
+consent_manager_config_auto_blocking = Auto-Blocking for manually inserted HTML
+consent_manager_config_auto_blocking_enable = Enable Auto-Blocking
+consent_manager_config_auto_blocking_desc = Automatically scans HTML code and blocks scripts/iframes with data-consent attributes. Scripts must be marked with data-consent-block="true" and data-consent-service="servicekey".
+consent_manager_auto_blocking_assistant_title = Auto-Blocking Code Assistant
+consent_manager_auto_blocking_assistant_intro = This assistant helps you prepare external code (scripts, iframes) for auto-blocking.
+consent_manager_auto_blocking_assistant_open = Open code assistant
+consent_manager_auto_blocking_assistant_input_label = Paste original code
+consent_manager_auto_blocking_assistant_input_placeholder = <script src="https://example.com/widget.js"></script>
+consent_manager_auto_blocking_assistant_service_label = Service key
+consent_manager_auto_blocking_assistant_service_select = -- Select service --
+consent_manager_auto_blocking_assistant_service_custom = Enter custom service key
+consent_manager_auto_blocking_assistant_service_notice = Must be created in "Consent Manager → Services"
+consent_manager_auto_blocking_assistant_provider_label = Provider name (optional)
+consent_manager_auto_blocking_assistant_privacy_label = Privacy URL (optional)
+consent_manager_auto_blocking_assistant_title_label = Title (optional)
+consent_manager_auto_blocking_assistant_text_label = Placeholder text (optional)
+consent_manager_auto_blocking_assistant_text_placeholder = e.g. We use this service for booking. Please consent.
+consent_manager_auto_blocking_assistant_text_notice = Custom text displayed in the consent blocker
+consent_manager_auto_blocking_assistant_generate = Generate code
+consent_manager_auto_blocking_assistant_output_label = Generated code (copy and paste)
+consent_manager_auto_blocking_assistant_copy = Copy to clipboard
+consent_manager_auto_blocking_assistant_copied = Code copied!
+consent_manager_auto_blocking_assistant_input_help = Paste your external script or iframe code here
+
 # Editorial Page
 consent_manager_editorial_title = Editorial
 consent_manager_editorial_welcome_title = Embed scripts in content in a privacy-compliant manner
@@ -488,12 +513,6 @@ consent_manager_editorial_example_youtube = YouTube video
 consent_manager_editorial_example_youtube_desc = This is what a correctly marked YouTube video looks like:
 consent_manager_editorial_example_custom = Custom widget with own text
 consent_manager_editorial_example_custom_desc = With own placeholder text:
-
-# Auto-Blocking Warning
-consent_manager_editorial_autoblock_warning_title = Auto-Blocking is not enabled
-consent_manager_editorial_autoblock_warning_intro = Automatic blocking of external content is currently disabled.
-consent_manager_editorial_autoblock_warning_admin = For the codes generated here to work, auto-blocking must be <a href="{0}"><strong>enabled in the settings</strong></a>. Without this feature, external content will be loaded directly and bypass the consent mechanism.
-consent_manager_editorial_autoblock_warning_user = For the codes generated here to work, auto-blocking must be enabled in the settings. <strong>Please contact an administrator or user with config permission</strong> to enable this feature. Without auto-blocking, external content will be loaded directly and bypass the consent mechanism.
 
 # Auto-Blocking Warning
 consent_manager_editorial_autoblock_warning_title = Auto-Blocking is not enabled
