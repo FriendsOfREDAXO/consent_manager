@@ -272,10 +272,25 @@ class InlineConsent
     {
         $debug = rex::isDebugMode();
 
+        // HMAC-Signatur für Content erstellen
+        $encodedContent = base64_encode($content);
+        $addon = \rex_addon::get('consent_manager');
+        $secret = $addon->getConfig('hmac_secret', '');
+        
+        // Secret initialisieren falls noch nicht vorhanden
+        if ('' === $secret) {
+            $secret = bin2hex(random_bytes(32));
+            $addon->setConfig('hmac_secret', $secret);
+        }
+        
+        $hmac = hash_hmac('sha256', $encodedContent, $secret);
+
         // Fragment verwenden für bessere Anpassbarkeit
         $fragment = new rex_fragment();
         $fragment->setVar('serviceKey', $serviceKey);
         $fragment->setVar('content', $content);
+        $fragment->setVar('encodedContent', $encodedContent);
+        $fragment->setVar('hmac', $hmac);
         $fragment->setVar('options', $options);
         $fragment->setVar('consentId', $consentId);
         $fragment->setVar('service', $service);

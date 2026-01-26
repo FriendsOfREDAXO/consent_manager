@@ -251,20 +251,43 @@ if (typeof window.consentManagerInline !== 'undefined') {
             
             this.debug('📜 Content script found:', contentScript);
             
-            var code = contentScript.innerHTML;
-            this.debug('📝 Raw code:', code.substring(0, 100));
+            // HMAC-Validierung über API
+            var encodedContent = contentScript.getAttribute('data-consent-original');
+            var hmac = contentScript.getAttribute('data-consent-hmac');
             
-            var tempTextArea = document.createElement('textarea');
-            tempTextArea.innerHTML = code;
-            var decodedCode = tempTextArea.value;
+            if (!encodedContent || !hmac) {
+                console.error('❌ Missing HMAC signature or encoded content');
+                return;
+            }
             
-            this.debug('🔓 Decoded code:', decodedCode.substring(0, 100));
+            var self = this;
+            var formData = new FormData();
+            formData.append('rex-api-call', 'inline_consent_validate');
+            formData.append('content', encodedContent);
+            formData.append('hmac', hmac);
+            
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HMAC validation failed');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                if (!data.success) {
+                    throw new Error(data.error || 'Validation failed');
+                }
+                
+                self.debug('✅ HMAC validated, loading content');
+                var decodedCode = data.content;
             
             var wrapper = document.createElement('div');
             // nosemgrep: javascript.browser.security.innerHTML-sink.innerHTML-sink
-            // SICHER: decodedCode stammt aus einem serverseitig generierten <script type="text/template">
-            // Element im DOM, nicht aus User-Input. Der Inhalt wird vom Backend-Redakteur kontrolliert
-            // und enthält beabsichtigt HTML (z.B. iframes für YouTube/Vimeo Embeds).
+            // SICHER: decodedCode wurde serverseitig per HMAC-Signatur validiert.
+            // Manipulation des data-consent-original Attributs würde die Validierung fehlschlagen lassen.
             wrapper.innerHTML = decodedCode;
             
             this.debug('📦 Wrapper children:', {count: wrapper.children.length, children: wrapper.children});
@@ -279,13 +302,6 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 if (child.nodeName === 'SCRIPT') {
                     console.log('🔧 Processing SCRIPT tag');
                     var newScript = document.createElement('script');
-                    
-                    // CSP Nonce hinzufügen (falls vorhanden im DOM)
-                    var nonce = document.querySelector('script[nonce]');
-                    if (nonce && nonce.getAttribute('nonce')) {
-                        newScript.setAttribute('nonce', nonce.getAttribute('nonce'));
-                        console.log('  🔒 Adding CSP nonce:', nonce.getAttribute('nonce'));
-                    }
                     
                     // Alle Attribute kopieren AUSSER data-consent-* (sonst würde es wieder blockiert)
                     for (var i = 0; i < child.attributes.length; i++) {
@@ -335,7 +351,12 @@ if (typeof window.consentManagerInline !== 'undefined') {
             
             // Container jetzt entfernen
             container.remove();
-            this.debug('🗑️ Container removed');
+            self.debug('🗑️ Container removed');
+            })
+            .catch(function(error) {
+                console.error('❌ Content loading failed:', error);
+                alert('Fehler beim Laden des Inhalts. Bitte laden Sie die Seite neu.');
+            });
         },
         
         logConsent: function(consentId, serviceKey, action) {
