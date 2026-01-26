@@ -272,8 +272,47 @@ if (typeof window.consentManagerInline !== 'undefined') {
             // Inhalte vor Container einfügen
             var insertedCount = 0;
             while (wrapper.firstChild) {
-                this.debug('➡️ Inserting child:', wrapper.firstChild);
-                container.parentNode.insertBefore(wrapper.firstChild, container);
+                var child = wrapper.firstChild;
+                this.debug('➡️ Processing child:', child);
+                
+                // Spezielle Behandlung für Script-Tags (müssen neu erstellt werden um ausgeführt zu werden)
+                if (child.nodeName === 'SCRIPT') {
+                    var newScript = document.createElement('script');
+                    
+                    // Alle Attribute kopieren AUSSER data-consent-* (sonst würde es wieder blockiert)
+                    for (var i = 0; i < child.attributes.length; i++) {
+                        var attr = child.attributes[i];
+                        if (!attr.name.startsWith('data-consent-')) {
+                            newScript.setAttribute(attr.name, attr.value);
+                        }
+                    }
+                    
+                    // Inline-Code kopieren (falls vorhanden)
+                    if (child.innerHTML) {
+                        newScript.innerHTML = child.innerHTML;
+                    }
+                    
+                    this.debug('🔄 Inserting recreated script tag');
+                    container.parentNode.insertBefore(newScript, container);
+                    wrapper.removeChild(child);
+                } else {
+                    // Andere Elemente (iframe, div, etc.) direkt einfügen
+                    // Entferne data-consent-* Attribute auch hier
+                    if (child.nodeType === 1) { // Element node
+                        var attrsToRemove = [];
+                        for (var i = 0; i < child.attributes.length; i++) {
+                            if (child.attributes[i].name.startsWith('data-consent-')) {
+                                attrsToRemove.push(child.attributes[i].name);
+                            }
+                        }
+                        attrsToRemove.forEach(function(attrName) {
+                            child.removeAttribute(attrName);
+                        });
+                    }
+                    
+                    this.debug('➡️ Inserting child:', child);
+                    container.parentNode.insertBefore(child, container);
+                }
                 insertedCount++;
             }
             

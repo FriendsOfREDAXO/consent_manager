@@ -47,13 +47,40 @@ $hasIssueTracker = rex_addon::exists('issue_tracker') && rex_addon::get('issue_t
                 <li><strong><?= $addon->i18n('consent_manager_editorial_step3_title') ?></strong><br>
                     <?= $addon->i18n('consent_manager_editorial_step3_desc') ?></li>
                 <li><strong><?= $addon->i18n('consent_manager_editorial_step4_title') ?></strong><br>
-                    <?= $addon->i18n('consent_manager_editorial_step4_desc') ?></li>
+                    <?= $addon->i18n('consent_manager_editorial_step4_desc') ?>
+                    
+                    <div class="alert alert-info" style="margin-top: 10px;">
+                        <p><strong><?= $addon->i18n('consent_manager_editorial_step4_how_title') ?></strong></p>
+                        <ul style="margin-bottom: 0;">
+                            <li><?= rex_i18n::rawMsg('consent_manager_editorial_step4_how_cke5') ?></li>
+                            <li><?= rex_i18n::rawMsg('consent_manager_editorial_step4_how_other') ?></li>
+                            <li><?= rex_i18n::rawMsg('consent_manager_editorial_step4_how_custom') ?></li>
+                        </ul>
+                    </div>
+                </li>
             </ol>
 
             <div class="text-center" style="margin-top: 20px;">
                 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#auto-blocking-assistant-modal">
                     <i class="rex-icon fa-magic"></i> <?= $addon->i18n('consent_manager_editorial_open_assistant') ?>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gespeicherte Snippets -->
+    <div class="panel panel-default">
+        <header class="panel-heading">
+            <div class="panel-title">
+                <i class="rex-icon fa-bookmark"></i> <?= $addon->i18n('consent_manager_editorial_snippets_title') ?>
+            </div>
+        </header>
+        <div class="panel-body">
+            <div id="snippets-container">
+                <div class="alert alert-info" id="snippets-empty-state">
+                    <i class="rex-icon fa-info-circle"></i> <?= $addon->i18n('consent_manager_editorial_snippets_empty') ?>
+                </div>
+                <div id="snippets-list" style="display: none;"></div>
             </div>
         </div>
     </div>
@@ -206,12 +233,17 @@ $hasIssueTracker = rex_addon::exists('issue_tracker') && rex_addon::get('issue_t
                     <div class="form-group" id="output_container" style="display: none;">
                         <label for="output_code"><?= $addon->i18n('consent_manager_auto_blocking_assistant_output_label') ?></label>
                         <textarea class="form-control" id="output_code" rows="8" readonly></textarea>
-                        <button type="button" class="btn btn-success btn-sm" id="copy_code" style="margin-top: 10px;">
-                            <i class="rex-icon fa-clipboard"></i> <?= $addon->i18n('consent_manager_auto_blocking_assistant_copy') ?>
-                        </button>
-                        <span id="copy_success" style="display: none; margin-left: 10px; color: #5cb85c;">
-                            <i class="rex-icon fa-check"></i> <?= $addon->i18n('consent_manager_auto_blocking_assistant_copied') ?>
-                        </span>
+                        <div style="margin-top: 10px;">
+                            <button type="button" class="btn btn-success btn-sm" id="copy_code">
+                                <i class="rex-icon fa-clipboard"></i> <?= $addon->i18n('consent_manager_auto_blocking_assistant_copy') ?>
+                            </button>
+                            <button type="button" class="btn btn-info btn-sm" id="save_snippet">
+                                <i class="rex-icon fa-bookmark"></i> <?= $addon->i18n('consent_manager_editorial_snippets_save') ?>
+                            </button>
+                            <span id="copy_success" style="display: none; margin-left: 10px; color: #5cb85c;">
+                                <i class="rex-icon fa-check"></i> <?= $addon->i18n('consent_manager_auto_blocking_assistant_copied') ?>
+                            </span>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -227,6 +259,171 @@ $hasIssueTracker = rex_addon::exists('issue_tracker') && rex_addon::get('issue_t
 <script nonce="<?= rex_response::getNonce() ?>">
 jQuery(function($) {
     'use strict';
+    
+    // LocalStorage Key
+    const STORAGE_KEY = 'consent_manager_snippets';
+    
+    // Snippet-Verwaltung
+    const snippetManager = {
+        load: function() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                console.error('Fehler beim Laden der Snippets:', e);
+                return [];
+            }
+        },
+        
+        save: function(snippets) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(snippets));
+                return true;
+            } catch (e) {
+                console.error('Fehler beim Speichern der Snippets:', e);
+                alert('Fehler beim Speichern des Snippets. Möglicherweise ist der LocalStorage voll.');
+                return false;
+            }
+        },
+        
+        add: function(name, code, metadata) {
+            const snippets = this.load();
+            snippets.push({
+                id: Date.now(),
+                name: name,
+                code: code,
+                metadata: metadata || {},
+                created: new Date().toISOString()
+            });
+            return this.save(snippets);
+        },
+        
+        delete: function(id) {
+            const snippets = this.load().filter(s => s.id !== id);
+            return this.save(snippets);
+        },
+        
+        render: function() {
+            const snippets = this.load();
+            const $container = $('#snippets-list');
+            const $emptyState = $('#snippets-empty-state');
+            
+            if (snippets.length === 0) {
+                $container.hide();
+                $emptyState.show();
+                return;
+            }
+            
+            $emptyState.hide();
+            $container.empty().show();
+            
+            snippets.forEach(snippet => {
+                const date = new Date(snippet.created).toLocaleDateString('de-DE');
+                const $item = $(`
+                    <div class="panel panel-default" data-snippet-id="${snippet.id}">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <strong><i class="rex-icon fa-bookmark"></i> ${$('<div>').text(snippet.name).html()}</strong>
+                                    <br><small class="text-muted">Erstellt: ${date}</small>
+                                    ${snippet.metadata.service ? '<br><small>Service: ' + $('<div>').text(snippet.metadata.service).html() + '</small>' : ''}
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    <button class="btn btn-primary btn-sm load-snippet" data-snippet-id="${snippet.id}">
+                                        <i class="rex-icon fa-download"></i> <?= $addon->i18n('consent_manager_editorial_snippets_load') ?>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-snippet" data-snippet-id="${snippet.id}">
+                                        <i class="rex-icon fa-trash"></i> <?= $addon->i18n('consent_manager_editorial_snippets_delete') ?>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                $container.append($item);
+            });
+        }
+    };
+    
+    // Initial Snippets laden
+    snippetManager.render();
+    
+    // Snippet laden
+    $(document).on('click', '.load-snippet', function() {
+        const id = parseInt($(this).data('snippet-id'));
+        const snippets = snippetManager.load();
+        const snippet = snippets.find(s => s.id === id);
+        
+        if (!snippet) {
+            alert('Snippet nicht gefunden!');
+            return;
+        }
+        
+        // Modal öffnen und Code einfügen
+        $('#auto-blocking-assistant-modal').modal('show');
+        
+        // Kurze Verzögerung, damit Modal geladen ist
+        setTimeout(() => {
+            $('#output_code').val(snippet.code);
+            $('#output_container').show();
+            
+            // Metadata zurücksetzen wenn vorhanden
+            if (snippet.metadata.service) {
+                $('#service_key').val(snippet.metadata.service);
+            }
+            if (snippet.metadata.provider) {
+                $('#provider_name').val(snippet.metadata.provider);
+            }
+            if (snippet.metadata.privacy) {
+                $('#privacy_url').val(snippet.metadata.privacy);
+            }
+            if (snippet.metadata.title) {
+                $('#consent_title').val(snippet.metadata.title);
+            }
+            if (snippet.metadata.text) {
+                $('#consent_text').val(snippet.metadata.text);
+            }
+        }, 300);
+    });
+    
+    // Snippet löschen
+    $(document).on('click', '.delete-snippet', function() {
+        if (!confirm('<?= $addon->i18n('consent_manager_editorial_snippets_delete_confirm') ?>')) {
+            return;
+        }
+        
+        const id = parseInt($(this).data('snippet-id'));
+        if (snippetManager.delete(id)) {
+            snippetManager.render();
+        }
+    });
+    
+    // Snippet speichern
+    $('#save_snippet').on('click', function() {
+        const code = $('#output_code').val();
+        if (!code) {
+            alert('Kein Code zum Speichern vorhanden!');
+            return;
+        }
+        
+        const name = prompt('<?= $addon->i18n('consent_manager_editorial_snippets_name') ?>', '<?= $addon->i18n('consent_manager_editorial_snippets_name_placeholder') ?>');
+        if (!name) {
+            return;
+        }
+        
+        const metadata = {
+            service: $('#service_key').val(),
+            provider: $('#provider_name').val(),
+            privacy: $('#privacy_url').val(),
+            title: $('#consent_title').val(),
+            text: $('#consent_text').val()
+        };
+        
+        if (snippetManager.add(name, code, metadata)) {
+            snippetManager.render();
+            alert('Snippet erfolgreich gespeichert!');
+        }
+    });
     
     // Toggle custom service input
     $('#service_key').on('change', function() {

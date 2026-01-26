@@ -455,6 +455,12 @@ class InlineConsent
                 $title = $titleMatch[1];
             }
 
+            // Optional: data-consent-text (Custom Placeholder Text)
+            $customText = '';
+            if (preg_match('/data-consent-text=["\']([^"\']+)["\']/', $attributes, $textMatch)) {
+                $customText = $textMatch[1];
+            }
+
             // Original-Tag rekonstruieren
             $originalTag = '<' . $tag . $attributes . '>' . $content . '</' . $tag . '>';
 
@@ -469,6 +475,10 @@ class InlineConsent
 
             if ('' !== $privacyUrl) {
                 $options['privacy_url'] = $privacyUrl;
+            }
+
+            if ('' !== $customText) {
+                $options['privacy_notice'] = $customText;
             }
 
             // Inline-Consent generieren
