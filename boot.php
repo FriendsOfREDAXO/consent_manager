@@ -113,6 +113,14 @@ if (rex::isFrontend()) {
         if (rex_addon::get('consent_manager')->getConfig('auto_blocking_enabled', false)) {
             if (class_exists('\FriendsOfRedaxo\ConsentManager\InlineConsent')) {
                 $content = \FriendsOfRedaxo\ConsentManager\InlineConsent::scanAndReplaceConsentElements($content);
+                
+                // CSS und JavaScript für Inline-Consent vor </head> einfügen
+                if (false !== stripos($content, '</head>')) {
+                    $assets = \FriendsOfRedaxo\ConsentManager\InlineConsent::getCSS();
+                    $assets .= \FriendsOfRedaxo\ConsentManager\InlineConsent::getJavaScript();
+                    $content = str_ireplace('</head>', $assets . '</head>', $content);
+                }
+                
                 $ep->setSubject($content);
             }
         }
