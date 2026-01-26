@@ -874,143 +874,59 @@ body.rex-theme-dark details > div code {
                     <style>
                         .wizard-loader-container {
                             text-align: center;
-                            padding: 60px 20px;
+                            padding: 80px 20px;
                         }
-                        .wizard-spinner {
+                        .wizard-loading-ring {
+                            display: inline-block;
+                            position: relative;
                             width: 80px;
                             height: 80px;
-                            margin: 0 auto 30px;
-                            position: relative;
                         }
-                        .wizard-spinner div {
+                        .wizard-loading-ring div {
+                            box-sizing: border-box;
+                            display: block;
                             position: absolute;
-                            width: 6px;
-                            height: 6px;
-                            background: #3498db;
+                            width: 64px;
+                            height: 64px;
+                            margin: 8px;
+                            border: 8px solid #3498db;
                             border-radius: 50%;
-                            animation: wizard-bounce 1.2s infinite ease-in-out both;
+                            animation: wizard-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+                            border-color: #3498db transparent transparent transparent;
                         }
-                        .wizard-spinner div:nth-child(1) {
-                            left: 8px;
-                            top: 8px;
-                            animation-delay: -0.36s;
+                        .wizard-loading-ring div:nth-child(1) {
+                            animation-delay: -0.45s;
                         }
-                        .wizard-spinner div:nth-child(2) {
-                            left: 8px;
-                            top: 37px;
-                            animation-delay: -0.24s;
+                        .wizard-loading-ring div:nth-child(2) {
+                            animation-delay: -0.3s;
                         }
-                        .wizard-spinner div:nth-child(3) {
-                            left: 8px;
-                            top: 66px;
-                            animation-delay: -0.12s;
+                        .wizard-loading-ring div:nth-child(3) {
+                            animation-delay: -0.15s;
                         }
-                        .wizard-spinner div:nth-child(4) {
-                            left: 37px;
-                            top: 8px;
-                            animation-delay: -0.36s;
-                        }
-                        .wizard-spinner div:nth-child(5) {
-                            left: 37px;
-                            top: 37px;
-                            animation-delay: -0.24s;
-                        }
-                        .wizard-spinner div:nth-child(6) {
-                            left: 37px;
-                            top: 66px;
-                            animation-delay: -0.12s;
-                        }
-                        .wizard-spinner div:nth-child(7) {
-                            left: 66px;
-                            top: 8px;
-                            animation-delay: 0s;
-                        }
-                        .wizard-spinner div:nth-child(8) {
-                            left: 66px;
-                            top: 37px;
-                            animation-delay: 0.12s;
-                        }
-                        .wizard-spinner div:nth-child(9) {
-                            left: 66px;
-                            top: 66px;
-                            animation-delay: 0.24s;
-                        }
-                        @keyframes wizard-bounce {
-                            0%, 40%, 100% {
-                                transform: scale(1);
-                                opacity: 1;
-                            }
-                            20% {
-                                transform: scale(1.5);
-                                opacity: 0.5;
-                            }
-                        }
-                        .wizard-waves {
-                            position: relative;
-                            width: 100%;
-                            height: 80px;
-                            margin-top: 30px;
-                        }
-                        .wizard-wave {
-                            position: absolute;
-                            width: 100%;
-                            height: 100%;
-                            opacity: 0.4;
-                        }
-                        .wizard-wave:before {
-                            content: '';
-                            position: absolute;
-                            width: 200%;
-                            height: 100%;
-                            top: 0;
-                            left: 50%;
-                            transform: translate(-50%, 0);
-                            background: linear-gradient(90deg, transparent, #3498db, transparent);
-                            animation: wizard-wave 3s linear infinite;
-                        }
-                        .wizard-wave:nth-child(2):before {
-                            animation-delay: -1s;
-                            opacity: 0.5;
-                        }
-                        .wizard-wave:nth-child(3):before {
-                            animation-delay: -2s;
-                            opacity: 0.3;
-                        }
-                        @keyframes wizard-wave {
+                        @keyframes wizard-ring {
                             0% {
-                                transform: translate(-50%, 0) translateX(-100%);
+                                transform: rotate(0deg);
                             }
                             100% {
-                                transform: translate(-50%, 0) translateX(100%);
+                                transform: rotate(360deg);
                             }
                         }
                     </style>
                     
                     <div class="wizard-loader-container">
-                        <div class="wizard-spinner">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
+                        <div class="wizard-loading-ring">
                             <div></div>
                             <div></div>
                             <div></div>
                             <div></div>
                         </div>
                         
-                        <h3 id="wizard-message" style="color: #3498db; margin: 0 0 10px 0; font-size: 20px;">
+                        <h3 id="wizard-message" style="color: #3498db; margin: 30px 0 10px 0; font-size: 20px;">
                             Setup wird durchgeführt...
                         </h3>
                         <p style="color: #7f8c8d; margin: 0;">
                             Bitte warten, während wir Ihre Domain konfigurieren
                         </p>
-                        
-                        <div class="wizard-waves">
-                            <div class="wizard-wave"></div>
-                            <div class="wizard-wave"></div>
-                            <div class="wizard-wave"></div>
-                        </div>
                     </div>
                 </div>
 
@@ -1339,9 +1255,26 @@ jQuery(function($) {
                 console.log('Setup Response:', response);
                 
                 if (response.status === 'success') {
-                    // Zum Abschluss-Screen wechseln
-                    $('#wizard-progress').hide();
-                    $('#wizard-success').show();
+                    // Kleine Pause nach Abschluss, dann sanfte Transition zum Success-Screen
+                    setTimeout(function() {
+                        // Fade-Out des Progress-Screens
+                        $('#wizard-progress').fadeOut(400, function() {
+                            // Dann Success-Screen mit schöner Transition einblenden
+                            $('#wizard-success').hide().css({
+                                'opacity': '0',
+                                'transform': 'scale(0.9)'
+                            }).show().animate({
+                                'opacity': '1'
+                            }, {
+                                duration: 600,
+                                step: function(now, fx) {
+                                    if (fx.prop === 'opacity') {
+                                        $(this).css('transform', 'scale(' + (0.9 + (now * 0.1)) + ')');
+                                    }
+                                }
+                            });
+                        });
+                    }, 1500); // 1.5 Sekunden Pause
                     
                     // Optional: Domain-Informationen anzeigen falls vorhanden
                     if (response.data && response.data.domain) {
