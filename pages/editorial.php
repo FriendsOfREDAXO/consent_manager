@@ -13,6 +13,12 @@ $hasIssueTracker = rex_addon::exists('issue_tracker') && rex_addon::get('issue_t
 // Admin-Info Text laden
 $adminInfo = $addon->getConfig('editorial_info', '');
 
+// Prüfe ob Auto-Blocking aktiviert ist
+$autoBlockingEnabled = (bool) $addon->getConfig('auto_blocking_enabled', false);
+
+// Prüfe ob User Config-Rechte hat
+$hasConfigPermission = rex::getUser()->isAdmin() || rex::getUser()->hasPerm('consent_manager[config]');
+
 ?>
 
 <style nonce="<?= rex_response::getNonce() ?>">
@@ -87,6 +93,12 @@ $adminInfo = $addon->getConfig('editorial_info', '');
     background: #5cb85c;
     color: #fff;
     border-color: #4cae4c;
+}
+
+.card-danger .consent-editorial-card-header {
+    background: #d9534f;
+    color: #fff;
+    border-color: #d43f3a;
 }
 
 .card-default .consent-editorial-card-header {
@@ -303,6 +315,34 @@ body.rex-theme-dark .panel-default .panel-body {
 </style>
 
 <div class="rex-addon-output consent-editorial-container">
+    <!-- Auto-Blocking Warnung (wenn nicht aktiviert) -->
+    <?php if (!$autoBlockingEnabled): ?>
+    <div class="consent-editorial-card card-danger consent-editorial-card-full" style="margin-bottom: 20px;">
+        <div class="consent-editorial-card-header">
+            <i class="rex-icon fa-exclamation-triangle"></i>
+            <span>Auto-Blocking ist nicht aktiviert</span>
+        </div>
+        <div class="consent-editorial-card-body" style="background: #fff; color: #333;">
+            <p style="margin: 0 0 10px 0;">
+                <strong>Die automatische Blockierung externer Inhalte ist derzeit deaktiviert.</strong>
+            </p>
+            <?php if ($hasConfigPermission): ?>
+            <p style="margin: 0;">
+                Damit die hier generierten Codes funktionieren, muss Auto-Blocking in den 
+                <a href="<?= rex_url::backendPage('consent_manager/config') ?>"><strong>Einstellungen aktiviert werden</strong></a>.
+                Ohne diese Funktion werden externe Inhalte direkt geladen und umgehen den Consent-Mechanismus.
+            </p>
+            <?php else: ?>
+            <p style="margin: 0;">
+                Damit die hier generierten Codes funktionieren, muss Auto-Blocking in den Einstellungen aktiviert werden.
+                <strong>Bitte kontaktieren Sie einen Administrator oder Benutzer mit Config-Berechtigung</strong>, 
+                um diese Funktion zu aktivieren. Ohne Auto-Blocking werden externe Inhalte direkt geladen und umgehen den Consent-Mechanismus.
+            </p>
+            <?php endif ?>
+        </div>
+    </div>
+    <?php endif ?>
+    
     <!-- Admin-Hinweise (Full Width wenn vorhanden) -->
     <?php if ('' !== $adminInfo): ?>
     <div class="consent-editorial-card card-primary consent-editorial-card-full" style="margin-bottom: 20px;">
