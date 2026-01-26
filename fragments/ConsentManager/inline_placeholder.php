@@ -122,9 +122,7 @@ if (str_starts_with($iconClass, 'uk-icon:')) {
         </div>
         
         <script type="text/plain" class="consent-content-data" 
-                data-consent-code="<?= rex_escape($serviceKey) ?>"
-                data-consent-original="<?= rex_escape($this->getVar('encodedContent', '')) ?>"
-                data-consent-hmac="<?= rex_escape($this->getVar('hmac', '')) ?>">
+                data-consent-code="<?= rex_escape($serviceKey) ?>">
 <?= $content ?>
         </script>
     </div>
