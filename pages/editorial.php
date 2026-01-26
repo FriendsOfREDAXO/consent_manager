@@ -311,7 +311,7 @@ body.rex-theme-dark .panel-default .panel-body {
             <span><?= $addon->i18n('consent_manager_editorial_admin_info_title') ?></span>
         </div>
         <div class="consent-editorial-card-body" style="background: #fff; color: #333;">
-            <div><?= $adminInfo ?></div>
+            <div><?= rex_escape($adminInfo, 'html') ?></div>
         </div>
     </div>
     <?php endif ?>

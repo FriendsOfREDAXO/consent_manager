@@ -280,6 +280,13 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     console.log('🔧 Processing SCRIPT tag');
                     var newScript = document.createElement('script');
                     
+                    // CSP Nonce hinzufügen (falls vorhanden im DOM)
+                    var nonce = document.querySelector('script[nonce]');
+                    if (nonce && nonce.getAttribute('nonce')) {
+                        newScript.setAttribute('nonce', nonce.getAttribute('nonce'));
+                        console.log('  🔒 Adding CSP nonce:', nonce.getAttribute('nonce'));
+                    }
+                    
                     // Alle Attribute kopieren AUSSER data-consent-* (sonst würde es wieder blockiert)
                     for (var i = 0; i < child.attributes.length; i++) {
                         var attr = child.attributes[i];
@@ -293,9 +300,9 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     }
                     
                     // Inline-Code kopieren (falls vorhanden)
-                    if (child.innerHTML && child.innerHTML.trim()) {
+                    if (child.textContent && child.textContent.trim()) {
                         console.log('  📝 Copying inline script content');
-                        newScript.innerHTML = child.innerHTML;
+                        newScript.textContent = child.textContent;
                     }
                     
                     console.log('🔄 Inserting recreated script tag:', newScript);
