@@ -1,9 +1,9 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.3.0 - 26.01.2026
+## Version 5.3.0 - 28.01.2026
 
 **🚀 Release-Highlights:**  
-Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse, Performance-Optimierungen, und neue Editorial-Seite für Redakteure mit Snippet-Manager und Auto-Blocking-Assistent.
+Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse, Performance-Optimierungen, und neue Editorial-Seite für Redakteure mit Snippet-Manager und Auto-Blocking-Assistent, Framework mode: Wähle dein Framework und schon passt es zu Deinem Designn.
 
 ---
 

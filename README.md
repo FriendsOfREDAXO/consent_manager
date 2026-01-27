@@ -25,7 +25,7 @@ Das AddOn stellt eine **DSGVO-konforme Lösung** für die Einholung von Einverst
 
 ### Rechtlicher Hinweis
 
-**Haftungsausschluss:** Mitgelieferte Texte und Cookie-Definitionen sind Beispiele ohne Gewähr. Website-Betreiber sind eigenverantwortlich für rechtskonforme Integration und müssen alle Inhalte durch Datenschutzbeauftragte prüfen lassen.
+🚨**Haftungsausschluss:** Mitgelieferte Texte und Cookie-Definitionen sind Beispiele ohne Gewähr. Website-Betreiber sind eigenverantwortlich für rechtskonforme Integration und müssen alle Inhalte durch Datenschutzbeauftragte prüfen lassen.
 
 ---
 
