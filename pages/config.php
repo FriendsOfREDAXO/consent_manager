@@ -1,6 +1,7 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\CLang;
+use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\Config;
 use FriendsOfRedaxo\ConsentManager\JsonSetup;
 use FriendsOfRedaxo\ConsentManager\Theme;
@@ -194,6 +195,16 @@ $cookie_count = $sql->getValue('count');
 $form = rex_config_form::factory((string) $addon->getPackageId());
 $form->addFieldset(rex_i18n::msg('consent_manager_config_legend'));
 
+// CSS Framework Modus
+$field = $form->addSelectField('css_framework_mode');
+$field->setLabel(rex_i18n::msg('consent_manager_config_css_framework_mode'));
+$select = $field->getSelect();
+$select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_none'), '');
+$select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_uikit3'), 'uikit3');
+$select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_bootstrap5'), 'bootstrap5');
+$select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_tailwind'), 'tailwind');
+$field->setNotice(rex_i18n::msg('consent_manager_config_css_framework_mode_notice'));
+
 // CSS Output Einstellung
 $field = $form->addCheckboxField('outputowncss');
 $field->setLabel(rex_i18n::msg('consent_manager_config_owncss'));
@@ -258,6 +269,7 @@ $wizardFragment = new rex_fragment();
 echo $wizardFragment->parse('ConsentManager/setup_wizard.php');
 
 if ('' !== rex_request::post('_csrf_token', 'string', '')) {
+    Cache::forceWrite();
     Theme::generateDefaultAssets();
     Theme::copyAllAssets();
 }

@@ -120,6 +120,12 @@ consent_manager_welcome_modal_step5_desc = Auswahl eines Designs für die Consen
 consent_manager_cache_write_failed = Cachefile konnte nicht geschrieben werden
 
 consent_manager_config_legend = Ausgabe-Einstellungen Frontend
+consent_manager_config_css_framework_mode = CSS Framework Modus
+consent_manager_config_css_framework_mode_notice = Wählen Sie ein CSS Framework aus. Bei Auswahl wird das klassische Theming deaktiviert und das Modal nutzt Framework-optimierte Klassen. Das Framework muss im Frontend bereits geladen sein.
+consent_manager_config_css_framework_mode_none = Keines (Standard Consent-Manager Themes)
+consent_manager_config_css_framework_mode_uikit3 = UIkit 3
+consent_manager_config_css_framework_mode_bootstrap5 = Bootstrap 5
+consent_manager_config_css_framework_mode_tailwind = Tailwind CSS
 consent_manager_config_owncss_desc = Wenn aktiviert wird im Frontend kein Standard-CSS für die Consent-Box ausgegeben (consent_manager_frontend.css).<br>CSS für das Styling der Consent-Box muss in eigenen CSS-Dateien vorhanden sein!
 consent_manager_config_owncss = Eigenes CSS verwenden
 consent_manager_config_hidebodyscrollbar = Scrollbar der Webseite ausblenden

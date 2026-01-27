@@ -129,8 +129,9 @@ if (true === $inlineMode || 'true' === $inlineMode || '1' === $inlineMode) {
     $consentparams['initially_hidden'] = 'true';
 }
 
-// Standard-CSS ausgeben
-if (false === $addon->getConfig('outputowncss', false)) {
+// Standard-CSS ausgeben (nur wenn kein Framework-Modus aktiv)
+$frameworkMode = $addon->getConfig('css_framework_mode', '');
+if ('' === $frameworkMode && false === $addon->getConfig('outputowncss', false)) {
     $_csscontent = Frontend::getFrontendCss();
     if ('' !== $_csscontent) {
         $consentparams['outputcss'] .= '    <style>' . trim($_csscontent) . '</style>' . PHP_EOL;

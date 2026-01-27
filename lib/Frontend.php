@@ -249,7 +249,7 @@ class Frontend
 
         $boxtemplate = '';
         ob_start();
-        echo self::getFragment(0, 0, 'ConsentManager/box.php');
+        echo self::getFragment(0, 0, self::getBoxFragmentName());
         $boxtemplate = (string) ob_get_contents();
         ob_end_clean();
         if ('' === $boxtemplate) {
@@ -430,7 +430,7 @@ class Frontend
         // Get box template
         $boxtemplate = '';
         ob_start();
-        echo self::getFragment(0, 0, 'ConsentManager/box.php');
+        echo self::getFragment(0, 0, self::getBoxFragmentName());
         $boxTemplateResult = ob_get_contents();
         ob_end_clean();
 
@@ -517,7 +517,22 @@ class Frontend
      */
     public static function getBox(): string
     {
-        return self::getFragment(0, 0, 'ConsentManager/box.php');
+        return self::getFragment(0, 0, self::getBoxFragmentName());
+    }
+
+    /**
+     * Get completing logic for selecting the correct box fragment.
+     *
+     * @return string
+     * @api
+     */
+    public static function getBoxFragmentName(): string
+    {
+        $frameworkMode = rex_addon::get('consent_manager')->getConfig('css_framework_mode', '');
+        if ('' !== $frameworkMode && in_array($frameworkMode, ['uikit3', 'bootstrap5', 'tailwind'], true)) {
+            return 'ConsentManager/box_' . $frameworkMode . '.php';
+        }
+        return 'ConsentManager/box.php';
     }
 
     /**
@@ -644,5 +659,25 @@ class Frontend
         }
 
         return $output;
+    }
+
+    /**
+     * @api
+     */
+    public static function getBoxFragmentName(): string
+    {
+        $addon = rex_addon::get('consent_manager');
+        $frameworkMode = (string) $addon->getConfig('css_framework_mode', '');
+
+        switch ($frameworkMode) {
+            case 'uikit3':
+                return 'ConsentManager/box_uikit3.php';
+            case 'bootstrap5':
+                return 'ConsentManager/box_bootstrap5.php';
+            case 'tailwind':
+                return 'ConsentManager/box_tailwind.php';
+            default:
+                return 'ConsentManager/box.php';
+        }
     }
 }
