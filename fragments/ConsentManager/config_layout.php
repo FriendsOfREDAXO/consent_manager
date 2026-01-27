@@ -130,19 +130,12 @@ $hasDomains = (int) $sql->getValue('cnt') > 0;
     <div class="row">
         <!-- Linke Spalte: Einstellungen (8 Spalten) -->
         <div class="col-md-8">
-            <div class="panel panel-edit">
-                <header class="panel-heading">
-                    <div class="panel-title">
-                        <i class="rex-icon fa-cogs"></i> <?= rex_i18n::msg('consent_manager_config_settings_title') ?>
-                    </div>
-                </header>
-                <div class="panel-body">
-                    <?php if (null !== $form): ?>
-                        <?= $form->get() ?>
-                    <?php else: ?>
-                        <p>Form konnte nicht geladen werden.</p>
-                    <?php endif ?>
-                </div>
+            <div style="margin-bottom: 20px;">
+                <?php if (null !== $form): ?>
+                    <?= $form->get() ?>
+                <?php else: ?>
+                    <p>Form konnte nicht geladen werden.</p>
+                <?php endif ?>
             </div>
         </div>
         

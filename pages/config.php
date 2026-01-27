@@ -193,7 +193,18 @@ $cookie_count = $sql->getValue('count');
 
 // Settings Form erstellen mit verbesserter Struktur
 $form = rex_config_form::factory((string) $addon->getPackageId());
-$form->addFieldset(rex_i18n::msg('consent_manager_config_legend'));
+
+// --- PANEL: Aussehen & Framework ---
+$panelStart = '
+<div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.05); margin: 20px 0; padding: 15px;">
+    <div style="display: flex; align-items: start;">
+        <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #5bc0de; line-height: 1;">
+            <i class="fa fa-paint-brush"></i>
+        </div>
+        <div style="flex: 1;">
+            <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">' . rex_i18n::msg('consent_manager_config_legend') . '</h4>
+';
+$form->addRawField($panelStart);
 
 // CSS Framework Modus
 $field = $form->addSelectField('css_framework_mode');
@@ -204,9 +215,42 @@ $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_uiki
 $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_bootstrap5'), 'bootstrap5');
 $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_tailwind'), 'tailwind');
 $field->setNotice(rex_i18n::msg('consent_manager_config_css_framework_mode_notice'));
+$field->setAttribute('id', 'css-framework-mode-select');
 
-// Framework Minimal Settings (nur anzeigen wenn Framework gewählt)
-$form->addFieldset(rex_i18n::msg('consent_manager_config_framework_legend'));
+// CSS Output Einstellung
+$field = $form->addCheckboxField('outputowncss');
+$field->setLabel(rex_i18n::msg('consent_manager_config_owncss'));
+$field->addOption(rex_i18n::msg('consent_manager_config_owncss'), 1);
+$field->setNotice(rex_i18n::msg('consent_manager_config_owncss_desc'));
+
+// Body Scrollbar Einstellung
+$field = $form->addCheckboxField('hidebodyscrollbar');
+$field->setLabel(rex_i18n::msg('consent_manager_config_hidebodyscrollbar'));
+$field->addOption(rex_i18n::msg('consent_manager_config_hidebodyscrollbar'), 1);
+$field->setNotice(rex_i18n::msg('consent_manager_config_hidebodyscrollbar_desc'));
+
+// Modal-Backdrop Einstellung
+$field = $form->addSelectField('backdrop');
+$field->setLabel(rex_i18n::msg('consent_manager_config_backdrop'));
+$select = $field->getSelect();
+$select->addOption(rex_i18n::msg('consent_manager_config_backdrop_enabled'), 1);
+$select->addOption(rex_i18n::msg('consent_manager_config_backdrop_disabled'), 0);
+$field->setNotice(rex_i18n::msg('consent_manager_config_backdrop_desc'));
+
+$form->addRawField('</div></div></div>');
+
+
+// --- PANEL: Framework-Optionen (Dynamisch) ---
+$panelStart = '
+<div id="framework-options-panel" class="panel panel-primary" style="border-left: 4px solid #337ab7; background: rgba(51, 122, 183, 0.05); margin: 20px 0; padding: 15px;">
+    <div style="display: flex; align-items: start;">
+        <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #337ab7; line-height: 1;">
+            <i class="fa fa-magic"></i>
+        </div>
+        <div style="flex: 1;">
+            <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">' . rex_i18n::msg('consent_manager_config_framework_legend') . '</h4>
+';
+$form->addRawField($panelStart);
 
 $field = $form->addSelectField('css_framework_shadow');
 $field->setLabel(rex_i18n::msg('consent_manager_config_framework_shadow'));
@@ -221,17 +265,20 @@ $select = $field->getSelect();
 $select->addOption(rex_i18n::msg('consent_manager_config_framework_rounded_no'), '0');
 $select->addOption(rex_i18n::msg('consent_manager_config_framework_rounded_yes'), '1');
 
-// CSS Output Einstellung
-$field = $form->addCheckboxField('outputowncss');
-$field->setLabel(rex_i18n::msg('consent_manager_config_owncss'));
-$field->addOption(rex_i18n::msg('consent_manager_config_owncss'), 1);
-$field->setNotice(rex_i18n::msg('consent_manager_config_owncss_desc'));
+$form->addRawField('</div></div></div>');
 
-// Body Scrollbar Einstellung
-$field = $form->addCheckboxField('hidebodyscrollbar');
-$field->setLabel(rex_i18n::msg('consent_manager_config_hidebodyscrollbar'));
-$field->addOption(rex_i18n::msg('consent_manager_config_hidebodyscrollbar'), 1);
-$field->setNotice(rex_i18n::msg('consent_manager_config_hidebodyscrollbar_desc'));
+
+// --- PANEL: Funktionsweise ---
+$panelStart = '
+<div class="panel panel-default" style="border-left: 4px solid #777; background: rgba(119, 119, 119, 0.05); margin: 20px 0; padding: 15px;">
+    <div style="display: flex; align-items: start;">
+        <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #777; line-height: 1;">
+            <i class="fa fa-gears"></i>
+        </div>
+        <div style="flex: 1;">
+            <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Funktion & Datenschutz</h4>
+';
+$form->addRawField($panelStart);
 
 // Inline-Only Modus
 $field = $form->addCheckboxField('inline_only_mode');
@@ -239,48 +286,76 @@ $field->setLabel(rex_i18n::msg('consent_manager_config_inline_only_mode'));
 $field->addOption(rex_i18n::msg('consent_manager_config_inline_only_mode'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_inline_only_mode_desc'));
 
-// Modal-Backdrop Einstellung
-$field = $form->addSelectField('backdrop');
-$field->setLabel(rex_i18n::msg('consent_manager_config_backdrop'));
-$select = $field->getSelect();
-$select->addOption(rex_i18n::msg('consent_manager_config_backdrop_enabled'), 1);
-$select->addOption(rex_i18n::msg('consent_manager_config_backdrop_disabled'), 0);
-$field->setNotice(rex_i18n::msg('consent_manager_config_backdrop_desc'));
-
 // Auto-Blocking für manuell eingefügtes HTML
 $field = $form->addCheckboxField('auto_blocking_enabled');
 $field->setLabel(rex_i18n::msg('consent_manager_config_auto_blocking'));
 $field->addOption(rex_i18n::msg('consent_manager_config_auto_blocking_enable'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_auto_blocking_desc'));
 
-// Redakteur-Hinweise (wird nur auf Editorial-Seite angezeigt)
+// Redakteur-Hinweise
 $field = $form->addTextAreaField('editorial_info');
 $field->setLabel(rex_i18n::msg('consent_manager_config_editorial_info'));
 $field->setAttribute('rows', '4');
-$field->setAttribute('placeholder', rex_i18n::msg('consent_manager_config_editorial_info_placeholder'));
 $field->setNotice(rex_i18n::msg('consent_manager_config_editorial_info_notice'));
+
+$form->addRawField('</div></div></div>');
+
+
+// --- PANEL: Cookie-Technik ---
+$panelStart = '
+<div class="panel panel-warning" style="border-left: 4px solid #f0ad4e; background: rgba(240, 173, 78, 0.05); margin: 20px 0; padding: 15px;">
+    <div style="display: flex; align-items: start;">
+        <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #f0ad4e; line-height: 1;">
+            <i class="fa fa-code"></i>
+        </div>
+        <div style="flex: 1;">
+            <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Technische Details</h4>
+';
+$form->addRawField($panelStart);
 
 // Cookie Name
 $field = $form->addTextField('cookie_name');
 $field->setLabel(rex_i18n::msg('consent_manager_config_cookie_name_label'));
 $field->setAttribute('placeholder', 'consentmanager');
-$field->setAttribute('pattern', '^[A-Za-z0-9_\\-]+$');
 $field->setNotice(rex_i18n::msg('consent_manager_config_cookie_name_notice'));
 
 // Cookie Lebensdauer
 $field = $form->addTextField('lifespan');
 $field->setLabel(rex_i18n::msg('consent_manager_config_lifespan_label'));
 $field->setAttribute('type', 'number');
-$field->setAttribute('step', '1');
-$field->setAttribute('pattern', '[0-9]*');
-$field->setAttribute('placeholder', '365');
 $field->setNotice(rex_i18n::msg('consent_manager_config_lifespan_notice'));
 
-// Token Einstellungen Fieldset
-$form->addFieldset(rex_i18n::msg('consent_manager_config_token_legend'));
+// Token Einstellungen
 $field = $form->addTextField('skip_consent');
 $field->setLabel(rex_i18n::msg('consent_manager_config_token_label'));
 $field->setNotice(rex_i18n::msg('consent_manager_config_token_notice'));
+
+$form->addRawField('</div></div></div>');
+
+// JS für Toggles am Ende der Form
+$form->addRawField('
+<script nonce="' . rex_response::getNonce() . '">
+document.addEventListener("DOMContentLoaded", function() {
+    var modeSelect = document.getElementById("css-framework-mode-select");
+    var frameworkPanel = document.getElementById("framework-options-panel");
+    
+    function updateToggles() {
+        if (modeSelect && frameworkPanel) {
+            if (modeSelect.value !== "") {
+                frameworkPanel.style.display = "block";
+            } else {
+                frameworkPanel.style.display = "none";
+            }
+        }
+    }
+    
+    if (modeSelect) {
+        modeSelect.addEventListener("change", updateToggles);
+        updateToggles();
+    }
+});
+</script>
+');
 
 // Layout mit Fragment
 $fragment = new rex_fragment();

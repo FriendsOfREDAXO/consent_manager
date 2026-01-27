@@ -1,4 +1,16 @@
 <?php
+use FriendsOfRedaxo\ConsentManager\Frontend;
+
+$consent_manager = new Frontend(0);
+if (is_string(rex_request::server('HTTP_HOST'))) {
+    $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
+}
+
+if (0 === count($consent_manager->texts)) {
+    echo '<div id="consent_manager-background">' . rex_view::error(rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig')) . '</div>';
+    return;
+}
+
 $addon = rex_addon::get('consent_manager');
 $backdropEnabled = $addon->getConfig('backdrop', '1') !== '0';
 $shadowType = $addon->getConfig('css_framework_shadow', 'large');
