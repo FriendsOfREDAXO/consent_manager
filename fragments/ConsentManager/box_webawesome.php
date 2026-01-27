@@ -24,52 +24,56 @@ $rounded = rex_addon::get('consent_manager')->getConfig('css_framework_rounded',
      data-cachelogid="<?= $consent_manager->cacheLogId ?>" 
      data-nosnippet aria-hidden="true">
     
-    <wa-dialog label="<?= $consent_manager->texts['headline'] ?>" id="consent_manager-wa-dialog" style="--width: 600px; max-width: 95vw;">
+    <sl-dialog label="<?= $consent_manager->texts['headline'] ?>" id="consent_manager-wa-dialog" style="--width: 600px; max-width: 95vw;">
         <div class="consent_manager-wa-content">
             <p><?= $consent_manager->texts['description'] ?></p>
             
             <div style="margin-top: 20px;">
                 <?php foreach ($consent_manager->cookiegroups as $cookiegroup) : ?>
-                    <wa-details summary="<?= $cookiegroup['name'] ?>" style="margin-bottom: 10px;">
+                    <sl-details summary="<?= $cookiegroup['name'] ?>" style="margin-bottom: 10px;">
                         <div style="margin-bottom: 10px;">
-                            <wa-checkbox 
+                            <sl-checkbox 
                                 class="consent_manager-cookiegroup-checkbox" 
                                 data-uid="<?= $cookiegroup['uid'] ?>"
                                 <?= $cookiegroup['required'] ? 'checked disabled' : '' ?>>
                                 <?= $cookiegroup['name'] ?>
-                            </wa-checkbox>
+                            </sl-checkbox>
                         </div>
                         <p><?= $cookiegroup['description'] ?></p>
                         
-                        <wa-list style="margin-top: 10px;">
+                        <div style="margin-top: 10px; padding-left: 20px; border-left: 2px solid var(--sl-color-neutral-200);">
                             <?php foreach ($cookiegroup['cookie'] as $cookie) : ?>
-                                <wa-list-item>
-                                    <strong><?= $cookie['service_name'] ?></strong>
-                                    <div slot="description"><?= $cookie['usage'] ?></div>
-                                </wa-list-item>
+                                <div style="margin-bottom: 8px;">
+                                    <strong><?= $cookie['service_name'] ?></strong><br>
+                                    <small><?= $cookie['usage'] ?></small>
+                                </div>
                             <?php endforeach; ?>
-                        </wa-list>
-                    </wa-details>
+                        </div>
+                    </sl-details>
                 <?php endforeach; ?>
             </div>
             
             <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
-                <wa-button variant="default" class="consent_manager-save">
+                <sl-button variant="default" class="consent_manager-save">
                     <?= $consent_manager->texts['button_accept'] ?>
-                </wa-button>
-                <wa-button variant="primary" class="consent_manager-accept-all">
+                </sl-button>
+                <sl-button variant="primary" class="consent_manager-accept-all">
                     <?= $consent_manager->texts['button_select_all'] ?>
-                </wa-button>
+                </sl-button>
             </div>
 
             <div style="margin-top: 15px; font-size: 0.8em; text-align: center;">
-                <a href="<?= rex_getUrl($consent_manager->links['privacy_policy']) ?>"><?= $consent_manager->texts['link_privacy'] ?></a>
-                <?php if (isset($consent_manager->links['legal_notice'])): ?>
-                    | <a href="<?= rex_getUrl($consent_manager->links['legal_notice']) ?>"><?= $consent_manager->texts['link_imprint'] ?? 'Impressum' ?></a>
+                <?php
+                $privacy_policy_id = $consent_manager->links['privacy_policy'] ?? 0;
+                $legal_notice_id = $consent_manager->links['legal_notice'] ?? 0;
+                ?>
+                <a href="<?= $privacy_policy_id ? rex_getUrl($privacy_policy_id) : '#' ?>"><?= $consent_manager->texts['link_privacy'] ?></a>
+                <?php if ($legal_notice_id): ?>
+                    | <a href="<?= rex_getUrl($legal_notice_id) ?>"><?= $consent_manager->texts['link_imprint'] ?? 'Impressum' ?></a>
                 <?php endif; ?>
             </div>
         </div>
-    </wa-dialog>
+    </sl-dialog>
 
     <!-- Base64 Scripts -->
     <?php
