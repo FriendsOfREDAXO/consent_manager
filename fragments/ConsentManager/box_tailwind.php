@@ -69,19 +69,16 @@ $buttonRoundedClass = $roundedEnabled ? 'rounded-lg' : 'rounded-none';
                                 <summary class="flex items-center justify-between py-5 cursor-pointer list-none appearance-none [&::-webkit-details-marker]:hidden">
                                     <div class="flex items-center flex-grow pr-4">
                                         <div class="relative flex items-center">
-                                            <input class="w-5 h-5 appearance-none border-2 border-slate-300 checked:bg-sky-600 checked:border-sky-600 transition-all cursor-pointer focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 <?= $roundedEnabled ? 'rounded' : 'rounded-none' ?>" type="checkbox" 
+                                            <input class="peer w-5 h-5 appearance-none border-2 border-slate-300 checked:bg-sky-600 checked:border-sky-600 transition-all cursor-pointer focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 <?= $roundedEnabled ? 'rounded' : 'rounded-none' ?>" type="checkbox" 
                                                 id="<?= rex_escape($cookiegroup['uid']) ?>" 
                                                 data-uid="<?= rex_escape($cookiegroup['uid']) ?>" 
                                                 data-cookie-uids='<?= json_encode($cookiegroup['cookie_uids']) ?>'
                                                 <?= $isRequired ? 'checked disabled data-action="toggle-cookie"' : 'tabindex="0"' ?>
                                                 onclick="event.stopPropagation();"
                                             >
-                                            <svg class="absolute w-3 h-3 text-white pointer-events-none left-1 opacity-0 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                            <svg class="absolute w-3 h-3 text-white pointer-events-none left-1 opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                                             </svg>
-                                            <style nonce="<?= rex_response::getNonce() ?>">
-                                                input:checked ~ .check-icon { opacity: 1; }
-                                            </style>
                                         </div>
                                         <label class="ml-4 block text-base font-semibold text-slate-900 cursor-pointer" for="<?= rex_escape($cookiegroup['uid']) ?>" onclick="event.stopPropagation();">
                                             <?= rex_escape($cookiegroup['name'] ?? '') ?>
