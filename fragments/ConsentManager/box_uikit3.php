@@ -138,7 +138,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                         >
                                         <span class="uk-text-bold"><?= rex_escape($cookiegroup['name'] ?? '') ?></span>
                                         <?php if ($isRequired): ?>
-                                            <span class="uk-label margin-small-left" style="font-size: 0.6rem;"><?= rex_i18n::msg('consent_manager_cookiegroup_required') ?></span>
+                                            <span class="uk-text-meta uk-margin-small-left" style="font-size: 0.75rem;">(<?= rex_i18n::msg('consent_manager_cookiegroup_required') ?>)</span>
                                         <?php endif; ?>
                                     </label>
                                     
