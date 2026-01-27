@@ -30,13 +30,13 @@ if (0 >= count($consent_manager->cookiegroups)) {
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
-    background: <?= (bool) rex_addon::get('consent_manager')->getConfig('backdrop', true) ? 'rgba(0, 0, 0, 0.6)' : 'transparent' ?> !important;
+    background: <?= rex_addon::get('consent_manager')->getConfig('backdrop', '1') !== '0' ? 'rgba(0, 0, 0, 0.6)' : 'transparent' ?> !important;
     display: none;
     align-items: center;
     justify-content: center;
     padding: 1rem;
     z-index: 1000000 !important;
-    <?php if (!(bool) rex_addon::get('consent_manager')->getConfig('backdrop', true)): ?>
+    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
     pointer-events: none !important;
     <?php endif; ?>
 }
@@ -47,7 +47,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
     display: none !important;
 }
 #consent_manager-wrapper {
-    <?php if (!(bool) rex_addon::get('consent_manager')->getConfig('backdrop', true)): ?>
+    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
     pointer-events: auto !important;
     <?php endif; ?>
     background: #fff;

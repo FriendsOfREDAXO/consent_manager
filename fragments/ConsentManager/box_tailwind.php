@@ -23,7 +23,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
 ?>
 
 <?php
-$backdropEnabled = (bool) rex_addon::get('consent_manager')->getConfig('backdrop', true);
+$backdropEnabled = rex_addon::get('consent_manager')->getConfig('backdrop', '1') !== '0';
 ?>
 
 <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?> fixed inset-0 flex items-center justify-center p-4 <?= $backdropEnabled ? 'bg-slate-900/60' : 'bg-transparent pointer-events-none' ?> z-[1000000]" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
