@@ -529,7 +529,7 @@ class Frontend
     public static function getBoxFragmentName(): string
     {
         $frameworkMode = rex_addon::get('consent_manager')->getConfig('css_framework_mode', '');
-        if ('' !== $frameworkMode && in_array($frameworkMode, ['uikit3', 'bootstrap5', 'tailwind'], true)) {
+        if ('' !== $frameworkMode && in_array($frameworkMode, ['uikit3', 'bootstrap5', 'tailwind', 'bulma'], true)) {
             return 'ConsentManager/box_' . $frameworkMode . '.php';
         }
         return 'ConsentManager/box.php';

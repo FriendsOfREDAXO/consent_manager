@@ -45,22 +45,32 @@ if ($shadow === 'large') $shadowClass = 'has-shadow';
                                 <label class="checkbox is-size-6 has-text-weight-bold">
                                     <input type="checkbox" 
                                            class="consent_manager-cookiegroup-checkbox mr-2" 
+                                           id="<?= $cookiegroup['uid'] ?>"
                                            data-uid="<?= $cookiegroup['uid'] ?>"
-                                           <?= $cookiegroup['required'] ? 'checked disabled' : '' ?>>
+                                           data-cookie-uids='<?= json_encode($cookiegroup['cookie_uids']) ?>'
+                                           <?= (bool) $cookiegroup['required'] ? 'checked disabled data-action="toggle-cookie"' : '' ?>>
                                     <?= $cookiegroup['name'] ?>
                                 </label>
                             </div>
                             <p class="is-size-7 has-text-grey"><?= $cookiegroup['description'] ?></p>
                             
-                            <details class="mt-2">
-                                <summary class="is-size-7 has-text-link is-clickable">Details anzeigen</summary>
-                                <div class="mt-2 pl-3 border-left">
-                                    <?php foreach ($cookiegroup['cookie'] as $cookie) : ?>
-                                        <div class="mb-2">
-                                            <div class="is-size-7 has-text-weight-semibold"><?= $cookie['service_name'] ?></div>
-                                            <div class="is-size-7 has-text-grey"><?= $cookie['usage'] ?></div>
-                                        </div>
-                                    <?php endforeach; ?>
+                            <details class="mt-2 text-small">
+                                <summary class="is-size-7 has-text-link is-clickable"><?= $consent_manager->texts['toggle_details'] ?></summary>
+                                <div class="mt-2 pl-3" style="border-left: 2px solid #eee;">
+                                    <?php 
+                                    foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
+                                        if (isset($consent_manager->cookies[$cookieUid])) {
+                                            $cookie = $consent_manager->cookies[$cookieUid];
+                                            $title = ($cookie['service_name'] !== '') ? $cookie['service_name'] : $cookie['provider'];
+                                            ?>
+                                            <div class="mb-2">
+                                                <div class="is-size-7 has-text-weight-semibold"><?= rex_escape($title) ?></div>
+                                                <div class="is-size-7 has-text-grey"><?= $cookie['description'] ?? '' ?></div>
+                                            </div>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
                                 </div>
                             </details>
                         </div>
@@ -68,24 +78,24 @@ if ($shadow === 'large') $shadowClass = 'has-shadow';
                 </div>
             </section>
             <footer class="modal-card-foot is-justify-content-flex-end" <?= $rounded === '0' ? 'style="border-radius: 0;"' : '' ?>>
-                <button class="button is-light consent_manager-save">
+                <button class="button is-light consent_manager-save consent_manager-close">
                     <?= $consent_manager->texts['button_accept'] ?>
                 </button>
-                <button class="button is-primary consent_manager-accept-all">
+                <button class="button is-primary consent_manager-accept-all consent_manager-close">
                     <?= $consent_manager->texts['button_select_all'] ?>
                 </button>
             </footer>
             
             <div class="has-text-centered py-3 is-size-7 has-text-grey" style="background: var(--bulma-modal-card-foot-background-color, #f5f5f5);">
                 <?php
-                $privacy_policy_id = $consent_manager->links['privacy_policy'] ?? 0;
-                $legal_notice_id = $consent_manager->links['legal_notice'] ?? 0;
+                $clang = rex_clang::getCurrentId();
+                foreach ($consent_manager->links as $v) {
+                    $article = rex_article::get($v, $clang);
+                    if ($article instanceof rex_article) {
+                        echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '" class="has-text-grey mx-2">' . rex_escape($article->getName()) . '</a>';
+                    }
+                }
                 ?>
-                <a href="<?= $privacy_policy_id ? rex_getUrl($privacy_policy_id) : '#' ?>" class="has-text-grey"><?= $consent_manager->texts['link_privacy'] ?></a>
-                <?php if ($legal_notice_id): ?>
-                    <span class="mx-1">|</span>
-                    <a href="<?= rex_getUrl($legal_notice_id) ?>" class="has-text-grey"><?= $consent_manager->texts['link_imprint'] ?? 'Impressum' ?></a>
-                <?php endif; ?>
             </div>
         </div>
     </div>

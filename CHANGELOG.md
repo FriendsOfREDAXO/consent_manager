@@ -3,7 +3,7 @@
 ## Version 5.3.0 - 28.01.2026
 
 **🚀 Release-Highlights:**  
-Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse, Performance-Optimierungen, und neue Editorial-Seite für Redakteure mit Snippet-Manager und Auto-Blocking-Assistent, Framework mode: Wähle dein Framework und schon passt es zu Deinem Designn.
+Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse, Performance-Optimierungen, und neue Editorial-Seite für Redakteure mit Snippet-Manager und Auto-Blocking-Assistent, Framework mode: Wähle dein Framework und schon passt es zu Deinem Design.
 
 ---
 
@@ -17,7 +17,7 @@ Vollständige Unterstützung für Frontend-Frameworks ohne Custom CSS:
 - **Setup-Wizard Integration**: Auswahl des Frameworks bereits bei der Ersteinrichtung möglich.
 - **Backdrop-Steuerung**: Native Modal-Overlays der Frameworks werden genutzt und können in den Einstellungen konfiguriert werden.
 
-### �📝 Editorial-Seite für Redakteure (NEU)
+### 📝 Editorial-Seite für Redakteure (NEU)
 
 Neue dedizierte Seite für Redakteure ohne Admin-Rechte:
 - **Moderne Card-basierte UI** mit Bootstrap 3 Farben und REDAXO-Design
@@ -74,7 +74,7 @@ Komplett neu gestaltete Preview-Seite ohne Hintergrundbilder:
 - Cookie-Box öffnet automatisch beim Laden der Preview
 - Dynamisches iframe-Management im Modal für stabiles Schließverhalten
 
-### �️ Security & XSS-Schutz
+### ️ Security & XSS-Schutz
 
 Vollständiges Security Audit durchgeführt und alle Inline-Scripts abgesichert:
 - **CSP-Nonce-Schutz** für alle Inline-`<script>`-Tags im Backend (config.php, theme.php, theme_preview.php, domain.php, log.php)
