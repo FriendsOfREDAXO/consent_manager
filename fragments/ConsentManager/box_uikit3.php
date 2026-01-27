@@ -147,9 +147,9 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                     </a>
                                 </div>
 
-                                <div id="details-<?= $groupUid ?>" class="uk-margin-small-top uk-padding-small uk-background-muted" hidden>
+                                <div id="details-<?= $groupUid ?>" class="uk-margin-small-top uk-padding-small uk-box-shadow-small" style="border: 1px solid #eee;" hidden>
                                     <div class="uk-text-small uk-margin-small-bottom"><?= $cookiegroup['description'] ?? '' ?></div>
-                                    <ul uk-accordion="multiple: true" class="uk-margin-remove">
+                                    <ul uk-accordion="multiple: true" class="uk-margin-remove uk-accordion-divider">
                                         <?php
                                         foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
                                             if (isset($consent_manager->cookies[$cookieUid])) {
