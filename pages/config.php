@@ -191,12 +191,15 @@ $sql = rex_sql::factory();
 $sql->setQuery('SELECT COUNT(*) as count FROM ' . rex::getTable('consent_manager_cookie'));
 $cookie_count = $sql->getValue('count');
 
-// Settings Form erstellen mit verbesserter Struktur
+// Settings Form erstellen
 $form = rex_config_form::factory((string) $addon->getPackageId());
+
+// --- Äußeres Panel (wie Domain-Einstellungen) ---
+$form->addRawField('<section class="rex-page-section"><div class="panel panel-edit"><div class="panel-body">');
 
 // --- PANEL: Aussehen & Framework ---
 $panelStart = '
-<div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.05); margin: 20px 0; padding: 15px;">
+<div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.05); margin-bottom: 20px; padding: 15px;">
     <div style="display: flex; align-items: start;">
         <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #5bc0de; line-height: 1;">
             <i class="fa fa-paint-brush"></i>
@@ -330,7 +333,8 @@ $field = $form->addTextField('skip_consent');
 $field->setLabel(rex_i18n::msg('consent_manager_config_token_label'));
 $field->setNotice(rex_i18n::msg('consent_manager_config_token_notice'));
 
-$form->addRawField('</div></div></div>');
+$form->addRawField('</div></div></div>'); // Ende Technisches Panel
+$form->addRawField('</div></div></section>'); // Ende Äußeres Panel + Section
 
 // JS für Toggles am Ende der Form
 $form->addRawField('

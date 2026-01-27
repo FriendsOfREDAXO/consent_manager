@@ -42,15 +42,15 @@ $backdropStyle = $backdropEnabled ? 'background: rgba(0,0,0,0.6);' : 'background
      data-cachelogid="<?= $consent_manager->cacheLogId ?>" 
      data-nosnippet aria-hidden="true">
 
-    <div class="consent_manager-wrapper uk-card uk-card-default uk-width-1-1 uk-width-2-3@s uk-width-1-2@m uk-position-relative uk-overflow-hidden uk-flex uk-flex-column <?= $shadowClass ?> <?= $roundedClass ?>" 
+    <div class="consent_manager-wrapper uk-card uk-card-default uk-width-1-1 uk-position-relative uk-overflow-hidden uk-flex uk-flex-column <?= $shadowClass ?> <?= $roundedClass ?>" 
          id="consent_manager-wrapper" 
          style="max-width: 720px; max-height: 90vh; pointer-events: auto;"
          tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
         
-        <button tabindex="0" class="consent_manager-close-box consent_manager-close uk-position-top-right uk-padding-small uk-close-large" 
-                style="top: 10px; right: 10px; z-index: 10;"
+        <button tabindex="0" class="consent_manager-close-box consent_manager-close uk-position-top-right uk-close-large" 
+                style="top: 20px; right: 20px; z-index: 10; background: transparent; border: none; padding: 0;"
                 aria-label="Close" type="button">
-            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><line fill="none" stroke="#000" stroke-width="2" x1="1" y1="1" x2="19" y2="19"></line><line fill="none" stroke="#000" stroke-width="2" x1="19" y1="1" x2="1" y2="19"></line></svg>
+            <svg width="24" height="24" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" style="display: block;"><line fill="none" stroke="#000" stroke-width="2" x1="1" y1="1" x2="19" y2="19"></line><line fill="none" stroke="#000" stroke-width="2" x1="19" y1="1" x2="1" y2="19"></line></svg>
         </button>
 
         <div class="uk-card-header uk-padding border-0" style="padding-top: 50px !important;">
@@ -177,6 +177,9 @@ $backdropStyle = $backdropEnabled ? 'background: rgba(0,0,0,0.6);' : 'background
     <style nonce="<?= rex_response::getNonce() ?>">
         #consent_manager-background:not(.consent_manager-hidden) { display: flex !important; }
         .consent_manager-hidden { display: none !important; }
+        #consent_manager-wrapper { width: 95vw; }
+        @media (min-width: 640px) { #consent_manager-wrapper { width: 80vw; } }
+        @media (min-width: 960px) { #consent_manager-wrapper { width: 60vw; } }
         .uk-accordion-title::after {
             content: ""; width: 1.4em; height: 1.4em; float: right;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2014%2014%22%20xmlns%3D%22http%3D%22//www.w3.org/2000/svg%22%3E%3Cline%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%221.1%22%20x1%3D%227%22%20y1%3D%221%22%20x2%3D%227%22%20y2%3D%2213%22%3E%3C/line%3E%3Cline%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%221.1%22%20x1%3D%221%22%20y1%3D%227%22%20x2%3D%2213%22%20y2%3D%227%22%3E%3C/line%3E%3C/svg%3E");
