@@ -32,12 +32,15 @@ if (0 >= count($consent_manager->cookiegroups)) {
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
-    background: rgba(0, 0, 0, 0.6) !important;
+    background: <?= (bool) rex_addon::get('consent_manager')->getConfig('backdrop', true) ? 'rgba(0, 0, 0, 0.6)' : 'transparent' ?> !important;
     display: none; /* Standardmäßig aus, JS schaltet es ein */
     align-items: center;
     justify-content: center;
     padding: 1rem;
     z-index: 1000000 !important; /* Über UIkit Modals (1010) */
+    <?php if (!(bool) rex_addon::get('consent_manager')->getConfig('backdrop', true)): ?>
+    pointer-events: none !important;
+    <?php endif; ?>
 }
 #consent_manager-background:not(.consent_manager-hidden) {
     display: flex !important;
@@ -46,6 +49,9 @@ if (0 >= count($consent_manager->cookiegroups)) {
     display: none !important;
 }
 #consent_manager-wrapper {
+    <?php if (!(bool) rex_addon::get('consent_manager')->getConfig('backdrop', true)): ?>
+    pointer-events: auto !important;
+    <?php endif; ?>
     max-width: 800px;
     width: 100%;
     max-height: 90vh;

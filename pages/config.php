@@ -223,6 +223,12 @@ $field->setLabel(rex_i18n::msg('consent_manager_config_inline_only_mode'));
 $field->addOption(rex_i18n::msg('consent_manager_config_inline_only_mode'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_inline_only_mode_desc'));
 
+// Modal-Backdrop Einstellung
+$field = $form->addCheckboxField('backdrop');
+$field->setLabel(rex_i18n::msg('consent_manager_config_backdrop'));
+$field->addOption(rex_i18n::msg('consent_manager_config_backdrop'), 1);
+$field->setNotice(rex_i18n::msg('consent_manager_config_backdrop_desc'));
+
 // Auto-Blocking für manuell eingefügtes HTML
 $field = $form->addCheckboxField('auto_blocking_enabled');
 $field->setLabel(rex_i18n::msg('consent_manager_config_auto_blocking'));

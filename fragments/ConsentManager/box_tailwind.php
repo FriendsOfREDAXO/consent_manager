@@ -22,8 +22,12 @@ if (0 >= count($consent_manager->cookiegroups)) {
 }
 ?>
 
-<div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?> fixed inset-0 flex items-center justify-center p-4 bg-slate-900/60 z-[1000000]" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
-    <div class="consent_manager-wrapper bg-white shadow-2xl rounded-none w-full max-w-2xl max-h-[90vh] flex flex-col relative" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
+<?php
+$backdropEnabled = (bool) rex_addon::get('consent_manager')->getConfig('backdrop', true);
+?>
+
+<div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?> fixed inset-0 flex items-center justify-center p-4 <?= $backdropEnabled ? 'bg-slate-900/60' : 'bg-transparent pointer-events-none' ?> z-[1000000]" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
+    <div class="consent_manager-wrapper bg-white shadow-2xl rounded-none w-full max-w-2xl max-h-[90vh] flex flex-col relative <?= $backdropEnabled ? '' : 'pointer-events-auto shadow-[0_0_50px_rgba(0,0,0,0.3)]' ?>" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
         
         <button tabindex="0" class="consent_manager-close absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors p-2" aria-label="Close">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

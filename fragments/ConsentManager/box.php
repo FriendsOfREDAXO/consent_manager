@@ -20,6 +20,18 @@ if (0 === count($consent_manager->texts)) {
 }
 if (0 < count($consent_manager->cookiegroups)) : ?>
         <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
+            <?php if (!(bool) rex_addon::get('consent_manager')->getConfig('backdrop', true)): ?>
+                <style nonce="<?= rex_response::getNonce() ?>">
+                    #consent_manager-background {
+                        background: transparent !important;
+                        pointer-events: none !important;
+                    }
+                    #consent_manager-wrapper {
+                        pointer-events: auto !important;
+                        box-shadow: 0 0 20px rgba(0,0,0,0.2) !important;
+                    }
+                </style>
+            <?php endif; ?>
             <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
                 <div class="consent_manager-wrapper-inner">
                     <div class="consent_manager-summary" id="consent_manager-summary">
