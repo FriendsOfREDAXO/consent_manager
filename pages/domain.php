@@ -515,7 +515,12 @@ if ('delete' === $func) {
         }
     }
 
-    $sidebar = '
+    $sidebar = '';
+
+    // Falls CSS Framework Modus aktiv ist, Themes in der Domain-Seite ausmaskieren
+    $cssFrameworkMode = rex_config::get('consent_manager', 'css_framework_mode');
+    if (!$cssFrameworkMode) {
+        $sidebar = '
     <style>
     .cm-domain-layout {
         display: flex;
@@ -690,6 +695,57 @@ if ('delete' === $func) {
         }
     })();
     </script>';
+    } else {
+        // Framework Modus ist aktiv: Hinweis anzeigen
+        $sidebar = '
+        <style>
+        .cm-domain-layout {
+            display: flex;
+            gap: 20px;
+        }
+        .cm-domain-main {
+            flex: 1;
+            min-width: 0;
+        }
+        .cm-domain-sidebar {
+            width: 320px;
+            flex-shrink: 0;
+        }
+        .cm-sidebar-panel {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05),
+                        0 1px 3px rgba(0,0,0,0.08);
+        }
+        .cm-sidebar-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+            letter-spacing: 0.3px;
+        }
+        @media (max-width: 992px) {
+            .cm-domain-layout {
+                flex-direction: column;
+            }
+            .cm-domain-sidebar {
+                width: 100%;
+            }
+        }
+        </style>
+        <div class="cm-sidebar-panel" style="border-left: 4px solid #337ab7; background: rgba(51, 122, 183, 0.05);">
+            <div class="cm-sidebar-title" style="color: #337ab7;"><i class="fa fa-paint-brush"></i> Framework Modus aktiv</div>
+            <p style="font-size: 13px; margin: 0;">
+                Sie nutzen den Modus <strong>' . rex_escape(ucfirst((string) $cssFrameworkMode)) . '</strong>. 
+                Die Theme-Auswahl ist daher deaktiviert, da das Frontend-Framework die Gestaltung vorgibt.
+            </p>
+            <p style="font-size: 11px; margin-top: 10px; opacity: 0.7;">
+                Sie können den Modus in den <a href="' . rex_url::backendPage('consent_manager/config') . '">Einstellungen</a> ändern.
+            </p>
+        </div>';
+    }
 
     // YRewrite Domain Select → TextField Sync Script
     if (!$form->isEditMode() && count($yrewriteDomains) > 0) {

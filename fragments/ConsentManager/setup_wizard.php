@@ -753,6 +753,58 @@ body.rex-theme-dark details > div code {
                             </div>
                         </div>
 
+                        <!-- Framework Modus Panel (NEU) -->
+                        <div class="panel panel-info" style="border-left: 4px solid #337ab7; background: rgba(51, 122, 183, 0.1); margin: 25px 0; padding: 15px;">
+                            <div style="display: flex; align-items: start;">
+                                <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #337ab7; line-height: 1;">
+                                    <i class="fa fa-paint-brush"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Website Framework</h4>
+                                    <p class="help-block" style="margin-top: 0; margin-bottom: 15px;">
+                                        Wählen Sie das CSS-System Ihrer Website. Der Consent Manager passt sich automatisch an (Keine custom Stile, native Klassen).
+                                    </p>
+                                    <div class="radio-group" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;">
+                                        <label class="radio-card" style="display: block; background: #fff; padding: 12px; border-radius: 6px; border: 2px solid #eee; margin: 0; cursor: pointer; text-align: center; transition: all 0.2s;">
+                                            <input type="radio" name="wizard_framework_mode" value="" checked style="display: none;">
+                                            <strong>Standard</strong><br>
+                                            <small class="text-muted">Eigene Stile</small>
+                                        </label>
+                                        <label class="radio-card" style="display: block; background: #fff; padding: 12px; border-radius: 6px; border: 2px solid #eee; margin: 0; cursor: pointer; text-align: center; transition: all 0.2s;">
+                                            <input type="radio" name="wizard_framework_mode" value="uikit3" <?= rex_config::get('consent_manager', 'css_framework_mode') == 'uikit3' ? 'checked' : '' ?> style="display: none;">
+                                            <strong>UIkit 3</strong><br>
+                                            <small class="text-muted">Liquid Layout</small>
+                                        </label>
+                                        <label class="radio-card" style="display: block; background: #fff; padding: 12px; border-radius: 6px; border: 2px solid #eee; margin: 0; cursor: pointer; text-align: center; transition: all 0.2s;">
+                                            <input type="radio" name="wizard_framework_mode" value="bootstrap5" <?= rex_config::get('consent_manager', 'css_framework_mode') == 'bootstrap5' ? 'checked' : '' ?> style="display: none;">
+                                            <strong>Bootstrap 5</strong><br>
+                                            <small class="text-muted">Native Modals</small>
+                                        </label>
+                                        <label class="radio-card" style="display: block; background: #fff; padding: 12px; border-radius: 6px; border: 2px solid #eee; margin: 0; cursor: pointer; text-align: center; transition: all 0.2s;">
+                                            <input type="radio" name="wizard_framework_mode" value="tailwind" <?= rex_config::get('consent_manager', 'css_framework_mode') == 'tailwind' ? 'checked' : '' ?> style="display: none;">
+                                            <strong>Tailwind</strong><br>
+                                            <small class="text-muted">Utility-First</small>
+                                        </label>
+                                    </div>
+                                    <style nonce="<?= rex_response::getNonce() ?>">
+                                        .radio-card:has(input:checked) {
+                                            border-color: #337ab7 !important;
+                                            background-color: rgba(51, 122, 183, 0.05) !important;
+                                            box-shadow: 0 2px 8px rgba(51, 122, 183, 0.2);
+                                        }
+                                        body.rex-theme-dark .radio-card {
+                                            background: #1f2937 !important;
+                                            border-color: #4b5563 !important;
+                                        }
+                                        body.rex-theme-dark .radio-card:has(input:checked) {
+                                            border-color: #60a5fa !important;
+                                            background-color: rgba(96, 165, 250, 0.1) !important;
+                                        }
+                                    </style>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Auto-Inject (VOR Theme) -->
                         <div class="panel panel-warning" style="border-left: 4px solid #f0ad4e; background: #fffbf0;">
                             <div class="panel-body">
@@ -1224,6 +1276,7 @@ jQuery(function($) {
         $('#wizard-btn-start').hide();
         
         var setupType = $('input[name="setup_type"]:checked').val();
+        var frameworkMode = $('input[name="wizard_framework_mode"]:checked').val();
         var autoInject = $('#wizard-auto-inject').is(':checked');
         
         // Template-IDs aus Checkboxen sammeln
@@ -1246,6 +1299,7 @@ jQuery(function($) {
             data: {
                 domain: domain,
                 setup_type: setupType,
+                css_framework_mode: frameworkMode,
                 auto_inject: autoInject ? 1 : 0,
                 include_templates: includeTemplates,
                 privacy_policy: privacyPolicy,
