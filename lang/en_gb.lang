@@ -15,7 +15,7 @@ consent_manager_changelog = Changelog
 # Frontend Text Keys (from 4.3.0 export)
 headline = Privacy Settings
 description = Our website uses external services for various purposes, such as statistics or the delivery of multimedia content. By selecting and confirming the services, you agree to the transfer of data to these services. These services and this website may also set cookies. The selection can be changed and revoked at any time.
-toggle_details = Show/hide details
+toggle_details = Details
 provider = Provider:
 link_privacy = Privacy policy
 lifetime = Lifetime:

@@ -15,7 +15,7 @@ consent_manager_changelog = Ändringslogg
 # Frontend Text Keys (från 4.3.0 export)
 headline = Integritetsinställningar
 description = Vår webbplats använder externa tjänster för olika ändamål, såsom statistik eller leverans av multimedia. Genom att välja och bekräfta tjänsterna samtycker du till överföring av data till dessa tjänster. Dessa tjänster och även denna webbplats kan sätta cookies. Valet kan ändras och återkallas när som helst.
-toggle_details = Visa/dölj detaljer
+toggle_details = Detaljer
 provider = Leverantör:
 link_privacy = Integritetspolicy
 lifetime = Livstid:

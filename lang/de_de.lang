@@ -15,7 +15,7 @@ consent_manager_setup_first_domain = Setup Wizard - Jetzt erste Domain einrichte
 # Frontend Text Keys (aus 4.3.0 Export)
 headline = Datenschutz-Einstellungen
 description = Unsere Website verwendet externe Dienste für verschiedene Zwecke, wie z.B. für Statistiken oder die Ausspielung von Multimedia. Durch Auswahl und Bestätigung der Dienste stimmen Sie der Übertragung von Daten an diese Dienste zu. Diese Dienste und auch diese Website setzen ggf. auch Cookies. Die Auswahl kann jederzeit geändert und widerrufen werden.
-toggle_details = Details anzeigen/ausblenden
+toggle_details = Details
 provider = Anbieter:
 link_privacy = Datenschutzerklärung
 lifetime = Laufzeit:

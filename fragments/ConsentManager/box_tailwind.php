@@ -22,120 +22,87 @@ if (0 >= count($consent_manager->cookiegroups)) {
 }
 ?>
 
-<div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
-<style nonce="<?= rex_response::getNonce() ?>">
-#consent_manager-background {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    background: rgba(0, 0, 0, 0.6) !important;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    z-index: 1000000 !important;
-}
-#consent_manager-background:not(.consent_manager-hidden) {
-    display: flex !important;
-}
-#consent_manager-background.consent_manager-hidden {
-    display: none !important;
-}
-#consent_manager-wrapper {
-    background: #fff;
-    border-radius: 0.5rem;
-    max-width: 800px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-.consent_manager-hidden {
-    display: none !important;
-}
-.consent_manager-close-box {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    border: none;
-    background: transparent;
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 10;
-}
-</style>
-    <div class="consent_manager-wrapper bg-white" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
-        <button tabindex="0" class="consent_manager-close consent_manager-close-box text-gray-400 hover:text-gray-500" aria-label="Close">&#10006;</button>
+<div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?> fixed inset-0 flex items-center justify-center p-4 bg-slate-900/60 z-[1000000]" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
+    <div class="consent_manager-wrapper bg-white shadow-2xl rounded-none w-full max-w-2xl max-h-[90vh] flex flex-col relative" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
         
-        <div class="p-6">
-            <h2 class="text-xl font-bold mb-2 text-gray-900" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
-            <div class="text-gray-600 mb-6 text-sm"><?= nl2br($consent_manager->texts['description']) ?></div>
+        <button tabindex="0" class="consent_manager-close absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors p-2" aria-label="Close">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        
+        <div class="p-8 overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4 text-slate-900 leading-tight" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
+            <div class="text-slate-600 mb-8 text-base leading-relaxed"><?= nl2br($consent_manager->texts['description']) ?></div>
             
-            <div class="space-y-3 mb-8">
+            <div class="space-y-0 border-t border-slate-100 mb-8">
                 <?php
                 foreach ($consent_manager->cookiegroups as $cookiegroup) {
                     if (count($cookiegroup['cookie_uids']) >= 1) {
                         $isRequired = (bool) ($cookiegroup['required'] ?? false);
                         ?>
-                        <div class="flex items-center">
-                            <input class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" type="checkbox" 
-                                id="<?= rex_escape($cookiegroup['uid']) ?>" 
-                                data-uid="<?= rex_escape($cookiegroup['uid']) ?>" 
-                                data-cookie-uids='<?= json_encode($cookiegroup['cookie_uids']) ?>'
-                                <?= $isRequired ? 'checked disabled data-action="toggle-cookie"' : 'tabindex="0"' ?>
-                            >
-                            <label class="ml-2 block text-sm font-medium text-gray-900" for="<?= rex_escape($cookiegroup['uid']) ?>">
-                                <?= rex_escape($cookiegroup['name'] ?? '') ?>
-                                <?php if ($isRequired): ?>
-                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" style="font-size: 0.6rem;"><?= rex_i18n::msg('consent_manager_cookiegroup_required') ?></span>
-                                <?php endif; ?>
-                            </label>
-                        </div>
-                        <?php
-                    }
-                }
-                ?>
-            </div>
-
-            <div class="mb-6">
-                <button id="consent_manager-toggle-details" class="text-blue-600 hover:text-blue-500 text-sm font-medium focus:outline-none" aria-controls="consent_manager-detail" aria-expanded="false">
-                    <?= $consent_manager->texts['toggle_details'] ?>
-                </button>
-            </div>
-
-            <div class="consent_manager-detail consent_manager-hidden border-t border-gray-200 pt-4" id="consent_manager-detail" aria-labelledby="consent_manager-toggle-details">
-                <?php
-                foreach ($consent_manager->cookiegroups as $cookiegroup) {
-                    if (count($cookiegroup['cookie_uids']) >= 1) {
-                        ?>
-                        <div class="mb-6">
-                            <h5 class="text-sm font-bold text-gray-900 mb-1"><?= rex_escape($cookiegroup['name'] ?? '') ?></h5>
-                            <div class="text-xs text-gray-500 mb-2"><?= $cookiegroup['description'] ?? '' ?></div>
-                            
-                            <div class="divide-y divide-gray-200">
-                                <?php
-                                foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
-                                    if (isset($consent_manager->cookies[$cookieUid])) {
-                                        $cookie = $consent_manager->cookies[$cookieUid];
-                                        foreach (($cookie['definition'] ?? []) as $index => $def) {
-                                            ?>
-                                            <div class="py-2">
-                                                <div class="text-xs font-semibold text-gray-800"><?= rex_escape($def['cookie_name'] ?? '') ?> <?= rex_escape($cookie['service_name'] ?? '') ?></div>
-                                                <div class="text-xs text-gray-600 mt-1"><?= $def['description'] ?? '' ?></div>
-                                                <div class="grid grid-cols-2 gap-2 mt-2 text-[10px] text-gray-400">
-                                                    <div><strong><?= $consent_manager->texts['lifetime'] ?? 'Laufzeit' ?>:</strong> <?= rex_escape($def['cookie_lifetime'] ?? '') ?></div>
-                                                    <div><strong><?= $consent_manager->texts['provider'] ?? 'Anbieter' ?>:</strong> <?= rex_escape($cookie['provider'] ?? '') ?></div>
-                                                </div>
-                                            </div>
-                                            <?php
+                        <div class="group border-b border-slate-100">
+                            <details class="cursor-default">
+                                <summary class="flex items-center justify-between py-5 cursor-pointer list-none appearance-none [&::-webkit-details-marker]:hidden">
+                                    <div class="flex items-center flex-grow pr-4">
+                                        <div class="relative flex items-center">
+                                            <input class="w-5 h-5 appearance-none border-2 border-slate-300 checked:bg-sky-600 checked:border-sky-600 transition-all cursor-pointer focus:ring-2 focus:ring-sky-500 focus:ring-offset-2" type="checkbox" 
+                                                id="<?= rex_escape($cookiegroup['uid']) ?>" 
+                                                data-uid="<?= rex_escape($cookiegroup['uid']) ?>" 
+                                                data-cookie-uids='<?= json_encode($cookiegroup['cookie_uids']) ?>'
+                                                <?= $isRequired ? 'checked disabled data-action="toggle-cookie"' : 'tabindex="0"' ?>
+                                                onclick="event.stopPropagation();"
+                                            >
+                                            <svg class="absolute w-3 h-3 text-white pointer-events-none left-1 opacity-0 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            <style nonce="<?= rex_response::getNonce() ?>">
+                                                input:checked ~ .check-icon { opacity: 1; }
+                                            </style>
+                                        </div>
+                                        <label class="ml-4 block text-base font-semibold text-slate-900 cursor-pointer" for="<?= rex_escape($cookiegroup['uid']) ?>" onclick="event.stopPropagation();">
+                                            <?= rex_escape($cookiegroup['name'] ?? '') ?>
+                                            <?php if ($isRequired): ?>
+                                                <span class="ml-2 px-2 py-0.5 inline-flex text-[10px] tracking-wider uppercase font-bold bg-slate-100 text-slate-500 rounded-none"><?= rex_i18n::msg('consent_manager_cookiegroup_required') ?></span>
+                                            <?php endif; ?>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center text-slate-400 gap-2 shrink-0">
+                                        <span class="text-xs font-medium"><?= $consent_manager->texts['toggle_details'] ?></span>
+                                        <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </summary>
+                                <div class="pb-6 pl-9 pr-4">
+                                    <div class="text-sm text-slate-500 mb-4 leading-relaxed"><?= $cookiegroup['description'] ?? '' ?></div>
+                                    
+                                    <div class="space-y-4">
+                                        <?php
+                                        foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
+                                            if (isset($consent_manager->cookies[$cookieUid])) {
+                                                $cookie = $consent_manager->cookies[$cookieUid];
+                                                foreach (($cookie['definition'] ?? []) as $index => $def) {
+                                                    ?>
+                                                    <div class="bg-slate-50 p-4 border-l-2 border-slate-200">
+                                                        <div class="text-xs font-bold text-slate-900 flex justify-between gap-4 mb-2">
+                                                            <span><?= rex_escape($def['cookie_name'] ?? '') ?></span>
+                                                            <span class="text-slate-400 font-normal"><?= rex_escape($cookie['service_name'] ?? '') ?></span>
+                                                        </div>
+                                                        <div class="text-xs text-slate-600 mb-3 leading-relaxed"><?= $def['description'] ?? '' ?></div>
+                                                        <div class="flex flex-wrap gap-x-6 gap-y-2 text-[10px] text-slate-400 uppercase tracking-tight font-medium">
+                                                            <div><span class="text-slate-300"><?= $consent_manager->texts['lifetime'] ?? 'Laufzeit' ?>:</span> <span class="text-slate-500"><?= rex_escape($def['cookie_lifetime'] ?? '') ?></span></div>
+                                                            <div><span class="text-slate-300"><?= $consent_manager->texts['provider'] ?? 'Anbieter' ?>:</span> <span class="text-slate-500"><?= rex_escape($cookie['provider'] ?? '') ?></span></div>
+                                                        </div>
+                                                    </div>
+                                                    <?php
+                                                }
+                                            }
                                         }
-                                    }
-                                }
-                                ?>
-                            </div>
+                                        ?>
+                                    </div>
+                                </div>
+                            </details>
                         </div>
                         <?php
                     }
@@ -143,32 +110,27 @@ if (0 >= count($consent_manager->cookiegroups)) {
                 ?>
             </div>
             
-            <div class="mt-8 border-t border-gray-100 pt-6">
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <?php if (isset($consent_manager->texts['button_select_none'])): ?>
-                    <div class="flex-1">
-                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"><?= $consent_manager->texts['button_select_none'] ?></button>
-                    </div>
-                    <?php endif; ?>
-                    <div class="flex-1">
-                        <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"><?= $consent_manager->texts['button_accept'] ?></button>
-                    </div>
-                    <div class="flex-1">
-                        <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"><?= $consent_manager->texts['button_select_all'] ?></button>
-                    </div>
-                </div>
+            <div class="flex flex-col gap-3">
+                <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close w-full px-8 py-4 bg-slate-900 border border-slate-900 text-white text-sm font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-md active:scale-[0.98]"><?= $consent_manager->texts['button_select_all'] ?></button>
                 
-                <div class="mt-4 text-center">
-                    <?php
-                    $clang = rex_clang::getCurrentId();
-                    foreach ($consent_manager->links as $v) {
-                        $article = rex_article::get($v, $clang);
-                        if ($article) {
-                            echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '" class="text-xs text-gray-400 hover:text-gray-500 mx-2">' . rex_escape($article->getName()) . '</a>';
-                        }
-                    }
-                    ?>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <?php if (isset($consent_manager->texts['button_select_none'])): ?>
+                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close w-full px-6 py-3 border border-slate-200 text-slate-600 text-[11px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all"><?= $consent_manager->texts['button_select_none'] ?></button>
+                    <?php endif; ?>
+                    <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close w-full px-6 py-3 border border-slate-900 text-slate-900 text-[11px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all"><?= $consent_manager->texts['button_accept'] ?></button>
                 </div>
+            </div>
+
+            <div class="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2">
+                <?php
+                $clang = rex_clang::getCurrentId();
+                foreach ($consent_manager->links as $v) {
+                    $article = rex_article::get($v, $clang);
+                    if ($article) {
+                        echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors underline underline-offset-4 decoration-slate-200">' . rex_escape($article->getName()) . '</a>';
+                    }
+                }
+                ?>
             </div>
         </div>
     </div>
@@ -181,6 +143,6 @@ if (0 >= count($consent_manager->cookiegroups)) {
         echo '<div class="consent_manager-script" data-uid="script-unselect-' . rex_escape($uid) . '" data-script="' . rex_escape($script, 'html_attr') . '"></div>';
     }
     ?>
-    <!-- Dummy für JavaScript-Kompatibilität (verhindert Fehler beim Schließen) -->
-    <div id="consent_manager-detail" class="consent_manager-hidden" hidden></div>
+    <!-- Dummy für JavaScript-Kompatibilität -->
+    <div id="consent_manager-detail" class="hidden" hidden aria-hidden="true"></div>
 </div>
