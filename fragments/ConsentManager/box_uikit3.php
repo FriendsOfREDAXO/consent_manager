@@ -82,8 +82,8 @@ $buttonRoundedStyle = $roundedEnabled ? 'border-radius: 6px !important;' : 'bord
 }
 .consent_manager-close-box {
     position: absolute;
-    top: 1.25rem;
-    right: 1.5rem;
+    top: 1rem;
+    right: 1.25rem;
     border: none;
     background: transparent;
     cursor: pointer;
@@ -140,8 +140,8 @@ $buttonRoundedStyle = $roundedEnabled ? 'border-radius: 6px !important;' : 'bord
             <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><line fill="none" stroke="#000" stroke-width="2" x1="1" y1="1" x2="19" y2="19"></line><line fill="none" stroke="#000" stroke-width="2" x1="19" y1="1" x2="1" y2="19"></line></svg>
         </button>
 
-        <div class="uk-card-header uk-padding-small border-0 uk-padding uk-padding-remove-bottom">
-            <h2 class="uk-h4 uk-margin-remove-bottom uk-text-bold" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
+        <div class="uk-card-header uk-padding border-0 uk-padding-remove-bottom" style="padding-top: 40px !important;">
+            <h2 class="uk-h3 uk-margin-remove-bottom uk-text-bold" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
         </div>
         
         <div class="consent_manager-wrapper-inner uk-card-body uk-padding">
@@ -237,15 +237,15 @@ $buttonRoundedStyle = $roundedEnabled ? 'border-radius: 6px !important;' : 'bord
             <div class="uk-card-footer uk-padding-remove-horizontal uk-margin-top border-0">
                 <div class="uk-grid-small uk-child-width-expand@s uk-flex-middle" uk-grid>
                     <div>
-                        <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close uk-button uk-button-primary uk-width-1-1"><?= $consent_manager->texts['button_select_all'] ?></button>
+                        <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close uk-button uk-button-primary uk-button-small uk-width-1-1"><?= $consent_manager->texts['button_select_all'] ?></button>
                     </div>
                     <?php if (isset($consent_manager->texts['button_select_none'])): ?>
                     <div class="uk-flex-first@s">
-                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close uk-button uk-button-default uk-width-1-1"><?= $consent_manager->texts['button_select_none'] ?></button>
+                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close uk-button uk-button-primary uk-button-small uk-width-1-1"><?= $consent_manager->texts['button_select_none'] ?></button>
                     </div>
                     <?php endif; ?>
                     <div class="uk-flex-last@s">
-                        <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close uk-button uk-button-primary uk-width-1-1"><?= $consent_manager->texts['button_accept'] ?></button>
+                        <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close uk-button uk-button-primary uk-button-small uk-width-1-1"><?= $consent_manager->texts['button_accept'] ?></button>
                     </div>
                 </div>
                 

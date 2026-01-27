@@ -197,7 +197,7 @@ $buttonRoundedClass = $roundedEnabled ? 'rounded-2' : 'rounded-0';
                 </div>
                 <?php if (isset($consent_manager->texts['button_select_none'])): ?>
                 <div class="col-sm order-1 order-sm-2">
-                    <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close btn btn-outline-secondary w-100 py-3 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_select_none'] ?></button>
+                    <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close btn btn-primary w-100 py-3 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_select_none'] ?></button>
                 </div>
                 <?php endif; ?>
                 <div class="col-sm order-3 order-sm-3">
