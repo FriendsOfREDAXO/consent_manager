@@ -1,25 +1,18 @@
 <?php
+$addon = rex_addon::get('consent_manager');
+$backdropEnabled = $addon->getConfig('backdrop', '1') !== '0';
+$shadowType = $addon->getConfig('css_framework_shadow', 'large');
+$roundedEnabled = $addon->getConfig('css_framework_rounded', '1') === '1';
 
-/**
- * Bootstrap 5 Framework Fragment für Consent Manager
- * Verwendet Bootstrap 5 Klassen für ein einheitliches Design analog zum UIkit-Fragment.
- */
-
-use FriendsOfRedaxo\ConsentManager\Frontend;
-
-$consent_manager = new Frontend(0);
-if (is_string(rex_request::server('HTTP_HOST'))) {
-    $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
+$shadowStyle = 'box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;';
+if ($shadowType === 'none') {
+    $shadowStyle = 'box-shadow: none !important;';
+} elseif ($shadowType === 'small') {
+    $shadowStyle = 'box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.075) !important;';
 }
 
-if (0 === count($consent_manager->texts)) {
-    echo '<div id="consent_manager-background"><div class="alert alert-danger" role="alert">' . rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig') . '</div></div>';
-    return;
-}
-
-if (0 >= count($consent_manager->cookiegroups)) {
-    return;
-}
+$roundedClass = $roundedEnabled ? 'rounded-3' : 'rounded-0';
+$buttonRoundedClass = $roundedEnabled ? 'rounded-2' : 'rounded-0';
 ?>
 
 <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
@@ -30,13 +23,13 @@ if (0 >= count($consent_manager->cookiegroups)) {
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
-    background: <?= rex_addon::get('consent_manager')->getConfig('backdrop', '1') !== '0' ? 'rgba(0, 0, 0, 0.6)' : 'transparent' ?> !important;
+    background: <?= $backdropEnabled ? 'rgba(0, 0, 0, 0.6)' : 'transparent' ?> !important;
     display: none;
     align-items: center;
     justify-content: center;
     padding: 1rem;
     z-index: 1000000 !important;
-    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
+    <?php if (!$backdropEnabled): ?>
     pointer-events: none !important;
     <?php endif; ?>
 }
@@ -47,19 +40,18 @@ if (0 >= count($consent_manager->cookiegroups)) {
     display: none !important;
 }
 #consent_manager-wrapper {
-    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
+    <?php if (!$backdropEnabled): ?>
     pointer-events: auto !important;
     <?php endif; ?>
     background: #fff;
-    max-width: 800px;
+    max-width: 720px;
     width: 100%;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    border-radius: 0 !important;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    <?= $shadowStyle ?>
 }
 @media (max-width: 576px) {
     #consent_manager-wrapper {
@@ -80,36 +72,13 @@ if (0 >= count($consent_manager->cookiegroups)) {
     right: 1.5rem;
     z-index: 100;
 }
-}
-/* Bootstrap Spezialanpassungen für "uikit liker" Look */
-.rounded-0 { border-radius: 0 !important; }
+<?php if (!$roundedEnabled): ?>
 .form-check-input { border-radius: 0 !important; }
 .btn { border-radius: 0 !important; }
-
-.accordion-item {
-    border-radius: 0 !important;
-    border: 1px solid rgba(0,0,0,.075) !important;
-    margin-bottom: 0.5rem !important;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05) !important;
-}
-.accordion-button {
-    border-radius: 0 !important;
-    padding: 0.75rem 1rem;
-    font-weight: 600;
-    font-size: 1rem;
-    background-color: #fff !important;
-    color: #212529 !important;
-    box-shadow: none !important;
-}
-.accordion-button:not(.collapsed)::after {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-}
-.card-details {
-    border: 1px solid rgba(0,0,0,.125);
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
-}
+.card { border-radius: 0 !important; }
+<?php endif; ?>
 </style>
-    <div class="consent_manager-wrapper card border-0 rounded-0" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
+    <div class="consent_manager-wrapper card border-0 <?= $roundedClass ?>" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
         <button tabindex="0" class="btn-close consent_manager-close consent_manager-close-box shadow-none" aria-label="Close" type="button"></button>
         
         <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
@@ -147,7 +116,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
                             </div>
 
                             <div class="collapse mt-2" id="details-<?= $groupUid ?>">
-                                <div class="card card-body card-details border rounded-0 p-3 bg-white">
+                                <div class="card card-body card-details border p-3 bg-white <?= $roundedEnabled ? 'rounded-2' : 'rounded-0' ?>">
                                     <div class="small mb-3 text-secondary"><?= $cookiegroup['description'] ?? '' ?></div>
                                     
                                     <div class="accordion accordion-flush" id="accordion-<?= $groupUid ?>">
@@ -158,15 +127,15 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                                 $title = ($cookie['service_name'] !== '') ? $cookie['service_name'] : $cookie['provider'];
                                                 $accId = 'acc-' . $groupUid . '-' . $cookieUid;
                                                 ?>
-                                                <div class="accordion-item mb-2">
+                                                <div class="accordion-item mb-2 border">
                                                     <h3 class="accordion-header">
                                                         <button class="accordion-button collapsed py-2" type="button" data-bs-toggle="collapse" data-bs-target="#content-<?= $accId ?>">
                                                             <?= rex_escape($title) ?>
                                                         </button>
                                                     </h3>
                                                     <div id="content-<?= $accId ?>" class="accordion-collapse collapse" data-bs-parent="#accordion-<?= $groupUid ?>">
-                                                        <div class="accordion-body small pt-1">
-                                                            <div class="mb-2">
+                                                        <div class="accordion-body small pt-1 pb-3">
+                                                            <div class="mb-2 mt-2">
                                                                 <strong><?= $consent_manager->texts['provider'] ?? 'Anbieter' ?>:</strong> <?= rex_escape($cookie['provider'] ?? '') ?>
                                                             </div>
                                                             <div class="mb-2"><?= $cookie['description'] ?? '' ?></div>
@@ -207,36 +176,37 @@ if (0 >= count($consent_manager->cookiegroups)) {
                 }
                 ?>
             </div>
+        </div>
+
+        <div class="card-footer bg-white border-top-0 px-4 pb-4 pt-0">
+            <div class="row g-2">
+                <div class="col-sm order-2 order-sm-1">
+                    <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close btn btn-dark w-100 py-2 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_select_all'] ?></button>
+                </div>
+                <?php if (isset($consent_manager->texts['button_select_none'])): ?>
+                <div class="col-sm order-1 order-sm-2">
+                    <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close btn btn-outline-secondary w-100 py-2 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_select_none'] ?></button>
+                </div>
+                <?php endif; ?>
+                <div class="col-sm order-3 order-sm-3">
+                    <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close btn btn-dark w-100 py-2 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_accept'] ?></button>
+                </div>
+            </div>
             
-            <div class="card-footer bg-white border-0 px-0 mt-3 pt-3">
-                <div class="row g-2">
-                    <?php if (isset($consent_manager->texts['button_select_none'])): ?>
-                    <div class="col-sm">
-                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close btn btn-primary w-100 rounded-0"><?= $consent_manager->texts['button_select_none'] ?></button>
-                    </div>
-                    <?php endif; ?>
-                    <div class="col-sm">
-                        <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close btn btn-primary w-100 rounded-0"><?= $consent_manager->texts['button_accept'] ?></button>
-                    </div>
-                    <div class="col-sm">
-                        <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close btn btn-primary w-100 rounded-0"><?= $consent_manager->texts['button_select_all'] ?></button>
-                    </div>
-                </div>
-                
-                <div class="mt-4 text-center small">
-                    <?php
-                    $clang = rex_clang::getCurrentId();
-                    foreach ($consent_manager->links as $v) {
-                        $article = rex_article::get($v, $clang);
-                        if ($article instanceof rex_article) {
-                            echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '" class="text-muted text-decoration-none me-3 hover-underline">' . rex_escape($article->getName()) . '</a>';
-                        }
+            <div class="mt-4 text-center">
+                <?php
+                $clang = rex_clang::getCurrentId();
+                foreach ($consent_manager->links as $v) {
+                    $article = rex_article::get($v, $clang);
+                    if ($article instanceof rex_article) {
+                        echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '" class="text-muted text-decoration-none mx-2 small hover-underline">' . rex_escape($article->getName()) . '</a>';
                     }
-                    ?>
-                </div>
+                }
+                ?>
             </div>
         </div>
     </div>
+</div>
     
     <?php
     foreach ($consent_manager->scripts as $uid => $script) {

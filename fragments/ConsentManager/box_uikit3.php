@@ -1,26 +1,18 @@
 <?php
+$addon = rex_addon::get('consent_manager');
+$backdropEnabled = $addon->getConfig('backdrop', '1') !== '0';
+$shadowType = $addon->getConfig('css_framework_shadow', 'large');
+$roundedEnabled = $addon->getConfig('css_framework_rounded', '1') === '1';
 
-/**
- * UIkit 3 Framework Fragment für Consent Manager
- * Verwendet UIkit 3 CSS-Klassen statt der Standard-Consent-Manager-Styles
- * Behält die Original-Struktur und JavaScript-Funktionalität bei
- */
-
-use FriendsOfRedaxo\ConsentManager\Frontend;
-
-$consent_manager = new Frontend(0);
-if (is_string(rex_request::server('HTTP_HOST'))) {
-    $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
+$shadowClass = 'uk-box-shadow-xlarge';
+if ($shadowType === 'none') {
+    $shadowClass = '';
+} elseif ($shadowType === 'small') {
+    $shadowClass = 'uk-box-shadow-medium';
 }
 
-if (0 === count($consent_manager->texts)) {
-    echo '<div id="consent_manager-background"><div class="uk-alert-danger" uk-alert>' . rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig') . '</div></div>';
-    return;
-}
-
-if (0 >= count($consent_manager->cookiegroups)) {
-    return;
-}
+$roundedStyle = $roundedEnabled ? 'border-radius: 12px !important;' : 'border-radius: 0 !important;';
+$buttonRoundedStyle = $roundedEnabled ? 'border-radius: 6px !important;' : 'border-radius: 0 !important;';
 ?>
 
 <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
@@ -32,13 +24,13 @@ if (0 >= count($consent_manager->cookiegroups)) {
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
-    background: <?= rex_addon::get('consent_manager')->getConfig('backdrop', '1') !== '0' ? 'rgba(0, 0, 0, 0.6)' : 'transparent' ?> !important;
+    background: <?= $backdropEnabled ? 'rgba(0, 0, 0, 0.6)' : 'transparent' ?> !important;
     display: none; /* Standardmäßig aus, JS schaltet es ein */
     align-items: center;
     justify-content: center;
     padding: 1rem;
     z-index: 1000000 !important; /* Über UIkit Modals (1010) */
-    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
+    <?php if (!$backdropEnabled): ?>
     pointer-events: none !important;
     <?php endif; ?>
 }
@@ -49,24 +41,24 @@ if (0 >= count($consent_manager->cookiegroups)) {
     display: none !important;
 }
 #consent_manager-wrapper {
-    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
+    <?php if (!$backdropEnabled): ?>
     pointer-events: auto !important;
     <?php endif; ?>
-    max-width: 800px;
+    max-width: 720px;
     width: 100%;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    border-radius: 0 !important;
+    <?= $roundedStyle ?>
+    background: #fff;
     animation: uk-fade-bottom 0.4s ease-out;
 }
 @media (max-width: 640px) {
     #consent_manager-wrapper {
         max-height: 100vh;
         height: 100vh;
-        border-radius: 0 !important;
     }
 }
 .consent_manager-wrapper-inner.uk-card-body {
@@ -78,13 +70,12 @@ if (0 >= count($consent_manager->cookiegroups)) {
 }
 .consent_manager-close-box {
     position: absolute;
-    top: 25px;
-    right: 30px;
+    top: 1.25rem;
+    right: 1.5rem;
     border: none;
     background: transparent;
     cursor: pointer;
     z-index: 100;
-}
     padding: 5px;
     transition: 0.2s ease-in-out;
 }
@@ -92,10 +83,14 @@ if (0 >= count($consent_manager->cookiegroups)) {
     opacity: 0.6;
 }
 .uk-button {
-    border-radius: 0 !important;
+    <?= $buttonRoundedStyle ?>
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 0.75rem;
 }
 .uk-checkbox {
-    border-radius: 0 !important;
+    <?= $roundedEnabled ? 'border-radius: 4px !important;' : 'border-radius: 0 !important;' ?>
 }
 @keyframes uk-fade-bottom {
     0% { opacity: 0; transform: translateY(20px); }
@@ -115,28 +110,30 @@ if (0 >= count($consent_manager->cookiegroups)) {
     line-height: 1.4;
     padding: 10px 15px;
     background: #fff;
+    font-size: 0.9rem;
 }
 .uk-accordion-divider > li {
-    border: 1px solid #eeeeee83;
+    border: 1px solid #eeeeee;
     margin-bottom: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    <?= $roundedEnabled ? 'border-radius: 6px;' : '' ?>
+    overflow: hidden;
 }
 .uk-accordion-content {
     padding: 0 15px 15px 15px;
     margin-top: 0;
 }
 </style>
-    <div class="consent_manager-wrapper uk-card uk-card-default" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
+    <div class="consent_manager-wrapper uk-card uk-card-default <?= $shadowClass ?>" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
         <button tabindex="0" class="consent_manager-close-box consent_manager-close uk-close-large" aria-label="Close" type="button">
-            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><line fill="none" stroke="#000" stroke-width="1.4" x1="1" y1="1" x2="19" y2="19"></line><line fill="none" stroke="#000" stroke-width="1.4" x1="19" y1="1" x2="1" y2="19"></line></svg>
+            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><line fill="none" stroke="#000" stroke-width="2" x1="1" y1="1" x2="19" y2="19"></line><line fill="none" stroke="#000" stroke-width="2" x1="19" y1="1" x2="1" y2="19"></line></svg>
         </button>
 
-        <div class="uk-card-header uk-padding-small">
-            <h2 class="uk-h3 uk-margin-remove-bottom" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
+        <div class="uk-card-header uk-padding-small border-0 uk-padding uk-padding-remove-bottom">
+            <h2 class="uk-h4 uk-margin-remove-bottom uk-text-bold" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
         </div>
         
-        <div class="consent_manager-wrapper-inner uk-card-body">
-            <div class="uk-text-meta uk-margin-bottom"><?= nl2br($consent_manager->texts['description']) ?></div>
+        <div class="consent_manager-wrapper-inner uk-card-body uk-padding">
+            <div class="uk-text-meta uk-margin-bottom uk-text-small"><?= nl2br($consent_manager->texts['description']) ?></div>
             <div class="consent_manager-summary" id="consent_manager-summary">
                 <div class="consent_manager-cookiegroups">
                     <?php
@@ -154,19 +151,19 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                             data-cookie-uids='<?= json_encode($cookiegroup['cookie_uids']) ?>'
                                             <?= $isRequired ? 'checked disabled data-action="toggle-cookie"' : 'tabindex="0"' ?>
                                         >
-                                        <span class="uk-text-bold"><?= rex_escape($cookiegroup['name'] ?? '') ?></span>
+                                        <span class="uk-text-bold uk-text-small"><?= rex_escape($cookiegroup['name'] ?? '') ?></span>
                                         <?php if ($isRequired): ?>
-                                            <span class="uk-text-meta uk-margin-small-left">(<?= rex_i18n::msg('consent_manager_cookiegroup_required') ?>)</span>
+                                            <span class="uk-text-meta uk-margin-small-left" style="font-size: 0.7rem;">(<?= rex_i18n::msg('consent_manager_cookiegroup_required') ?>)</span>
                                         <?php endif; ?>
                                     </label>
                                     
-                                    <a class="uk-button uk-button-text uk-text-primary" href="#details-<?= $groupUid ?>" uk-toggle>
+                                    <a class="uk-button uk-button-text uk-text-primary uk-text-bold" style="font-size: 0.7rem;" href="#details-<?= $groupUid ?>" uk-toggle>
                                         <?= $consent_manager->texts['toggle_details'] ?>
                                     </a>
                                 </div>
 
-                                <div id="details-<?= $groupUid ?>" class="uk-margin-small-top uk-card uk-card-default uk-card-body uk-card-small" hidden>
-                                    <div class="uk-margin-small-bottom"><?= $cookiegroup['description'] ?? '' ?></div>
+                                <div id="details-<?= $groupUid ?>" class="uk-margin-small-top uk-card uk-card-default uk-card-body uk-card-small uk-background-muted" style="box-shadow: none; border: 1px solid #eee; <?= $roundedEnabled ? 'border-radius: 6px;' : '' ?>" hidden>
+                                    <div class="uk-margin-small-bottom uk-text-meta uk-text-small"><?= $cookiegroup['description'] ?? '' ?></div>
                                     
                                     <ul uk-accordion="multiple: true" class="uk-margin-remove uk-accordion-divider">
                                         <?php
@@ -176,34 +173,34 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                                 $title = ($cookie['service_name'] !== '') ? $cookie['service_name'] : $cookie['provider'];
                                                 ?>
                                                 <li>
-                                                    <a class="uk-accordion-title uk-text-default uk-text-bold" href="#">
+                                                    <a class="uk-accordion-title uk-text-default uk-text-bold" href="#" style="font-size: 0.8rem;">
                                                         <?= rex_escape($title) ?>
                                                     </a>
-                                                    <div class="uk-accordion-content">
+                                                    <div class="uk-accordion-content uk-text-small">
                                                         <div class="uk-margin-small-bottom">
                                                             <strong><?= $consent_manager->texts['provider'] ?? 'Anbieter' ?>:</strong> <?= rex_escape($cookie['provider'] ?? '') ?>
                                                         </div>
                                                         
-                                                        <div class="uk-margin-small-bottom">
+                                                        <div class="uk-margin-small-bottom text-muted">
                                                             <?= $cookie['description'] ?? '' ?>
                                                         </div>
                                                         
                                                         <?php if (isset($cookie['provider_link_privacy']) && '' !== $cookie['provider_link_privacy']): ?>
                                                         <div class="uk-margin-small-bottom">
-                                                            <a href="<?= rex_escape($cookie['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer nofollow" class="uk-button uk-button-link uk-text-primary"><?= $consent_manager->texts['link_privacy'] ?? 'Datenschutz-Informationen' ?></a>
+                                                            <a href="<?= rex_escape($cookie['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer nofollow" class="uk-button uk-button-link uk-text-primary uk-text-bold" style="font-size: 0.7rem;"><?= $consent_manager->texts['link_privacy'] ?? 'Datenschutz' ?></a>
                                                         </div>
                                                         <?php endif; ?>
 
                                                         <?php if (isset($cookie['definition']) && count($cookie['definition']) > 0): ?>
                                                             <div class="uk-margin-small-top uk-padding-small uk-background-default" style="border-top: 1px dashed #eee;">
-                                                                <div class="uk-text-meta uk-text-uppercase uk-margin-small-bottom uk-text-bold" style="letter-spacing: 0.5px;"><?= $consent_manager->texts['cookie_name'] ?? 'Cookies' ?></div>
+                                                                <div class="uk-text-meta uk-text-uppercase uk-margin-small-bottom uk-text-bold" style="letter-spacing: 0.5px; font-size: 0.65rem;"><?= $consent_manager->texts['cookie_name'] ?? 'Cookies' ?></div>
                                                                 
                                                                 <?php foreach ($cookie['definition'] as $def): ?>
-                                                                    <div class="uk-margin-small-bottom uk-text-small">
-                                                                        <code style="color: #d05d41; background: #fdfafa; padding: 2px 4px;"><?= rex_escape($def['cookie_name'] ?? '') ?></code>
-                                                                        <span class="uk-text-meta uk-margin-small-left">(<?= rex_escape($def['cookie_lifetime'] ?? '') ?>)</span>
+                                                                    <div class="uk-margin-small-bottom">
+                                                                        <code style="color: #d05d41; background: #fdfafa; padding: 2px 4px; font-size: 0.75rem;"><?= rex_escape($def['cookie_name'] ?? '') ?></code>
+                                                                        <span class="uk-text-meta uk-margin-small-left" style="font-size: 0.7rem;">(<?= rex_escape($def['cookie_lifetime'] ?? '') ?>)</span>
                                                                         <?php if (isset($def['description']) && $def['description'] !== '' && $def['description'] !== $cookie['description']): ?>
-                                                                            <div class="uk-margin-xsmall-top uk-text-muted" style="font-size: 0.85rem; padding-left: 5px; border-left: 2px solid #eee;"><?= $def['description'] ?></div>
+                                                                            <div class="uk-text-muted uk-margin-xsmall-top" style="font-size: 0.75rem; padding-left: 8px; border-left: 2px solid #eee;"><?= $def['description'] ?></div>
                                                                         <?php endif; ?>
                                                                     </div>
                                                                 <?php endforeach; ?>
@@ -225,28 +222,28 @@ if (0 >= count($consent_manager->cookiegroups)) {
                 </div>
             </div>
             
-            <div class="uk-card-footer uk-padding-remove-horizontal uk-margin-top">
+            <div class="uk-card-footer uk-padding-remove-horizontal uk-margin-top border-0">
                 <div class="uk-grid-small uk-child-width-expand@s uk-flex-middle" uk-grid>
-                    <?php if (isset($consent_manager->texts['button_select_none'])): ?>
                     <div>
-                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close uk-button uk-button-primary uk-width-1-1"><?= $consent_manager->texts['button_select_none'] ?></button>
+                        <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close uk-button uk-button-secondary uk-width-1-1 uk-padding-small"><?= $consent_manager->texts['button_select_all'] ?></button>
+                    </div>
+                    <?php if (isset($consent_manager->texts['button_select_none'])): ?>
+                    <div class="uk-flex-first@s">
+                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close uk-button uk-button-default uk-width-1-1 uk-padding-small"><?= $consent_manager->texts['button_select_none'] ?></button>
                     </div>
                     <?php endif; ?>
-                    <div>
-                        <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close uk-button uk-button-primary uk-width-1-1"><?= $consent_manager->texts['button_accept'] ?></button>
-                    </div>
-                    <div>
-                        <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close uk-button uk-button-primary uk-width-1-1"><?= $consent_manager->texts['button_select_all'] ?></button>
+                    <div class="uk-flex-last@s">
+                        <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close uk-button uk-button-secondary uk-width-1-1 uk-padding-small"><?= $consent_manager->texts['button_accept'] ?></button>
                     </div>
                 </div>
                 
-                <div class="uk-margin-small-top uk-text-center uk-text-meta">
+                <div class="uk-margin-top uk-text-center uk-text-meta uk-text-small">
                     <?php
                     $clang = rex_clang::getCurrentId();
                     foreach ($consent_manager->links as $v) {
                         $article = rex_article::get($v, $clang);
                         if ($article instanceof rex_article) {
-                            echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '" class="uk-link uk-margin-small-right">' . rex_escape($article->getName()) . '</a>';
+                            echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '" class="uk-link-muted uk-margin-small-right">' . rex_escape($article->getName()) . '</a>';
                         }
                     }
                     ?>

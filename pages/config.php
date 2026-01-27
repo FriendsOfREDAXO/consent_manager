@@ -205,6 +205,22 @@ $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_boot
 $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_tailwind'), 'tailwind');
 $field->setNotice(rex_i18n::msg('consent_manager_config_css_framework_mode_notice'));
 
+// Framework Minimal Settings (nur anzeigen wenn Framework gewählt)
+$form->addFieldset(rex_i18n::msg('consent_manager_config_framework_legend'));
+
+$field = $form->addSelectField('css_framework_shadow');
+$field->setLabel(rex_i18n::msg('consent_manager_config_framework_shadow'));
+$select = $field->getSelect();
+$select->addOption(rex_i18n::msg('consent_manager_config_framework_shadow_none'), 'none');
+$select->addOption(rex_i18n::msg('consent_manager_config_framework_shadow_small'), 'small');
+$select->addOption(rex_i18n::msg('consent_manager_config_framework_shadow_large'), 'large');
+
+$field = $form->addSelectField('css_framework_rounded');
+$field->setLabel(rex_i18n::msg('consent_manager_config_framework_rounded'));
+$select = $field->getSelect();
+$select->addOption(rex_i18n::msg('consent_manager_config_framework_rounded_no'), '0');
+$select->addOption(rex_i18n::msg('consent_manager_config_framework_rounded_yes'), '1');
+
 // CSS Output Einstellung
 $field = $form->addCheckboxField('outputowncss');
 $field->setLabel(rex_i18n::msg('consent_manager_config_owncss'));

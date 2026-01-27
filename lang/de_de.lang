@@ -126,6 +126,15 @@ consent_manager_config_css_framework_mode_none = Keines (Standard Consent-Manage
 consent_manager_config_css_framework_mode_uikit3 = UIkit 3
 consent_manager_config_css_framework_mode_bootstrap5 = Bootstrap 5
 consent_manager_config_css_framework_mode_tailwind = Tailwind CSS
+
+consent_manager_config_framework_legend = Framework-Einstellungen
+consent_manager_config_framework_shadow = Schatten
+consent_manager_config_framework_shadow_none = Keiner
+consent_manager_config_framework_shadow_small = Dezent
+consent_manager_config_framework_shadow_large = Ausgeprägt
+consent_manager_config_framework_rounded = Abgerundete Ecken
+consent_manager_config_framework_rounded_no = Eckig
+consent_manager_config_framework_rounded_yes = Abgerundet
 consent_manager_config_owncss_desc = Wenn aktiviert wird im Frontend kein Standard-CSS für die Consent-Box ausgegeben (consent_manager_frontend.css).<br>CSS für das Styling der Consent-Box muss in eigenen CSS-Dateien vorhanden sein!
 consent_manager_config_owncss = Eigenes CSS verwenden
 consent_manager_config_hidebodyscrollbar = Scrollbar der Webseite ausblenden
