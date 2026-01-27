@@ -27,7 +27,7 @@ $backdropEnabled = rex_addon::get('consent_manager')->getConfig('backdrop', '1')
 ?>
 
 <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?> fixed inset-0 flex items-center justify-center p-4 <?= $backdropEnabled ? 'bg-slate-900/60' : 'bg-transparent pointer-events-none' ?> z-[1000000]" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
-    <div class="consent_manager-wrapper bg-white shadow-2xl rounded-none w-full max-w-2xl max-h-[90vh] flex flex-col relative <?= $backdropEnabled ? '' : 'pointer-events-auto shadow-[0_0_50px_rgba(0,0,0,0.3)]' ?>" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
+    <div class="consent_manager-wrapper bg-white shadow-2xl rounded-none w-full max-w-3xl max-h-[90vh] flex flex-col relative <?= $backdropEnabled ? '' : 'pointer-events-auto shadow-[0_0_50px_rgba(0,0,0,0.3)]' ?>" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
         
         <div class="sticky top-0 z-20 bg-white border-b border-slate-50 px-8 py-6 flex items-start justify-between">
             <div>
