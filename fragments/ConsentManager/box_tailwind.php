@@ -181,4 +181,6 @@ if (0 >= count($consent_manager->cookiegroups)) {
         echo '<div class="consent_manager-script" data-uid="script-unselect-' . rex_escape($uid) . '" data-script="' . rex_escape($script, 'html_attr') . '"></div>';
     }
     ?>
+    <!-- Dummy für JavaScript-Kompatibilität (verhindert Fehler beim Schließen) -->
+    <div id="consent_manager-detail" class="consent_manager-hidden" hidden></div>
 </div>

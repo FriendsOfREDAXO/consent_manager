@@ -138,7 +138,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                         >
                                         <span class="uk-text-bold"><?= rex_escape($cookiegroup['name'] ?? '') ?></span>
                                         <?php if ($isRequired): ?>
-                                            <span class="uk-label uk-label-success uk-margin-small-left" style="font-size: 0.6rem;"><?= rex_i18n::msg('consent_manager_cookiegroup_required') ?></span>
+                                            <span class="uk-label margin-small-left" style="font-size: 0.6rem;"><?= rex_i18n::msg('consent_manager_cookiegroup_required') ?></span>
                                         <?php endif; ?>
                                     </label>
                                     
@@ -226,4 +226,6 @@ if (0 >= count($consent_manager->cookiegroups)) {
         echo '<div class="consent_manager-script" data-uid="script-unselect-' . rex_escape($uid) . '" data-script="' . rex_escape($script, 'html_attr') . '"></div>';
     }
     ?>
+    <!-- Dummy für JavaScript-Kompatibilität (verhindert Fehler beim Schließen) -->
+    <div id="consent_manager-detail" class="consent_manager-hidden" hidden></div>
 </div>
