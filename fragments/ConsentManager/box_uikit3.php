@@ -46,19 +46,13 @@ if (0 >= count($consent_manager->cookiegroups)) {
     display: none !important;
 }
 #consent_manager-wrapper {
-    background: #fff;
-    border-radius: 0 !important;
-    box-shadow: 0 28px 50px rgba(0,0,0,0.16);
     max-width: 800px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
-    padding: 0;
+    border-radius: 0 !important;
     animation: uk-fade-bottom 0.4s ease-out;
-}
-.uk-card-body {
-    padding: 40px !important;
 }
 @media (max-width: 640px) {
     #consent_manager-wrapper {
@@ -129,7 +123,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
                             ?>
                             <div class="uk-margin-bottom">
                                 <div class="uk-flex uk-flex-middle uk-flex-between">
-                                    <label class="uk-flex uk-flex-middle" style="cursor: pointer;">
+                                    <label class="uk-flex uk-flex-middle">
                                         <input class="uk-checkbox uk-margin-small-right" type="checkbox" 
                                             id="<?= $groupUid ?>" 
                                             data-uid="<?= $groupUid ?>" 
@@ -138,7 +132,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                         >
                                         <span class="uk-text-bold"><?= rex_escape($cookiegroup['name'] ?? '') ?></span>
                                         <?php if ($isRequired): ?>
-                                            <span class="uk-text-meta uk-margin-small-left" style="font-size: 0.85rem; color: #666;">(<?= rex_i18n::msg('consent_manager_cookiegroup_required') ?>)</span>
+                                            <span class="uk-text-meta uk-margin-small-left">(<?= rex_i18n::msg('consent_manager_cookiegroup_required') ?>)</span>
                                         <?php endif; ?>
                                     </label>
                                     
@@ -147,7 +141,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                     </a>
                                 </div>
 
-                                <div id="details-<?= $groupUid ?>" class="uk-margin-small-top uk-padding-small uk-box-shadow-small" style="border: 1px solid #eee;" hidden>
+                                <div id="details-<?= $groupUid ?>" class="uk-margin-small-top uk-card uk-card-default uk-card-body uk-card-small" hidden>
                                     <div class="uk-margin-small-bottom"><?= $cookiegroup['description'] ?? '' ?></div>
                                     
                                     <ul uk-accordion="multiple: true" class="uk-margin-remove uk-accordion-divider">
@@ -172,20 +166,34 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                                         
                                                         <?php if (isset($cookie['provider_link_privacy']) && '' !== $cookie['provider_link_privacy']): ?>
                                                         <div class="uk-margin-small-bottom">
-                                                            <a href="<?= rex_escape($cookie['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer nofollow" class="uk-button uk-button-link uk-text-primary" style="text-decoration: underline;"><?= $consent_manager->texts['link_privacy'] ?? 'Datenschutz-Informationen' ?></a>
+                                                            <a href="<?= rex_escape($cookie['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer nofollow" class="uk-button uk-button-link uk-text-primary"><?= $consent_manager->texts['link_privacy'] ?? 'Datenschutz-Informationen' ?></a>
                                                         </div>
                                                         <?php endif; ?>
 
                                                         <?php if (isset($cookie['definition']) && count($cookie['definition']) > 0): ?>
-                                                            <div class="uk-margin-small-top uk-text-meta" style="border-top: 1px dashed #eee; padding-top: 10px; color: #666;">
+                                                            <div class="uk-margin-small-top uk-section-muted uk-padding-small">
+                                                                <div class="uk-text-meta uk-text-uppercase uk-margin-small-bottom uk-text-bold"><?= $consent_manager->texts['cookie_name'] ?? 'Cookies' ?></div>
+                                                                
                                                                 <?php foreach ($cookie['definition'] as $def): ?>
                                                                     <div class="uk-margin-small-bottom">
-                                                                        <span class="uk-text-bold"><?= $consent_manager->texts['cookie_name'] ?? 'Cookie' ?>:</span> 
-                                                                        <code style="background: transparent; color: #d05d41; padding: 0;"><?= rex_escape($def['cookie_name'] ?? '') ?></code>
-                                                                        <span class="uk-margin-small-left">(<?= $consent_manager->texts['lifetime'] ?? 'Dauer' ?>: <?= rex_escape($def['cookie_lifetime'] ?? '') ?>)</span>
-                                                                        <?php if (isset($def['description']) && $def['description'] !== '' && $def['description'] !== $cookie['description']): ?>
-                                                                            <div class="uk-margin-xsmall-top" style="font-style: italic;"><?= $def['description'] ?></div>
-                                                                        <?php endif; ?>
+                                                                        <div uk-grid class="uk-grid-small">
+                                                                            <div class="uk-width-1-3@s">
+                                                                                <span class="uk-text-bold"><?= $consent_manager->texts['cookie_name'] ?? 'Name' ?>:</span>
+                                                                            </div>
+                                                                            <div class="uk-width-2-3@s">
+                                                                                <code><?= rex_escape($def['cookie_name'] ?? '') ?></code>
+                                                                                <span class="uk-text-meta uk-margin-small-left">(<?= $consent_manager->texts['lifetime'] ?? 'Dauer' ?>: <?= rex_escape($def['cookie_lifetime'] ?? '') ?>)</span>
+                                                                            </div>
+                                                                            
+                                                                            <?php if (isset($def['description']) && $def['description'] !== '' && $def['description'] !== $cookie['description']): ?>
+                                                                                <div class="uk-width-1-3@s">
+                                                                                    <span class="uk-text-bold"><?= $consent_manager->texts['description'] ?? 'Zweck' ?>:</span>
+                                                                                </div>
+                                                                                <div class="uk-width-2-3@s">
+                                                                                    <div class="uk-text-small"><?= $def['description'] ?></div>
+                                                                                </div>
+                                                                            <?php endif; ?>
+                                                                        </div>
                                                                     </div>
                                                                 <?php endforeach; ?>
                                                             </div>
