@@ -660,24 +660,4 @@ class Frontend
 
         return $output;
     }
-
-    /**
-     * @api
-     */
-    public static function getBoxFragmentName(): string
-    {
-        $addon = rex_addon::get('consent_manager');
-        $frameworkMode = (string) $addon->getConfig('css_framework_mode', '');
-
-        switch ($frameworkMode) {
-            case 'uikit3':
-                return 'ConsentManager/box_uikit3.php';
-            case 'bootstrap5':
-                return 'ConsentManager/box_bootstrap5.php';
-            case 'tailwind':
-                return 'ConsentManager/box_tailwind.php';
-            default:
-                return 'ConsentManager/box.php';
-        }
-    }
 }
