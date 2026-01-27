@@ -23,10 +23,6 @@ if (0 >= count($consent_manager->cookiegroups)) {
 ?>
 
 <?php
-$backdropEnabled = rex_addon::get('consent_manager')->getConfig('backdrop', '1') !== '0';
-?>
-
-<?php
 $addon = rex_addon::get('consent_manager');
 $backdropEnabled = $addon->getConfig('backdrop', '1') !== '0';
 $shadowType = $addon->getConfig('css_framework_shadow', 'large');
