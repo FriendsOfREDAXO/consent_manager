@@ -241,7 +241,7 @@ class Frontend
         header('Cache-Control: max-age=604800, public');
 
         // Check if client has current version
-        $clientEtag = $_SERVER['HTTP_IF_NONE_MATCH'] ?? '';
+        $clientEtag = (string) rex_request::server('HTTP_IF_NONE_MATCH', 'string', '');
         if (trim($clientEtag, '"') === $etag) {
             http_response_code(304);
             exit;
@@ -289,7 +289,7 @@ class Frontend
         if ('' === $lifespan) {
             $lifespan = 365;
         }
-        $content = 'const cmCookieExpires = ' . $lifespan . ';' . PHP_EOL . PHP_EOL;
+        $content = 'var cmCookieExpires = ' . $lifespan . ';' . PHP_EOL . PHP_EOL;
         $filenames = [];
         $filenames[] = 'js.cookie.min.js';
         $filenames[] = 'consent_manager_polyfills.js';
@@ -475,6 +475,7 @@ class Frontend
             'cspNonce' => rex_response::getNonce(),
             'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
+            'cookieName' => $addon->getConfig('cookie_name', 'consentmanager'),
         ];
         $output .= 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES) . ';' . PHP_EOL . PHP_EOL;
 
@@ -489,7 +490,7 @@ class Frontend
         if ('' === $lifespan) {
             $lifespan = 365;
         }
-        $output .= 'const cmCookieExpires = ' . $lifespan . ';' . PHP_EOL . PHP_EOL;
+        $output .= 'var cmCookieExpires = ' . $lifespan . ';' . PHP_EOL . PHP_EOL;
 
         // JavaScript files
         $filenames = [];
