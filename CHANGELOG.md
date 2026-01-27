@@ -7,10 +7,10 @@ Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview,
 
 ---
 
-### � Framework-First Integration (NEU)
+### 🚀 Framework-First Integration (NEU)
 
 Vollständige Unterstützung für Frontend-Frameworks ohne Custom CSS:
-- **CSS Framework Modus**: Native Unterstützung für **UIkit 3**, **Bootstrap 5**, **Tailwind CSS** und **Webawesome (Shoelace)**.
+- **CSS Framework Modus**: Native Unterstützung für **UIkit 3**, **Bootstrap 5**, **Tailwind CSS** und **Bulma**.
 - **Pure Utility Strategy**: Fragmente nutzen native Framework-Klassen (z.B. `.rounded-4`, `.uk-modal`, `.flex`) anstatt eigene Stile zu injizieren.
 - **Framework-Einstellungen**: Schatten (none, small, large) und Rundungen (eckig, abgerundet) werden direkt auf Framework-Klassen gemappt.
 - **Dynamische Sidebar**: In der Domain-Verwaltung wird die Theme-Auswahl automatisch maskiert, wenn ein Framework-Modus aktiv ist.

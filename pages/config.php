@@ -217,7 +217,7 @@ $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_none
 $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_uikit3'), 'uikit3');
 $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_bootstrap5'), 'bootstrap5');
 $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_tailwind'), 'tailwind');
-$select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_webawesome'), 'webawesome');
+$select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_bulma'), 'bulma');
 $field->setNotice(rex_i18n::msg('consent_manager_config_css_framework_mode_notice'));
 $field->setAttribute('id', 'css-framework-mode-select');
 

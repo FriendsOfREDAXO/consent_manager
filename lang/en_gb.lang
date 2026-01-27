@@ -155,6 +155,7 @@ consent_manager_config_css_framework_mode_none = None (Standard Consent Manager 
 consent_manager_config_css_framework_mode_uikit3 = UIkit 3
 consent_manager_config_css_framework_mode_bootstrap5 = Bootstrap 5
 consent_manager_config_css_framework_mode_tailwind = Tailwind CSS
+consent_manager_config_css_framework_mode_bulma = Bulma
 consent_manager_config_owncss_desc = If enabled, no standard CSS for the consent box will be output in the frontend (consent_manager_frontend.css).<br>CSS for styling the consent box must be present in your own CSS files!
 consent_manager_config_owncss = Use custom CSS
 consent_manager_config_hidebodyscrollbar = Hide website scrollbar

@@ -29,9 +29,9 @@ $frameworkAssets = [
         'css' => [],
         'js' => ['https://cdn.tailwindcss.com']
     ],
-    'webawesome' => [
-        'css' => ['https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/themes/light.css'],
-        'js' => ['https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/shoelace.js']
+    'bulma' => [
+        'css' => ['https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css'],
+        'js' => []
     ]
 ];
 
@@ -236,43 +236,65 @@ $activeAssets = $frameworkAssets[$mode] ?? ['css' => [], 'js' => []];
       </div>
     </div>
 
-<?php elseif ($mode === 'webawesome'): ?>
-    <!-- Webawesome / Shoelace Mockup -->
-    <header style="background: #fff; border-bottom: 1px solid #ddd; padding: 20px;">
-        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-size: 24px; font-weight: bold; color: var(--sl-color-primary-600);">Consent-Test</div>
-            <nav style="display: flex; gap: 20px;">
-                <sl-button variant="text">Home</sl-button>
-                <sl-button variant="text">Features</sl-button>
-            </nav>
+<?php elseif ($mode === 'bulma'): ?>
+    <!-- Bulma Mockup -->
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+      <div class="container">
+        <div class="navbar-brand">
+          <a class="navbar-item font-weight-bold" href="#">Consent-Test</a>
         </div>
-    </header>
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item is-active">Home</a>
+            <a class="navbar-item">Features</a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-    <div style="background: var(--sl-color-primary-500); color: #fff; padding: 100px 20px; text-align: center;">
-        <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 20px;">Webawesome Integration</h1>
-        <p style="font-size: 1.25rem; margin-bottom: 40px; opacity: 0.9;">Das ist ein Test-Layout für das Webawesome (Shoelace) Fragment des Consent Managers.</p>
-        <div style="display: flex; gap: 15px; justify-content: center;">
-            <sl-button variant="default" size="large" outline class="consent_manager-show-box">Cookie-Einstellungen öffnen</sl-button>
-            <sl-button variant="primary" size="large" href="https://github.com/FriendsOfREDAXO/consent_manager" target="_blank">Addon auf GitHub</sl-button>
+    <section class="hero is-link is-bold is-medium">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title is-1">Bulma CSS Integration</h1>
+          <p class="subtitle is-3">Das ist ein Test-Layout für das Bulma Fragment des Consent Managers.</p>
+          <div class="buttons mt-5">
+              <button class="button is-light is-outlined is-large consent_manager-show-box">Cookie-Einstellungen öffnen</button>
+              <a class="button is-white is-large" href="https://github.com/FriendsOfREDAXO/consent_manager" target="_blank">Addon auf GitHub</a>
+          </div>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <div style="max-width: 1200px; margin: 80px auto; padding: 0 20px;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-            <sl-card>
-                <h3 slot="header" style="margin: 0;">Feature 1</h3>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
-            </sl-card>
-            <sl-card>
-                <h3 slot="header" style="margin: 0;">Feature 2</h3>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
-            </sl-card>
-            <sl-card>
-                <h3 slot="header" style="margin: 0;">Feature 3</h3>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
-            </sl-card>
+    <section class="section">
+      <div class="container">
+        <div class="columns is-multiline">
+          <div class="column is-4">
+            <div class="card shadow">
+              <div class="card-content">
+                <p class="title is-4">Feature 1</p>
+                <p class="subtitle is-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-4">
+            <div class="card shadow">
+              <div class="card-content">
+                <p class="title is-4">Feature 2</p>
+                <p class="subtitle is-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-4">
+            <div class="card shadow">
+              <div class="card-content">
+                <p class="title is-4">Feature 3</p>
+                <p class="subtitle is-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+    </section>
 
 <?php else: ?>
     <!-- Theme-Modus / Standard Layout -->

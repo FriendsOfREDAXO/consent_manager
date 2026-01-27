@@ -51,7 +51,7 @@ Der Consent Manager unterstützt einen **Framework-First** Ansatz. Anstatt eigen
 - **UIkit 3**: Nutzt `uk-modal`, `uk-button` und Tailwind-ähnliche Abstände.
 - **Bootstrap 5**: Verwendet native Bootstrap Modals und Utility-Classes.
 - **Tailwind CSS**: Nutzt ausschließlich Standard Tailwind Utilities.
-- **Webawesome (Shoelace)**: Basiert auf modernen Webcomponents wie `<wa-dialog>`.
+- **Bulma**: Basiert auf nativen Bulma Modals und Boxes.
 
 **Vorteil:** Die Consent-Box sieht sofort aus wie der Rest Ihrer Website, ohne dass Sie CSS anpassen müssen. Schatten und Abrundungen werden automatisch auf die entsprechenden Framework-Klassen gemappt.
 

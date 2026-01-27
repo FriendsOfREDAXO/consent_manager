@@ -126,7 +126,7 @@ consent_manager_config_css_framework_mode_none = Keines (Standard Consent-Manage
 consent_manager_config_css_framework_mode_uikit3 = UIkit 3
 consent_manager_config_css_framework_mode_bootstrap5 = Bootstrap 5
 consent_manager_config_css_framework_mode_tailwind = Tailwind CSS
-consent_manager_config_css_framework_mode_webawesome = Webawesome (Shoelace)
+consent_manager_config_css_framework_mode_bulma = Bulma
 
 consent_manager_config_framework_legend = Framework-Einstellungen
 consent_manager_config_framework_shadow = Schatten
