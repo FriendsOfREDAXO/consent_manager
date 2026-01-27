@@ -28,6 +28,10 @@ $frameworkAssets = [
     'tailwind' => [
         'css' => [],
         'js' => ['https://cdn.tailwindcss.com']
+    ],
+    'webawesome' => [
+        'css' => ['https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/themes/light.css'],
+        'js' => ['https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/shoelace-autoloader.js']
     ]
 ];
 
@@ -230,6 +234,44 @@ $activeAssets = $frameworkAssets[$mode] ?? ['css' => [], 'js' => []];
           <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
         </div>
       </div>
+    </div>
+
+<?php elseif ($mode === 'webawesome'): ?>
+    <!-- Webawesome / Shoelace Mockup -->
+    <header style="background: #fff; border-bottom: 1px solid #ddd; padding: 20px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 24px; font-weight: bold; color: var(--sl-color-primary-600);">Consent-Test</div>
+            <nav style="display: flex; gap: 20px;">
+                <wa-button variant="text">Home</wa-button>
+                <wa-button variant="text">Features</wa-button>
+            </nav>
+        </div>
+    </header>
+
+    <div style="background: var(--sl-color-primary-500); color: #fff; padding: 100px 20px; text-align: center;">
+        <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 20px;">Webawesome Integration</h1>
+        <p style="font-size: 1.25rem; margin-bottom: 40px; opacity: 0.9;">Das ist ein Test-Layout für das Webawesome (Shoelace) Fragment des Consent Managers.</p>
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <wa-button variant="default" size="large" outline class="consent_manager-show-box">Cookie-Einstellungen öffnen</wa-button>
+            <wa-button variant="primary" size="large" href="https://github.com/FriendsOfREDAXO/consent_manager" target="_blank">Addon auf GitHub</wa-button>
+        </div>
+    </div>
+
+    <div style="max-width: 1200px; margin: 80px auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+            <wa-card>
+                <h3 slot="header" style="margin: 0;">Feature 1</h3>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+            </wa-card>
+            <wa-card>
+                <h3 slot="header" style="margin: 0;">Feature 2</h3>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+            </wa-card>
+            <wa-card>
+                <h3 slot="header" style="margin: 0;">Feature 3</h3>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+            </wa-card>
+        </div>
     </div>
 
 <?php else: ?>

@@ -359,6 +359,48 @@ Verwenden Sie Video-Thumbnails für YouTube/Vimeo Platzhalter zur besseren User 
 
 ---
 
+## Framework-Integration (Entwickler)
+
+In Version 5.3.0 wurde das System auf einen **Framework-First** Ansatz umgestellt. Dies ermöglicht es, die Consent-Box nativ in Ihrem Framework (Bootstrap, UIkit, Tailwind, etc.) zu rendern, ohne dass das Addon eigenes CSS mitbringen muss.
+
+### Ein neues Framework hinzufügen
+
+Um ein eigenes Framework zu unterstützen, sind folgende Schritte notwendig:
+
+#### 1. Registrierung im Backend
+Fügen Sie in der Datei `pages/config.php` den neuen Framework-Identifier (z.B. `my-framework`) zum Select-Feld `css_framework_mode` hinzu.
+
+#### 2. Fragment erstellen
+Erstellen Sie ein neues Fragment unter:
+`fragments/ConsentManager/box_my-framework.php`
+
+Dieses Fragment wird automatisch von `fragments/ConsentManager/box.php` geladen, wenn der Modus auf `my-framework` steht. Nutzen Sie hier die nativen Klassen Ihres Frameworks. Die Standardvariablen (Textinhalte, Services) stehen im Fragment zur Verfügung.
+
+**Beispiel Struktur eines Sub-Fragments:**
+```php
+<?php
+/** @var rex_fragment $this */
+$is_modern = true; // Empfohlen für neue Integrationen
+?>
+<!-- HTML Struktur Ihres Frameworks -->
+<div class="my-modal">
+    <h3><?= $this->getVar('headline') ?></h3>
+    <p><?= $this->getVar('description') ?></p>
+    <!-- Buttons etc -->
+</div>
+```
+
+#### 3. Setup-Wizard erweitern (Optional)
+Damit User Ihr Framework direkt beim Onboarding wählen können, erweitern Sie:
+- `fragments/ConsentManager/setup_wizard.php` (UI Karte hinzufügen)
+- `lib/Api/consent_manager_setup_wizard.php` (Validierung anpassen)
+
+#### 4. Sprachvariablen
+Fügen Sie die entsprechenden Übersetzungen für den Namen des Frameworks in den `.lang` Dateien hinzu:
+`consent_manager_config_css_framework_mode_my-framework = My Framework`
+
+---
+
 ## Troubleshooting
 
 ### Problem: Consent wird nicht gespeichert

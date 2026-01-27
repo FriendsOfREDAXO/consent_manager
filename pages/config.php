@@ -217,6 +217,7 @@ $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_none
 $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_uikit3'), 'uikit3');
 $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_bootstrap5'), 'bootstrap5');
 $select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_tailwind'), 'tailwind');
+$select->addOption(rex_i18n::msg('consent_manager_config_css_framework_mode_webawesome'), 'webawesome');
 $field->setNotice(rex_i18n::msg('consent_manager_config_css_framework_mode_notice'));
 $field->setAttribute('id', 'css-framework-mode-select');
 
@@ -225,6 +226,7 @@ $field = $form->addCheckboxField('outputowncss');
 $field->setLabel(rex_i18n::msg('consent_manager_config_owncss'));
 $field->addOption(rex_i18n::msg('consent_manager_config_owncss'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_owncss_desc'));
+$field->setAttribute('id', 'output-own-css-container');
 
 // Body Scrollbar Einstellung
 $field = $form->addCheckboxField('hidebodyscrollbar');
@@ -342,13 +344,24 @@ $form->addRawField('
 document.addEventListener("DOMContentLoaded", function() {
     var modeSelect = document.getElementById("css-framework-mode-select");
     var frameworkPanel = document.getElementById("framework-options-panel");
+    var outputOwnCssContainer = document.getElementById("output-own-css-container");
     
     function updateToggles() {
-        if (modeSelect && frameworkPanel) {
-            if (modeSelect.value !== "") {
-                frameworkPanel.style.display = "block";
-            } else {
-                frameworkPanel.style.display = "none";
+        if (modeSelect) {
+            var frameworkActive = modeSelect.value !== "";
+            
+            // Framework-Optionen einblenden wenn Modus gewählt
+            if (frameworkPanel) {
+                frameworkPanel.style.display = frameworkActive ? "block" : "none";
+            }
+            
+            // "Eigenes CSS" nur zeigen wenn KEIN Framework gewählt ist
+            if (outputOwnCssContainer) {
+                // rex_form Checkbox-Container (meistens das umschließende .rex-form-row)
+                var row = outputOwnCssContainer.closest(".rex-form-row");
+                if (row) {
+                    row.style.display = frameworkActive ? "none" : "block";
+                }
             }
         }
     }

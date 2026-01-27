@@ -785,6 +785,11 @@ body.rex-theme-dark details > div code {
                                             <strong>Tailwind</strong><br>
                                             <small class="text-muted">Utility-First</small>
                                         </label>
+                                        <label class="radio-card" style="display: block; background: #fff; padding: 12px; border-radius: 6px; border: 2px solid #eee; margin: 0; cursor: pointer; text-align: center; transition: all 0.2s;">
+                                            <input type="radio" name="wizard_framework_mode" value="webawesome" <?= rex_config::get('consent_manager', 'css_framework_mode') == 'webawesome' ? 'checked' : '' ?> style="display: none;">
+                                            <strong>Webawesome</strong><br>
+                                            <small class="text-muted">Shoelace</small>
+                                        </label>
                                     </div>
                                     <style nonce="<?= rex_response::getNonce() ?>">
                                         .radio-card:has(input:checked) {

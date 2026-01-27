@@ -7,7 +7,17 @@ Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview,
 
 ---
 
-### 📝 Editorial-Seite für Redakteure (NEU)
+### � Framework-First Integration (NEU)
+
+Vollständige Unterstützung für Frontend-Frameworks ohne Custom CSS:
+- **CSS Framework Modus**: Native Unterstützung für **UIkit 3**, **Bootstrap 5**, **Tailwind CSS** und **Webawesome (Shoelace)**.
+- **Pure Utility Strategy**: Fragmente nutzen native Framework-Klassen (z.B. `.rounded-4`, `.uk-modal`, `.flex`) anstatt eigene Stile zu injizieren.
+- **Framework-Einstellungen**: Schatten (none, small, large) und Rundungen (eckig, abgerundet) werden direkt auf Framework-Klassen gemappt.
+- **Dynamische Sidebar**: In der Domain-Verwaltung wird die Theme-Auswahl automatisch maskiert, wenn ein Framework-Modus aktiv ist.
+- **Setup-Wizard Integration**: Auswahl des Frameworks bereits bei der Ersteinrichtung möglich.
+- **Backdrop-Steuerung**: Native Modal-Overlays der Frameworks werden genutzt und können in den Einstellungen konfiguriert werden.
+
+### �📝 Editorial-Seite für Redakteure (NEU)
 
 Neue dedizierte Seite für Redakteure ohne Admin-Rechte:
 - **Moderne Card-basierte UI** mit Bootstrap 3 Farben und REDAXO-Design

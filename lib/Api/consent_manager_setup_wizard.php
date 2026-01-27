@@ -36,7 +36,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         $cssFrameworkMode = rex_request::request('css_framework_mode', 'string', '');
 
         // Framework Modus speichern falls übergeben
-        if (in_array($cssFrameworkMode, ['', 'uikit3', 'bootstrap5', 'tailwind'], true)) {
+        if (in_array($cssFrameworkMode, ['', 'uikit3', 'bootstrap5', 'tailwind', 'webawesome'], true)) {
             rex_config::set('consent_manager', 'css_framework_mode', $cssFrameworkMode);
         }
 

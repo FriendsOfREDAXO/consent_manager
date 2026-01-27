@@ -18,6 +18,14 @@ if (0 === count($consent_manager->texts)) {
     echo '<div id="consent_manager-background">' . rex_view::error(rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig')) . '</div>';
     return;
 }
+
+// Check for CSS Framework Mode
+$cssFrameworkMode = rex_addon::get('consent_manager')->getConfig('css_framework_mode');
+if ($cssFrameworkMode) {
+    echo $this->subparse('ConsentManager/box_' . $cssFrameworkMode . '.php');
+    return;
+}
+
 if (0 < count($consent_manager->cookiegroups)) : ?>
         <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
             <style nonce="<?= rex_response::getNonce() ?>">
