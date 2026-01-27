@@ -47,23 +47,24 @@ if (0 >= count($consent_manager->cookiegroups)) {
 }
 #consent_manager-wrapper {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 0 !important;
+    box-shadow: 0 28px 50px rgba(0,0,0,0.16);
     max-width: 800px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
     padding: 0;
+    animation: uk-fade-bottom 0.4s ease-out;
 }
 .uk-card-body {
-    padding: 20px !important;
+    padding: 40px !important;
 }
 @media (max-width: 640px) {
     #consent_manager-wrapper {
         max-height: 100vh;
         height: 100vh;
-        border-radius: 0;
+        border-radius: 0 !important;
     }
 }
 .consent_manager-hidden {
@@ -71,110 +72,120 @@ if (0 >= count($consent_manager->cookiegroups)) {
 }
 .consent_manager-close-box {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 20px;
+    right: 20px;
     border: none;
     background: transparent;
-    font-size: 1.5rem;
     cursor: pointer;
     z-index: 10;
+    padding: 5px;
+    transition: 0.2s ease-in-out;
+}
+.consent_manager-close-box:hover {
+    opacity: 0.6;
+}
+.uk-button {
+    border-radius: 0 !important;
+}
+.uk-checkbox {
+    border-radius: 0 !important;
+}
+@keyframes uk-fade-bottom {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+/* Accordion Icon Fix (wenn UIkit JS nicht auto-init) */
+.uk-accordion-title::before {
+    content: "";
+    width: 1.4em;
+    height: 1.4em;
+    float: right;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3D%22//www.w3.org/2000/svg%22%3E%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%221.1%22%20points%3D%221%201%206.5%206.5%2012%201%22%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+.uk-open > .uk-accordion-title::before {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3D%22//www.w3.org/2000/svg%22%3E%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%221.1%22%20points%3D%221%2012%206.5%206.5%2012%2012%22%3E%3C/polyline%3E%3C/svg%3E");
 }
 </style>
     <div class="consent_manager-wrapper uk-card uk-card-default" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
-        <button tabindex="0" class="consent_manager-close-box consent_manager-close uk-close" aria-label="Close">&#10006;</button>
+        <button tabindex="0" class="consent_manager-close-box consent_manager-close uk-close-large" aria-label="Close" type="button">
+            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><line fill="none" stroke="#000" stroke-width="1.4" x1="1" y1="1" x2="19" y2="19"></line><line fill="none" stroke="#000" stroke-width="1.4" x1="19" y1="1" x2="1" y2="19"></line></svg>
+        </button>
+
+        <div class="uk-card-header">
+            <h2 class="uk-h3 uk-margin-remove-bottom" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
+            <div class="uk-text-meta uk-margin-small-top"><?= nl2br($consent_manager->texts['description']) ?></div>
+        </div>
         
         <div class="consent_manager-wrapper-inner uk-card-body">
             <div class="consent_manager-summary" id="consent_manager-summary">
-                <h2 class="uk-h3 uk-margin-small-bottom" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
-                <div class="uk-text-meta uk-margin-bottom"><?= nl2br($consent_manager->texts['description']) ?></div>
-                
-                <div class="consent_manager-cookiegroups uk-margin">
+                <div class="consent_manager-cookiegroups">
                     <?php
                     foreach ($consent_manager->cookiegroups as $cookiegroup) {
                         if (count($cookiegroup['cookie_uids']) >= 1) {
                             $isRequired = (bool) ($cookiegroup['required'] ?? false);
+                            $groupUid = rex_escape($cookiegroup['uid']);
                             ?>
-                            <div class="uk-margin-small">
-                                <label class="uk-flex uk-flex-middle" style="cursor: pointer;">
-                                    <input class="uk-checkbox uk-margin-small-right" type="checkbox" 
-                                        id="<?= rex_escape($cookiegroup['uid']) ?>" 
-                                        data-uid="<?= rex_escape($cookiegroup['uid']) ?>" 
-                                        data-cookie-uids='<?= json_encode($cookiegroup['cookie_uids']) ?>'
-                                        <?= $isRequired ? 'checked disabled data-action="toggle-cookie"' : 'tabindex="0"' ?>
-                                    >
-                                    <span class="uk-text-bold"><?= rex_escape($cookiegroup['name'] ?? '') ?></span>
-                                    <?php if ($isRequired): ?>
-                                        <span class="uk-label uk-label-success uk-margin-small-left" style="font-size: 0.6rem;"><?= rex_i18n::msg('consent_manager_cookiegroup_required') ?></span>
-                                    <?php endif; ?>
-                                </label>
+                            <div class="uk-margin-bottom">
+                                <div class="uk-flex uk-flex-middle uk-flex-between">
+                                    <label class="uk-flex uk-flex-middle" style="cursor: pointer;">
+                                        <input class="uk-checkbox uk-margin-small-right" type="checkbox" 
+                                            id="<?= $groupUid ?>" 
+                                            data-uid="<?= $groupUid ?>" 
+                                            data-cookie-uids='<?= json_encode($cookiegroup['cookie_uids']) ?>'
+                                            <?= $isRequired ? 'checked disabled data-action="toggle-cookie"' : 'tabindex="0"' ?>
+                                        >
+                                        <span class="uk-text-bold"><?= rex_escape($cookiegroup['name'] ?? '') ?></span>
+                                        <?php if ($isRequired): ?>
+                                            <span class="uk-label uk-label-success uk-margin-small-left" style="font-size: 0.6rem;"><?= rex_i18n::msg('consent_manager_cookiegroup_required') ?></span>
+                                        <?php endif; ?>
+                                    </label>
+                                    
+                                    <a class="uk-button uk-button-text uk-text-primary uk-text-small" href="#details-<?= $groupUid ?>" uk-toggle>
+                                        <?= $consent_manager->texts['toggle_details'] ?>
+                                    </a>
+                                </div>
+
+                                <div id="details-<?= $groupUid ?>" class="uk-margin-small-top uk-padding-small uk-background-muted" hidden>
+                                    <div class="uk-text-small uk-margin-small-bottom"><?= $cookiegroup['description'] ?? '' ?></div>
+                                    <ul uk-accordion="multiple: true" class="uk-margin-remove">
+                                        <?php
+                                        foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
+                                            if (isset($consent_manager->cookies[$cookieUid])) {
+                                                $cookie = $consent_manager->cookies[$cookieUid];
+                                                if (isset($cookie['definition'])) {
+                                                    foreach ($cookie['definition'] as $def) {
+                                                        ?>
+                                                        <li>
+                                                            <a class="uk-accordion-title uk-text-small uk-text-bold" href="#"><?= rex_escape($def['cookie_name'] ?? '') ?></a>
+                                                            <div class="uk-accordion-content uk-text-small">
+                                                                <p class="uk-margin-small-bottom"><?= $def['description'] ?? '' ?></p>
+                                                                <div class="uk-grid-small uk-child-width-1-2@s" uk-grid>
+                                                                    <div><strong><?= $consent_manager->texts['lifetime'] ?? 'Laufzeit' ?>:</strong> <?= rex_escape($def['cookie_lifetime'] ?? '') ?></div>
+                                                                    <div><strong><?= $consent_manager->texts['provider'] ?? 'Anbieter' ?>:</strong> <?= rex_escape($cookie['provider'] ?? '') ?></div>
+                                                                </div>
+                                                                <?php if (isset($cookie['provider_link_privacy']) && '' !== $cookie['provider_link_privacy']): ?>
+                                                                <div class="uk-margin-small-top">
+                                                                    <a href="<?= rex_escape($cookie['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer nofollow" class="uk-button uk-button-link uk-button-small uk-text-primary"><?= $consent_manager->texts['link_privacy'] ?? 'Datenschutz' ?></a>
+                                                                </div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </li>
+                                                        <?php
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
                             </div>
                             <?php
                         }
                     }
                     ?>
                 </div>
-
-                <div class="uk-margin">
-                    <button id="consent_manager-toggle-details" class="uk-button uk-button-text uk-text-primary" aria-controls="consent_manager-detail" aria-expanded="false">
-                        <?= $consent_manager->texts['toggle_details'] ?>
-                    </button>
-                </div>
-            </div>
-
-            <div class="consent_manager-detail consent_manager-hidden uk-margin-top" id="consent_manager-detail" aria-labelledby="consent_manager-toggle-details">
-                <hr>
-                <?php
-                foreach ($consent_manager->cookiegroups as $cookiegroup) {
-                    if (count($cookiegroup['cookie_uids']) >= 1) {
-                        $countAll = 0;
-                        if (isset($cookiegroup['cookie_uids'])) {
-                            foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
-                                $countAll += count($consent_manager->cookies[$cookieUid]['definition'] ?? []);
-                            }
-                        }
-                        ?>
-                        <div class="uk-margin-medium-bottom">
-                            <h4 class="uk-h5 uk-margin-remove-bottom">
-                                <?= rex_escape($cookiegroup['name'] ?? '') ?> 
-                                <span class="uk-text-muted uk-text-small">(<?= $countAll ?>)</span>
-                            </h4>
-                            <div class="uk-text-small uk-margin-small-top"><?= $cookiegroup['description'] ?? '' ?></div>
-                            
-                            <ul uk-accordion="multiple: true" class="uk-margin-small-top">
-                                <?php
-                                foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
-                                    if (isset($consent_manager->cookies[$cookieUid])) {
-                                        $cookie = $consent_manager->cookies[$cookieUid];
-                                        if (isset($cookie['definition'])) {
-                                            foreach ($cookie['definition'] as $def) {
-                                                ?>
-                                                <li>
-                                                    <a class="uk-accordion-title uk-text-small" href="#"><strong><?= rex_escape($def['cookie_name'] ?? '') ?></strong> <?= rex_escape($cookie['service_name'] ?? '') ?></a>
-                                                    <div class="uk-accordion-content uk-text-small">
-                                                        <p class="uk-margin-remove"><?= $def['description'] ?? '' ?></p>
-                                                        <div class="uk-grid-small uk-child-width-1-2@s uk-margin-small-top" uk-grid>
-                                                            <div><strong><?= $consent_manager->texts['lifetime'] ?? 'Laufzeit' ?>:</strong> <?= rex_escape($def['cookie_lifetime'] ?? '') ?></div>
-                                                            <div><strong><?= $consent_manager->texts['provider'] ?? 'Anbieter' ?>:</strong> <?= rex_escape($cookie['provider'] ?? '') ?></div>
-                                                        </div>
-                                                        <?php if (isset($cookie['provider_link_privacy']) && '' !== $cookie['provider_link_privacy']): ?>
-                                                        <div class="uk-margin-small-top">
-                                                            <a href="<?= rex_escape($cookie['provider_link_privacy']) ?>" target="_blank" rel="noopener noreferrer nofollow" class="uk-button uk-button-link uk-button-small"><?= $consent_manager->texts['link_privacy'] ?? 'Datenschutz' ?></a>
-                                                        </div>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </li>
-                                                <?php
-                                            }
-                                        }
-                                    }
-                                }
-                                ?>
-                            </ul>
-                        </div>
-                        <?php
-                    }
-                }
-                ?>
             </div>
             
             <div class="uk-card-footer uk-padding-remove-horizontal uk-margin-top">
