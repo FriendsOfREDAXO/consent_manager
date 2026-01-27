@@ -22,6 +22,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
 }
 ?>
 
+<div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
 <style nonce="<?= rex_response::getNonce() ?>">
 #consent_manager-background {
     position: fixed !important;
@@ -52,8 +53,6 @@ if (0 >= count($consent_manager->cookiegroups)) {
     position: relative;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
-</style>
-}
 .consent_manager-hidden {
     display: none !important;
 }
@@ -68,8 +67,6 @@ if (0 >= count($consent_manager->cookiegroups)) {
     z-index: 10;
 }
 </style>
-
-<div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
     <div class="consent_manager-wrapper bg-white" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
         <button tabindex="0" class="consent_manager-close consent_manager-close-box text-gray-400 hover:text-gray-500" aria-label="Close">&#10006;</button>
         

@@ -23,6 +23,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
 }
 ?>
 
+<div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
 <style nonce="<?= rex_response::getNonce() ?>">
 /* Glue-CSS für UIkit Integration */
 #consent_manager-background {
@@ -56,7 +57,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
     padding: 0;
 }
 .uk-card-body {
-    padding: 40px !important;
+    padding: 20px !important;
 }
 @media (max-width: 640px) {
     #consent_manager-wrapper {
@@ -65,7 +66,6 @@ if (0 >= count($consent_manager->cookiegroups)) {
         border-radius: 0;
     }
 }
-</style>
 .consent_manager-hidden {
     display: none !important;
 }
@@ -80,8 +80,6 @@ if (0 >= count($consent_manager->cookiegroups)) {
     z-index: 10;
 }
 </style>
-
-<div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
     <div class="consent_manager-wrapper uk-card uk-card-default" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
         <button tabindex="0" class="consent_manager-close-box consent_manager-close uk-close" aria-label="Close">&#10006;</button>
         
