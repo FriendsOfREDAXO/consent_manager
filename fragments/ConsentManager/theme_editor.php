@@ -153,7 +153,7 @@ $csrfToken = $this->getVar('csrfToken');
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="font_size">Allgemeine Schriftgröße: <span id="font_size_value"><?= rex_escape($colors['font_size'] ?? '') ?><?= !empty($colors['font_size']) ? 'px' : 'Standard' ?></span></label>
+                                <label for="font_size">Allgemeine Schriftgröße: <span id="font_size_value"><?= rex_escape($colors['font_size'] ?? '') ?><?= (isset($colors['font_size']) && '' !== $colors['font_size']) ? 'px' : 'Standard' ?></span></label>
                                 <input type="range" class="form-control" id="font_size" name="font_size" min="12" max="22" value="<?= rex_escape($colors['font_size'] ?? '16') ?>">
                                 <small class="help-block">Basis-Schriftgröße für die Consent-Box (12-22px, Standard je nach Theme-Typ)</small>
                             </div>

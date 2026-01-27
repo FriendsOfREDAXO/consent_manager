@@ -86,7 +86,7 @@ if (0 < count($consent_manager->domainInfo)
 
 // Consent bei Datenschutz und Impressum ausblenden
 if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->links['legal_notice'])) {
-    if (rex_article::getCurrentId() === (int) $consent_manager->links['privacy_policy'] || rex_article::getCurrentId() === (int) $consent_manager->links['legal_notice']) {
+    if (rex_article::getCurrentId() === $consent_manager->links['privacy_policy'] || rex_article::getCurrentId() === $consent_manager->links['legal_notice']) {
         $consentparams['initially_hidden'] = 'true';
     }
 }

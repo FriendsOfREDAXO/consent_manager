@@ -11,8 +11,8 @@ $demo_texts = [
     'button_accept' => 'Auswahl bestätigen',
     'button_select_all' => 'Alle auswählen',
     'button_select_none' => 'Nur notwendige',
-    'show_details' => 'Details anzeigen',
-    'hide_details' => 'Details verbergen',
+    'show_details' => 'Details',
+    'hide_details' => 'Details',
 ];
 
 $demo_cookiegroups = [
@@ -66,8 +66,8 @@ $boxClass = '';
     // Demo-Konfiguration für Preview
     var consent_manager_parameters = {
         domain: "<?= rex_escape($domainName) ?>",
-        version: <?= (int) $version ?>,
-        cacheLogId: <?= (int) $cacheLogId ?>,
+        version: <?= $version ?>,
+        cacheLogId: <?= $cacheLogId ?>,
         cookieLifetime: 14,
         focus: "0",
         mode: "opt-in",
@@ -75,7 +75,7 @@ $boxClass = '';
         groups: <?= json_encode($demo_cookiegroups, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>
     };
 </script>
-        <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= rex_escape($boxClass) ?>" id="consent_manager-background" data-domain-name="<?= rex_escape($domainName) ?>" data-version="<?= (int) $version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= (int) $cacheLogId ?>" data-nosnippet aria-hidden="true">
+        <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= rex_escape($boxClass) ?>" id="consent_manager-background" data-domain-name="<?= rex_escape($domainName) ?>" data-version="<?= $version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $cacheLogId ?>" data-nosnippet aria-hidden="true">
             <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
                 <div class="consent_manager-wrapper-inner">
                     <div class="consent_manager-summary" id="consent_manager-summary">

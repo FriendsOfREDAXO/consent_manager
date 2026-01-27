@@ -30,7 +30,7 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                             foreach ($consent_manager->cookiegroups as $cookiegroup) {
                                 if (count($cookiegroup['cookie_uids']) >= 1) {
                                     // TODO: was steht eigentlch in dem Feld? String, Int, Bool, ...?
-                                    if ($cookiegroup['required']) {
+                                    if ((bool) $cookiegroup['required']) {
                                         echo '<div class="consent_manager-cookiegroup-checkbox">';
                                         echo '<label for="' . rex_escape($cookiegroup['uid']) . '"><input type="checkbox" disabled="disabled" data-action="toggle-cookie" id="' . rex_escape($cookiegroup['uid']) . '" data-uid="' . rex_escape($cookiegroup['uid']) . '" data-cookie-uids=\'' . json_encode($cookiegroup['cookie_uids']) . '\' checked>';
                                         echo '<span>' . rex_escape($cookiegroup['name']) . '</span></label>';
@@ -140,8 +140,9 @@ if (0 === $clang) {
 }
 foreach ($consent_manager->links as $v) {
     $article = rex_article::get($v, $clang);
-    $articleName = null !== $article ? rex_escape($article->getName()) : '';
-    echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . $articleName . '</a>';
+    if ($article instanceof rex_article) {
+        echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . rex_escape($article->getName()) . '</a>';
+    }
 }
 ?>
                         </div>

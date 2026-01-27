@@ -126,7 +126,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
                 $clang = rex_clang::getCurrentId();
                 foreach ($consent_manager->links as $v) {
                     $article = rex_article::get($v, $clang);
-                    if ($article) {
+                    if ($article instanceof rex_article) {
                         echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors underline underline-offset-4 decoration-slate-200">' . rex_escape($article->getName()) . '</a>';
                     }
                 }
