@@ -94,18 +94,18 @@ if (0 >= count($consent_manager->cookiegroups)) {
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
 }
-/* Accordion Icon Fix (wenn UIkit JS nicht auto-init) */
-.uk-accordion-title::before {
+/* Accordion Icon Fix (Plus/Minus) */
+.uk-accordion-title::after {
     content: "";
     width: 1.4em;
     height: 1.4em;
     float: right;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3D%22//www.w3.org/2000/svg%22%3E%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%221.1%22%20points%3D%221%201%206.5%206.5%2012%201%22%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2014%2014%22%20xmlns%3D%22http%3D%22//www.w3.org/2000/svg%22%3E%3Cline%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%221.1%22%20x1%3D%227%22%20y1%3D%221%22%20x2%3D%227%22%20y2%3D%2213%22%3E%3C/line%3E%3Cline%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%221.1%22%20x1%3D%221%22%20y1%3D%227%22%20x2%3D%2213%22%20y2%3D%227%22%3E%3C/line%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: 50% 50%;
 }
-.uk-open > .uk-accordion-title::before {
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3D%22//www.w3.org/2000/svg%22%3E%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%221.1%22%20points%3D%221%2012%206.5%206.5%2012%2012%22%3E%3C/polyline%3E%3C/svg%3E");
+.uk-open > .uk-accordion-title::after {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2014%2014%22%20xmlns%3D%22http%3D%22//www.w3.org/2000/svg%22%3E%3Cline%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%221.1%22%20x1%3D%221%22%20y1%3D%227%22%20x2%3D%2213%22%20y2%3D%227%22%3E%3C/line%3E%3C/svg%3E");
 }
 </style>
     <div class="consent_manager-wrapper uk-card uk-card-default" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
@@ -158,7 +158,9 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                                     foreach ($cookie['definition'] as $def) {
                                                         ?>
                                                         <li>
-                                                            <a class="uk-accordion-title uk-text-small uk-text-bold" href="#"><?= rex_escape($def['cookie_name'] ?? '') ?></a>
+                                                            <a class="uk-accordion-title uk-text-small uk-text-bold" href="#">
+                                                                <?= rex_escape($def['cookie_name'] ?? '') ?>
+                                                            </a>
                                                             <div class="uk-accordion-content uk-text-small">
                                                                 <p class="uk-margin-small-bottom"><?= $def['description'] ?? '' ?></p>
                                                                 <div class="uk-grid-small uk-child-width-1-2@s" uk-grid>
