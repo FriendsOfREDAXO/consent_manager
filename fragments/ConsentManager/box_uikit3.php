@@ -149,14 +149,28 @@ if (0 >= count($consent_manager->cookiegroups)) {
 
                                 <div id="details-<?= $groupUid ?>" class="uk-margin-small-top uk-padding-small uk-box-shadow-small" style="border: 1px solid #eee;" hidden>
                                     <div class="uk-text-small uk-margin-small-bottom"><?= $cookiegroup['description'] ?? '' ?></div>
-                                    <ul uk-accordion="multiple: true" class="uk-margin-remove uk-accordion-divider">
-                                        <?php
-                                        foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
-                                            if (isset($consent_manager->cookies[$cookieUid])) {
-                                                $cookie = $consent_manager->cookies[$cookieUid];
-                                                if (isset($cookie['definition'])) {
-                                                    foreach ($cookie['definition'] as $def) {
-                                                        ?>
+                                    <?php
+                                    $cookiesByProvider = [];
+                                    foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
+                                        if (isset($consent_manager->cookies[$cookieUid])) {
+                                            $cookie = $consent_manager->cookies[$cookieUid];
+                                            $provider = $cookie['provider'] ?? 'Unbekannt';
+                                            if (!isset($cookiesByProvider[$provider])) {
+                                                $cookiesByProvider[$provider] = [];
+                                            }
+                                            $cookiesByProvider[$provider][] = $cookie;
+                                        }
+                                    }
+                                    ?>
+                                    
+                                    <?php foreach ($cookiesByProvider as $providerName => $cookies): ?>
+                                        <div class="uk-margin-small-top uk-text-meta uk-text-uppercase uk-text-bold" style="font-size: 0.65rem; border-bottom: 2px solid #eee; padding-bottom: 2px; margin-bottom: 5px;">
+                                            <?= rex_escape($providerName) ?>
+                                        </div>
+                                        <ul uk-accordion="multiple: true" class="uk-margin-remove uk-accordion-divider uk-margin-bottom">
+                                            <?php foreach ($cookies as $cookie): ?>
+                                                <?php if (isset($cookie['definition'])): ?>
+                                                    <?php foreach ($cookie['definition'] as $def): ?>
                                                         <li>
                                                             <a class="uk-accordion-title uk-text-small uk-text-bold" href="#">
                                                                 <?= rex_escape($def['cookie_name'] ?? '') ?>
@@ -165,7 +179,7 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                                                 <p class="uk-margin-small-bottom"><?= $def['description'] ?? '' ?></p>
                                                                 <div class="uk-grid-small uk-child-width-1-2@s" uk-grid>
                                                                     <div><strong><?= $consent_manager->texts['lifetime'] ?? 'Laufzeit' ?>:</strong> <?= rex_escape($def['cookie_lifetime'] ?? '') ?></div>
-                                                                    <div><strong><?= $consent_manager->texts['provider'] ?? 'Anbieter' ?>:</strong> <?= rex_escape($cookie['provider'] ?? '') ?></div>
+                                                                    <div><strong><?= $consent_manager->texts['provider'] ?? 'Anbieter' ?>:</strong> <?= rex_escape($providerName) ?></div>
                                                                 </div>
                                                                 <?php if (isset($cookie['provider_link_privacy']) && '' !== $cookie['provider_link_privacy']): ?>
                                                                 <div class="uk-margin-small-top">
@@ -174,13 +188,11 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                                                 <?php endif; ?>
                                                             </div>
                                                         </li>
-                                                        <?php
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        ?>
-                                    </ul>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
                             <?php
