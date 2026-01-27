@@ -237,15 +237,15 @@ $buttonRoundedStyle = $roundedEnabled ? 'border-radius: 6px !important;' : 'bord
             <div class="uk-card-footer uk-padding-remove-horizontal uk-margin-top border-0">
                 <div class="uk-grid-small uk-child-width-expand@s uk-flex-middle" uk-grid>
                     <div>
-                        <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close uk-button uk-button-secondary uk-width-1-1 uk-padding-small"><?= $consent_manager->texts['button_select_all'] ?></button>
+                        <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close uk-button uk-button-primary uk-width-1-1"><?= $consent_manager->texts['button_select_all'] ?></button>
                     </div>
                     <?php if (isset($consent_manager->texts['button_select_none'])): ?>
                     <div class="uk-flex-first@s">
-                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close uk-button uk-button-default uk-width-1-1 uk-padding-small"><?= $consent_manager->texts['button_select_none'] ?></button>
+                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close uk-button uk-button-default uk-width-1-1"><?= $consent_manager->texts['button_select_none'] ?></button>
                     </div>
                     <?php endif; ?>
                     <div class="uk-flex-last@s">
-                        <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close uk-button uk-button-secondary uk-width-1-1 uk-padding-small"><?= $consent_manager->texts['button_accept'] ?></button>
+                        <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close uk-button uk-button-primary uk-width-1-1"><?= $consent_manager->texts['button_accept'] ?></button>
                     </div>
                 </div>
                 

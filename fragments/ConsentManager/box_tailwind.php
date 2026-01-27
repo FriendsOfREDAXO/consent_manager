@@ -137,13 +137,13 @@ $buttonRoundedClass = $roundedEnabled ? 'rounded-lg' : 'rounded-none';
         <!-- Footer (Fixed) -->
         <div class="flex-none bg-slate-50/50  px-6 py-6 sm:px-8 sm:py-8 border-t border-slate-100 <?= $roundedEnabled ? 'rounded-b-2xl' : '' ?>">
             <div class="flex flex-col sm:flex-row gap-3">
-                <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close flex-1 px-4 py-3.5 bg-slate-900 border border-slate-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-sm active:scale-[0.98] <?= $buttonRoundedClass ?>"><?= $consent_manager->texts['button_select_all'] ?></button>
+                <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close flex-1 px-4 py-3.5 bg-blue-600 border border-blue-600 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all shadow-sm active:scale-[0.98] <?= $buttonRoundedClass ?>"><?= $consent_manager->texts['button_select_all'] ?></button>
                 
                 <?php if (isset($consent_manager->texts['button_select_none'])): ?>
                     <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close flex-1 px-4 py-3.5 bg-white border border-slate-200 text-slate-900 text-[11px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm active:scale-[0.98] <?= $buttonRoundedClass ?>"><?= $consent_manager->texts['button_select_none'] ?></button>
                 <?php endif; ?>
                 
-                <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close flex-1 px-4 py-3.5 bg-slate-900 border border-slate-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-sm active:scale-[0.98] <?= $buttonRoundedClass ?>"><?= $consent_manager->texts['button_accept'] ?></button>
+                <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close flex-1 px-4 py-3.5 bg-blue-600 border border-blue-600 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all shadow-sm active:scale-[0.98] <?= $buttonRoundedClass ?>"><?= $consent_manager->texts['button_accept'] ?></button>
             </div>
 
             <div class="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">

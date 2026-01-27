@@ -193,15 +193,15 @@ $buttonRoundedClass = $roundedEnabled ? 'rounded-2' : 'rounded-0';
         <div class="card-footer bg-white border-top-0 px-4 pb-4 pt-0">
             <div class="row g-2">
                 <div class="col-sm order-2 order-sm-1">
-                    <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close btn btn-dark w-100 py-2 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_select_all'] ?></button>
+                    <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close btn btn-primary w-100 py-3 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_select_all'] ?></button>
                 </div>
                 <?php if (isset($consent_manager->texts['button_select_none'])): ?>
                 <div class="col-sm order-1 order-sm-2">
-                    <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close btn btn-outline-secondary w-100 py-2 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_select_none'] ?></button>
+                    <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close btn btn-outline-secondary w-100 py-3 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_select_none'] ?></button>
                 </div>
                 <?php endif; ?>
                 <div class="col-sm order-3 order-sm-3">
-                    <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close btn btn-dark w-100 py-2 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_accept'] ?></button>
+                    <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close btn btn-primary w-100 py-3 fw-bold text-uppercase tracking-wider <?= $buttonRoundedClass ?>" style="font-size: 0.75rem;"><?= $consent_manager->texts['button_accept'] ?></button>
                 </div>
             </div>
             
