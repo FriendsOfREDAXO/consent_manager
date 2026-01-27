@@ -159,6 +159,12 @@ foreach ($inlineTexts as $uid => $defaultText) {
     }
 }
 
+// Kürze den "Details anzeigen/ausblenden" Text auf "Details" (Fix für Issue / User-Feedback)
+$sql = rex_sql::factory();
+$sql->setQuery('UPDATE ' . rex::getTable('consent_manager_text') . ' SET `text` = ? WHERE `uid` = ? AND `text` = ?', ['Details', 'toggle_details', 'Details anzeigen/ausblenden']);
+$sql->setQuery('UPDATE ' . rex::getTable('consent_manager_text') . ' SET `text` = ? WHERE `uid` = ? AND `text` = ?', ['Details', 'toggle_details', 'Show/hide details']);
+$sql->setQuery('UPDATE ' . rex::getTable('consent_manager_text') . ' SET `text` = ? WHERE `uid` = ? AND `text` = ?', ['Detaljer', 'toggle_details', 'Visa/dölj detaljer']);
+
 // Mediamanager-Type für Thumbnails erstellen (falls Media Manager verfügbar)
 if (rex_addon::get('media_manager')->isAvailable()) {
     // Prüfe ob Type bereits existiert

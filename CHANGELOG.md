@@ -1,11 +1,21 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.3.0 - 26.01.2026
+## Version 5.3.0 - 28.01.2026
 
 **🚀 Release-Highlights:**  
-Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse, Performance-Optimierungen, und neue Editorial-Seite für Redakteure mit Snippet-Manager und Auto-Blocking-Assistent.
+Setup-Wizard für Erstkonfiguration, Domain-spezifische Themes mit Live-Preview, moderne Theme-Vorschau mit 32 Varianten, Google Consent Mode v2 Optimierungen, vollständiges Security-Audit mit CSP-Nonce-Schutz, Multi-Language-Verbesserungen mit editierbaren Script-Feldern, automatische Frontend-Einbindung per Domain-Option mit Template-Positivliste, erweiterte Debug-Tools mit Cookie-Analyse, Performance-Optimierungen, und neue Editorial-Seite für Redakteure mit Snippet-Manager und Auto-Blocking-Assistent, Framework mode: Wähle dein Framework und schon passt es zu Deinem Design.
 
 ---
+
+### 🚀 Framework-First Integration (NEU)
+
+Vollständige Unterstützung für Frontend-Frameworks ohne Custom CSS:
+- **CSS Framework Modus**: Native Unterstützung für **UIkit 3**, **Bootstrap 5**, **Tailwind CSS** und **Bulma**.
+- **Pure Utility Strategy**: Fragmente nutzen native Framework-Klassen (z.B. `.rounded-4`, `.uk-modal`, `.flex`) anstatt eigene Stile zu injizieren.
+- **Framework-Einstellungen**: Schatten (none, small, large) und Rundungen (eckig, abgerundet) werden direkt auf Framework-Klassen gemappt.
+- **Dynamische Sidebar**: In der Domain-Verwaltung wird die Theme-Auswahl automatisch maskiert, wenn ein Framework-Modus aktiv ist.
+- **Setup-Wizard Integration**: Auswahl des Frameworks bereits bei der Ersteinrichtung möglich.
+- **Backdrop-Steuerung**: Native Modal-Overlays der Frameworks werden genutzt und können in den Einstellungen konfiguriert werden.
 
 ### 📝 Editorial-Seite für Redakteure (NEU)
 
@@ -64,7 +74,7 @@ Komplett neu gestaltete Preview-Seite ohne Hintergrundbilder:
 - Cookie-Box öffnet automatisch beim Laden der Preview
 - Dynamisches iframe-Management im Modal für stabiles Schließverhalten
 
-### �️ Security & XSS-Schutz
+### ️ Security & XSS-Schutz
 
 Vollständiges Security Audit durchgeführt und alle Inline-Scripts abgesichert:
 - **CSP-Nonce-Schutz** für alle Inline-`<script>`-Tags im Backend (config.php, theme.php, theme_preview.php, domain.php, log.php)

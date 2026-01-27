@@ -153,7 +153,7 @@ $csrfToken = $this->getVar('csrfToken');
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="font_size">Allgemeine Schriftgröße: <span id="font_size_value"><?= rex_escape($colors['font_size'] ?? '') ?><?= !empty($colors['font_size']) ? 'px' : 'Standard' ?></span></label>
+                                <label for="font_size">Allgemeine Schriftgröße: <span id="font_size_value"><?= rex_escape($colors['font_size'] ?? '') ?><?= (isset($colors['font_size']) && '' !== $colors['font_size']) ? 'px' : 'Standard' ?></span></label>
                                 <input type="range" class="form-control" id="font_size" name="font_size" min="12" max="22" value="<?= rex_escape($colors['font_size'] ?? '16') ?>">
                                 <small class="help-block">Basis-Schriftgröße für die Consent-Box (12-22px, Standard je nach Theme-Typ)</small>
                             </div>
@@ -178,7 +178,7 @@ $csrfToken = $this->getVar('csrfToken');
                 </header>
                 <div class="panel-body">
                     <!-- Details Toggle Button -->
-                    <h5><i class="rex-icon fa-toggle-on"></i> "Details anzeigen/ausblenden" Button</h5>
+                    <h5><i class="rex-icon fa-toggle-on"></i> "Details" Button</h5>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -220,7 +220,7 @@ $csrfToken = $this->getVar('csrfToken');
                     <div class="well well-sm" style="margin-top: 10px; margin-bottom: 20px;">
                         <strong>Vorschau:</strong><br><br>
                         <button type="button" id="details-toggle-preview" style="display: inline-flex; align-items: center; padding: 8px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">
-                            Details anzeigen/ausblenden ▶
+                            Details ▶
                         </button>
                     </div>
                     
@@ -228,7 +228,7 @@ $csrfToken = $this->getVar('csrfToken');
                     
                     <!-- Aufgeklappter Bereich -->
                     <h5><i class="rex-icon fa-folder-open"></i> Aufgeklappter Inhalt</h5>
-                    <p class="help-block"><i class="rex-icon fa-info-circle"></i> Diese Farben gelten für den Bereich, der erscheint wenn "Details anzeigen" geklickt wird.</p>
+                    <p class="help-block"><i class="rex-icon fa-info-circle"></i> Diese Farben gelten für den Bereich, der erscheint wenn "Details" geklickt wird.</p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

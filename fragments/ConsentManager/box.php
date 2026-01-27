@@ -18,19 +18,72 @@ if (0 === count($consent_manager->texts)) {
     echo '<div id="consent_manager-background">' . rex_view::error(rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig')) . '</div>';
     return;
 }
+
+// Check for CSS Framework Mode
+$cssFrameworkMode = rex_addon::get('consent_manager')->getConfig('css_framework_mode');
+if ($cssFrameworkMode) {
+    echo $this->subparse('ConsentManager/box_' . $cssFrameworkMode . '.php');
+    return;
+}
+
 if (0 < count($consent_manager->cookiegroups)) : ?>
         <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
+            <style nonce="<?= rex_response::getNonce() ?>">
+                #consent_manager-background {
+                    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
+                    background: transparent !important;
+                    pointer-events: none !important;
+                    <?php endif; ?>
+                }
+                #consent_manager-wrapper {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    max-height: 90vh !important;
+                    overflow: hidden !important;
+                    border-radius: 0 !important;
+                    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
+                    pointer-events: auto !important;
+                    box-shadow: 0 0 20px rgba(0,0,0,0.2) !important;
+                    background: #fff !important;
+                    <?php endif; ?>
+                }
+                #consent_manager-wrapper .consent_manager-wrapper-inner {
+                    overflow-y: auto !important;
+                    flex: 1 !important;
+                }
+                .consent_manager-header {
+                    padding: 20px;
+                    background: #fff;
+                    border-bottom: 1px solid #eee;
+                    position: relative;
+                    z-index: 10;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .consent_manager-close {
+                    cursor: pointer;
+                    background: transparent;
+                    border: none;
+                    font-size: 20px;
+                    line-height: 1;
+                    padding: 5px;
+                }
+            </style>
             <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
+                <div class="consent_manager-header">
+                    <p class="consent_manager-headline" id="consent_manager-headline" style="margin:0; font-weight:bold;"><?= $consent_manager->texts['headline'] ?></p>
+                    <button class="consent_manager-close" aria-label="Close" type="button" onclick="document.getElementById('consent_manager-background').classList.add('consent_manager-hidden')">×</button>
+                </div>
                 <div class="consent_manager-wrapper-inner">
                     <div class="consent_manager-summary" id="consent_manager-summary">
-                        <p class="consent_manager-headline" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></p>
                         <p class="consent_manager-text"><?= nl2br($consent_manager->texts['description']) ?></p>
                         <div class="consent_manager-cookiegroups">
                             <?php
                             foreach ($consent_manager->cookiegroups as $cookiegroup) {
                                 if (count($cookiegroup['cookie_uids']) >= 1) {
                                     // TODO: was steht eigentlch in dem Feld? String, Int, Bool, ...?
-                                    if ($cookiegroup['required']) {
+                                    if ((bool) $cookiegroup['required']) {
                                         echo '<div class="consent_manager-cookiegroup-checkbox">';
                                         echo '<label for="' . rex_escape($cookiegroup['uid']) . '"><input type="checkbox" disabled="disabled" data-action="toggle-cookie" id="' . rex_escape($cookiegroup['uid']) . '" data-uid="' . rex_escape($cookiegroup['uid']) . '" data-cookie-uids=\'' . json_encode($cookiegroup['cookie_uids']) . '\' checked>';
                                         echo '<span>' . rex_escape($cookiegroup['name']) . '</span></label>';
@@ -140,8 +193,9 @@ if (0 === $clang) {
 }
 foreach ($consent_manager->links as $v) {
     $article = rex_article::get($v, $clang);
-    $articleName = null !== $article ? rex_escape($article->getName()) : '';
-    echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . $articleName . '</a>';
+    if ($article instanceof rex_article) {
+        echo '<a tabindex="0" href="' . rex_getUrl($v, $clang) . '">' . rex_escape($article->getName()) . '</a>';
+    }
 }
 ?>
                         </div>

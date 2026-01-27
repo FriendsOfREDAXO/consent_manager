@@ -86,7 +86,7 @@ if (0 < count($consent_manager->domainInfo)
 
 // Consent bei Datenschutz und Impressum ausblenden
 if (isset($consent_manager->links['privacy_policy']) && isset($consent_manager->links['legal_notice'])) {
-    if (rex_article::getCurrentId() === (int) $consent_manager->links['privacy_policy'] || rex_article::getCurrentId() === (int) $consent_manager->links['legal_notice']) {
+    if (rex_article::getCurrentId() === $consent_manager->links['privacy_policy'] || rex_article::getCurrentId() === $consent_manager->links['legal_notice']) {
         $consentparams['initially_hidden'] = 'true';
     }
 }
@@ -129,8 +129,9 @@ if (true === $inlineMode || 'true' === $inlineMode || '1' === $inlineMode) {
     $consentparams['initially_hidden'] = 'true';
 }
 
-// Standard-CSS ausgeben
-if (false === $addon->getConfig('outputowncss', false)) {
+// Standard-CSS ausgeben (nur wenn kein Framework-Modus aktiv)
+$frameworkMode = $addon->getConfig('css_framework_mode', '');
+if ('' === $frameworkMode && false === $addon->getConfig('outputowncss', false)) {
     $_csscontent = Frontend::getFrontendCss();
     if ('' !== $_csscontent) {
         $consentparams['outputcss'] .= '    <style>' . trim($_csscontent) . '</style>' . PHP_EOL;

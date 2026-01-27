@@ -19,12 +19,13 @@ Das AddOn stellt eine **DSGVO-konforme Lösung** für die Einholung von Einverst
 - ✅ Auto-Blocking für manuell eingefügtes HTML (Scripts, iFrames, Embeds)
 - ✅ **Editorial-Seite** für Redakteure mit Code-Assistent und Snippet-Manager und Editor-Recht. 
 - ✅ **Custom Platzhalter-Texte** pro Element mit `data-consent-text` Attribut 
+- ✅ **Framework-First Support**: Native Integration von UIkit 3, Bootstrap 5, Tailwind und Webawesome (Shoelace).
 
 ![Screenshot](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager.png?raw=true)
 
 ### Rechtlicher Hinweis
 
-**Haftungsausschluss:** Mitgelieferte Texte und Cookie-Definitionen sind Beispiele ohne Gewähr. Website-Betreiber sind eigenverantwortlich für rechtskonforme Integration und müssen alle Inhalte durch Datenschutzbeauftragte prüfen lassen.
+🚨**Haftungsausschluss:** Mitgelieferte Texte und Cookie-Definitionen sind Beispiele ohne Gewähr. Website-Betreiber sind eigenverantwortlich für rechtskonforme Integration und müssen alle Inhalte durch Datenschutzbeauftragte prüfen lassen.
 
 ---
 
@@ -39,6 +40,22 @@ Das AddOn stellt eine **DSGVO-konforme Lösung** für die Einholung von Einverst
 **Setup-Varianten:**
 - **Minimal**: Nur technisch notwendige Cookies
 - **Standard**: Vollständige Service-Sammlung (Google Analytics, Facebook, YouTube, etc.)
+
+---
+
+## Framework-Integration
+
+Der Consent Manager unterstützt einen **Framework-First** Ansatz. Anstatt eigene CSS-Stile zu laden, die oft mit dem Website-Design kollidieren, nutzt das Addon native Klassen Ihres Frameworks.
+
+### Unterstützte Frameworks:
+- **UIkit 3**: Nutzt `uk-modal`, `uk-button` und Tailwind-ähnliche Abstände.
+- **Bootstrap 5**: Verwendet native Bootstrap Modals und Utility-Classes.
+- **Tailwind CSS**: Nutzt ausschließlich Standard Tailwind Utilities.
+- **Bulma**: Basiert auf nativen Bulma Modals und Boxes.
+
+**Vorteil:** Die Consent-Box sieht sofort aus wie der Rest Ihrer Website, ohne dass Sie CSS anpassen müssen. Schatten und Abrundungen werden automatisch auf die entsprechenden Framework-Klassen gemappt.
+
+---
 
 ### Grundeinrichtung
 

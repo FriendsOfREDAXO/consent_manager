@@ -33,6 +33,12 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         $includeTemplates = rex_request::request('include_templates', 'string', '');
         $privacyPolicy = rex_request::request('privacy_policy', 'int', 0);
         $legalNotice = rex_request::request('legal_notice', 'int', 0);
+        $cssFrameworkMode = rex_request::request('css_framework_mode', 'string', '');
+
+        // Framework Modus speichern falls übergeben
+        if (in_array($cssFrameworkMode, ['', 'uikit3', 'bootstrap5', 'tailwind', 'bulma'], true)) {
+            rex_config::set('consent_manager', 'css_framework_mode', $cssFrameworkMode);
+        }
 
         // Domain bereinigen und validieren
         $cleanDomain = $this->cleanDomain($domain);
@@ -46,13 +52,13 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
         }
 
         // Setup ausführen
-        $this->runSetup($cleanDomain, $setupType, $autoInject, $includeTemplates, $privacyPolicy, $legalNotice);
+        $this->runSetup($cleanDomain, $setupType, $autoInject, $includeTemplates, $privacyPolicy, $legalNotice, $cssFrameworkMode);
     }
 
     /**
      * Setup ausführen - komplett synchron.
      */
-    private function runSetup(string $domain, string $setupType, bool $autoInject, string $includeTemplates, int $privacyPolicy, int $legalNotice)
+    private function runSetup(string $domain, string $setupType, bool $autoInject, string $includeTemplates, int $privacyPolicy, int $legalNotice, string $cssFrameworkMode = '')
     {
         try {
             // Parameter auslesen
@@ -62,6 +68,7 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             $includeTemplates = rex_request::request('include_templates', 'string', '');
             $privacyPolicy = rex_request::request('privacy_policy', 'int', 0);
             $legalNotice = rex_request::request('legal_notice', 'int', 0);
+            $cssFrameworkMode = rex_request::request('css_framework_mode', 'string', '');
 
             // Validierung
             if (empty($domain)) {

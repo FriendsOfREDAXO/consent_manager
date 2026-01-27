@@ -1,10 +1,10 @@
 // Issue #317: Remove domain parameter to prevent wildcard cookies (.example.com)
 // Cookies must be domain-specific for GDPR compliance
 // Cookie settings are now configurable via backend
-const cmCookieSameSite = consent_manager_parameters.cookieSameSite || 'Lax';
-const cmCookieSecure = consent_manager_parameters.cookieSecure || false;
-const cmCookieName = consent_manager_parameters.cookieName || 'consentmanager';
-const cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', sameSite: cmCookieSameSite, secure: cmCookieSecure });
+var cmCookieSameSite = consent_manager_parameters.cookieSameSite || 'Lax';
+var cmCookieSecure = consent_manager_parameters.cookieSecure || false;
+var cmCookieName = consent_manager_parameters.cookieName || 'consentmanager';
+var cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', sameSite: cmCookieSameSite, secure: cmCookieSecure });
 
 if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
     console.log('Consent Manager: Script loaded');
