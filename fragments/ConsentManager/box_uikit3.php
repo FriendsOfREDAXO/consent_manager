@@ -177,33 +177,15 @@ if (0 >= count($consent_manager->cookiegroups)) {
                                                         <?php endif; ?>
 
                                                         <?php if (isset($cookie['definition']) && count($cookie['definition']) > 0): ?>
-                                                            <div class="uk-margin-small-top" style="border-top: 1px dashed #eee; padding-top: 15px;">
-                                                                <div class="uk-text-meta uk-text-uppercase uk-margin-small-bottom" style="font-size: 0.8rem; color: #333; font-weight: bold; letter-spacing: 1px;"><?= $consent_manager->texts['cookie_name'] ?? 'Cookies' ?></div>
-                                                                
+                                                            <div class="uk-margin-small-top uk-text-meta" style="border-top: 1px dashed #eee; padding-top: 10px; color: #666;">
                                                                 <?php foreach ($cookie['definition'] as $def): ?>
-                                                                    <div class="uk-margin-small-bottom uk-padding-small" style="background: #fcfcfc; border: 1px solid #f0f0f0;">
-                                                                        <div class="uk-grid-small" uk-grid>
-                                                                            <div class="uk-width-1-3@s">
-                                                                                <span class="uk-text-bold uk-text-muted" style="font-size: 0.8rem;"><?= $consent_manager->texts['cookie_name'] ?? 'Name' ?>:</span>
-                                                                            </div>
-                                                                            <div class="uk-width-2-3@s">
-                                                                                <code style="background: transparent; color: #d05d41; padding: 0;"><?= rex_escape($def['cookie_name'] ?? '') ?></code>
-                                                                            </div>
-                                                                            
-                                                                            <div class="uk-width-1-3@s">
-                                                                                <span class="uk-text-bold uk-text-muted" style="font-size: 0.8rem;"><?= $consent_manager->texts['description'] ?? 'Zweck' ?>:</span>
-                                                                            </div>
-                                                                            <div class="uk-width-2-3@s">
-                                                                                <div class="uk-text-small"><?= $def['description'] ?? '' ?></div>
-                                                                            </div>
-
-                                                                            <div class="uk-width-1-3@s">
-                                                                                <span class="uk-text-bold uk-text-muted" style="font-size: 0.8rem;"><?= $consent_manager->texts['lifetime'] ?? 'Dauer' ?>:</span>
-                                                                            </div>
-                                                                            <div class="uk-width-2-3@s">
-                                                                                <div class="uk-text-small"><?= rex_escape($def['cookie_lifetime'] ?? '') ?></div>
-                                                                            </div>
-                                                                        </div>
+                                                                    <div class="uk-margin-small-bottom">
+                                                                        <span class="uk-text-bold"><?= $consent_manager->texts['cookie_name'] ?? 'Cookie' ?>:</span> 
+                                                                        <code style="background: transparent; color: #d05d41; padding: 0;"><?= rex_escape($def['cookie_name'] ?? '') ?></code>
+                                                                        <span class="uk-margin-small-left">(<?= $consent_manager->texts['lifetime'] ?? 'Dauer' ?>: <?= rex_escape($def['cookie_lifetime'] ?? '') ?>)</span>
+                                                                        <?php if (isset($def['description']) && $def['description'] !== '' && $def['description'] !== $cookie['description']): ?>
+                                                                            <div class="uk-margin-xsmall-top" style="font-style: italic;"><?= $def['description'] ?></div>
+                                                                        <?php endif; ?>
                                                                     </div>
                                                                 <?php endforeach; ?>
                                                             </div>
