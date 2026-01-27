@@ -55,7 +55,9 @@ if (0 >= count($consent_manager->cookiegroups)) {
     max-width: 800px;
     width: 100%;
     max-height: 90vh;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     position: relative;
     border-radius: 0 !important;
     animation: uk-fade-bottom 0.4s ease-out;
@@ -67,17 +69,22 @@ if (0 >= count($consent_manager->cookiegroups)) {
         border-radius: 0 !important;
     }
 }
+.consent_manager-wrapper-inner.uk-card-body {
+    overflow-y: auto;
+    flex: 1;
+}
 .consent_manager-hidden {
     display: none !important;
 }
 .consent_manager-close-box {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 25px;
+    right: 30px;
     border: none;
     background: transparent;
     cursor: pointer;
-    z-index: 10;
+    z-index: 100;
+}
     padding: 5px;
     transition: 0.2s ease-in-out;
 }
@@ -124,12 +131,12 @@ if (0 >= count($consent_manager->cookiegroups)) {
             <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><line fill="none" stroke="#000" stroke-width="1.4" x1="1" y1="1" x2="19" y2="19"></line><line fill="none" stroke="#000" stroke-width="1.4" x1="19" y1="1" x2="1" y2="19"></line></svg>
         </button>
 
-        <div class="uk-card-header">
+        <div class="uk-card-header uk-padding-small">
             <h2 class="uk-h3 uk-margin-remove-bottom" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
-            <div class="uk-text-meta uk-margin-small-top"><?= nl2br($consent_manager->texts['description']) ?></div>
         </div>
         
         <div class="consent_manager-wrapper-inner uk-card-body">
+            <div class="uk-text-meta uk-margin-bottom"><?= nl2br($consent_manager->texts['description']) ?></div>
             <div class="consent_manager-summary" id="consent_manager-summary">
                 <div class="consent_manager-cookiegroups">
                     <?php

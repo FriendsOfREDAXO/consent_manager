@@ -54,7 +54,9 @@ if (0 >= count($consent_manager->cookiegroups)) {
     max-width: 800px;
     width: 100%;
     max-height: 90vh;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     position: relative;
     border-radius: 0 !important;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -65,14 +67,19 @@ if (0 >= count($consent_manager->cookiegroups)) {
         height: 100vh;
     }
 }
+.consent_manager-wrapper-inner {
+    overflow-y: auto;
+    flex: 1;
+}
 .consent_manager-hidden {
     display: none !important;
 }
 .consent_manager-close-box {
     position: absolute;
-    top: 1.25rem;
-    right: 1.25rem;
-    z-index: 10;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 100;
+}
 }
 /* Bootstrap Spezialanpassungen für "uikit liker" Look */
 .rounded-0 { border-radius: 0 !important; }
@@ -106,11 +113,11 @@ if (0 >= count($consent_manager->cookiegroups)) {
         <button tabindex="0" class="btn-close consent_manager-close consent_manager-close-box shadow-none" aria-label="Close" type="button"></button>
         
         <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
-            <h2 class="card-title h4 mb-2 fw-bold" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
-            <div class="text-muted small mb-0"><?= nl2br($consent_manager->texts['description']) ?></div>
+            <h2 class="card-title h4 mb-0 fw-bold" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
         </div>
 
         <div class="consent_manager-wrapper-inner card-body p-4">
+            <div class="text-muted small mb-4"><?= nl2br($consent_manager->texts['description']) ?></div>
             <div class="consent_manager-cookiegroups">
                 <?php
                 foreach ($consent_manager->cookiegroups as $cookiegroup) {

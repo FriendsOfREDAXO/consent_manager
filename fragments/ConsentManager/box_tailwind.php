@@ -29,14 +29,18 @@ $backdropEnabled = (bool) rex_addon::get('consent_manager')->getConfig('backdrop
 <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?> fixed inset-0 flex items-center justify-center p-4 <?= $backdropEnabled ? 'bg-slate-900/60' : 'bg-transparent pointer-events-none' ?> z-[1000000]" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
     <div class="consent_manager-wrapper bg-white shadow-2xl rounded-none w-full max-w-2xl max-h-[90vh] flex flex-col relative <?= $backdropEnabled ? '' : 'pointer-events-auto shadow-[0_0_50px_rgba(0,0,0,0.3)]' ?>" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
         
-        <button tabindex="0" class="consent_manager-close absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors p-2" aria-label="Close">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
+        <div class="sticky top-0 z-20 bg-white border-b border-slate-50 px-8 py-6 flex items-start justify-between">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900 leading-tight" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
+            </div>
+            <button tabindex="0" class="consent_manager-close text-slate-400 hover:text-slate-600 transition-colors p-2 -mr-2 -mt-2" aria-label="Close">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
         
-        <div class="p-8 overflow-y-auto">
-            <h2 class="text-2xl font-bold mb-4 text-slate-900 leading-tight" id="consent_manager-headline"><?= $consent_manager->texts['headline'] ?></h2>
+        <div class="p-8 overflow-y-auto pt-4">
             <div class="text-slate-600 mb-8 text-base leading-relaxed"><?= nl2br($consent_manager->texts['description']) ?></div>
             
             <div class="space-y-0 border-t border-slate-100 mb-8">
@@ -114,15 +118,14 @@ $backdropEnabled = (bool) rex_addon::get('consent_manager')->getConfig('backdrop
                 ?>
             </div>
             
-            <div class="flex flex-col gap-3">
-                <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close w-full px-8 py-4 bg-slate-900 border border-slate-900 text-white text-sm font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-md active:scale-[0.98]"><?= $consent_manager->texts['button_select_all'] ?></button>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button tabindex="0" id="consent_manager-accept-all" class="consent_manager-accept-all consent_manager-close flex-1 px-4 py-3 bg-slate-900 border border-slate-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-sm active:scale-[0.98]"><?= $consent_manager->texts['button_select_all'] ?></button>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <?php if (isset($consent_manager->texts['button_select_none'])): ?>
-                        <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close w-full px-6 py-3 border border-slate-200 text-slate-600 text-[11px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all"><?= $consent_manager->texts['button_select_none'] ?></button>
-                    <?php endif; ?>
-                    <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close w-full px-6 py-3 border border-slate-900 text-slate-900 text-[11px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all"><?= $consent_manager->texts['button_accept'] ?></button>
-                </div>
+                <?php if (isset($consent_manager->texts['button_select_none'])): ?>
+                    <button tabindex="0" id="consent_manager-accept-none" class="consent_manager-accept-none consent_manager-close flex-1 px-4 py-3 bg-slate-900 border border-slate-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-sm active:scale-[0.98]"><?= $consent_manager->texts['button_select_none'] ?></button>
+                <?php endif; ?>
+                
+                <button tabindex="0" id="consent_manager-save-selection" class="consent_manager-save-selection consent_manager-close flex-1 px-4 py-3 bg-slate-900 border border-slate-900 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-sm active:scale-[0.98]"><?= $consent_manager->texts['button_accept'] ?></button>
             </div>
 
             <div class="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2">
