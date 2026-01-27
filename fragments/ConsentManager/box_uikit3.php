@@ -24,19 +24,22 @@ if (0 >= count($consent_manager->cookiegroups)) {
 ?>
 
 <style nonce="<?= rex_response::getNonce() ?>">
-/* UIkit 3 spezifische Layout-Korrekturen für Modal */
+/* Glue-CSS für UIkit Integration */
 #consent_manager-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    display: none; /* Standardmäßig aus, JS schaltet es ein */
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    z-index: 999999;
+    z-index: 1000000 !important; /* Über UIkit Modals (1010) */
+}
+#consent_manager-background:not(.consent_manager-hidden) {
+    display: flex !important;
 }
 #consent_manager-background.consent_manager-hidden {
     display: none !important;
@@ -50,7 +53,19 @@ if (0 >= count($consent_manager->cookiegroups)) {
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
+    padding: 0;
 }
+.uk-card-body {
+    padding: 40px !important;
+}
+@media (max-width: 640px) {
+    #consent_manager-wrapper {
+        max-height: 100vh;
+        height: 100vh;
+        border-radius: 0;
+    }
+}
+</style>
 .consent_manager-hidden {
     display: none !important;
 }

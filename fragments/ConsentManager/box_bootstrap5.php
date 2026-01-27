@@ -24,17 +24,20 @@ if (0 >= count($consent_manager->cookiegroups)) {
 
 <style nonce="<?= rex_response::getNonce() ?>">
 #consent_manager-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    display: none;
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    z-index: 999999;
+    z-index: 1000000 !important;
+}
+#consent_manager-background:not(.consent_manager-hidden) {
+    display: flex !important;
 }
 #consent_manager-background.consent_manager-hidden {
     display: none !important;
@@ -48,6 +51,8 @@ if (0 >= count($consent_manager->cookiegroups)) {
     overflow-y: auto;
     position: relative;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+</style>
 }
 .consent_manager-hidden {
     display: none !important;
