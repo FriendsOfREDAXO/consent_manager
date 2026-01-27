@@ -81,7 +81,12 @@ if ($shadow === 'large') $shadowClass = 'has-shadow';
                 <div id="consent_manager-detail" class="consent_manager-hidden" hidden aria-hidden="true"></div>
             </section>
             <footer class="modal-card-foot is-justify-content-flex-end" <?= $rounded === '0' ? 'style="border-radius: 0;"' : '' ?>>
-                <button class="button is-light consent_manager-save-selection consent_manager-close" type="button">
+                <?php if (isset($consent_manager->texts['button_select_none'])) : ?>
+                    <button class="button is-primary consent_manager-accept-none consent_manager-close" type="button">
+                        <?= $consent_manager->texts['button_select_none'] ?>
+                    </button>
+                <?php endif; ?>
+                <button class="button is-primary consent_manager-save-selection consent_manager-close" type="button">
                     <?= $consent_manager->texts['button_accept'] ?>
                 </button>
                 <button class="button is-primary consent_manager-accept-all consent_manager-close" type="button">
