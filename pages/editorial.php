@@ -682,7 +682,7 @@ jQuery(function($) {
     var STORAGE_KEY = 'consent_manager_snippets';
     
     // Snippet-Verwaltung
-    const snippetManager = {
+    var snippetManager = {
         load: function() {
             try {
                 var data = localStorage.getItem(STORAGE_KEY);
@@ -779,7 +779,7 @@ jQuery(function($) {
         $('#auto-blocking-assistant-modal').modal('show');
         
         // Kurze Verzögerung, damit Modal geladen ist
-        setTimeout(function() { {
+        setTimeout(function() {
             $('#output_code').val(snippet.code);
             $('#output_container').show();
             
