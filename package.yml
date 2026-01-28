@@ -45,8 +45,7 @@ page:
       title: "translate:consent_manager_log"
     help:
       title: "translate:consent_manager_help"
-      icon: rex-icon fa-question-circle
-      itemClass: pull-right
+      icon: rex-icon fa-info
       subpages:
         readme:
           title: "Dokumentation"
