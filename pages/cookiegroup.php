@@ -180,7 +180,6 @@ if ('delete' === $func) {
             $html .= '<button type="button" class="btn btn-default cm-deselect-all"><i class="fa fa-square-o"></i> Alle abwählen</button>';
             $html .= '</span>';
             $html .= '<input type="text" id="cm-cookie-search" class="form-control" placeholder="Suche..." style="width: 200px;">';
-            $html .= '<span class="input-group-addon"><i class="rex-icon rex-icon-search"></i></span>';
             $html .= '</div>';
             $html .= '</div>';
             
@@ -250,17 +249,67 @@ if ('delete' === $func) {
                 vertical-align: top;
                 padding-right: 10px;
                 box-sizing: border-box; 
-                background: #f9f9f9;
-                padding: 8px;
-                border-radius: 4px;
-                border: 1px solid #e0e0e0;
+                /* Removed background and border */
+                padding: 8px 0; 
             }
             .consent-manager-cookie-list .checkbox:hover {
-                background: #f0f0f0;
+                /* Removed hover background */
             }
+
+            /* Custom Checkbox Styling */
+            .consent-manager-cookie-list .checkbox input[type="checkbox"] {
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                width: 26px;
+                height: 26px;
+                border: 3px solid #e0e0e0;
+                border-radius: 50%;
+                cursor: pointer;
+                position: relative;
+                transition: all 0.3s ease;
+                vertical-align: middle;
+                margin-right: 8px;
+                margin-top: 0;
+                float: left; /* Ensure it floats left like standard checkbox */
+            }
+
+            .consent-manager-cookie-list .checkbox input[type="checkbox"]::before {
+                content: "";
+                position: absolute;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: #667eea;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0);
+                transition: transform 0.3s ease;
+            }
+
+            .consent-manager-cookie-list .checkbox input[type="checkbox"]:checked {
+                border-color: #667eea;
+            }
+
+            .consent-manager-cookie-list .checkbox input[type="checkbox"]:checked::before {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            .consent-manager-cookie-list .checkbox input[type="checkbox"]:hover {
+                border-color: #667eea;
+            }
+
+            .consent-manager-cookie-list .checkbox input[type="checkbox"]:focus {
+                outline: 2px solid #667eea;
+                outline-offset: 2px;
+            }
+
             .consent-manager-cookie-list .checkbox label {
                 width: 100%;
                 cursor: pointer;
+                display: block; /* Important for float layout */
+                padding-left: 0;
+                line-height: 28px; /* Align text vertically with 26px checkbox */
             }
             </style>';
             
