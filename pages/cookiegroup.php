@@ -107,6 +107,8 @@ if ('delete' === $func) {
     $domains = $db->getArray();
 
     if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
+        $form->addFieldset(rex_i18n::msg('consent_manager_general'));
+
         $field = $form->addTextField('uid');
         $field->setLabel(rex_i18n::msg('consent_manager_uid'));
         $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_uid_empty_msg'));
@@ -115,19 +117,22 @@ if ('delete' === $func) {
         $field = $form->addCheckboxField('required');
         $field->addOption(rex_i18n::msg('consent_manager_cookiegroup_required'), 1);
 
+        $field = $form->addPrioField('prio');
+        $field->setWhereCondition('clang_id = ' . $clang_id);
+        $field->setLabel(rex_i18n::msg('consent_manager_prio'));
+        $field->setLabelField('uid');
+
         if (count($domains) > 0) {
+            $form->addFieldset(rex_i18n::msg('consent_manager_domain'));
             $field = $form->addCheckboxField('domain');
             $field->setLabel(rex_i18n::msg('consent_manager_domain'));
             foreach ($domains as $v) {
                 $field->addOption((string) $v['uid'], (int) $v['id']);
             }
         }
-
-        $field = $form->addPrioField('prio');
-        $field->setWhereCondition('clang_id = ' . $clang_id);
-        $field->setLabel(rex_i18n::msg('consent_manager_prio'));
-        $field->setLabelField('uid');
     } else {
+        $form->addFieldset(rex_i18n::msg('consent_manager_general'));
+        
         $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), (string) $form->getSql()->getValue('uid')));
         $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), rex_i18n::msg('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
 
@@ -140,9 +145,15 @@ if ('delete' === $func) {
             $checkboxes[] = [$checked, $v['uid']];
         }
         if (count($checkboxes) > 0) {
+            $form->addFieldset(rex_i18n::msg('consent_manager_domain'));
             $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
+
+    if ($form->isEditMode() && $clang_id !== rex_clang::getStartId()) {
+         $form->addFieldset(rex_i18n::msg('consent_manager_general'));
+    }
+
     $field = $form->addTextField('name');
     $field->setLabel(rex_i18n::msg('consent_manager_name'));
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_uid_empty_msg'));
@@ -157,21 +168,20 @@ if ('delete' === $func) {
     $db->select('DISTINCT pid, uid, service_name, variant');
     $cookies = $db->getArray();
 
-    $cookieLinks = [];
-    foreach ($cookies as $c) {
-        $cookieLinks[$c['uid']] = rex_url::backendPage('consent_manager/cookie', ['func' => 'edit', 'pid' => $c['pid']]);
-    }
-
     if ($clang_id === rex_clang::getStartId() || true !== $form->isEditMode()) {
         if ([] !== $cookies) {
+            $form->addFieldset(rex_i18n::msg('consent_manager_cookies'));
+
             // Styling und Buttons
-            $html = '<div id="cm-cookie-toolbar" class="input-group input-group-xs" style="margin-bottom: 5px;">';
+            $html = '<div style="display: flex; justify-content: center; margin-bottom: 5px;">';
+            $html .= '<div id="cm-cookie-toolbar" class="input-group input-group-xs" style="width: auto;">';
             $html .= '<span class="input-group-btn">';
             $html .= '<button type="button" class="btn btn-info cm-select-all"><i class="fa fa-check-square-o"></i> Alle auswählen</button>';
             $html .= '<button type="button" class="btn btn-default cm-deselect-all"><i class="fa fa-square-o"></i> Alle abwählen</button>';
             $html .= '</span>';
-            $html .= '<input type="text" id="cm-cookie-search" class="form-control" placeholder="Suche...">';
+            $html .= '<input type="text" id="cm-cookie-search" class="form-control" placeholder="Suche..." style="width: 200px;">';
             $html .= '<span class="input-group-addon"><i class="rex-icon rex-icon-search"></i></span>';
+            $html .= '</div>';
             $html .= '</div>';
             
             $html .= '<script nonce="' . rex_response::getNonce() . '">
@@ -184,12 +194,16 @@ if ('delete' === $func) {
                     $checkboxes.first().closest(".rex-form-group").addClass("consent-manager-cookie-list");
                 }
                 
-                // Toolbar Wrapper
+                // Toolbar Wrapper finden
                 var $toolbar = $("#cm-cookie-toolbar");
                 
-                // Optional: Label des Button-Containers leeren, falls vorhanden
-                $toolbar.closest(".rex-form-group").find("dt").html("&nbsp;");
+                // Den zugehörigen Form-Group Container des Toolbars finden
+                var $toolbarGroup = $toolbar.closest(".rex-form-group");
                 
+                // Label (dt) des Toolbars entfernen/verstecken für Full-Width Look
+                $toolbarGroup.addClass("cm-toolbar-group");
+                $toolbarGroup.find("dt").html("&nbsp;"); 
+
                 // Select All Handler
                 $toolbar.on("click", ".cm-select-all", function() {
                     $checkboxes.filter(":visible").prop("checked", true);
@@ -219,6 +233,16 @@ if ('delete' === $func) {
             </script>';
             
             $html .= '<style nonce="' . rex_response::getNonce() . '">
+            /* Toolbar Row Styling */
+            .cm-toolbar-group {
+                margin-bottom: 0 !important;
+                border-bottom: 0 !important;
+            }
+            .cm-toolbar-group dd {
+                padding-bottom: 5px;
+            }
+
+            /* Cookie List Styling */
             .consent-manager-cookie-list .checkbox {
                 display: inline-block;
                 width: 49%;
@@ -252,6 +276,8 @@ if ('delete' === $func) {
         }
     } else {
         if ([] !== $cookies) {
+            $form->addFieldset(rex_i18n::msg('consent_manager_cookies'));
+            
             $checkboxes = [];
             if (null !== $form->getSql()->getValue('cookie')) {
                 $checkedBoxes = array_filter(explode('|', (string) $form->getSql()->getValue('cookie')), static function ($value) {
