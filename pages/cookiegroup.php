@@ -159,9 +159,71 @@ if ('delete' === $func) {
 
     if ($clang_id === rex_clang::getStartId() || true !== $form->isEditMode()) {
         if ([] !== $cookies) {
-            // Eigene HTML-Darstellung mit Toggles und Config-Buttons
-            $serviceHtml = RexFormSupport::getActiveServiceToggleList(rex_i18n::msg('consent_manager_cookies'), $cookies, $clang_id, 'cookie', $form);
-            $form->addRawField($serviceHtml);
+            // Styling und Buttons
+            $html = '<div id="cm-cookie-buttons-wrapper" class="btn-group btn-group-xs" style="margin-bottom: 5px;">';
+            $html .= '<button type="button" class="btn btn-info cm-select-all"><i class="fa fa-check-square-o"></i> Alle auswählen</button>';
+            $html .= '<button type="button" class="btn btn-default cm-deselect-all"><i class="fa fa-square-o"></i> Alle abwählen</button>';
+            $html .= '</div>';
+            
+            $html .= '<script nonce="' . rex_response::getNonce() . '">
+            jQuery(function($) {
+                // Checkboxen selektieren via Klasse
+                var $checkboxes = $(".cm-cookie-checkbox-item");
+                
+                // Styling Klasse auf das Container-Element der Checkboxen anwenden
+                if ($checkboxes.length > 0) {
+                    $checkboxes.first().closest(".rex-form-group").addClass("consent-manager-cookie-list");
+                }
+                
+                // Buttons Wrapper
+                var $btnWrapper = $("#cm-cookie-buttons-wrapper");
+                
+                // Optional: Label des Button-Containers leeren, falls vorhanden
+                $btnWrapper.closest(".rex-form-group").find("dt").html("&nbsp;");
+                
+                // Select All Handler
+                $btnWrapper.on("click", ".cm-select-all", function() {
+                    $checkboxes.prop("checked", true);
+                });
+                
+                // Deselect All Handler
+                $btnWrapper.on("click", ".cm-deselect-all", function() {
+                    $checkboxes.prop("checked", false);
+                });
+            });
+            </script>';
+            
+            $html .= '<style nonce="' . rex_response::getNonce() . '">
+            .consent-manager-cookie-list .checkbox {
+                display: inline-block;
+                width: 49%;
+                margin: 5px 0;
+                vertical-align: top;
+                padding-right: 10px;
+                box-sizing: border-box; 
+                background: #f9f9f9;
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #e0e0e0;
+            }
+            .consent-manager-cookie-list .checkbox:hover {
+                background: #f0f0f0;
+            }
+            .consent-manager-cookie-list .checkbox label {
+                width: 100%;
+                cursor: pointer;
+            }
+            </style>';
+            
+            $form->addRawField($html);
+
+            $field = $form->addCheckboxField('cookie');
+            $field->setAttribute('class', 'cm-cookie-checkbox-item'); // Klasse für JS-Selektor
+            $field->setLabel(rex_i18n::msg('consent_manager_cookies'));
+            foreach ($cookies as $v) {
+                // Name und UID speichern
+                $field->addOption(rex_escape($v['service_name']), $v['uid']);
+            }
         }
     } else {
         if ([] !== $cookies) {
@@ -175,29 +237,10 @@ if ('delete' === $func) {
             }
             foreach ($cookies as $v) {
                 $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
-                $checkboxes[] = [$checked, $v['uid']];
+                $checkboxes[] = [$checked, rex_escape($v['service_name'])];
             }
-            $form->addRawField(RexFormSupport::getServiceToggleList(rex_i18n::msg('consent_manager_cookies'), $checkboxes, $clang_id)); /** @phpstan-ignore-line */
+            $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
         }
-    }
-
-    // Bugfix: Cookie-Auswahl speichern (da addRawField genutzt wird, muss manuell gespeichert werden)
-    if ($clang_id === rex_clang::getStartId() || true !== $form->isEditMode()) {
-        rex_extension::register('REX_FORM_SAVING', static function (rex_extension_point $ep) {
-            $form = $ep->getParam('form');
-            if ($form->getTableName() !== rex::getTable('consent_manager_cookiegroup')) {
-                return;
-            }
-
-            $cookies = rex_request('cookie', 'array', []);
-            $cookieString = '';
-            if ([] !== $cookies) {
-                $cookieString = '|' . implode('|', $cookies) . '|';
-            }
-
-            $sql = $ep->getParam('sql');
-            $sql->setValue('cookie', $cookieString);
-        });
     }
 
     $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_cookiegroup_edit') : rex_i18n::msg('consent_manager_cookiegroup_add');
