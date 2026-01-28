@@ -154,15 +154,24 @@ if ('delete' === $func) {
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('consent_manager_cookie'));
     $db->setWhere('clang_id = ' . $clang_id . ' AND uid != "consent_manager" ORDER BY uid ASC');
-    $db->select('DISTINCT uid, service_name, variant');
+    $db->select('DISTINCT pid, uid, service_name, variant');
     $cookies = $db->getArray();
+
+    $cookieLinks = [];
+    foreach ($cookies as $c) {
+        $cookieLinks[$c['uid']] = rex_url::backendPage('consent_manager/cookie', ['func' => 'edit', 'pid' => $c['pid']]);
+    }
 
     if ($clang_id === rex_clang::getStartId() || true !== $form->isEditMode()) {
         if ([] !== $cookies) {
             // Styling und Buttons
-            $html = '<div id="cm-cookie-buttons-wrapper" class="btn-group btn-group-xs" style="margin-bottom: 5px;">';
+            $html = '<div id="cm-cookie-toolbar" class="input-group input-group-xs" style="margin-bottom: 5px;">';
+            $html .= '<span class="input-group-btn">';
             $html .= '<button type="button" class="btn btn-info cm-select-all"><i class="fa fa-check-square-o"></i> Alle auswählen</button>';
             $html .= '<button type="button" class="btn btn-default cm-deselect-all"><i class="fa fa-square-o"></i> Alle abwählen</button>';
+            $html .= '</span>';
+            $html .= '<input type="text" id="cm-cookie-search" class="form-control" placeholder="Suche...">';
+            $html .= '<span class="input-group-addon"><i class="rex-icon rex-icon-search"></i></span>';
             $html .= '</div>';
             
             $html .= '<script nonce="' . rex_response::getNonce() . '">
@@ -175,20 +184,36 @@ if ('delete' === $func) {
                     $checkboxes.first().closest(".rex-form-group").addClass("consent-manager-cookie-list");
                 }
                 
-                // Buttons Wrapper
-                var $btnWrapper = $("#cm-cookie-buttons-wrapper");
+                // Toolbar Wrapper
+                var $toolbar = $("#cm-cookie-toolbar");
                 
                 // Optional: Label des Button-Containers leeren, falls vorhanden
-                $btnWrapper.closest(".rex-form-group").find("dt").html("&nbsp;");
+                $toolbar.closest(".rex-form-group").find("dt").html("&nbsp;");
                 
                 // Select All Handler
-                $btnWrapper.on("click", ".cm-select-all", function() {
-                    $checkboxes.prop("checked", true);
+                $toolbar.on("click", ".cm-select-all", function() {
+                    $checkboxes.filter(":visible").prop("checked", true);
                 });
                 
                 // Deselect All Handler
-                $btnWrapper.on("click", ".cm-deselect-all", function() {
-                    $checkboxes.prop("checked", false);
+                $toolbar.on("click", ".cm-deselect-all", function() {
+                    $checkboxes.filter(":visible").prop("checked", false);
+                });
+                
+                // Live Search Handler
+                $("#cm-cookie-search").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $checkboxes.each(function() {
+                        var $input = $(this);
+                        var text = $input.closest("label").text().toLowerCase();
+                        var $wrapper = $input.closest(".checkbox");
+                        
+                        if (text.indexOf(value) > -1) {
+                            $wrapper.show();
+                        } else {
+                            $wrapper.hide();
+                        }
+                    });
                 });
             });
             </script>';
