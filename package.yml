@@ -46,23 +46,7 @@ page:
     help:
       title: "translate:consent_manager_help"
       icon: rex-icon fa-info
-      subpages:
-        readme:
-          title: "Dokumentation"
-          icon: rex-icon fa-book
-          subPath: README.md
-        inline:
-          title: "Inline Consent"
-          icon: rex-icon fa-play-circle
-          subPath: inline.md
-        api:
-          title: "API"
-          icon: rex-icon fa-code
-          subPath: api.md
-        changelog:
-          title: "translate:consent_manager_changelog"
-          icon: rex-icon fa-list
-          subPath: CHANGELOG.md
+
 
 requires:
   redaxo: "^5.15"

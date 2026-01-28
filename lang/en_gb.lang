@@ -541,3 +541,12 @@ consent_manager_editorial_autoblock_warning_intro = Automatic blocking of extern
 consent_manager_editorial_autoblock_warning_admin = For the codes generated here to work, auto-blocking must be <a href="{0}"><strong>enabled in the settings</strong></a>. Without this feature, external content will be loaded directly and bypass the consent mechanism.
 consent_manager_editorial_autoblock_warning_user = For the codes generated here to work, auto-blocking must be enabled in the settings. <strong>Please contact an administrator or user with config permission</strong> to enable this feature. Without auto-blocking, external content will be loaded directly and bypass the consent mechanism.
 consent_manager_general = General
+
+consent_manager_search_results_for = Search results for "{0}"
+consent_manager_no_results_found = No results found.
+
+
+consent_manager_toc_header = Table of Contents
+consent_manager_toc_filter_placeholder = Filter content
+consent_manager_help_search_placeholder = Search help
+
