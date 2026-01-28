@@ -36,10 +36,8 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                     <?php endif; ?>
                 }
                 #consent_manager-wrapper {
-                    display: flex !important;
-                    flex-direction: column !important;
                     max-height: 90vh !important;
-                    overflow: hidden !important;
+                    overflow-y: auto !important;
                     border-radius: 0 !important;
                     <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
                     pointer-events: auto !important;
@@ -47,33 +45,34 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                     background: #fff !important;
                     <?php endif; ?>
                 }
-                #consent_manager-wrapper .consent_manager-wrapper-inner {
-                    overflow-y: auto !important;
-                    flex: 1 !important;
-                }
                 .consent_manager-header {
-                    padding: 20px;
-                    background: #fff;
-                    border-bottom: 1px solid #eee;
+                    padding: 20px 20px 0 20px;
+                    background: transparent;
                     position: relative;
                     z-index: 10;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    color: inherit;
                 }
                 .consent_manager-close {
                     cursor: pointer;
                     background: transparent;
                     border: none;
-                    font-size: 20px;
+                    font-size: 24px;
                     line-height: 1;
                     padding: 5px;
+                    color: inherit;
+                    opacity: 0.7;
+                }
+                .consent_manager-close:hover {
+                    opacity: 1;
                 }
             </style>
             <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
                 <div class="consent_manager-header">
-                    <p class="consent_manager-headline" id="consent_manager-headline" style="margin:0; font-weight:bold;"><?= $consent_manager->texts['headline'] ?></p>
-                    <button class="consent_manager-close" aria-label="Close" type="button" onclick="document.getElementById('consent_manager-background').classList.add('consent_manager-hidden')">×</button>
+                    <p class="consent_manager-headline" id="consent_manager-headline" style="margin:0; font-weight:bold; color: inherit;"><?= $consent_manager->texts['headline'] ?></p>
+                    <button class="consent_manager-close" aria-label="Close" type="button">×</button>
                 </div>
                 <div class="consent_manager-wrapper-inner">
                     <div class="consent_manager-summary" id="consent_manager-summary">
@@ -200,7 +199,6 @@ foreach ($consent_manager->links as $v) {
 ?>
                         </div>
                     </div>
-                    <button tabindex="0" class="icon-cancel-circled consent_manager-close consent_manager-close-box">&#10006;</button>
                 </div>
             </div>
             <?php
