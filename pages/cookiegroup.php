@@ -181,6 +181,25 @@ if ('delete' === $func) {
         }
     }
 
+    // Bugfix: Cookie-Auswahl speichern (da addRawField genutzt wird, muss manuell gespeichert werden)
+    if ($clang_id === rex_clang::getStartId() || true !== $form->isEditMode()) {
+        rex_extension::register('REX_FORM_SAVING', static function (rex_extension_point $ep) {
+            $form = $ep->getParam('form');
+            if ($form->getTableName() !== rex::getTable('consent_manager_cookiegroup')) {
+                return;
+            }
+
+            $cookies = rex_request('cookie', 'array', []);
+            $cookieString = '';
+            if ([] !== $cookies) {
+                $cookieString = '|' . implode('|', $cookies) . '|';
+            }
+
+            $sql = $ep->getParam('sql');
+            $sql->setValue('cookie', $cookieString);
+        });
+    }
+
     $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_cookiegroup_edit') : rex_i18n::msg('consent_manager_cookiegroup_add');
     $content = $form->get();
 
