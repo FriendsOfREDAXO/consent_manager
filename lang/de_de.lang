@@ -470,3 +470,4 @@ consent_manager_editorial_autoblock_warning_title = Auto-Blocking ist nicht akti
 consent_manager_editorial_autoblock_warning_intro = Die automatische Blockierung externer Inhalte ist derzeit deaktiviert.
 consent_manager_editorial_autoblock_warning_admin = Damit die hier generierten Codes funktionieren, muss Auto-Blocking in den <a href="{0}"><strong>Einstellungen aktiviert werden</strong></a>. Ohne diese Funktion werden externe Inhalte direkt geladen und umgehen den Consent-Mechanismus.
 consent_manager_editorial_autoblock_warning_user = Damit die hier generierten Codes funktionieren, muss Auto-Blocking in den Einstellungen aktiviert werden. <strong>Bitte kontaktieren Sie einen Administrator oder Benutzer mit Config-Berechtigung</strong>, um diese Funktion zu aktivieren. Ohne Auto-Blocking werden externe Inhalte direkt geladen und umgehen den Consent-Mechanismus.
+consent_manager_general = Allgemein
