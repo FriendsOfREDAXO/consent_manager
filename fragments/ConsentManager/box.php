@@ -22,7 +22,7 @@ if (0 === count($consent_manager->texts)) {
 // Check for CSS Framework Mode
 $cssFrameworkMode = rex_addon::get('consent_manager')->getConfig('css_framework_mode');
 if ($cssFrameworkMode) {
-    echo $this->subparse('ConsentManager/box_' . $cssFrameworkMode . '.php');
+    echo $this->parse('ConsentManager/box_' . $cssFrameworkMode . '.php');
     return;
 }
 
