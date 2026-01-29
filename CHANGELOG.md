@@ -1,5 +1,9 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.3.4 - 29.01.2026
+
+- **Fix:** JSON Parsing Fehler im Frontend behoben (`double-escaping` von HTML-Attributen entfernt), was zu Fehlern beim Laden der Cookie-Gruppen führte (`safeJSONParse failed`).
+
 ## Version 5.3.3 - 29.01.2026
 
 - **Fix:** Fehler beim Laden von Framework-Templates behoben (`Call to undefined method rex_fragment::subparse()`).
