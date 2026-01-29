@@ -259,7 +259,6 @@ class Frontend
             /** @phpstan-ignore-next-line */
             $boxtemplate = sprogdown($boxtemplate, $clang);
         }
-        $boxtemplate = str_replace("'", "\\'", $boxtemplate);
         $boxtemplate = str_replace("\r", '', $boxtemplate);
         $boxtemplate = str_replace("\n", ' ', $boxtemplate);
 
