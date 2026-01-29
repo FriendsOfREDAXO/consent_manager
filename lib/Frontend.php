@@ -264,12 +264,16 @@ class Frontend
         $boxtemplate = str_replace("\n", ' ', $boxtemplate);
 
         echo '/* --- Parameters --- */' . PHP_EOL;
+        // Sanitize input parameters to prevent XSS
+        $cacheLogId = preg_replace('/[^a-zA-Z0-9_\-]/', '', rex_request::get('cid', 'string', ''));
+        $version = preg_replace('/[^0-9.]/', '', rex_request::get('v', 'string', ''));
+
         $consent_manager_parameters = [
             'initially_hidden' => 'true' === rex_request::get('i', 'string', 'false'),
             'domain' => Utility::hostname(),
             'consentid' => uniqid('', true),
-            'cachelogid' => rex_request::get('cid', 'string', ''),
-            'version' => rex_request::get('v', 'string', ''),
+            'cachelogid' => $cacheLogId,
+            'version' => $version,
             'fe_controller' => rex_url::frontend(),
             'forcereload' => rex_request::get('r', 'int', 0),
             'hidebodyscrollbar' => 'true' === rex_request::get('h', 'string', 'false'),
@@ -278,12 +282,9 @@ class Frontend
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
             'cookieName' => $addon->getConfig('cookie_name', 'consentmanager'),
         ];
-        echo 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES) . ';' . PHP_EOL . PHP_EOL;
+        echo 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
-        echo 'var consent_manager_box_template = \'';
-        // REXSTAN: meldet «Binary operation "." between array<string>|string and '\';' results in an error.»
-        // Das ist definitiv falsch und eine Fehlinterpretation wegen obigem «$boxtemplate = str_replace(...»
-        echo $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
+        echo 'var consent_manager_box_template = ' . json_encode($boxtemplate, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';' . PHP_EOL . PHP_EOL;
 
         $lifespan = $addon->getConfig('lifespan', 365);
         if ('' === $lifespan) {
@@ -454,11 +455,6 @@ class Frontend
             $boxtemplate = is_string($sprogResult) ? $sprogResult : $boxtemplate;
         }
 
-        // Escape for JavaScript
-        $boxtemplate = str_replace("'", "\\'", $boxtemplate);
-        $boxtemplate = str_replace("\r", '', $boxtemplate);
-        $boxtemplate = str_replace("\n", ' ', $boxtemplate);
-
         $output = '';
 
         // Parameters
@@ -477,13 +473,11 @@ class Frontend
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
             'cookieName' => $addon->getConfig('cookie_name', 'consentmanager'),
         ];
-        $output .= 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES) . ';' . PHP_EOL . PHP_EOL;
+        $output .= 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';' . PHP_EOL . PHP_EOL;
 
         // Box template
         $output .= '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
-        $output .= 'var consent_manager_box_template = \'';
-        // $boxtemplate is guaranteed to be string after above checks
-        $output .= $boxtemplate . '\';' . PHP_EOL . PHP_EOL;
+        $output .= 'var consent_manager_box_template = ' . json_encode($boxtemplate, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';' . PHP_EOL . PHP_EOL;
 
         // Cookie expiration
         $lifespan = $addon->getConfig('lifespan', 365);
