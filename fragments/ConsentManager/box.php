@@ -102,7 +102,7 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                         </div>
                     </div>
 
-                    <div class="consent_manager-detail consent_manager-hidden" id="consent_manager-detail" aria-labelledby="consent_manager-toggle-details">
+                    <div class="consent_manager-detail consent_manager-hidden" id="consent_manager-detail" aria-labelledby="consent_manager-toggle-details" role="region">
                     	<?php
                         foreach ($consent_manager->cookiegroups as $cookiegroup) {
                             if (count($cookiegroup['cookie_uids']) >= 1) {
