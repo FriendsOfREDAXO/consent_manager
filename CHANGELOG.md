@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.3.3 - 29.01.2026
+## Version 5.3.4 - 29.01.2026
 
 - **Fix:** JSON Parsing Fehler im Frontend behoben (`double-escaping` von HTML-Attributen entfernt), was zu Fehlern beim Laden der Cookie-Gruppen führte (`safeJSONParse failed`).
 
@@ -8,7 +8,6 @@
 - **Security:** XSS-Schwachstelle in `consent_manager_outputjs` behoben (Input-Sanitizing für `cid` und `v` Parameter).
 - **Security:** Schutz vor Host-Header Injection im Frontend-Output.
 - **Fix:** JavaScript Syntax-Fehler durch verbessertes Template-Escaping behoben (`json_encode` statt string replace).
-- **Fix:** Google Consent Mode v2 Script auf ES5 Syntax aktualisiert (SyntaxError Fix für ältere Umgebungen).
 
 ## Version 5.3.0 - 28.01.2026
 
