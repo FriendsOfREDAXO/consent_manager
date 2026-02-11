@@ -47,12 +47,12 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 });
             });
             
-            // Cookie-Änderungen überwachen
-            var lastCookieValue = self.getCookie('consentmanager');
+            // Cookie/Storage-Änderungen überwachen
+            var lastStorageValue = self.getStorageValue();
             setInterval(function() {
-                var currentCookieValue = self.getCookie('consentmanager');
-                if (currentCookieValue !== lastCookieValue) {
-                    lastCookieValue = currentCookieValue;
+                var currentStorageValue = self.getStorageValue();
+                if (currentStorageValue !== lastStorageValue) {
+                    lastStorageValue = currentStorageValue;
                     self.updateAllPlaceholders();
                 }
             }, 1000);
@@ -382,7 +382,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
             } catch (e) {
                 // ignore and fallback to default
             }
-            var cookieValue = this.getCookie('consentmanager');
+            var cookieValue = this.getStorageValue();
             
         if (!cookieValue) {
             return {
@@ -508,6 +508,13 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
 
         setCookieData: function(data) {
+            if (this.isSessionScope()) {
+                try {
+                    sessionStorage.setItem('consentmanager', JSON.stringify(data));
+                } catch(e) { /* ignore */ }
+                return;
+            }
+
             // Vor dem Setzen: alte / invalide Cookies entfernen
             var shouldClear = false;
             try {
@@ -542,6 +549,26 @@ if (typeof window.consentManagerInline !== 'undefined') {
             document.cookie = 'consent_manager=' + JSON.stringify(data) + 
                              '; expires=' + expires.toUTCString() + 
                              '; path=/; SameSite=Lax';
+        },
+        
+        isSessionScope: function() {
+            try {
+                return (typeof window.consentManagerInlineOptions !== 'undefined' && 
+                        window.consentManagerInlineOptions.sessionScope === true);
+            } catch(e) {
+                return false;
+            }
+        },
+
+        getStorageValue: function() {
+            if (this.isSessionScope()) {
+                try {
+                    return sessionStorage.getItem('consentmanager');
+                } catch(e) {
+                    return null;
+                }
+            }
+            return this.getCookie('consentmanager');
         },
         
         getCookie: function(name) {
