@@ -6,6 +6,7 @@
 - **Fix:** Reload-Loop behoben: Das Öffnen der Details aus einem Inline-Element führte unter Umständen zu einem sofortigen Neuladen der Seite.
 - **System:** Build-Skript aktualisiert für bessere Minifizierung.
 
+
 ## Version 5.3.4 - 29.01.2026
 
 - **Fix:** JSON Parsing Fehler im Frontend behoben (`double-escaping` von HTML-Attributen entfernt), was zu Fehlern beim Laden der Cookie-Gruppen führte (`safeJSONParse failed`).
