@@ -225,6 +225,17 @@ if (class_exists(InlineConsent::class)) {
 
 ---
 
+## 🔧 Backend-Konfiguration: Globale Einstellungen
+
+### Session-Scope (Nur für die Sitzung merken)
+
+Unter **Consent Manager → Einstellungen** kann die Option **"Inline-Consent: Zustimmung nur für Session merken"** aktiviert werden.
+
+- **Deaktiviert (Standard):** Zustimmungen für Inline-Elemente (z.B. "Einmal laden" oder "Alle zulassen") werden als persistentes Cookie gespeichert (Standard 1 Jahr).
+- **Aktiviert:** Zustimmungen werden im `sessionStorage` des Browsers gespeichert. Sobald der Tab oder Browser geschlossen wird, verfällt die Zustimmung automatisch.
+
+Diese Einstellung ist besonders datenschutzfreundlich, da Besucher bei jedem neuen Besuch erneut explizit zustimmen müssen.
+
 ## 🔧 Backend-Konfiguration: Platzhalter pro Service
 
 Im Backend unter **Consent Manager → Cookies** können für jeden Service individuelle Platzhalter-Einstellungen vorgenommen werden:

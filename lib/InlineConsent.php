@@ -397,9 +397,14 @@ class InlineConsent
         }
         self::$jsOutputted = true;
 
+        $addon = \rex_addon::get('consent_manager');
+        $sessionScope = $addon->getConfig('inline_consent_session_scope') ? 'true' : 'false';
+        
+        $configScript = '<script>window.consentManagerInlineOptions = { sessionScope: ' . $sessionScope . ' };</script>';
+
         // JavaScript-Datei laden
         $jsPath = rex_url::addonAssets('consent_manager', 'consent_inline.js');
-        return '<script defer src="' . $jsPath . '"></script>';
+        return $configScript . '<script defer src="' . $jsPath . '"></script>';
     }
 
     /**
