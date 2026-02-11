@@ -345,9 +345,9 @@ class Frontend
         // 1. Prüfen ob Domain-spezifisches Theme existiert
         $domainTheme = null;
         $hasDomainConfig = false;
-        if (is_string(rex_request::server('HTTP_HOST'))) {
+        if ('' !== Utility::hostname()) {
             $frontend = new self(0);
-            $frontend->setDomain(rex_request::server('HTTP_HOST'));
+            $frontend->setDomain(Utility::hostname());
 
             // Prüfen ob Domain konfiguriert ist
             if ('' !== $frontend->domainName) {
@@ -544,8 +544,8 @@ class Frontend
 
         if (null === $domainName) {
             // Aktuelle Domain verwenden
-            if (is_string(rex_request::server('HTTP_HOST'))) {
-                $consent->setDomain(rex_request::server('HTTP_HOST'));
+            if ('' !== Utility::hostname()) {
+                $consent->setDomain(Utility::hostname());
             }
         } else {
             // Spezifische Domain verwenden

@@ -291,7 +291,8 @@ function safeJSONParse(input, fallback) {
                     if (actions.indexOf('reload') !== -1) {
                         // Warte auf Box-Close und reload dann
                         var checkClose = setInterval(function() {
-                            if (!document.querySelector('.consent_manager-box')) {
+                            var box = document.getElementById('consent_manager-background');
+                            if (!box || box.classList.contains('consent_manager-hidden')) {
                                 clearInterval(checkClose);
                                 location.reload();
                             }

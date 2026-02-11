@@ -396,6 +396,11 @@ consent_manager_import_standard_update_error = Standard setup-uppdatering missly
 consent_manager_quickstart_status_final = Slutförande
 
 # Inline Consent-inställningar
+# Inline Consent Settings
+consent_manager_config_inline_consent_session_scope = Kom ihåg inline-samtycke för sessionen
+consent_manager_config_inline_consent_session_scope_enable = Ja, spara valet för sessionen
+consent_manager_config_inline_consent_session_scope_desc = Om aktiverat sparas valet "Ladda en gång" och "Tillåt alla" (i inline-sammanhang) under webbläsarsessionens varaktighet (sessionStorage). Som standard gäller "Ladda en gång" endast tills sidan laddas om och "Tillåt alla" sparas permanent i cookien. Med detta alternativ beter sig "Tillåt alla" som ett sessionsgodkännande.
+
 consent_manager_config_inline_only_mode = Använd endast inline-consent
 consent_manager_config_inline_only_mode_desc = Den globala consent-popupen visas inte som standard. Samtycke begärs endast vid behov via doConsent().
 

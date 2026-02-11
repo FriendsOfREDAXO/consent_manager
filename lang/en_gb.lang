@@ -416,6 +416,11 @@ consent_manager_import_standard_update_error = Standard setup update failed: {0}
 consent_manager_quickstart_status_final = Completion
 
 # Inline Consent Settings
+# Inline Consent Settings
+consent_manager_config_inline_consent_session_scope = Remember inline consent for session
+consent_manager_config_inline_consent_session_scope_enable = Yes, save selection for the session
+consent_manager_config_inline_consent_session_scope_desc = If enabled, the selection "Load once" and "Allow all" (in inline context) is stored for the duration of the browser session (sessionStorage). By default, "Load once" applies only until the page is reloaded and "Allow all" saves permanently in the cookie. With this option, "Allow all" behaves like a session approval.
+
 consent_manager_config_inline_only_mode = Use inline consent only
 consent_manager_config_inline_only_mode_desc = The global consent popup is not displayed by default. Consent is only requested when needed via doConsent().
 

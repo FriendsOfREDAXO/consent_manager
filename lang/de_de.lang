@@ -308,6 +308,10 @@ consent_manager_import_standard_update_success = Standard Setup Update erfolgrei
 consent_manager_import_standard_update_error = Standard Setup Update fehlgeschlagen: {0}
 
 # Inline Consent Einstellungen
+consent_manager_config_inline_consent_session_scope = Inline-Consent für Session merken
+consent_manager_config_inline_consent_session_scope_enable = Ja, Auswahl für die Session speichern
+consent_manager_config_inline_consent_session_scope_desc = Wenn aktiviert, wird die Auswahl "Einmal laden" und "Alle erlauben" (im Inline-Kontext) für die Dauer der Browsersitzung gespeichert (sessionStorage). Standardmäßig gilt "Einmal laden" nur bis zum Neuladen der Seite und "Alle erlauben" speichert dauerhaft im Cookie. Mit dieser Option verhält sich "Alle erlauben" wie eine Session-Freigabe.
+
 consent_manager_config_inline_only_mode = Nur Inline-Consent verwenden
 consent_manager_config_inline_only_mode_desc = Das globale Consent-Popup wird standardmäßig nicht angezeigt. Consent wird nur bei Bedarf über doConsent() abgefragt.
 

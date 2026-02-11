@@ -291,6 +291,12 @@ $field->setLabel(rex_i18n::msg('consent_manager_config_inline_only_mode'));
 $field->addOption(rex_i18n::msg('consent_manager_config_inline_only_mode'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_inline_only_mode_desc'));
 
+// Inline Consent Session Scope
+$field = $form->addCheckboxField('inline_consent_session_scope');
+$field->setLabel(rex_i18n::msg('consent_manager_config_inline_consent_session_scope'));
+$field->addOption(rex_i18n::msg('consent_manager_config_inline_consent_session_scope_enable'), 1); // Use "1" as value for checked
+$field->setNotice(rex_i18n::msg('consent_manager_config_inline_consent_session_scope_desc'));
+
 // Auto-Blocking für manuell eingefügtes HTML
 $field = $form->addCheckboxField('auto_blocking_enabled');
 $field->setLabel(rex_i18n::msg('consent_manager_config_auto_blocking'));
