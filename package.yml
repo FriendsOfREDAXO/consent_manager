@@ -59,6 +59,7 @@ default_config:
   skip_consent: ''
   cookie_name: 'consentmanager'
   lifespan: 365
+  inline_consent_session_scope: false
   theme: false
   first_run_completed: false
 
