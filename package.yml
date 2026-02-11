@@ -1,5 +1,5 @@
 package: consent_manager
-version: "5.3.3"
+version: "5.3.6"
 author: "Friends Of REDAXO"
 supportpage: https://redaxo.org/support/community/#slack
 
@@ -59,7 +59,6 @@ default_config:
   skip_consent: ''
   cookie_name: 'consentmanager'
   lifespan: 365
-  inline_consent_session_scope: false
   theme: false
   first_run_completed: false
 
