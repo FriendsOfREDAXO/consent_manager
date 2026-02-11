@@ -83,8 +83,8 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 });
             }
             
-            // Event-Handler für Buttons mit spezifischer Priorität
-            document.addEventListener('click', function(e) {
+            // Helper function for button click handling (unified for click and touchstart)
+            var handleButtonClick = function(e) {
                 // Eindeutig nur "Einmal laden" Button - Lädt NUR diesen einen Container
                 if (e.target.matches('.consent-inline-once') && !e.target.matches('.consent-inline-allow-all')) {
                     e.preventDefault();
@@ -115,7 +115,18 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     self.showDetails(serviceKey);
                     return;
                 }
-            });
+            };
+
+            // Event-Handler für Buttons mit spezifischer Priorität
+            document.addEventListener('click', handleButtonClick);
+            
+            // iOS Safari Fix: touchend statt touchstart verwenden
+            // touchend verhindert Hover-State und triggert sofort
+            document.addEventListener('touchend', function(e) {
+                if (e.target.matches('.consent-inline-once, .consent-inline-allow-all, .consent-inline-details')) {
+                    handleButtonClick(e);
+                }
+            }, { passive: false });
             
             // Fallback: Regelmäßige Prüfung
             setInterval(function() { 
