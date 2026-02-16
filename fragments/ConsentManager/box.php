@@ -77,7 +77,7 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
             <?php endif; ?>
             <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
                 <div class="consent_manager-header">
-                    <p class="consent_manager-headline" id="consent_manager-headline" style="margin:0; font-weight:bold; color: inherit;"><?= $consent_manager->texts['headline'] ?></p>
+                    <p class="consent_manager-headline" id="consent_manager-headline"<?php if ('' === $cssFrameworkMode && false === $addon->getConfig('outputowncss', false)) : ?> style="margin:0; font-weight:bold; color: inherit;"<?php endif; ?>><?= $consent_manager->texts['headline'] ?></p>
                     <button class="consent_manager-close" aria-label="Close" type="button">×</button>
                 </div>
                 <div class="consent_manager-wrapper-inner">

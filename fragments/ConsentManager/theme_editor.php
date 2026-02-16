@@ -589,7 +589,7 @@ $csrfToken = $this->getVar('csrfToken');
 }
 </style>
 
-<script>
+<script nonce="<?= rex_response::getNonce() ?>">
 (function() {
     'use strict';
     
