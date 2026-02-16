@@ -10,17 +10,18 @@
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
+$addon = rex_addon::get('consent_manager');
 $consent_manager = new Frontend(0);
 if (is_string(rex_request::server('HTTP_HOST'))) {
     $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 }
 if (0 === count($consent_manager->texts)) {
-    echo '<div id="consent_manager-background">' . rex_view::error(rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig')) . '</div>';
+    echo '<div id="consent_manager-background">' . rex_view::error($addon->i18n('consent_manager_error_noconfig')) . '</div>';
     return;
 }
 
 // Check for CSS Framework Mode
-$cssFrameworkMode = rex_addon::get('consent_manager')->getConfig('css_framework_mode');
+$cssFrameworkMode = $addon->getConfig('css_framework_mode');
 if ($cssFrameworkMode) {
     echo $this->parse('ConsentManager/box_' . $cssFrameworkMode . '.php');
     return;
@@ -30,12 +31,11 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
         <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
             <?php
             // Inline-CSS nur ausgeben wenn kein Framework-Modus und kein eigenes CSS aktiv ist
-            $frameworkMode = rex_addon::get('consent_manager')->getConfig('css_framework_mode', '');
-            if ('' === $frameworkMode && false === rex_addon::get('consent_manager')->getConfig('outputowncss', false)) :
+            if ('' === $cssFrameworkMode && false === $addon->getConfig('outputowncss', false)) :
             ?>
             <style nonce="<?= rex_response::getNonce() ?>">
                 #consent_manager-background {
-                    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
+                    <?php if ($addon->getConfig('backdrop', '1') === '0'): ?>
                     background: transparent !important;
                     pointer-events: none !important;
                     <?php endif; ?>
@@ -44,7 +44,7 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                     max-height: 90vh !important;
                     overflow-y: auto !important;
                     border-radius: 0 !important;
-                    <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
+                    <?php if ($addon->getConfig('backdrop', '1') === '0'): ?>
                     pointer-events: auto !important;
                     box-shadow: 0 0 20px rgba(0,0,0,0.2) !important;
                     background: #fff !important;
