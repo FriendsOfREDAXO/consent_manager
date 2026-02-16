@@ -28,6 +28,11 @@ if ($cssFrameworkMode) {
 
 if (0 < count($consent_manager->cookiegroups)) : ?>
         <div tabindex="-1" class="consent_manager-background consent_manager-hidden <?= $consent_manager->boxClass ?>" id="consent_manager-background" data-domain-name="<?= $consent_manager->domainName ?>" data-version="<?= $consent_manager->version ?>" data-consentid="<?= uniqid('', true) ?>" data-cachelogid="<?= $consent_manager->cacheLogId ?>" data-nosnippet aria-hidden="true">
+            <?php
+            // Inline-CSS nur ausgeben wenn kein Framework-Modus und kein eigenes CSS aktiv ist
+            $frameworkMode = rex_addon::get('consent_manager')->getConfig('css_framework_mode', '');
+            if ('' === $frameworkMode && false === rex_addon::get('consent_manager')->getConfig('outputowncss', false)) :
+            ?>
             <style nonce="<?= rex_response::getNonce() ?>">
                 #consent_manager-background {
                     <?php if (rex_addon::get('consent_manager')->getConfig('backdrop', '1') === '0'): ?>
@@ -69,6 +74,7 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                     opacity: 1;
                 }
             </style>
+            <?php endif; ?>
             <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
                 <div class="consent_manager-header">
                     <p class="consent_manager-headline" id="consent_manager-headline" style="margin:0; font-weight:bold; color: inherit;"><?= $consent_manager->texts['headline'] ?></p>
