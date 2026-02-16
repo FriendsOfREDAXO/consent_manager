@@ -1,6 +1,34 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.4.0 - 11.02.2026
+## Version 5.4.0 - 16.02.2026
+
+### 🔧 Fixes & Verbesserungen
+
+- **Fix:** Inline CSS/Style-Attribute in `box.php` werden jetzt korrekt nur ausgegeben, wenn "Eigenes CSS verwenden" deaktiviert ist (Issue #458)
+- **Security:** CSP nonce-Attribut zu Script-Tag in `theme_editor.php` hinzugefügt (Issue #459)
+- **Performance:** Neuer `consent_cookie_helper.js` ersetzt `js.cookie.min.js` - 35% kleiner (1.3KB vs 2.0KB)
+- **Performance:** Optimierte Cookie-Operationen in `consent_inline.js` und `consent_debug.js`
+- **Build:** Verbesserter Build-Prozess mit automatischer Terser-Erkennung für optimale Minifizierung
+
+### ⚡ Performance-Optimierungen
+
+**Neuer Cookie Helper:**
+- Eigene, optimierte Cookie-Library speziell für Consent Manager
+- Keine externe Dependency mehr (js.cookie.min.js entfernt)
+- 100% API-kompatibel - Drop-in Replacement ohne Breaking Changes
+- Global als `Cookies` und `ConsentCookieHelper` verfügbar
+
+**JavaScript-Optimierungen:**
+- Effizientere Cookie-Lese/Schreib-Operationen
+- Redundante Code-Teile entfernt
+- Fallback-Logik für maximale Browser-Kompatibilität
+
+**Build-Prozess:**
+- `build.php` nutzt Terser für 73% Kompression (statt 58% Basic Minification)
+- Automatische Tool-Erkennung mit intelligentem Fallback
+- Alle JavaScript-Dateien werden optimiert minifiziert
+
+### 📋 Inline-Consent Features (aus 5.4.0-beta)
 
 - **Feature:** Inline-Consent kann nun optional auf "Session-Scope" beschränkt werden. Zustimmungen gelten dann nur, solange der Browser-Tab offen ist (via `sessionStorage`). Konfigurierbar unter Einstellungen.
 - **Fix:** Reload-Loop behoben: Das Öffnen der Details aus einem Inline-Element führte unter Umständen zu einem sofortigen Neuladen der Seite.
