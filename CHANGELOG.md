@@ -1,5 +1,9 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.4.1 (Entwicklung)
+
+- **Fix:** `box.php`: `outputowncss` Einstellung respektieren und fehlende CSP-Nonce für Inline-Styles ergänzen (#462).
+
 ## Version 5.4.0 - 11.02.2026
 
 - **Feature:** Inline-Consent kann nun optional auf "Session-Scope" beschränkt werden. Zustimmungen gelten dann nur, solange der Browser-Tab offen ist (via `sessionStorage`). Konfigurierbar unter Einstellungen.
