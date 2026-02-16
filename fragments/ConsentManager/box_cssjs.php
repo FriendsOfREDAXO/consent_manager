@@ -54,7 +54,7 @@ if (0 < count($consent_manager->domainInfo)
         $googleConsentModeScriptFile = 'google_consent_mode_v2.js';
     }
     $googleConsentModeScriptUrl = $addon->getAssetsUrl($googleConsentModeScriptFile);
-    $googleConsentModeOutput .= '    <script src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
+    $googleConsentModeOutput .= '    <script nonce="' . rex_response::getNonce() . '" src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
 
     // Debug-Script laden wenn Debug-Modus aktiviert UND User im Backend eingeloggt
     if (isset($consent_manager->domainInfo['google_consent_mode_debug'])
@@ -65,10 +65,10 @@ if (0 < count($consent_manager->domainInfo)
         // Nur für eingeloggte Backend-Benutzer
         if (rex_backend_login::hasSession() && null !== rex::getUser()) {
             $debugScriptUrl = $addon->getAssetsUrl('consent_debug.js');
-            $googleConsentModeOutput .= '    <script src="' . $debugScriptUrl . '" defer></script>' . PHP_EOL;
+            $googleConsentModeOutput .= '    <script nonce="' . rex_response::getNonce() . '" src="' . $debugScriptUrl . '" defer></script>' . PHP_EOL;
 
             // Debug-Konfiguration für JavaScript verfügbar machen
-            $googleConsentModeOutput .= '    <script>' . PHP_EOL;
+            $googleConsentModeOutput .= '    <script nonce="' . rex_response::getNonce() . '">' . PHP_EOL;
             $googleConsentModeOutput .= '        window.consentManagerDebugConfig = ' . json_encode([
                 'mode' => $consent_manager->domainInfo['google_consent_mode_enabled'],
                 'auto_mapping' => 'auto' === $consent_manager->domainInfo['google_consent_mode_enabled'],
@@ -164,8 +164,8 @@ $jsConfig = [
     'mode' => 'opt-in',
 ];
 
-$consentparams['outputjs'] .= '    <script>var consent_manager_parameters = ' . json_encode($jsConfig, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';</script>' . PHP_EOL;
-$consentparams['outputjs'] .= '    <script src="' . rex_url::frontendController($_params) . '" id="consent_manager_script" defer></script>' . PHP_EOL;
+$consentparams['outputjs'] .= '    <script nonce="' . rex_response::getNonce() . '">var consent_manager_parameters = ' . json_encode($jsConfig, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';</script>' . PHP_EOL;
+$consentparams['outputjs'] .= '    <script nonce="' . rex_response::getNonce() . '" src="' . rex_url::frontendController($_params) . '" id="consent_manager_script" defer></script>' . PHP_EOL;
 
 // Ausgabe Google Consent Mode v2 (vor allem anderen)
 echo $googleConsentModeOutput;
