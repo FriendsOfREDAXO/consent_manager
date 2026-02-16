@@ -1,15 +1,13 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.4.1 (Entwicklung)
-
-- **Fix:** `box.php`: `outputowncss` Einstellung respektieren und fehlende CSP-Nonce für Inline-Styles ergänzen (#462).
-
-## Version 5.4.0 - 11.02.2026
+## Version 5.4.1 - 16.02.2026
 
 - **Feature:** Inline-Consent kann nun optional auf "Session-Scope" beschränkt werden. Zustimmungen gelten dann nur, solange der Browser-Tab offen ist (via `sessionStorage`). Konfigurierbar unter Einstellungen.
 - **Fix:** Reload-Loop behoben: Das Öffnen der Details aus einem Inline-Element führte unter Umständen zu einem sofortigen Neuladen der Seite.
 - **Fix:** iOS Safari Touch-Event Handling verbessert: Button musste unter Umständen doppelt getippt werden; nun reagiert er sofort (Danke @alexwenz).
+- **Fix:** `box.php`: `outputowncss` Einstellung respektieren und fehlende CSP-Nonce für Inline-Styles ergänzen (#462).
 - **System:** Build-Skript aktualisiert für bessere Minifizierung.
+
 
 
 
