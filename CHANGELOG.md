@@ -1,5 +1,9 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.4.2 - 17.02.2026
+
+- **Revert:** Die Änderung an `box.php` aus 5.4.1 wurde rückgängig gemacht, da sie zu Darstellungsproblemen bei aktiviertem "Eigenes CSS" führte. Das Basis-Layout (Backdrop, Positionierung) wird nun wieder immer ausgegeben.
+
 ## Version 5.4.1 - 16.02.2026
 
 - **Feature:** Inline-Consent kann nun optional auf "Session-Scope" beschränkt werden. Zustimmungen gelten dann nur, solange der Browser-Tab offen ist (via `sessionStorage`). Konfigurierbar unter Einstellungen.
