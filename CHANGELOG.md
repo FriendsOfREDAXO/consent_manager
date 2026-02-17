@@ -1,13 +1,11 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.4.0 - 11.02.2026
+## Version 5.5.0 (Entwicklung)
 
 - **Feature:** Inline-Consent kann nun optional auf "Session-Scope" beschränkt werden. Zustimmungen gelten dann nur, solange der Browser-Tab offen ist (via `sessionStorage`). Konfigurierbar unter Einstellungen.
 - **Fix:** Reload-Loop behoben: Das Öffnen der Details aus einem Inline-Element führte unter Umständen zu einem sofortigen Neuladen der Seite.
-- **Fix:** iOS Safari Touch-Event Handling verbessert: Button musste unter Umständen doppelt getippt werden; nun reagiert er sofort (Danke @alexwenz).
-- **System:** Build-Skript aktualisiert für bessere Minifizierung.
-
-
+- **Fix:** iOS Safari Touch-Event Handling verbessert: Button musste unter Umständen doppelt getippt werden; nun reagiert er sofort.
+- **Security:** CSRF/XSS-Schutz: Fehlende CSP-Nonce für Inline-Styles und Scripte ergänzt (`theme_editor.php` und `box_cssjs.php`).
 
 ## Version 5.3.4 - 29.01.2026
 

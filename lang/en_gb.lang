@@ -158,6 +158,7 @@ consent_manager_config_css_framework_mode_uikit3 = UIkit 3
 consent_manager_config_css_framework_mode_bootstrap5 = Bootstrap 5
 consent_manager_config_css_framework_mode_tailwind = Tailwind CSS
 consent_manager_config_css_framework_mode_bulma = Bulma
+consent_manager_config_css_framework_mode_active = "Framework Mode" is active. Themes cannot be used in this mode as the layout is controlled by the framework.
 
 consent_manager_config_framework_legend = Framework Settings
 consent_manager_config_framework_shadow = Shadow
