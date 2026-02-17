@@ -516,3 +516,5 @@ consent_manager_editorial_autoblock_warning_title = Auto-Blocking är inte aktiv
 consent_manager_editorial_autoblock_warning_intro = Automatisk blockering av externt innehåll är för närvarande inaktiverad.
 consent_manager_editorial_autoblock_warning_admin = För att koderna som genereras här ska fungera måste auto-blocking <a href="{0}"><strong>aktiveras i inställningarna</strong></a>. Utan denna funktion laddas externt innehåll direkt och kringgår samtyckes-mekanismen.
 consent_manager_editorial_autoblock_warning_user = För att koderna som genereras här ska fungera måste auto-blocking aktiveras i inställningarna. <strong>Kontakta en administratör eller användare med config-behörighet</strong> för att aktivera denna funktion. Utan auto-blocking laddas externt innehåll direkt och kringgår samtyckes-mekanismen.
+
+consent_manager_config_css_framework_mode_active = "Framework-läge" är aktivt. Teman kan inte användas i detta läge eftersom layouten styrs av ramverket.

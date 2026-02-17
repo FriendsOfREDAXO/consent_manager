@@ -400,11 +400,11 @@ class InlineConsent
         $addon = \rex_addon::get('consent_manager');
         $sessionScope = $addon->getConfig('inline_consent_session_scope') ? 'true' : 'false';
         
-        $configScript = '<script>window.consentManagerInlineOptions = { sessionScope: ' . $sessionScope . ' };</script>';
+        $configScript = '<script nonce="' . \rex_response::getNonce() . '">window.consentManagerInlineOptions = { sessionScope: ' . $sessionScope . ' };</script>';
 
         // JavaScript-Datei laden
         $jsPath = rex_url::addonAssets('consent_manager', 'consent_inline.js');
-        return $configScript . '<script defer src="' . $jsPath . '"></script>';
+        return $configScript . '<script nonce="' . \rex_response::getNonce() . '" defer src="' . $jsPath . '"></script>';
     }
 
     /**

@@ -322,12 +322,12 @@ if (rex::isFrontend()) {
 
             try {
                 $googleConsentModeConfig = GoogleConsentMode::getDomainConfig($domain);
-                $debugScript = '<script>window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
+                $debugScript = '<script nonce="' . rex_response::getNonce() . '">window.consentManagerDebugConfig = ' . json_encode($googleConsentModeConfig) . ';</script>' . PHP_EOL;
             } catch (Exception $e) {
-                $debugScript = '<script>window.consentManagerDebugConfig = {"mode": "unknown", "enabled": false};</script>' . PHP_EOL;
+                $debugScript = '<script nonce="' . rex_response::getNonce() . '">window.consentManagerDebugConfig = {"mode": "unknown", "enabled": false};</script>' . PHP_EOL;
             }
 
-            $debugScript .= '<script src="' . $consentDebugUrl . '"></script>' . PHP_EOL;
+            $debugScript .= '<script nonce="' . rex_response::getNonce() . '" src="' . $consentDebugUrl . '"></script>' . PHP_EOL;
 
             // Debug-Script vor </head> einfügen
             $content = $ep->getSubject();

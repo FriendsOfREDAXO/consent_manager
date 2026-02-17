@@ -21,6 +21,13 @@ if ('' !== $preview) {
 
 if ('|1|' === $addon->getConfig('outputowncss', false)) {
     echo rex_view::error(rex_i18n::msg('consent_manager_config_owncss_active'));
+    return;
+}
+
+// Framework Modus darf nicht aktiviert sein
+if ($addon->getConfig('css_framework_mode')) {
+    echo rex_view::error(rex_i18n::msg('consent_manager_config_css_framework_mode_active'));
+    return;
 }
 
 // Prüfen ob mindestens eine Domain angelegt wurde
