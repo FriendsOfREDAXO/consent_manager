@@ -1,6 +1,8 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.5.0 (Entwicklung)
+## Version 5.5.1 - 17.02.2026
+small style fixes
+
 ## Version 5.5.0 - 17.02.2026
 
 - **Feature:** Inline-Consent kann nun optional auf "Session-Scope" beschränkt werden. Zustimmungen gelten dann nur, solange der Browser-Tab offen ist (via `sessionStorage`). Konfigurierbar unter Einstellungen.
