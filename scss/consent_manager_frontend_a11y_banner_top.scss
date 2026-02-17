@@ -351,6 +351,10 @@ div.consent_manager-wrapper div.consent_manager-detail {
         padding-right: 4em;
     }
 
+    div.consent_manager-header {
+        grid-column: 1 / -1;
+    }
+
     div.consent_manager-wrapper .consent_manager-headline,
     div.consent_manager-wrapper p.consent_manager-text {
         margin-bottom: 0.3em;
