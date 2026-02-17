@@ -121,7 +121,7 @@ if (str_starts_with($iconClass, 'uk-icon:')) {
             </div>
         </div>
         
-        <script type="text/plain" class="consent-content-data" 
+        <script nonce="<?= rex_response::getNonce() ?>" type="text/plain" class="consent-content-data" 
                 data-consent-code="<?= rex_escape($serviceKey) ?>">
 <?= str_replace('</script>', '<\/script>', $content) ?>
         </script>

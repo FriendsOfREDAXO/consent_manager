@@ -166,7 +166,7 @@ if ($q !== '') {
                 $tocHtml .= '</div></div>';
 
                 // JS for Live Search
-                $tocHtml .= '<script>
+                $tocHtml .= '<script nonce="' . rex_response::getNonce() . '">
                 (function($) {
                     $(document).on("rex:ready", function() {
                         var $input = $("#cm-toc-filter");
