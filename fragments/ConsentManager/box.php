@@ -46,7 +46,7 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                     <?php endif; ?>
                 }
                 .consent_manager-header {
-                    padding: 20px 20px 0 20px;
+                    padding: 0 0 1em 0;
                     background: transparent;
                     position: relative;
                     z-index: 10;
@@ -55,7 +55,7 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                     align-items: center;
                     color: inherit;
                 }
-                .consent_manager-close {
+                .consent_manager-header .consent_manager-close {
                     cursor: pointer;
                     background: transparent;
                     border: none;
@@ -64,17 +64,20 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                     padding: 5px;
                     color: inherit;
                     opacity: 0.7;
+                    position: absolute;
+                    top: -1.7rem;
+                    right: -1.7rem;
                 }
-                .consent_manager-close:hover {
+                .consent_manager-header .consent_manager-close:hover {
                     opacity: 1;
                 }
             </style>
             <div class="consent_manager-wrapper" id="consent_manager-wrapper" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="consent_manager-headline">
-                <div class="consent_manager-header">
-                    <p class="consent_manager-headline" id="consent_manager-headline" style="margin:0; font-weight:bold; color: inherit;"><?= $consent_manager->texts['headline'] ?></p>
-                    <button class="consent_manager-close" aria-label="Close" type="button">×</button>
-                </div>
                 <div class="consent_manager-wrapper-inner">
+                    <div class="consent_manager-header">
+                        <p class="consent_manager-headline" id="consent_manager-headline" style="margin:0; font-weight:bold; color: inherit;"><?= $consent_manager->texts['headline'] ?></p>
+                        <button class="consent_manager-close" aria-label="Close" type="button">×</button>
+                    </div>
                     <div class="consent_manager-summary" id="consent_manager-summary">
                         <p class="consent_manager-text"><?= nl2br($consent_manager->texts['description']) ?></p>
                         <div class="consent_manager-cookiegroups">
