@@ -28,7 +28,6 @@ page:
     text:
       title: "translate:consent_manager_texts"
       icon: rex-icon fa-file-text-o
-      perm: consent_manager[config]
     domain:
       title: "translate:consent_manager_domains"
       icon: rex-icon fa-globe
