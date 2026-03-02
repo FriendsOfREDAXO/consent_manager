@@ -881,30 +881,37 @@ jQuery(function($) {
         
         // Parse HTML und füge Attribute hinzu
         var $temp = $('<div>').html(originalCode);
-        var $element = $temp.children().first();
+        var $elements = $temp.children();
         
-        if ($element.length === 0) {
+        if ($elements.length === 0) {
             alert('Ungültiger HTML-Code!');
             return;
         }
         
-        // Basis-Attribute
-        $element.attr('data-consent-block', 'true');
-        $element.attr('data-consent-service', serviceKey);
-        
-        // Optionale Attribute
-        if (providerName) {
-            $element.attr('data-consent-provider', providerName);
-        }
-        if (privacyUrl) {
-            $element.attr('data-consent-privacy', privacyUrl);
-        }
-        if (title) {
-            $element.attr('data-consent-title', title);
-        }
-        if (customText) {
-            $element.attr('data-consent-text', customText);
-        }
+        // Alle Elemente bearbeiten (script, iframe, etc.)
+        $elements.each(function() {
+            var $element = $(this);
+            
+            // Basis-Attribute
+            $element.attr('data-consent-block', 'true');
+            $element.attr('data-consent-service', serviceKey);
+            
+            // Optionale Attribute nur beim ersten Element
+            if ($element.is($elements.first())) {
+                if (providerName) {
+                    $element.attr('data-consent-provider', providerName);
+                }
+                if (privacyUrl) {
+                    $element.attr('data-consent-privacy', privacyUrl);
+                }
+                if (title) {
+                    $element.attr('data-consent-title', title);
+                }
+                if (customText) {
+                    $element.attr('data-consent-text', customText);
+                }
+            }
+        });
         
         // Generierter Code
         var generatedCode = $temp.html();

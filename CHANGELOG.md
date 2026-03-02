@@ -1,5 +1,10 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.5.3 - 02.03.2026
+
+- **Feature:** Auto-Blocking-Assistent unterstützt jetzt mehrere Elemente gleichzeitig (z.B. mehrere `<script>`-Tags + `<iframe>` bei Widgets wie TrustYou)
+- **Enhancement:** Verbessertes Multi-Element-Blocking für komplexe Widget-Integrationen
+
 ## Version 5.5.1 - 17.02.2026
 small style fixes
 
