@@ -22,28 +22,6 @@ class RexFormSupport
 {
     /**
      * @api
-     */
-    public static function getFakeText(string $label, string $value): string
-    {
-        return self::renderFakeField(
-            $label,
-            '<p class="form-control-static">' . rex_escape($value) . '</p>',
-        );
-    }
-
-    /**
-     * @api
-     */
-    public static function getFakeTextarea(string $label, string $value): string
-    {
-        return self::renderFakeField(
-            $label,
-            '<textarea disabled="disabled" class="form-control" rows="6">' . rex_escape($value) . '</textarea>',
-        );
-    }
-
-    /**
-     * @api
      * @param array<array{0: string, 1: string}> $checkboxes
      */
     public static function getFakeCheckbox(string $label, array $checkboxes): string
