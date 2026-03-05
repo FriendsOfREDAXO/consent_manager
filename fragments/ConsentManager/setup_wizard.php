@@ -1,10 +1,14 @@
 <?php
 /**
+ * @var rex_fragment $this
+ * @psalm-scope-this rex_fragment
+ *
  * Fragment: Setup Wizard mit AJAX Polling
  * Reaktiver Setup-Assistent für erste Einrichtung.
+ *
+ * Fragment-Schnittstelle:
+ * - Erwartete Variablen via `$this->getVar(...)`: keine
  */
-
-/** @var rex_fragment $this */
 
 $addon = rex_addon::get('consent_manager');
 

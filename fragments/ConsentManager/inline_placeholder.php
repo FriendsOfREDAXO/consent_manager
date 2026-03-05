@@ -11,10 +11,12 @@
  * - content: Original-Content der geladen werden soll
  */
 
+/**
+ * @var rex_fragment $this
+ * @psalm-scope-this rex_fragment
+ */
 /** @var rex_fragment $this */
 // Variablen aus Fragment abrufen
-$serviceKey = $this->getVar('serviceKey', '');
-$consentId = $this->getVar('consentId', '');
 $service = $this->getVar('service', []);
 $options = $this->getVar('options', []);
 $placeholderData = $this->getVar('placeholderData', []);

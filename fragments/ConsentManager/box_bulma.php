@@ -1,7 +1,13 @@
 <?php
 /**
+ * @var rex_fragment $this
+ * @psalm-scope-this rex_fragment
+ *
  * Fragment: Bulma Framework Modal
  * Uses native Bulma classes: modal, modal-card, modal-card-head, modal-card-body, modal-card-foot
+ *
+ * Fragment-Schnittstelle:
+ * - Erwartete Variablen via `$this->getVar(...)`: keine
  */
 
 use FriendsOfRedaxo\ConsentManager\Frontend;

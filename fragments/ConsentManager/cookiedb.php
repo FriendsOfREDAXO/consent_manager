@@ -1,16 +1,14 @@
 <?php
 
 /**
- * TODO: hier die Schnittstelle beschreiben:
- * - Welche Vars werden vom Fragment erwartet
- * - Welchen Typ haben die Vars
- * - Welchen Default-Wert haben optionale Vars
- * - Welche Vars sind mandatory und was passiert wenn sie fehlen (return oder Exception)
+ * @var rex_fragment $this
+ * @psalm-scope-this rex_fragment
+ *
+ * Fragment-Schnittstelle:
+ * - forceCache: int|null, optional, Default `null`
  */
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
-
-/** @var rex_fragment $this */
 
 $consent_manager = new Frontend($this->getVar('forceCache'));
 if (is_string(rex_request::server('HTTP_HOST'))) {

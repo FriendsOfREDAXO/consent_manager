@@ -1,11 +1,11 @@
 <?php
 
 /**
- * TODO: hier die Schnittstelle beschreiben:
- * - Welche Vars werden vom Fragment erwartet
- * - Welchen Typ haben die Vars
- * - Welchen Default-Wert haben optionale Vars
- * - Welche Vars sind mandatory und was passiert wenn sie fehlen (return oder Exception)
+ * @var rex_fragment $this
+ * @psalm-scope-this rex_fragment
+ *
+ * Fragment-Schnittstelle:
+ * - Erwartete Variablen via `$this->getVar(...)`: keine
  */
 
 use FriendsOfRedaxo\ConsentManager\Frontend;

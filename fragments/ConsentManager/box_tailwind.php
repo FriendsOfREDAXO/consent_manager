@@ -1,8 +1,14 @@
 <?php
 
 /**
+ * @var rex_fragment $this
+ * @psalm-scope-this rex_fragment
+ *
  * Tailwind CSS Framework Fragment für Consent Manager
  * (Platzhalter - aktuell identisch mit box.php mit Tailwind Utilities)
+ *
+ * Fragment-Schnittstelle:
+ * - Erwartete Variablen via `$this->getVar(...)`: keine
  */
 
 use FriendsOfRedaxo\ConsentManager\Frontend;

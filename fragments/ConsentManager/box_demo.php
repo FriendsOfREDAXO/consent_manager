@@ -1,7 +1,13 @@
 <?php
 /**
+ * @var rex_fragment $this
+ * @psalm-scope-this rex_fragment
+ *
  * Demo Consent Box für Theme-Preview
  * Verwendet hart-kodierte Demo-Daten ohne DB-Zugriff.
+ *
+ * Fragment-Schnittstelle:
+ * - Erwartete Variablen via `$this->getVar(...)`: keine
  */
 
 // Demo-Daten für Preview (aus minimal_setup.json)

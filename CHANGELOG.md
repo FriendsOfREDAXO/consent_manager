@@ -8,6 +8,7 @@
 - **Refactor (Issue #423):** `RexFormSupport` erzeugt Fake-Felder nicht mehr per manuellem HTML-String-Bau, sondern rendert über Fragmente.
 - **Feature (Intern):** Neues Fragment für die read-only Checkbox-Ausgabe ergänzt (`fragments/ConsentManager/fake_checkbox.php`).
 - **Cleanup:** Codepfade für Fake-Textausgaben vereinfacht und näher an REDAXO-Core-Konventionen ausgerichtet.
+- **Docs/Cleanup (Issue #468):** Fragment-Header im AddOn vereinheitlicht und erwartete Fragment-Schnittstellen/Variablen dokumentiert.
 
 ## Version 5.6.0-beta1 - 05.03.2026
 

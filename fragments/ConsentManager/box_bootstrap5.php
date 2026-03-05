@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * @var rex_fragment $this
+ * @psalm-scope-this rex_fragment
+ *
+ * Fragment-Schnittstelle:
+ * - Erwartete Variablen via `$this->getVar(...)`: keine
+ */
+
 use FriendsOfRedaxo\ConsentManager\Frontend;
 
 $consent_manager = new Frontend(0);
