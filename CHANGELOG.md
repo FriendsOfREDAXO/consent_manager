@@ -9,6 +9,7 @@
 - **Feature (Intern):** Neues Fragment für die read-only Checkbox-Ausgabe ergänzt (`fragments/ConsentManager/fake_checkbox.php`).
 - **Cleanup:** Codepfade für Fake-Textausgaben vereinfacht und näher an REDAXO-Core-Konventionen ausgerichtet.
 - **Docs/Cleanup (Issue #468):** Fragment-Header im AddOn vereinheitlicht und erwartete Fragment-Schnittstellen/Variablen dokumentiert.
+- **Cleanup (Issue #470):** Inline-JS aus `pages/config.php` in `assets/consent_manager_config.js` ausgelagert; Initialisierung REDAXO-konform über `rex:ready`.
 
 ## Version 5.6.0-beta1 - 05.03.2026
 

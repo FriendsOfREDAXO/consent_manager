@@ -7,6 +7,7 @@ use FriendsOfRedaxo\ConsentManager\JsonSetup;
 use FriendsOfRedaxo\ConsentManager\Theme;
 
 $addon = rex_addon::get('consent_manager');
+$redirectUrlAfterAction = null;
 
 $func = rex_request::request('func', 'string');
 
@@ -27,8 +28,7 @@ if ('setup_minimal' === $func) {
         echo rex_view::error(rex_i18n::msg('consent_manager_import_minimal_file_not_found'));
     }
 
-    // Redirect to normal config page without func parameter
-    echo '<script nonce="' . rex_response::getNonce() . '">setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
+    $redirectUrlAfterAction = rex_url::currentBackendPage(['page' => 'consent_manager/config']);
 } elseif ('setup_standard' === $func) {
     // Import standard setup (comprehensive setup with common services)
     $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/default_setup.json';
@@ -45,8 +45,7 @@ if ('setup_minimal' === $func) {
         echo rex_view::error(rex_i18n::msg('consent_manager_import_standard_file_not_found'));
     }
 
-    // Redirect to normal config page without func parameter
-    echo '<script nonce="' . rex_response::getNonce() . '">setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
+    $redirectUrlAfterAction = rex_url::currentBackendPage(['page' => 'consent_manager/config']);
 } elseif ('setup_minimal_update' === $func) {
     // Update with minimal setup (only add new, don't overwrite existing)
     $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/minimal_setup.json';
@@ -63,8 +62,7 @@ if ('setup_minimal' === $func) {
         echo rex_view::error(rex_i18n::msg('consent_manager_import_minimal_file_not_found'));
     }
 
-    // Redirect to normal config page without func parameter
-    echo '<script nonce="' . rex_response::getNonce() . '">setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
+    $redirectUrlAfterAction = rex_url::currentBackendPage(['page' => 'consent_manager/config']);
 } elseif ('setup_standard_update' === $func) {
     // Update with standard setup (only add new, don't overwrite existing)
     $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/default_setup.json';
@@ -81,8 +79,7 @@ if ('setup_minimal' === $func) {
         echo rex_view::error(rex_i18n::msg('consent_manager_import_standard_file_not_found'));
     }
 
-    // Redirect to normal config page without func parameter
-    echo '<script nonce="' . rex_response::getNonce() . '">setTimeout(function() { window.location.href = "' . rex_url::currentBackendPage(['page' => 'consent_manager/config']) . '"; }, 2000);</script>';
+    $redirectUrlAfterAction = rex_url::currentBackendPage(['page' => 'consent_manager/config']);
 }
 
 // For all other functions CSRF check
@@ -344,41 +341,11 @@ $field->setNotice(rex_i18n::msg('consent_manager_config_token_notice'));
 $form->addRawField('</div></div></div>'); // Ende Technisches Panel
 $form->addRawField('</div></div></section>'); // Ende Äußeres Panel + Section
 
-// JS für Toggles am Ende der Form
-$form->addRawField('
-<script nonce="' . rex_response::getNonce() . '">
-document.addEventListener("DOMContentLoaded", function() {
-    var modeSelect = document.getElementById("css-framework-mode-select");
-    var frameworkPanel = document.getElementById("framework-options-panel");
-    var outputOwnCssContainer = document.getElementById("output-own-css-container");
-    
-    function updateToggles() {
-        if (modeSelect) {
-            var frameworkActive = modeSelect.value !== "";
-            
-            // Framework-Optionen einblenden wenn Modus gewählt
-            if (frameworkPanel) {
-                frameworkPanel.style.display = frameworkActive ? "block" : "none";
-            }
-            
-            // "Eigenes CSS" nur zeigen wenn KEIN Framework gewählt ist
-            if (outputOwnCssContainer) {
-                // rex_form Checkbox-Container (meistens das umschließende .rex-form-row)
-                var row = outputOwnCssContainer.closest(".rex-form-row");
-                if (row) {
-                    row.style.display = frameworkActive ? "none" : "block";
-                }
-            }
-        }
-    }
-    
-    if (modeSelect) {
-        modeSelect.addEventListener("change", updateToggles);
-        updateToggles();
-    }
-});
-</script>
-');
+if (null !== $redirectUrlAfterAction) {
+    $form->addRawField('<div id="cm-config-redirect" data-cm-config-redirect-url="' . rex_escape($redirectUrlAfterAction) . '" data-cm-config-redirect-delay="2000"></div>');
+}
+
+rex_view::addJsFile($addon->getAssetsUrl('consent_manager_config.js'));
 
 // Layout mit Fragment
 $fragment = new rex_fragment();
