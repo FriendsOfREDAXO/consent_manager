@@ -51,10 +51,12 @@ function initConsentManagerConfigPage() {
     }, Number.isNaN(redirectDelay) ? 2000 : redirectDelay);
 }
 
-document.addEventListener('rex:ready', initConsentManagerConfigPage);
+(function ($) {
+    $(document).on('rex:ready', initConsentManagerConfigPage);
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initConsentManagerConfigPage, { once: true });
-} else {
-    initConsentManagerConfigPage();
-}
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initConsentManagerConfigPage, { once: true });
+    } else {
+        initConsentManagerConfigPage();
+    }
+})(jQuery);

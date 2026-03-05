@@ -345,6 +345,7 @@ if (null !== $redirectUrlAfterAction) {
     $form->addRawField('<div id="cm-config-redirect" data-cm-config-redirect-url="' . rex_escape($redirectUrlAfterAction) . '" data-cm-config-redirect-delay="2000"></div>');
 }
 
+rex_file::copy($addon->getPath('assets/consent_manager_config.js'), $addon->getAssetsPath('consent_manager_config.js'));
 rex_view::addJsFile($addon->getAssetsUrl('consent_manager_config.js'));
 
 // Layout mit Fragment
