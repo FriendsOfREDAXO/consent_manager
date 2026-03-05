@@ -164,30 +164,6 @@ if ($q !== '') {
                      $tocHtml .= '<a href="#' . $item['id'] . '" class="list-group-item" style="' . $style . '">' . $item['text'] . '</a>';
                 }
                 $tocHtml .= '</div></div>';
-
-                // JS for Live Search
-                $tocHtml .= '<script nonce="' . rex_response::getNonce() . '">
-                (function($) {
-                    $(document).on("rex:ready", function() {
-                        var $input = $("#cm-toc-filter");
-                        var $list = $("#cm-toc-list");
-                        
-                        $input.on("keyup", function() {
-                            var value = $(this).val().toLowerCase();
-                            $list.find("a").filter(function() {
-                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                            });
-                        });
-                        // Prevent form submission on enter in filter input
-                        $input.on("keydown", function(e) {
-                            if (e.key === "Enter") {
-                                e.preventDefault();
-                                return false;
-                            }
-                        });
-                    });
-                })(jQuery);
-                </script>';
             }
 
             $content = '<div class="rex-docs" style="display: block !important">' . $parsed . '</div>';
@@ -224,6 +200,8 @@ $fragment = new rex_fragment();
 $fragment->setVar('title', isset($cm_help_pages[$func]) ? $cm_help_pages[$func]['title'] : rex_i18n::msg('search_results'));
 $fragment->setVar('body', $content, false);
 $mainContent = $fragment->parse('core/page/section.php');
+
+rex_view::addJsFile($addon->getAssetsUrl('consent_manager_help.js'));
 
 echo '
 <div class="row">
@@ -275,39 +253,4 @@ mark {
     opacity: 1;
 }
 </style>
-<script>
-(function($) {
-    $(document).on("rex:ready", function() {
-        $(".rex-docs pre").each(function() {
-            var $pre = $(this);
-            if ($pre.find(".btn-copy-code").length) return;
-            
-            var $code = $pre.find("code");
-            if (!$code.length) return;
-            
-            var $btn = $("<button class=\"btn-copy-code\" title=\"Copy to clipboard\" type=\"button\"><i class=\"rex-icon fa-clipboard\"></i></button>");
-            $pre.append($btn);
-            
-            $btn.on("click", function() {
-                var codeText = $code.text();
-                
-                var textarea = document.createElement("textarea");
-                textarea.value = codeText;
-                document.body.appendChild(textarea);
-                textarea.select();
-                try {
-                    document.execCommand("copy");
-                    $btn.addClass("copied").html("<i class=\"rex-icon fa-check\"></i>");
-                    setTimeout(function() {
-                        $btn.removeClass("copied").html("<i class=\"rex-icon fa-clipboard\"></i>");
-                    }, 2000);
-                } catch (err) {
-                    console.error("Failed to copy text", err);
-                }
-                document.body.removeChild(textarea);
-            });
-        });
-    });
-})(jQuery);
-</script>
 ';
