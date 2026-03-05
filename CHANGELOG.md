@@ -1,5 +1,10 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.5.4 - 05.03.2026
+
+- **Docs:** README ergänzt: Der Google Consent Mode v2 Helper wird nur im **Manual-Modus** benötigt; im **Auto-Modus** sind Consent-Updates in der Regel automatisch.
+- **UX:** Hinweis im Google Consent Mode v2 Helper klarer hervorgehoben (rahmenbasiert statt Alert-Box).
+
 ## Version 5.5.3 - 02.03.2026
 
 - **Feature:** Auto-Blocking-Assistent unterstützt jetzt mehrere Elemente gleichzeitig (z.B. mehrere `<script>`-Tags + `<iframe>` bei Widgets wie TrustYou)

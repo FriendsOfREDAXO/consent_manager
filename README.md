@@ -191,6 +191,10 @@ Für DSGVO-Konformität muss ein Link zu den Cookie-Einstellungen im Footer plat
 - **Auto**: Automatische Integration (empfohlen)
 - **Manual**: Manuelle Konfiguration
 
+**Hinweis zum Google Consent Mode v2 Helper:**
+- Der Helper wird nur im **Manual-Modus** benötigt.
+- Im **Auto-Modus** ist der Helper in der Regel nicht erforderlich, da die Consent-Updates automatisch erzeugt werden.
+
 **Debug-Modus**: Aktivieren für detaillierte Consent-Informationen im Frontend (nur für angemeldete Backend-Benutzer).
 
 ### Inline-Only Modus
