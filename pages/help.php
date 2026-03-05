@@ -201,9 +201,6 @@ $fragment->setVar('title', isset($cm_help_pages[$func]) ? $cm_help_pages[$func][
 $fragment->setVar('body', $content, false);
 $mainContent = $fragment->parse('core/page/section.php');
 
-rex_file::copy($addon->getPath('assets/consent_manager_help.js'), $addon->getAssetsPath('consent_manager_help.js'));
-rex_view::addJsFile($addon->getAssetsUrl('consent_manager_help.js'));
-
 echo '
 <div class="row">
     <div class="col-md-3">

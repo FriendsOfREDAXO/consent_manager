@@ -52,7 +52,7 @@ function initConsentManagerConfigPage() {
 }
 
 (function ($) {
-    $(document).on('rex:ready', initConsentManagerConfigPage);
+    $(document).on('rex:ready pjax:complete', initConsentManagerConfigPage);
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initConsentManagerConfigPage, { once: true });

@@ -54,6 +54,13 @@ if (rex::isBackend()) {
                 if ('cookie' === $currentPage) {
                     rex_view::addJsFile($addon->getAssetsUrl('google_consent_helper.js'));
                 }
+
+                if ('config' === $currentPage || 'help' === $currentPage) {
+                    rex_file::copy($addon->getPath('assets/consent_manager_config.js'), $addon->getAssetsPath('consent_manager_config.js'));
+                    rex_file::copy($addon->getPath('assets/consent_manager_help.js'), $addon->getAssetsPath('consent_manager_help.js'));
+                    rex_view::addJsFile($addon->getAssetsUrl('consent_manager_config.js'));
+                    rex_view::addJsFile($addon->getAssetsUrl('consent_manager_help.js'));
+                }
             }
         }
     });
