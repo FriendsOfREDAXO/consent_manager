@@ -9,7 +9,9 @@
 - **Feature (Intern):** Neues Fragment für die read-only Checkbox-Ausgabe ergänzt (`fragments/ConsentManager/fake_checkbox.php`).
 - **Cleanup:** Codepfade für Fake-Textausgaben vereinfacht und näher an REDAXO-Core-Konventionen ausgerichtet.
 - **Docs/Cleanup (Issue #468):** Fragment-Header im AddOn vereinheitlicht und erwartete Fragment-Schnittstellen/Variablen dokumentiert.
-- **Cleanup (Issue #470):** Inline-JS aus `pages/config.php` in `assets/consent_manager_config.js` ausgelagert; Initialisierung REDAXO-konform über `rex:ready`.
+- **Cleanup (Issue #470):** Inline-JS aus `pages/config.php` und `pages/help.php` in externe Assets ausgelagert.
+- **Fix:** Backend-JS wird zentral im Boot-Prozess eingebunden, statt seitenlokal verteilt.
+- **Fix:** Initialisierung im Backend auf `rex:ready` vereinheitlicht; PJAX-spezifische Zusatzpfade entfernt.
 
 ## Version 5.6.0-beta1 - 05.03.2026
 
