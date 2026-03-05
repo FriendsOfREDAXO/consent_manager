@@ -1,10 +1,14 @@
 <?php
 
 use FriendsOfRedaxo\ConsentManager\Cache;
+use FriendsOfRedaxo\ConsentManager\Theme;
 
 // Cache-Klasse wird ggf. direkt eingebunden, da beim Install/Update der Autoloader nicht aktiv ist
 if (!class_exists('FriendsOfRedaxo\ConsentManager\Cache')) {
     require_once __DIR__ . '/lib/Cache.php';
+}
+if (!class_exists('FriendsOfRedaxo\ConsentManager\Theme')) {
+    require_once __DIR__ . '/lib/Theme.php';
 }
 
 $addon = rex_addon::get('consent_manager');
@@ -238,6 +242,7 @@ if (rex_addon::get('cronjob')->isAvailable()) {
 // Rewrite
 // Cache-Klasse wurde oben bereits eingebunden
 Cache::forceWrite();
+Theme::generateDefaultAssets();
 
 // Delete Template cache
 rex_dir::delete(rex_path::cache('addons/templates'));

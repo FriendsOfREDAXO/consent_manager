@@ -339,8 +339,8 @@ class Frontend
     {
         $addon = rex_addon::get('consent_manager');
 
-        // Standard CSS-Datei
-        $_cssfilename = 'consent_manager_frontend.css';
+        // Standard-Theme (SCSS-Name als Quelle)
+        $_theme = 'consent_manager_frontend.scss';
 
         // 1. Prüfen ob Domain-spezifisches Theme existiert
         $domainTheme = null;
@@ -364,26 +364,27 @@ class Frontend
             // Validiere Theme-Namen: Erlaube nur alphanumerisch, _, -, / und :
             // Verhindere Path-Traversal durch ..
             if (preg_match('/^[a-zA-Z0-9_\-\/:.]+$/', $domainTheme) && !str_contains($domainTheme, '..')) {
-                $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $domainTheme));
-                // Normalisiere Pfad und prüfe dass er im Assets-Verzeichnis liegt
-                $fullPath = $addon->getAssetsPath($_themecssfilename);
-                $assetsPath = $addon->getAssetsPath();
-                if ('' !== $_themecssfilename && file_exists($fullPath) && str_starts_with(realpath($fullPath), realpath($assetsPath))) {
-                    $_cssfilename = $_themecssfilename;
+                if (Theme::ensureThemeCss($domainTheme)) {
+                    $_theme = $domainTheme;
                 }
             }
         }
         // 3. Fallback: Globales Theme (wenn kein Domain-Theme gesetzt oder "Standard" gewählt)
-        if ('consent_manager_frontend.css' === $_cssfilename && false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
-            $_themecssfilename = $addon->getConfig('theme', false);
-            $_themecssfilename = str_replace('project:', 'project_', str_replace('.scss', '.css', $_themecssfilename));
-            if ('' !== $_themecssfilename && file_exists($addon->getAssetsPath($_themecssfilename))) {
-                $_cssfilename = $_themecssfilename;
+        if ('consent_manager_frontend.scss' === $_theme && false !== $addon->getConfig('theme', false) && is_string($addon->getConfig('theme', false))) {
+            $_configuredTheme = $addon->getConfig('theme', false);
+            if (is_string($_configuredTheme) && '' !== $_configuredTheme && Theme::ensureThemeCss($_configuredTheme)) {
+                $_theme = $_configuredTheme;
             }
         }
 
-        $_csscontent = file_get_contents($addon->getAssetsPath($_cssfilename));
-        if (false === $_csscontent) {
+        // Letzter Fallback: Standard-Theme erzeugen/laden
+        if (!Theme::ensureThemeCss($_theme)) {
+            return '';
+        }
+
+        $_cssfilename = Theme::getThemeCssFilename($_theme);
+        $_csscontent = rex_file::get(Theme::getThemeCssPath($_theme));
+        if ('' === $_csscontent) {
             return '';
         }
 

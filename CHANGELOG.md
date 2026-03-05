@@ -1,5 +1,17 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.0-beta1 - 05.03.2026
+
+> ⚠️ **Beta-Release:** Bitte noch nicht als finalen Stand für produktive Installationen einplanen. Wir freuen uns über Tests und Rückmeldungen aus realen Setups.
+
+- **Feature (Beta):** Theme-Handling überarbeitet: Theme-CSS wird jetzt aus einem dedizierten AddOn-Ordner `themes/` geladen/kompiliert statt über public Asset-Mirroring.
+- **Feature (Beta):** Kompilierte Theme-Dateien werden aus `assets/` nach `themes/` verlagert; `assets/` bleibt auf Laufzeit-/Runtime-Dateien fokussiert.
+- **Fix (Beta):** Public-Assets werden bereinigt, sodass Theme-Dateien nicht mehr unnötig öffentlich gespiegelt werden.
+- **Fix (Beta):** Robustere Fallback-Logik für Cache-Busting (`filemtime`) ohne Warnungen, wenn eine Datei im public Mirror nicht vorhanden ist.
+- **Hinweis:** Umsetzung auf Wunsch von **Thomas Blum**.
+
+👉 **Feedback erwünscht:** Bitte testet insbesondere Multi-Domain-Setups, globale vs. domain-spezifische Theme-Auswahl, Custom-Themes aus dem `project`-Addon und den Install/Update-Pfad. Rückmeldungen/Edge-Cases bitte direkt als Issue melden.
+
 ## Version 5.5.4 - 05.03.2026
 
 - **Docs:** README ergänzt: Der Google Consent Mode v2 Helper wird nur im **Manual-Modus** benötigt; im **Auto-Modus** sind Consent-Updates in der Regel automatisch.

@@ -4,8 +4,12 @@
 if (!class_exists('FriendsOfRedaxo\ConsentManager\Cache')) {
     require_once __DIR__ . '/lib/Cache.php';
 }
+if (!class_exists('FriendsOfRedaxo\ConsentManager\Theme')) {
+    require_once __DIR__ . '/lib/Theme.php';
+}
 
 use FriendsOfRedaxo\ConsentManager\Cache;
+use FriendsOfRedaxo\ConsentManager\Theme;
 
 $addon = rex_addon::get('consent_manager');
 $addon->includeFile(__DIR__ . '/install.php');
@@ -88,3 +92,5 @@ if (is_dir($publicAssetsPath)) {
         }
     }
 }
+
+Theme::generateDefaultAssets();

@@ -149,7 +149,12 @@ $_params['h'] = $consentparams['hidescrollbar'];
 $_params['cid'] = $consent_manager->cacheLogId;
 $_params['v'] = $consent_manager->version;
 $_params['r'] = $forceReload;
-$_params['t'] = filemtime($addon->getAssetsPath('consent_manager_frontend.js')) . rex_clang::getCurrentId();
+$mtimePath = $addon->getAssetsPath('consent_manager_frontend.js');
+if (!file_exists($mtimePath)) {
+    $mtimePath = $addon->getPath('assets/consent_manager_frontend.js');
+}
+$mtime = file_exists($mtimePath) ? (int) filemtime($mtimePath) : time();
+$_params['t'] = $mtime . rex_clang::getCurrentId();
 
 // JavaScript-Konfiguration für Frontend
 $jsConfig = [
