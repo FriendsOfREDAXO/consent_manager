@@ -4,6 +4,7 @@ namespace FriendsOfRedaxo\ConsentManager;
 
 use rex;
 use rex_extension_point;
+use rex_fragment;
 use rex_form;
 use rex_response;
 use rex_sql;
@@ -21,53 +22,60 @@ class RexFormSupport
 {
     /**
      * @api
-     *
-     * TODO: korrekter Weise müsste das wohl mit dem Fragment core/form/form.php gelöst werden.
      */
     public static function getFakeText(string $label, string $value): string
     {
-        $html = '';
-        $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
-        $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
-        $html .= '<dd><input disabled class="form-control" type="text" value="' . $value . '"></dd>';
-        $html .= '</dl>';
-        return $html;
+        return self::renderFakeField(
+            $label,
+            '<p class="form-control-static">' . rex_escape($value) . '</p>',
+        );
     }
 
     /**
      * @api
-     * TODO: korrekter Weise müsste das wohl mit dem Fragment core/form/form.php gelöst werden.
      */
     public static function getFakeTextarea(string $label, string $value): string
     {
-        $html = '';
-        $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
-        $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
-        $html .= '<dd><textarea disabled class="form-control" rows="6">' . $value . '</textarea></dd>';
-        $html .= '</dl>';
-        return $html;
+        return self::renderFakeField(
+            $label,
+            '<textarea disabled="disabled" class="form-control" rows="6">' . rex_escape($value) . '</textarea>',
+        );
     }
 
     /**
      * @api
-     * @param array<string, string> $checkboxes
-     * TODO: korrekter Weise müsste das wohl mit dem Fragment core/form/checkbox.php gelöst werden.
+     * @param array<array{0: string, 1: string}> $checkboxes
      */
     public static function getFakeCheckbox(string $label, array $checkboxes): string
     {
-        $html = '';
-        $html .= '<dl class="rex-form-group form-group consent_manager-fake">';
-        if ('' !== $label) {
-            $html .= '<dt><label class="control-label">' . $label . '</label></dt>';
+        $items = [];
+        foreach ($checkboxes as $checkbox) {
+            $items[] = [
+                'checked' => '|1|' === $checkbox[0],
+                'label' => $checkbox[1],
+            ];
         }
-        $html .= '<dd>';
-        foreach ($checkboxes as $v) {
-            $checked = '|1|' === $v[0] ? 'checked' : '';
-            $html .= '<div class="checkbox"><label class="control-label"><input type="checkbox" disabled ' . $checked . '>' . $v[1] . '</label></div>';
-        }
-        $html .= '</dd>';
-        $html .= '</dl>';
-        return $html;
+
+        $fragment = new rex_fragment();
+        $fragment->setVar('items', $items, false);
+        $fieldHtml = $fragment->parse('ConsentManager/fake_checkbox.php');
+
+        return self::renderFakeField($label, $fieldHtml);
+    }
+
+    private static function renderFakeField(string $label, string $fieldHtml): string
+    {
+        $formElements = [];
+        $element = [];
+        $element['label'] = '' !== $label ? '<label class="control-label">' . rex_escape($label) . '</label>' : '';
+        $element['field'] = $fieldHtml;
+        $element['class'] = 'consent_manager-fake';
+        $formElements[] = $element;
+
+        $fragment = new rex_fragment();
+        $fragment->setVar('elements', $formElements, false);
+
+        return $fragment->parse('core/form/form.php');
     }
 
     /**

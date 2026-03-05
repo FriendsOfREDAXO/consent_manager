@@ -135,7 +135,8 @@ if ('delete' === $func) {
 
     if ('edit' === $func && 'consent_manager' === $form->getSql()->getValue('uid')) {
         $form->addRawField(RexFormSupport::showInfo(rex_i18n::rawMsg('consent_manager_cookie_consent_manager_info')));
-        $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), $form->getSql()->getValue('uid')));
+        $field = $form->addReadOnlyField('uid_readonly', (string) $form->getSql()->getValue('uid'));
+        $field->setLabel(rex_i18n::msg('consent_manager_uid'));
     } else {
         if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
             $field = $form->addTextField('uid');
@@ -143,7 +144,8 @@ if ('delete' === $func) {
             $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_uid_empty_msg'));
             $field->getValidator()->add('match', rex_i18n::msg('consent_manager_uid_malformed_msg'), '/^[a-z0-9-_]+$/');
         } else {
-            $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), (string) $form->getSql()->getValue('uid')));
+            $field = $form->addReadOnlyField('uid_readonly', (string) $form->getSql()->getValue('uid'));
+            $field->setLabel(rex_i18n::msg('consent_manager_uid'));
         }
     }
     $field = $form->addTextField('service_name');

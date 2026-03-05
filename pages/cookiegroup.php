@@ -133,7 +133,8 @@ if ('delete' === $func) {
     } else {
         $form->addFieldset(rex_i18n::msg('consent_manager_general'));
         
-        $form->addRawField(RexFormSupport::getFakeText(rex_i18n::msg('consent_manager_uid'), (string) $form->getSql()->getValue('uid')));
+        $field = $form->addReadOnlyField('uid_readonly', (string) $form->getSql()->getValue('uid'));
+        $field->setLabel(rex_i18n::msg('consent_manager_uid'));
         $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), rex_i18n::msg('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
 
         $checkboxes = [];

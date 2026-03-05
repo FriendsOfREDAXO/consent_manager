@@ -1,5 +1,14 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.0-beta2 - 05.03.2026
+
+> ⚠️ **Beta-Release:** Weiterhin Beta-Status. Bitte in realen Setups testen und Rückmeldung geben.
+
+- **Refactor (Core-nah):** Anzeige-only UID-Felder in den Formularen auf native REDAXO-ReadOnly-Felder (`addReadOnlyField`) umgestellt.
+- **Refactor (Issue #423):** `RexFormSupport` erzeugt Fake-Felder nicht mehr per manuellem HTML-String-Bau, sondern rendert über Fragmente.
+- **Feature (Intern):** Neues Fragment für die read-only Checkbox-Ausgabe ergänzt (`fragments/ConsentManager/fake_checkbox.php`).
+- **Cleanup:** Codepfade für Fake-Textausgaben vereinfacht und näher an REDAXO-Core-Konventionen ausgerichtet.
+
 ## Version 5.6.0-beta1 - 05.03.2026
 
 > ⚠️ **Beta-Release:** Bitte noch nicht als finalen Stand für produktive Installationen einplanen. Wir freuen uns über Tests und Rückmeldungen aus realen Setups.
