@@ -69,10 +69,10 @@ body.dark .google-consent-preview-code,
             <!-- Messages Container -->
             <div id="google-helper-messages"></div>
             
-            <p class="help-block">
-                <i class="fa fa-info-circle"></i> 
+            <div class="well well-sm" role="note">
+                <i class="fa fa-exclamation-circle"></i>
                 <?= rex_i18n::msg('consent_manager_google_helper_description') ?>
-            </p>
+            </div>
             
             <!-- Service Auswahl -->
             <div class="form-group">

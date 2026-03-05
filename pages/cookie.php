@@ -113,7 +113,7 @@ if ('delete' === $func) {
 
             foreach (rex_clang::getAll() as $clang) {
                 $clangId = $clang->getId();
-                $isActive = $clangId === $clang_id ? 'btn-primary' : 'btn-default';
+                $isActive = $clangId === $clang_id ? 'btn-primary active' : 'btn-primary';
                 $icon = $clangId === rex_clang::getStartId() ? '<i class="rex-icon fa-star"></i> ' : '';
                 $url = rex_url::currentBackendPage(['func' => 'edit', 'pid' => $pid, 'page' => 'consent_manager/cookie/clang' . $clangId]);
                 $languageSwitcher .= '<a href="' . $url . '" class="btn ' . $isActive . ' btn-sm">' . $icon . rex_escape($clang->getName()) . '</a>';

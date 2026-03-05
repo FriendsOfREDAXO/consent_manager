@@ -226,7 +226,7 @@ consent_manager_google_helper_title = Google Consent Mode v2 Hjälpare
 consent_manager_google_helper_show = Visa hjälpare
 # # FIXME: "google_consent_helper_hide" -> wo wird der Text benötigt?
 google_consent_helper_hide = Dölj hjälpare
-consent_manager_google_helper_description = Automatisk generering av <code>gtag("consent", "update", {...})</code> skript för kända tjänster.
+consent_manager_google_helper_description = Automatisk generering av <code>gtag("consent", "update", {...})</code> skript för kända tjänster. Denna helper behövs endast när auto-mapping är inaktiverat (manuellt läge).
 consent_manager_google_helper_service_type = Tjänstetyp
 consent_manager_google_helper_select_service = -- Välj tjänst --
 consent_manager_google_helper_auto_detection = Föreslås automatiskt baserat på tjänstenamn
