@@ -63,7 +63,7 @@
         });
     }
 
-    $(document).on('rex:ready pjax:complete', initHelpPage);
+    $(document).on('rex:ready', initHelpPage);
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initHelpPage, { once: true });
