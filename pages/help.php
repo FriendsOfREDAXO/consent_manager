@@ -30,6 +30,11 @@ $cm_help_pages = [
     ],
 ];
 
+$cm_help_file_map = [];
+foreach ($cm_help_pages as $key => $page) {
+    $cm_help_file_map[strtolower($page['file'])] = $key;
+}
+
 $func = rex_request('func', 'string', 'readme');
 $q = rex_request('q', 'string', '');
 
@@ -119,13 +124,20 @@ if ($q !== '') {
         if (file_exists($file)) {
             $md = rex_file::get($file);
             
-            $md = preg_replace_callback('/\[([^\]]+)\]\(([^)]+)\.md\)/', function ($matches) use ($cm_help_pages) {
-                foreach ($cm_help_pages as $key => $page) {
-                    if ($page['file'] === $matches[2] . '.md') {
-                         return '[' . $matches[1] . '](' . rex_url::currentBackendPage(['func' => $key]) . ')';
-                    }
+            $md = preg_replace_callback('/\[([^\]]+)\]\(([^)#]+\.md)(#[^)]+)?\)/i', function ($matches) use ($cm_help_file_map) {
+                $fileReference = trim(str_replace('\\', '/', $matches[2]));
+                $fileName = strtolower(basename($fileReference));
+
+                if (!isset($cm_help_file_map[$fileName])) {
+                    return $matches[0];
                 }
-                return $matches[0];
+
+                $url = rex_url::currentBackendPage(['func' => $cm_help_file_map[$fileName]]);
+                if (isset($matches[3])) {
+                    $url .= $matches[3];
+                }
+
+                return '[' . $matches[1] . '](' . $url . ')';
             }, $md);
 
             $parsed = rex_markdown::factory()->parse($md);

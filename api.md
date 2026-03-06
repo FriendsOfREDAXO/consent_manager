@@ -2,79 +2,42 @@
 
 ## JavaScript API
 
-### doConsent()
-
-Die globale Funktion `doConsent()` ermöglicht es, programmatisch Consent-Anfragen zu stellen.
-
-```javascript
-doConsent(serviceKey, callback);
-```
-
-**Parameter:**
-- `serviceKey` (string): Der Service-Schlüssel (z.B. 'youtube', 'google-analytics')
-- `callback` (function): Callback-Funktion, die nach der Consent-Entscheidung ausgeführt wird
-
-**Rückgabewert:**
-- `true`: User hat bereits zugestimmt
-- `false`: Consent-Modal wird angezeigt, Callback wird nach Entscheidung aufgerufen
-
-**Beispiel:**
-
-```javascript
-// YouTube Video laden, wenn Consent erteilt
-if (doConsent('youtube', function() {
-    console.log('User hat YouTube zugestimmt!');
-    loadYouTubeVideo();
-})) {
-    // Consent bereits vorhanden
-    loadYouTubeVideo();
-}
-```
-
-### ConsentManagerCore
-
-Das globale `ConsentManagerCore` Objekt bietet erweiterte Funktionen.
-
-#### hasConsent()
+### consent_manager_hasconsent()
 
 Prüft, ob für einen Service bereits Consent vorliegt.
 
 ```javascript
-ConsentManagerCore.hasConsent(serviceKey);
+consent_manager_hasconsent(serviceKey);
 ```
+
+**Parameter:**
+- `serviceKey` (string): Der Service-Schlüssel (z.B. `youtube`, `google-analytics`)
+
+**Rückgabewert:**
+- `true` wenn Consent erteilt wurde
+- `false` wenn kein Consent vorliegt
 
 **Beispiel:**
 
 ```javascript
-if (ConsentManagerCore.hasConsent('google-analytics')) {
+if (typeof consent_manager_hasconsent === 'function' && consent_manager_hasconsent('google-analytics')) {
     console.log('Google Analytics ist aktiv');
 }
 ```
 
-#### getAllConsents()
+### consent_manager_showBox()
 
-Gibt alle erteilten Consents zurück.
-
-```javascript
-var consents = ConsentManagerCore.getAllConsents();
-console.log(consents); // z.B. ['consent_manager', 'youtube', 'google-analytics']
-```
-
-#### openSettings()
-
-Öffnet das Consent-Modal zur Änderung der Einstellungen.
+Öffnet den Consent-Dialog manuell.
 
 ```javascript
-ConsentManagerCore.openSettings();
+consent_manager_showBox();
 ```
 
-#### revokeAllConsents()
+Typischerweise nicht direkt nötig, wenn Links mit `data-consent-action="settings"` verwendet werden.
 
-Widerruft alle Consents und lädt die Seite neu.
+### Hinweis zu älteren API-Namen
 
-```javascript
-ConsentManagerCore.revokeAllConsents();
-```
+Ältere Beispiele mit `ConsentManagerCore` oder `doConsent()` als Frontend-JS-API sind nicht mehr der aktuelle Standard für den globalen Consent-Dialog. Für den Dialog bitte die oben genannten Funktionen und Events verwenden.
 
 ---
 
@@ -244,33 +207,48 @@ rex_extension::register('CONSENT_MANAGER_INLINE_PLACEHOLDER', function($ep) {
 
 Der Consent Manager löst folgende Custom Events im Browser aus:
 
-### consentmanager:ready
+### consent_manager-ready
 
-Wird ausgelöst, wenn der Consent Manager initialisiert ist.
+Wird ausgelöst, wenn der Consent Manager initialisiert wurde.
 
 ```javascript
-document.addEventListener('consentmanager:ready', function() {
+document.addEventListener('consent_manager-ready', function (e) {
+    if (!e.detail.initialized) {
+        console.warn('Consent Manager nicht bereit:', e.detail.reason);
+        return;
+    }
     console.log('Consent Manager ready');
 });
 ```
 
-### consentmanager:consent-given
+### consent_manager-saved
 
-Wird ausgelöst, wenn ein Consent erteilt wurde.
+Wird ausgelöst, wenn eine Consent-Auswahl gespeichert wurde.
 
 ```javascript
-document.addEventListener('consentmanager:consent-given', function(event) {
-    console.log('Consent erteilt für:', event.detail.service);
+document.addEventListener('consent_manager-saved', function (e) {
+    var consents = JSON.parse(e.detail);
+    console.log('Gespeicherte Consents:', consents);
 });
 ```
 
-### consentmanager:consent-revoked
+### consent_manager-show
 
-Wird ausgelöst, wenn ein Consent widerrufen wurde.
+Wird ausgelöst, wenn der Dialog geöffnet wurde.
 
 ```javascript
-document.addEventListener('consentmanager:consent-revoked', function(event) {
-    console.log('Consent widerrufen für:', event.detail.service);
+document.addEventListener('consent_manager-show', function () {
+    console.log('Consent-Dialog geöffnet');
+});
+```
+
+### consent_manager-close
+
+Wird ausgelöst, wenn der Dialog geschlossen wurde.
+
+```javascript
+document.addEventListener('consent_manager-close', function () {
+    console.log('Consent-Dialog geschlossen');
 });
 ```
 
@@ -331,9 +309,7 @@ foreach ($data as $key => $value) {
 ### 1. Consent prüfen bevor externe Scripte geladen werden
 
 ```javascript
-if (doConsent('google-analytics', function() {
-    loadGoogleAnalytics();
-})) {
+if (typeof consent_manager_hasconsent === 'function' && consent_manager_hasconsent('google-analytics')) {
     loadGoogleAnalytics();
 }
 ```

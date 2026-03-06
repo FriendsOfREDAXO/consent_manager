@@ -124,7 +124,7 @@ Die automatische Einbindung prüft nur das Template, **nicht aber URL-Parameter*
 - AJAX-Popups über Parameter (`?popup=1`, `?ajax=1`)
 - Dynamische Varianten (`?view=iframe`, `?format=json`)
 
-**👉 Empfehlung:** Bei komplexen Parameter-Checks → **[Manuelle Einrichtung](index.php?page=consent_manager/help#manuelle-einrichtung)** verwenden
+**👉 Empfehlung:** Bei komplexen Parameter-Checks → **[Manuelle Einrichtung](DEV_QUICKSTART.md#manuelle-einbindung-vollständige-kontrolle)** verwenden
 
 Falls Auto-Inject trotzdem gewünscht:
 
@@ -136,7 +136,7 @@ if (rex_request::get('print') == '1'
     || rex_request::get('popup') == '1') {
     // Auto-Inject wird ausgeführt, aber Template sollte <head> nicht rendern
     // ODER: Auto-Inject deaktivieren und manuell einbinden mit if-Bedingung
-    // → Siehe: index.php?page=consent_manager/help#manuelle-einrichtung
+    // → Siehe: DEV_QUICKSTART.md#manuelle-einbindung-vollständige-kontrolle
 }
 ?>
 ```
@@ -199,7 +199,7 @@ Für DSGVO-Konformität muss ein Link zu den Cookie-Einstellungen im Footer plat
 
 ### Inline-Only Modus
 
-**Inline-Only Modus** unterdrückt das globale Cookie-Banner. Consent wird nur bei Bedarf über `doConsent()` JavaScript-Funktion abgefragt (z.B. bei eingebetteten Videos).
+**Inline-Only Modus** unterdrückt das globale Cookie-Banner. Consent wird nur bei Bedarf über Inline-Consent-Mechanismen abgefragt (z.B. bei eingebetteten Videos).
 
 **Aktivierung:** `Consent Manager → Domains → Domain bearbeiten → Inline-Only Modus`
 
@@ -244,7 +244,7 @@ Für DSGVO-Konformität muss ein Link zu den Cookie-Einstellungen im Footer plat
 </iframe>
 ```
 
-**📖 Ausführliche Dokumentation:** [AUTO_BLOCKING.md](AUTO_BLOCKING.md)
+**📖 Ausführliche Dokumentation:** [inline.md](inline.md)
 
 **Anwendungsfall:**
 - Redakteure ohne Programmierkenntnisse
@@ -533,7 +533,7 @@ REX_CONSENT_MANAGER[fragment=my_custom_box.php]
 **JavaScript-Aufruf (für Custom-Implementierungen):**
 
 ```javascript
-window.consentManager.showBox();
+consent_manager_showBox();
 ```
 
 ---
@@ -612,107 +612,11 @@ $legalId = $consent->links['legal_notice'] ?? 0;
 ```
 
 **💡 Tipps:**
-- Links zu rechtlichen Seiten sollten immer `rel="nofollow"` haben
-- Der "Cookie-Einstellungen" Link ermöglicht Nutzern, ihre Einwilligung jederzeit zu ändern (DSGVO-Pflicht!)
-- `data-consent-action="settings"` wird automatisch erkannt - kein onclick-Handler nötig
+Die technischen Details sind zentral dokumentiert, um Redundanzen zu vermeiden:
 
----
-
-## 👨‍💻 Für Developer
-
-👉 **Kurzhilfe / Schnellstart für Entwickler:** [DEV_QUICKSTART.md](DEV_QUICKSTART.md)
-
-### JavaScript API
-
-```javascript
-// Consent-Status prüfen
-if (consent_manager_hasconsent('youtube')) {
-    // YouTube wurde akzeptiert
-}
-
-// Event bei Consent-Änderung
-document.addEventListener('consent_manager-saved', function(e) {
-    var consents = JSON.parse(e.detail);
-    // Scripts nachladen, UI aktualisieren etc.
-});
-
-// Event wenn Consent Manager initialisiert ist
-document.addEventListener('consent_manager-ready', function(e) {
-    if (!e.detail.initialized) {
-        console.warn('Consent Manager nicht initialisiert:', e.detail.reason);
-        return;
-    }
-
-    if (typeof consent_manager_hasconsent === 'function' && consent_manager_hasconsent('google-analytics')) {
-        // Eigene Scripts sicher ausführen
-    }
-});
-
-// Box öffnen
-consent_manager_showBox();
-
-// Erweiterte API
-window.consentManager.doConsent('youtube', {
-    callback: function(consentGiven) {
-        if (consentGiven) loadYouTubeVideo();
-    }
-});
-```
-
-### PHP API
-
-```php
-<?php
-use FriendsOfRedaxo\ConsentManager\{Utility, Domain, Cookie, CookieGroup};
-
-// Consent-Status prüfen
-if (Utility::has_consent('youtube')) {
-    echo '<iframe src="https://youtube.com/..."></iframe>';
-}
-
-// Domain-Konfiguration
-$domain = Domain::getCurrentDomain();
-$autoInject = $domain->getValue('auto_inject');
-
-// Services und Gruppen
-$services = Cookie::getByDomain('example.com');
-$groups = CookieGroup::getByDomain('example.com');
-?>
-```
-
-### Custom Fragments erstellen
-
-Eigene Consent-Box-Designs über Fragments:
-
-**Pfad:** `redaxo/src/addons/project/fragments/my_custom_box.php`
-
-```php
-<?php
-/** @var rex_fragment $this */
-$css = $this->getVar('css');
-$js = $this->getVar('js');
-$box = $this->getVar('box');
-?>
-
-<style><?= $css ?></style>
-<script<?= $this->getVar('nonce_attribute') ?>><?= $js ?></script>
-<?= $box ?>
-```
-
-**Verwendung:**
-
-```php
-echo Frontend::getFragment(0, 0, 'my_custom_box.php');
-```
-
-### Hooks und Extension Points
-
-```php
-// Vor Output-Generierung
-rex_extension::register('rex_consent_manager_before_output', function($ep) {
-    $output = $ep->getSubject();
-    // Output anpassen
-    return $output;
+- **Schnellstart / Kurzhilfe:** [DEV_QUICKSTART.md](DEV_QUICKSTART.md)
+- **Vollständige API (JS, Events, PHP):** [api.md](api.md)
+- **Inline-Consent (Praxisbeispiele):** [inline.md](inline.md)
 });
 
 // Nach Speichern
@@ -923,7 +827,7 @@ Content-Security-Policy:
 ## 📄 Lizenz und Credits
 
 ### Lizenz
-MIT Lizenz - siehe [LICENSE.md](https://github.com/FriendsOfREDAXO/consent_manager/blob/master/LICENSE.md)
+MIT Lizenz - siehe [LICENSE.md](LICENSE.md)
 
 ### Entwicklung
 **Friends Of REDAXO:** [https://github.com/FriendsOfREDAXO](https://github.com/FriendsOfREDAXO)
