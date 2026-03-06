@@ -1,6 +1,6 @@
 # Consent-Manager für REDAXO CMS
 
-![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo.jpg?raw=true)
+![logo](https://github.com/FriendsOfREDAXO/consent_manager/blob/assets/consent_manager-logo2.jpg?raw=true)
 
 ## Was ist der Consent-Manager?
 
