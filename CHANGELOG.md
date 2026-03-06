@@ -1,5 +1,20 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.0-beta3 - 06.03.2026
+
+> ⚠️ **Beta-Release:** Bitte weiterhin in realen Setups testen und Feedback geben.
+
+- **Docs:** Dokumentation in einen zentralen `docs/`-Ordner überführt und thematisch in Einzeldokumente aufgeteilt.
+- **Docs:** README auf allgemeine Produktinfos reduziert; technische Details in dedizierte Doku-Seiten ausgelagert.
+- **Docs:** Neues Schritt-für-Schritt-Tutorial ergänzt (`docs/tutorial_so_gehts.md`).
+- **Docs:** Setup-Doku um ausführliche Wizard-Beschreibung inkl. Felder/Flows erweitert (`docs/installation_und_grundeinrichtung.md`).
+- **Docs:** Domain-Zuordnung für Gruppen explizit dokumentiert (`docs/dienste_und_gruppen.md`).
+- **Docs:** CKE5 oEmbed-Lösung ausführlich beschrieben (Aktivierung, Voraussetzungen, Ablauf, Troubleshooting) (`docs/erweiterte_konfiguration.md`).
+- **Docs/API:** PHP-API-Dokumentation erweitert (u. a. `Frontend`, `Utility`, `ConsentManager`) (`docs/api.md`).
+- **Backend Help:** Hilfe-Navigation auf neue Docs-Struktur umgestellt und logisch sortiert (u. a. Setup, Dienste & Gruppen, Dev Kurzhilfe vor API, Tutorial).
+- **Backend Help:** Link-Rewrite robuster gemacht (`.md`-Links inkl. Ankern, `docs/...`-Pfade, Top-Anchor-Verhalten, `amp;func`-Fallback).
+- **Backend Help:** Lizenz- und Credits-Seite in die Hilfe integriert.
+
 ## Version 5.6.0-beta2 - 05.03.2026
 
 > ⚠️ **Beta-Release:** Weiterhin Beta-Status. Bitte in realen Setups testen und Rückmeldung geben.
