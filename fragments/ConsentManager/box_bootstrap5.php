@@ -131,6 +131,9 @@ $backdropStyle = $backdropEnabled ? 'background: rgba(0,0,0,0.6);' : 'background
                                                                         <div class="mb-2">
                                                                             <code class="px-1 text-danger bg-danger-subtle rounded-1"><?= rex_escape($def['cookie_name'] ?? '') ?></code>
                                                                             <span class="text-muted small ms-1">(<?= rex_escape($def['cookie_lifetime'] ?? '') ?>)</span>
+                                                                            <?php if ('' !== trim((string) ($def['description'] ?? ''))): ?>
+                                                                                <div class="consent_manager-cookie-description mt-1 mb-2"><?= $def['description'] ?></div>
+                                                                            <?php endif; ?>
                                                                         </div>
                                                                     <?php endforeach; ?>
                                                                 </div>

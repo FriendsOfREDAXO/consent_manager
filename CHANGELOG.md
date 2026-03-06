@@ -14,6 +14,7 @@
 - **Backend Help:** Hilfe-Navigation auf neue Docs-Struktur umgestellt und logisch sortiert (u. a. Setup, Dienste & Gruppen, Dev Kurzhilfe vor API, Tutorial).
 - **Backend Help:** Link-Rewrite robuster gemacht (`.md`-Links inkl. Ankern, `docs/...`-Pfade, Top-Anchor-Verhalten, `amp;func`-Fallback).
 - **Backend Help:** Lizenz- und Credits-Seite in die Hilfe integriert.
+- **Fix (Issue #475):** Cookie-Definitions-Beschreibungen (`$def['description']`) werden in den Framework-Fragmenten wieder ausgegeben (`box_bootstrap5.php`, `box_bulma.php`, `box_uikit3.php`).
 
 ## Version 5.6.0-beta2 - 05.03.2026
 

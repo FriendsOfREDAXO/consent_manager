@@ -73,6 +73,19 @@ if ($shadow === 'large') $shadowClass = 'has-shadow';
                                             <div class="mb-2">
                                                 <div class="is-size-7 has-text-weight-semibold"><?= rex_escape($title) ?></div>
                                                 <div class="is-size-7 has-text-grey"><?= $cookie['description'] ?? '' ?></div>
+                                                    <?php if (isset($cookie['definition']) && count($cookie['definition']) > 0): ?>
+                                                        <div class="mt-2">
+                                                            <?php foreach ($cookie['definition'] as $def): ?>
+                                                                <div class="mb-1">
+                                                                    <code><?= rex_escape($def['cookie_name'] ?? '') ?></code>
+                                                                    <span class="is-size-7 has-text-grey">(<?= rex_escape($def['cookie_lifetime'] ?? '') ?>)</span>
+                                                                    <?php if ('' !== trim((string) ($def['description'] ?? ''))): ?>
+                                                                        <div class="consent_manager-cookie-description mt-1"><?= $def['description'] ?></div>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    <?php endif; ?>
                                             </div>
                                             <?php
                                         }
