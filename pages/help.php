@@ -28,6 +28,16 @@ $cm_help_pages = [
         'icon' => 'rex-icon fa-list',
         'file' => 'CHANGELOG.md'
     ],
+    'license' => [
+        'title' => 'Lizenz',
+        'icon' => 'rex-icon fa-gavel',
+        'file' => 'LICENSE.md'
+    ],
+    'credits' => [
+        'title' => 'Credits',
+        'icon' => 'rex-icon fa-heart',
+        'file' => 'credits.md'
+    ],
 ];
 
 $cm_help_file_map = [];
@@ -140,6 +150,8 @@ if ($q !== '') {
                 $url = rex_url::currentBackendPage(['func' => $cm_help_file_map[$fileName]]);
                 if (isset($matches[3])) {
                     $url .= $matches[3];
+                } else {
+                    $url .= '#cm-doc-top';
                 }
 
                 return '[' . $matches[1] . '](' . $url . ')';
@@ -188,7 +200,7 @@ if ($q !== '') {
                 $tocHtml .= '</div></div>';
             }
 
-            $content = '<div class="rex-docs" style="display: block !important">' . $parsed . '</div>';
+            $content = '<a id="cm-doc-top"></a><div class="rex-docs" style="display: block !important">' . $parsed . '</div>';
         }
     }
 }

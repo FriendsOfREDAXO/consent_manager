@@ -841,6 +841,8 @@ MIT Lizenz - siehe [LICENSE.md](LICENSE.md)
 
 **Contributors:** [Siehe GitHub](https://github.com/FriendsOfREDAXO/consent_manager/graphs/contributors)
 
+**Vollständige Historie (aus Git-History):** [credits.md](credits.md)
+
 **Besonderer Dank an:**
 - [Christoph Böcker](https://github.com/Christophboecker) - Code refactoring, bug fixing und mehr
 - [Thomas Blum](https://github.com/tbaddade/) - Code aus Sprog AddOn
