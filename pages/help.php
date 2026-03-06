@@ -35,7 +35,12 @@ foreach ($cm_help_pages as $key => $page) {
     $cm_help_file_map[strtolower($page['file'])] = $key;
 }
 
-$func = rex_request('func', 'string', 'readme');
+$func = rex_request('func', 'string', '');
+if ($func === '') {
+    $func = rex_request('amp;func', 'string', 'readme');
+}
+
+$func = preg_replace('/^amp;/', '', $func);
 $q = rex_request('q', 'string', '');
 
 // Search Logic

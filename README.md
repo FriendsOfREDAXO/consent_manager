@@ -124,7 +124,7 @@ Die automatische Einbindung prüft nur das Template, **nicht aber URL-Parameter*
 - AJAX-Popups über Parameter (`?popup=1`, `?ajax=1`)
 - Dynamische Varianten (`?view=iframe`, `?format=json`)
 
-**👉 Empfehlung:** Bei komplexen Parameter-Checks → **[Manuelle Einrichtung](DEV_QUICKSTART.md#manuelle-einbindung-vollständige-kontrolle)** verwenden
+**👉 Empfehlung:** Bei komplexen Parameter-Checks → **[Manuelle Einrichtung](#manuelle-einrichtung)** verwenden
 
 Falls Auto-Inject trotzdem gewünscht:
 
@@ -136,7 +136,7 @@ if (rex_request::get('print') == '1'
     || rex_request::get('popup') == '1') {
     // Auto-Inject wird ausgeführt, aber Template sollte <head> nicht rendern
     // ODER: Auto-Inject deaktivieren und manuell einbinden mit if-Bedingung
-    // → Siehe: DEV_QUICKSTART.md#manuelle-einbindung-vollständige-kontrolle
+    // → Siehe Abschnitt "Manuelle Einrichtung"
 }
 ?>
 ```
