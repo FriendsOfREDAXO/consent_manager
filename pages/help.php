@@ -8,20 +8,50 @@ $cm_help_pages = [
         'icon' => 'rex-icon fa-book',
         'file' => 'README.md'
     ],
-    'dev_quickstart' => [
-        'title' => 'Dev Kurzhilfe',
-        'icon' => 'rex-icon fa-bolt',
-        'file' => 'DEV_QUICKSTART.md'
+    'setup' => [
+        'title' => 'Installation & Setup',
+        'icon' => 'rex-icon fa-play-circle',
+        'file' => 'docs/installation_und_grundeinrichtung.md'
+    ],
+    'tutorial' => [
+        'title' => 'Tutorial: So Geht\'s',
+        'icon' => 'rex-icon fa-map-signs',
+        'file' => 'docs/tutorial_so_gehts.md'
+    ],
+    'services_groups' => [
+        'title' => 'Dienste & Gruppen',
+        'icon' => 'rex-icon fa-cogs',
+        'file' => 'docs/dienste_und_gruppen.md'
+    ],
+    'advanced_config' => [
+        'title' => 'Erweiterte Konfiguration',
+        'icon' => 'rex-icon fa-sliders',
+        'file' => 'docs/erweiterte_konfiguration.md'
+    ],
+    'manual_setup' => [
+        'title' => 'Manuelle Einrichtung',
+        'icon' => 'rex-icon fa-wrench',
+        'file' => 'docs/manuelle_einrichtung.md'
     ],
     'inline' => [
         'title' => 'Inline Consent',
-        'icon' => 'rex-icon fa-play-circle',
-        'file' => 'inline.md'
+        'icon' => 'rex-icon fa-code',
+        'file' => 'docs/inline.md'
+    ],
+    'dev_quickstart' => [
+        'title' => 'Dev Kurzhilfe',
+        'icon' => 'rex-icon fa-bolt',
+        'file' => 'docs/DEV_QUICKSTART.md'
     ],
     'api' => [
         'title' => 'API',
         'icon' => 'rex-icon fa-code',
-        'file' => 'api.md'
+        'file' => 'docs/api.md'
+    ],
+    'themes_csp' => [
+        'title' => 'Themes, Best Practices & CSP',
+        'icon' => 'rex-icon fa-paint-brush',
+        'file' => 'docs/themes_best_practices_csp.md'
     ],
     'changelog' => [
         'title' => rex_i18n::msg('consent_manager_changelog'),
@@ -36,13 +66,21 @@ $cm_help_pages = [
     'credits' => [
         'title' => 'Credits',
         'icon' => 'rex-icon fa-heart',
-        'file' => 'credits.md'
+        'file' => 'docs/credits.md'
+    ],
+    'support' => [
+        'title' => 'Support & Community',
+        'icon' => 'rex-icon fa-life-ring',
+        'file' => 'docs/support_und_community.md'
     ],
 ];
 
 $cm_help_file_map = [];
 foreach ($cm_help_pages as $key => $page) {
-    $cm_help_file_map[strtolower($page['file'])] = $key;
+    $fullPath = strtolower($page['file']);
+    $baseName = strtolower((string) basename($page['file']));
+    $cm_help_file_map[$fullPath] = $key;
+    $cm_help_file_map[$baseName] = $key;
 }
 
 $func = rex_request('func', 'string', '');

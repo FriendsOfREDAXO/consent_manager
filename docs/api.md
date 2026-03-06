@@ -43,6 +43,117 @@ Typischerweise nicht direkt nötig, wenn Links mit `data-consent-action="setting
 
 ## PHP API
 
+Die PHP-API besteht aus mehreren Klassen mit unterschiedlichen Aufgaben.
+
+### Frontend
+
+Die Klasse `Frontend` ist die zentrale Integrationsklasse für Templates.
+
+```php
+use FriendsOfRedaxo\ConsentManager\Frontend;
+```
+
+#### getFragment()
+
+Standard-Einstieg für die Ausgabe im Frontend:
+
+```php
+echo Frontend::getFragment(0, 0, 'ConsentManager/box_cssjs.php');
+```
+
+Parameter:
+
+- `$forceCache` (`int`): Cache-Verhalten (`0` normal, `1` neu schreiben)
+- `$forceReload` (`int`): Seite nach Consent-Änderung neu laden (`0`/`1`)
+- `$fragmentFilename` (`string`): Fragment-Datei
+
+#### getFragmentWithVars()
+
+Wie `getFragment()`, aber mit zusätzlichen Variablen für Custom-Fragmente.
+
+```php
+echo Frontend::getFragmentWithVars(0, 0, 'ConsentManager/box_cssjs.php', [
+    'customClass' => 'my-consent-box'
+]);
+```
+
+#### setDomain()
+
+Lädt Domain-spezifische Daten (Links, Services, Gruppen, Texte) in die Instanz.
+
+```php
+$frontend = new Frontend();
+$frontend->setDomain('beispiel.de');
+```
+
+#### Wichtige Eigenschaften
+
+Nach `setDomain()` stehen u. a. diese Properties zur Verfügung:
+
+- `$frontend->links['privacy_policy']`
+- `$frontend->links['legal_notice']`
+- `$frontend->cookiegroups`
+- `$frontend->cookies`
+- `$frontend->texts`
+
+### Utility
+
+Hilfsfunktionen für Consent-Checks und Domain-Informationen.
+
+```php
+use FriendsOfRedaxo\ConsentManager\Utility;
+```
+
+#### has_consent()
+
+Prüft, ob ein Service bereits akzeptiert wurde.
+
+```php
+if (Utility::has_consent('youtube')) {
+    // Consent vorhanden
+}
+```
+
+#### consentConfigured()
+
+Prüft, ob für die aktuelle Host-Konstellation eine nutzbare Consent-Konfiguration existiert.
+
+```php
+if (!Utility::consentConfigured()) {
+    // ggf. Fallback oder Hinweis
+}
+```
+
+#### hostname() und get_domaininfo()
+
+- `hostname()`: liefert den aktuellen Host inkl. Subdomain (domain-spezifischer Consent)
+- `get_domaininfo($url)`: zerlegt eine URL in Domain-Bestandteile
+
+### ConsentManager
+
+Statischer Zugriff auf den aufgebauten Addon-Cache.
+
+```php
+use FriendsOfRedaxo\ConsentManager\ConsentManager;
+```
+
+Wichtige Methoden:
+
+- `getCache()`
+- `getDomains()` / `getDomain($domain)`
+- `getCookieGroups(?int $clangId = null)`
+- `getCookies(?int $clangId = null)`
+- `getTexts(?int $clangId = null)`
+- `getCookieData(string $uid, ?int $clangId = null)`
+- `getPlaceholderData(string $uid, ?int $clangId = null)`
+
+Beispiel:
+
+```php
+$domain = ConsentManager::getDomain('beispiel.de');
+$cookies = ConsentManager::getCookies();
+```
+
 ### InlineConsent
 
 Die `InlineConsent` Klasse bietet Methoden zur automatischen Blockierung von externen Inhalten.
