@@ -51,6 +51,19 @@ function safeJSONParse(input, fallback) {
     var showDelay = parseInt(autoInjectOptions.showDelay, 10) || 0;
     var autoFocus = autoInjectOptions.autoFocus !== false; // default true
 
+    function emitReady(initialized, reason) {
+        document.dispatchEvent(new CustomEvent('consent_manager-ready', {
+            detail: {
+                initialized: initialized,
+                reason: reason || null,
+                noCookieSet: !!consent_manager_parameters.no_cookie_set,
+                domain: consent_manager_parameters.domain || '',
+                hasConsentApi: typeof consent_manager_hasconsent === 'function',
+                hasShowBoxApi: typeof consent_manager_showBox === 'function'
+            }
+        }));
+    }
+
     // Es gibt keinen Datenschutzcookie, Consent zeigen
     if (typeof cmCookieAPI.get(cmCookieName) === 'undefined') {
         cmCookieAPI.set(cmCookieName + '_test', 'test');
@@ -75,6 +88,7 @@ function safeJSONParse(input, fallback) {
 
     if (consent_manager_box_template === '') {
         console.warn('Addon consent_manager: Keine Cookie-Gruppen / Cookies ausgewählt bzw. keine Domain zugewiesen! (' + location.hostname + ')');
+        emitReady(false, 'missing_template');
         return;
     }
     consent_managerBox = new DOMParser().parseFromString(consent_manager_box_template, 'text/html');
@@ -409,11 +423,15 @@ function safeJSONParse(input, fallback) {
             console.warn('Addon consent_manager: Es konnte kein Cookie für die Domain ' + document.domain + ' gesetzt werden!');
         } else {
             // Async logging to avoid blocking UI (replaced deprecated synchronous XHR)
-            var url = consent_manager_parameters.fe_controller + '?rex-api-call=consent_manager&buster=' + new Date().getTime();
+            // Use same-origin current URL to avoid mixed-content/CORS failures when fe_controller differs.
+            var url = window.location.pathname + window.location.search;
+            var separator = url.indexOf('?') === -1 ? '?' : '&';
+            url = url + separator + 'rex-api-call=consent_manager&buster=' + new Date().getTime();
             var params = 'domain=' + encodeURIComponent(document.domain) + '&consentid=' + encodeURIComponent(consent_manager_parameters.consentid) + '&buster=' + new Date().getTime();
             
             fetch(url, {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Cache-Control': 'no-cache, no-store, max-age=0'
@@ -665,6 +683,8 @@ function safeJSONParse(input, fallback) {
         // Trigger show event (Issue #156)
         document.dispatchEvent(new CustomEvent('consent_manager-show'));
     }
+
+    emitReady(true);
 
 })();
 

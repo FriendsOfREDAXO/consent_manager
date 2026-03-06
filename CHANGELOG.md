@@ -12,6 +12,9 @@
 - **Cleanup (Issue #470):** Inline-JS aus `pages/config.php` und `pages/help.php` in externe Assets ausgelagert.
 - **Fix:** Backend-JS wird zentral im Boot-Prozess eingebunden, statt seitenlokal verteilt.
 - **Fix:** Initialisierung im Backend auf `rex:ready` vereinheitlicht; PJAX-spezifische Zusatzpfade entfernt.
+- **Fix:** Consent-Logging-Request auf same-origin umgestellt (`window.location` statt `fe_controller`), um `TypeError: Load failed` bei Host-/Protokoll-Mismatch zu vermeiden.
+- **Feature (JS API):** Neues Event `consent_manager-ready` eingeführt, damit eigene Skripte zuverlässig auf die Initialisierung reagieren können.
+- **Docs:** Neue Entwickler-Kurzhilfe `DEV_QUICKSTART.md` mit Einbindungsvarianten sowie Consent-Abfragen per PHP/JavaScript ergänzt und in die Hilfe-Navigation integriert.
 
 ## Version 5.6.0-beta1 - 05.03.2026
 

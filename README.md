@@ -620,6 +620,8 @@ $legalId = $consent->links['legal_notice'] ?? 0;
 
 ## 👨‍💻 Für Developer
 
+👉 **Kurzhilfe / Schnellstart für Entwickler:** [DEV_QUICKSTART.md](DEV_QUICKSTART.md)
+
 ### JavaScript API
 
 ```javascript
@@ -632,6 +634,18 @@ if (consent_manager_hasconsent('youtube')) {
 document.addEventListener('consent_manager-saved', function(e) {
     var consents = JSON.parse(e.detail);
     // Scripts nachladen, UI aktualisieren etc.
+});
+
+// Event wenn Consent Manager initialisiert ist
+document.addEventListener('consent_manager-ready', function(e) {
+    if (!e.detail.initialized) {
+        console.warn('Consent Manager nicht initialisiert:', e.detail.reason);
+        return;
+    }
+
+    if (typeof consent_manager_hasconsent === 'function' && consent_manager_hasconsent('google-analytics')) {
+        // Eigene Scripts sicher ausführen
+    }
 });
 
 // Box öffnen

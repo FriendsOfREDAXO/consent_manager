@@ -8,6 +8,11 @@ $cm_help_pages = [
         'icon' => 'rex-icon fa-book',
         'file' => 'README.md'
     ],
+    'dev_quickstart' => [
+        'title' => 'Dev Kurzhilfe',
+        'icon' => 'rex-icon fa-bolt',
+        'file' => 'DEV_QUICKSTART.md'
+    ],
     'inline' => [
         'title' => 'Inline Consent',
         'icon' => 'rex-icon fa-play-circle',
