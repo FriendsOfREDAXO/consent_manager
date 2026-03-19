@@ -12,11 +12,17 @@
  */
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
+use FriendsOfRedaxo\ConsentManager\Utility;
 
 if (0 === rex_article::getCurrentId()) {
     return;
 }
 if (true === rex_request::get('consent_manager_outputjs', 'bool', false)) {
+    return;
+}
+// Skip consent manager output for search engine bots – scripts are not relevant
+// for crawlers and should not be delivered to them for SEO purposes.
+if (Utility::isBot()) {
     return;
 }
 

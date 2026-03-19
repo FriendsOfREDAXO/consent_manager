@@ -15,6 +15,53 @@ use function strlen;
 class Utility
 {
     /**
+     * List of known search engine bot User-Agent patterns.
+     *
+     * @var list<string>
+     */
+    private static array $botPatterns = [
+        'bot',
+        'crawl',
+        'slurp',
+        'spider',
+        'mediapartners',
+        'facebookexternalhit',
+        'ia_archiver',
+        'baiduspider',
+        'yandexbot',
+        'sogou',
+        'exabot',
+        'facebot',
+        'duckduckbot',
+        'archive.org',
+        'semrushbot',
+        'ahrefsbot',
+        'mj12bot',
+        'dotbot',
+        'rogerbot',
+    ];
+
+    /**
+     * Detect whether the current visitor is a search engine crawler or bot.
+     *
+     * Returns true when the HTTP User-Agent matches any known bot pattern so
+     * that callers can skip rendering consent manager scripts for crawlers.
+     *
+     * @api
+     */
+    public static function isBot(string $userAgent = ''): bool
+    {
+        if ('' === $userAgent) {
+            $userAgent = rex_request::server('HTTP_USER_AGENT', 'string', '');
+        }
+        if ('' === $userAgent) {
+            return false;
+        }
+        $pattern = '/' . implode('|', array_map('preg_quote', self::$botPatterns, array_fill(0, count(self::$botPatterns), '/'))) . '/i';
+        return (bool) preg_match($pattern, $userAgent);
+    }
+
+    /**
      * Check consent for cookieUid.
      *
      * @api
