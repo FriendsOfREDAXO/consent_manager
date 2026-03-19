@@ -84,7 +84,7 @@ $backdropStyle = $backdropEnabled ? 'background: rgba(0,0,0,0.6);' : 'background
                                     <label class="form-check-label fw-bold ms-2" for="<?= $groupUid ?>">
                                         <?= rex_escape($cookiegroup['name'] ?? '') ?>
                                         <?php if ($isRequired): ?>
-                                            <span class="text-muted small ms-1 fw-normal">(<?= rex_i18n::msg('consent_manager_cookiegroup_required') ?>)</span>
+                                            <span class="text-muted small ms-1 fw-normal">(<?= rex_escape($cookiegroup['description'] ?? '') ?>)</span>
                                         <?php endif; ?>
                                     </label>
                                 </div>

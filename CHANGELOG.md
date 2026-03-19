@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.0-beta4 - 19.03.2026
+
+> ⚠️ **Beta-Release:** Bitte weiterhin in realen Setups testen und Feedback geben.
+
+- **Fix (Mehrsprachigkeit):** In den Frontend-Fragmenten (`box_bootstrap5.php`, `box_uikit3.php`, `box_tailwind.php`) wurde `rex_i18n::msg('consent_manager_cookiegroup_required')` durch `$cookiegroup['description']` ersetzt. Der Hinweis-Text bei pflichtigen Cookie-Gruppen wird nun korrekt aus der Datenbank pro Sprache geladen statt immer in der Backend-Sprache ausgegeben.
+
 ## Version 5.6.0-beta3 - 06.03.2026
 
 > ⚠️ **Beta-Release:** Bitte weiterhin in realen Setups testen und Feedback geben.

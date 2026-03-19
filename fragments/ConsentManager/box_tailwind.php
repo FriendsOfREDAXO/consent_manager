@@ -89,7 +89,7 @@ $buttonRoundedClass = $roundedEnabled ? 'rounded-lg' : 'rounded-none';
                                         <label class="ml-4 block text-base font-semibold text-slate-900 cursor-pointer" for="<?= rex_escape($cookiegroup['uid']) ?>" onclick="event.stopPropagation();">
                                             <?= rex_escape($cookiegroup['name'] ?? '') ?>
                                             <?php if ($isRequired): ?>
-                                                <span class="ml-2 px-2 py-0.5 inline-flex text-[10px] tracking-wider uppercase font-bold bg-slate-100 text-slate-400 <?= $roundedEnabled ? 'rounded' : 'rounded-none' ?>"><?= rex_i18n::msg('consent_manager_cookiegroup_required') ?></span>
+                                                <span class="ml-2 px-2 py-0.5 inline-flex text-[10px] tracking-wider uppercase font-bold bg-slate-100 text-slate-400 <?= $roundedEnabled ? 'rounded' : 'rounded-none' ?>"><?= rex_escape($cookiegroup['description'] ?? '') ?></span>
                                             <?php endif; ?>
                                         </label>
                                     </div>

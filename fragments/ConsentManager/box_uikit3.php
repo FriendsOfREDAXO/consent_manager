@@ -87,7 +87,7 @@ $backdropStyle = $backdropEnabled ? 'background: rgba(0,0,0,0.6);' : 'background
                                         >
                                         <span class="uk-text-bold uk-text-small"><?= rex_escape($cookiegroup['name'] ?? '') ?></span>
                                         <?php if ($isRequired): ?>
-                                            <span class="uk-text-meta uk-margin-small-left" style="font-size: 0.7rem;">(<?= rex_i18n::msg('consent_manager_cookiegroup_required') ?>)</span>
+                                            <span class="uk-text-meta uk-margin-small-left" style="font-size: 0.7rem;">(<?= rex_escape($cookiegroup['description'] ?? '') ?>)</span>
                                         <?php endif; ?>
                                     </label>
                                     
