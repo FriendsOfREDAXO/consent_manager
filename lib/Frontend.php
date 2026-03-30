@@ -234,6 +234,7 @@ class Frontend
         rex_response::cleanOutputBuffers();
         header_remove();
         header('Content-Type: application/javascript; charset=utf-8');
+        header('X-Robots-Tag: noindex');
         // Use ETag based on version and timestamp for proper caching
         $cacheVersion = rex_request::get('t', 'string', time());
         $etag = md5($addon->getVersion() . '-' . $cacheVersion);

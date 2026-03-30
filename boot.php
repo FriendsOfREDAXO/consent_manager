@@ -199,7 +199,6 @@ if (rex::isFrontend()) {
     });
     rex_extension::register('FE_OUTPUT', static function (rex_extension_point $ep) {
         if (true === rex_request::get('consent_manager_outputjs', 'bool', false)) {
-            rex_response::setHeader('X-Robots-Tag', 'noindex');
             $consent_manager = new Frontend(0);
             $consent_manager->outputJavascript();
             exit;
