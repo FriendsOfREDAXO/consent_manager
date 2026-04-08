@@ -1,5 +1,13 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.3 - 08.04.2026
+
+- **Fix (Frontend):** Verbesserte Consent Debug-Infos (klarerer Status, bevor der Nutzer eingewilligt hat, Erklärung teilweise abgelehnter Dienste).
+- **A11y:** Debug-Panel-Elemente mit `sa11y-ignore` versehen, damit Accessibility-Werkzeuge diese Entwickler-UI ignorieren.
+
+## Version 5.6.2 - ?
+- Update auf 5.6.0 bis 5.6.2 (Bugfixes)
+
 ## Version 5.6.0-beta4 - 19.03.2026
 
 > ⚠️ **Beta-Release:** Bitte weiterhin in realen Setups testen und Feedback geben.

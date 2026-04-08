@@ -27,6 +27,7 @@
     function createDebugPanel() {
         const panel = document.createElement('div');
         panel.id = 'consent-debug-panel';
+        panel.className = 'sa11y-ignore';
         panel.innerHTML = `
             <div id="consent-debug-header">
                 <span>🔍 Consent Debug</span>
@@ -668,14 +669,44 @@
             });
         }
         
-        // Problem 3: Consent Manager Cookie fehlt bei erteiltem Consent
+        // Check ob Consent von Benutzer erteilt wurde
+        const userHasConsented = consentManagerStatus.status === 'combined' || consentManagerStatus.status === 'consent_manager_only';
+        
+        // Problem 3: Warten auf Consent oder Consent Manager Cookie fehlt
         const cookiePattern = cookieName + '=';
-        if (consentManagerStatus.status !== 'no_consent' && !document.cookie.includes(cookiePattern)) {
+        if (!userHasConsented && !document.cookie.includes(cookiePattern)) {
+            issues.push({
+                type: 'info',
+                title: 'Warten auf User Consent',
+                message: 'Es wurde noch kein Consent erteilt. Die Standardeinstellungen sind aktiv.',
+                solution: 'Bitte akzeptieren Sie die gewünschten Dienste im Consent-Banner, um den Status zu testen.'
+            });
+            
+            // Wenn GCM aktiv, prüfe ob fälschlicherweise schon etwas granted ist (ohne Consent)
+            let googleConsent = null;
+            if (window.GoogleConsentModeV2 && window.GoogleConsentModeV2.getCurrentSettings) {
+                googleConsent = window.GoogleConsentModeV2.getCurrentSettings();
+            } else if (window.currentConsentSettings) {
+                googleConsent = window.currentConsentSettings;
+            }
+            if (googleConsent) {
+                // security_storage wird oft default granted, daher ignorieren wir es hier
+                const hasWrongfullyGranted = Object.entries(googleConsent).some(([key, value]) => value === 'granted' && key !== 'security_storage');
+                if (hasWrongfullyGranted) {
+                    issues.push({
+                        type: 'warning',
+                        title: 'GCM Default-Status fehlerhaft',
+                        message: 'Es wurde noch kein Consent erteilt, aber bestimmte Google Consent Flags sind bereits "granted".',
+                        solution: 'Google Consent Mode sollte vor der Einwilligung standardmäßig auf "denied" (oder ungesetzt) stehen.'
+                    });
+                }
+            }
+        } else if (userHasConsented && !document.cookie.includes(cookiePattern)) {
             issues.push({
                 type: 'warning',
                 title: 'Consent Cookie fehlt',
                 message: `Consent wurde erteilt, aber das Consent-Manager Cookie (${cookieName}) ist nicht vorhanden.`,
-                solution: 'Überprüfen Sie Cookie-Einstellungen und SameSite-Attribute.'
+                solution: 'Überprüfen Sie Cookie-Einstellungen und SameSite-Attribute. Möglicherweise wird es geblockt.'
             });
         }
         
@@ -689,8 +720,8 @@
             });
         }
         
-        // Problem 5: Auto-Mapping aktiviert aber keine Google Consent Mode Updates
-        if (googleConsentModeStatus.autoMapping && consentManagerStatus.status !== 'no_consent') {
+        // Problem 5: Auto-Mapping Info & Warnungen
+        if (googleConsentModeStatus.autoMapping && userHasConsented) {
             let googleConsent = null;
             if (window.GoogleConsentModeV2 && window.GoogleConsentModeV2.getCurrentSettings) {
                 googleConsent = window.GoogleConsentModeV2.getCurrentSettings();
@@ -700,14 +731,28 @@
             
             if (googleConsent) {
                 const hasGrantedFlags = Object.values(googleConsent).some(value => value === 'granted');
+                // Prüfen ob der Nutzer im Banner optionale Dienste akzeptiert hat
+                const userAcceptedOptionalServices = consentManagerStatus.data && Array.isArray(consentManagerStatus.data.consents) && 
+                    consentManagerStatus.data.consents.some(c => c !== 'consent_manager' && c !== 'necessary');
                 
-                if (!hasGrantedFlags) {
+                if (!hasGrantedFlags && userAcceptedOptionalServices) {
                     issues.push({
                         type: 'warning',
                         title: 'Auto-Mapping ohne Effekt',
                         message: 'Auto-Mapping ist aktiviert und Consent erteilt, aber keine Google Consent Flags wurden auf "granted" gesetzt.',
-                        solution: 'Überprüfen Sie die Service-UIDs (z.B. google-analytics) und die Mapping-Funktion.'
+                        solution: 'Überprüfen Sie die Service-UIDs (z.B. google-analytics) und die Mapping-Funktion im Backend.'
                     });
+                } else if (hasGrantedFlags) {
+                    // Erklären warum bestimmte Keys evtl noch "denied" sind
+                    const deniedKeys = Object.entries(googleConsent).filter(([k,v]) => v === 'denied').map(([k]) => k);
+                    if (deniedKeys.length > 0) {
+                        issues.push({
+                            type: 'info',
+                            title: 'Teilweise verweigerte Consent-Flags',
+                            message: `Folgende Zwecke bleiben auf "denied": ${deniedKeys.join(', ')}.`,
+                            solution: 'Dies ist gewolltes Verhalten, wenn der Nutzer die korrespondierenden Zwecke (z.B. ad_user_data für personalisierte Werbung) nicht akzeptiert hat, oder wenn dafür keine Services im Auto-Mapping definiert wurden.'
+                        });
+                    }
                 }
             }
         }
@@ -1085,6 +1130,7 @@
         
         const button = document.createElement('button');
         button.id = 'consent-debug-toggle-btn';
+        button.className = 'sa11y-ignore';
         button.innerHTML = 'Consent Debug';
         button.title = 'Consent Debug öffnen';
         button.style.cssText = `
