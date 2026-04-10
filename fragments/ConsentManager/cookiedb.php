@@ -32,9 +32,10 @@ if (0 !== count($consent_manager->cookiegroups)) { /** phpstan-ignore-line */
             'SELECT ' . rex::getTable('consent_manager_consent_log') . '.*
                         FROM ' . rex::getTable('consent_manager_consent_log') . '
                         WHERE ' . rex::getTable('consent_manager_consent_log') . '.cachelogid = :cachelogid
+                        AND ' . rex::getTable('consent_manager_consent_log') . '.domain = :domain
                         ORDER BY ' . rex::getTable('consent_manager_consent_log') . '.id DESC
                         LIMIT 5',
-            ['cachelogid' => $consent_manager_cookie['cachelogid']],
+            ['cachelogid' => $consent_manager_cookie['cachelogid'], 'domain' => $consent_manager->domainName],
         );
         $history = $db->getArray();
         $consents = [];
