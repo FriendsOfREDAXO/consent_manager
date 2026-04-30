@@ -73,7 +73,7 @@ class OEmbedParser
     {
         // Domain ermitteln falls nicht übergeben
         if (null === $domain) {
-            $domain = rex_request::server('HTTP_HOST', 'string', $domain);
+            $domain = rex_request::server('HTTP_HOST', 'string', '');
         }
 
         // Domain-Config laden
@@ -128,7 +128,7 @@ class OEmbedParser
         }
 
         // Domain-spezifische Konfiguration laden
-        $config = self::getDomainConfig($domain ?? rex::getServer());
+        $config = self::getDomainConfig($domain ?? rex::getServer() ?? '');
 
         // Optionen für Inline-Blocker
         $options = [
@@ -202,7 +202,7 @@ class OEmbedParser
      * @api
      * @return array<string, mixed> Konfiguration
      */
-    private static function getDomainConfig(string $domain): array
+    private static function getDomainConfig(?string $domain): array
     {
         // Standard-Konfiguration
         $defaultConfig = [
@@ -213,6 +213,11 @@ class OEmbedParser
         ];
 
         // Domain aus Datenbank laden
+        // Defensive guard: callers should pass a non-empty string, but we accept ?string for safety
+        if (null === $domain || '' === $domain) {
+            return $defaultConfig;
+        }
+
         try {
             $sql = rex_sql::factory();
             // TODO: Query ändern in setTable/setWhere/select
