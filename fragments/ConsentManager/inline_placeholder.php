@@ -79,7 +79,7 @@ if (str_starts_with($iconClass, 'uk-icon:')) {
 }
 ?>
                     </div>
-                    <h4 class="consent-inline-title"><?= rex_escape($options['title'] ?? $service['service_name'] ?? $inline_title_fallback) ?></h4>
+                    <p class="consent-inline-title h4"><?= rex_escape($options['title'] ?? $service['service_name'] ?? $inline_title_fallback) ?></p>
                     <p class="consent-inline-notice"><?= rex_escape($options['privacy_notice'] ?? (isset($service['placeholder_text']) && '' !== $service['placeholder_text'] ? $service['placeholder_text'] : $inline_privacy_notice)) ?></p>
                     <p class="consent-inline-action-text"><?= rex_escape($inline_action_text) ?></p>
                     
