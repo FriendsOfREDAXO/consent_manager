@@ -13,7 +13,6 @@
 namespace FriendsOfRedaxo\ConsentManager;
 
 use Exception;
-use FriendsOfRedaxo\VidStack\Video;
 use rex;
 use rex_addon;
 use rex_clang;
@@ -42,7 +41,6 @@ class OEmbedParser
          * rex_extension::register nur ausgeführt wird, wenn ...
          */
         rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) use ($domain) {
-            /** @var string $content */
             $content = $ep->getSubject();
 
             /**
@@ -73,7 +71,7 @@ class OEmbedParser
     {
         // Domain ermitteln falls nicht übergeben
         if (null === $domain) {
-            $domain = rex_request::server('HTTP_HOST', 'string', $domain);
+            $domain = rex_request::server('HTTP_HOST', 'string', rex::getServer());
         }
 
         // Domain-Config laden
@@ -87,10 +85,12 @@ class OEmbedParser
         // Regex für <oembed url="..."></oembed>
         $pattern = '/<oembed\s+url=["\']([^"\']+)["\']\s*><\/oembed>/i';
 
-        return preg_replace_callback($pattern, static function ($matches) use ($domain) {
+        $parsedContent = preg_replace_callback($pattern, static function ($matches) use ($domain) {
             $url = $matches[1];
             return self::processOembed($url, $domain);
         }, $content);
+
+        return null !== $parsedContent ? $parsedContent : $content;
     }
 
     /**
@@ -128,7 +128,12 @@ class OEmbedParser
         }
 
         // Domain-spezifische Konfiguration laden
-        $config = self::getDomainConfig($domain ?? rex::getServer());
+        $configDomain = $domain;
+        if (null === $configDomain || '' === $configDomain) {
+            $configDomain = rex::getServer();
+        }
+
+        $config = self::getDomainConfig($configDomain);
 
         // Optionen für Inline-Blocker
         $options = [
@@ -202,7 +207,7 @@ class OEmbedParser
      * @api
      * @return array<string, mixed> Konfiguration
      */
-    private static function getDomainConfig(string $domain): array
+    private static function getDomainConfig(?string $domain): array
     {
         // Standard-Konfiguration
         $defaultConfig = [
@@ -213,6 +218,11 @@ class OEmbedParser
         ];
 
         // Domain aus Datenbank laden
+        // Defensive guard: HTTP_HOST / rex::getServer() können in Proxy/CLI-Kontexten leer sein
+        if (null === $domain || '' === $domain) {
+            return $defaultConfig;
+        }
+
         try {
             $sql = rex_sql::factory();
             // TODO: Query ändern in setTable/setWhere/select
@@ -287,8 +297,18 @@ class OEmbedParser
             return '<!-- Vidstack Player nicht verfügbar -->';
         }
 
+        $videoClass = 'FriendsOfRedaxo\\VidStack\\Video';
+        if (!class_exists($videoClass)) {
+            return '<!-- Vidstack Player Klasse nicht verfügbar -->';
+        }
+
         try {
-            $player = new Video($videoUrl);
+            /** @var object $player */
+            $player = new $videoClass($videoUrl);
+
+            if (!method_exists($player, 'setAttributes') || !method_exists($player, 'generate')) {
+                return '<!-- Vidstack Player API nicht kompatibel -->';
+            }
 
             // Attribute für den Player setzen
             $attributes = [
@@ -308,7 +328,8 @@ class OEmbedParser
 
             // Nur generate() verwenden - OHNE Vidstack Consent
             // Der Consent Manager Inline-Blocker kommt davor (via doConsent)
-            return $player->generate();
+            $generated = $player->generate();
+            return is_string($generated) ? $generated : '';
         } catch (Exception $e) {
             if (rex::isDebugMode()) {
                 // TODO: Texte über .lang aufbauen

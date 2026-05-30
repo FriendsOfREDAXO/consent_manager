@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.5 - 30.05.2026
+
+- **Fix (oEmbed):** Robustes Domain-Fallback in `OEmbedParser`, damit auch in Proxy-/CLI-Kontexten ohne `HTTP_HOST` keine Type-Fehler auftreten.
+- **Fix (Rexstan):** Null-sichere Rückgabe in `parse()` ergänzt (`preg_replace_callback`-Fallback), Signaturen/Guards bereinigt und auf striktere Analyse ausgerichtet.
+- **Kompatibilität (Addon-übergreifend):** Optionale Vidstack-Integration defensiv entkoppelt (`class_exists`/`method_exists`), damit fehlende oder inkompatible Vidstack-Klassen keine Folgefehler erzeugen.
+
 ## Version 5.6.3 - 08.04.2026
 
 - **Fix (Frontend):** Verbesserte Consent Debug-Infos (klarerer Status, bevor der Nutzer eingewilligt hat, Erklärung teilweise abgelehnter Dienste).
