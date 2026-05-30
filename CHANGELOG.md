@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.6.5 - 30.05.2026
+## Version 5.6.6 - 30.05.2026
 
 - **Fix (oEmbed):** Robustes Domain-Fallback in `OEmbedParser`, damit auch in Proxy-/CLI-Kontexten ohne `HTTP_HOST` keine Type-Fehler auftreten.
 - **Fix (Rexstan):** Null-sichere Rückgabe in `parse()` ergänzt (`preg_replace_callback`-Fallback), Signaturen/Guards bereinigt und auf striktere Analyse ausgerichtet.
