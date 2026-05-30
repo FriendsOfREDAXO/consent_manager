@@ -73,7 +73,7 @@ class OEmbedParser
     {
         // Domain ermitteln falls nicht übergeben
         if (null === $domain) {
-            $domain = rex_request::server('HTTP_HOST', 'string', '');
+            $domain = rex_request::server('HTTP_HOST', 'string', rex::getServer() ?? '');
         }
 
         // Domain-Config laden
@@ -213,7 +213,7 @@ class OEmbedParser
         ];
 
         // Domain aus Datenbank laden
-        // Defensive guard: callers should pass a non-empty string, but we accept ?string for safety
+        // Defensive guard: HTTP_HOST / rex::getServer() können in Proxy/CLI-Kontexten leer sein
         if (null === $domain || '' === $domain) {
             return $defaultConfig;
         }
