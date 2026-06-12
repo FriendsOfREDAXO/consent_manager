@@ -21,6 +21,8 @@ $service = $this->getVar('service', []);
 $options = $this->getVar('options', []);
 $placeholderData = $this->getVar('placeholderData', []);
 $content = $this->getVar('content', '');
+$consentId = $this->getVar('consentId', uniqid('consent_', true));
+$serviceKey = $this->getVar('serviceKey', '');
 
 // Text-Variablen aus Fragment abrufen (von FriendsOfRedaxo\ConsentManager\InlineConsent::getButtonText())
 $inline_title_fallback = $this->getVar('inline_title_fallback', 'Externes Medium');
