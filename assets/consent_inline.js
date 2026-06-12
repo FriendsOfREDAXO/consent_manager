@@ -556,9 +556,15 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 this.clearOldConsentCookies();
             }
 
+            // Legacy-Cleanup: in v5.6.6 und früher wurde das Cookie unter dem
+            // falschen Namen 'consent_manager' geschrieben, alle Read-Pfade
+            // verwendeten aber 'consentmanager'. Den alten Namen für betroffene
+            // User explizit löschen, damit nicht zwei parallele Cookies existieren.
+            document.cookie = 'consent_manager=; expires=' + new Date(0).toUTCString() + '; path=/';
+
             // Setze das neue Cookie (neu und sauber)
-            document.cookie = 'consent_manager=' + JSON.stringify(data) + 
-                             '; expires=' + expires.toUTCString() + 
+            document.cookie = 'consentmanager=' + JSON.stringify(data) +
+                             '; expires=' + expires.toUTCString() +
                              '; path=/; SameSite=Lax';
         },
         
