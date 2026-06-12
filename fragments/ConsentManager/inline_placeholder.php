@@ -21,6 +21,19 @@ $service = $this->getVar('service', []);
 $options = $this->getVar('options', []);
 $placeholderData = $this->getVar('placeholderData', []);
 $content = $this->getVar('content', '');
+// Erst Var holen, Fallback nur bei Bedarf erzeugen — uniqid() würde sonst
+// auch bei gesetzter ID auf jedem Render-Pfad ausgewertet (PHP wertet
+// Default-Argumente eager aus).
+$consentId = $this->getVar('consentId', '');
+if ('' === $consentId) {
+    $consentId = uniqid('consent_', true);
+}
+$serviceKey = $this->getVar('serviceKey', '');
+
+// Optionale CSS-Klasse (laut docs/inline.md unterstützt) an den Container hängen
+$extraClass = (isset($options['css_class']) && is_string($options['css_class']) && '' !== $options['css_class'])
+    ? ' ' . rex_escape($options['css_class'])
+    : '';
 
 // Text-Variablen aus Fragment abrufen (von FriendsOfRedaxo\ConsentManager\InlineConsent::getButtonText())
 $inline_title_fallback = $this->getVar('inline_title_fallback', 'Externes Medium');
@@ -55,7 +68,7 @@ if ('' !== $thumbnailSrc) {
 }
 ?>
 
-<div class="consent-inline-container" data-consent-id="<?= rex_escape($consentId) ?>" 
+<div class="consent-inline-container<?= $extraClass ?>" data-consent-id="<?= rex_escape($consentId) ?>"
      data-service="<?= rex_escape($serviceKey) ?>">
     
     <div class="consent-inline-placeholder">
