@@ -24,6 +24,11 @@ $content = $this->getVar('content', '');
 $consentId = $this->getVar('consentId', uniqid('consent_', true));
 $serviceKey = $this->getVar('serviceKey', '');
 
+// Optionale CSS-Klasse (laut docs/inline.md unterstützt) an den Container hängen
+$extraClass = (isset($options['css_class']) && is_string($options['css_class']) && '' !== $options['css_class'])
+    ? ' ' . rex_escape($options['css_class'])
+    : '';
+
 // Text-Variablen aus Fragment abrufen (von FriendsOfRedaxo\ConsentManager\InlineConsent::getButtonText())
 $inline_title_fallback = $this->getVar('inline_title_fallback', 'Externes Medium');
 $inline_privacy_notice = $this->getVar('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.');
@@ -57,7 +62,7 @@ if ('' !== $thumbnailSrc) {
 }
 ?>
 
-<div class="consent-inline-container" data-consent-id="<?= rex_escape($consentId) ?>" 
+<div class="consent-inline-container<?= $extraClass ?>" data-consent-id="<?= rex_escape($consentId) ?>"
      data-service="<?= rex_escape($serviceKey) ?>">
     
     <div class="consent-inline-placeholder">
