@@ -21,7 +21,13 @@ $service = $this->getVar('service', []);
 $options = $this->getVar('options', []);
 $placeholderData = $this->getVar('placeholderData', []);
 $content = $this->getVar('content', '');
-$consentId = $this->getVar('consentId', uniqid('consent_', true));
+// Erst Var holen, Fallback nur bei Bedarf erzeugen — uniqid() würde sonst
+// auch bei gesetzter ID auf jedem Render-Pfad ausgewertet (PHP wertet
+// Default-Argumente eager aus).
+$consentId = $this->getVar('consentId', '');
+if ('' === $consentId) {
+    $consentId = uniqid('consent_', true);
+}
 $serviceKey = $this->getVar('serviceKey', '');
 
 // Optionale CSS-Klasse (laut docs/inline.md unterstützt) an den Container hängen
