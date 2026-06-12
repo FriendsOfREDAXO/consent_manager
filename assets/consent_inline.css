@@ -65,7 +65,7 @@
     --consent-overlay-border-radius: 8px;
     --consent-overlay-border: 1px solid rgba(128, 128, 128, 0.2);
     --consent-overlay-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --consent-overlay-max-width: 90%;
+    --consent-overlay-max-width: 100%;
     
     position: relative;
     z-index: 2;
@@ -258,7 +258,7 @@
         /* Mobile Variablen */
         --consent-min-height: 250px;
         --consent-overlay-padding: 1.5rem;
-        --consent-overlay-max-width: 95%;
+        --consent-overlay-max-width: 100%;
     }
     
     .consent-inline-content {
