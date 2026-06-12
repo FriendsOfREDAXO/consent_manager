@@ -585,7 +585,27 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     return null;
                 }
             }
-            return this.getCookie('consentmanager');
+            var raw = this.getCookie('consentmanager');
+            if (raw !== null) {
+                return raw;
+            }
+            // Legacy-Migration: in v5.6.6 und früher wurde das Cookie unter dem
+            // falschen Namen 'consent_manager' geschrieben. Wenn es noch existiert,
+            // einmalig nach 'consentmanager' umkopieren und das Alt-Cookie expiren —
+            // so muss der User nach dem Update nicht erneut zustimmen.
+            var legacy = this.getCookie('consent_manager');
+            if (legacy !== null) {
+                try {
+                    var expires = new Date();
+                    expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
+                    document.cookie = 'consentmanager=' + legacy +
+                                     '; expires=' + expires.toUTCString() +
+                                     '; path=/; SameSite=Lax';
+                    document.cookie = 'consent_manager=; expires=' + new Date(0).toUTCString() + '; path=/';
+                } catch(e) { /* ignore */ }
+                return legacy;
+            }
+            return null;
         },
         
         getCookie: function(name) {
