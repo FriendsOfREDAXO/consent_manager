@@ -1,5 +1,9 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.7 - 15.06.2026
+
+- **Fix (Mehrsprachigkeit/Reinstall):** Beim Deinstallieren werden jetzt alle Addon-Konfigurationswerte entfernt. Dadurch wird nach Neuinstallation die Initialisierung für bestehende Nicht-Startsprachen wieder korrekt ausgeführt und Gruppen/Dienste sind vollständig vorhanden.
+
 ## Version 5.6.6 - 30.05.2026
 
 - **Fix (oEmbed):** Robustes Domain-Fallback in `OEmbedParser`, damit auch in Proxy-/CLI-Kontexten ohne `HTTP_HOST` keine Type-Fehler auftreten.
