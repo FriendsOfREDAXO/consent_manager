@@ -128,7 +128,7 @@ class Frontend
         }
 
         if ('' === $this->domainName) {
-            $normalizedCandidates = array_unique(array_map(Utility::normalizeDomain(...), $domainCandidates));
+            $normalizedCandidates = array_unique(array_map([Utility::class, 'normalizeDomain'], $domainCandidates));
             foreach (array_keys($domains) as $configuredDomain) {
                 if (in_array(Utility::normalizeDomain($configuredDomain), $normalizedCandidates, true)) {
                     $this->domainName = $configuredDomain;
