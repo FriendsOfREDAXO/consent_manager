@@ -1,5 +1,8 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.8 - 02.07.2026
+- **Fix Import einer json Settings Datei funktioniert jetzt
+
 ## Version 5.6.7 - 15.06.2026
 
 - **Fix (Mehrsprachigkeit/Reinstall):** Beim Deinstallieren werden jetzt alle Addon-Konfigurationswerte entfernt. Dadurch wird nach Neuinstallation die Initialisierung für bestehende Nicht-Startsprachen wieder korrekt ausgeführt und Gruppen/Dienste sind vollständig vorhanden.
