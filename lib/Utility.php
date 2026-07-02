@@ -10,7 +10,10 @@ use rex_sql;
 use function count;
 use function is_array;
 use function is_string;
+use function ltrim;
+use function strtolower;
 use function strlen;
+use function trim;
 
 class Utility
 {
@@ -44,12 +47,19 @@ class Utility
         $db = rex_sql::factory();
         $db->setDebug(false);
 
-        // Check host
-        // TODO: setTable/setWhere/select
-        $db->prepareQuery('SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` = :uid');
-        $dbresult = $db->execute(['uid' => rex_request::server('HTTP_HOST')]);
-        if (1 === $dbresult->getRows()) {
-            $domain = $dbresult->getValue('id');
+        $hostVariants = self::getDomainVariants((string) rex_request::server('HTTP_HOST'));
+        if ([] === $hostVariants) {
+            return false;
+        }
+
+        $placeholders = implode(', ', array_fill(0, count($hostVariants), '?'));
+        $db->setQuery(
+            'SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` IN (' . $placeholders . ') LIMIT 1',
+            $hostVariants,
+        );
+
+        if (1 === $db->getRows()) {
+            $domain = $db->getValue('id');
             // Check domain in cookie group
             $db->prepareQuery('SELECT count(*) as `count` FROM `' . rex::getTable('consent_manager_cookiegroup') . '` WHERE `domain` LIKE :domain AND `clang_id` = :clang AND `cookie` != \'\'');
             $dbresult = $db->execute(['domain' => '%|' . $domain . '|%', 'clang' => rex_clang::getCurrentId()]);
@@ -72,9 +82,61 @@ class Utility
         $dominfo = self::get_domaininfo('https://' . rex_request::server('HTTP_HOST'));
         // Return full hostname including subdomain (DSGVO requirement)
         if ('' < $dominfo['subdomain']) {
-            return strtolower($dominfo['subdomain'] . '.' . $dominfo['domain']);
+            return self::normalizeDomain($dominfo['subdomain'] . '.' . $dominfo['domain']);
         }
-        return strtolower($dominfo['domain']);
+        return self::normalizeDomain($dominfo['domain']);
+    }
+
+    /**
+     * @api
+     * @return array<int, string>
+     */
+    public static function getDomainVariants(string $domain): array
+    {
+        $host = self::extractHost($domain);
+        if ('' === $host) {
+            return [];
+        }
+
+        $variants = [$host];
+        $asciiHost = self::normalizeDomain($host);
+        if ('' !== $asciiHost) {
+            $variants[] = $asciiHost;
+        }
+
+        if (function_exists('idn_to_utf8')) {
+            $utf8Host = idn_to_utf8($host, IDNA_DEFAULT);
+            if (is_string($utf8Host) && '' !== $utf8Host) {
+                $variants[] = strtolower($utf8Host);
+            }
+
+            $utf8AsciiHost = idn_to_utf8($asciiHost, IDNA_DEFAULT);
+            if (is_string($utf8AsciiHost) && '' !== $utf8AsciiHost) {
+                $variants[] = strtolower($utf8AsciiHost);
+            }
+        }
+
+        return array_values(array_unique(array_filter($variants)));
+    }
+
+    /**
+     * @api
+     */
+    public static function normalizeDomain(string $domain): string
+    {
+        $host = self::extractHost($domain);
+        if ('' === $host) {
+            return '';
+        }
+
+        if (function_exists('idn_to_ascii')) {
+            $asciiHost = idn_to_ascii($host, IDNA_DEFAULT);
+            if (is_string($asciiHost) && '' !== $asciiHost) {
+                return strtolower($asciiHost);
+            }
+        }
+
+        return $host;
     }
 
     /**
@@ -111,5 +173,22 @@ class Utility
             'host' => strtolower($host),     // Host auch in Kleinbuchstaben
             'tld' => strtolower($tld),       // TLD auch in Kleinbuchstaben
         ];
+    }
+
+    private static function extractHost(string $domain): string
+    {
+        $domain = trim($domain);
+        if ('' === $domain) {
+            return '';
+        }
+
+        $url = str_contains($domain, '://') ? $domain : 'https://' . $domain;
+        $host = parse_url($url, PHP_URL_HOST);
+        if (!is_string($host) || '' === $host) {
+            return '';
+        }
+
+        $host = strtolower($host);
+        return rtrim($host, '.');
     }
 }

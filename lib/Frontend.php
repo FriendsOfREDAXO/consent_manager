@@ -109,29 +109,30 @@ class Frontend
      */
     public function setDomain(string $domain)
     {
-        // Domain immer in Kleinbuchstaben normalisieren für den Lookup
-        $domain = Utility::hostname();
-
         $domains = ConsentManager::getDomains();
         if (empty($domains)) {
             return;
         }
 
-        // Zuerst exakte Domain suchen
-        if (isset($domains[$domain])) {
-            $this->domainName = $domain;
-        } else {
-            // Dann HTTP_HOST versuchen (für Fälle mit Port oder Subdomain)
-            $httpHost = strtolower(rex_request::server('HTTP_HOST'));
-            if (isset($domains[$httpHost])) {
-                $this->domainName = $httpHost;
-            } else {
-                // Domain ohne Port versuchen
-                $httpHostNoPort = preg_replace('/:\d+$/', '', $httpHost);
-                if (isset($domains[$httpHostNoPort])) {
-                    $this->domainName = $httpHostNoPort;
-                } else {
-                    return;
+        $domainCandidates = array_merge(
+            Utility::getDomainVariants($domain),
+            Utility::getDomainVariants(Utility::hostname()),
+            Utility::getDomainVariants((string) rex_request::server('HTTP_HOST')),
+        );
+
+        foreach ($domainCandidates as $candidate) {
+            if (isset($domains[$candidate])) {
+                $this->domainName = $candidate;
+                break;
+            }
+        }
+
+        if ('' === $this->domainName) {
+            $normalizedCandidates = array_unique(array_map([Utility::class, 'normalizeDomain'], $domainCandidates));
+            foreach (array_keys($domains) as $configuredDomain) {
+                if (in_array(Utility::normalizeDomain($configuredDomain), $normalizedCandidates, true)) {
+                    $this->domainName = $configuredDomain;
+                    break;
                 }
             }
         }
