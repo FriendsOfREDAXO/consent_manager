@@ -503,9 +503,9 @@ class RexFormSupport
      */
     public static function validateHostname(string $hostname): bool|string
     {
-        $host = parse_url('https://' . $hostname);
-        if (isset($host['scheme']) && isset($host['host']) && !isset($host['path'])) {
-            return filter_var($host['host'], FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
+        $normalizedHost = Utility::normalizeDomain($hostname);
+        if ('' !== $normalizedHost) {
+            return filter_var($normalizedHost, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
         }
         return false;
     }

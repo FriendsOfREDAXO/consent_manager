@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.9 - 02.07.2026
+
+- **Fix (IDN/Umlaut-Domains):** Domain-Eingaben wie `müller.de` werden nun durchgängig akzeptiert und intern robust gegen UTF-8-/Punycode-Varianten aufgelöst.
+- **Fix (Frontend/Auto-Inject/Debug):** Domain-Matching nutzt jetzt Variantenauflösung, sodass Konfigurationen auch dann greifen, wenn Request-Host und gespeicherte Domain in unterschiedlicher Schreibweise (Umlaut vs. `xn--...`) vorliegen.
+- **UX (Backend):** Domain-Hinweise in der Verwaltung präzisiert; Umlaut-Domains können direkt in der korrekten Schreibweise eingegeben werden.
+
 ## Version 5.6.8 - 02.07.2026
 - **Fix Import einer json Settings Datei funktioniert jetzt
 

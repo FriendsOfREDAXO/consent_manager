@@ -2,6 +2,7 @@
 
 namespace FriendsOfRedaxo\ConsentManager\Api;
 
+use FriendsOfRedaxo\ConsentManager\Utility;
 use rex;
 use rex_api_function;
 use rex_request;
@@ -32,12 +33,14 @@ class ConsentManager extends rex_api_function
             exit;
         }
 
+        $normalizedDomain = Utility::normalizeDomain($domain);
+
         // Security: Validate domain format (basic hostname validation)
         // Only allow valid hostname characters and limit length (DNS max = 255)
-        if (strlen($domain) > 255) {
+        if ('' === $normalizedDomain || strlen($normalizedDomain) > 255) {
             exit;
         }
-        if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]$/', $domain) && !preg_match('/^[a-zA-Z0-9]$/', $domain)) {
+        if (false === filter_var($normalizedDomain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
             exit;
         }
 
@@ -98,7 +101,7 @@ class ConsentManager extends rex_api_function
             $db = rex_sql::factory();
             $db->setTable(rex::getTable('consent_manager_consent_log'));
             // Domain in Kleinbuchstaben normalisieren beim Speichern ins Log
-            $db->setValue('domain', strtolower($domain));
+            $db->setValue('domain', $normalizedDomain);
             $db->setValue('consentid', $consentid);
             // Use validated consents only (prevents XSS via malicious consent values)
             $db->setValue('consents', json_encode($validatedConsents));

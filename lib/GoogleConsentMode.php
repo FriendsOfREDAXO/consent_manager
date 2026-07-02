@@ -66,10 +66,10 @@ class GoogleConsentMode
      */
     public static function getDomainConfig(string $domain): array
     {
-        // Domain in Kleinbuchstaben normalisieren für den Lookup
-        $domain = strtolower($domain);
+        $resolvedDomain = Utility::resolveConfiguredDomainKey(ConsentManager::getDomains(), $domain);
+        $lookupDomain = '' !== $resolvedDomain ? $resolvedDomain : strtolower($domain);
 
-        $domainData = ConsentManager::getDomain($domain);
+        $domainData = ConsentManager::getDomain($lookupDomain);
         $mode = 'disabled';
 
         if (is_array($domainData) && count($domainData) > 0) {
@@ -81,7 +81,7 @@ class GoogleConsentMode
             'auto_mapping' => 'auto' === $mode,
             'mode' => $mode,
             'default_state' => 'denied', // GDPR-konform immer denied als Default
-            'domain' => $domain,
+            'domain' => $lookupDomain,
             'flags' => self::$defaultConsentFlags,
         ];
     }

@@ -112,10 +112,7 @@ if ('delete' === $func) {
     $field->setLabel(count($yrewriteDomains) > 0 && !$form->isEditMode() ? '<small class="text-muted">Oder eigene Domain eingeben:</small>' : rex_i18n::msg('consent_manager_domain'));
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_empty_msg'));
     $field->getValidator()->add('custom', rex_i18n::msg('consent_manager_domain_malformed_msg'), RexFormSupport::validateHostname(...));
-    $field->getValidator()->add('custom', 'Domain muss in Kleinbuchstaben eingegeben werden (z.B. "example.com" statt "Example.com")', static function ($value) {
-        return RexFormSupport::validateLowercase($value);
-    });
-    $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
+    $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com" oder "müller.de"). Umlaut-Domains werden intern automatisch kompatibel verarbeitet.');
     $field->setAttribute('id', 'domain-uid-field');
 
     $domainPanelEnd = '

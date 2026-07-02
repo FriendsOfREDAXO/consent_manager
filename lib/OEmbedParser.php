@@ -223,14 +223,23 @@ class OEmbedParser
             return $defaultConfig;
         }
 
+        $domainVariants = Utility::getDomainVariants($domain);
+        if ([] === $domainVariants) {
+            return $defaultConfig;
+        }
+
         try {
             $sql = rex_sql::factory();
-            // TODO: Query ändern in setTable/setWhere/select
+            $placeholders = implode(', ', array_fill(0, count($domainVariants), '?'));
+            $orderPlaceholders = implode(', ', array_fill(0, count($domainVariants), '?'));
+
             $sql->setQuery('
                 SELECT oembed_enabled, oembed_video_width, oembed_video_height, oembed_show_allow_all
                 FROM ' . rex::getTable('consent_manager_domain') . '
-                WHERE uid = ?
-            ', [$domain]);
+                WHERE uid IN (' . $placeholders . ')
+                ORDER BY FIELD(uid, ' . $orderPlaceholders . ')
+                LIMIT 1
+            ', array_merge($domainVariants, $domainVariants));
 
             if ($sql->getRows() > 0) {
                 $dbConfig = [
@@ -250,8 +259,9 @@ class OEmbedParser
         $addon = rex_addon::get('consent_manager');
         $domainConfigs = $addon->getProperty('oembed_domain_configs', []);
 
-        if (isset($domainConfigs[$domain])) {
-            return array_merge($defaultConfig, $domainConfigs[$domain]);
+        $resolvedDomain = Utility::resolveConfiguredDomainKey(is_array($domainConfigs) ? $domainConfigs : [], $domain);
+        if ('' !== $resolvedDomain && isset($domainConfigs[$resolvedDomain])) {
+            return array_merge($defaultConfig, $domainConfigs[$resolvedDomain]);
         }
 
         return $defaultConfig;
