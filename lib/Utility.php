@@ -48,13 +48,15 @@ class Utility
         $db->setDebug(false);
 
         $hostVariants = self::getDomainVariants((string) rex_request::server('HTTP_HOST'));
-        if ([] !== $hostVariants) {
-            $placeholders = implode(', ', array_fill(0, count($hostVariants), '?'));
-            $db->setQuery(
-                'SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` IN (' . $placeholders . ') LIMIT 1',
-                $hostVariants,
-            );
+        if ([] === $hostVariants) {
+            return false;
         }
+
+        $placeholders = implode(', ', array_fill(0, count($hostVariants), '?'));
+        $db->setQuery(
+            'SELECT `id` FROM `' . rex::getTable('consent_manager_domain') . '` WHERE `uid` IN (' . $placeholders . ') LIMIT 1',
+            $hostVariants,
+        );
 
         if (1 === $db->getRows()) {
             $domain = $db->getValue('id');
