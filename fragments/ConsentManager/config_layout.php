@@ -218,7 +218,7 @@ $hasDomains = (int) $sql->getValue('cnt') > 0;
                     <p><?= rex_i18n::msg('consent_manager_config_import_desc') ?></p>
                     <form action="<?= rex_url::currentBackendPage() ?>" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="func" value="import_json" />
-                        <?= rex_csrf_token::factory('consent_manager_config')->getHiddenField() ?>
+                        <?= rex_csrf_token::factory(\FriendsOfRedaxo\ConsentManager\Config::class)->getHiddenField() ?>
                         <div class="form-group">
                             <input type="file" class="form-control" id="import_file" name="import_file" accept=".json" required>
                         </div>
