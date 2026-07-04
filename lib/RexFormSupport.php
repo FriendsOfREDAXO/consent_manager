@@ -504,8 +504,8 @@ class RexFormSupport
     public static function validateHostname(string $hostname): bool|string
     {
         $trimmed = trim($hostname);
-        // Reject input that contains a protocol, path, query string, fragment, or userinfo –
-        // only a plain hostname (with optional port) is acceptable.
+        // Reject input that contains a protocol, path, query string, fragment, or userinfo.
+        // Only a plain hostname is acceptable (e.g. "example.com" or "müller.de").
         if (
             false !== strpos($trimmed, '://') ||
             false !== strpos($trimmed, '/') ||
