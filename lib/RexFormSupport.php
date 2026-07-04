@@ -503,7 +503,19 @@ class RexFormSupport
      */
     public static function validateHostname(string $hostname): bool|string
     {
-        $normalizedHost = Utility::normalizeDomain($hostname);
+        $trimmed = trim($hostname);
+        // Reject input that contains a protocol, path, query string, fragment, or userinfo –
+        // only a plain hostname (with optional port) is acceptable.
+        if (
+            false !== strpos($trimmed, '://') ||
+            false !== strpos($trimmed, '/') ||
+            false !== strpos($trimmed, '?') ||
+            false !== strpos($trimmed, '#') ||
+            false !== strpos($trimmed, '@')
+        ) {
+            return false;
+        }
+        $normalizedHost = Utility::normalizeDomain($trimmed);
         if ('' !== $normalizedHost) {
             return filter_var($normalizedHost, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
         }

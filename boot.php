@@ -233,7 +233,7 @@ if (rex::isFrontend()) {
 
         $sql = rex_sql::factory();
         $sql->setQuery(
-            'SELECT auto_inject, auto_inject_reload_on_consent, auto_inject_delay, auto_inject_focus, auto_inject_include_templates 
+            'SELECT uid, auto_inject, auto_inject_reload_on_consent, auto_inject_delay, auto_inject_focus, auto_inject_include_templates 
              FROM ' . rex::getTable('consent_manager_domain') . ' 
              WHERE uid IN (' . $inPlaceholders . ')
              ORDER BY FIELD(uid, ' . $orderPlaceholders . ')

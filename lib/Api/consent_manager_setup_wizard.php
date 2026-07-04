@@ -162,9 +162,9 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             $domain = substr($domain, 0, $pos);
         }
 
-            $variants = Utility::getDomainVariants($domain);
+        $variants = Utility::getDomainVariants($domain);
 
-            return $variants[0] ?? '';
+        return $variants[0] ?? '';
     }
 
     /**
