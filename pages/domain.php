@@ -112,7 +112,7 @@ if ('delete' === $func) {
     $field->setLabel(count($yrewriteDomains) > 0 && !$form->isEditMode() ? '<small class="text-muted">Oder eigene Domain eingeben:</small>' : rex_i18n::msg('consent_manager_domain'));
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_empty_msg'));
     $field->getValidator()->add('custom', rex_i18n::msg('consent_manager_domain_malformed_msg'), RexFormSupport::validateHostname(...));
-    $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com" oder "müller.de"). Umlaut-Domains werden intern automatisch in Punycode umgewandelt, sofern die PHP-Erweiterung "intl" verfügbar ist. Ohne "intl" müssen Umlaut-Domains manuell in Punycode (z.B. "xn--mller-kva.de") eingegeben werden.');
+    $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com" oder "müller.de"). Umlaut-Domains werden intern automatisch in Punycode umgewandelt (z.B. "xn--mller-kva.de").');
     $field->setAttribute('id', 'domain-uid-field');
 
     $domainPanelEnd = '
