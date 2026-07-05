@@ -12,6 +12,7 @@ Der Consent Manager bietet eine DSGVO-konforme Lösung für die Einholung und Ve
 - Flexible Gruppierung von Diensten
 - Nachträgliche Änderung der Einstellungen durch Besucher
 - Mehrsprachig und Multi-Domain-fähig
+- IDN-/Umlaut-Domains werden robust unterstützt (UTF-8/Punycode)
 - Automatische Frontend-Einbindung (Auto-Inject)
 - Inline-Consent für Embeds (YouTube, Vimeo, Maps etc.)
 - Google Consent Mode v2
