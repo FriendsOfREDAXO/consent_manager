@@ -1,5 +1,12 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.10 - 05.07.2026
+
+- **Fix (IDN/Domain-Matching):** Domain-Abgleich wurde über Variantenauflösung stabilisiert (UTF-8/Punycode), damit gespeicherte und angefragte Hosts zuverlässig zusammenfinden.
+- **Fix (Backend-Validierung):** Hostname-Validierung akzeptiert nur noch echte Hostnamen und weist URLs mit Protokoll, Pfad, Query, Fragment oder Userinfo konsequent ab.
+- **Fix (Domain-Setup):** Domain-Bereinigung im Setup-Wizard nutzt dieselbe Normalisierungslogik wie der Rest des Addons und speichert konsistente Domainwerte.
+- **UX (Backend):** Domain-Hinweistext aktualisiert: Umlaut-Domains koennen direkt eingegeben werden; interne Punycode-Umwandlung wird transparent kommuniziert.
+
 ## Version 5.6.9 - 02.07.2026
 
 - **Fix (IDN/Umlaut-Domains):** Domain-Eingaben wie `müller.de` werden nun durchgängig akzeptiert und intern robust gegen UTF-8-/Punycode-Varianten aufgelöst.
