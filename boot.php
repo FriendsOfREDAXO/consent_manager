@@ -184,12 +184,21 @@ if (rex::isFrontend()) {
 
         // delete server-side (works also for HttpOnly cookies)
         if ($mustDelete) {
-            $host = $_SERVER['HTTP_HOST'] ?? '';
+            $host = Utility::normalizeDomain((string) rex_request::server('HTTP_HOST', 'string', ''));
             $secure = (!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS']);
-            // expire for current host/path
-            setcookie($cookieName, '', time() - 3600, '/', $host, $secure, true);
-            // also try shorter flags (some older cookies may differ)
-            setcookie($cookieName, '', time() - 3600, '/', $host, $secure, false);
+
+            // Expire host-only cookie and explicit domain variants for robust cleanup.
+            $cookieDomains = [''];
+            if ('' !== $host) {
+                $cookieDomains[] = $host;
+                $cookieDomains[] = '.' . ltrim($host, '.');
+            }
+
+            foreach (array_unique($cookieDomains) as $cookieDomain) {
+                // expire for current host/path (HttpOnly + non-HttpOnly legacy variant)
+                setcookie($cookieName, '', time() - 3600, '/', $cookieDomain, $secure, true);
+                setcookie($cookieName, '', time() - 3600, '/', $cookieDomain, $secure, false);
+            }
         }
 
         // set sentinel to avoid repeating this check for this visitor
