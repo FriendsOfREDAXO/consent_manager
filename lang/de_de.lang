@@ -62,6 +62,7 @@ consent_manager_cookie_duplicated_edit_uid_desc = Bitte ändern Sie <strong>sofo
 consent_manager_cookie_duplicated_edit_uid = Dienst wurde dupliziert. Bitte ändern Sie jetzt die UID, damit keine Duplikate mit gleichem Schlüssel existieren!
 consent_manager_cookie_duplicate_error = Fehler beim Duplizieren des Dienstes
 consent_manager_cookie_not_found = Dienst nicht gefunden
+consent_manager_cookie_duplicates_cleaned = Es wurden {0} doppelte Diensteinträge (gleiche UID in derselben Sprache) automatisch bereinigt.
 
 consent_manager_cookiegroups = Gruppen
 consent_manager_cookiegroup_add = Gruppe erstellen

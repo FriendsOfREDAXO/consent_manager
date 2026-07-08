@@ -11,6 +11,52 @@ $csrf = rex_csrf_token::factory('consent_manager_cookie');
 $clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3) ?? '');
 $table = rex::getTable('consent_manager_cookie');
 $msg = '';
+
+$cleanupDuplicatesByUid = static function (string $tableName, int $clangId): int {
+    $duplicateSql = rex_sql::factory();
+    $duplicateSql->setQuery(
+        'SELECT uid FROM ' . $tableName . ' WHERE clang_id = ? GROUP BY uid HAVING COUNT(*) > 1',
+        [$clangId],
+    );
+
+    $deletedRows = 0;
+    foreach ($duplicateSql->getArray() as $duplicate) {
+        $uid = (string) ($duplicate['uid'] ?? '');
+        if ('' === $uid) {
+            continue;
+        }
+
+        $rowsSql = rex_sql::factory();
+        $rowsSql->setQuery('SELECT pid FROM ' . $tableName . ' WHERE clang_id = ? AND uid = ? ORDER BY pid ASC', [$clangId, $uid]);
+        $rows = $rowsSql->getArray();
+        if (count($rows) <= 1) {
+            continue;
+        }
+
+        $deletePids = [];
+        foreach ($rows as $index => $row) {
+            if (0 === $index) {
+                continue;
+            }
+            $deletePids[] = (int) $row['pid'];
+        }
+
+        if ([] !== $deletePids) {
+            $deleteSql = rex_sql::factory();
+            $deleteSql->setQuery('DELETE FROM ' . $tableName . ' WHERE pid IN (' . implode(',', $deletePids) . ')');
+            $deletedRows += count($deletePids);
+        }
+    }
+
+    return $deletedRows;
+};
+
+$deletedDuplicates = $cleanupDuplicatesByUid($table, $clang_id);
+if ($deletedDuplicates > 0) {
+    Cache::forceWrite();
+    $msg .= rex_view::warning(rex_i18n::msg('consent_manager_cookie_duplicates_cleaned', $deletedDuplicates));
+}
+
 if ('delete' === $func) {
     $msg = CLang::deleteCookie($pid);
     Cache::forceWrite();
@@ -110,16 +156,25 @@ if ('delete' === $func) {
     if ($form->isEditMode() && rex_clang::count() > 1) {
         // Sprach-Switcher für alle Services außer consent_manager (System-Cookie)
         if ('consent_manager' !== $form->getSql()->getValue('uid')) {
+            $currentUid = (string) $form->getSql()->getValue('uid');
             $languageSwitcher = '<div class="alert alert-info" style="margin: 15px 0;">';
             $languageSwitcher .= '<i class="rex-icon fa-language"></i> <strong>' . rex_i18n::msg('consent_manager_cookie_multilang_title') . '</strong><br>';
-            $languageSwitcher .= '<small>' . rex_i18n::msg('consent_manager_cookie_multilang_desc', rex_i18n::rawMsg(rex_clang::get(rex_clang::getStartId())->getName())) . '</small><br><br>';
+            $languageSwitcher .= '<small>' . rex_i18n::msg('consent_manager_cookie_multilang_desc', rex_clang::get(rex_clang::getStartId())->getName()) . '</small><br><br>';
             $languageSwitcher .= '<div class="btn-group" role="group">';
 
             foreach (rex_clang::getAll() as $clang) {
                 $clangId = $clang->getId();
                 $isActive = $clangId === $clang_id ? 'btn-primary active' : 'btn-primary';
                 $icon = $clangId === rex_clang::getStartId() ? '<i class="rex-icon fa-star"></i> ' : '';
-                $url = rex_url::currentBackendPage(['func' => 'edit', 'pid' => $pid, 'page' => 'consent_manager/cookie/clang' . $clangId]);
+                $targetPid = $pid;
+                if ($clangId !== $clang_id) {
+                    $targetSql = rex_sql::factory();
+                    $targetSql->setQuery('SELECT pid FROM ' . $table . ' WHERE uid = ? AND clang_id = ? ORDER BY pid ASC LIMIT 1', [$currentUid, $clangId]);
+                    if ($targetSql->getRows() > 0) {
+                        $targetPid = (int) $targetSql->getValue('pid');
+                    }
+                }
+                $url = rex_url::currentBackendPage(['func' => 'edit', 'pid' => $targetPid, 'page' => 'consent_manager/cookie/clang' . $clangId]);
                 $languageSwitcher .= '<a href="' . $url . '" class="btn ' . $isActive . ' btn-sm">' . $icon . rex_escape($clang->getName()) . '</a>';
             }
 
@@ -129,7 +184,7 @@ if ('delete' === $func) {
 
             // Fallback-Hinweis für Nicht-Start-Sprachen (bezieht sich auf alle Felder)
             if ($clang_id !== rex_clang::getStartId()) {
-                $startLangName = rex_i18n::rawMsg(rex_clang::get(rex_clang::getStartId())->getName());
+                $startLangName = rex_clang::get(rex_clang::getStartId())->getName();
                 $fallbackNotice = '<div class="alert alert-warning"><i class="rex-icon fa-info-circle"></i> ' .
                     rex_i18n::msg('consent_manager_cookie_fallback_notice', $startLangName) . '</div>';
                 $field = $form->addRawField($fallbackNotice);

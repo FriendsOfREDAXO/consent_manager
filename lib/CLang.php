@@ -318,9 +318,15 @@ class CLang
             if ($form->getSql()->getValue('clang_id') === $clangId) {
                 continue;
             }
+
+            $datasetUid = trim((string) $form->getSql()->getValue('uid'));
             $db = rex_sql::factory();
             $db->setTable($form->getTableName());
-            $db->setWhere('clang_id = :clang_id AND id = :id', ['clang_id' => $clangId, 'id' => $form->getSql()->getValue('id')]);
+            if ('' !== $datasetUid) {
+                $db->setWhere('clang_id = :clang_id AND uid = :uid', ['clang_id' => $clangId, 'uid' => $datasetUid]);
+            } else {
+                $db->setWhere('clang_id = :clang_id AND id = :id', ['clang_id' => $clangId, 'id' => $form->getSql()->getValue('id')]);
+            }
             foreach ($fields2Update as $v) {
                 $db->setValue($v, $newValues[$v]);
             }

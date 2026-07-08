@@ -432,6 +432,7 @@ consent_manager_import_minimal_update_success = Minimal setup update successful 
 consent_manager_import_minimal_update_error = Minimal setup update failed: {0}
 consent_manager_import_standard_update_success = Standard setup update successful - only new services added, existing unchanged
 consent_manager_import_standard_update_error = Standard setup update failed: {0}
+consent_manager_cookie_duplicates_cleaned = {0} duplicate service entries (same UID in the same language) were cleaned up automatically.
 consent_manager_quickstart_status_final = Completion
 
 # Inline Consent Settings

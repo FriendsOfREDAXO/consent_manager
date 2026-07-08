@@ -247,23 +247,28 @@ class JsonSetup
      */
     private static function importCookieGroups(array $cookiegroups, string $mode = 'replace'): void
     {
+        $seenByClangUid = [];
         foreach ($cookiegroups as $group) {
             if (!isset($group['uid'])) {
                 continue;
             }
 
             $clangId = (int) ($group['clang_id'] ?? rex_clang::getStartId());
+            $uid = (string) $group['uid'];
+            if (isset($seenByClangUid[$clangId][$uid])) {
+                continue;
+            }
+            $seenByClangUid[$clangId][$uid] = true;
+
+            // IDs aus dem Import sind bewusst irrelevant: interne Dataset-ID wird immer aus uid abgeleitet.
+            $group['id'] = self::resolveDatasetIdByUid('consent_manager_cookiegroup', $uid);
 
             // Check if group already exists
-            $existingGroup = self::findExistingCookieGroup((string) $group['uid'], $clangId);
+            $existingGroup = self::findExistingCookieGroup($uid, $clangId);
 
             // Decide action based on mode
             if ('update' === $mode && is_array($existingGroup)) {
                 continue; // Skip existing groups in update mode
-            }
-            // Adjust ID if it conflicts in update mode
-            if ('update' === $mode && isset($group['id']) && self::idExistsInTable('consent_manager_cookiegroup', $group['id'])) {
-                $group['id'] = self::getNextAvailableId('consent_manager_cookiegroup');
             }
             // Insert new group (replace mode or new group)
             self::insertCookieGroup($group);
@@ -277,23 +282,28 @@ class JsonSetup
      */
     private static function importCookies(array $cookies, string $mode = 'replace'): void
     {
+        $seenByClangUid = [];
         foreach ($cookies as $cookie) {
             if (!isset($cookie['uid'])) {
                 continue;
             }
 
             $clangId = (int) ($cookie['clang_id'] ?? rex_clang::getStartId());
+            $uid = (string) $cookie['uid'];
+            if (isset($seenByClangUid[$clangId][$uid])) {
+                continue;
+            }
+            $seenByClangUid[$clangId][$uid] = true;
+
+            // IDs aus dem Import sind bewusst irrelevant: interne Dataset-ID wird immer aus uid abgeleitet.
+            $cookie['id'] = self::resolveDatasetIdByUid('consent_manager_cookie', $uid);
 
             // Check if cookie already exists
-            $existingCookie = self::findExistingCookie((string) $cookie['uid'], $clangId);
+            $existingCookie = self::findExistingCookie($uid, $clangId);
 
             // Decide action based on mode
             if ('update' === $mode && is_array($existingCookie)) {
                 continue; // Skip existing cookies in update mode
-            }
-            // Adjust ID if it conflicts in update mode
-            if ('update' === $mode && isset($cookie['id']) && self::idExistsInTable('consent_manager_cookie', $cookie['id'])) {
-                $cookie['id'] = self::getNextAvailableId('consent_manager_cookie');
             }
             // Insert new cookie (replace mode or new cookie)
             self::insertCookie($cookie);
@@ -307,21 +317,28 @@ class JsonSetup
      */
     private static function importTexts(array $texts, string $mode = 'replace'): void
     {
+        $seenByClangUid = [];
         foreach ($texts as $text) {
             if (!isset($text['uid'])) {
                 continue;
             }
 
+            $clangId = (int) ($text['clang_id'] ?? rex_clang::getStartId());
+            $uid = (string) $text['uid'];
+            if (isset($seenByClangUid[$clangId][$uid])) {
+                continue;
+            }
+            $seenByClangUid[$clangId][$uid] = true;
+
+            // IDs aus dem Import sind bewusst irrelevant: interne Dataset-ID wird immer aus uid abgeleitet.
+            $text['id'] = self::resolveDatasetIdByUid('consent_manager_text', $uid);
+
             // Check if text already exists
-            $existingText = self::findExistingText($text['uid'], $text['clang_id'] ?? 1);
+            $existingText = self::findExistingText($uid, $clangId);
 
             // Decide action based on mode
             if ('update' === $mode && is_array($existingText)) {
                 continue; // Skip existing texts in update mode
-            }
-            // Adjust ID if it conflicts in update mode
-            if ('update' === $mode && isset($text['id']) && self::idExistsInTable('consent_manager_text', $text['id'])) {
-                $text['id'] = self::getNextAvailableId('consent_manager_text');
             }
             // Insert new text (replace mode or new text)
             self::insertText($text);
@@ -465,6 +482,23 @@ class JsonSetup
         $sql->setQuery('SELECT MAX(id) as max_id FROM ' . rex::getTable($table));
         $maxId = (int) ($sql->getValue('max_id') ?? 0);
         return $maxId + 1;
+    }
+
+    /**
+     * @param non-empty-string $table
+     */
+    private static function resolveDatasetIdByUid(string $table, string $uid): int
+    {
+        $sql = rex_sql::factory();
+        $sql->setQuery('SELECT id FROM ' . rex::getTable($table) . ' WHERE uid = ? ORDER BY id ASC LIMIT 1', [$uid]);
+        if ($sql->getRows() > 0) {
+            $existingId = (int) ($sql->getValue('id') ?? 0);
+            if ($existingId > 0) {
+                return $existingId;
+            }
+        }
+
+        return self::getNextAvailableId($table);
     }
 
     /**

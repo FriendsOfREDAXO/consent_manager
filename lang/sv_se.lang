@@ -411,6 +411,7 @@ consent_manager_import_minimal_update_success = Minimal setup-uppdatering lyckad
 consent_manager_import_minimal_update_error = Minimal setup-uppdatering misslyckades: {0}
 consent_manager_import_standard_update_success = Standard setup-uppdatering lyckades - endast nya tjänster tillagda, befintliga oförändrade
 consent_manager_import_standard_update_error = Standard setup-uppdatering misslyckades: {0}
+consent_manager_cookie_duplicates_cleaned = {0} dubbla tjänsteposter (samma UID i samma språk) rensades automatiskt.
 consent_manager_quickstart_status_final = Slutförande
 
 # Inline Consent-inställningar
