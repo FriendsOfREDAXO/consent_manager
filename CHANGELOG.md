@@ -8,6 +8,15 @@
 - **Fix (Cookie-Migration/Cleanup):** Serverseitiges Löschen alter Consent-Cookies nutzt jetzt normalisierte Domain-Varianten (inkl. host-only und Punkt-Präfix), damit Bereinigung auch bei IDN/Host-Edge-Cases zuverlässig greift.
 - **Fix (Backend/YRewrite):** YRewrite-Domainauswahl verwendet die zentrale Variantenauflösung für UTF-8/Punycode und vermeidet dadurch inkonsistente Duplikate.
 - **UX (Backend):** Domain-Hinweistext aktualisiert: Umlaut-Domains koennen direkt eingegeben werden; interne Punycode-Umwandlung wird transparent kommuniziert.
+- **Fix (Mehrsprachigkeit/Sync):** Sprachdatensätze werden beim Anlegen/Sync idempotent ergänzt (fehlende Sprachen), ohne bestehende Sprachzeilen erneut zu duplizieren.
+- **Fix (Mehrsprachigkeit/Datensatz-Zuordnung):** Sprachübergreifende Zuordnung und Updates erfolgen konsistent über `uid` (Fallback `id`), damit kollidierende Import-IDs keine falschen Sprachdatensätze überschreiben.
+- **Fix (Backend-Sprachwechsel Dienste):** Sprach-Switcher auf der Dienste-Editseite löst die Ziel-`pid` pro `uid + clang_id` auf, sodass Bearbeitungen in Nicht-Startsprachen nicht mehr auf dem falschen Datensatz landen.
+- **Fix (Import/JSON):** Import ignoriert externe Datensatz-IDs für Dienste/Gruppen/Texte und leitet interne IDs stabil über `uid` ab; bei fehlendem Treffer wird robust eine neue ID vergeben.
+- **Fix (Import/JSON-Dedupe):** In einem Import-Payload werden doppelte Einträge pro `clang_id + uid` verworfen, um Dubletten durch fehlerhafte Setup-Dateien zu verhindern.
+- **Fix (Setup-Daten):** Korrigierte doppelte Dienst-ID im Standard-Setup (`matomo-self-hosted`/`google-analytics-4`), um inkonsistente Zuordnung nach frischem Import zu vermeiden.
+- **UX (Mehrsprachigkeit):** Sprach-Tabs zeigen Status-Badges mit Symbol/Farbe (Primär, Primärsprache, Teilweise, Übersetzt) zur schnelleren Orientierung.
+- **Feature (Config):** Neue Sprach-Sync-Aktion im Backend: fehlende Einträge aus Quellsprache in ausgewählte Zielsprachen und Bereiche (Gruppen, Dienste, Texte) ergänzen, ohne bestehende Übersetzungen zu überschreiben.
+- **Feature (Texte):** Manuelles Anlegen neuer Text-Keys wieder möglich (Add-Button + UID-Feld im Add-Modus).
 
 ## Version 5.6.9 - 02.07.2026
 
