@@ -23,9 +23,17 @@ if ('delete' === $func) {
     $form->addHiddenField('clang_id', $clang_id);
     RexFormSupport::getId($form, $table);
 
-    $field = $form->addReadOnlyField('uid_readonly', (string) $form->getSql()->getValue('uid'));
-    $field->setLabel(rex_i18n::msg('consent_manager_uid'));
-    $form->addHiddenField('uid', $form->getSql()->getValue('uid'));
+    if ($form->isEditMode()) {
+        $field = $form->addReadOnlyField('uid_readonly', (string) $form->getSql()->getValue('uid'));
+        $field->setLabel(rex_i18n::msg('consent_manager_uid'));
+        $form->addHiddenField('uid', $form->getSql()->getValue('uid'));
+    } else {
+        $field = $form->addTextField('uid');
+        $field->setLabel(rex_i18n::msg('consent_manager_uid_with_hint'));
+        $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_uid_empty_msg'));
+        $field->getValidator()->add('match', rex_i18n::msg('consent_manager_uid_malformed_msg'), '/^[a-z0-9-_]+$/');
+    }
+
     $field = $form->addTextAreaField('text');
     $field->setLabel(rex_i18n::msg('consent_manager_text'));
 
@@ -50,9 +58,9 @@ if ($showlist) {
     $list->removeColumn('pid');
 
     $tdIcon = '<i class="fa fa-coffee"></i>';
-    // $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
-    $list->addColumn('', $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
-    $list->setColumnParams('', ['func' => 'edit', 'pid' => '###pid###']);
+    $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
+    $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
+    $list->setColumnParams($thIcon, ['func' => 'edit', 'pid' => '###pid###']);
 
     $list->setColumnLabel('uid', rex_i18n::msg('consent_manager_uid'));
     $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);

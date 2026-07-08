@@ -5,6 +5,7 @@ namespace FriendsOfRedaxo\ConsentManager;
 use Exception;
 use rex;
 use rex_addon;
+use rex_clang;
 use rex_i18n;
 use rex_path;
 use rex_sql;
@@ -251,8 +252,10 @@ class JsonSetup
                 continue;
             }
 
+            $clangId = (int) ($group['clang_id'] ?? rex_clang::getStartId());
+
             // Check if group already exists
-            $existingGroup = self::findExistingCookieGroup($group['uid']);
+            $existingGroup = self::findExistingCookieGroup((string) $group['uid'], $clangId);
 
             // Decide action based on mode
             if ('update' === $mode && is_array($existingGroup)) {
@@ -279,8 +282,10 @@ class JsonSetup
                 continue;
             }
 
+            $clangId = (int) ($cookie['clang_id'] ?? rex_clang::getStartId());
+
             // Check if cookie already exists
-            $existingCookie = self::findExistingCookie($cookie['uid']);
+            $existingCookie = self::findExistingCookie((string) $cookie['uid'], $clangId);
 
             // Decide action based on mode
             if ('update' === $mode && is_array($existingCookie)) {
@@ -356,22 +361,22 @@ class JsonSetup
     /**
      * @return array<string, mixed>|null
      */
-    private static function findExistingCookieGroup(string $uid): ?array
+    private static function findExistingCookieGroup(string $uid, int $clangId): ?array
     {
         $sql = rex_sql::factory();
         // TODO: SQL-Abfrage auf setTable/setWhere/select umstellen
-        $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookiegroup') . ' WHERE uid = ?', [$uid]);
+        $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookiegroup') . ' WHERE uid = ? AND clang_id = ?', [$uid, $clangId]);
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
 
     /**
      * @return array<string, mixed>|null
      */
-    private static function findExistingCookie(string $uid): ?array
+    private static function findExistingCookie(string $uid, int $clangId): ?array
     {
         $sql = rex_sql::factory();
         // TODO: SQL-Abfrage auf setTable/setWhere/select umstellen
-        $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE uid = ?', [$uid]);
+        $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookie') . ' WHERE uid = ? AND clang_id = ?', [$uid, $clangId]);
         return $sql->getRows() > 0 ? $sql->getRow() : null;
     }
 

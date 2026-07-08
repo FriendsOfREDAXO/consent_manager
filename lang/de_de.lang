@@ -293,6 +293,24 @@ consent_manager_config_export_button = JSON exportieren
 consent_manager_config_import_title = JSON-Konfiguration importieren
 consent_manager_config_import_desc = Importieren Sie eine zuvor exportierte JSON-Konfiguration.
 consent_manager_config_import_button = JSON importieren
+consent_manager_sync_missing_title = Sprach-Sync (fehlende Einträge)
+consent_manager_sync_missing_desc = Übernimmt nur fehlende Einträge aus einer Quellsprache in ausgewählte Zielsprachen. Bestehende Übersetzungen bleiben unverändert.
+consent_manager_sync_missing_source = Quellsprache
+consent_manager_sync_missing_targets = Zielsprachen
+consent_manager_sync_missing_tables = Bereiche
+consent_manager_sync_missing_button = Fehlende Einträge synchronisieren
+consent_manager_sync_missing_confirm = Fehlende Einträge jetzt aus der Quellsprache in die ausgewählten Zielsprachen übernehmen?
+consent_manager_sync_missing_success = Sprach-Sync abgeschlossen. Neu angelegte Einträge: {0}
+consent_manager_sync_missing_nothing_to_do = Sprach-Sync: Es waren keine fehlenden Einträge zu ergänzen.
+consent_manager_sync_missing_no_targets = Sprach-Sync: Bitte mindestens eine Zielsprache auswählen.
+consent_manager_lang_status_primary = Primär
+consent_manager_lang_status_primary_fallback = Primärsprache
+consent_manager_lang_status_partial = Teilweise
+consent_manager_lang_status_translated = Übersetzt
+consent_manager_lang_status_badge_primary = <span class="label label-default" style="margin-left:4px;"><i class="fa fa-globe"></i> Primär</span>
+consent_manager_lang_status_badge_primary_fallback = <span class="label label-danger" style="margin-left:4px;"><i class="fa fa-globe"></i> Primärsprache</span>
+consent_manager_lang_status_badge_partial = <span class="label label-warning" style="margin-left:4px;"><i class="fa fa-globe"></i> Teilweise</span>
+consent_manager_lang_status_badge_translated = <span class="label label-success" style="margin-left:4px;"><i class="fa fa-globe"></i> Übersetzt</span>
 
 # Quickstart modal additional
 

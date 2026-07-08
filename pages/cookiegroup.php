@@ -1,5 +1,6 @@
 <?php
 
+use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 use FriendsOfRedaxo\ConsentManager\RexListSupport;
@@ -39,6 +40,10 @@ if ('delete' === $func) {
             $counter = 1;
             $newUid = $originalUid . '-copy';
 
+            $idSql = rex_sql::factory();
+            $idSql->setTable($table);
+            $newSql->setValue('id', $idSql->setNewId('id', 1));
+
             // Prüfen ob UID bereits existiert, dann Suffix erhöhen
             $checkSql = rex_sql::factory();
             while (true) {
@@ -58,6 +63,7 @@ if ('delete' === $func) {
             try {
                 $newSql->insert();
                 $newPid = $newSql->getLastId();
+                Cache::forceWrite();
 
                 // Zur Edit-Seite des neuen Eintrags weiterleiten mit Hinweis
                 $msg = rex_view::warning(rex_i18n::msg('consent_manager_cookiegroup_duplicated_edit_uid'));

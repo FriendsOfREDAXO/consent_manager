@@ -372,6 +372,24 @@ consent_manager_config_export_button = Exportera JSON
 consent_manager_config_import_title = Importera JSON-konfiguration
 consent_manager_config_import_desc = Importera en tidigare exporterad JSON-konfiguration.
 consent_manager_config_import_button = Importera JSON
+consent_manager_sync_missing_title = Språksynk (saknade poster)
+consent_manager_sync_missing_desc = Överför endast saknade poster från ett källspråk till valda målspråk. Befintliga översättningar lämnas oförändrade.
+consent_manager_sync_missing_source = Källspråk
+consent_manager_sync_missing_targets = Målspråk
+consent_manager_sync_missing_tables = Områden
+consent_manager_sync_missing_button = Synkronisera saknade poster
+consent_manager_sync_missing_confirm = Synkronisera saknade poster från källspråket till valda målspråk nu?
+consent_manager_sync_missing_success = Språksynk slutförd. Nyskapade poster: {0}
+consent_manager_sync_missing_nothing_to_do = Språksynk: Inga saknade poster behövde läggas till.
+consent_manager_sync_missing_no_targets = Språksynk: Välj minst ett målspråk.
+consent_manager_lang_status_primary = Primär
+consent_manager_lang_status_primary_fallback = Primärspråk
+consent_manager_lang_status_partial = Delvis
+consent_manager_lang_status_translated = Översatt
+consent_manager_lang_status_badge_primary = <span class="label label-default" style="margin-left:4px;"><i class="fa fa-globe"></i> Primär</span>
+consent_manager_lang_status_badge_primary_fallback = <span class="label label-danger" style="margin-left:4px;"><i class="fa fa-globe"></i> Primärspråk</span>
+consent_manager_lang_status_badge_partial = <span class="label label-warning" style="margin-left:4px;"><i class="fa fa-globe"></i> Delvis</span>
+consent_manager_lang_status_badge_translated = <span class="label label-success" style="margin-left:4px;"><i class="fa fa-globe"></i> Översatt</span>
 consent_manager_config_after_import_title = Efter setup-import:
 consent_manager_config_step_domains = 1. Konfigurera domän
 consent_manager_config_step_services = 2. Anpassa tjänster

@@ -18,6 +18,8 @@ $csrf = $this->getVar('csrf');
 $sql = rex_sql::factory();
 $sql->setQuery('SELECT COUNT(*) as cnt FROM ' . rex::getTable('consent_manager_domain'));
 $hasDomains = (int) $sql->getValue('cnt') > 0;
+$allClangs = rex_clang::getAll();
+$defaultSourceClangId = rex_clang::getStartId();
 
 ?>
 
@@ -186,6 +188,79 @@ $hasDomains = (int) $sql->getValue('cnt') > 0;
                             </a>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Sprach-Sync -->
+            <div class="panel panel-warning" style="margin-bottom: 15px;">
+                <header class="panel-heading">
+                    <div class="panel-title">
+                        <i class="rex-icon fa-language"></i> <?= rex_i18n::msg('consent_manager_sync_missing_title') ?>
+                    </div>
+                </header>
+                <div class="panel-body">
+                    <p><?= rex_i18n::msg('consent_manager_sync_missing_desc') ?></p>
+                    <form action="<?= rex_url::currentBackendPage() ?>" method="post">
+                        <input type="hidden" name="func" value="sync_missing_clang" />
+                        <?= rex_csrf_token::factory(\FriendsOfRedaxo\ConsentManager\Config::class)->getHiddenField() ?>
+
+                        <div class="form-group">
+                            <label for="cm-sync-source-clang"><?= rex_i18n::msg('consent_manager_sync_missing_source') ?></label>
+                            <select id="cm-sync-source-clang" name="source_clang_id" class="form-control">
+                                <?php foreach ($allClangs as $clang): ?>
+                                    <option value="<?= (int) $clang->getId() ?>"<?= (int) $clang->getId() === $defaultSourceClangId ? ' selected' : '' ?>>
+                                        <?= rex_escape($clang->getName()) ?>
+                                    </option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?= rex_i18n::msg('consent_manager_sync_missing_targets') ?></label>
+                            <div style="max-height: 120px; overflow: auto; border: 1px solid #ddd; padding: 8px 10px; border-radius: 4px;">
+                                <?php foreach ($allClangs as $clang): ?>
+                                    <?php $clangId = (int) $clang->getId(); ?>
+                                    <?php if ($clangId === $defaultSourceClangId) { continue; } ?>
+                                    <div class="checkbox" style="margin: 0 0 6px 0;">
+                                        <label>
+                                            <input type="checkbox" name="target_clang_ids[]" value="<?= $clangId ?>" checked>
+                                            <?= rex_escape($clang->getName()) ?>
+                                        </label>
+                                    </div>
+                                <?php endforeach ?>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?= rex_i18n::msg('consent_manager_sync_missing_tables') ?></label>
+                            <div style="border: 1px solid #ddd; padding: 8px 10px; border-radius: 4px;">
+                                <div class="checkbox" style="margin: 0 0 6px 0;">
+                                    <label>
+                                        <input type="checkbox" name="sync_tables[]" value="<?= rex_escape(rex::getTable('consent_manager_cookiegroup')) ?>" checked>
+                                        <?= rex_i18n::msg('consent_manager_cookiegroups') ?>
+                                    </label>
+                                </div>
+                                <div class="checkbox" style="margin: 0 0 6px 0;">
+                                    <label>
+                                        <input type="checkbox" name="sync_tables[]" value="<?= rex_escape(rex::getTable('consent_manager_cookie')) ?>" checked>
+                                        <?= rex_i18n::msg('consent_manager_cookies') ?>
+                                    </label>
+                                </div>
+                                <div class="checkbox" style="margin: 0;">
+                                    <label>
+                                        <input type="checkbox" name="sync_tables[]" value="<?= rex_escape(rex::getTable('consent_manager_text')) ?>" checked>
+                                        <?= rex_i18n::msg('consent_manager_text') ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('<?= rex_i18n::msg('consent_manager_sync_missing_confirm') ?>')">
+                                <i class="rex-icon fa-random"></i> <?= rex_i18n::msg('consent_manager_sync_missing_button') ?>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
             

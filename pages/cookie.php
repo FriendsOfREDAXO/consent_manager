@@ -39,6 +39,10 @@ if ('delete' === $func) {
             $counter = 1;
             $newUid = $originalUid . '-copy';
 
+            $idSql = rex_sql::factory();
+            $idSql->setTable($table);
+            $newSql->setValue('id', $idSql->setNewId('id', 1));
+
             // Prüfen ob UID bereits existiert, dann Suffix erhöhen
             $checkSql = rex_sql::factory();
             while (true) {

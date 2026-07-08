@@ -126,6 +126,67 @@ if ('' !== $func && !in_array($func, ['setup_minimal', 'setup_standard', 'setup_
             }
             exit;
         }
+        if ('sync_missing_clang' === $func) {
+            $sourceClangId = rex_request::post('source_clang_id', 'int', rex_clang::getStartId());
+            $targetClangIdsRaw = rex_request::post('target_clang_ids', 'array', []);
+            $syncTablesRaw = rex_request::post('sync_tables', 'array', []);
+
+            $targetClangIds = [];
+            foreach ((array) $targetClangIdsRaw as $targetClangIdRaw) {
+                $targetClangId = (int) $targetClangIdRaw;
+                if ($targetClangId > 0) {
+                    $targetClangIds[] = $targetClangId;
+                }
+            }
+
+            $allowedTables = Config::getTables(true);
+            $syncTables = [];
+            foreach ((array) $syncTablesRaw as $syncTableRaw) {
+                $syncTable = (string) $syncTableRaw;
+                if (in_array($syncTable, $allowedTables, true)) {
+                    $syncTables[] = $syncTable;
+                }
+            }
+
+            if ([] === $syncTables) {
+                $syncTables = $allowedTables;
+            }
+
+            if ([] === $targetClangIds) {
+                echo rex_view::error(rex_i18n::msg('consent_manager_sync_missing_no_targets'));
+            } else {
+                $syncResult = CLang::syncMissingFromSource($sourceClangId, $targetClangIds, $syncTables);
+                if ((int) $syncResult['inserted'] > 0) {
+                    $details = [];
+                    foreach ($syncResult['per_table'] as $tableName => $count) {
+                        if ((int) $count <= 0) {
+                            continue;
+                        }
+
+                        $label = $tableName;
+                        if ($tableName === rex::getTable('consent_manager_cookie')) {
+                            $label = rex_i18n::msg('consent_manager_cookies');
+                        } elseif ($tableName === rex::getTable('consent_manager_cookiegroup')) {
+                            $label = rex_i18n::msg('consent_manager_cookiegroups');
+                        } elseif ($tableName === rex::getTable('consent_manager_text')) {
+                            $label = rex_i18n::msg('consent_manager_text');
+                        }
+                        $details[] = rex_escape($label) . ': ' . (int) $count;
+                    }
+
+                    $detailText = '';
+                    if ([] !== $details) {
+                        $detailText = '<br><small>' . implode(' | ', $details) . '</small>';
+                    }
+
+                    echo rex_view::success(rex_i18n::msg('consent_manager_sync_missing_success', $syncResult['inserted']) . $detailText);
+                } else {
+                    echo rex_view::info(rex_i18n::msg('consent_manager_sync_missing_nothing_to_do'));
+                }
+            }
+
+            $redirectUrlAfterAction = rex_url::currentBackendPage(['page' => 'consent_manager/config']);
+        }
         if ('import_json' === $func) {
             // JSON Import verarbeiten
             $importFile = rex_request::files('import_file', 'array', []);
