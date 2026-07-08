@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.11 - 08.07.2026
+
+- **UX (Mehrsprachigkeit/Listen):** Eigene Übersetzungsstatus-Spalte in den Listen für Dienste, Gruppen und Texte ergänzt.
+- **UX (Mehrsprachigkeit/Status):** Sprach-Icon wird pro Datensatz als Statusindikator genutzt (grün = übersetzt, grau = nicht übersetzt).
+- **UX (Listen-Layout):** Doppelmarkierungen entfernt (kein zusätzlicher Punkt mehr im Schlüssel), dadurch klarere und ruhigere Tabellenansicht.
+
 ## Version 5.6.10 - 05.07.2026
 
 - **Fix (IDN/Domain-Matching):** Domain-Abgleich wurde über Variantenauflösung stabilisiert (UTF-8/Punycode), damit gespeicherte und angefragte Hosts zuverlässig zusammenfinden.
