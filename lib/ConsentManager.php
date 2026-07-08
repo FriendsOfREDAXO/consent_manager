@@ -74,7 +74,21 @@ class ConsentManager
     public static function getDomain(string $domain): ?array
     {
         self::initCache();
-        return self::$cache['domains'][$domain] ?? null;
+        if (isset(self::$cache['domains'][$domain])) {
+            return self::$cache['domains'][$domain];
+        }
+
+        $domains = self::$cache['domains'] ?? [];
+        if (!is_array($domains) || [] === $domains) {
+            return null;
+        }
+
+        $resolvedKey = Utility::resolveConfiguredDomainKey($domains, $domain);
+        if ('' !== $resolvedKey && isset($domains[$resolvedKey]) && is_array($domains[$resolvedKey])) {
+            return $domains[$resolvedKey];
+        }
+
+        return null;
     }
 
     /**

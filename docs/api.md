@@ -129,6 +129,22 @@ if (!Utility::consentConfigured()) {
 - `hostname()`: liefert den aktuellen Host inkl. Subdomain (domain-spezifischer Consent)
 - `get_domaininfo($url)`: zerlegt eine URL in Domain-Bestandteile
 
+#### Domain-Normalisierung und Variantenaufloesung
+
+- `normalizeDomain($domain)`: normalisiert auf ASCII/Punycode zur konsistenten Verarbeitung
+- `getDomainVariants($domain)`: liefert robuste Kandidaten fuer Matching (UTF-8 + Punycode)
+- `resolveConfiguredDomainKey($domains, $domain)`: loest einen Request-Host auf den tatsaechlich konfigurierten Domain-Key auf
+
+Beispiel:
+
+```php
+$variants = Utility::getDomainVariants('müller.de');
+// z. B. ['müller.de', 'xn--mller-kva.de']
+
+$domains = ConsentManager::getDomains();
+$resolved = Utility::resolveConfiguredDomainKey($domains, 'xn--mller-kva.de');
+```
+
 ### ConsentManager
 
 Statischer Zugriff auf den aufgebauten Addon-Cache.

@@ -1,5 +1,20 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.6.10 - 05.07.2026
+
+- **Fix (IDN/Domain-Matching):** Domain-Abgleich wurde über Variantenauflösung stabilisiert (UTF-8/Punycode), damit gespeicherte und angefragte Hosts zuverlässig zusammenfinden.
+- **Fix (Backend-Validierung):** Hostname-Validierung akzeptiert nur noch echte Hostnamen und weist URLs mit Protokoll, Pfad, Query, Fragment oder Userinfo konsequent ab.
+- **Fix (Domain-Setup):** Domain-Bereinigung im Setup-Wizard nutzt dieselbe Normalisierungslogik wie der Rest des Addons und speichert konsistente Domainwerte.
+- **Fix (Cookie-Migration/Cleanup):** Serverseitiges Löschen alter Consent-Cookies nutzt jetzt normalisierte Domain-Varianten (inkl. host-only und Punkt-Präfix), damit Bereinigung auch bei IDN/Host-Edge-Cases zuverlässig greift.
+- **Fix (Backend/YRewrite):** YRewrite-Domainauswahl verwendet die zentrale Variantenauflösung für UTF-8/Punycode und vermeidet dadurch inkonsistente Duplikate.
+- **UX (Backend):** Domain-Hinweistext aktualisiert: Umlaut-Domains koennen direkt eingegeben werden; interne Punycode-Umwandlung wird transparent kommuniziert.
+
+## Version 5.6.9 - 02.07.2026
+
+- **Fix (IDN/Umlaut-Domains):** Domain-Eingaben wie `müller.de` werden nun durchgängig akzeptiert und intern robust gegen UTF-8-/Punycode-Varianten aufgelöst.
+- **Fix (Frontend/Auto-Inject/Debug):** Domain-Matching nutzt jetzt Variantenauflösung, sodass Konfigurationen auch dann greifen, wenn Request-Host und gespeicherte Domain in unterschiedlicher Schreibweise (Umlaut vs. `xn--...`) vorliegen.
+- **UX (Backend):** Domain-Hinweise in der Verwaltung präzisiert; Umlaut-Domains können direkt in der korrekten Schreibweise eingegeben werden.
+
 ## Version 5.6.8 - 02.07.2026
 - **Fix Import einer json Settings Datei funktioniert jetzt
 

@@ -11,6 +11,7 @@ use FriendsOfRedaxo\ConsentManager\GoogleConsentMode;
 use FriendsOfRedaxo\ConsentManager\InlineConsent;
 use FriendsOfRedaxo\ConsentManager\OEmbedParser;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
+use FriendsOfRedaxo\ConsentManager\Utility;
 
 $addon = rex_addon::get('consent_manager');
 
@@ -183,12 +184,21 @@ if (rex::isFrontend()) {
 
         // delete server-side (works also for HttpOnly cookies)
         if ($mustDelete) {
-            $host = $_SERVER['HTTP_HOST'] ?? '';
+            $host = Utility::normalizeDomain((string) rex_request::server('HTTP_HOST', 'string', ''));
             $secure = (!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS']);
-            // expire for current host/path
-            setcookie($cookieName, '', time() - 3600, '/', $host, $secure, true);
-            // also try shorter flags (some older cookies may differ)
-            setcookie($cookieName, '', time() - 3600, '/', $host, $secure, false);
+
+            // Expire host-only cookie and explicit domain variants for robust cleanup.
+            $cookieDomains = [''];
+            if ('' !== $host) {
+                $cookieDomains[] = $host;
+                $cookieDomains[] = '.' . ltrim($host, '.');
+            }
+
+            foreach (array_unique($cookieDomains) as $cookieDomain) {
+                // expire for current host/path (HttpOnly + non-HttpOnly legacy variant)
+                setcookie($cookieName, '', time() - 3600, '/', $cookieDomain, $secure, true);
+                setcookie($cookieName, '', time() - 3600, '/', $cookieDomain, $secure, false);
+            }
         }
 
         // set sentinel to avoid repeating this check for this visitor
@@ -221,24 +231,31 @@ if (rex::isFrontend()) {
 
         // Domain-Konfiguration prüfen
         $domain = rex_request::server('HTTP_HOST', 'string', '');
-        if ('' === $domain) {
+        $domainCandidates = Utility::getDomainVariants($domain);
+        if ([] === $domainCandidates) {
             return $content;
         }
 
-        $domain = strtolower($domain);
+        $inPlaceholders = implode(', ', array_fill(0, count($domainCandidates), '?'));
+        $orderPlaceholders = implode(', ', array_fill(0, count($domainCandidates), '?'));
+        $domainParams = array_merge($domainCandidates, $domainCandidates);
 
         $sql = rex_sql::factory();
         $sql->setQuery(
-            'SELECT auto_inject, auto_inject_reload_on_consent, auto_inject_delay, auto_inject_focus, auto_inject_include_templates 
+            'SELECT uid, auto_inject, auto_inject_reload_on_consent, auto_inject_delay, auto_inject_focus, auto_inject_include_templates 
              FROM ' . rex::getTable('consent_manager_domain') . ' 
-             WHERE uid = ?',
-            [$domain],
+             WHERE uid IN (' . $inPlaceholders . ')
+             ORDER BY FIELD(uid, ' . $orderPlaceholders . ')
+             LIMIT 1',
+            $domainParams,
         );
 
         // Nur einbinden wenn explizit aktiviert
         if (0 === $sql->getRows() || 1 !== (int) $sql->getValue('auto_inject')) {
             return $content;
         }
+
+        $domain = (string) $sql->getValue('uid');
 
         // Template-Whitelist prüfen (Positivliste)
         $includeTemplates = $sql->getValue('auto_inject_include_templates');
@@ -309,16 +326,27 @@ if (rex::isFrontend()) {
 
         // Domain-Konfiguration prüfen
         $domain = rex_request::server('HTTP_HOST', 'string', '');
-        $domain = strtolower($domain);
+        $domainCandidates = Utility::getDomainVariants($domain);
+        if ([] === $domainCandidates) {
+            return;
+        }
+
+        $inPlaceholders = implode(', ', array_fill(0, count($domainCandidates), '?'));
+        $orderPlaceholders = implode(', ', array_fill(0, count($domainCandidates), '?'));
+        $domainParams = array_merge($domainCandidates, $domainCandidates);
 
         $sql = rex_sql::factory();
         $sql->setQuery(
-            'SELECT google_consent_mode_debug FROM ' . rex::getTable('consent_manager_domain') . ' WHERE uid = ?',
-            [$domain],
+            'SELECT uid, google_consent_mode_debug FROM ' . rex::getTable('consent_manager_domain') . ' 
+             WHERE uid IN (' . $inPlaceholders . ')
+             ORDER BY FIELD(uid, ' . $orderPlaceholders . ')
+             LIMIT 1',
+            $domainParams,
         );
 
         $debugEnabled = false;
         if ($sql->getRows() > 0) {
+            $domain = (string) $sql->getValue('uid');
             $debugEnabled = (bool) $sql->getValue('google_consent_mode_debug');
         }
 

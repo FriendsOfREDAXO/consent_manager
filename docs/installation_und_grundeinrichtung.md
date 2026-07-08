@@ -13,6 +13,8 @@ Der Setup Wizard führt durch die Erstkonfiguration und übernimmt die wichtigst
 ### 1) Domain wählen
 
 - Domain kann manuell eingetragen werden.
+- Umlaut-Domains koennen direkt eingegeben werden (z. B. `müller.de`).
+- Intern werden Domain-Varianten (UTF-8/Punycode) fuer Matching und Duplikat-Pruefung aufgeloest.
 - Falls `yrewrite` aktiv ist, werden verfügbare Domains zur Auswahl angeboten.
 - Bereits konfigurierte Domains werden nicht erneut als Vorschlag angezeigt.
 
@@ -91,6 +93,7 @@ Vorteil: Die Consent-Box integriert sich visuell in das bestehende Frontend ohne
 Backend: `Consent Manager → Domains → Domain hinzufügen`
 
 - Domain ohne Protokoll eintragen (z. B. `beispiel.de`)
+- Keine URL-Bestandteile eingeben (kein Pfad, Query, Fragment oder Userinfo)
 - Datenschutz/Impressum zuweisen
 - Auto-Inject aktivieren (empfohlen)
 

@@ -7,6 +7,7 @@
 
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\JsonSetup;
+use FriendsOfRedaxo\ConsentManager\Utility;
 
 class rex_api_consent_manager_setup_wizard extends rex_api_function
 {
@@ -161,10 +162,9 @@ class rex_api_consent_manager_setup_wizard extends rex_api_function
             $domain = substr($domain, 0, $pos);
         }
 
-        // Zu lowercase
-        $domain = strtolower($domain);
+        $variants = Utility::getDomainVariants($domain);
 
-        return $domain;
+        return $variants[0] ?? '';
     }
 
     /**

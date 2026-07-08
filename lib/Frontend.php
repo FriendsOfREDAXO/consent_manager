@@ -109,30 +109,22 @@ class Frontend
      */
     public function setDomain(string $domain)
     {
-        // Domain immer in Kleinbuchstaben normalisieren für den Lookup
-        $domain = Utility::hostname();
-
         $domains = ConsentManager::getDomains();
         if (empty($domains)) {
             return;
         }
 
-        // Zuerst exakte Domain suchen
-        if (isset($domains[$domain])) {
-            $this->domainName = $domain;
-        } else {
-            // Dann HTTP_HOST versuchen (für Fälle mit Port oder Subdomain)
-            $httpHost = strtolower(rex_request::server('HTTP_HOST'));
-            if (isset($domains[$httpHost])) {
-                $this->domainName = $httpHost;
-            } else {
-                // Domain ohne Port versuchen
-                $httpHostNoPort = preg_replace('/:\d+$/', '', $httpHost);
-                if (isset($domains[$httpHostNoPort])) {
-                    $this->domainName = $httpHostNoPort;
-                } else {
-                    return;
-                }
+        $domainCandidates = [
+            $domain,
+            Utility::hostname(),
+            (string) rex_request::server('HTTP_HOST'),
+        ];
+
+        foreach ($domainCandidates as $candidate) {
+            $resolved = Utility::resolveConfiguredDomainKey($domains, $candidate);
+            if ('' !== $resolved) {
+                $this->domainName = $resolved;
+                break;
             }
         }
 

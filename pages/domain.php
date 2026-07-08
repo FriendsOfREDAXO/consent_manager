@@ -2,6 +2,7 @@
 
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 use FriendsOfRedaxo\ConsentManager\Theme;
+use FriendsOfRedaxo\ConsentManager\Utility;
 
 $showlist = true;
 $id = rex_request::request('id', 'int', 0);
@@ -36,26 +37,35 @@ if ('delete' === $func) {
 
     // YRewrite Domains laden falls verfügbar
     $yrewriteDomains = [];
+    $yrewriteDomainSet = [];
     $existingDomains = [];
+    $existingDomainSet = [];
 
     // Bereits konfigurierte Domains laden (außer der aktuellen beim Edit)
     $sql = rex_sql::factory();
     $whereClause = $form->isEditMode() ? 'id != ' . $id : '1=1';
     $sql->setQuery('SELECT uid FROM ' . rex::getTable('consent_manager_domain') . ' WHERE ' . $whereClause);
     foreach ($sql as $row) {
-        $existingDomains[] = $row->getValue('uid');
+        $uid = (string) $row->getValue('uid');
+        $existingDomains[] = $uid;
+        foreach (Utility::getDomainVariants($uid) as $variant) {
+            $existingDomainSet[$variant] = true;
+        }
     }
 
     $yrewriteSelectHtml = '';
     if (rex_addon::exists('yrewrite') && rex_addon::get('yrewrite')->isAvailable()) {
         foreach (rex_yrewrite::getDomains() as $domain) {
-            $cleanDomain = preg_replace('#^https?://#i', '', $domain->getUrl());
-            $cleanDomain = rtrim($cleanDomain, '/');
-            $cleanDomain = strtolower($cleanDomain);
+            $variants = Utility::getDomainVariants((string) $domain->getUrl());
+            $cleanDomain = $variants[0] ?? '';
+            if ('' === $cleanDomain) {
+                continue;
+            }
 
             // Duplikate vermeiden (z.B. wenn eine Domain sowohl als Standard als auch regulär existiert)
-            if (!in_array($cleanDomain, $yrewriteDomains, true) && !in_array($cleanDomain, $existingDomains, true)) {
+            if (!isset($yrewriteDomainSet[$cleanDomain]) && !isset($existingDomainSet[$cleanDomain])) {
                 $yrewriteDomains[] = $cleanDomain;
+                $yrewriteDomainSet[$cleanDomain] = true;
             }
         }
 
@@ -112,10 +122,7 @@ if ('delete' === $func) {
     $field->setLabel(count($yrewriteDomains) > 0 && !$form->isEditMode() ? '<small class="text-muted">Oder eigene Domain eingeben:</small>' : rex_i18n::msg('consent_manager_domain'));
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_empty_msg'));
     $field->getValidator()->add('custom', rex_i18n::msg('consent_manager_domain_malformed_msg'), RexFormSupport::validateHostname(...));
-    $field->getValidator()->add('custom', 'Domain muss in Kleinbuchstaben eingegeben werden (z.B. "example.com" statt "Example.com")', static function ($value) {
-        return RexFormSupport::validateLowercase($value);
-    });
-    $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com"). Bitte nur Kleinbuchstaben verwenden.');
+    $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com" oder "müller.de"). Umlaut-Domains werden intern automatisch in Punycode umgewandelt (z.B. "xn--mller-kva.de").');
     $field->setAttribute('id', 'domain-uid-field');
 
     $domainPanelEnd = '
