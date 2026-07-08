@@ -48,6 +48,37 @@ if ('delete' === $func) {
 }
 
 if ($showlist) {
+    $isTranslatedTextUid = static function (string $uid) use ($table, $clang_id): bool {
+        if ($clang_id === rex_clang::getStartId()) {
+            return false;
+        }
+
+        static $cache = [];
+        $cacheKey = $clang_id . '|' . $uid;
+        if (isset($cache[$cacheKey])) {
+            return $cache[$cacheKey];
+        }
+
+        $sqlCompare = rex_sql::factory();
+        $sqlCompare->setQuery('SELECT text FROM ' . $table . ' WHERE uid = ? AND clang_id = ? ORDER BY pid ASC LIMIT 1', [$uid, $clang_id]);
+        if ($sqlCompare->getRows() === 0) {
+            $cache[$cacheKey] = false;
+            return false;
+        }
+        $targetText = trim((string) $sqlCompare->getValue('text'));
+
+        $sqlBase = rex_sql::factory();
+        $sqlBase->setQuery('SELECT text FROM ' . $table . ' WHERE uid = ? AND clang_id = ? ORDER BY pid ASC LIMIT 1', [$uid, rex_clang::getStartId()]);
+        if ($sqlBase->getRows() === 0) {
+            $cache[$cacheKey] = false;
+            return false;
+        }
+        $startText = trim((string) $sqlBase->getValue('text'));
+
+        $cache[$cacheKey] = '' !== $targetText && $targetText !== $startText;
+        return $cache[$cacheKey];
+    };
+
     $listDebug = false;
     $sql = 'SELECT pid,uid,text FROM ' . $table . ' WHERE clang_id = ' . $clang_id;
 
@@ -57,13 +88,27 @@ if ($showlist) {
 
     $list->removeColumn('pid');
 
-    $tdIcon = '<i class="fa fa-coffee"></i>';
+    $tdIcon = '<i class="rex-icon rex-icon-edit"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'pid' => '###pid###']);
 
     $list->setColumnLabel('uid', rex_i18n::msg('consent_manager_uid'));
     $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
+    $list->setColumnFormat('uid', 'custom', static function (array $params): string {
+        return rex_escape((string) $params['value']);
+    });
+
+    $translationStatusHeader = '<i class="rex-icon fa-language" title="Uebersetzung"></i>';
+    $list->addColumn($translationStatusHeader, '', 2, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
+    $list->setColumnFormat($translationStatusHeader, 'custom', static function (array $params) use ($isTranslatedTextUid): string {
+        $uid = (string) $params['list']->getValue('uid');
+        $translated = $isTranslatedTextUid($uid);
+        $color = $translated ? '#3cba54' : '#9aa0a6';
+        $title = $translated ? 'Uebersetzt' : 'Nicht uebersetzt';
+
+        return '<i class="rex-icon fa-language" title="' . $title . '" style="color:' . $color . ';"></i>';
+    });
 
     $list->setColumnLabel('text', rex_i18n::msg('consent_manager_text'));
 

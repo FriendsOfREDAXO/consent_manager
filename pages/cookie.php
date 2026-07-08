@@ -280,12 +280,55 @@ if ($showlist) {
     $listDebug = false;
     $sql = 'SELECT pid,uid,service_name,variant,provider FROM ' . $table . ' WHERE clang_id = ' . $clang_id . ' ORDER BY uid';
 
+    $isTranslatedCookieUid = static function (string $uid) use ($table, $clang_id): bool {
+        if ($clang_id === rex_clang::getStartId()) {
+            return false;
+        }
+
+        static $cache = [];
+        $cacheKey = $clang_id . '|' . $uid;
+        if (isset($cache[$cacheKey])) {
+            return $cache[$cacheKey];
+        }
+
+        $fields = ['service_name', 'variant', 'provider', 'provider_link_privacy', 'definition', 'script', 'script_unselect', 'placeholder_text'];
+        $fieldList = implode(',', $fields);
+
+        $sqlCompare = rex_sql::factory();
+        $sqlCompare->setQuery('SELECT ' . $fieldList . ' FROM ' . $table . ' WHERE uid = ? AND clang_id = ? ORDER BY pid ASC LIMIT 1', [$uid, $clang_id]);
+        if ($sqlCompare->getRows() === 0) {
+            $cache[$cacheKey] = false;
+            return false;
+        }
+        $targetRow = $sqlCompare->getArray()[0];
+
+        $sqlBase = rex_sql::factory();
+        $sqlBase->setQuery('SELECT ' . $fieldList . ' FROM ' . $table . ' WHERE uid = ? AND clang_id = ? ORDER BY pid ASC LIMIT 1', [$uid, rex_clang::getStartId()]);
+        if ($sqlBase->getRows() === 0) {
+            $cache[$cacheKey] = false;
+            return false;
+        }
+        $startRow = $sqlBase->getArray()[0];
+
+        foreach ($fields as $field) {
+            $targetValue = trim((string) ($targetRow[$field] ?? ''));
+            $startValue = trim((string) ($startRow[$field] ?? ''));
+            if ('' !== $targetValue && $targetValue !== $startValue) {
+                $cache[$cacheKey] = true;
+                return true;
+            }
+        }
+
+        $cache[$cacheKey] = false;
+        return false;
+    };
+
     $list = rex_list::factory($sql, 100, '', $listDebug);
     $list->addParam('page', rex_be_controller::getCurrentPage());
     $list->addTableAttribute('class', 'table table-striped table-hover consent_manager-table consent_manager-table-cookie');
     $list->addTableAttribute('id', 'consent_manager-table-cookie');
 
-    $tdIcon = '<i class="fa fa-coffee"></i>';
+    $tdIcon = '<i class="rex-icon rex-icon-edit"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '"' . rex::getAccesskey(rex_i18n::msg('add'), 'add') . '><i class="rex-icon rex-icon-add"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'pid' => '###pid###']);
@@ -294,6 +337,17 @@ if ($showlist) {
     $list->setColumnLabel('uid', rex_i18n::msg('consent_manager_uid'));
     $list->setColumnParams('uid', ['func' => 'edit', 'pid' => '###pid###']);
     $list->setColumnSortable('uid');
+
+    $translationStatusHeader = '<i class="rex-icon fa-language" title="Uebersetzung"></i>';
+    $list->addColumn($translationStatusHeader, '', 2, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
+    $list->setColumnFormat($translationStatusHeader, 'custom', static function (array $params) use ($isTranslatedCookieUid): string {
+        $uid = (string) $params['list']->getValue('uid');
+        $translated = $isTranslatedCookieUid($uid);
+        $color = $translated ? '#3cba54' : '#9aa0a6';
+        $title = $translated ? 'Uebersetzt' : 'Nicht uebersetzt';
+
+        return '<i class="rex-icon fa-language" title="' . $title . '" style="color:' . $color . ';"></i>';
+    });
 
     // Variant-Spalte entfernen (wird in service_name integriert)
     $list->removeColumn('variant');
