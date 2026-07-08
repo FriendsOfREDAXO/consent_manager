@@ -49,7 +49,7 @@ class CLang
         $db->setWhere('pid = :pid', ['pid' => $pid]);
         $db->select('uid');
         foreach ($db->getArray() as $v) {
-            if ('consent_manager' === $v['uid']) {
+            if (in_array((string) $v['uid'], ['consent_manager', 'consentmanager'], true)) {
                 $msg = rex_view::error(rex_i18n::msg('consent_manager_not_deletable'));
                 break;
             }

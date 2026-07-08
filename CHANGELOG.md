@@ -5,6 +5,10 @@
 - **UX (Mehrsprachigkeit/Listen):** Eigene Übersetzungsstatus-Spalte in den Listen für Dienste, Gruppen und Texte ergänzt.
 - **UX (Mehrsprachigkeit/Status):** Sprach-Icon wird pro Datensatz als Statusindikator genutzt (grün = übersetzt, grau = nicht übersetzt).
 - **UX (Listen-Layout):** Doppelmarkierungen entfernt (kein zusätzlicher Punkt mehr im Schlüssel), dadurch klarere und ruhigere Tabellenansicht.
+- **Setup (Initial-Importe):** System-Cookie in den Setup-Dateien von `consent_manager` auf `consentmanager` umgestellt (UID, Cookie-Name und Gruppenzuordnung).
+- **Setup (Initial-Importe):** Cookie-Definitionen für LinkedIn Insight Tag und Google Analytics in den Start-Setups auf den aktuellen Stand gebracht (inkl. `__cf_bm`, `bcookie`, `li_gc`, `lidc`, `_ga`, `_ga_S0R9E6EWX7`).
+- **Kompatibilität:** Backend- und Cache-Logik akzeptiert für den System-Cookie jetzt sowohl `consent_manager` (Bestand) als auch `consentmanager` (neue Initial-Importe).
+- **Fix (Cookie-Name aus Config):** Für den System-Cookie wird in der Ausgabe immer der in den Addon-Einstellungen konfigurierte Cookie-Name verwendet (statt statischer Setup-Werte).
 
 ## Version 5.6.10 - 05.07.2026
 

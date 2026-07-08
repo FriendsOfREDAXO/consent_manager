@@ -11,6 +11,7 @@ $csrf = rex_csrf_token::factory('consent_manager_cookie');
 $clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3) ?? '');
 $table = rex::getTable('consent_manager_cookie');
 $msg = '';
+$systemCookieUids = ['consent_manager', 'consentmanager'];
 
 $cleanupDuplicatesByUid = static function (string $tableName, int $clangId): int {
     $duplicateSql = rex_sql::factory();
@@ -155,7 +156,7 @@ if ('delete' === $func) {
     // Multi-Language Sprach-Switcher (gilt für gesamten Datensatz, daher ganz oben)
     if ($form->isEditMode() && rex_clang::count() > 1) {
         // Sprach-Switcher für alle Services außer consent_manager (System-Cookie)
-        if ('consent_manager' !== $form->getSql()->getValue('uid')) {
+        if (!in_array((string) $form->getSql()->getValue('uid'), $systemCookieUids, true)) {
             $currentUid = (string) $form->getSql()->getValue('uid');
             $languageSwitcher = '<div class="alert alert-info" style="margin: 15px 0;">';
             $languageSwitcher .= '<i class="rex-icon fa-language"></i> <strong>' . rex_i18n::msg('consent_manager_cookie_multilang_title') . '</strong><br>';
@@ -192,7 +193,7 @@ if ('delete' === $func) {
         }
     }
 
-    if ('edit' === $func && 'consent_manager' === $form->getSql()->getValue('uid')) {
+    if ('edit' === $func && in_array((string) $form->getSql()->getValue('uid'), $systemCookieUids, true)) {
         $form->addRawField(RexFormSupport::showInfo(rex_i18n::rawMsg('consent_manager_cookie_consent_manager_info')));
         $field = $form->addReadOnlyField('uid_readonly', (string) $form->getSql()->getValue('uid'));
         $field->setLabel(rex_i18n::msg('consent_manager_uid'));
@@ -225,7 +226,7 @@ if ('delete' === $func) {
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_provider_link_privacy'));
     $field->setNotice(rex_i18n::msg('consent_manager_cookie_notice_provider_link_privacy'));
 
-    if ('edit' === $func && 'consent_manager' !== $form->getSql()->getValue('uid')) {
+    if ('edit' === $func && !in_array((string) $form->getSql()->getValue('uid'), $systemCookieUids, true)) {
         // Google Consent Mode v2 Helper Fragment verwenden
         $fragment = new rex_fragment();
         $googleHelperHtml = $fragment->parse('ConsentManager/google_consent_helper.php');

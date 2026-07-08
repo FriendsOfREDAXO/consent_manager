@@ -113,13 +113,20 @@ class Cache
 
     private function prepareCookie(int $clangId): void
     {
+        $configuredCookieName = (string) rex_addon::get('consent_manager')->getConfig('cookie_name', 'consentmanager');
+        $systemCookieUids = ['consent_manager', 'consentmanager'];
+
         if (isset($this->cookies[$clangId])) {
             foreach ((array) $this->cookies[$clangId] as $uid => $cookie) {
                 $defs = [];
                 $cookie = (array) $cookie;
                 if (is_string($cookie['definition'])) {
                     foreach (rex_string::yamlDecode($cookie['definition']) as $k => $v) {
-                        $defs[$k]['cookie_name'] = $v['name'] ?? '';
+                        $cookieName = (string) ($v['name'] ?? '');
+                        if (in_array((string) $uid, $systemCookieUids, true)) {
+                            $cookieName = $configuredCookieName;
+                        }
+                        $defs[$k]['cookie_name'] = $cookieName;
                         $defs[$k]['cookie_lifetime'] = $v['time'] ?? '';
                         $defs[$k]['description'] = $v['desc'] ?? '';
                     }
@@ -146,7 +153,11 @@ class Cache
                     }
                 }
                 if ('|1|' === $cookiegroup['required']) {
-                    $cookie_uids[] = 'consent_manager';
+                    if (isset($this->cookies[$clangId]['consentmanager'])) {
+                        $cookie_uids[] = 'consentmanager';
+                    } elseif (isset($this->cookies[$clangId]['consent_manager'])) {
+                        $cookie_uids[] = 'consent_manager';
+                    }
                 }
                 $this->cookiegroups[$clangId][$uid]['cookie_uids'] = array_merge(array_filter(array_unique($cookie_uids))); /** @phpstan-ignore-line */
                 $domainIds = array_filter(explode('|', $cookiegroup['domain']), strlen(...)); // @phpstan-ignore-line

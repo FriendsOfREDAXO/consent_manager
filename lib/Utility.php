@@ -3,6 +3,7 @@
 namespace FriendsOfRedaxo\ConsentManager;
 
 use rex;
+use rex_addon;
 use rex_clang;
 use rex_request;
 use rex_sql;
@@ -26,8 +27,9 @@ class Utility
      */
     public static function has_consent(string $cookieUid): bool
     {
-        if (null !== rex_request::cookie('consentmanager') && is_string(rex_request::cookie('consentmanager'))) {
-            $cookieData = (array) json_decode(rex_request::cookie('consentmanager'), true);
+        $cookieName = (string) rex_addon::get('consent_manager')->getConfig('cookie_name', 'consentmanager');
+        if (null !== rex_request::cookie($cookieName) && is_string(rex_request::cookie($cookieName))) {
+            $cookieData = (array) json_decode(rex_request::cookie($cookieName), true);
             if (isset($cookieData['consents']) && is_array($cookieData['consents']) && 0 !== count($cookieData['consents'])) {
                 foreach ($cookieData['consents'] as $consent) {
                     if ($cookieUid === $consent) {

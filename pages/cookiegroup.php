@@ -171,7 +171,7 @@ if ('delete' === $func) {
 
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('consent_manager_cookie'));
-    $db->setWhere('clang_id = ' . $clang_id . ' AND uid != "consent_manager" ORDER BY uid ASC');
+    $db->setWhere('clang_id = ' . $clang_id . ' AND uid NOT IN ("consent_manager", "consentmanager") ORDER BY uid ASC');
     $db->select('DISTINCT pid, uid, service_name, variant');
     $cookies = $db->getArray();
 
