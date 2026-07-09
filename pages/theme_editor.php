@@ -231,6 +231,7 @@ $defaultColors = [
         'title' => '#0f172a',
         'background' => '#ffffff',
         'background_opacity' => '85',
+        'backdrop_blur' => '12',
         'text' => '#1e293b',
         'overlay' => '#0f172a',
         'overlay_opacity' => '50',
@@ -269,6 +270,7 @@ $defaultColors = [
         'title' => '#ffffff',
         'background' => '#1e1e2e',
         'background_opacity' => '85',
+        'backdrop_blur' => '12',
         'text' => '#cdd6f4',
         'overlay' => '#000000',
         'overlay_opacity' => '60',
@@ -306,6 +308,8 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
         // Details-Bereich
         'details_bg' => rex_request::post('details_bg', 'string', $defaultColors[$themeBase]['details_bg']),
         'details_bg_opacity' => rex_request::post('details_bg_opacity', 'string', $defaultColors[$themeBase]['details_bg_opacity'] ?? '100'),
+        'details_table_bg' => rex_request::post('details_table_bg', 'string', $defaultColors[$themeBase]['details_table_bg'] ?? $defaultColors[$themeBase]['details_bg']),
+        'details_table_bg_opacity' => rex_request::post('details_table_bg_opacity', 'string', $defaultColors[$themeBase]['details_table_bg_opacity'] ?? '100'),
         'details_text' => rex_request::post('details_text', 'string', $defaultColors[$themeBase]['details_text']),
         'details_heading' => rex_request::post('details_heading', 'string', $defaultColors[$themeBase]['details_heading']),
         'details_border' => rex_request::post('details_border', 'string', $defaultColors[$themeBase]['details_border']),
@@ -313,9 +317,12 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
         'title' => rex_request::post('title_color', 'string', $defaultColors[$themeBase]['title']),
         'background' => rex_request::post('background_color', 'string', $defaultColors[$themeBase]['background']),
         'background_opacity' => rex_request::post('background_opacity', 'string', $defaultColors[$themeBase]['background_opacity'] ?? '100'),
+        'backdrop_blur' => rex_request::post('backdrop_blur', 'string', $defaultColors[$themeBase]['backdrop_blur'] ?? '0'),
         'text' => rex_request::post('text_color', 'string', $defaultColors[$themeBase]['text']),
         'overlay' => rex_request::post('overlay_color', 'string', $defaultColors[$themeBase]['overlay']),
         'overlay_opacity' => rex_request::post('overlay_opacity', 'string', $defaultColors[$themeBase]['overlay_opacity']),
+        'overlay_backdrop_blur' => rex_request::post('overlay_backdrop_blur', 'string', isset($defaultColors[$themeBase]['overlay_backdrop_blur']) ? (string) $defaultColors[$themeBase]['overlay_backdrop_blur'] : '0'),
+        'overlay_enabled' => rex_request::post('overlay_enabled', 'string', isset($defaultColors[$themeBase]['overlay_enabled']) ? (string) $defaultColors[$themeBase]['overlay_enabled'] : '1'),
         'border_radius' => rex_request::post('border_radius', 'string', $defaultColors[$themeBase]['border_radius']),
         'border_width' => rex_request::post('border_width', 'string', $defaultColors[$themeBase]['border_width']),
         // Schriftgrößen
@@ -333,6 +340,22 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
     ];
 } else {
     $colors = $defaultColors[$themeBase];
+}
+
+if (!isset($colors['overlay_enabled'])) {
+    $colors['overlay_enabled'] = '1';
+}
+
+if (!isset($colors['overlay_backdrop_blur'])) {
+    $colors['overlay_backdrop_blur'] = '0';
+}
+
+if (!isset($colors['details_table_bg'])) {
+    $colors['details_table_bg'] = $colors['details_bg'] ?? '#f8f9fa';
+}
+
+if (!isset($colors['details_table_bg_opacity'])) {
+    $colors['details_table_bg_opacity'] = '100';
 }
 
 // Handle form submission

@@ -282,8 +282,13 @@ class Theme
         $borderWidth = ($colors['border_width'] ?? ($isCompact ? '2' : '3')) . 'px';
         $borderRadius = ($colors['border_radius'] ?? '4') . 'px';
 
-        // Overlay-Opacity
+        // Overlay
+        $overlayEnabled = '0' !== (string) ($colors['overlay_enabled'] ?? '1');
         $overlayOpacity = ((int) ($colors['overlay_opacity'] ?? 75)) / 100;
+        $overlayBackdropBlur = max(0, min(30, (int) ($colors['overlay_backdrop_blur'] ?? 0)));
+        $overlayBackdropFilterCss = ($overlayEnabled && $overlayBackdropBlur > 0)
+            ? 'backdrop-filter: blur(' . $overlayBackdropBlur . 'px); -webkit-backdrop-filter: blur(' . $overlayBackdropBlur . 'px);'
+            : 'backdrop-filter: none; -webkit-backdrop-filter: none;';
 
         $hexToRgba = static function (string $hex, float $alpha = 0.2): string {
             $hex = ltrim($hex, '#');
@@ -295,7 +300,7 @@ class Theme
 
         // Overlay-Farbe mit Opacity
         $overlayColor = $colors['overlay'] ?? '#000000';
-        $overlayRgba = $hexToRgba($overlayColor, $overlayOpacity);
+        $overlayRgba = $overlayEnabled ? $hexToRgba($overlayColor, $overlayOpacity) : 'transparent';
 
         $accentRgba = $hexToRgba($colors['accent'], 0.3);
         $focusRgba = $hexToRgba($colors['focus'], 0.2);
@@ -305,6 +310,10 @@ class Theme
         // Hintergrund und Text - mit Opacity für Fluid-Theme
         $backgroundHex = $colors['background'] ?? '#ffffff';
         $backgroundOpacity = ((int) ($colors['background_opacity'] ?? 100)) / 100;
+        $backdropBlur = max(0, min(30, (int) ($colors['backdrop_blur'] ?? ($isFluid ? 12 : 0))));
+        $backdropFilterCss = $backdropBlur > 0
+            ? 'backdrop-filter: blur(' . $backdropBlur . 'px); -webkit-backdrop-filter: blur(' . $backdropBlur . 'px);'
+            : 'backdrop-filter: none; -webkit-backdrop-filter: none;';
         $background = $isFluid && $backgroundOpacity < 1
             ? $hexToRgba($backgroundHex, $backgroundOpacity)
             : $backgroundHex;
@@ -340,6 +349,11 @@ class Theme
         $detailsBg = $isFluid && $detailsBgOpacity < 1
             ? $hexToRgba($detailsBgHex, $detailsBgOpacity)
             : $detailsBgHex;
+        $detailsTableBgHex = $colors['details_table_bg'] ?? $detailsBgHex;
+        $detailsTableBgOpacity = ((int) ($colors['details_table_bg_opacity'] ?? 100)) / 100;
+        $detailsTableBg = $detailsTableBgOpacity < 1
+            ? $hexToRgba($detailsTableBgHex, $detailsTableBgOpacity)
+            : $detailsTableBgHex;
         $detailsText = $colors['details_text'] ?? '#1a1a1a';
         $detailsHeading = $colors['details_heading'] ?? '#1a1a1a';
         $detailsBorderHex = $colors['details_border'] ?? '#dee2e6';
@@ -383,9 +397,11 @@ class Theme
             $isBannerTop => 'border-radius: 0; border-left: none; border-right: none; border-top: none;',
             $isBannerBottom => 'border-radius: 0; border-left: none; border-right: none; border-bottom: none;',
             $isMinimal => 'max-height: 80vh;',
-            $isFluid => 'backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2);',
+            $isFluid => 'border: 1px solid rgba(255,255,255,0.2);',
             default => '',
         };
+
+        $wrapperPositionCss = trim($wrapperPositionCss . ' ' . $backdropFilterCss);
 
         // Button-Style CSS (filled vs outline)
         if ('outline' === $buttonStyle) {
@@ -399,19 +415,19 @@ class Theme
 
         // Additional CSS for specific themes
         $additionalCss = '';
-        if ($isFluid) {
+        if ($isFluid && $backdropBlur > 0) {
             $fallbackBg = $backgroundHex;
-            $detailsFallbackBg = $detailsBgHex;
+            $detailsFallbackBg = $detailsTableBgHex;
             $additionalCss = <<<ADDCSS
 
                 /* Fluid Theme - Glaseffekt */
-                @supports (backdrop-filter: blur(12px)) {
+                @supports (backdrop-filter: blur({$backdropBlur}px)) {
                     div.consent_manager-wrapper {
                         background: {$background};
                     }
                 }
 
-                @supports not (backdrop-filter: blur(12px)) {
+                @supports not (backdrop-filter: blur({$backdropBlur}px)) {
                     div.consent_manager-wrapper {
                         background: {$fallbackBg};
                     }
@@ -479,6 +495,7 @@ class Theme
 
             // Details-Bereich
             \$details-bg: $detailsBg;
+            \$details-table-bg: $detailsTableBg;
             \$details-text: $detailsText;
             \$details-heading: $detailsHeading;
             \$details-border: $detailsBorder;
@@ -509,7 +526,8 @@ class Theme
                 top: 0;
                 right: 0;
                 bottom: 0;
-                background: transparent;
+                background: \$overlay-background;
+                $overlayBackdropFilterCss
                 display: flex;
                 flex-direction: column;
                 $backgroundPositionCss
@@ -793,16 +811,20 @@ class Theme
                     color: \$details-heading !important;
                     background-color: \$cookie-title-bg !important;
                     padding: 10px 14px !important;
-                    margin: 1em 0 0 0 !important;
+                    margin: 0.75em 0 0 0 !important;
                     font-weight: bold !important;
                     font-size: 15px !important;
                     border-left: 3px solid \$cookie-accent !important;
                 }
 
+                div.consent_manager-cookiegroup-title:first-of-type {
+                    margin-top: 0 !important;
+                }
+
                 div.consent_manager-cookiegroup-description {
                     border-left: 3px solid \$details-border !important;
                     padding: 10px 14px !important;
-                    background: \$details-bg !important;
+                    background: \$details-table-bg !important;
                     color: \$details-text !important;
                     font-size: 14px !important;
                 }
@@ -810,15 +832,19 @@ class Theme
                 div.consent_manager-cookie {
                     margin-top: 2px !important;
                     border-left: 3px solid \$details-border !important;
-                    padding: 10px 14px !important;
-                    background: \$details-bg !important;
+                    padding: 6px 14px 10px !important;
+                    background: \$details-table-bg !important;
                     color: \$details-text !important;
                     font-size: 14px !important;
 
                     span {
                         display: block;
-                        margin-top: 0.5em;
+                        margin-top: 0;
                         line-height: 1.5;
+                    }
+
+                    span + span {
+                        margin-top: 0.5em;
                     }
                     
                     a {

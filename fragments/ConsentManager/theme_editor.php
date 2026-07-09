@@ -16,6 +16,19 @@ $themeBase = $this->getVar('themeBase', 'normal');
 $themeBases = $this->getVar('themeBases', []);
 $colors = $this->getVar('colors', []);
 $csrfToken = $this->getVar('csrfToken');
+
+$basePreviewThemeMap = [
+    'normal' => 'consent_manager_frontend_a11y.scss',
+    'compact' => 'consent_manager_frontend_a11y_compact.scss',
+    'banner_top' => 'consent_manager_frontend_a11y_banner_top.scss',
+    'banner_bottom' => 'consent_manager_frontend_a11y_banner_bottom.scss',
+    'minimal' => 'consent_manager_frontend_bottom_right.scss',
+    'fluid' => 'consent_manager_frontend_a11y_fluid.scss',
+    'fluid_dark' => 'consent_manager_frontend_a11y_fluid_dark.scss',
+];
+$basePreviewTheme = $basePreviewThemeMap[$themeBase] ?? 'consent_manager_frontend_a11y.scss';
+$basePreviewUrl = rex_url::backendPage('consent_manager/theme', ['preview' => $basePreviewTheme, 'preview_cache' => (string) time()]);
+$basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
 ?>
 
 <div class="consent-manager-theme-editor">
@@ -85,6 +98,34 @@ $csrfToken = $this->getVar('csrfToken');
                 </div>
             </div>
         </section>
+
+        <!-- Live Preview -->
+        <section class="rex-page-section">
+            <div class="panel panel-default">
+                <header class="panel-heading">
+                    <div class="panel-title"><i class="rex-icon fa-eye"></i> Live Preview</div>
+                </header>
+                <div class="panel-body">
+                    <div class="alert alert-info" style="margin-bottom: 14px;">
+                        <strong>Echte Theme-Basis-Vorschau:</strong> Diese Vorschau rendert das reale Consent-Theme der gewaehlten Vorlage.
+                    </div>
+
+                    <div class="cm-real-preview-wrap" style="margin-bottom: 18px;">
+                        <iframe
+                            id="cm-real-theme-preview"
+                            src="<?= $basePreviewUrl ?>"
+                            title="Reale Theme-Vorschau"
+                            loading="lazy"
+                            style="width: 100%; height: 520px; border: 1px solid #d7d7d7; border-radius: 8px; background: #fff;"
+                        ></iframe>
+                    </div>
+
+                    <p class="help-block" style="margin-bottom: 0;">
+                        <strong>Hinweis:</strong> Alle Änderungen werden direkt auf die reale Theme-Basis-Vorschau oben angewendet.
+                    </p>
+                </div>
+            </div>
+        </section>
         
         <!-- Grundfarben -->
         <section class="rex-page-section">
@@ -107,6 +148,11 @@ $csrfToken = $this->getVar('csrfToken');
                                 <label for="background_opacity">Hintergrund-Transparenz: <span id="background_opacity_value"><?= rex_escape($colors['background_opacity'] ?? '100') ?>%</span></label>
                                 <input type="range" class="form-control" id="background_opacity" name="background_opacity" min="0" max="100" value="<?= rex_escape($colors['background_opacity'] ?? '100') ?>">
                                 <small class="help-block">Für Glaseffekt empfohlen: 70-90%</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="backdrop_blur">Backdrop-Blur: <span id="backdrop_blur_value"><?= rex_escape($colors['backdrop_blur'] ?? '12') ?>px</span></label>
+                                <input type="range" class="form-control" id="backdrop_blur" name="backdrop_blur" min="0" max="30" value="<?= rex_escape($colors['backdrop_blur'] ?? '12') ?>">
+                                <small class="help-block">Steuert die Unschärfe des Hintergrunds hinter dem Dialog.</small>
                             </div>
                             <?php endif ?>
                         </div>
@@ -277,6 +323,23 @@ $csrfToken = $this->getVar('csrfToken');
                                     <input type="color" class="form-control color-picker" id="details_border" name="details_border" value="<?= rex_escape($colors['details_border'] ?? '#dee2e6') ?>">
                                     <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_border'] ?? '#dee2e6') ?></span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="details_table_bg">Tabellen-/Zeilenhintergrund:</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control color-picker" id="details_table_bg" name="details_table_bg" value="<?= rex_escape($colors['details_table_bg'] ?? $colors['details_bg'] ?? '#f8f9fa') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_table_bg'] ?? $colors['details_bg'] ?? '#f8f9fa') ?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="details_table_bg_opacity">Tabellen-Transparenz: <span id="details_table_bg_opacity_value"><?= rex_escape($colors['details_table_bg_opacity'] ?? '100') ?>%</span></label>
+                                <input type="range" class="form-control" id="details_table_bg_opacity" name="details_table_bg_opacity" min="0" max="100" value="<?= rex_escape($colors['details_table_bg_opacity'] ?? '100') ?>">
                             </div>
                         </div>
                     </div>
@@ -508,6 +571,13 @@ $csrfToken = $this->getVar('csrfToken');
                     <div class="panel-title"><i class="rex-icon fa-columns"></i> Overlay & Layout</div>
                 </header>
                 <div class="panel-body">
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <input type="hidden" name="overlay_enabled" value="0">
+                        <label for="overlay_enabled" style="font-weight: 600; cursor: pointer; margin-bottom: 0;">
+                            <input type="checkbox" id="overlay_enabled" name="overlay_enabled" value="1" <?= ('0' !== (string) ($colors['overlay_enabled'] ?? '1')) ? 'checked' : '' ?>>
+                            Overlay aktivieren
+                        </label>
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -522,6 +592,12 @@ $csrfToken = $this->getVar('csrfToken');
                             <div class="form-group">
                                 <label for="overlay_opacity">Overlay-Transparenz: <span id="overlay_opacity_value"><?= rex_escape($colors['overlay_opacity']) ?>%</span></label>
                                 <input type="range" class="form-control" id="overlay_opacity" name="overlay_opacity" min="0" max="100" value="<?= rex_escape($colors['overlay_opacity']) ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="overlay_backdrop_blur">Overlay-Backdrop-Blur: <span id="overlay_backdrop_blur_value"><?= rex_escape($colors['overlay_backdrop_blur'] ?? '0') ?>px</span></label>
+                                <input type="range" class="form-control" id="overlay_backdrop_blur" name="overlay_backdrop_blur" min="0" max="30" value="<?= rex_escape($colors['overlay_backdrop_blur'] ?? '0') ?>">
                             </div>
                         </div>
                     </div>
@@ -589,6 +665,187 @@ $csrfToken = $this->getVar('csrfToken');
 .consent-manager-theme-editor input[type="range"] {
     -webkit-appearance: auto;
     appearance: auto;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage {
+    position: relative;
+    height: 520px;
+    border: 1px solid #d7d7d7;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f5f7fa;
+}
+
+.consent-manager-theme-editor .cm-live-preview-page {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(145deg, #f9fafb 0%, #eef2f7 100%);
+}
+
+.consent-manager-theme-editor .cm-live-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid #dbe2ea;
+    font-weight: 600;
+    color: #334155;
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.consent-manager-theme-editor .cm-live-preview-pill {
+    font-size: 12px;
+    background: #e2e8f0;
+    color: #475569;
+    border-radius: 999px;
+    padding: 3px 10px;
+}
+
+.consent-manager-theme-editor .cm-live-preview-content {
+    padding: 22px 20px;
+    color: #475569;
+}
+
+.consent-manager-theme-editor .cm-live-preview-content h4 {
+    margin: 0 0 8px 0;
+    color: #1e293b;
+}
+
+.consent-manager-theme-editor .cm-live-preview-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+.consent-manager-theme-editor .cm-live-preview-box {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    top: 55%;
+    transform: translate(-50%, -50%);
+    width: min(92%, 560px);
+    padding: 18px;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-compact .cm-live-preview-box {
+    width: min(90%, 440px);
+    padding: 14px;
+    top: 56%;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-banner-top .cm-live-preview-box,
+.consent-manager-theme-editor .cm-live-preview-stage.template-banner-bottom .cm-live-preview-box {
+    left: 0;
+    right: 0;
+    transform: none;
+    width: 100%;
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+    border-radius: 0 !important;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-banner-top .cm-live-preview-box {
+    top: 0;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-banner-bottom .cm-live-preview-box {
+    top: auto;
+    bottom: 0;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-banner-top .cm-live-preview-overlay,
+.consent-manager-theme-editor .cm-live-preview-stage.template-banner-bottom .cm-live-preview-overlay,
+.consent-manager-theme-editor .cm-live-preview-stage.template-minimal .cm-live-preview-overlay {
+    display: none;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-minimal .cm-live-preview-box {
+    left: auto;
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    transform: none;
+    width: min(88%, 360px);
+    padding: 14px;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-fluid .cm-live-preview-box,
+.consent-manager-theme-editor .cm-live-preview-stage.template-fluid-dark .cm-live-preview-box {
+    width: min(94%, 680px);
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-fluid-dark .cm-live-preview-page {
+    background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-fluid-dark .cm-live-preview-header {
+    background: rgba(15, 23, 42, 0.8);
+    border-bottom-color: #334155;
+    color: #e2e8f0;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-fluid-dark .cm-live-preview-pill {
+    background: #334155;
+    color: #cbd5e1;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-fluid-dark .cm-live-preview-content {
+    color: #cbd5e1;
+}
+
+.consent-manager-theme-editor .cm-live-preview-stage.template-fluid-dark .cm-live-preview-content h4 {
+    color: #f8fafc;
+}
+
+.consent-manager-theme-editor .cm-live-preview-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    line-height: 1.2;
+}
+
+.consent-manager-theme-editor .cm-live-preview-box p {
+    margin: 0 0 10px 0;
+    line-height: 1.45;
+}
+
+.consent-manager-theme-editor .cm-live-preview-box a {
+    text-decoration: underline;
+}
+
+.consent-manager-theme-editor .cm-live-preview-actions {
+    display: flex;
+    gap: 10px;
+    margin: 14px 0 12px 0;
+    flex-wrap: wrap;
+}
+
+.consent-manager-theme-editor .cm-live-preview-actions button,
+.consent-manager-theme-editor #cm-live-preview-details-toggle {
+    padding: 10px 14px;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+.consent-manager-theme-editor .cm-live-preview-details {
+    margin-top: 10px;
+    padding: 12px;
+}
+
+.consent-manager-theme-editor .cm-live-preview-details h4 {
+    margin: 0 0 6px 0;
+}
+
+@media (max-width: 768px) {
+    .consent-manager-theme-editor .cm-live-preview-stage {
+        height: 460px;
+    }
+
+    .consent-manager-theme-editor .cm-live-preview-box {
+        width: calc(100% - 18px);
+        padding: 14px;
+    }
 }
 </style>
 
@@ -699,6 +956,8 @@ $csrfToken = $this->getVar('csrfToken');
 
     function updateDetailsPreviews() {
         const detailsBg = document.getElementById('details_bg') ? document.getElementById('details_bg').value : '#f8f9fa';
+        const detailsTableBg = document.getElementById('details_table_bg') ? document.getElementById('details_table_bg').value : detailsBg;
+        const detailsTableBgOpacity = document.getElementById('details_table_bg_opacity') ? document.getElementById('details_table_bg_opacity').value : '100';
         const detailsText = document.getElementById('details_text') ? document.getElementById('details_text').value : '#1a1a1a';
         const detailsHeading = document.getElementById('details_heading') ? document.getElementById('details_heading').value : '#1a1a1a';
         const detailsBorder = document.getElementById('details_border') ? document.getElementById('details_border').value : '#dee2e6';
@@ -710,7 +969,7 @@ $csrfToken = $this->getVar('csrfToken');
         const previewLink = document.getElementById('details-preview-link');
         
         if (preview) {
-            preview.style.backgroundColor = detailsBg;
+            preview.style.backgroundColor = toRgba(detailsTableBg, detailsTableBgOpacity);
             preview.style.borderColor = detailsBorder;
         }
         if (previewHeading) {
@@ -796,6 +1055,291 @@ $csrfToken = $this->getVar('csrfToken');
         
         preview.style.boxShadow = boxShadow;
         preview.style.borderRadius = borderRadius;
+
+        return boxShadow;
+    }
+
+    function toRgba(hex, opacityPercent) {
+        const clean = (hex || '#000000').replace('#', '');
+        const r = parseInt(clean.substring(0, 2), 16);
+        const g = parseInt(clean.substring(2, 4), 16);
+        const b = parseInt(clean.substring(4, 6), 16);
+        const alpha = Math.max(0, Math.min(100, parseInt(opacityPercent || '100', 10))) / 100;
+        return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+    }
+
+    function updateRealThemePreview(state) {
+        const iframe = document.getElementById('cm-real-theme-preview');
+        if (!iframe) {
+            return;
+        }
+
+        let doc;
+        try {
+            doc = iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null);
+        } catch (e) {
+            return;
+        }
+
+        if (!doc || !doc.head || !doc.body) {
+            return;
+        }
+
+        let styleNode = doc.getElementById('cm-theme-editor-live-overrides');
+        if (!styleNode) {
+            styleNode = doc.createElement('style');
+            styleNode.id = 'cm-theme-editor-live-overrides';
+            doc.head.appendChild(styleNode);
+        }
+
+        const primaryButtonBackground = state.buttonStyle === 'outline' ? 'transparent' : state.buttonBg;
+        const primaryButtonText = state.buttonStyle === 'outline' ? state.buttonBorderColor : state.buttonText;
+        const overlayBackground = state.overlayEnabled ? toRgba(state.overlayColor, state.overlayOpacity) : 'transparent';
+        const overlayBlurAmount = Math.max(0, parseInt(state.overlayBackdropBlur || '0', 10));
+        const overlayBackdropFilterValue = (state.overlayEnabled && overlayBlurAmount > 0) ? 'blur(' + overlayBlurAmount + 'px)' : 'none';
+        const detailsTableBackground = toRgba(state.detailsTableBg || state.detailsBg, state.detailsTableBgOpacity || '100');
+        const blurAmount = Math.max(0, parseInt(state.backdropBlur || '0', 10));
+        const backdropFilterValue = blurAmount > 0 ? 'blur(' + blurAmount + 'px)' : 'none';
+        const builderThemeBaseInput = document.querySelector('#theme-editor-form input[name="theme_base"]');
+        const effectiveThemeBase = (state.themeBase || (builderThemeBaseInput ? builderThemeBaseInput.value : '') || '').trim();
+        let layoutOverride = '';
+
+        if (effectiveThemeBase === 'banner_bottom') {
+            layoutOverride = '' +
+                '#consent_manager-wrapper { position: fixed !important; left: 0 !important; right: 0 !important; bottom: 0 !important; top: auto !important; transform: none !important; width: 100% !important; max-width: none !important; margin: 0 !important; }';
+        } else if (effectiveThemeBase === 'banner_top') {
+            layoutOverride = '' +
+                '#consent_manager-wrapper { position: fixed !important; left: 0 !important; right: 0 !important; top: 0 !important; bottom: auto !important; transform: none !important; width: 100% !important; max-width: none !important; margin: 0 !important; }';
+        }
+
+        styleNode.textContent = '' +
+            '#consent_manager-background { background: ' + overlayBackground + ' !important; backdrop-filter: ' + overlayBackdropFilterValue + ' !important; -webkit-backdrop-filter: ' + overlayBackdropFilterValue + ' !important; }' +
+            '#consent_manager-wrapper { background: ' + toRgba(state.bg, state.boxBgOpacity) + ' !important; color: ' + state.text + ' !important; border: ' + state.borderWidth + ' solid ' + state.accent + ' !important; border-radius: ' + state.borderRadius + ' !important; box-shadow: ' + state.shadowValue + ' !important; font-size: ' + state.fontSize + 'px !important; backdrop-filter: ' + backdropFilterValue + ' !important; -webkit-backdrop-filter: ' + backdropFilterValue + ' !important; }' +
+            '#consent_manager-wrapper .consent_manager-header { position: static !important; padding-right: 2.5rem !important; width: 100% !important; box-sizing: border-box !important; }' +
+            '#consent_manager-wrapper .consent_manager-wrapper-inner { position: relative !important; }' +
+            '#consent_manager-wrapper .consent_manager-header .consent_manager-close { position: absolute !important; top: 0.35rem !important; right: 0.35rem !important; margin-left: 0 !important; transform: none !important; }' +
+            '#consent_manager-wrapper .consent_manager-headline { color: ' + state.title + ' !important; }' +
+            '#consent_manager-wrapper .consent_manager-text, #consent_manager-wrapper .consent_manager-cookie-description, #consent_manager-wrapper .consent_manager-cookie-provider, #consent_manager-wrapper .consent_manager-cookie-name, #consent_manager-wrapper .consent_manager-cookiegroup-description { color: ' + state.text + ' !important; }' +
+            '#consent_manager-wrapper a, #consent_manager-wrapper .consent_manager-sitelinks a { color: ' + state.link + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-toggle-details { color: ' + state.detailsLink + ' !important; border: ' + state.buttonBorderWidth + ' solid ' + state.detailsLink + ' !important; border-radius: ' + state.buttonRadius + ' !important; background: transparent !important; font-size: ' + state.buttonFontSize + 'px !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail { background: ' + toRgba(state.detailsBg, state.detailsBgOpacity) + ' !important; color: ' + state.detailsText + ' !important; border: 1px solid ' + state.detailsBorder + ' !important; border-radius: ' + state.buttonRadius + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookiegroup-description, #consent_manager-wrapper #consent_manager-detail .consent_manager-cookie { background: ' + detailsTableBackground + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookie { padding-top: 6px !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookie > span { margin-top: 0 !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookie > span + span { margin-top: 0.5em !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookiegroup-title { margin-top: 0.75em !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookiegroup-title:first-of-type { margin-top: 0 !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail .consent_manager-headline, #consent_manager-wrapper #consent_manager-detail .consent_manager-cookiegroup-title { color: ' + state.detailsHeading + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-save-selection, #consent_manager-wrapper #consent_manager-accept-all, #consent_manager-wrapper #consent_manager-accept-none { border-radius: ' + state.buttonRadius + ' !important; border: ' + state.buttonBorderWidth + ' solid ' + state.buttonBorderColor + ' !important; font-size: ' + state.buttonFontSize + 'px !important; }' +
+            '#consent_manager-wrapper #consent_manager-save-selection, #consent_manager-wrapper #consent_manager-accept-all { background: ' + primaryButtonBackground + ' !important; color: ' + primaryButtonText + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-accept-none { background: ' + primaryButtonBackground + ' !important; color: ' + primaryButtonText + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-save-selection:focus, #consent_manager-wrapper #consent_manager-accept-all:focus, #consent_manager-wrapper #consent_manager-accept-none:focus, #consent_manager-wrapper #consent_manager-toggle-details:focus { outline: 2px solid ' + state.focus + ' !important; outline-offset: 2px !important; }' +
+            layoutOverride;
+
+        const wrapper = doc.getElementById('consent_manager-wrapper');
+        if (wrapper) {
+            if (effectiveThemeBase === 'banner_bottom' || effectiveThemeBase === 'banner_top') {
+                wrapper.style.setProperty('position', 'fixed', 'important');
+                wrapper.style.setProperty('left', '0', 'important');
+                wrapper.style.setProperty('right', '0', 'important');
+                wrapper.style.setProperty('width', '100%', 'important');
+                wrapper.style.setProperty('max-width', 'none', 'important');
+                wrapper.style.setProperty('margin', '0', 'important');
+                wrapper.style.setProperty('transform', 'none', 'important');
+
+                if (effectiveThemeBase === 'banner_bottom') {
+                    wrapper.style.setProperty('top', 'auto', 'important');
+                    wrapper.style.setProperty('bottom', '0', 'important');
+                } else {
+                    wrapper.style.setProperty('top', '0', 'important');
+                    wrapper.style.setProperty('bottom', 'auto', 'important');
+                }
+            } else {
+                wrapper.style.removeProperty('top');
+                wrapper.style.removeProperty('bottom');
+                wrapper.style.removeProperty('left');
+                wrapper.style.removeProperty('right');
+                wrapper.style.removeProperty('width');
+                wrapper.style.removeProperty('max-width');
+                wrapper.style.removeProperty('margin');
+                wrapper.style.removeProperty('transform');
+                wrapper.style.removeProperty('position');
+            }
+        }
+    }
+
+    function updateLivePreview() {
+        const themeBaseInput = document.querySelector('#theme-editor-form input[name="theme_base"]');
+        const themeBase = themeBaseInput ? themeBaseInput.value : 'normal';
+        const bg = document.getElementById('background_color').value;
+        const text = document.getElementById('text_color').value;
+        const title = document.getElementById('title_color') ? document.getElementById('title_color').value : text;
+        const link = document.getElementById('link_color').value;
+        const detailsLink = document.getElementById('details_link') ? document.getElementById('details_link').value : link;
+        const detailsBg = document.getElementById('details_bg') ? document.getElementById('details_bg').value : '#f8f9fa';
+        const detailsTableBg = document.getElementById('details_table_bg') ? document.getElementById('details_table_bg').value : detailsBg;
+        const detailsTableBgOpacity = document.getElementById('details_table_bg_opacity') ? document.getElementById('details_table_bg_opacity').value : '100';
+        const detailsText = document.getElementById('details_text') ? document.getElementById('details_text').value : '#1a1a1a';
+        const detailsHeading = document.getElementById('details_heading') ? document.getElementById('details_heading').value : detailsText;
+        const detailsBorder = document.getElementById('details_border') ? document.getElementById('details_border').value : '#dee2e6';
+
+        const overlayColor = document.getElementById('overlay_color').value;
+        const overlayOpacity = document.getElementById('overlay_opacity').value;
+        const overlayBackdropBlur = document.getElementById('overlay_backdrop_blur') ? document.getElementById('overlay_backdrop_blur').value : '0';
+        const overlayEnabledInput = document.getElementById('overlay_enabled');
+        const overlayEnabled = overlayEnabledInput ? overlayEnabledInput.checked : true;
+        const boxBgOpacity = document.getElementById('background_opacity') ? document.getElementById('background_opacity').value : '100';
+        const backdropBlur = document.getElementById('backdrop_blur') ? document.getElementById('backdrop_blur').value : '0';
+        const detailsBgOpacity = document.getElementById('details_bg_opacity') ? document.getElementById('details_bg_opacity').value : '100';
+
+        const buttonBg = document.getElementById('button_bg').value;
+        const buttonText = document.getElementById('button_text').value;
+        const buttonHover = document.getElementById('button_hover').value;
+        const buttonHoverText = document.getElementById('button_hover_text').value;
+        const buttonStyle = document.getElementById('button_style') ? document.getElementById('button_style').value : 'filled';
+        const buttonRadius = (document.getElementById('button_radius') ? document.getElementById('button_radius').value : '4') + 'px';
+        const buttonBorderWidth = (document.getElementById('button_border_width') ? document.getElementById('button_border_width').value : '2') + 'px';
+        const buttonBorderColor = document.getElementById('button_border_color') ? document.getElementById('button_border_color').value : '#333333';
+
+        const borderRadius = (document.getElementById('border_radius') ? document.getElementById('border_radius').value : '4') + 'px';
+        const borderWidth = (document.getElementById('border_width') ? document.getElementById('border_width').value : '1') + 'px';
+        const accent = document.getElementById('accent_color').value;
+        const focus = document.getElementById('focus_color').value;
+
+        const fontSize = document.getElementById('font_size') ? document.getElementById('font_size').value : '16';
+        const buttonFontSize = document.getElementById('button_font_size') ? document.getElementById('button_font_size').value : '15';
+        const shadowValue = updateShadowPreview() || 'none';
+
+        const liveOverlay = document.getElementById('cm-live-preview-overlay');
+        const liveBox = document.getElementById('cm-live-preview-box');
+        const liveStage = document.getElementById('cm-live-preview-stage');
+        const liveTitle = document.getElementById('cm-live-preview-title');
+        const liveText = document.getElementById('cm-live-preview-text');
+        const liveLink = document.getElementById('cm-live-preview-link');
+        const liveDetails = document.getElementById('cm-live-preview-details');
+        const liveDetailsLink = document.getElementById('cm-live-preview-details-link');
+        const liveBtnPrimary = document.getElementById('cm-live-preview-btn-primary');
+        const liveBtnSecondary = document.getElementById('cm-live-preview-btn-secondary');
+        const liveDetailsToggle = document.getElementById('cm-live-preview-details-toggle');
+
+        if (liveOverlay && liveBox && liveStage) {
+            const templateClasses = ['template-normal', 'template-compact', 'template-banner-top', 'template-banner-bottom', 'template-minimal', 'template-fluid', 'template-fluid-dark'];
+            templateClasses.forEach(function(cssClass) {
+                liveStage.classList.remove(cssClass);
+            });
+            const currentTemplateClass = 'template-' + themeBase.replace('_', '-');
+            liveStage.classList.add(currentTemplateClass);
+
+            liveOverlay.style.backgroundColor = overlayEnabled ? toRgba(overlayColor, overlayOpacity) : 'transparent';
+            liveBox.style.backgroundColor = toRgba(bg, boxBgOpacity);
+            liveBox.style.color = text;
+            liveBox.style.border = borderWidth + ' solid ' + accent;
+            liveBox.style.borderRadius = borderRadius;
+            liveBox.style.boxShadow = shadowValue;
+            liveBox.style.fontSize = (fontSize || '16') + 'px';
+
+            if (liveTitle) {
+                liveTitle.style.color = title;
+            }
+            if (liveText) {
+                liveText.style.color = text;
+            }
+            if (liveLink) {
+                liveLink.style.color = link;
+            }
+
+            if (liveBtnPrimary) {
+                liveBtnPrimary.style.borderRadius = buttonRadius;
+                liveBtnPrimary.style.border = buttonBorderWidth + ' solid ' + buttonBorderColor;
+                liveBtnPrimary.style.fontSize = buttonFontSize + 'px';
+                if (buttonStyle === 'outline') {
+                    liveBtnPrimary.style.backgroundColor = 'transparent';
+                    liveBtnPrimary.style.color = buttonBorderColor;
+                } else {
+                    liveBtnPrimary.style.backgroundColor = buttonBg;
+                    liveBtnPrimary.style.color = buttonText;
+                }
+            }
+
+            if (liveBtnSecondary) {
+                liveBtnSecondary.style.borderRadius = buttonRadius;
+                liveBtnSecondary.style.border = buttonBorderWidth + ' solid ' + buttonBorderColor;
+                liveBtnSecondary.style.fontSize = buttonFontSize + 'px';
+                liveBtnSecondary.style.backgroundColor = buttonHover;
+                liveBtnSecondary.style.color = buttonHoverText;
+            }
+
+            if (liveDetailsToggle) {
+                liveDetailsToggle.style.color = detailsLink;
+                liveDetailsToggle.style.backgroundColor = 'transparent';
+                liveDetailsToggle.style.border = buttonBorderWidth + ' solid ' + detailsLink;
+                liveDetailsToggle.style.borderRadius = buttonRadius;
+                liveDetailsToggle.style.fontSize = buttonFontSize + 'px';
+            }
+
+            if (liveDetails) {
+                liveDetails.style.backgroundColor = toRgba(detailsBg, detailsBgOpacity);
+                liveDetails.style.color = detailsText;
+                liveDetails.style.border = '1px solid ' + detailsBorder;
+                liveDetails.style.borderRadius = buttonRadius;
+            }
+
+            const liveDetailsHeading = liveDetails ? liveDetails.querySelector('h4') : null;
+            const liveDetailsText = liveDetails ? liveDetails.querySelector('p') : null;
+            if (liveDetailsHeading) {
+                liveDetailsHeading.style.color = detailsHeading;
+            }
+            if (liveDetailsText) {
+                liveDetailsText.style.color = detailsText;
+            }
+            if (liveDetailsLink) {
+                liveDetailsLink.style.color = detailsLink;
+            }
+
+            // Tastaturfokus schnell sichtbar in der Vorschau
+            [liveBtnPrimary, liveBtnSecondary, liveDetailsToggle].forEach(function(btn) {
+                if (!btn) return;
+                btn.style.outlineColor = focus;
+                btn.style.outlineOffset = '2px';
+            });
+        }
+
+        updateRealThemePreview({
+            themeBase: themeBase,
+            bg: bg,
+            text: text,
+            title: title,
+            link: link,
+            detailsLink: detailsLink,
+            detailsBg: detailsBg,
+            detailsTableBg: detailsTableBg,
+            detailsTableBgOpacity: detailsTableBgOpacity,
+            detailsText: detailsText,
+            detailsHeading: detailsHeading,
+            detailsBorder: detailsBorder,
+            overlayColor: overlayColor,
+            overlayOpacity: overlayOpacity,
+            overlayBackdropBlur: overlayBackdropBlur,
+            overlayEnabled: overlayEnabled,
+            boxBgOpacity: boxBgOpacity,
+            backdropBlur: backdropBlur,
+            detailsBgOpacity: detailsBgOpacity,
+            buttonBg: buttonBg,
+            buttonText: buttonText,
+            buttonHover: buttonHover,
+            buttonHoverText: buttonHoverText,
+            buttonStyle: buttonStyle,
+            buttonRadius: buttonRadius,
+            buttonBorderWidth: buttonBorderWidth,
+            buttonBorderColor: buttonBorderColor,
+            borderRadius: borderRadius,
+            borderWidth: borderWidth,
+            accent: accent,
+            focus: focus,
+            fontSize: fontSize,
+            buttonFontSize: buttonFontSize,
+            shadowValue: shadowValue
+        });
     }
 
     function updateDetailsTogglePreview() {
@@ -816,6 +1360,41 @@ $csrfToken = $this->getVar('csrfToken');
 
     // Event Listeners - use rex:ready for REDAXO backend
     function initThemeEditor() {
+        function updateOverlayControlsState() {
+            const toggle = document.getElementById('overlay_enabled');
+            const overlayColor = document.getElementById('overlay_color');
+            const overlayOpacity = document.getElementById('overlay_opacity');
+            const overlayBackdropBlur = document.getElementById('overlay_backdrop_blur');
+            const enabled = toggle ? toggle.checked : true;
+
+            if (overlayColor) {
+                overlayColor.disabled = !enabled;
+            }
+
+            if (overlayOpacity) {
+                overlayOpacity.disabled = !enabled;
+            }
+
+            if (overlayBackdropBlur) {
+                overlayBackdropBlur.disabled = !enabled;
+            }
+        }
+
+        const realPreviewFrame = document.getElementById('cm-real-theme-preview');
+        if (realPreviewFrame) {
+            realPreviewFrame.addEventListener('load', function() {
+                updateLivePreview();
+            });
+        }
+
+        const overlayToggle = document.getElementById('overlay_enabled');
+        if (overlayToggle) {
+            overlayToggle.addEventListener('change', function() {
+                updateOverlayControlsState();
+                updateLivePreview();
+            });
+        }
+
         // Update hex values when color picker changes
         document.querySelectorAll('.color-picker').forEach(function(colorInput) {
             colorInput.addEventListener('input', function() {
@@ -825,6 +1404,7 @@ $csrfToken = $this->getVar('csrfToken');
                 updateDetailsPreviews();
                 updateDetailsTogglePreview();
                 updateShadowPreview();
+                updateLivePreview();
             });
         });
 
@@ -846,6 +1426,7 @@ $csrfToken = $this->getVar('csrfToken');
                 updateButtonPreviews();
                 updateDetailsTogglePreview();
                 updateShadowPreview();
+                updateLivePreview();
             });
         });
         
@@ -854,15 +1435,18 @@ $csrfToken = $this->getVar('csrfToken');
             selectInput.addEventListener('change', function() {
                 updateButtonPreviews();
                 updateShadowPreview();
+                updateLivePreview();
             });
         });
 
         // Initial update
+        updateOverlayControlsState();
         updateAllContrasts();
         updateButtonPreviews();
         updateDetailsPreviews();
         updateDetailsTogglePreview();
         updateShadowPreview();
+        updateLivePreview();
     }
     
     // Support both DOMContentLoaded and rex:ready for REDAXO backend

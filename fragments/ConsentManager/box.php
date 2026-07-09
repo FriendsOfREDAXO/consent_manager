@@ -48,12 +48,18 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                 .consent_manager-header {
                     padding: 0 0 1em 0;
                     background: transparent;
-                    position: relative;
+                    position: static;
                     z-index: 10;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     color: inherit;
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding-right: 2.5rem;
+                }
+                .consent_manager-wrapper-inner {
+                    position: relative;
                 }
                 .consent_manager-header .consent_manager-close {
                     cursor: pointer;
@@ -65,8 +71,9 @@ if (0 < count($consent_manager->cookiegroups)) : ?>
                     color: inherit;
                     opacity: 0.7;
                     position: absolute;
-                    top: -1.7rem;
-                    right: -1.7rem;
+                    top: 0.35rem;
+                    right: 0.35rem;
+                    margin-left: 0;
                 }
                 .consent_manager-header .consent_manager-close:hover {
                     opacity: 1;

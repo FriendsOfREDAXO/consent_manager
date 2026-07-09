@@ -2,6 +2,7 @@
 
 ## Version 5.7.0 - 09.07.2026
 
+- **Feature (Theme-Editor/Live):** Neuer Live-Theme-Editor mit direkter Echtzeit-Vorschau des realen Consent-Themes im Backend (inkl. sofort sichtbarer Anpassungen für Farben, Overlay, Backdrop und Details-Bereich).
 - **Feature (Rename-Workflow/Listen):** Schlüssel-Umbenennung erfolgt jetzt direkt in den jeweiligen Listen (Dienste, Gruppen, Texte), ohne Seitenwechsel in die Settings.
 - **Feature (Rename-Workflow/Sicherheit):** Vor einer echten Umbenennung ist ein Dry-Run jetzt verpflichtend. Ein Apply ohne passenden Dry-Run wird serverseitig blockiert.
 - **UX (Rename-Workflow):** Apply-Button bleibt bis zum erfolgreichen Dry-Run deaktiviert und wird erst für genau die geprüfte Alt/Neu-Kombination freigeschaltet.
