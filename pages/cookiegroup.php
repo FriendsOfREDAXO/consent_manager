@@ -4,6 +4,7 @@ use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
 use FriendsOfRedaxo\ConsentManager\RexFormSupport;
 use FriendsOfRedaxo\ConsentManager\RexListSupport;
+use FriendsOfRedaxo\ConsentManager\UidRenameWorkflow;
 use FriendsOfRedaxo\ConsentManager\Utility;
 
 $showlist = true;
@@ -13,6 +14,84 @@ $csrf = rex_csrf_token::factory('consent_manager_cookiegroup');
 $clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3) ?? '');
 $table = rex::getTable('consent_manager_cookiegroup');
 $msg = '';
+$startClangId = rex_clang::getStartId();
+$renameOpen = false;
+$renameMode = '';
+$renameResult = null;
+$renameOldUid = '';
+$renamePid = rex_request::request('rename_pid', 'int', 0);
+$approvedDryrunToken = '';
+$buildRenameToken = static function (string $oldUid, string $newUid, bool $updateConsentLogs): string {
+    return hash('sha256', 'cookiegroup|' . $oldUid . '|' . $newUid . '|' . ((int) $updateConsentLogs));
+};
+
+if ('uid_rename_open' === $func) {
+    if ($renamePid > 0) {
+        $uidSql = rex_sql::factory();
+        $uidSql->setQuery('SELECT uid FROM ' . $table . ' WHERE pid = ? LIMIT 1', [$renamePid]);
+        if ($uidSql->getRows() > 0) {
+            $renameOldUid = (string) $uidSql->getValue('uid');
+            $renameOpen = true;
+        }
+    }
+    $func = '';
+}
+
+if ('uid_rename_dryrun' === $func || 'uid_rename_apply' === $func) {
+    if (!$csrf->isValid()) {
+        $msg = rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+    } elseif ($clang_id !== $startClangId) {
+        $msg = rex_view::error(rex_i18n::msg('consent_manager_uid_primary_only_notice'));
+    } else {
+        $renameOldUid = rex_request::post('old_uid', 'string', '');
+        $renameNewUid = rex_request::post('new_uid', 'string', '');
+        $updateConsentLogs = (bool) rex_request::post('update_consent_logs', 'int', 1);
+        $expectedToken = $buildRenameToken($renameOldUid, $renameNewUid, $updateConsentLogs);
+        $postedDryrunToken = rex_request::post('dryrun_token', 'string', '');
+
+        if ('uid_rename_dryrun' === $func) {
+            $renameResult = UidRenameWorkflow::dryRun('cookiegroup', $renameOldUid, $renameNewUid);
+            $renameMode = 'dryrun';
+            if (is_array($renameResult) && ($renameResult['ok'] ?? false)) {
+                $approvedDryrunToken = $expectedToken;
+            }
+        } else {
+            if ($postedDryrunToken !== $expectedToken) {
+                $renameResult = UidRenameWorkflow::dryRun('cookiegroup', $renameOldUid, $renameNewUid);
+                $renameMode = 'dryrun';
+                if (is_array($renameResult) && ($renameResult['ok'] ?? false)) {
+                    $approvedDryrunToken = $expectedToken;
+                }
+                $msg = rex_view::error('Vor der Umbenennung muss ein Dry-Run fuer genau diesen Schluessel ausgefuehrt werden. Bitte Hinweise und moegliche Nacharbeit pruefen.');
+                $renameOpen = true;
+                $func = '';
+            } else {
+                $renameResult = UidRenameWorkflow::apply('cookiegroup', $renameOldUid, $renameNewUid, $updateConsentLogs);
+                $renameMode = 'apply';
+            }
+        }
+
+        if ('' === $msg) {
+            if (is_array($renameResult) && ($renameResult['ok'] ?? false)) {
+                $msg = rex_view::success('dryrun' === $renameMode ? 'Dry-Run erfolgreich. Bitte Hinweise pruefen.' : 'Umbenennung erfolgreich ausgefuehrt.');
+            } else {
+                $msg = rex_view::error('Dry-Run/Umbenennung fehlgeschlagen. Details siehe Dialog.');
+            }
+        }
+
+        $renameOpen = true;
+    }
+    $func = '';
+}
+
+if ('add' === $func && $clang_id !== $startClangId) {
+    header('Location: ' . rex_url::backendPage('consent_manager/cookiegroup/clang' . $startClangId, ['func' => 'add', 'uid_primary_only' => 1]));
+    exit;
+}
+
+if (1 === rex_request::request('uid_primary_only', 'int', 0)) {
+    $msg .= rex_view::warning(rex_i18n::msg('consent_manager_uid_primary_only_notice'));
+}
 if ('delete' === $func) {
     $msg = CLang::deleteDataset($table, $pid);
 } elseif ('duplicate' === $func) {
@@ -112,7 +191,7 @@ if ('delete' === $func) {
     $db->select('id,uid');
     $domains = $db->getArray();
 
-    if ($clang_id === rex_clang::getStartId() || !$form->isEditMode()) {
+    if (!$form->isEditMode()) {
         $form->addFieldset(rex_i18n::msg('consent_manager_general'));
 
         $field = $form->addTextField('uid');
@@ -141,6 +220,7 @@ if ('delete' === $func) {
         
         $field = $form->addReadOnlyField('uid_readonly', (string) $form->getSql()->getValue('uid'));
         $field->setLabel(rex_i18n::msg('consent_manager_uid'));
+        $form->addHiddenField('uid', (string) $form->getSql()->getValue('uid'));
         $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), rex_i18n::msg('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
 
         $checkboxes = [];
@@ -452,12 +532,16 @@ if ($showlist) {
     });
 
     $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
-    $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="3">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
+    $list->setColumnLayout(rex_i18n::msg('function'), ['<th class="rex-table-action" colspan="4">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('function'), ['pid' => '###pid###', 'func' => 'edit', 'start' => rex_request::request('start', 'string')]);
 
     $list->addColumn(rex_i18n::msg('consent_manager_duplicate'), '<i class="rex-icon rex-icon-duplicate"></i> ' . rex_i18n::msg('consent_manager_duplicate'));
     $list->setColumnLayout(rex_i18n::msg('consent_manager_duplicate'), ['', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('consent_manager_duplicate'), ['pid' => '###pid###', 'func' => 'duplicate', 'start' => rex_request::request('start', 'string')] + $csrf->getUrlParams());
+
+    $list->addColumn(rex_i18n::msg('consent_manager_rename'), '<i class="rex-icon fa-exchange"></i> ' . rex_i18n::msg('consent_manager_rename'));
+    $list->setColumnLayout(rex_i18n::msg('consent_manager_rename'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+    $list->setColumnParams(rex_i18n::msg('consent_manager_rename'), ['func' => 'uid_rename_open', 'rename_pid' => '###pid###', 'start' => rex_request::request('start', 'string')]);
 
     $list->addColumn(rex_i18n::msg('delete'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete'), ['', '<td class="rex-table-action">###VALUE###</td>']);
@@ -470,4 +554,97 @@ if ($showlist) {
     $fragment->setVar('title', rex_i18n::msg('consent_manager_cookiegroups'));
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
+
+    $renameNewUidValue = rex_request::post('new_uid', 'string', '');
+    $updateConsentLogsChecked = 1 === rex_request::post('update_consent_logs', 'int', 1);
+    $currentDryrunToken = $approvedDryrunToken;
+    if ('' === $currentDryrunToken && 'dryrun' === $renameMode && is_array($renameResult) && ($renameResult['ok'] ?? false) && '' !== $renameOldUid && '' !== $renameNewUidValue) {
+        $currentDryrunToken = $buildRenameToken($renameOldUid, $renameNewUidValue, $updateConsentLogsChecked);
+    }
+    $applyDisabled = '' === $currentDryrunToken;
+    if ($renameOpen):
+?>
+<div class="modal fade in" id="cm-cookiegroup-rename-modal" tabindex="-1" role="dialog" aria-hidden="false" style="display:block;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location='<?= rex_url::currentBackendPage(['func' => '', 'rename_pid' => 0, 'start' => rex_request::request('start', 'string')]) ?>';"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="rex-icon fa-exchange"></i> <?= rex_i18n::msg('consent_manager_rename') ?></h4>
+            </div>
+            <div class="modal-body">
+                <form action="<?= rex_url::currentBackendPage() ?>" method="post" id="cm-cookiegroup-rename-form">
+                    <?= $csrf->getHiddenField() ?>
+                    <input type="hidden" name="old_uid" value="<?= rex_escape($renameOldUid) ?>">
+                    <input type="hidden" name="func" id="cm-cookiegroup-rename-func" value="">
+                    <input type="hidden" name="dryrun_token" id="cm-cookiegroup-rename-token" value="<?= rex_escape($currentDryrunToken) ?>">
+                    <input type="hidden" name="start" value="<?= rex_escape(rex_request::request('start', 'string')) ?>">
+
+                    <div class="alert alert-info" style="margin-bottom: 12px;">
+                        Vor dem Umbenennen ist ein Dry-Run verpflichtend. Bitte pruefen Sie Auswirkungen, Hinweise und moegliche manuelle Nacharbeit.
+                    </div>
+
+                    <div class="form-group">
+                        <label>Aktueller Schluessel</label>
+                        <input type="text" class="form-control" value="<?= rex_escape($renameOldUid) ?>" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cm-cookiegroup-rename-new">Neuer Schluessel</label>
+                        <input id="cm-cookiegroup-rename-new" type="text" class="form-control" name="new_uid" value="<?= rex_escape($renameNewUidValue) ?>" required>
+                    </div>
+
+                    <div class="checkbox" style="margin-top:0;">
+                        <label>
+                            <input type="checkbox" name="update_consent_logs" value="1"<?= $updateConsentLogsChecked ? ' checked' : '' ?>>
+                            Bei Gruppen-Rename auch Consent-Log-Eintraege anpassen
+                        </label>
+                    </div>
+                </form>
+
+                <?php if (is_array($renameResult)): ?>
+                    <hr>
+                    <?php $impact = is_array($renameResult['impact'] ?? null) ? $renameResult['impact'] : []; ?>
+                    <div class="well" style="margin-bottom:10px; padding:10px;">
+                        <div><strong>Modus:</strong> <?= rex_escape($renameMode) ?></div>
+                        <div><strong>Treffer Datensaetze:</strong> <?= (int) ($impact['source_rows'] ?? 0) ?></div>
+                        <div><strong>Betroffene Sprachen:</strong> <?= (int) ($impact['affected_clangs'] ?? 0) ?></div>
+                        <div><strong>Referenzen in Consent-Logs:</strong> <?= (int) ($impact['consent_log_refs'] ?? 0) ?></div>
+                    </div>
+
+                    <?php $errors = is_array($renameResult['errors'] ?? null) ? $renameResult['errors'] : []; ?>
+                    <?php if ([] !== $errors): ?>
+                        <div class="alert alert-danger"><strong>Fehler</strong><ul style="margin:8px 0 0 18px;"><?php foreach ($errors as $error): ?><li><?= rex_escape((string) $error) ?></li><?php endforeach ?></ul></div>
+                    <?php endif ?>
+
+                    <?php $warnings = is_array($renameResult['warnings'] ?? null) ? $renameResult['warnings'] : []; ?>
+                    <?php if ([] !== $warnings): ?>
+                        <div class="alert alert-warning"><strong>Hinweise</strong><ul style="margin:8px 0 0 18px;"><?php foreach ($warnings as $warning): ?><li><?= rex_escape((string) $warning) ?></li><?php endforeach ?></ul></div>
+                    <?php endif ?>
+
+                    <?php $manualActions = is_array($renameResult['manual_actions'] ?? null) ? $renameResult['manual_actions'] : []; ?>
+                    <?php if ([] !== $manualActions): ?>
+                        <div class="alert alert-info"><strong>Moegliche manuelle Nacharbeit</strong><ul style="margin:8px 0 0 18px;"><?php foreach ($manualActions as $manualAction): ?><li><?= rex_escape((string) $manualAction) ?></li><?php endforeach ?></ul></div>
+                    <?php endif ?>
+                <?php endif ?>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" href="<?= rex_url::currentBackendPage(['func' => '', 'rename_pid' => 0, 'start' => rex_request::request('start', 'string')]) ?>">Schliessen</a>
+                <button type="button" class="btn btn-warning" onclick="document.getElementById('cm-cookiegroup-rename-func').value='uid_rename_dryrun'; document.getElementById('cm-cookiegroup-rename-form').submit();"><i class="rex-icon fa-search"></i> Dry-Run</button>
+                <button type="button" class="btn btn-danger<?= $applyDisabled ? ' disabled' : '' ?>"<?= $applyDisabled ? ' title="Bitte zuerst Dry-Run ausfuehren." aria-disabled="true"' : '' ?> onclick="if (this.classList.contains('disabled')) { return false; } if (confirm('Umbenennung jetzt ausfuehren? Hinweise wurden geprueft?')) { document.getElementById('cm-cookiegroup-rename-func').value='uid_rename_apply'; document.getElementById('cm-cookiegroup-rename-form').submit(); }"><i class="rex-icon fa-play"></i> Umbenennen</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in"></div>
+<script nonce="<?= rex_response::getNonce() ?>">
+    jQuery(function () {
+        var input = document.getElementById('cm-cookiegroup-rename-new');
+        if (input) {
+            input.focus();
+            input.select();
+        }
+    });
+</script>
+<?php
+    endif;
 }

@@ -1,5 +1,13 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.7.0 - 09.07.2026
+
+- **Feature (Rename-Workflow/Listen):** Schlüssel-Umbenennung erfolgt jetzt direkt in den jeweiligen Listen (Dienste, Gruppen, Texte), ohne Seitenwechsel in die Settings.
+- **Feature (Rename-Workflow/Sicherheit):** Vor einer echten Umbenennung ist ein Dry-Run jetzt verpflichtend. Ein Apply ohne passenden Dry-Run wird serverseitig blockiert.
+- **UX (Rename-Workflow):** Apply-Button bleibt bis zum erfolgreichen Dry-Run deaktiviert und wird erst für genau die geprüfte Alt/Neu-Kombination freigeschaltet.
+- **UX (Auswirkungen & Nacharbeit):** Dry-Run zeigt Auswirkungen, Risiken/Hinweise und mögliche manuelle Nacharbeiten direkt im Umbenennen-Dialog an.
+- **Cleanup (Settings):** Der UID/Schlüssel-Rename-Block wurde aus der Settings-Seite entfernt, um doppelte Bedienwege zu vermeiden.
+
 ## Version 5.6.11 - 08.07.2026
 
 - **UX (Mehrsprachigkeit/Listen):** Eigene Übersetzungsstatus-Spalte in den Listen für Dienste, Gruppen und Texte ergänzt.
@@ -9,6 +17,11 @@
 - **Setup (Initial-Importe):** Cookie-Definitionen für LinkedIn Insight Tag und Google Analytics in den Start-Setups auf den aktuellen Stand gebracht (inkl. `__cf_bm`, `bcookie`, `li_gc`, `lidc`, `_ga`, `_ga_S0R9E6EWX7`).
 - **Kompatibilität:** Backend- und Cache-Logik akzeptiert für den System-Cookie jetzt sowohl `consent_manager` (Bestand) als auch `consentmanager` (neue Initial-Importe).
 - **Fix (Cookie-Name aus Config):** Für den System-Cookie wird in der Ausgabe immer der in den Addon-Einstellungen konfigurierte Cookie-Name verwendet (statt statischer Setup-Werte).
+- **Feature (UID-Rename-Workflow):** Neue zentrale Rename-Funktion in den Einstellungen mit Dry-Run vor Apply (Bereiche: Dienste, Gruppen, Texte).
+- **Feature (UID-Rename-Workflow):** Dry-Run zeigt betroffene Sprachdatensätze, interne Referenzen, Risiken und Hinweise auf mögliche manuelle Nacharbeit.
+- **Feature (UID-Rename-Workflow):** Apply aktualisiert UID sprachübergreifend im Zielbereich und passt abhängige Daten mit an (z. B. Gruppen-Referenzen; optional Consent-Logs bei Gruppen-Rename).
+- **Fix (Mehrsprachigkeit/UID):** UID-Anlage in Nicht-Primärsprachen wird unterbunden; Benutzer werden auf die Primärsprache umgeleitet und erhalten einen Hinweis.
+- **UX (Listen/Rename):** Umbenennen direkt aus den Listen (Dienste, Gruppen, Texte) möglich; aktueller Schlüssel wird im Rename-Panel automatisch über den Datensatz ermittelt.
 
 ## Version 5.6.10 - 05.07.2026
 

@@ -263,7 +263,7 @@ $defaultSourceClangId = rex_clang::getStartId();
                     </form>
                 </div>
             </div>
-            
+
             <!-- Export -->
             <div class="panel panel-success" style="margin-bottom: 15px;">
                 <header class="panel-heading">
@@ -312,4 +312,5 @@ $defaultSourceClangId = rex_clang::getStartId();
 // Setup Wizard Modal einbinden
 $fragment = new rex_fragment();
 echo $fragment->parse('ConsentManager/setup_wizard.php');
+
 ?>
