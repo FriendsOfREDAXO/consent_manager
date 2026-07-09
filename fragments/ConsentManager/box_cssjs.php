@@ -55,7 +55,11 @@ if (0 < count($consent_manager->domainInfo)
         $googleConsentModeScriptFile = 'google_consent_mode_v2.js';
     }
     $googleConsentModeScriptUrl = $addon->getAssetsUrl($googleConsentModeScriptFile);
-    $googleConsentModeOutput .= '    <script nonce="' . rex_response::getNonce() . '" src="' . $googleConsentModeScriptUrl . '" defer></script>' . PHP_EOL;
+    // Bewusst OHNE defer: der Consent-Default (gtag('consent','default', …)) muss SYNCHRON vor externen
+    // Tags (z.B. ein Google-Tag-Manager-Snippet im Template) im dataLayer stehen. Mit defer läuft dieses
+    // Script erst nach dem gtm.js-Event -> GTM wertet Tags mit "Additional consent required" (FB-Pixel,
+    // LinkedIn, TikTok …) mit denied aus und re-feuert sie nicht. Das Script ist klein und same-origin.
+    $googleConsentModeOutput .= '    <script nonce="' . rex_response::getNonce() . '" src="' . $googleConsentModeScriptUrl . '"></script>' . PHP_EOL;
 
     // Debug-Script laden wenn Debug-Modus aktiviert UND User im Backend eingeloggt
     if (isset($consent_manager->domainInfo['google_consent_mode_debug'])
