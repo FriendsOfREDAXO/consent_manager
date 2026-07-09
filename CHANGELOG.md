@@ -4,6 +4,8 @@
 
 - **Feature (Theme-Editor/Live):** Neuer Live-Theme-Editor mit direkter Echtzeit-Vorschau des realen Consent-Themes im Backend (inkl. sofort sichtbarer Anpassungen für Farben, Overlay, Backdrop und Details-Bereich).
 - **Feature (Theme-Editor/Details):** Erweiterte Gestaltung des Details-Bereichs ergänzt: Gruppen-Header-Hintergrund, Gruppen-Header-Rahmenfarbe und Gruppen-Header-Schriftfarbe sind nun separat konfigurierbar.
+- **Feature (Theme-Editor/Details-Button):** Details-Button deutlich erweitert: separate Einstellungen für Textfarbe, Hintergrund, Hover-Text, Hover-Hintergrund, Rahmenfarbe und Rahmenbreite.
+- **Feature (Theme-Editor/Transparenz):** Für Hintergründe des Details-Buttons (normal + hover) wurden explizite „Transparent“-Optionen ergänzt, da native Colorpicker kein transparentes Farbfeld anbieten.
 - **Feature (Theme-Editor/Typografie):** Schriftgrößen-Ausgabe auf `rem` umgestellt und optionaler Responsive-Typografie-Schalter mit `clamp()` ergänzt.
 - **Feature (Theme-Editor/Komfort):** Automatische Farbvorschläge (Textfarbe aus Hintergrund) auf weitere Bereiche ausgeweitet und sofortige Übernahme in der Live-Vorschau verbessert.
 - **Fix (Theme-Editor/Kontrast):** Kontrastprüfung für Inhalt-Linkfarbe nutzt jetzt den effektiven Tabellen-/Zeilenhintergrund (inkl. Transparenz), statt nur den Container-Hintergrund.
