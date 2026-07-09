@@ -329,18 +329,45 @@ class Theme
         $buttonBorderWidth = ($colors['button_border_width'] ?? '2') . 'px';
         $buttonBorderColor = $colors['button_border_color'] ?? $colors['button_bg'];
         $buttonStyle = $colors['button_style'] ?? 'filled';
+        $responsiveTypography = '1' === (string) ($colors['responsive_typography'] ?? '0');
+
+        $toRem = static function (float $px): string {
+            $rem = $px / 16;
+            return rtrim(rtrim(number_format($rem, 4, '.', ''), '0'), '.') . 'rem';
+        };
+
+        $toClamp = static function (float $px) use ($toRem): string {
+            $minPx = max(12, $px - 2);
+            $maxPx = max($minPx + 1, $px + 2);
+            return 'clamp(' . $toRem($minPx) . ', calc(' . $toRem($px) . ' + 0.2vw), ' . $toRem($maxPx) . ')';
+        };
 
         // Schriftgröße (benutzerdefiniert oder Standard je nach Theme-Typ)
         $customFontSize = $colors['font_size'] ?? null;
-        if ($customFontSize && '' !== $customFontSize) {
-            $fontSize = $customFontSize . 'px';
-        }
-        $buttonFontSize = $colors['button_font_size'] ?? '15';
+        $defaultFontSizePx = match (true) {
+            $isMinimal => 14.0,
+            $isBanner => 15.0,
+            $isFluid => 16.0,
+            $isCompact => 15.0,
+            default => 16.0,
+        };
+        $fontSizePx = (float) ((null !== $customFontSize && '' !== (string) $customFontSize) ? $customFontSize : $defaultFontSizePx);
+        $buttonFontSizePx = (float) ($colors['button_font_size'] ?? '15');
+        $fontSize = $responsiveTypography ? $toClamp($fontSizePx) : $toRem($fontSizePx);
+        $buttonFontSize = $responsiveTypography ? $toClamp($buttonFontSizePx) : $toRem($buttonFontSizePx);
 
         // Details-Toggle Button (anzeigen/ausblenden)
         $detailsLink = $colors['details_link'] ?? $colors['link'] ?? '#0066cc';
         $detailsLinkHover = $colors['details_link_hover'] ?? '#004499';
-        $detailsToggleBorder = $colors['details_toggle_border'] ?? $detailsLink;
+        $detailsToggleText = $colors['details_toggle_text'] ?? $detailsLink;
+        $detailsToggleBg = ('1' === (string) ($colors['details_toggle_bg_transparent'] ?? '0'))
+            ? 'transparent'
+            : ($colors['details_toggle_bg'] ?? 'transparent');
+        $detailsToggleHoverText = $colors['details_toggle_hover_text'] ?? ($colors['background'] ?? '#ffffff');
+        $detailsToggleHoverBg = ('1' === (string) ($colors['details_toggle_hover_bg_transparent'] ?? '0'))
+            ? 'transparent'
+            : ($colors['details_toggle_hover_bg'] ?? $detailsLinkHover);
+        $detailsToggleBorder = $colors['details_toggle_border'] ?? $detailsToggleText;
         $detailsToggleBorderWidth = ($colors['details_toggle_border_width'] ?? '2') . 'px';
 
         // Details-Bereich (aufgeklappte Ansicht) - mit Opacity für Fluid-Theme
@@ -361,7 +388,7 @@ class Theme
         $detailsBorder = $isFluid && $detailsBorderOpacity < 1
             ? $hexToRgba($detailsBorderHex, $detailsBorderOpacity)
             : $detailsBorderHex;
-        $detailsLinkColor = $colors['details_link'] ?? '#0066cc';
+        $detailsLinkColor = $colors['details_content_link'] ?? ($colors['details_link'] ?? '#0066cc');
         $detailsLinkHoverColor = $colors['details_link_hover'] ?? '#004499';
 
         // Link-Hover-Farbe
@@ -369,6 +396,9 @@ class Theme
 
         // Accent-Farbe
         $accentColor = $colors['accent'];
+        $detailsGroupHeaderBg = $colors['details_group_header_bg'] ?? $cookieTitleBg;
+        $detailsGroupHeaderBorder = $colors['details_group_header_border'] ?? $accentColor;
+        $detailsGroupHeaderText = $colors['details_group_header_text'] ?? $detailsHeading;
         $buttonBg = $colors['button_bg'];
         $buttonHover = $colors['button_hover'];
         $linkColor = $colors['link'];
@@ -494,8 +524,10 @@ class Theme
             \$link-hover-bg: $linkHoverBg;
 
             // Details-Toggle Button
-            \$details-toggle-color: $detailsLink;
-            \$details-toggle-hover: $detailsLinkHover;
+            \$details-toggle-text: $detailsToggleText;
+            \$details-toggle-bg: $detailsToggleBg;
+            \$details-toggle-hover-text: $detailsToggleHoverText;
+            \$details-toggle-hover-bg: $detailsToggleHoverBg;
             \$details-toggle-border: $detailsToggleBorder;
             \$details-toggle-border-width: $detailsToggleBorderWidth;
 
@@ -508,10 +540,11 @@ class Theme
             \$details-link: $detailsLinkColor;
             \$details-link-hover: $detailsLinkHoverColor;
 
-            \$cookie-title-bg: $cookieTitleBg;
+            \$cookie-title-bg: $detailsGroupHeaderBg;
+            \$cookie-title-color: $detailsGroupHeaderText;
             \$cookie-desc-bg: \$details-bg;
             \$cookie-border: $accentColor;
-            \$cookie-accent: $accentColor;
+            \$cookie-accent: $detailsGroupHeaderBorder;
 
             @media (prefers-reduced-motion: reduce) {
                 * {
@@ -710,18 +743,19 @@ class Theme
                     min-height: 44px !important;
                     padding: 8px 14px !important;
                     cursor: pointer !important;
-                    color: \$details-toggle-color !important;
-                    background-color: transparent !important;
+                    color: \$details-toggle-text !important;
+                    background-color: \$details-toggle-bg !important;
                     border: \$details-toggle-border-width solid \$details-toggle-border !important;
                     border-radius: \$button-radius !important;
-                    font-size: 15px !important;
+                    font-size: {$buttonFontSize} !important;
                     font-weight: 600 !important;
                     transition: 0.2s ease all !important;
 
                     &:hover,
                     &:focus {
-                        background-color: \$details-toggle-color !important;
-                        color: \$consent_manager-background !important;
+                        background-color: \$details-toggle-hover-bg !important;
+                        color: \$details-toggle-hover-text !important;
+                        border-color: \$details-toggle-hover-bg !important;
                         transform: translateY(-2px) !important;
                     }
 
@@ -747,7 +781,7 @@ class Theme
                 color: $buttonTextCss !important;
                 padding: $buttonPadding !important;
                 border-radius: \$button-radius !important;
-                font-size: {$buttonFontSize}px !important;
+                font-size: {$buttonFontSize} !important;
                 font-weight: 600 !important;
                 text-align: center !important;
                 display: block !important;
@@ -814,7 +848,7 @@ class Theme
                 }
 
                 div.consent_manager-cookiegroup-title {
-                    color: \$details-heading !important;
+                    color: \$cookie-title-color !important;
                     background-color: \$cookie-title-bg !important;
                     padding: 10px 14px !important;
                     margin: 0.75em 0 0 0 !important;

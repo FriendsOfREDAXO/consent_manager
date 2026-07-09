@@ -19,6 +19,7 @@ $sql = rex_sql::factory();
 $sql->setQuery('SELECT COUNT(*) as cnt FROM ' . rex::getTable('consent_manager_domain'));
 $hasDomains = (int) $sql->getValue('cnt') > 0;
 $allClangs = rex_clang::getAll();
+$hasMultipleClangs = count($allClangs) > 1;
 $defaultSourceClangId = rex_clang::getStartId();
 
 ?>
@@ -191,6 +192,7 @@ $defaultSourceClangId = rex_clang::getStartId();
                 </div>
             </div>
 
+            <?php if ($hasMultipleClangs): ?>
             <!-- Sprach-Sync -->
             <div class="panel panel-warning" style="margin-bottom: 15px;">
                 <header class="panel-heading">
@@ -263,6 +265,7 @@ $defaultSourceClangId = rex_clang::getStartId();
                     </form>
                 </div>
             </div>
+            <?php endif ?>
 
             <!-- Export -->
             <div class="panel panel-success" style="margin-bottom: 15px;">

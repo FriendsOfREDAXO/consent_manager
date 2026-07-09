@@ -29,6 +29,19 @@ $basePreviewThemeMap = [
 $basePreviewTheme = $basePreviewThemeMap[$themeBase] ?? 'consent_manager_frontend_a11y.scss';
 $basePreviewUrl = rex_url::backendPage('consent_manager/theme', ['preview' => $basePreviewTheme, 'preview_cache' => (string) time()]);
 $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
+$formatRemLabel = static function ($value): string {
+    if (!is_scalar($value) || '' === trim((string) $value)) {
+        return 'Standard';
+    }
+
+    $px = (float) $value;
+    if ($px <= 0.0) {
+        return 'Standard';
+    }
+
+    $rem = $px / 16;
+    return rtrim(rtrim(number_format($rem, 4, '.', ''), '0'), '.') . 'rem';
+};
 ?>
 
 <div class="consent-manager-theme-editor">
@@ -141,6 +154,11 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                                 <div class="input-group">
                                     <input type="color" class="form-control color-picker" id="background_color" name="background_color" value="<?= rex_escape($colors['background']) ?>">
                                     <span class="input-group-addon color-hex-display"><?= rex_escape($colors['background']) ?></span>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default auto-text-btn" onclick="autoTextColor('background_color', 'text_color')" title="Textfarbe automatisch berechnen">
+                                            <i class="rex-icon fa-magic"></i>
+                                        </button>
+                                    </span>
                                 </div>
                             </div>
                             <?php if ('fluid' === $themeBase || 'fluid_dark' === $themeBase): ?>
@@ -202,17 +220,28 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="font_size">Allgemeine Schriftgröße: <span id="font_size_value"><?= rex_escape($colors['font_size'] ?? '') ?><?= (isset($colors['font_size']) && '' !== $colors['font_size']) ? 'px' : 'Standard' ?></span></label>
+                                <label for="font_size">Allgemeine Schriftgröße: <span id="font_size_value"><?= rex_escape($formatRemLabel($colors['font_size'] ?? '')) ?></span></label>
                                 <input type="range" class="form-control" id="font_size" name="font_size" min="12" max="22" value="<?= rex_escape($colors['font_size'] ?? '16') ?>">
-                                <small class="help-block">Basis-Schriftgröße für die Consent-Box (12-22px, Standard je nach Theme-Typ)</small>
+                                <small class="help-block">Basis-Schriftgröße für die Consent-Box (Ausgabe in rem, Standard je nach Theme-Typ)</small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="button_font_size">Button-Schriftgröße: <span id="button_font_size_value"><?= rex_escape($colors['button_font_size'] ?? '15') ?>px</span></label>
+                                <label for="button_font_size">Button-Schriftgröße: <span id="button_font_size_value"><?= rex_escape($formatRemLabel($colors['button_font_size'] ?? '15')) ?></span></label>
                                 <input type="range" class="form-control" id="button_font_size" name="button_font_size" min="12" max="20" value="<?= rex_escape($colors['button_font_size'] ?? '15') ?>">
-                                <small class="help-block">Schriftgröße für die Buttons (12-20px)</small>
+                                <small class="help-block">Schriftgröße für die Buttons (Ausgabe in rem)</small>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="checkbox" style="margin-top: 6px;">
+                                <label>
+                                    <input type="checkbox" id="responsive_typography" name="responsive_typography" value="1" <?= ('1' === (string) ($colors['responsive_typography'] ?? '0')) ? 'checked' : '' ?>>
+                                    Responsive Typografie mit <code>clamp()</code> verwenden (ansonsten Ausgabe in <code>rem</code>)
+                                </label>
+                            </div>
+                            <small class="help-block">Empfohlen für flexible Größen auf unterschiedlichen Viewports.</small>
                         </div>
                     </div>
                 </div>
@@ -229,35 +258,75 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                     <!-- Details Toggle Button -->
                     <h5><i class="rex-icon fa-toggle-on"></i> "Details" Button</h5>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="details_link">Button-Farbe:</label>
+                                <label for="details_toggle_text">Textfarbe:</label>
                                 <div class="input-group">
-                                    <input type="color" class="form-control color-picker" id="details_link" name="details_link" value="<?= rex_escape($colors['details_link'] ?? '#0066cc') ?>">
-                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_link'] ?? '#0066cc') ?></span>
+                                    <input type="color" class="form-control color-picker" id="details_toggle_text" name="details_toggle_text" value="<?= rex_escape($colors['details_toggle_text'] ?? $colors['details_link'] ?? '#0066cc') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_toggle_text'] ?? $colors['details_link'] ?? '#0066cc') ?></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="details_link_hover">Button-Hover:</label>
+                                <label for="details_toggle_bg">Hintergrund:</label>
                                 <div class="input-group">
-                                    <input type="color" class="form-control color-picker" id="details_link_hover" name="details_link_hover" value="<?= rex_escape($colors['details_link_hover'] ?? '#004499') ?>">
-                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_link_hover'] ?? '#004499') ?></span>
+                                    <input type="color" class="form-control color-picker" id="details_toggle_bg" name="details_toggle_bg" value="<?= rex_escape($colors['details_toggle_bg'] ?? '#ffffff') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_toggle_bg'] ?? '#ffffff') ?></span>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default auto-text-btn" onclick="autoTextColor('details_toggle_bg', 'details_toggle_text')" title="Textfarbe automatisch berechnen">
+                                            <i class="rex-icon fa-magic"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                                <div class="checkbox" style="margin-top: 6px;">
+                                    <label>
+                                        <input type="checkbox" id="details_toggle_bg_transparent" name="details_toggle_bg_transparent" value="1" <?= ('1' === (string) ($colors['details_toggle_bg_transparent'] ?? '0')) ? 'checked' : '' ?>>
+                                        Transparent
+                                    </label>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="details_toggle_border">Rahmenfarbe:</label>
+                                <label for="details_toggle_hover_text">Hover-Textfarbe:</label>
                                 <div class="input-group">
-                                    <input type="color" class="form-control color-picker" id="details_toggle_border" name="details_toggle_border" value="<?= rex_escape($colors['details_toggle_border'] ?? $colors['details_link'] ?? '#0066cc') ?>">
-                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_toggle_border'] ?? $colors['details_link'] ?? '#0066cc') ?></span>
+                                    <input type="color" class="form-control color-picker" id="details_toggle_hover_text" name="details_toggle_hover_text" value="<?= rex_escape($colors['details_toggle_hover_text'] ?? $colors['background'] ?? '#ffffff') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_toggle_hover_text'] ?? $colors['background'] ?? '#ffffff') ?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="details_toggle_hover_bg">Hover-Hintergrund:</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control color-picker" id="details_toggle_hover_bg" name="details_toggle_hover_bg" value="<?= rex_escape($colors['details_toggle_hover_bg'] ?? $colors['details_link_hover'] ?? '#004499') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_toggle_hover_bg'] ?? $colors['details_link_hover'] ?? '#004499') ?></span>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default auto-text-btn" onclick="autoTextColor('details_toggle_hover_bg', 'details_toggle_hover_text')" title="Textfarbe automatisch berechnen">
+                                            <i class="rex-icon fa-magic"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                                <div class="checkbox" style="margin-top: 6px;">
+                                    <label>
+                                        <input type="checkbox" id="details_toggle_hover_bg_transparent" name="details_toggle_hover_bg_transparent" value="1" <?= ('1' === (string) ($colors['details_toggle_hover_bg_transparent'] ?? '0')) ? 'checked' : '' ?>>
+                                        Transparent
+                                    </label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="details_toggle_border">Rahmenfarbe:</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control color-picker" id="details_toggle_border" name="details_toggle_border" value="<?= rex_escape($colors['details_toggle_border'] ?? $colors['details_toggle_text'] ?? $colors['details_link'] ?? '#0066cc') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_toggle_border'] ?? $colors['details_toggle_text'] ?? $colors['details_link'] ?? '#0066cc') ?></span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="details_toggle_border_width">Rahmenbreite: <span id="details_toggle_border_width_value"><?= rex_escape($colors['details_toggle_border_width'] ?? '2') ?>px</span></label>
@@ -285,6 +354,11 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                                 <div class="input-group">
                                     <input type="color" class="form-control color-picker" id="details_bg" name="details_bg" value="<?= rex_escape($colors['details_bg'] ?? '#f8f9fa') ?>">
                                     <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_bg'] ?? '#f8f9fa') ?></span>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default auto-text-btn" onclick="autoTextColor('details_bg', 'details_text')" title="Textfarbe automatisch berechnen">
+                                            <i class="rex-icon fa-magic"></i>
+                                        </button>
+                                    </span>
                                 </div>
                             </div>
                             <?php if ('fluid' === $themeBase || 'fluid_dark' === $themeBase): ?>
@@ -318,6 +392,43 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label for="details_group_header_bg">Gruppen-Header Hintergrund:</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control color-picker" id="details_group_header_bg" name="details_group_header_bg" value="<?= rex_escape($colors['details_group_header_bg'] ?? $colors['details_bg'] ?? '#f8f9fa') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_group_header_bg'] ?? $colors['details_bg'] ?? '#f8f9fa') ?></span>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default auto-text-btn" onclick="autoTextColor('details_group_header_bg', 'details_group_header_text')" title="Textfarbe automatisch berechnen">
+                                            <i class="rex-icon fa-magic"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="details_group_header_border">Gruppen-Header Rahmenfarbe:</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control color-picker" id="details_group_header_border" name="details_group_header_border" value="<?= rex_escape($colors['details_group_header_border'] ?? $colors['accent'] ?? '#333333') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_group_header_border'] ?? $colors['accent'] ?? '#333333') ?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="details_group_header_text">Gruppen-Header Schriftfarbe:</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control color-picker" id="details_group_header_text" name="details_group_header_text" value="<?= rex_escape($colors['details_group_header_text'] ?? $colors['details_heading'] ?? '#1a1a1a') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_group_header_text'] ?? $colors['details_heading'] ?? '#1a1a1a') ?></span>
+                                    <span class="input-group-addon contrast-badge" id="details-group-header-text-contrast-badge">Prüfe...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label for="details_border">Rahmenfarbe:</label>
                                 <div class="input-group">
                                     <input type="color" class="form-control color-picker" id="details_border" name="details_border" value="<?= rex_escape($colors['details_border'] ?? '#dee2e6') ?>">
@@ -348,8 +459,8 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                             <div class="form-group">
                                 <label for="details_content_link">Inhalt-Linkfarbe:</label>
                                 <div class="input-group">
-                                    <input type="color" class="form-control color-picker" id="details_content_link" name="details_content_link" value="<?= rex_escape($colors['details_link'] ?? '#0066cc') ?>">
-                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_link'] ?? '#0066cc') ?></span>
+                                    <input type="color" class="form-control color-picker" id="details_content_link" name="details_content_link" value="<?= rex_escape($colors['details_content_link'] ?? $colors['details_link'] ?? '#0066cc') ?>">
+                                    <span class="input-group-addon color-hex-display"><?= rex_escape($colors['details_content_link'] ?? $colors['details_link'] ?? '#0066cc') ?></span>
                                     <span class="input-group-addon contrast-badge" id="details-link-contrast-badge">Prüfe...</span>
                                 </div>
                             </div>
@@ -893,6 +1004,76 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
         };
     }
 
+    function componentToHex(value) {
+        const hex = Math.max(0, Math.min(255, Math.round(value))).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    }
+
+    function rgbToHex(r, g, b) {
+        return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
+
+    function blendHexOverHex(foregroundHex, backgroundHex, opacityPercent) {
+        const fg = hexToRgb(foregroundHex || '#ffffff');
+        const bg = hexToRgb(backgroundHex || '#ffffff');
+        const alpha = Math.max(0, Math.min(100, parseInt(opacityPercent || '100', 10))) / 100;
+
+        return rgbToHex(
+            (fg.r * alpha) + (bg.r * (1 - alpha)),
+            (fg.g * alpha) + (bg.g * (1 - alpha)),
+            (fg.b * alpha) + (bg.b * (1 - alpha))
+        );
+    }
+
+    function pxToRemValue(pxValue, fallbackPx) {
+        const parsed = parseFloat(pxValue);
+        const fallback = parseFloat(fallbackPx);
+        const safePx = Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+        const remValue = safePx / 16;
+        return remValue.toFixed(4).replace(/\.?0+$/, '') + 'rem';
+    }
+
+    function buildClampFontSize(pxValue, fallbackPx) {
+        const parsed = parseFloat(pxValue);
+        const fallback = parseFloat(fallbackPx);
+        const basePx = Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+        const minPx = Math.max(12, basePx - 2);
+        const maxPx = Math.max(minPx + 1, basePx + 2);
+
+        return 'clamp(' + pxToRemValue(minPx, minPx) + ', calc(' + pxToRemValue(basePx, basePx) + ' + 0.2vw), ' + pxToRemValue(maxPx, maxPx) + ')';
+    }
+
+    function formatRemLabel(pxValue, fallbackPx) {
+        return pxToRemValue(pxValue, fallbackPx);
+    }
+
+    function getTransparentAwareColor(colorInputId, transparentCheckboxId, fallbackColor) {
+        const transparentToggle = document.getElementById(transparentCheckboxId);
+        if (transparentToggle && transparentToggle.checked) {
+            return 'transparent';
+        }
+
+        const colorInput = document.getElementById(colorInputId);
+        return colorInput ? colorInput.value : fallbackColor;
+    }
+
+    function updateTransparentColorControls() {
+        const pairs = [
+            ['details_toggle_bg', 'details_toggle_bg_transparent'],
+            ['details_toggle_hover_bg', 'details_toggle_hover_bg_transparent']
+        ];
+
+        pairs.forEach(function(pair) {
+            const colorInput = document.getElementById(pair[0]);
+            const transparentToggle = document.getElementById(pair[1]);
+            if (!colorInput || !transparentToggle) {
+                return;
+            }
+
+            colorInput.disabled = transparentToggle.checked;
+        });
+    }
+
     function getContrastRatio(hex1, hex2) {
         const l1 = getLuminance(hex1);
         const l2 = getLuminance(hex2);
@@ -925,6 +1106,10 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
     window.autoTextColor = function(bgInputId, textInputId) {
         const bgInput = document.getElementById(bgInputId);
         const textInput = document.getElementById(textInputId);
+
+        if (!bgInput || !textInput) {
+            return;
+        }
         
         const bgColor = bgInput.value;
         const luminance = getLuminance(bgColor);
@@ -937,6 +1122,10 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
         
         updateAllContrasts();
         updateButtonPreviews();
+        updateDetailsPreviews();
+        updateDetailsTogglePreview();
+        updateShadowPreview();
+        updateLivePreview();
     };
     
     function updateHexDisplay(colorInput) {
@@ -958,9 +1147,14 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
         
         // Details-Bereich
         const detailsBg = document.getElementById('details_bg') ? document.getElementById('details_bg').value : '#f8f9fa';
+        const detailsTableBg = document.getElementById('details_table_bg') ? document.getElementById('details_table_bg').value : detailsBg;
+        const detailsTableBgOpacity = document.getElementById('details_table_bg_opacity') ? document.getElementById('details_table_bg_opacity').value : '100';
+        const detailsTableEffectiveBg = blendHexOverHex(detailsTableBg, detailsBg, detailsTableBgOpacity);
         const detailsText = document.getElementById('details_text') ? document.getElementById('details_text').value : '#1a1a1a';
         const detailsHeading = document.getElementById('details_heading') ? document.getElementById('details_heading').value : '#1a1a1a';
-        const detailsLink = document.getElementById('details_link') ? document.getElementById('details_link').value : '#0066cc';
+        const detailsGroupHeaderBg = document.getElementById('details_group_header_bg') ? document.getElementById('details_group_header_bg').value : detailsBg;
+        const detailsGroupHeaderText = document.getElementById('details_group_header_text') ? document.getElementById('details_group_header_text').value : detailsHeading;
+        const detailsLink = document.getElementById('details_content_link') ? document.getElementById('details_content_link').value : '#0066cc';
         
         // Haupt-Kontraste
         updateContrastBadge('text-contrast-badge', getContrastRatio(bg, text));
@@ -972,17 +1166,21 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
         // Details-Kontraste
         updateContrastBadge('details-text-contrast-badge', getContrastRatio(detailsBg, detailsText));
         updateContrastBadge('details-heading-contrast-badge', getContrastRatio(detailsBg, detailsHeading));
-        updateContrastBadge('details-link-contrast-badge', getContrastRatio(detailsBg, detailsLink));
+        updateContrastBadge('details-group-header-text-contrast-badge', getContrastRatio(detailsGroupHeaderBg, detailsGroupHeaderText));
+        updateContrastBadge('details-link-contrast-badge', getContrastRatio(detailsTableEffectiveBg, detailsLink));
     }
 
     function updateDetailsPreviews() {
         const detailsBg = document.getElementById('details_bg') ? document.getElementById('details_bg').value : '#f8f9fa';
         const detailsTableBg = document.getElementById('details_table_bg') ? document.getElementById('details_table_bg').value : detailsBg;
         const detailsTableBgOpacity = document.getElementById('details_table_bg_opacity') ? document.getElementById('details_table_bg_opacity').value : '100';
+        const detailsGroupHeaderBg = document.getElementById('details_group_header_bg') ? document.getElementById('details_group_header_bg').value : detailsBg;
+        const detailsGroupHeaderBorder = document.getElementById('details_group_header_border') ? document.getElementById('details_group_header_border').value : '#333333';
+        const detailsGroupHeaderText = document.getElementById('details_group_header_text') ? document.getElementById('details_group_header_text').value : '#1a1a1a';
         const detailsText = document.getElementById('details_text') ? document.getElementById('details_text').value : '#1a1a1a';
         const detailsHeading = document.getElementById('details_heading') ? document.getElementById('details_heading').value : '#1a1a1a';
         const detailsBorder = document.getElementById('details_border') ? document.getElementById('details_border').value : '#dee2e6';
-        const detailsLink = document.getElementById('details_link') ? document.getElementById('details_link').value : '#0066cc';
+        const detailsLink = document.getElementById('details_content_link') ? document.getElementById('details_content_link').value : '#0066cc';
         
         const preview = document.getElementById('details-preview');
         const previewHeading = document.getElementById('details-preview-heading');
@@ -994,7 +1192,10 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             preview.style.borderColor = detailsBorder;
         }
         if (previewHeading) {
-            previewHeading.style.color = detailsHeading;
+            previewHeading.style.color = detailsGroupHeaderText;
+            previewHeading.style.backgroundColor = detailsGroupHeaderBg;
+            previewHeading.style.borderLeft = '3px solid ' + detailsGroupHeaderBorder;
+            previewHeading.style.padding = '8px 12px';
         }
         if (previewText) {
             previewText.style.color = detailsText;
@@ -1142,25 +1343,29 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
 
         styleNode.textContent = '' +
             '#consent_manager-background { background: ' + overlayBackground + ' !important; backdrop-filter: ' + overlayBackdropFilterValue + ' !important; -webkit-backdrop-filter: ' + overlayBackdropFilterValue + ' !important; }' +
-            '#consent_manager-wrapper { background: ' + toRgba(state.bg, state.boxBgOpacity) + ' !important; color: ' + state.text + ' !important; border: ' + state.borderWidth + ' solid ' + state.accent + ' !important; border-radius: ' + state.borderRadius + ' !important; box-shadow: ' + state.shadowValue + ' !important; font-size: ' + state.fontSize + 'px !important; backdrop-filter: ' + backdropFilterValue + ' !important; -webkit-backdrop-filter: ' + backdropFilterValue + ' !important; }' +
+            '#consent_manager-wrapper { background: ' + toRgba(state.bg, state.boxBgOpacity) + ' !important; color: ' + state.text + ' !important; border: ' + state.borderWidth + ' solid ' + state.accent + ' !important; border-radius: ' + state.borderRadius + ' !important; box-shadow: ' + state.shadowValue + ' !important; font-size: ' + state.fontSizeCss + ' !important; backdrop-filter: ' + backdropFilterValue + ' !important; -webkit-backdrop-filter: ' + backdropFilterValue + ' !important; }' +
             '#consent_manager-wrapper .consent_manager-header { position: static !important; padding-right: 2.5rem !important; width: 100% !important; box-sizing: border-box !important; }' +
             '#consent_manager-wrapper .consent_manager-wrapper-inner { position: relative !important; }' +
             '#consent_manager-wrapper .consent_manager-header .consent_manager-close { position: absolute !important; top: 0.35rem !important; right: 0.35rem !important; margin-left: 0 !important; transform: none !important; }' +
             '#consent_manager-wrapper .consent_manager-headline { color: ' + state.title + ' !important; }' +
             '#consent_manager-wrapper .consent_manager-text, #consent_manager-wrapper .consent_manager-cookie-description, #consent_manager-wrapper .consent_manager-cookie-provider, #consent_manager-wrapper .consent_manager-cookie-name, #consent_manager-wrapper .consent_manager-cookiegroup-description { color: ' + state.text + ' !important; }' +
             '#consent_manager-wrapper a, #consent_manager-wrapper .consent_manager-sitelinks a { color: ' + state.link + ' !important; }' +
-            '#consent_manager-wrapper #consent_manager-toggle-details { color: ' + state.detailsLink + ' !important; border: ' + state.buttonBorderWidth + ' solid ' + state.detailsLink + ' !important; border-radius: ' + state.buttonRadius + ' !important; background: transparent !important; font-size: ' + state.buttonFontSize + 'px !important; }' +
+            '#consent_manager-wrapper #consent_manager-toggle-details { color: ' + state.detailsToggleText + ' !important; border: ' + state.detailsToggleBorderWidth + ' solid ' + state.detailsToggleBorder + ' !important; border-radius: ' + state.buttonRadius + ' !important; background: ' + state.detailsToggleBg + ' !important; font-size: ' + state.buttonFontSizeCss + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-toggle-details:hover, #consent_manager-wrapper #consent_manager-toggle-details:active { color: ' + state.detailsToggleHoverText + ' !important; background: ' + state.detailsToggleHoverBg + ' !important; border-color: ' + state.detailsToggleHoverBg + ' !important; }' +
             '#consent_manager-wrapper #consent_manager-detail { background: ' + toRgba(state.detailsBg, state.detailsBgOpacity) + ' !important; color: ' + state.detailsText + ' !important; border: 1px solid ' + state.detailsBorder + ' !important; border-radius: ' + state.buttonRadius + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail a { color: ' + state.detailsContentLink + ' !important; }' +
             '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookiegroup-description, #consent_manager-wrapper #consent_manager-detail .consent_manager-cookie { background: ' + detailsTableBackground + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookiegroup-title { background-color: ' + (state.detailsGroupHeaderBg || state.detailsBg) + ' !important; border-left-color: ' + (state.detailsGroupHeaderBorder || state.accent) + ' !important; color: ' + (state.detailsGroupHeaderText || state.detailsHeading) + ' !important; }' +
             '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookie { padding-top: 6px !important; }' +
             '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookie > span { margin-top: 0 !important; }' +
             '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookie > span + span { margin-top: 0.5em !important; }' +
             '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookiegroup-title { margin-top: 0.75em !important; }' +
             '#consent_manager-wrapper #consent_manager-detail .consent_manager-cookiegroup-title:first-of-type { margin-top: 0 !important; }' +
-            '#consent_manager-wrapper #consent_manager-detail .consent_manager-headline, #consent_manager-wrapper #consent_manager-detail .consent_manager-cookiegroup-title { color: ' + state.detailsHeading + ' !important; }' +
-            '#consent_manager-wrapper #consent_manager-save-selection, #consent_manager-wrapper #consent_manager-accept-all, #consent_manager-wrapper #consent_manager-accept-none { border-radius: ' + state.buttonRadius + ' !important; border: ' + state.buttonBorderWidth + ' solid ' + state.buttonBorderColor + ' !important; font-size: ' + state.buttonFontSize + 'px !important; }' +
+            '#consent_manager-wrapper #consent_manager-detail .consent_manager-headline { color: ' + state.detailsHeading + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-save-selection, #consent_manager-wrapper #consent_manager-accept-all, #consent_manager-wrapper #consent_manager-accept-none { border-radius: ' + state.buttonRadius + ' !important; border: ' + state.buttonBorderWidth + ' solid ' + state.buttonBorderColor + ' !important; font-size: ' + state.buttonFontSizeCss + ' !important; }' +
             '#consent_manager-wrapper #consent_manager-save-selection, #consent_manager-wrapper #consent_manager-accept-all { background: ' + primaryButtonBackground + ' !important; color: ' + primaryButtonText + ' !important; }' +
             '#consent_manager-wrapper #consent_manager-accept-none { background: ' + primaryButtonBackground + ' !important; color: ' + primaryButtonText + ' !important; }' +
+            '#consent_manager-wrapper #consent_manager-save-selection:hover, #consent_manager-wrapper #consent_manager-accept-all:hover, #consent_manager-wrapper #consent_manager-accept-none:hover, #consent_manager-wrapper #consent_manager-save-selection:active, #consent_manager-wrapper #consent_manager-accept-all:active, #consent_manager-wrapper #consent_manager-accept-none:active { background: ' + state.buttonHover + ' !important; color: ' + state.buttonHoverText + ' !important; border-color: ' + state.buttonHover + ' !important; }' +
             '#consent_manager-wrapper #consent_manager-save-selection:focus, #consent_manager-wrapper #consent_manager-accept-all:focus, #consent_manager-wrapper #consent_manager-accept-none:focus, #consent_manager-wrapper #consent_manager-toggle-details:focus { outline: 2px solid ' + state.focus + ' !important; outline-offset: 2px !important; }' +
             layoutOverride;
 
@@ -1205,12 +1410,21 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
         const text = document.getElementById('text_color').value;
         const title = document.getElementById('title_color') ? document.getElementById('title_color').value : text;
         const link = document.getElementById('link_color').value;
-        const detailsLink = document.getElementById('details_link') ? document.getElementById('details_link').value : link;
+        const detailsToggleText = document.getElementById('details_toggle_text') ? document.getElementById('details_toggle_text').value : (document.getElementById('details_link') ? document.getElementById('details_link').value : link);
+        const detailsToggleBg = getTransparentAwareColor('details_toggle_bg', 'details_toggle_bg_transparent', 'transparent');
+        const detailsToggleHoverText = document.getElementById('details_toggle_hover_text') ? document.getElementById('details_toggle_hover_text').value : text;
+        const detailsToggleHoverBg = getTransparentAwareColor('details_toggle_hover_bg', 'details_toggle_hover_bg_transparent', (document.getElementById('details_link_hover') ? document.getElementById('details_link_hover').value : detailsToggleText));
+        const detailsToggleBorder = document.getElementById('details_toggle_border') ? document.getElementById('details_toggle_border').value : detailsToggleText;
+        const detailsToggleBorderWidth = (document.getElementById('details_toggle_border_width') ? document.getElementById('details_toggle_border_width').value : '2') + 'px';
+        const detailsContentLink = document.getElementById('details_content_link') ? document.getElementById('details_content_link').value : detailsToggleText;
         const detailsBg = document.getElementById('details_bg') ? document.getElementById('details_bg').value : '#f8f9fa';
         const detailsTableBg = document.getElementById('details_table_bg') ? document.getElementById('details_table_bg').value : detailsBg;
         const detailsTableBgOpacity = document.getElementById('details_table_bg_opacity') ? document.getElementById('details_table_bg_opacity').value : '100';
+        const detailsGroupHeaderBg = document.getElementById('details_group_header_bg') ? document.getElementById('details_group_header_bg').value : detailsBg;
+        const detailsGroupHeaderBorder = document.getElementById('details_group_header_border') ? document.getElementById('details_group_header_border').value : '#333333';
         const detailsText = document.getElementById('details_text') ? document.getElementById('details_text').value : '#1a1a1a';
         const detailsHeading = document.getElementById('details_heading') ? document.getElementById('details_heading').value : detailsText;
+        const detailsGroupHeaderText = document.getElementById('details_group_header_text') ? document.getElementById('details_group_header_text').value : detailsHeading;
         const detailsBorder = document.getElementById('details_border') ? document.getElementById('details_border').value : '#dee2e6';
 
         const overlayColor = document.getElementById('overlay_color').value;
@@ -1238,6 +1452,10 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
 
         const fontSize = document.getElementById('font_size') ? document.getElementById('font_size').value : '16';
         const buttonFontSize = document.getElementById('button_font_size') ? document.getElementById('button_font_size').value : '15';
+        const responsiveTypographyInput = document.getElementById('responsive_typography');
+        const responsiveTypography = responsiveTypographyInput ? responsiveTypographyInput.checked : false;
+        const fontSizeCss = responsiveTypography ? buildClampFontSize(fontSize, 16) : pxToRemValue(fontSize, 16);
+        const buttonFontSizeCss = responsiveTypography ? buildClampFontSize(buttonFontSize, 15) : pxToRemValue(buttonFontSize, 15);
         const shadowValue = updateShadowPreview() || 'none';
         const customCssInput = document.getElementById('custom_css');
         const customCss = customCssInput ? customCssInput.value : '';
@@ -1268,7 +1486,7 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             liveBox.style.border = borderWidth + ' solid ' + accent;
             liveBox.style.borderRadius = borderRadius;
             liveBox.style.boxShadow = shadowValue;
-            liveBox.style.fontSize = (fontSize || '16') + 'px';
+            liveBox.style.fontSize = fontSizeCss;
 
             if (liveTitle) {
                 liveTitle.style.color = title;
@@ -1283,7 +1501,7 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             if (liveBtnPrimary) {
                 liveBtnPrimary.style.borderRadius = buttonRadius;
                 liveBtnPrimary.style.border = buttonBorderWidth + ' solid ' + buttonBorderColor;
-                liveBtnPrimary.style.fontSize = buttonFontSize + 'px';
+                liveBtnPrimary.style.fontSize = buttonFontSizeCss;
                 if (buttonStyle === 'outline') {
                     liveBtnPrimary.style.backgroundColor = 'transparent';
                     liveBtnPrimary.style.color = buttonBorderColor;
@@ -1296,17 +1514,17 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             if (liveBtnSecondary) {
                 liveBtnSecondary.style.borderRadius = buttonRadius;
                 liveBtnSecondary.style.border = buttonBorderWidth + ' solid ' + buttonBorderColor;
-                liveBtnSecondary.style.fontSize = buttonFontSize + 'px';
+                liveBtnSecondary.style.fontSize = buttonFontSizeCss;
                 liveBtnSecondary.style.backgroundColor = buttonHover;
                 liveBtnSecondary.style.color = buttonHoverText;
             }
 
             if (liveDetailsToggle) {
-                liveDetailsToggle.style.color = detailsLink;
-                liveDetailsToggle.style.backgroundColor = 'transparent';
-                liveDetailsToggle.style.border = buttonBorderWidth + ' solid ' + detailsLink;
+                liveDetailsToggle.style.color = detailsToggleText;
+                liveDetailsToggle.style.backgroundColor = detailsToggleBg;
+                liveDetailsToggle.style.border = detailsToggleBorderWidth + ' solid ' + detailsToggleBorder;
                 liveDetailsToggle.style.borderRadius = buttonRadius;
-                liveDetailsToggle.style.fontSize = buttonFontSize + 'px';
+                liveDetailsToggle.style.fontSize = buttonFontSizeCss;
             }
 
             if (liveDetails) {
@@ -1325,7 +1543,7 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                 liveDetailsText.style.color = detailsText;
             }
             if (liveDetailsLink) {
-                liveDetailsLink.style.color = detailsLink;
+                liveDetailsLink.style.color = detailsContentLink;
             }
 
             // Tastaturfokus schnell sichtbar in der Vorschau
@@ -1342,10 +1560,19 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             text: text,
             title: title,
             link: link,
-            detailsLink: detailsLink,
+            detailsToggleText: detailsToggleText,
+            detailsToggleBg: detailsToggleBg,
+            detailsToggleHoverText: detailsToggleHoverText,
+            detailsToggleHoverBg: detailsToggleHoverBg,
+            detailsToggleBorder: detailsToggleBorder,
+            detailsToggleBorderWidth: detailsToggleBorderWidth,
+            detailsContentLink: detailsContentLink,
             detailsBg: detailsBg,
             detailsTableBg: detailsTableBg,
             detailsTableBgOpacity: detailsTableBgOpacity,
+            detailsGroupHeaderBg: detailsGroupHeaderBg,
+            detailsGroupHeaderBorder: detailsGroupHeaderBorder,
+            detailsGroupHeaderText: detailsGroupHeaderText,
             detailsText: detailsText,
             detailsHeading: detailsHeading,
             detailsBorder: detailsBorder,
@@ -1369,23 +1596,26 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             accent: accent,
             focus: focus,
             fontSize: fontSize,
+            fontSizeCss: fontSizeCss,
             buttonFontSize: buttonFontSize,
+            buttonFontSizeCss: buttonFontSizeCss,
             shadowValue: shadowValue
             ,customCss: customCss
         });
     }
 
     function updateDetailsTogglePreview() {
-        const detailsLink = document.getElementById('details_link') ? document.getElementById('details_link').value : '#0066cc';
-        const detailsToggleBorder = document.getElementById('details_toggle_border') ? document.getElementById('details_toggle_border').value : detailsLink;
+        const detailsToggleText = document.getElementById('details_toggle_text') ? document.getElementById('details_toggle_text').value : (document.getElementById('details_link') ? document.getElementById('details_link').value : '#0066cc');
+        const detailsToggleBg = getTransparentAwareColor('details_toggle_bg', 'details_toggle_bg_transparent', 'transparent');
+        const detailsToggleBorder = document.getElementById('details_toggle_border') ? document.getElementById('details_toggle_border').value : detailsToggleText;
         const detailsToggleBorderWidth = document.getElementById('details_toggle_border_width') ? document.getElementById('details_toggle_border_width').value + 'px' : '2px';
         const buttonRadius = document.getElementById('button_radius') ? document.getElementById('button_radius').value + 'px' : '4px';
         const bg = document.getElementById('background_color') ? document.getElementById('background_color').value : '#ffffff';
         
         const preview = document.getElementById('details-toggle-preview');
         if (preview) {
-            preview.style.color = detailsLink;
-            preview.style.backgroundColor = 'transparent';
+            preview.style.color = detailsToggleText;
+            preview.style.backgroundColor = detailsToggleBg;
             preview.style.border = detailsToggleBorderWidth + ' solid ' + detailsToggleBorder;
             preview.style.borderRadius = buttonRadius;
         }
@@ -1428,6 +1658,19 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             });
         }
 
+        ['details_toggle_bg_transparent', 'details_toggle_hover_bg_transparent'].forEach(function(toggleId) {
+            const toggle = document.getElementById(toggleId);
+            if (!toggle) {
+                return;
+            }
+
+            toggle.addEventListener('change', function() {
+                updateTransparentColorControls();
+                updateDetailsTogglePreview();
+                updateLivePreview();
+            });
+        });
+
         // Update hex values when color picker changes
         document.querySelectorAll('.color-picker').forEach(function(colorInput) {
             colorInput.addEventListener('input', function() {
@@ -1447,16 +1690,18 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                 const valueSpan = document.getElementById(this.id + '_value');
                 if (valueSpan) {
                     const isOpacity = this.id.includes('opacity');
-                    const isFontSize = this.id === 'font_size';
+                    const isFontSize = this.id === 'font_size' || this.id === 'button_font_size';
                     let unit = isOpacity ? '%' : 'px';
-                    // Für allgemeine Schriftgröße: Wenn Standard-Bereich, zeige "Standard"
-                    if (isFontSize && this.value === '') {
-                        valueSpan.textContent = 'Standard';
+                    if (isFontSize) {
+                        const fallback = this.id === 'font_size' ? 16 : 15;
+                        valueSpan.textContent = formatRemLabel(this.value, fallback);
                     } else {
                         valueSpan.textContent = this.value + unit;
                     }
                 }
+                updateAllContrasts();
                 updateButtonPreviews();
+                updateDetailsPreviews();
                 updateDetailsTogglePreview();
                 updateShadowPreview();
                 updateLivePreview();
@@ -1472,6 +1717,13 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             });
         });
 
+        const responsiveTypographyToggle = document.getElementById('responsive_typography');
+        if (responsiveTypographyToggle) {
+            responsiveTypographyToggle.addEventListener('change', function() {
+                updateLivePreview();
+            });
+        }
+
         const customCssInput = document.getElementById('custom_css');
         if (customCssInput) {
             customCssInput.addEventListener('input', function() {
@@ -1481,6 +1733,7 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
 
         // Initial update
         updateOverlayControlsState();
+        updateTransparentColorControls();
         updateAllContrasts();
         updateButtonPreviews();
         updateDetailsPreviews();

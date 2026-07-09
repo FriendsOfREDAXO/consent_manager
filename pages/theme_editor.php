@@ -302,6 +302,13 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
         'link' => rex_request::post('link_color', 'string', $defaultColors[$themeBase]['link']),
         'link_hover' => rex_request::post('link_hover', 'string', $defaultColors[$themeBase]['link_hover']),
         'details_link' => rex_request::post('details_link', 'string', $defaultColors[$themeBase]['details_link']),
+        'details_toggle_text' => rex_request::post('details_toggle_text', 'string', $defaultColors[$themeBase]['details_toggle_text'] ?? $defaultColors[$themeBase]['details_link']),
+        'details_toggle_bg' => rex_request::post('details_toggle_bg', 'string', $defaultColors[$themeBase]['details_toggle_bg'] ?? '#ffffff'),
+        'details_toggle_bg_transparent' => rex_request::post('details_toggle_bg_transparent', 'string', '0'),
+        'details_toggle_hover_text' => rex_request::post('details_toggle_hover_text', 'string', $defaultColors[$themeBase]['details_toggle_hover_text'] ?? ($defaultColors[$themeBase]['background'] ?? '#ffffff')),
+        'details_toggle_hover_bg' => rex_request::post('details_toggle_hover_bg', 'string', $defaultColors[$themeBase]['details_toggle_hover_bg'] ?? $defaultColors[$themeBase]['details_link_hover']),
+        'details_toggle_hover_bg_transparent' => rex_request::post('details_toggle_hover_bg_transparent', 'string', '0'),
+        'details_content_link' => rex_request::post('details_content_link', 'string', $defaultColors[$themeBase]['details_content_link'] ?? $defaultColors[$themeBase]['details_link']),
         'details_link_hover' => rex_request::post('details_link_hover', 'string', $defaultColors[$themeBase]['details_link_hover']),
         'details_toggle_border' => rex_request::post('details_toggle_border', 'string', $defaultColors[$themeBase]['details_toggle_border']),
         'details_toggle_border_width' => rex_request::post('details_toggle_border_width', 'string', $defaultColors[$themeBase]['details_toggle_border_width']),
@@ -313,6 +320,9 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
         'details_text' => rex_request::post('details_text', 'string', $defaultColors[$themeBase]['details_text']),
         'details_heading' => rex_request::post('details_heading', 'string', $defaultColors[$themeBase]['details_heading']),
         'details_border' => rex_request::post('details_border', 'string', $defaultColors[$themeBase]['details_border']),
+        'details_group_header_bg' => rex_request::post('details_group_header_bg', 'string', $defaultColors[$themeBase]['details_group_header_bg'] ?? $defaultColors[$themeBase]['details_bg']),
+        'details_group_header_border' => rex_request::post('details_group_header_border', 'string', $defaultColors[$themeBase]['details_group_header_border'] ?? $defaultColors[$themeBase]['accent']),
+        'details_group_header_text' => rex_request::post('details_group_header_text', 'string', $defaultColors[$themeBase]['details_group_header_text'] ?? $defaultColors[$themeBase]['details_heading']),
         'details_border_opacity' => rex_request::post('details_border_opacity', 'string', $defaultColors[$themeBase]['details_border_opacity'] ?? '100'),
         'title' => rex_request::post('title_color', 'string', $defaultColors[$themeBase]['title']),
         'background' => rex_request::post('background_color', 'string', $defaultColors[$themeBase]['background']),
@@ -328,6 +338,7 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
         // Schriftgrößen
         'font_size' => rex_request::post('font_size', 'string', $defaultColors[$themeBase]['font_size'] ?? ''),
         'button_font_size' => rex_request::post('button_font_size', 'string', $defaultColors[$themeBase]['button_font_size'] ?? '15'),
+        'responsive_typography' => rex_request::post('responsive_typography', 'string', '0'),
         // Button-Styles
         'button_style' => rex_request::post('button_style', 'string', $defaultColors[$themeBase]['button_style']),
         'button_radius' => rex_request::post('button_radius', 'string', $defaultColors[$themeBase]['button_radius']),
@@ -359,8 +370,52 @@ if (!isset($colors['details_table_bg_opacity'])) {
     $colors['details_table_bg_opacity'] = '100';
 }
 
+if (!isset($colors['details_group_header_bg'])) {
+    $colors['details_group_header_bg'] = $colors['details_bg'] ?? '#f8f9fa';
+}
+
+if (!isset($colors['details_group_header_border'])) {
+    $colors['details_group_header_border'] = $colors['accent'] ?? '#333333';
+}
+
+if (!isset($colors['details_group_header_text'])) {
+    $colors['details_group_header_text'] = $colors['details_heading'] ?? '#1a1a1a';
+}
+
+if (!isset($colors['details_toggle_bg_transparent'])) {
+    $colors['details_toggle_bg_transparent'] = '0';
+}
+
+if (!isset($colors['details_toggle_hover_bg_transparent'])) {
+    $colors['details_toggle_hover_bg_transparent'] = '0';
+}
+
+if (!isset($colors['details_content_link'])) {
+    $colors['details_content_link'] = $colors['details_link'] ?? '#0066cc';
+}
+
+if (!isset($colors['details_toggle_text'])) {
+    $colors['details_toggle_text'] = $colors['details_link'] ?? '#0066cc';
+}
+
+if (!isset($colors['details_toggle_bg'])) {
+    $colors['details_toggle_bg'] = '#ffffff';
+}
+
+if (!isset($colors['details_toggle_hover_text'])) {
+    $colors['details_toggle_hover_text'] = $colors['background'] ?? '#ffffff';
+}
+
+if (!isset($colors['details_toggle_hover_bg'])) {
+    $colors['details_toggle_hover_bg'] = $colors['details_link_hover'] ?? '#004499';
+}
+
 if (!isset($colors['custom_css'])) {
     $colors['custom_css'] = '';
+}
+
+if (!isset($colors['responsive_typography'])) {
+    $colors['responsive_typography'] = '0';
 }
 
 // Handle form submission

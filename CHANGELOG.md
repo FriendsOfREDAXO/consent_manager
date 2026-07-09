@@ -3,11 +3,18 @@
 ## Version 5.7.0 - 09.07.2026
 
 - **Feature (Theme-Editor/Live):** Neuer Live-Theme-Editor mit direkter Echtzeit-Vorschau des realen Consent-Themes im Backend (inkl. sofort sichtbarer Anpassungen für Farben, Overlay, Backdrop und Details-Bereich).
+- **Feature (Theme-Editor/Details):** Erweiterte Gestaltung des Details-Bereichs ergänzt: Gruppen-Header-Hintergrund, Gruppen-Header-Rahmenfarbe und Gruppen-Header-Schriftfarbe sind nun separat konfigurierbar.
+- **Feature (Theme-Editor/Typografie):** Schriftgrößen-Ausgabe auf `rem` umgestellt und optionaler Responsive-Typografie-Schalter mit `clamp()` ergänzt.
+- **Feature (Theme-Editor/Komfort):** Automatische Farbvorschläge (Textfarbe aus Hintergrund) auf weitere Bereiche ausgeweitet und sofortige Übernahme in der Live-Vorschau verbessert.
+- **Fix (Theme-Editor/Kontrast):** Kontrastprüfung für Inhalt-Linkfarbe nutzt jetzt den effektiven Tabellen-/Zeilenhintergrund (inkl. Transparenz), statt nur den Container-Hintergrund.
+- **Fix (Theme-Editor/Details-Links):** Eigene Inhalt-Linkfarbe im Details-Bereich ist nun durchgängig angebunden (UI, Live-Vorschau, SCSS-Generierung).
+- **Fix (Theme-Editor/Buttons):** Hover-Hintergrund- und Hover-Textfarbe der Aktionsbuttons werden in der Live-Vorschau berücksichtigt.
 - **Feature (Rename-Workflow/Listen):** Schlüssel-Umbenennung erfolgt jetzt direkt in den jeweiligen Listen (Dienste, Gruppen, Texte), ohne Seitenwechsel in die Settings.
 - **Feature (Rename-Workflow/Sicherheit):** Vor einer echten Umbenennung ist ein Dry-Run jetzt verpflichtend. Ein Apply ohne passenden Dry-Run wird serverseitig blockiert.
 - **UX (Rename-Workflow):** Apply-Button bleibt bis zum erfolgreichen Dry-Run deaktiviert und wird erst für genau die geprüfte Alt/Neu-Kombination freigeschaltet.
 - **UX (Auswirkungen & Nacharbeit):** Dry-Run zeigt Auswirkungen, Risiken/Hinweise und mögliche manuelle Nacharbeiten direkt im Umbenennen-Dialog an.
 - **Cleanup (Settings):** Der UID/Schlüssel-Rename-Block wurde aus der Settings-Seite entfernt, um doppelte Bedienwege zu vermeiden.
+- **UX (Settings/Mehrsprachigkeit):** Panel „Sprach-Sync (fehlende Einträge)“ wird auf der Settings-Seite nur noch angezeigt, wenn mehr als eine Sprache vorhanden ist.
 
 ## Version 5.6.11 - 08.07.2026
 
