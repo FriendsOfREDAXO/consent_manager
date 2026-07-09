@@ -337,6 +337,7 @@ if ('1' === rex_request::post('formsubmit', 'string')) {
         'shadow_style' => rex_request::post('shadow_style', 'string', $defaultColors[$themeBase]['shadow_style']),
         'shadow_color' => rex_request::post('shadow_color', 'string', $defaultColors[$themeBase]['shadow_color']),
         'shadow_opacity' => rex_request::post('shadow_opacity', 'string', $defaultColors[$themeBase]['shadow_opacity']),
+        'custom_css' => rex_request::post('custom_css', 'string', ''),
     ];
 } else {
     $colors = $defaultColors[$themeBase];
@@ -356,6 +357,10 @@ if (!isset($colors['details_table_bg'])) {
 
 if (!isset($colors['details_table_bg_opacity'])) {
     $colors['details_table_bg_opacity'] = '100';
+}
+
+if (!isset($colors['custom_css'])) {
+    $colors['custom_css'] = '';
 }
 
 // Handle form submission

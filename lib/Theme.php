@@ -455,6 +455,12 @@ class Theme
                 ADDCSS;
         }
 
+            $customCss = trim((string) ($colors['custom_css'] ?? ''));
+            $customCssBlock = '';
+            if ('' !== $customCss) {
+                $customCssBlock = "\n\n/* Custom CSS (Theme-Editor) */\n" . $customCss . "\n";
+            }
+
         return <<<SCSS
             /*
             Theme: {"name": "$name", "description": "$description", "type": "light", "style": "$styleDesc, Custom Colors", "autor": "@custom"}
@@ -943,6 +949,7 @@ class Theme
                 border-width: 0;
             }
             $additionalCss
+            $customCssBlock
             SCSS;
     }
 }

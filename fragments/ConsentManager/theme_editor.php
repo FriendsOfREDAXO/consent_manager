@@ -618,6 +618,27 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                 </div>
             </div>
         </section>
+
+        <!-- Custom CSS -->
+        <section class="rex-page-section">
+            <div class="panel panel-default">
+                <header class="panel-heading">
+                    <div class="panel-title"><i class="rex-icon fa-code"></i> Custom CSS (Experten)</div>
+                </header>
+                <div class="panel-body">
+                    <p class="help-block" style="margin-bottom: 10px;">
+                        Eigene CSS-Regeln für Sonderfälle (z. B. Close-Button/X) direkt auf das Consent-Theme anwenden.
+                    </p>
+                    <p class="help-block" style="margin-bottom: 10px;">
+                        Hinweis: Je nach vorhandenen Theme-Regeln kann es nötig sein, Selektoren mit <code>!important</code> zu ergänzen.
+                    </p>
+                    <div class="form-group">
+                        <label for="custom_css">Custom CSS:</label>
+                        <textarea class="form-control" id="custom_css" name="custom_css" rows="8" spellcheck="false" placeholder="#consent_manager-wrapper .consent_manager-close { border-radius: 50%; }\n#consent_manager-wrapper .consent_manager-headline { letter-spacing: .01em; }"><?= rex_escape($colors['custom_css'] ?? '') ?></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
         
         <!-- Actions -->
         <section class="rex-page-section">
@@ -1092,6 +1113,13 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             doc.head.appendChild(styleNode);
         }
 
+        let customStyleNode = doc.getElementById('cm-theme-editor-custom-css');
+        if (!customStyleNode) {
+            customStyleNode = doc.createElement('style');
+            customStyleNode.id = 'cm-theme-editor-custom-css';
+            doc.head.appendChild(customStyleNode);
+        }
+
         const primaryButtonBackground = state.buttonStyle === 'outline' ? 'transparent' : state.buttonBg;
         const primaryButtonText = state.buttonStyle === 'outline' ? state.buttonBorderColor : state.buttonText;
         const overlayBackground = state.overlayEnabled ? toRgba(state.overlayColor, state.overlayOpacity) : 'transparent';
@@ -1166,6 +1194,8 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                 wrapper.style.removeProperty('position');
             }
         }
+
+        customStyleNode.textContent = state.customCss || '';
     }
 
     function updateLivePreview() {
@@ -1209,6 +1239,8 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
         const fontSize = document.getElementById('font_size') ? document.getElementById('font_size').value : '16';
         const buttonFontSize = document.getElementById('button_font_size') ? document.getElementById('button_font_size').value : '15';
         const shadowValue = updateShadowPreview() || 'none';
+        const customCssInput = document.getElementById('custom_css');
+        const customCss = customCssInput ? customCssInput.value : '';
 
         const liveOverlay = document.getElementById('cm-live-preview-overlay');
         const liveBox = document.getElementById('cm-live-preview-box');
@@ -1339,6 +1371,7 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
             fontSize: fontSize,
             buttonFontSize: buttonFontSize,
             shadowValue: shadowValue
+            ,customCss: customCss
         });
     }
 
@@ -1438,6 +1471,13 @@ $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
                 updateLivePreview();
             });
         });
+
+        const customCssInput = document.getElementById('custom_css');
+        if (customCssInput) {
+            customCssInput.addEventListener('input', function() {
+                updateLivePreview();
+            });
+        }
 
         // Initial update
         updateOverlayControlsState();
