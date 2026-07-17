@@ -93,11 +93,9 @@ function safeJSONParse(input, fallback) {
             // Backfill fuer bestehende Cookies ohne Scope-Fingerprint
             if ('' === cookieScopeHash) {
                 cookieData.service_scope_hash = cmServiceScopeHash;
-                try {
-                    cmCookieAPI.set(cmCookieName, JSON.stringify(cookieData));
-                } catch (e) {
-                    console.warn('consent_manager: could not backfill service scope hash', e);
-                }
+                // Nicht in das Cookie zurückschreiben, damit bestehende Expires-Werte
+                // (z. B. minimal consent mit 14 Tagen) nicht unbeabsichtigt verlängert werden.
+                cookieScopeHash = cmServiceScopeHash;
             } else if (cookieScopeHash !== cmServiceScopeHash) {
                 show = 1;
                 consents = [];
