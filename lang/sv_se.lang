@@ -64,9 +64,29 @@ consent_manager_cookiegroups = Grupper
 consent_manager_cookiegroup_add = Skapa grupp
 consent_manager_cookiegroup_edit = Redigera grupp
 consent_manager_cookiegroup_required = denna grupp innehåller tekniskt nödvändiga tjänster och cookies
+consent_manager_cookiegroup_primary_fields_editable_notice = Obs: "Tekniskt nödvändiga" och domäntilldelning hanteras i primärspråket och synkroniseras automatiskt till alla språk.
+consent_manager_cookiegroup_primary_fields_readonly_notice = Obs: "Tekniskt nödvändiga" och domäntilldelning ärvs från primärspråket. Växla till primärspråket för att ändra dessa fält.
 consent_manager_cookiegroup_scripts = Skript som laddas efter samtycke
 consent_manager_cookiegroup_scripts_unselect = Skript som laddas efter återkallande av samtycke
 consent_manager_cookiegroup_scripts_notice = Ange skript inklusive <code><script>...</script></code>
+consent_manager_cookiegroup_cookie_mode = Tjänsttilldelning
+consent_manager_cookiegroup_cookie_mode_inherit = Ärv från primärspråket ({0})
+consent_manager_cookiegroup_cookie_mode_custom = Egen tjänsttilldelning för detta språk
+consent_manager_cookiegroup_cookie_mode_inherit_hint = Ändra tjänsttilldelningar i primärspråket; detta språk ärver dem.
+consent_manager_cookiegroup_cookie_mode_custom_hint = Detta språk använder egen tjänsttilldelning.
+consent_manager_cookiegroup_cookie_mode_globally_disabled = Språkspecifik tjänsttilldelning är globalt inaktiverad. Denna grupp ärver tjänster från primärspråket.
+consent_manager_cookiegroup_list_service_assignment = Tjänsttilldelning per språk
+consent_manager_cookiegroup_service_status_primary = Primärspråk (referens)
+consent_manager_cookiegroup_service_status_inherited = Ärvd från primärspråket
+consent_manager_cookiegroup_service_status_custom = Skiljer sig från primärspråket
+consent_manager_cookiegroup_service_status_global_off = Globalt inaktiverad (alltid ärvd)
+consent_manager_cookiegroup_cookie_autoset_notice = Obs: Systemtjänsten "consent_manager" behöver inte väljas här. Consent-cookien sätts automatiskt.
+consent_manager_cookiegroup_helpbox_title = Redigeringshjälp
+consent_manager_cookiegroup_helpbox_point_primary = "Tekniskt nödvändiga" och domäntilldelning hanteras i {0} och ärvs av alla språk.
+consent_manager_cookiegroup_helpbox_point_system_cookie = Systemtjänsten "consent_manager" behöver inte väljas. Consent-cookien sätts automatiskt.
+consent_manager_cookiegroup_helpbox_point_translatable = I "{0}" översätter du främst namn, beskrivning och skript.
+consent_manager_cookiegroup_helpbox_point_service_code = Lägg språkspecifik tjänstkod direkt i respektive tjänst.
+consent_manager_cookiegroup_helpbox_point_status = Språkikonen i fliken visar översättningsstatus: ärvt, delvis översatt eller fullständigt översatt.
 consent_manager_cookiegroup_nodomain_notice = Ingen domän eller tjänster tilldelade än! Samtyckes-boxen kanske inte visas i frontend.
 
 consent_manager_texts = Texter
@@ -398,6 +418,10 @@ consent_manager_lang_status_badge_primary = <span class="label label-default" st
 consent_manager_lang_status_badge_primary_fallback = <span class="label label-danger" style="margin-left:4px;"><i class="fa fa-globe"></i> Primärspråk</span>
 consent_manager_lang_status_badge_partial = <span class="label label-warning" style="margin-left:4px;"><i class="fa fa-globe"></i> Delvis</span>
 consent_manager_lang_status_badge_translated = <span class="label label-success" style="margin-left:4px;"><i class="fa fa-globe"></i> Översatt</span>
+consent_manager_lang_status_tooltip_primary = Primärspråk
+consent_manager_lang_status_tooltip_primary_fallback = Ärvt från primärspråket (inte översatt)
+consent_manager_lang_status_tooltip_partial = Delvis översatt
+consent_manager_lang_status_tooltip_translated = Fullständigt översatt
 consent_manager_config_after_import_title = Efter setup-import:
 consent_manager_config_step_domains = 1. Konfigurera domän
 consent_manager_config_step_services = 2. Anpassa tjänster
@@ -430,6 +454,9 @@ consent_manager_config_inline_consent_session_scope_desc = Om aktiverat sparas v
 
 consent_manager_config_inline_only_mode = Använd endast inline-consent
 consent_manager_config_inline_only_mode_desc = Den globala consent-popupen visas inte som standard. Samtycke begärs endast vid behov via doConsent().
+consent_manager_config_cookiegroup_language_custom_services = Språkspecifik tjänsttilldelning per grupp
+consent_manager_config_cookiegroup_language_custom_services_enable = Aktivera
+consent_manager_config_cookiegroup_language_custom_services_notice = Om aktiverat kan översatta språk växla per grupp mellan ärvd och egen tjänsttilldelning. Om inaktiverat är tjänsttilldelningar alltid ärvda från primärspråket.
 
 # Domän Inline Consent-inställningar
 consent_manager_domain_inline_only_mode = Inline-endast läge

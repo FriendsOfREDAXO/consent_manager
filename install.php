@@ -47,6 +47,8 @@ rex_sql_table::get(rex::getTable('consent_manager_cookiegroup'))
     ->ensureColumn(new rex_sql_column('name', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('description', 'text'))
     ->ensureColumn(new rex_sql_column('cookie', 'varchar(255)', true))
+    ->ensureColumn(new rex_sql_column('cookie_mode', 'varchar(20)', true, 'inherit'))
+    ->ensureColumn(new rex_sql_column('cookie_custom', 'varchar(255)', true, ''))
     ->ensureColumn(new rex_sql_column('script', 'text'))
     ->ensureColumn(new rex_sql_column('createuser', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('updateuser', 'varchar(255)'))
@@ -115,6 +117,14 @@ rex_sql_table::get(rex::getTable('consent_manager_consent_log'))
 
 if (-1 === $addon->getConfig('justInstalled', -1)) {
     $addon->setConfig('justInstalled', $justinstalled);
+}
+
+if (-1 === $addon->getConfig('cookiegroup_language_custom_services_enabled', -1)) {
+    $addon->setConfig('cookiegroup_language_custom_services_enabled', true);
+}
+
+if (-1 === $addon->getConfig('reconsent_on_scope_change', -1)) {
+    $addon->setConfig('reconsent_on_scope_change', true);
 }
 
 // Add Text for new Button button_select_none

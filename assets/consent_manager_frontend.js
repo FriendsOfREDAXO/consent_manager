@@ -4,6 +4,8 @@
 var cmCookieSameSite = consent_manager_parameters.cookieSameSite || 'Lax';
 var cmCookieSecure = consent_manager_parameters.cookieSecure || false;
 var cmCookieName = consent_manager_parameters.cookieName || 'consentmanager';
+var cmServiceScopeHash = consent_manager_parameters.service_scope_hash || '';
+var cmReconsentOnScopeChange = consent_manager_parameters.reconsent_on_scope_change !== false;
 var cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', sameSite: cmCookieSameSite, secure: cmCookieSecure });
 
 if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
@@ -83,6 +85,24 @@ function safeJSONParse(input, fallback) {
             consents = cookieData.consents;
             cookieVersion = parseInt(cookieData.version);
             cookieCachelogid = parseInt(cookieData.cachelogid);
+        }
+
+        if (cmReconsentOnScopeChange && '' !== cmServiceScopeHash) {
+            var cookieScopeHash = String(cookieData.service_scope_hash || cookieData.scope_hash || '');
+
+            // Backfill fuer bestehende Cookies ohne Scope-Fingerprint
+            if ('' === cookieScopeHash) {
+                cookieData.service_scope_hash = cmServiceScopeHash;
+                try {
+                    cmCookieAPI.set(cmCookieName, JSON.stringify(cookieData));
+                } catch (e) {
+                    console.warn('consent_manager: could not backfill service scope hash', e);
+                }
+            } else if (cookieScopeHash !== cmServiceScopeHash) {
+                show = 1;
+                consents = [];
+                deleteCookies();
+            }
         }
     }
 
@@ -336,7 +356,8 @@ function safeJSONParse(input, fallback) {
             consents: [],
             version: addonVersion,
             consentid: consent_manager_parameters.consentid,
-            cachelogid: consent_manager_parameters.cachelogid
+            cachelogid: consent_manager_parameters.cachelogid,
+            service_scope_hash: cmServiceScopeHash
         };
         // checkboxen
         if (toSave !== 'none') {

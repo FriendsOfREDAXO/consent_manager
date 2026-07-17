@@ -70,9 +70,29 @@ consent_manager_cookiegroups = Gruppen
 consent_manager_cookiegroup_add = Gruppe erstellen
 consent_manager_cookiegroup_edit = Gruppe bearbeiten
 consent_manager_cookiegroup_required = diese Gruppe enthält die technisch notwendigen Dienste und Cookies
+consent_manager_cookiegroup_primary_fields_editable_notice = Hinweis: "Technisch notwendig" und Domain-Zuweisung werden in der Primärsprache gepflegt und automatisch in alle Sprachen übernommen.
+consent_manager_cookiegroup_primary_fields_readonly_notice = Hinweis: "Technisch notwendig" und Domain-Zuweisung sind aus der Primärsprache geerbt. Bitte wechseln Sie in die Primärsprache, um diese Felder zu ändern.
 consent_manager_cookiegroup_scripts = Skripte, die nach Einverständnis geladen werden
 consent_manager_cookiegroup_scripts_unselect = Skripte, die nach Widerrufen des Einverständnisses geladen werden
 consent_manager_cookiegroup_scripts_notice = Skripte inklusive <code><script>...</script></code> eingeben
+consent_manager_cookiegroup_cookie_mode = Dienstzuweisung
+consent_manager_cookiegroup_cookie_mode_inherit = Aus Primärsprache ({0}) erben
+consent_manager_cookiegroup_cookie_mode_custom = Eigene Dienstzuweisung für diese Sprache
+consent_manager_cookiegroup_cookie_mode_inherit_hint = Änderungen an den Diensten erfolgen in der Primärsprache und werden hier geerbt.
+consent_manager_cookiegroup_cookie_mode_custom_hint = Für diese Sprache wird eine eigene Dienstzuweisung verwendet.
+consent_manager_cookiegroup_cookie_mode_globally_disabled = Sprachspezifische Dienstzuweisung ist global deaktiviert. Diese Gruppe erbt die Dienste aus der Primärsprache.
+consent_manager_cookiegroup_list_service_assignment = Dienstzuweisung je Sprache
+consent_manager_cookiegroup_service_status_primary = Primärsprache (Referenz)
+consent_manager_cookiegroup_service_status_inherited = Aus Primärsprache geerbt
+consent_manager_cookiegroup_service_status_custom = Weicht von der Primärsprache ab
+consent_manager_cookiegroup_service_status_global_off = Global deaktiviert (immer geerbt)
+consent_manager_cookiegroup_cookie_autoset_notice = Hinweis: Der System-Dienst "consent_manager" muss hier nicht ausgewählt werden. Das Consent-Cookie wird automatisch gesetzt.
+consent_manager_cookiegroup_helpbox_title = Hinweise zur Bearbeitung
+consent_manager_cookiegroup_helpbox_point_primary = „Technisch notwendig“ und Domain-Zuweisung werden in {0} gepflegt und für alle Sprachen übernommen.
+consent_manager_cookiegroup_helpbox_point_system_cookie = Der System-Dienst „consent_manager“ muss nicht ausgewählt werden, das Consent-Cookie wird automatisch gesetzt.
+consent_manager_cookiegroup_helpbox_point_translatable = In „{0}“ bearbeiten Sie vor allem Name, Beschreibung und Skripte sprachspezifisch.
+consent_manager_cookiegroup_helpbox_point_service_code = Sprachspezifischen Code für Dienste hinterlegen Sie bitte direkt im jeweiligen Dienst.
+consent_manager_cookiegroup_helpbox_point_status = Das Sprachsymbol im Tab zeigt den Übersetzungsstatus: geerbt, teilweise übersetzt oder vollständig übersetzt.
 consent_manager_cookiegroup_nodomain_notice = Es wurde noch keine Domain oder keine Dienste zugeordnet! Im Frontent wird evtl. keine Consent-Box angezeigt.
 consent_manager_cookiegroup_duplicated = Gruppe erfolgreich dupliziert
 consent_manager_cookiegroup_duplicated_edit_uid_title = Gruppe wurde dupliziert
@@ -314,6 +334,10 @@ consent_manager_lang_status_badge_primary = <span class="label label-default" st
 consent_manager_lang_status_badge_primary_fallback = <span class="label label-danger" style="margin-left:4px;"><i class="fa fa-globe"></i> Primärsprache</span>
 consent_manager_lang_status_badge_partial = <span class="label label-warning" style="margin-left:4px;"><i class="fa fa-globe"></i> Teilweise</span>
 consent_manager_lang_status_badge_translated = <span class="label label-success" style="margin-left:4px;"><i class="fa fa-globe"></i> Übersetzt</span>
+consent_manager_lang_status_tooltip_primary = Primärsprache
+consent_manager_lang_status_tooltip_primary_fallback = Geerbt von Primärsprache (nicht übersetzt)
+consent_manager_lang_status_tooltip_partial = Teilweise übersetzt
+consent_manager_lang_status_tooltip_translated = Vollständig übersetzt
 
 # Quickstart modal additional
 
@@ -336,6 +360,9 @@ consent_manager_config_inline_consent_session_scope_desc = Wenn aktiviert, wird 
 
 consent_manager_config_inline_only_mode = Nur Inline-Consent verwenden
 consent_manager_config_inline_only_mode_desc = Das globale Consent-Popup wird standardmäßig nicht angezeigt. Consent wird nur bei Bedarf über doConsent() abgefragt.
+consent_manager_config_cookiegroup_language_custom_services = Sprachspezifische Dienstzuweisung pro Gruppe
+consent_manager_config_cookiegroup_language_custom_services_enable = Aktivieren
+consent_manager_config_cookiegroup_language_custom_services_notice = Wenn aktiv, kann in übersetzten Sprachen pro Gruppe zwischen geerbter und eigener Dienstzuweisung umgeschaltet werden. Wenn deaktiviert, sind Dienstzuweisungen immer aus der Primärsprache geerbt.
 
 # Domain Inline Consent Einstellungen
 consent_manager_domain_inline_only_mode = Inline-Only Modus

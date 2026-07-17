@@ -361,6 +361,12 @@ $field->setLabel(rex_i18n::msg('consent_manager_config_auto_blocking'));
 $field->addOption(rex_i18n::msg('consent_manager_config_auto_blocking_enable'), 1);
 $field->setNotice(rex_i18n::msg('consent_manager_config_auto_blocking_desc'));
 
+// Sprachspezifische Dienstzuweisung je Cookie-Gruppe
+$field = $form->addCheckboxField('cookiegroup_language_custom_services_enabled');
+$field->setLabel(rex_i18n::msg('consent_manager_config_cookiegroup_language_custom_services'));
+$field->addOption(rex_i18n::msg('consent_manager_config_cookiegroup_language_custom_services_enable'), 1);
+$field->setNotice(rex_i18n::msg('consent_manager_config_cookiegroup_language_custom_services_notice'));
+
 // Redakteur-Hinweise
 $field = $form->addTextAreaField('editorial_info');
 $field->setLabel(rex_i18n::msg('consent_manager_config_editorial_info'));

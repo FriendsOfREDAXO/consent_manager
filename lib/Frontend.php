@@ -259,6 +259,7 @@ class Frontend
         // Sanitize input parameters to prevent XSS
         $cacheLogId = preg_replace('/[^a-zA-Z0-9_\-]/', '', rex_request::get('cid', 'string', ''));
         $version = preg_replace('/[^0-9.]/', '', rex_request::get('v', 'string', ''));
+        $serviceScopeHash = self::getServiceScopeHashForCurrentContext();
 
         $consent_manager_parameters = [
             'initially_hidden' => 'true' === rex_request::get('i', 'string', 'false'),
@@ -273,6 +274,8 @@ class Frontend
             'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
             'cookieName' => $addon->getConfig('cookie_name', 'consentmanager'),
+            'service_scope_hash' => $serviceScopeHash,
+            'reconsent_on_scope_change' => (bool) $addon->getConfig('reconsent_on_scope_change', true),
         ];
         echo 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
@@ -296,6 +299,35 @@ class Frontend
         }
         echo $content;
         exit;
+    }
+
+    private static function getServiceScopeHashForCurrentContext(): string
+    {
+        $frontend = new self(0);
+        $frontend->setDomain(Utility::hostname());
+
+        if ([] === $frontend->cookiegroups) {
+            return '';
+        }
+
+        $serviceUids = [];
+        foreach ($frontend->cookiegroups as $cookiegroup) {
+            if (!isset($cookiegroup['cookie_uids']) || !is_array($cookiegroup['cookie_uids'])) {
+                continue;
+            }
+
+            foreach ($cookiegroup['cookie_uids'] as $cookieUid) {
+                $serviceUid = trim((string) $cookieUid);
+                if ('' !== $serviceUid) {
+                    $serviceUids[] = $serviceUid;
+                }
+            }
+        }
+
+        $serviceUids = array_values(array_unique($serviceUids));
+        sort($serviceUids);
+
+        return hash('sha256', implode('|', $serviceUids));
     }
 
     /**

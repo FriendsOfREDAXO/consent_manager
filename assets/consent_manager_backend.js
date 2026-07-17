@@ -71,6 +71,79 @@ $(document).on('rex:ready', function (event, container) {
 
     rex_searchfield_init("#consent_manager_log_search");
 
+    // Cookiegroup language mode toggle (inherit/custom services)
+    var cookieModeSelectSelector = 'select[name*="cookie_mode"], select[id*="cookie_mode"], select[id*="cookie-mode"]';
+
+    var initCookieModeToggle = function (selectElement) {
+        var cookieModeSelect = $(selectElement);
+        if (!cookieModeSelect.length || cookieModeSelect.data('cmCookieModeInit') === true) {
+            return;
+        }
+        cookieModeSelect.data('cmCookieModeInit', true);
+
+        var cookieModeForm = cookieModeSelect.closest('form');
+        var cookieModeInheritSection = cookieModeForm.find('.cm-cookie-mode-section-inherit');
+        var cookieModeCustomSection = cookieModeForm.find('.cm-cookie-mode-section-custom');
+        var cookieModeInheritHint = cookieModeForm.find('.cm-cookie-mode-hint-inherit');
+        var cookieModeCustomHint = cookieModeForm.find('.cm-cookie-mode-hint-custom');
+
+        var customCheckboxes = cookieModeForm.find('input[type="checkbox"][name*="cookie_custom"]');
+        var customCheckboxGroup = customCheckboxes.first().closest('dl.rex-form-group, .form-group');
+
+        var copyInheritedSelectionToCustom = function () {
+            if (customCheckboxGroup.data('inheritApplied') === true) {
+                return;
+            }
+
+            if (customCheckboxes.filter(':checked').length > 0) {
+                customCheckboxGroup.data('inheritApplied', true);
+                return;
+            }
+
+            var inheritedCheckedLabels = {};
+            cookieModeInheritSection.find('.checkbox input[type="checkbox"]:checked').each(function () {
+                var labelText = $(this).closest('label').text().trim();
+                if (labelText !== '') {
+                    inheritedCheckedLabels[labelText] = true;
+                }
+            });
+
+            customCheckboxes.each(function () {
+                var checkbox = $(this);
+                var customLabel = checkbox.closest('label').text().trim();
+                checkbox.prop('checked', inheritedCheckedLabels[customLabel] === true);
+            });
+
+            customCheckboxGroup.data('inheritApplied', true);
+        };
+
+        var syncCookieModeView = function () {
+            var isCustom = cookieModeSelect.val() === 'custom';
+
+            cookieModeInheritSection.hide();
+            cookieModeCustomSection.toggle(isCustom);
+            cookieModeInheritHint.toggle(!isCustom);
+            cookieModeCustomHint.toggle(isCustom);
+
+            if (customCheckboxGroup.length) {
+                customCheckboxGroup.toggle(isCustom);
+            }
+
+            customCheckboxes.prop('disabled', !isCustom);
+
+            if (isCustom) {
+                copyInheritedSelectionToCustom();
+            }
+        };
+
+        cookieModeSelect.on('change', syncCookieModeView);
+        syncCookieModeView();
+    };
+
+    container.find(cookieModeSelectSelector).each(function () {
+        initCookieModeToggle(this);
+    });
+
     // Theme preview
     var modalOverlay = $('.cm_modal-overlay');
     var modalIframe = $('.cm_modal-iframe');

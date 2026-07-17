@@ -105,3 +105,113 @@ div.thumbnail iframe {
     opacity: 0;
     transition: all 300ms ease-in-out;
 }
+
+/* Language status icon badges in navigation tabs */
+.consent-manager-lang-status {
+    --cm-lang-status-bg: #e5e7eb;
+    --cm-lang-status-fg: #374151;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4em;
+    height: 1.4em;
+    margin-left: 4px;
+    border-radius: 999px;
+    background: var(--cm-lang-status-bg);
+    color: var(--cm-lang-status-fg);
+    font-size: 11px;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.consent-manager-lang-status--primary {
+    --cm-lang-status-bg: #dbeafe;
+    --cm-lang-status-fg: #1d4ed8;
+}
+
+.consent-manager-lang-status--primary_fallback {
+    --cm-lang-status-bg: #fef3c7;
+    --cm-lang-status-fg: #92400e;
+}
+
+.consent-manager-lang-status--partial {
+    --cm-lang-status-bg: #ede9fe;
+    --cm-lang-status-fg: #6d28d9;
+}
+
+.consent-manager-lang-status--translated {
+    --cm-lang-status-bg: #dcfce7;
+    --cm-lang-status-fg: #166534;
+}
+
+body.rex-theme-dark .consent-manager-lang-status {
+    --cm-lang-status-bg: #334155;
+    --cm-lang-status-fg: #e2e8f0;
+}
+
+body.rex-theme-dark .consent-manager-lang-status--primary {
+    --cm-lang-status-bg: #1e3a8a;
+    --cm-lang-status-fg: #bfdbfe;
+}
+
+body.rex-theme-dark .consent-manager-lang-status--primary_fallback {
+    --cm-lang-status-bg: #78350f;
+    --cm-lang-status-fg: #fde68a;
+}
+
+body.rex-theme-dark .consent-manager-lang-status--partial {
+    --cm-lang-status-bg: #4c1d95;
+    --cm-lang-status-fg: #ddd6fe;
+}
+
+body.rex-theme-dark .consent-manager-lang-status--translated {
+    --cm-lang-status-bg: #14532d;
+    --cm-lang-status-fg: #bbf7d0;
+}
+
+@media (prefers-color-scheme: dark) {
+    body.rex-has-theme:not(.rex-theme-light) .consent-manager-lang-status {
+        --cm-lang-status-bg: #334155;
+        --cm-lang-status-fg: #e2e8f0;
+    }
+
+    body.rex-has-theme:not(.rex-theme-light) .consent-manager-lang-status--primary {
+        --cm-lang-status-bg: #1e3a8a;
+        --cm-lang-status-fg: #bfdbfe;
+    }
+
+    body.rex-has-theme:not(.rex-theme-light) .consent-manager-lang-status--primary_fallback {
+        --cm-lang-status-bg: #78350f;
+        --cm-lang-status-fg: #fde68a;
+    }
+
+    body.rex-has-theme:not(.rex-theme-light) .consent-manager-lang-status--partial {
+        --cm-lang-status-bg: #4c1d95;
+        --cm-lang-status-fg: #ddd6fe;
+    }
+
+    body.rex-has-theme:not(.rex-theme-light) .consent-manager-lang-status--translated {
+        --cm-lang-status-bg: #14532d;
+        --cm-lang-status-fg: #bbf7d0;
+    }
+}
+
+/* Cookiegroup side-panel layout (similar to addon settings page) */
+.cm-cookiegroup-panels .panel {
+    margin-bottom: 16px;
+}
+
+.cm-cookiegroup-help-list .panel {
+    box-shadow: none;
+}
+
+.cm-cookiegroup-help-list small {
+    line-height: 1.35;
+}
+
+@media (max-width: 991px) {
+    .cm-cookiegroup-panels > [class*="col-"] {
+        width: 100%;
+    }
+}

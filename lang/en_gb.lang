@@ -67,9 +67,29 @@ consent_manager_cookiegroups = Groups
 consent_manager_cookiegroup_add = Create group
 consent_manager_cookiegroup_edit = Edit group
 consent_manager_cookiegroup_required = this group contains technically necessary services and cookies
+consent_manager_cookiegroup_primary_fields_editable_notice = Note: "Technically necessary" and domain assignment are maintained in the primary language and automatically synchronized to all languages.
+consent_manager_cookiegroup_primary_fields_readonly_notice = Note: "Technically necessary" and domain assignment are inherited from the primary language. Please switch to the primary language to change these fields.
 consent_manager_cookiegroup_scripts = Scripts loaded after consent
 consent_manager_cookiegroup_scripts_unselect = Scripts loaded after consent revocation
 consent_manager_cookiegroup_scripts_notice = Enter scripts including <code><script>...</script></code>
+consent_manager_cookiegroup_cookie_mode = Service assignment
+consent_manager_cookiegroup_cookie_mode_inherit = Inherit from primary language ({0})
+consent_manager_cookiegroup_cookie_mode_custom = Custom service assignment for this language
+consent_manager_cookiegroup_cookie_mode_inherit_hint = Change service assignments in the primary language; this language inherits them.
+consent_manager_cookiegroup_cookie_mode_custom_hint = This language uses its own service assignment.
+consent_manager_cookiegroup_cookie_mode_globally_disabled = Language-specific service assignment is globally disabled. This group inherits services from the primary language.
+consent_manager_cookiegroup_list_service_assignment = Service assignment per language
+consent_manager_cookiegroup_service_status_primary = Primary language (reference)
+consent_manager_cookiegroup_service_status_inherited = Inherited from primary language
+consent_manager_cookiegroup_service_status_custom = Differs from primary language
+consent_manager_cookiegroup_service_status_global_off = Globally disabled (always inherited)
+consent_manager_cookiegroup_cookie_autoset_notice = Note: The system service "consent_manager" does not need to be selected here. The consent cookie is set automatically.
+consent_manager_cookiegroup_helpbox_title = Editing hints
+consent_manager_cookiegroup_helpbox_point_primary = "Technically necessary" and domain assignment are maintained in {0} and inherited by all languages.
+consent_manager_cookiegroup_helpbox_point_system_cookie = The system service "consent_manager" does not need to be selected. The consent cookie is set automatically.
+consent_manager_cookiegroup_helpbox_point_translatable = In "{0}" you mainly translate name, description, and scripts.
+consent_manager_cookiegroup_helpbox_point_service_code = Please maintain language-specific service code directly in the respective service.
+consent_manager_cookiegroup_helpbox_point_status = The language icon in the tab shows translation status: inherited, partially translated, or fully translated.
 consent_manager_cookiegroup_nodomain_notice = No domain or services assigned yet! The consent box may not be displayed in the frontend.
 
 consent_manager_texts = Texts
@@ -419,6 +439,10 @@ consent_manager_lang_status_badge_primary = <span class="label label-default" st
 consent_manager_lang_status_badge_primary_fallback = <span class="label label-danger" style="margin-left:4px;"><i class="fa fa-globe"></i> Primary fallback</span>
 consent_manager_lang_status_badge_partial = <span class="label label-warning" style="margin-left:4px;"><i class="fa fa-globe"></i> Partial</span>
 consent_manager_lang_status_badge_translated = <span class="label label-success" style="margin-left:4px;"><i class="fa fa-globe"></i> Translated</span>
+consent_manager_lang_status_tooltip_primary = Primary language
+consent_manager_lang_status_tooltip_primary_fallback = Inherited from primary language (not translated)
+consent_manager_lang_status_tooltip_partial = Partially translated
+consent_manager_lang_status_tooltip_translated = Fully translated
 consent_manager_config_after_import_title = After setup import:
 consent_manager_config_step_domains = 1. Configure domain
 consent_manager_config_step_services = 2. Customize services
@@ -451,6 +475,9 @@ consent_manager_config_inline_consent_session_scope_desc = If enabled, the selec
 
 consent_manager_config_inline_only_mode = Use inline consent only
 consent_manager_config_inline_only_mode_desc = The global consent popup is not displayed by default. Consent is only requested when needed via doConsent().
+consent_manager_config_cookiegroup_language_custom_services = Language-specific service assignment per group
+consent_manager_config_cookiegroup_language_custom_services_enable = Enable
+consent_manager_config_cookiegroup_language_custom_services_notice = If enabled, translated languages can switch per group between inherited and custom service assignment. If disabled, service assignments are always inherited from the primary language.
 
 # Domain Inline Consent Settings
 consent_manager_domain_inline_only_mode = Inline-only mode

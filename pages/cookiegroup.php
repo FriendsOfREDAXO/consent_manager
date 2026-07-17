@@ -13,6 +13,14 @@ $func = rex_request::request('func', 'string');
 $csrf = rex_csrf_token::factory('consent_manager_cookiegroup');
 $clang_id = (int) str_replace('clang', '', rex_be_controller::getCurrentPagePart(3) ?? '');
 $table = rex::getTable('consent_manager_cookiegroup');
+$languageCustomServicesEnabled = (bool) rex_addon::get('consent_manager')->getConfig('cookiegroup_language_custom_services_enabled', true);
+$hasCookieModeColumns = false;
+$columnCheckSql = rex_sql::factory();
+$columnCheckSql->setQuery('SHOW COLUMNS FROM ' . $table . ' LIKE ?', ['cookie_mode']);
+if ($columnCheckSql->getRows() > 0) {
+    $columnCheckSql->setQuery('SHOW COLUMNS FROM ' . $table . ' LIKE ?', ['cookie_custom']);
+    $hasCookieModeColumns = $columnCheckSql->getRows() > 0;
+}
 $msg = '';
 $startClangId = rex_clang::getStartId();
 $renameOpen = false;
@@ -186,6 +194,11 @@ if ('delete' === $func) {
     $form->addHiddenField('clang_id', $clang_id);
     RexFormSupport::getId($form, $table);
 
+    $startClang = rex_clang::get(rex_clang::getStartId());
+    $startLanguageName = null !== $startClang ? $startClang->getName() : 'Startsprache';
+    $currentClang = rex_clang::get($clang_id);
+    $currentLanguageName = null !== $currentClang ? $currentClang->getName() : $startLanguageName;
+
     $db = rex_sql::factory();
     $db->setTable(rex::getTable('consent_manager_domain'));
     $db->select('id,uid');
@@ -216,12 +229,20 @@ if ('delete' === $func) {
             }
         }
     } else {
+        $isPrimaryLanguage = $clang_id === rex_clang::getStartId();
+
         $form->addFieldset(rex_i18n::msg('consent_manager_general'));
-        
+
         $field = $form->addReadOnlyField('uid_readonly', (string) $form->getSql()->getValue('uid'));
         $field->setLabel(rex_i18n::msg('consent_manager_uid'));
         $form->addHiddenField('uid', (string) $form->getSql()->getValue('uid'));
-        $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), rex_i18n::msg('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
+
+        if ($isPrimaryLanguage) {
+            $field = $form->addCheckboxField('required');
+            $field->addOption(rex_i18n::msg('consent_manager_cookiegroup_required'), 1);
+        } else {
+            $form->addRawField(RexFormSupport::getFakeCheckbox('', [[$form->getSql()->getValue('required'), rex_i18n::msg('consent_manager_cookiegroup_required')]])); /** @phpstan-ignore-line */
+        }
 
         $checkboxes = [];
         $checkedBoxes = array_filter(explode('|', (string) $form->getSql()->getValue('domain')), static function ($value) {
@@ -233,7 +254,15 @@ if ('delete' === $func) {
         }
         if (count($checkboxes) > 0) {
             $form->addFieldset(rex_i18n::msg('consent_manager_domain'));
-            $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
+            if ($isPrimaryLanguage) {
+                $field = $form->addCheckboxField('domain');
+                $field->setLabel(rex_i18n::msg('consent_manager_domain'));
+                foreach ($domains as $v) {
+                    $field->addOption((string) $v['uid'], (int) $v['id']);
+                }
+            } else {
+                $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_domain'), $checkboxes)); /** @phpstan-ignore-line */
+            }
         }
     }
 
@@ -254,6 +283,17 @@ if ('delete' === $func) {
     $db->setWhere('clang_id = ' . $clang_id . ' AND uid NOT IN ("consent_manager", "consentmanager") ORDER BY uid ASC');
     $db->select('DISTINCT pid, uid, service_name, variant');
     $cookies = $db->getArray();
+
+    $primaryCookieSelectionByUid = [];
+    if ($clang_id !== rex_clang::getStartId()) {
+        $dbPrimaryCookiegroup = rex_sql::factory();
+        $dbPrimaryCookiegroup->setTable($table);
+        $dbPrimaryCookiegroup->setWhere('clang_id = ' . rex_clang::getStartId());
+        $dbPrimaryCookiegroup->select('uid,cookie');
+        foreach ($dbPrimaryCookiegroup->getArray() as $row) {
+            $primaryCookieSelectionByUid[(string) ($row['uid'] ?? '')] = (string) ($row['cookie'] ?? '');
+        }
+    }
 
     if ($clang_id === rex_clang::getStartId() || true !== $form->isEditMode()) {
         if ([] !== $cookies) {
@@ -413,31 +453,187 @@ if ('delete' === $func) {
     } else {
         if ([] !== $cookies) {
             $form->addFieldset(rex_i18n::msg('consent_manager_cookies'));
-            
-            $checkboxes = [];
-            if (null !== $form->getSql()->getValue('cookie')) {
-                $checkedBoxes = array_filter(explode('|', (string) $form->getSql()->getValue('cookie')), static function ($value) {
+
+            if ($hasCookieModeColumns && $languageCustomServicesEnabled) {
+                $cookieMode = trim((string) $form->getSql()->getValue('cookie_mode'));
+                if ('custom' !== $cookieMode) {
+                    $cookieMode = 'inherit';
+                }
+
+                $modeField = $form->addSelectField('cookie_mode');
+                $modeField->setLabel(rex_i18n::msg('consent_manager_cookiegroup_cookie_mode'));
+                $modeField->setAttribute('class', 'cm-cookie-mode-select');
+                $modeSelect = $modeField->getSelect();
+                $modeSelect->addOption(rex_i18n::msg('consent_manager_cookiegroup_cookie_mode_inherit', $startLanguageName), 'inherit');
+                $modeSelect->addOption(rex_i18n::msg('consent_manager_cookiegroup_cookie_mode_custom'), 'custom');
+
+                $inheritHintStyle = 'inherit' === $cookieMode ? '' : ' style="display:none"';
+                $customHintStyle = 'custom' === $cookieMode ? '' : ' style="display:none"';
+                $form->addRawField('<p class="help-block cm-cookie-mode-hint cm-cookie-mode-hint-inherit"' . $inheritHintStyle . '>' . rex_i18n::msg('consent_manager_cookiegroup_cookie_mode_inherit_hint', $startLanguageName) . '</p>');
+                $form->addRawField('<p class="help-block cm-cookie-mode-hint cm-cookie-mode-hint-custom"' . $customHintStyle . '>' . rex_i18n::msg('consent_manager_cookiegroup_cookie_mode_custom_hint') . '</p>');
+
+                $form->addRawField('<style nonce="' . rex_response::getNonce() . '">
+                .cm-cookie-mode-section-custom .checkbox {
+                    display: inline-block;
+                    width: 49%;
+                    margin: 5px 0;
+                    vertical-align: top;
+                    padding-right: 10px;
+                    box-sizing: border-box;
+                    padding: 8px 0;
+                }
+
+                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"] {
+                    appearance: none;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    width: 26px;
+                    height: 26px;
+                    border: 3px solid #e0e0e0;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    position: relative;
+                    transition: all 0.3s ease;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                    margin-top: 0;
+                    float: left;
+                }
+
+                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]::before {
+                    content: "";
+                    position: absolute;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    background: #667eea;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0);
+                    transition: transform 0.3s ease;
+                }
+
+                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]:checked {
+                    border-color: #667eea;
+                }
+
+                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]:checked::before {
+                    transform: translate(-50%, -50%) scale(1);
+                }
+
+                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]:hover {
+                    border-color: #667eea;
+                }
+
+                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]:focus {
+                    outline: 2px solid #667eea;
+                    outline-offset: 2px;
+                }
+
+                .cm-cookie-mode-section-custom .checkbox label {
+                    width: 100%;
+                    cursor: pointer;
+                    display: block;
+                    padding-left: 0;
+                    line-height: 28px;
+                }
+                </style>');
+
+                $uid = (string) $form->getSql()->getValue('uid');
+                $inheritedCookieSelection = $primaryCookieSelectionByUid[$uid] ?? '';
+                $checkedBoxes = array_filter(explode('|', $inheritedCookieSelection), static function ($value) {
                     return '' !== $value;
                 });
+
+                $customCookieSelection = (string) $form->getSql()->getValue('cookie_custom');
+                if ('custom' === $cookieMode && '' === trim($customCookieSelection)) {
+                    $form->getSql()->setValue('cookie_custom', $inheritedCookieSelection);
+                }
+
+                $checkboxes = [];
+                foreach ($cookies as $v) {
+                    $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
+                    $checkboxes[] = [$checked, rex_escape($v['service_name'])];
+                }
+
+                $inheritSectionStyle = ' style="display:none"';
+                $customSectionStyle = 'custom' === $cookieMode ? '' : ' style="display:none"';
+                $form->addRawField('<div class="cm-cookie-mode-section cm-cookie-mode-section-inherit"' . $inheritSectionStyle . '>');
+                $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
+                $form->addRawField('</div>');
+
+                $form->addRawField('<div class="cm-cookie-mode-section cm-cookie-mode-section-custom consent-manager-cookie-list"' . $customSectionStyle . '>');
+                $field = $form->addCheckboxField('cookie_custom');
+                $field->setLabel(rex_i18n::msg('consent_manager_cookies'));
+                $field->setAttribute('class', 'cm-cookie-custom-checkbox');
+                if ('custom' !== $cookieMode) {
+                    $field->setAttribute('disabled', 'disabled');
+                }
+                foreach ($cookies as $v) {
+                    $field->addOption(rex_escape($v['service_name']), $v['uid']);
+                }
+                $form->addRawField('</div>');
             } else {
-                $checkedBoxes = [];
+                $checkboxes = [];
+                if ($hasCookieModeColumns && !$languageCustomServicesEnabled) {
+                    $form->addRawField('<p class="help-block">' . rex_i18n::msg('consent_manager_cookiegroup_cookie_mode_globally_disabled') . '</p>');
+                    $uid = (string) $form->getSql()->getValue('uid');
+                    $selection = (string) ($primaryCookieSelectionByUid[$uid] ?? '');
+                } else {
+                    $selection = (string) $form->getSql()->getValue('cookie');
+                }
+
+                if ('' !== $selection) {
+                    $checkedBoxes = array_filter(explode('|', $selection), static function ($value) {
+                        return '' !== $value;
+                    });
+                } else {
+                    $checkedBoxes = [];
+                }
+                foreach ($cookies as $v) {
+                    $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
+                    $checkboxes[] = [$checked, rex_escape($v['service_name'])];
+                }
+                $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
             }
-            foreach ($cookies as $v) {
-                $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
-                $checkboxes[] = [$checked, rex_escape($v['service_name'])];
-            }
-            $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
         }
     }
 
     $title = $form->isEditMode() ? rex_i18n::msg('consent_manager_cookiegroup_edit') : rex_i18n::msg('consent_manager_cookiegroup_add');
-    $content = $form->get();
+    $formContent = $form->get();
 
-    $fragment = new rex_fragment();
-    $fragment->setVar('class', 'edit', false);
-    $fragment->setVar('title', $title);
-    $fragment->setVar('body', $content, false);
-    echo $fragment->parse('core/page/section.php');
+    $mainSection = new rex_fragment();
+    $mainSection->setVar('class', 'edit', false);
+    $mainSection->setVar('title', $title);
+    $mainSection->setVar('body', $formContent, false);
+
+    $helpBody = '<div class="cm-cookiegroup-help-list">';
+    $helpBody .= '<div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.07); margin-bottom: 12px; padding: 10px 12px;">';
+    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_primary', $startLanguageName) . '</small>';
+    $helpBody .= '</div>';
+    $helpBody .= '<div class="panel panel-default" style="border-left: 4px solid #777; background: rgba(119, 119, 119, 0.05); margin-bottom: 12px; padding: 10px 12px;">';
+    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_system_cookie') . '</small>';
+    $helpBody .= '</div>';
+    $helpBody .= '<div class="panel panel-primary" style="border-left: 4px solid #337ab7; background: rgba(51, 122, 183, 0.07); margin-bottom: 12px; padding: 10px 12px;">';
+    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_translatable', $currentLanguageName) . '</small>';
+    $helpBody .= '</div>';
+    $helpBody .= '<div class="panel panel-default" style="border-left: 4px solid #777; background: rgba(119, 119, 119, 0.05); margin-bottom: 12px; padding: 10px 12px;">';
+    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_service_code') . '</small>';
+    $helpBody .= '</div>';
+    $helpBody .= '<div class="panel panel-warning" style="border-left: 4px solid #f0ad4e; background: rgba(240, 173, 78, 0.08); margin-bottom: 0; padding: 10px 12px;">';
+    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_status') . '</small>';
+    $helpBody .= '</div>';
+    $helpBody .= '</div>';
+
+    $helpSection = new rex_fragment();
+    $helpSection->setVar('class', 'default', false);
+    $helpSection->setVar('title', rex_i18n::msg('consent_manager_cookiegroup_helpbox_title'));
+    $helpSection->setVar('body', $helpBody, false);
+
+    echo '<div class="row cm-cookiegroup-panels">';
+    echo '<div class="col-md-8 col-lg-9">' . $mainSection->parse('core/page/section.php') . '</div>';
+    echo '<div class="col-md-4 col-lg-3">' . $helpSection->parse('core/page/section.php') . '</div>';
+    echo '</div>';
 }
 echo $msg;
 
@@ -490,6 +686,78 @@ if ($showlist) {
     };
 
     $listDebug = false;
+
+    $getCookieAssignmentStatusByUid = static function (string $uid) use ($table, $clang_id, $hasCookieModeColumns, $languageCustomServicesEnabled): string {
+        if ($clang_id === rex_clang::getStartId()) {
+            return 'primary';
+        }
+
+        if (!$languageCustomServicesEnabled) {
+            return 'global_inherit';
+        }
+
+        static $cache = [];
+        $cacheKey = $clang_id . '|' . $uid;
+        if (isset($cache[$cacheKey])) {
+            return $cache[$cacheKey];
+        }
+
+        $normalizeSelection = static function (string $selection): string {
+            $parts = array_filter(explode('|', $selection), static function ($value) {
+                return '' !== $value;
+            });
+            $parts = array_values(array_unique($parts));
+            sort($parts);
+
+            return implode('|', $parts);
+        };
+
+        $sqlStart = rex_sql::factory();
+        $sqlStart->setQuery('SELECT cookie FROM ' . $table . ' WHERE uid = ? AND clang_id = ? ORDER BY pid ASC LIMIT 1', [$uid, rex_clang::getStartId()]);
+        if (0 === $sqlStart->getRows()) {
+            $cache[$cacheKey] = 'inherited';
+
+            return 'inherited';
+        }
+
+        $startSelection = (string) $sqlStart->getValue('cookie');
+
+        $sqlTarget = rex_sql::factory();
+        if ($hasCookieModeColumns) {
+            $sqlTarget->setQuery('SELECT cookie, cookie_mode, cookie_custom FROM ' . $table . ' WHERE uid = ? AND clang_id = ? ORDER BY pid ASC LIMIT 1', [$uid, $clang_id]);
+        } else {
+            $sqlTarget->setQuery('SELECT cookie FROM ' . $table . ' WHERE uid = ? AND clang_id = ? ORDER BY pid ASC LIMIT 1', [$uid, $clang_id]);
+        }
+
+        if (0 === $sqlTarget->getRows()) {
+            $cache[$cacheKey] = 'inherited';
+
+            return 'inherited';
+        }
+
+        $effectiveSelection = $startSelection;
+        if ($hasCookieModeColumns) {
+            $cookieMode = trim((string) $sqlTarget->getValue('cookie_mode'));
+            if ('custom' === $cookieMode) {
+                $customSelection = trim((string) $sqlTarget->getValue('cookie_custom'));
+                if ('' !== $customSelection) {
+                    $effectiveSelection = $customSelection;
+                }
+            }
+        } else {
+            $effectiveSelection = (string) $sqlTarget->getValue('cookie');
+        }
+
+        if ($normalizeSelection($effectiveSelection) !== $normalizeSelection($startSelection)) {
+            $cache[$cacheKey] = 'custom';
+
+            return 'custom';
+        }
+
+        $cache[$cacheKey] = 'inherited';
+
+        return 'inherited';
+    };
     $qry = '
     SELECT pid,uid,name,domain,cookie
     FROM ' . $table . '
@@ -529,6 +797,32 @@ if ($showlist) {
         $title = $translated ? 'Uebersetzt' : 'Nicht uebersetzt';
 
         return '<i class="rex-icon fa-language" title="' . $title . '" style="color:' . $color . ';"></i>';
+    });
+
+    $serviceAssignmentHeaderTitle = rex_escape(rex_i18n::msg('consent_manager_cookiegroup_list_service_assignment'));
+    $serviceAssignmentHeader = '<i class="rex-icon fa-link" title="' . $serviceAssignmentHeaderTitle . '"></i>';
+    $list->addColumn($serviceAssignmentHeader, '', 5, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
+    $list->setColumnFormat($serviceAssignmentHeader, 'custom', static function (array $params) use ($getCookieAssignmentStatusByUid): string {
+        $uid = (string) $params['list']->getValue('uid');
+        $status = $getCookieAssignmentStatusByUid($uid);
+
+        $icon = 'fa-link';
+        $color = '#9aa0a6';
+        $title = rex_i18n::msg('consent_manager_cookiegroup_service_status_inherited');
+
+        if ('custom' === $status) {
+            $icon = 'fa-unlink';
+            $color = '#f0ad4e';
+            $title = rex_i18n::msg('consent_manager_cookiegroup_service_status_custom');
+        } elseif ('primary' === $status) {
+            $color = '#5bc0de';
+            $title = rex_i18n::msg('consent_manager_cookiegroup_service_status_primary');
+        } elseif ('global_inherit' === $status) {
+            $color = '#777';
+            $title = rex_i18n::msg('consent_manager_cookiegroup_service_status_global_off');
+        }
+
+        return '<i class="rex-icon ' . $icon . '" title="' . rex_escape($title) . '" style="color:' . $color . ';"></i>';
     });
 
     $list->addColumn(rex_i18n::msg('function'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));

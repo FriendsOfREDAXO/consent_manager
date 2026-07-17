@@ -53,6 +53,21 @@ Die technische Dokumentation ist in thematische Einzeldokumente unter `docs/` au
 - Changelog: [CHANGELOG.md](CHANGELOG.md)
 - Lizenz: [LICENSE.md](LICENSE.md)
 
+## Entwicklung: Asset-Minify
+
+Für reproduzierbare Minify-Ergebnisse (lokal und in GitHub Actions) nutzt das Addon npm-Skripte.
+
+1. Abhängigkeiten installieren:
+	`npm ci`
+2. Frontend-JS minifizieren:
+	`npm run minify`
+3. Prüfen, ob die minifizierte Datei aktuell committed ist:
+	`npm run check:minify`
+
+Alternativ über Makefile:
+
+`make minify-assets`
+
 ## Support und Community
 
 ### Fehler melden

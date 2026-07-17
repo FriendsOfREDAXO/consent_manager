@@ -1,6 +1,6 @@
 # Makefile für Git-Setup und Commit-Validierung
 
-.PHONY: setup-git lint-commits check-branch clean-branches examples theme-compile help
+.PHONY: setup-git lint-commits check-branch clean-branches examples theme-compile minify-assets help
 
 # Git-Template und Hooks einrichten
 setup-git:
@@ -62,6 +62,16 @@ theme-compile:
 		echo "❌ sass nicht installiert. Installiere mit: npm install -g sass"; \
 	fi
 
+# Minifiziere Frontend JavaScript
+minify-assets:
+	@echo "🧩 Minifiziere Frontend-Assets..."
+	@if command -v npm >/dev/null 2>&1; then \
+		npm run minify; \
+		echo "✅ Frontend-Assets minifiziert"; \
+	else \
+		echo "❌ npm nicht installiert. Bitte Node.js/NPM installieren."; \
+	fi
+
 # Hilfe anzeigen
 help:
 	@echo "📋 Verfügbare Make-Commands:"
@@ -71,5 +81,6 @@ help:
 	@echo "make check-branch   📋 Git Status und Branch-Info anzeigen"
 	@echo "make clean-branches 🧹 Bereinige merged Branches"
 	@echo "make theme-compile  🎨 SCSS Themes kompilieren"
+	@echo "make minify-assets  🧩 Frontend-Assets minifizieren"
 	@echo "make examples       📝 Zeige Beispiel-Commits"
 	@echo "make help           ❓ Diese Hilfe anzeigen"

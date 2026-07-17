@@ -1,0 +1,18 @@
+{
+  "name": "@friendsofredaxo/consent-manager",
+  "version": "5.8.0",
+  "private": true,
+  "description": "Build tooling for consent_manager addon assets",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "scripts": {
+    "minify": "npm run minify:frontend",
+    "minify:frontend": "terser assets/consent_manager_frontend.js --compress --mangle --comments false --output assets/consent_manager_frontend.min.js",
+    "check:minify": "npm run minify && git diff --exit-code -- assets/consent_manager_frontend.min.js"
+  },
+  "devDependencies": {
+    "terser": "^5.37.0"
+  }
+}
