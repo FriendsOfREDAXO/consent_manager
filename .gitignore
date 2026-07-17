@@ -37,7 +37,7 @@ composer.lock
 
 # npm/node artifacts - only for local dev / CI
 node_modules/
-package-lock.json
+build/
 
 # Test results
 test-results/

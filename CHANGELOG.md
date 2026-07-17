@@ -1,5 +1,21 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.8.0 - 17.07.2026
+
+- **Feature (Mehrsprachigkeit/Gruppen):** Pro Cookie-Gruppe kann in Nicht-Primärsprachen optional zwischen geerbter und eigener Dienstzuweisung umgeschaltet werden (`inherit` / `custom`).
+- **Feature (Settings/Global):** Neuer globaler Schalter für sprachspezifische Dienstzuweisungen pro Gruppe ergänzt. Ist der Schalter deaktiviert, werden Dienste in Übersetzungen immer aus der Primärsprache geerbt.
+- **Feature (Listen-Status):** In der Gruppenliste wurde ein zusätzlicher Statusindikator für Dienstzuweisungen ergänzt (Primär, geerbt, abweichend, global deaktiviert).
+- **Feature (UX/Gruppen-Formular):** Live-Umschaltung im Backend-Formular verbessert: Bei „Eigene Dienstzuweisung“ wird die Auswahl sofort eingeblendet, bei „Erben“ ausgeblendet.
+- **Feature (UX/Gruppen-Formular):** Beim ersten Wechsel auf „Eigene Dienstzuweisung“ werden die Häkchen initial aus der Primärsprache übernommen, damit kein leerer Startzustand entsteht.
+- **Feature (UX/Checkboxen):** Die visuelle Checkbox-Darstellung im Custom-Modus wurde an die Primärsprache angeglichen.
+- **Fix (Kompatibilität/Altinstallationen):** Zugriff auf neue Spalten (`cookie_mode`, `cookie_custom`) wird robust gegen ältere Datenbankschemata abgesichert; dadurch keine Warnung „Field ... does not exist in result“ mehr vor dem Update-Lauf.
+- **Fix (Resolver/Runtime):** Die effektive Dienstauflösung berücksichtigt globalen Schalter und Sprachmodus konsistent; bei `custom` ohne eigene Auswahl bleibt der Primärsprach-Fallback aktiv.
+- **Feature (Consent-Logik):** Re-Consent wird bei Sprachwechsel nur noch dann erzwungen, wenn sich der effektive Dienst-Scope tatsächlich unterscheidet (Scope-Fingerprint über Service-UIDs).
+- **Feature (Consent-Cookie):** Der Consent-Cookie speichert zusätzlich einen `service_scope_hash`; bestehende Cookies ohne Hash werden per Backfill ergänzt.
+- **Fix (Frontend-Auslieferung):** Asset-/Selector-Anpassungen für reales Formular-Markup und saubere Initialisierung im `rex:ready`-Kontext vorgenommen.
+- **Update/Install:** Neue Config-Defaults für `cookiegroup_language_custom_services_enabled` und `reconsent_on_scope_change` in Install- und Update-Pfad ergänzt.
+- **Build/Workflow:** GitHub-üblicher Minify-Workflow ergänzt (`package.json`, `package-lock.json`, npm-Skripte und CI-Check), damit `assets/consent_manager_frontend.min.js` reproduzierbar und in Pull Requests automatisch prüfbar ist.
+
 ## Version 5.7.0 - 09.07.2026
 
 - **Feature (Theme-Editor/Live):** Neuer Live-Theme-Editor mit direkter Echtzeit-Vorschau des realen Consent-Themes im Backend (inkl. sofort sichtbarer Anpassungen für Farben, Overlay, Backdrop und Details-Bereich).

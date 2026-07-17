@@ -9,11 +9,27 @@
  */
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
+use FriendsOfRedaxo\ConsentManager\ConsentManager;
 
 $consent_manager = new Frontend(0);
 if (is_string(rex_request::server('HTTP_HOST'))) {
     $consent_manager->setDomain(rex_request::server('HTTP_HOST'));
 }
+
+// Im Backend-Preview kann der HTTP_HOST von den importierten Domains abweichen.
+// Dann auf die erste konfigurierte Domain zurückfallen, damit die Box renderbar bleibt.
+if (
+    rex::isBackend()
+    && 0 === count($consent_manager->cookiegroups)
+    && 'consent_manager/theme' === rex_request::request('page', 'string', '')
+) {
+    $configuredDomains = ConsentManager::getDomains();
+    $fallbackDomain = (string) array_key_first($configuredDomains);
+    if ('' !== $fallbackDomain) {
+        $consent_manager->setDomain($fallbackDomain);
+    }
+}
+
 if (0 === count($consent_manager->texts)) {
     echo '<div id="consent_manager-background">' . rex_view::error(rex_addon::get('consent_manager')->i18n('consent_manager_error_noconfig')) . '</div>';
     return;

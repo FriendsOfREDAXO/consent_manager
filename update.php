@@ -14,6 +14,12 @@ use FriendsOfRedaxo\ConsentManager\Theme;
 $addon = rex_addon::get('consent_manager');
 $addon->includeFile(__DIR__ . '/install.php');
 $addon->setConfig('forceCache', true);
+if (-1 === $addon->getConfig('cookiegroup_language_custom_services_enabled', -1)) {
+    $addon->setConfig('cookiegroup_language_custom_services_enabled', true);
+}
+if (-1 === $addon->getConfig('reconsent_on_scope_change', -1)) {
+    $addon->setConfig('reconsent_on_scope_change', true);
+}
 
 // Copy scripts to every language
 if (count(rex_clang::getAllIds()) > 1) {
@@ -62,6 +68,14 @@ rex_sql_table::get(rex::getTable('consent_manager_domain'))
     ->ensureColumn(new rex_sql_column('oembed_video_height', 'int(10) unsigned', true, '360'))
     ->ensureColumn(new rex_sql_column('oembed_show_allow_all', 'tinyint(1)', true, '0'))
     ->ensure();
+
+rex_sql_table::get(rex::getTable('consent_manager_cookiegroup'))
+    ->ensureColumn(new rex_sql_column('cookie_mode', 'varchar(20)', true, 'inherit'))
+    ->ensureColumn(new rex_sql_column('cookie_custom', 'varchar(255)', true, ''))
+    ->ensure();
+
+$sql = rex_sql::factory();
+$sql->setQuery('UPDATE ' . rex::getTable('consent_manager_cookiegroup') . ' SET cookie_mode = ? WHERE cookie_mode IS NULL OR cookie_mode = ?', ['inherit', '']);
 
 // Update cookie lifetime text for consent_manager cookie (Privacy by Design)
 $sql = rex_sql::factory();

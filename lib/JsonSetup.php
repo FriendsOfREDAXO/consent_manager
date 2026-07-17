@@ -441,6 +441,8 @@ class JsonSetup
             'name' => 'name',
             'description' => 'description',
             'cookie' => 'cookie',
+            'cookie_mode' => 'cookie_mode',
+            'cookie_custom' => 'cookie_custom',
             'script' => 'script',
         ];
 

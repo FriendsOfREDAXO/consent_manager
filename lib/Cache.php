@@ -142,11 +142,32 @@ class Cache
     private function prepareCookieGroups(int $clangId): void
     {
         if (isset($this->cookiegroups[$clangId])) {
+            $startClangId = rex_clang::getStartId();
+            $languageCustomServicesEnabled = (bool) rex_addon::get('consent_manager')->getConfig('cookiegroup_language_custom_services_enabled', true);
             foreach ((array) $this->cookiegroups[$clangId] as $uid => $cookiegroup) {
                 $cookie_uids = [];
                 $cookiegroup = (array) $cookiegroup;
-                if (is_string($cookiegroup['cookie'])) {
-                    foreach (array_filter(explode('|', $cookiegroup['cookie']), strlen(...)) as $cookieUid) { /** @phpstan-ignore-line */
+                $effectiveCookieSelection = (string) ($cookiegroup['cookie'] ?? '');
+
+                if ($clangId !== $startClangId) {
+                    if (isset($this->cookiegroups[$startClangId][$uid]) && is_array($this->cookiegroups[$startClangId][$uid])) {
+                        $startCookiegroup = (array) $this->cookiegroups[$startClangId][$uid];
+                        $effectiveCookieSelection = (string) ($startCookiegroup['cookie'] ?? $effectiveCookieSelection);
+                    }
+
+                    if ($languageCustomServicesEnabled) {
+                        $cookieMode = trim((string) ($cookiegroup['cookie_mode'] ?? 'inherit'));
+                        if ('custom' === $cookieMode) {
+                            $customCookieSelection = trim((string) ($cookiegroup['cookie_custom'] ?? ''));
+                            if ('' !== $customCookieSelection) {
+                                $effectiveCookieSelection = $customCookieSelection;
+                            }
+                        }
+                    }
+                }
+
+                if ('' !== $effectiveCookieSelection) {
+                    foreach (array_filter(explode('|', $effectiveCookieSelection), strlen(...)) as $cookieUid) { /** @phpstan-ignore-line */
                         if (isset($this->cookies[$clangId][$cookieUid])) {
                             $cookie_uids[] = $cookieUid;
                         }

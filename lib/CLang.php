@@ -100,7 +100,15 @@ class CLang
             return '';
         }
 
-        return ' ' . rex_i18n::rawMsg('consent_manager_lang_status_badge_' . $status);
+        return ' ' . self::renderLangStatusBadge($status);
+    }
+
+    private static function renderLangStatusBadge(string $status): string
+    {
+        $tooltip = rex_i18n::msg('consent_manager_lang_status_tooltip_' . $status);
+        $safeTooltip = rex_escape($tooltip);
+
+        return '<span class="consent-manager-lang-status consent-manager-lang-status--' . $status . '" title="' . $safeTooltip . '" aria-label="' . $safeTooltip . '"><i class="rex-icon fa-language" aria-hidden="true"></i></span>';
     }
 
     private static function getLangStatus(string $pageKey, int $clangId): ?string
