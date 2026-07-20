@@ -1,5 +1,10 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.8.1 - 20.07.2026
+
+- **Fix (Settings/Cookie-Name):** Das Feld „Cookie-Name“ zeigt jetzt den aktuell gespeicherten Wert aus den Addon-Einstellungen an und speichert Änderungen korrekt zurück.
+- **UX (Settings/Cookie-Name):** Der bisherige reine Placeholder-Ansatz wurde entfernt, damit der sichtbare Wert eindeutig als tatsächliche Konfiguration erkennbar ist.
+
 ## Version 5.8.0 - 17.07.2026
 
 - **Feature (Mehrsprachigkeit/Gruppen):** Pro Cookie-Gruppe kann in Nicht-Primärsprachen optional zwischen geerbter und eigener Dienstzuweisung umgeschaltet werden (`inherit` / `custom`).

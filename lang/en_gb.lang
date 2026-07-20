@@ -48,7 +48,7 @@ button_select_none = Essential only
 consent_manager_cookies = Services
 consent_manager_cookie_add = Create service
 consent_manager_cookie_edit = Edit service
-consent_manager_cookie_consent_manager_info = "consent_manager" is required by the addon, this setting var stores the user's selection.
+consent_manager_cookie_consent_manager_info = The system service "consentmanager" is required by the addon. The cookie name is set at runtime from the configuration and overrides anything entered in the service at "Name". This cookie variable stores the user's selection.
 consent_manager_cookie_notice_provider_link_privacy = Leave empty for domain privacy policy
 consent_manager_cookie_service_name = Service / Cookie name
 consent_manager_cookie_provider = Provider
@@ -509,7 +509,7 @@ consent_manager_stats_count = Count
 consent_manager_stats_history = History (Days)
 consent_manager_stats_date = Date
 consent_manager_config_cookie_name_label = Cookie Name
-consent_manager_config_cookie_name_notice = Name of the cookie in which consent is stored. Default: consentmanager
+consent_manager_config_cookie_name_notice = Name of the cookie in which consent is stored. The system service "consentmanager" uses this value at runtime and overrides the value entered in the service at "Name". Default: consentmanager
 
 # Auto-Blocking Feature
 consent_manager_config_auto_blocking = Auto-Blocking for manually inserted HTML
