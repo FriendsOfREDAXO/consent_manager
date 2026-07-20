@@ -391,7 +391,7 @@ $form->addRawField($panelStart);
 // Cookie Name
 $field = $form->addTextField('cookie_name');
 $field->setLabel(rex_i18n::msg('consent_manager_config_cookie_name_label'));
-$field->setAttribute('placeholder', 'consentmanager');
+$field->setValue((string) $addon->getConfig('cookie_name', 'consentmanager'));
 $field->setNotice(rex_i18n::msg('consent_manager_config_cookie_name_notice'));
 
 // Cookie Lebensdauer
