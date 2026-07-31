@@ -60,14 +60,14 @@ if ('uid_rename_dryrun' === $func || 'uid_rename_apply' === $func) {
         if ('uid_rename_dryrun' === $func) {
             $renameResult = UidRenameWorkflow::dryRun('cookiegroup', $renameOldUid, $renameNewUid);
             $renameMode = 'dryrun';
-            if (is_array($renameResult) && ($renameResult['ok'] ?? false)) {
+            if ($renameResult['ok'] ?? false) {
                 $approvedDryrunToken = $expectedToken;
             }
         } else {
             if ($postedDryrunToken !== $expectedToken) {
                 $renameResult = UidRenameWorkflow::dryRun('cookiegroup', $renameOldUid, $renameNewUid);
                 $renameMode = 'dryrun';
-                if (is_array($renameResult) && ($renameResult['ok'] ?? false)) {
+                if ($renameResult['ok'] ?? false) {
                     $approvedDryrunToken = $expectedToken;
                 }
                 $msg = rex_view::error('Vor der Umbenennung muss ein Dry-Run fuer genau diesen Schluessel ausgefuehrt werden. Bitte Hinweise und moegliche Nacharbeit pruefen.');
@@ -80,7 +80,7 @@ if ('uid_rename_dryrun' === $func || 'uid_rename_apply' === $func) {
         }
 
         if ('' === $msg) {
-            if (is_array($renameResult) && ($renameResult['ok'] ?? false)) {
+            if ($renameResult['ok'] ?? false) {
                 $msg = rex_view::success('dryrun' === $renameMode ? 'Dry-Run erfolgreich. Bitte Hinweise pruefen.' : 'Umbenennung erfolgreich ausgefuehrt.');
             } else {
                 $msg = rex_view::error('Dry-Run/Umbenennung fehlgeschlagen. Details siehe Dialog.');
@@ -284,14 +284,11 @@ if ('delete' === $func) {
     $db->select('DISTINCT pid, uid, service_name, variant');
     $cookies = $db->getArray();
 
-    // Helper: build a display label for a service, appending the variant so that
-    // services with the same name but different variants (multi-domain setups) can
-    // be told apart in the cookie-group selection UI.
     $cookieServiceLabel = static function (array $v): string {
-        $label = rex_escape($v['service_name']);
+        $label = (string) ($v['service_name'] ?? '');
         $variant = trim((string) ($v['variant'] ?? ''));
         if ('' !== $variant) {
-            $label .= ' (' . rex_escape($variant) . ')';
+            $label .= ' (' . $variant . ')';
         }
         return $label;
     };
@@ -459,7 +456,7 @@ if ('delete' === $func) {
             $field->setLabel(rex_i18n::msg('consent_manager_cookies'));
             foreach ($cookies as $v) {
                 // Name und UID speichern
-                $field->addOption($cookieServiceLabel($v), $v['uid']);
+                $field->addOption($cookieServiceLabel($v), (string) $v['uid']);
             }
         }
     } else {
@@ -582,12 +579,12 @@ if ('delete' === $func) {
                     $field->setAttribute('disabled', 'disabled');
                 }
                 foreach ($cookies as $v) {
-                    $field->addOption($cookieServiceLabel($v), $v['uid']);
+                    $field->addOption($cookieServiceLabel($v), (string) $v['uid']);
                 }
                 $form->addRawField('</div>');
             } else {
                 $checkboxes = [];
-                if ($hasCookieModeColumns && !$languageCustomServicesEnabled) {
+                if ($hasCookieModeColumns) {
                     $form->addRawField('<p class="help-block">' . rex_i18n::msg('consent_manager_cookiegroup_cookie_mode_globally_disabled') . '</p>');
                     $uid = (string) $form->getSql()->getValue('uid');
                     $selection = (string) ($primaryCookieSelectionByUid[$uid] ?? '');
@@ -864,7 +861,7 @@ if ($showlist) {
     $renameNewUidValue = rex_request::post('new_uid', 'string', '');
     $updateConsentLogsChecked = 1 === rex_request::post('update_consent_logs', 'int', 1);
     $currentDryrunToken = $approvedDryrunToken;
-    if ('' === $currentDryrunToken && 'dryrun' === $renameMode && is_array($renameResult) && ($renameResult['ok'] ?? false) && '' !== $renameOldUid && '' !== $renameNewUidValue) {
+    if ('' === $currentDryrunToken && 'dryrun' === $renameMode && ($renameResult['ok'] ?? false) && '' !== $renameOldUid && '' !== $renameNewUidValue) {
         $currentDryrunToken = $buildRenameToken($renameOldUid, $renameNewUidValue, $updateConsentLogsChecked);
     }
     $applyDisabled = '' === $currentDryrunToken;

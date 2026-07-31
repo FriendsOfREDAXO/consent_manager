@@ -13,8 +13,8 @@ Der Setup Wizard führt durch die Erstkonfiguration und übernimmt die wichtigst
 ### 1) Domain wählen
 
 - Domain kann manuell eingetragen werden.
-- Umlaut-Domains koennen direkt eingegeben werden (z. B. `müller.de`).
-- Intern werden Domain-Varianten (UTF-8/Punycode) fuer Matching und Duplikat-Pruefung aufgeloest.
+- Umlaut-Domains können direkt eingegeben werden (z. B. `müller.de`).
+- Intern werden Domain-Varianten (UTF-8/Punycode) für Matching und Duplikat-Prüfung aufgelöst.
 - Falls `yrewrite` aktiv ist, werden verfügbare Domains zur Auswahl angeboten.
 - Bereits konfigurierte Domains werden nicht erneut als Vorschlag angezeigt.
 
@@ -107,6 +107,14 @@ Empfohlene Startwerte:
 - Reload bei Consent-Änderung: Ja
 - Delay: 0 Sekunden
 - Fokus auf Box: Ja
+
+## Cookie-Name festlegen
+
+Backend: `Consent Manager → Einstellungen → Technische Details`
+
+Im Feld **Cookie-Name** wird der aktuell gespeicherte Name des Consent-Cookies angezeigt und bearbeitet. Der Standardwert ist `consentmanager`. Nach einer Änderung sollte geprüft werden, ob bestehende Integrationen oder eigene JavaScript-Abfragen noch den alten Namen verwenden.
+
+Der konfigurierte Wert wird zur Laufzeit auch für den System-Dienst verwendet. Ein dort eventuell hinterlegter abweichender Cookie-Name wird überschrieben.
 
 ## Template-Positivliste (Optional)
 
