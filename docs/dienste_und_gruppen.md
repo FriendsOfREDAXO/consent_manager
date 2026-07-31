@@ -6,7 +6,8 @@ Diese Seite beschreibt die vollständige Pflege von Services (Diensten/Cookies) 
 
 - **Dienste** beschreiben den einzelnen Drittanbieter (z. B. YouTube, Maps, Analytics)
 - **Gruppen** bündeln mehrere Dienste für die Consent-UI (z. B. „Statistik“, „Marketing“)
-- **Domain-Zuordnung** steuert, wo ein Dienst/eine Gruppe aktiv ist
+- **Domain-Zuordnung** steuert über die Gruppen, auf welchen Domains die enthaltenen Dienste aktiv sind
+- **Variante / Zweck** unterscheidet gleichnamige Dienste mit abweichender technischer Konfiguration
 
 Empfohlene Reihenfolge:
 
@@ -24,6 +25,7 @@ Backend: `Consent Manager → Dienste`
 |------|--------------|
 | Schlüssel | Eindeutiger Key ohne Sonderzeichen (z. B. `youtube`) |
 | Dienstname | Anzeigename in der Consent-Box |
+| Variante / Zweck | Optionales Unterscheidungsmerkmal im Backend (z. B. `Domain A`, `Lokale Instanz`, `EU-Server`) |
 | Anbieter | Firma/Anbieter des Dienstes |
 | Cookies | YAML-Liste der gesetzten Cookies |
 | Script | JavaScript-Code, der erst nach Consent ausgeführt wird |
@@ -32,7 +34,28 @@ Backend: `Consent Manager → Dienste`
 
 - Keys klein und stabil halten (`youtube`, `google-analytics`, `meta-pixel`)
 - Keys nachträglich möglichst nicht ändern, damit bestehende Integrationen stabil bleiben
-- Pro technischem Dienst genau einen Service-Eintrag verwenden
+- Pro technischer Konfiguration einen eigenen Dienst mit eindeutigem Schlüssel verwenden
+
+## Gleichnamige Dienste in Multi-Domain-Setups
+
+Benötigt derselbe Anbieter je nach Domain ein anderes Script, werden mehrere Dienste mit jeweils eindeutigem Schlüssel angelegt. Der sichtbare Dienstname kann gleich bleiben; das Feld **Variante / Zweck** dient zur Unterscheidung im Backend.
+
+Beispiel:
+
+| Schlüssel | Dienstname | Variante / Zweck |
+|-----------|------------|-------------------|
+| `youtube-domain-a` | YouTube | Domain A |
+| `youtube-domain-b` | YouTube | Domain B |
+
+In der Dienstauswahl einer Gruppe erscheinen diese Einträge als **YouTube (Domain A)** und **YouTube (Domain B)**. Die Variante wird in allen aktiven und schreibgeschützten Auswahlzuständen angezeigt und von der Live-Suche berücksichtigt. Im Frontend bleibt der für Besucher bestimmte Dienstname unverändert.
+
+Vorgehen:
+
+1. Für jede technische Variante einen Dienst mit eigener UID anlegen oder einen vorhandenen Dienst duplizieren.
+2. Den gemeinsamen, für Besucher bestimmten Dienstnamen eintragen.
+3. Unter **Variante / Zweck** die Domain oder den technischen Zweck hinterlegen.
+4. Jede Variante der passenden Gruppe zuweisen.
+5. Die Gruppe den vorgesehenen Domains zuordnen.
 
 ## Cookie-Definition (YAML)
 
@@ -62,6 +85,21 @@ Backend: `Consent Manager → Gruppen`
 - **Technisch notwendig**: immer aktiv, nicht deaktivierbar
 - **Dienste zuweisen**: mehrere Services pro Gruppe möglich
 - **Domain**: Gruppenzuordnung zu einer Domain
+
+## Dienstzuweisung in mehreren Sprachen
+
+Backend: `Consent Manager → Einstellungen → Allgemein`
+
+Mit **Sprachspezifische Dienstzuweisung pro Gruppe** wird global festgelegt, ob übersetzte Gruppen eine eigene Dienstauswahl erhalten dürfen. Die Option ist standardmäßig aktiviert.
+
+In einer Nicht-Primärsprache stehen pro Gruppe zwei Modi zur Verfügung:
+
+- **Aus Primärsprache erben**: Änderungen an der Dienstauswahl werden ausschließlich in der Primärsprache vorgenommen und automatisch übernommen.
+- **Eigene Dienstzuweisung für diese Sprache**: Für die aktuelle Sprache kann eine abweichende Auswahl gespeichert werden. Beim ersten Umschalten wird die Auswahl der Primärsprache als Ausgangspunkt übernommen.
+
+Ist die globale Option deaktiviert, erben alle Übersetzungen die Dienstzuweisung der Primärsprache. Bleibt eine eigene Auswahl leer, greift ebenfalls die Auswahl der Primärsprache als Fallback.
+
+Ändert sich durch einen Sprachwechsel der tatsächlich wirksame Satz an Dienst-UIDs, fordert der Consent Manager die Einwilligung erneut an. Reine Übersetzungsänderungen ohne veränderte Dienstzuweisung lösen keinen erneuten Consent aus.
 
 ### Empfohlene Gruppenstruktur
 

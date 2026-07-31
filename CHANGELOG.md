@@ -1,5 +1,12 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.8.2 - 31.07.2026
+
+- **Fix (Multidomain/Dienstzuordnung):** In der Dienstauswahl von Cookie-Gruppen wird neben dem Dienstnamen jetzt auch die optionale „Variante / Zweck“ angezeigt. Gleichnamige Dienste mit unterschiedlichen domainabhängigen Skripten lassen sich dadurch eindeutig unterscheiden und auswählen.
+- **Fix (Mehrsprachigkeit/Gruppen):** Die Variantenbezeichnung wird in allen Auswahlzuständen berücksichtigt: Primärsprache, geerbte Zuordnung, eigene sprachspezifische Zuordnung und global deaktivierte sprachspezifische Zuordnung. Die vorhandene Live-Suche findet Dienste ebenfalls über die Variante.
+- **Fix (Backend/Encoding):** Zusammengesetzte Dienstbezeichnungen werden erst bei der Ausgabe escaped, sodass Sonderzeichen in Dienstnamen und Varianten korrekt dargestellt werden.
+- **Wartung (RexStan):** Sieben Meldungen in der Cookie-Gruppenverwaltung beseitigt: redundante Typprüfungen entfernt, SQL-Werte für Checkbox-Optionen typisiert und bereits durch den Kontrollfluss garantierte Bedingungen vereinfacht.
+
 ## Version 5.8.1 - 20.07.2026
 
 - **Fix (Settings/Cookie-Name):** Das Feld „Cookie-Name“ zeigt jetzt den aktuell gespeicherten Wert aus den Addon-Einstellungen an und speichert Änderungen korrekt zurück.

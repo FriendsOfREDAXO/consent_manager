@@ -12,6 +12,8 @@ Der Consent Manager bietet eine DSGVO-konforme Lösung für die Einholung und Ve
 - Flexible Gruppierung von Diensten
 - Nachträgliche Änderung der Einstellungen durch Besucher
 - Mehrsprachig und Multi-Domain-fähig
+- Eindeutige Dienstvarianten für domainabhängige Skripte
+- Pro Sprache wahlweise geerbte oder eigene Dienstzuweisungen je Gruppe
 - IDN-/Umlaut-Domains werden robust unterstützt (UTF-8/Punycode)
 - Automatische Frontend-Einbindung (Auto-Inject)
 - Inline-Consent für Embeds (YouTube, Vimeo, Maps etc.)
@@ -37,7 +39,7 @@ Die technische Dokumentation ist in thematische Einzeldokumente unter `docs/` au
 ### Konfiguration
 
 - Erweiterte Konfiguration: [docs/erweiterte_konfiguration.md](docs/erweiterte_konfiguration.md)
-- Dienste & Gruppen: [docs/dienste_und_gruppen.md](docs/dienste_und_gruppen.md)
+- Dienste & Gruppen (inkl. Multidomain-Varianten und Mehrsprachigkeit): [docs/dienste_und_gruppen.md](docs/dienste_und_gruppen.md)
 - Manuelle Einrichtung: [docs/manuelle_einrichtung.md](docs/manuelle_einrichtung.md)
 
 ### Entwicklung

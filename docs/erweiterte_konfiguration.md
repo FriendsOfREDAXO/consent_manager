@@ -117,11 +117,21 @@ Vertiefung:
 
 ## Multi-Domain
 
-Mehrere Domains können getrennt konfiguriert werden (Services, Texte, Themes).
+Mehrere Domains können getrennt konfiguriert werden. Gruppen werden den gewünschten Domains zugeordnet und aktivieren dort die enthaltenen Dienste.
+
+Benötigt ein Anbieter je Domain unterschiedliche Scripts oder Tracking-IDs, kann derselbe sichtbare Dienstname mehrfach verwendet werden. Jeder Eintrag benötigt eine eindeutige UID; **Variante / Zweck** kennzeichnet die technische Ausprägung im Backend. In der Gruppenauswahl werden Dienstname und Variante gemeinsam angezeigt, beispielsweise `YouTube (Domain A)`.
+
+Ausführlicher Ablauf: [dienste_und_gruppen.md#gleichnamige-dienste-in-multi-domain-setups](dienste_und_gruppen.md#gleichnamige-dienste-in-multi-domain-setups)
 
 ## Mehrsprachigkeit
 
-Texte und Service-Skripte können sprachspezifisch gepflegt werden, inkl. Fallback.
+Texte und Service-Skripte können sprachspezifisch gepflegt werden, inklusive Fallback auf die Primärsprache.
+
+Ist unter `Consent Manager → Einstellungen → Allgemein` die Option **Sprachspezifische Dienstzuweisung pro Gruppe** aktiviert, kann jede übersetzte Gruppe wahlweise die Auswahl der Primärsprache erben oder eine eigene Dienstauswahl verwenden. Bei deaktivierter Option wird immer geerbt.
+
+Der Consent-Cookie enthält einen Fingerprint des wirksamen Dienstumfangs. Beim Sprachwechsel wird eine erneute Einwilligung nur verlangt, wenn sich die tatsächlich zugeordneten Dienst-UIDs ändern. Übersetzte Texte oder Scripts allein lösen keinen Re-Consent aus.
+
+Details und Bedienablauf: [dienste_und_gruppen.md#dienstzuweisung-in-mehreren-sprachen](dienste_und_gruppen.md#dienstzuweisung-in-mehreren-sprachen)
 
 ## Datensicherung, Import und Export
 
