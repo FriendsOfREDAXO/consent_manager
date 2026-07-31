@@ -284,6 +284,18 @@ if ('delete' === $func) {
     $db->select('DISTINCT pid, uid, service_name, variant');
     $cookies = $db->getArray();
 
+    // Helper: build a display label for a service, appending the variant so that
+    // services with the same name but different variants (multi-domain setups) can
+    // be told apart in the cookie-group selection UI.
+    $cookieServiceLabel = static function (array $v): string {
+        $label = rex_escape($v['service_name']);
+        $variant = trim((string) ($v['variant'] ?? ''));
+        if ('' !== $variant) {
+            $label .= ' (' . rex_escape($variant) . ')';
+        }
+        return $label;
+    };
+
     $primaryCookieSelectionByUid = [];
     if ($clang_id !== rex_clang::getStartId()) {
         $dbPrimaryCookiegroup = rex_sql::factory();
@@ -447,7 +459,7 @@ if ('delete' === $func) {
             $field->setLabel(rex_i18n::msg('consent_manager_cookies'));
             foreach ($cookies as $v) {
                 // Name und UID speichern
-                $field->addOption(rex_escape($v['service_name']), $v['uid']);
+                $field->addOption($cookieServiceLabel($v), $v['uid']);
             }
         }
     } else {
@@ -553,7 +565,7 @@ if ('delete' === $func) {
                 $checkboxes = [];
                 foreach ($cookies as $v) {
                     $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
-                    $checkboxes[] = [$checked, rex_escape($v['service_name'])];
+                    $checkboxes[] = [$checked, $cookieServiceLabel($v)];
                 }
 
                 $inheritSectionStyle = ' style="display:none"';
@@ -570,7 +582,7 @@ if ('delete' === $func) {
                     $field->setAttribute('disabled', 'disabled');
                 }
                 foreach ($cookies as $v) {
-                    $field->addOption(rex_escape($v['service_name']), $v['uid']);
+                    $field->addOption($cookieServiceLabel($v), $v['uid']);
                 }
                 $form->addRawField('</div>');
             } else {
@@ -592,7 +604,7 @@ if ('delete' === $func) {
                 }
                 foreach ($cookies as $v) {
                     $checked = (in_array((string) $v['uid'], $checkedBoxes, true)) ? '|1|' : '';
-                    $checkboxes[] = [$checked, rex_escape($v['service_name'])];
+                    $checkboxes[] = [$checked, $cookieServiceLabel($v)];
                 }
                 $form->addRawField(RexFormSupport::getFakeCheckbox(rex_i18n::msg('consent_manager_cookies'), $checkboxes)); /** @phpstan-ignore-line */
             }
