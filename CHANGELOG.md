@@ -1,5 +1,15 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.8.4 - 2026-08-13
+
+### Behobene Fehler (Bugfixes)
+
+* **Media Manager / External Thumbnail Effect:**
+  * **Strict Matching:** Der Reguläre Ausdruck zur Ermittlung des Video-Services matcht nun strikt gegen die in `self::SERVICES` definierten Dienste. Dadurch werden reguläre Medien (z. B. Bilder mit mehreren Unterstrichen im Dateinamen) nicht mehr fälschlicherweise als externe Thumbnails interpretiert.
+  * **Fehlerbehandlung:** Unbekannte Video-Services werfen keine `rex_exception` mehr, sondern liefern direkt das Fallback-Bild.
+  * **Performance & Noise:** Verhindert unbeabsichtigte HTTP-Requests an externe Dienste sowie unnötige Log-Einträge und Cache-Müll (insbesondere im Zusammenspiel mit `cache_warmup`).
+
+
 ## Version 5.8.2 - 31.07.2026
 
 - **Fix (Multidomain/Dienstzuordnung):** In der Dienstauswahl von Cookie-Gruppen wird neben dem Dienstnamen jetzt auch die optionale „Variante / Zweck“ angezeigt. Gleichnamige Dienste mit unterschiedlichen domainabhängigen Skripten lassen sich dadurch eindeutig unterscheiden und auswählen.
