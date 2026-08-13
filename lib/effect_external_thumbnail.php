@@ -34,7 +34,15 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             $filename = $this->media->getMediaFilename();
 
             // Parameter aus Dateiname parsen: service_videoid_hash.jpg
-            if ((bool) preg_match('/^([^_]+)_([^_]+)_([^\.]+)\.jpg$/', $filename, $matches)) {
+            // Nur die tatsächlich unterstützten Services matchen, sonst wird jede
+            // beliebige Datei mit Unterstrichen im Namen als Video-Thumbnail
+            // interpretiert.
+            $servicePattern = implode('|', array_map(
+                static fn (string $knownService): string => preg_quote($knownService, '/'),
+                array_keys(self::SERVICES),
+            ));
+
+            if ((bool) preg_match('/^(' . $servicePattern . ')_([^_]+)_([^.]+)\.jpg$/', $filename, $matches)) {
                 $service = $matches[1];
                 $videoId = $matches[2];
             } else {
@@ -48,8 +56,11 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                 }
             }
 
+            // Kann nur noch über die Effect-Parameter auftreten; der Dateiname
+            // liefert per Konstruktion einen bekannten Service.
             if (!isset(self::SERVICES[$service])) {
-                throw new rex_exception('External thumbnail effect: Unsupported service "' . $service . '"');
+                $this->createFallbackImage();
+                return;
             }
 
             $thumbnailUrl = $this->getThumbnailUrl($service, $videoId);
