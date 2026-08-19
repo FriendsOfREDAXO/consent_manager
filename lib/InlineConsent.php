@@ -291,13 +291,17 @@ class InlineConsent
         $debug = rex::isDebugMode();
 
         // Fragment verwenden für bessere Anpassbarkeit
+        // escape=false: Das Fragment escaped jedes Feld schon selbst gezielt (rex_escape) -
+        // Default-Escaping hier fuehrte zu doppelt escaptem Output (z.B. '&' -> '&amp;amp;').
+        // 'content' bleibt bewusst escaped: consent_inline.js liest es aus einem
+        // <script type="text/plain"> und dekodiert per textarea-Trick genau EINE Escape-Stufe.
         $fragment = new rex_fragment();
-        $fragment->setVar('serviceKey', $serviceKey);
+        $fragment->setVar('serviceKey', $serviceKey, false);
         $fragment->setVar('content', $content);
-        $fragment->setVar('options', $options);
-        $fragment->setVar('consentId', $consentId);
-        $fragment->setVar('service', $service);
-        $fragment->setVar('placeholderData', $placeholderData);
+        $fragment->setVar('options', $options, false);
+        $fragment->setVar('consentId', $consentId, false);
+        $fragment->setVar('service', $service, false);
+        $fragment->setVar('placeholderData', $placeholderData, false);
 
         if ($debug) {
             echo "<!-- DEBUG renderPlaceholderHTML: serviceKey=$serviceKey -->\n";
@@ -306,15 +310,15 @@ class InlineConsent
 
         // Alle Button-Texte für Fragment hinzufügen
         // TODO: Button-Texte etc. über .lang bereitstellen
-        $fragment->setVar('button_inline_details_text', self::getButtonText('button_inline_details', 'Einstellungen'));
-        $fragment->setVar('inline_placeholder_text', self::getButtonText('inline_placeholder_text', 'Einmal laden'));
-        $fragment->setVar('button_inline_allow_all_text', self::getButtonText('button_inline_allow_all', 'Alle erlauben'));
-        $fragment->setVar('inline_action_text', self::getButtonText('inline_action_text', 'Was möchten Sie tun?'));
+        $fragment->setVar('button_inline_details_text', self::getButtonText('button_inline_details', 'Einstellungen'), false);
+        $fragment->setVar('inline_placeholder_text', self::getButtonText('inline_placeholder_text', 'Einmal laden'), false);
+        $fragment->setVar('button_inline_allow_all_text', self::getButtonText('button_inline_allow_all', 'Alle erlauben'), false);
+        $fragment->setVar('inline_action_text', self::getButtonText('inline_action_text', 'Was möchten Sie tun?'), false);
         $fragment->setVar('show_allow_all', $options['show_allow_all'] ?? false);
         $privacyNotice = self::getButtonText('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.');
-        $fragment->setVar('inline_privacy_notice', $privacyNotice);
-        $fragment->setVar('inline_title_fallback', self::getButtonText('inline_title_fallback', 'Externes Medium'));
-        $fragment->setVar('inline_privacy_link_text', self::getButtonText('inline_privacy_link_text', 'Datenschutzerklärung von'));
+        $fragment->setVar('inline_privacy_notice', $privacyNotice, false);
+        $fragment->setVar('inline_title_fallback', self::getButtonText('inline_title_fallback', 'Externes Medium'), false);
+        $fragment->setVar('inline_privacy_link_text', self::getButtonText('inline_privacy_link_text', 'Datenschutzerklärung von'), false);
 
         if ($debug) {
             // TODO: Texte über .lang aufbauen?
@@ -323,7 +327,7 @@ class InlineConsent
         }
 
         // Icon-Konfiguration
-        $fragment->setVar('privacy_icon', $options['privacy_icon'] ?? 'uk-icon:shield');
+        $fragment->setVar('privacy_icon', $options['privacy_icon'] ?? 'uk-icon:shield', false);
 
         return $fragment->parse('ConsentManager/inline_placeholder.php');
     }
