@@ -12,6 +12,8 @@
  */
 
 use FriendsOfRedaxo\ConsentManager\Frontend;
+use FriendsOfRedaxo\ConsentManager\GoogleConsentMode;
+use FriendsOfRedaxo\ConsentManager\Utility;
 
 if (0 === rex_article::getCurrentId()) {
     return;
@@ -60,6 +62,29 @@ if (0 < count($consent_manager->domainInfo)
     // Script erst nach dem gtm.js-Event -> GTM wertet Tags mit "Additional consent required" (FB-Pixel,
     // LinkedIn, TikTok …) mit denied aus und re-feuert sie nicht. Das Script ist klein und same-origin.
     $googleConsentModeOutput .= '    <script nonce="' . rex_response::getNonce() . '" src="' . $googleConsentModeScriptUrl . '"></script>' . PHP_EOL;
+
+    // Der granted-Status kommt sonst erst aus consent_manager_frontend.js (defer) und damit
+    // ggf. nach dem async geladenen gtm.js. GTM wertet Tags mit "Additional consent required"
+    // dann mit denied aus und feuert sie nicht nach.
+    // Nur bei Auto-Mapping — im manuellen Modus setzt der Betreiber die Flags selbst.
+    if ('auto' === $consent_manager->domainInfo['google_consent_mode_enabled']) {
+        $grantedConsentFlags = [];
+        foreach (GoogleConsentMode::getCookieConsentMappings(rex_clang::getCurrentId()) as $serviceUid => $consentFlags) {
+            if (!Utility::has_consent($serviceUid)) {
+                continue;
+            }
+            foreach ($consentFlags as $consentFlag) {
+                $grantedConsentFlags[$consentFlag] = 'granted';
+            }
+        }
+        if ([] !== $grantedConsentFlags) {
+            // Lokale Push-Funktion statt globalem gtag(), um nichts zu ueberschreiben.
+            $googleConsentModeOutput .= '    <script nonce="' . rex_response::getNonce() . '">'
+                . '(function(){window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments);}'
+                . 'g(\'consent\',\'update\',' . json_encode($grantedConsentFlags) . ');})();'
+                . '</script>' . PHP_EOL;
+        }
+    }
 
     // Debug-Script laden wenn Debug-Modus aktiviert UND User im Backend eingeloggt
     if (isset($consent_manager->domainInfo['google_consent_mode_debug'])
