@@ -12,7 +12,7 @@
 ### Darstellung
 
 - Live-Preview im Theme-Editor und Theme-Vorschauen funktionieren jetzt auch ohne angelegte Domain bzw. ohne Domain-Zuordnung der Gruppen: Die Vorschau zeigt dann alle Gruppen der aktuellen Sprache (nur im Backend-Preview, das Frontend bleibt unverändert). Bisher blieb der Vorschau-Iframe leer und die Details ließen sich nicht öffnen; die Themes-Seite zeigt statt zweier Sperr-Hinweise einen Hinweis und trotzdem die Theme-Kacheln.
-- Themes und Theme-Editor werden im CSS-Framework-Modus aus der Navigation genommen, da sie dort nicht nutzbar sind.
+- Themes und Theme-Editor werden im CSS-Framework-Modus aus der Navigation genommen, da sie dort nicht nutzbar sind. Die Einstellungsseiten laden sich nach dem Speichern neu, damit die Navigation sofort den gespeicherten Stand zeigt.
 
 ### Einstellungen
 
