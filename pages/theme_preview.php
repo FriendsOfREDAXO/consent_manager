@@ -639,7 +639,7 @@ $layout = $layouts[array_rand($layouts)];
             if (window.parent && window.parent.consent_manager_close_preview) {
                 window.parent.consent_manager_close_preview();
             } else {
-                window.location.href = '?page=consent_manager/theme';
+                window.location.href = '?page=consent_manager/design/theme';
             }
         }
 

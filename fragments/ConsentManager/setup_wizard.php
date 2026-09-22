@@ -1072,7 +1072,7 @@ body.rex-theme-dark details > div code {
                                     </h4>
                                     <p class="list-group-item-text"><?= rex_i18n::msg('consent_manager_wizard_link_services_desc') ?></p>
                                 </a>
-                                <a href="<?= rex_url::backendPage('consent_manager/theme') ?>" class="list-group-item wizard-nav-link" data-page="consent_manager/theme">
+                                <a href="<?= rex_url::backendPage('consent_manager/design/theme') ?>" class="list-group-item wizard-nav-link" data-page="consent_manager/design/theme">
                                     <h4 class="list-group-item-heading">
                                         <i class="rex-icon fa-grip" style="color: #9b59b6;"></i> 
                                         <?= rex_i18n::msg('consent_manager_wizard_link_theme') ?>

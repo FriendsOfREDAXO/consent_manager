@@ -104,6 +104,35 @@ class Frontend
     }
 
     /**
+     * Nur für die Backend-Vorschau: alle Gruppen und Dienste der Sprache laden, unabhängig von der Domain-Zuordnung,
+     * damit Themes auch ohne angelegte Domain beurteilt werden können.
+     */
+    public function loadAllForPreview(): void
+    {
+        $clang = rex_request::request('lang', 'integer', 0);
+        if (0 === $clang) {
+            $clang = rex_clang::getCurrent()->getId();
+        }
+
+        $cookiegroups = $this->cache['cookiegroups'][$clang] ?? [];
+        if (!is_array($cookiegroups) || [] === $cookiegroups) {
+            return;
+        }
+
+        $this->cookiegroups = $cookiegroups;
+        if (isset($this->cache['texts'][$clang]) && is_array($this->cache['texts'][$clang])) {
+            $this->texts = $this->cache['texts'][$clang];
+        }
+        foreach ($this->cookiegroups as $cookiegroup) {
+            foreach ((array) ($cookiegroup['cookie_uids'] ?? []) as $uid) {
+                if (isset($this->cache['cookies'][$clang][$uid])) {
+                    $this->cookies[$uid] = $this->cache['cookies'][$clang][$uid];
+                }
+            }
+        }
+    }
+
+    /**
      * @api
      * @return void
      */

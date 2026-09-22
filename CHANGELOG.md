@@ -4,13 +4,19 @@
 
 ### Nutzerführung
 
-- Checkliste „Erste Schritte“: Solange Domain, Gruppen oder Dienste fehlen, zeigt jede Unterseite (außer den Einstellungen) oben eine Checkliste mit Status je Schritt, Links zu den Seiten und dem Button zum Setup-Assistenten. Bisher landete man nach der Installation in einer leeren Liste ohne Hinweis, was zu tun ist.
+- Checkliste „Erste Schritte“: Solange Domain, Gruppen oder Dienste fehlen, zeigt jede Unterseite (außer Einstellungen und Darstellung) oben eine Checkliste mit Status je Schritt, Links zu den Seiten und dem Button zum Setup-Assistenten. Bisher landete man nach der Installation in einer leeren Liste ohne Hinweis, was zu tun ist.
 - Setup-Assistent auf allen Unterseiten verfügbar (zentral eingebunden) statt nur auf Domains und Einstellungen; auf der Einstellungsseite war das Modal zuvor doppelt eingebunden.
-- Navigation neu sortiert und einheitlich deutsch: Gruppen, Dienste, Domains, Texte, Redaktion, Einstellungen, Themes, Theme-Editor, Protokoll, Hilfe.
+- Neuer Hauptpunkt „Darstellung“ mit den Unterseiten „Ausgabe & Framework“, Themes und Theme-Editor (bisher Themes und Theme-Editor als eigene Hauptpunkte, die Ausgabe-Optionen in den Einstellungen). Die Seitenschlüssel lauten jetzt `consent_manager/design/theme`, `…/design/theme_editor`, `…/design/output`.
+- Navigation neu sortiert und einheitlich deutsch: Gruppen, Dienste, Domains, Texte, Darstellung, Redaktion, Einstellungen, Protokoll, Hilfe.
+
+### Darstellung
+
+- Live-Preview im Theme-Editor und Theme-Vorschauen funktionieren jetzt auch ohne angelegte Domain bzw. ohne Domain-Zuordnung der Gruppen: Die Vorschau zeigt dann alle Gruppen der aktuellen Sprache (nur im Backend-Preview, das Frontend bleibt unverändert). Bisher blieb der Vorschau-Iframe leer und die Details ließen sich nicht öffnen; die Themes-Seite zeigt statt zweier Sperr-Hinweise einen Hinweis und trotzdem die Theme-Kacheln.
+- Themes und Theme-Editor werden im CSS-Framework-Modus aus der Navigation genommen, da sie dort nicht nutzbar sind.
 
 ### Einstellungen
 
-- In Unterseiten aufgeteilt (wie bei anderen AddOns): „Allgemein“ (Funktion & Datenschutz, technische Details), „Darstellung“ (Frontend-Ausgabe, Framework-Optionen) und „Setup, Import & Export“ (Setup-Vorlagen, Sprach-Sync, JSON-Export/-Import, Wizard). Bisher stand alles auf einer zweispaltigen Seite. Links auf `consent_manager/config` landen automatisch auf „Allgemein“.
+- In Unterseiten aufgeteilt (wie bei anderen AddOns): „Allgemein“ (Funktion & Datenschutz, technische Details) und „Setup, Import & Export“ (Setup-Vorlagen, Sprach-Sync, JSON-Export/-Import, Wizard); die Ausgabe-/Framework-Optionen liegen unter „Darstellung“. Bisher stand alles auf einer zweispaltigen Seite. Links auf `consent_manager/config` landen automatisch auf „Allgemein“.
 - Wizard-Button ist ein normaler Primär-Button ohne animierten Farbverlauf-Rahmen und Pulsieren; solange keine Domain existiert, übernimmt die Checkliste den Aufruf.
 
 ### Backend-Aufräumen (ohne Funktionsänderung)

@@ -554,7 +554,9 @@ consent_manager_onboarding_afterwards = Danach: <a href="{0}">Texte</a> prüfen 
 consent_manager_onboarding_wizard = Setup-Assistent starten
 consent_manager_onboarding_manual = oder Schritt für Schritt manuell über die Links oben
 consent_manager_config_general = Allgemein
-consent_manager_config_display = Darstellung
 consent_manager_config_data = Setup, Import & Export
 consent_manager_config_function_legend = Funktion & Datenschutz
 consent_manager_config_technical_legend = Technische Details
+consent_manager_design = Darstellung
+consent_manager_design_output = Ausgabe & Framework
+consent_manager_theme_preview_unassigned_notice = Die Vorschau zeigt alle Gruppen der aktuellen Sprache. Im Frontend erscheint die Consent-Box erst, wenn eine <a href="{0}">Domain</a> angelegt ist und die <a href="{1}">Gruppen</a> ihr zugeordnet sind.

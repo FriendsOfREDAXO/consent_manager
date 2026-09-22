@@ -56,12 +56,30 @@ if (rex::isBackend()) {
                     rex_view::addJsFile($addon->getAssetsUrl('google_consent_helper.js'));
                 }
 
-                if ('config' === $currentPage || 'help' === $currentPage) {
+                // consent_manager_config.js steuert u. a. das Framework-Optionen-Panel unter Darstellung > Ausgabe
+                if ('config' === $currentPage || 'design' === $currentPage || 'help' === $currentPage) {
                     rex_file::copy($addon->getPath('assets/consent_manager_config.js'), $addon->getAssetsPath('consent_manager_config.js'));
                     rex_file::copy($addon->getPath('assets/consent_manager_help.js'), $addon->getAssetsPath('consent_manager_help.js'));
                     rex_view::addJsFile($addon->getAssetsUrl('consent_manager_config.js'));
                     rex_view::addJsFile($addon->getAssetsUrl('consent_manager_help.js'));
                 }
+            }
+        }
+    });
+
+    // Themes und Theme-Editor sind nur ohne CSS-Framework nutzbar, im Framework-Modus aus der Navigation nehmen
+    rex_extension::register('PAGES_PREPARED', static function () use ($addon) {
+        if (!$addon->getConfig('css_framework_mode')) {
+            return;
+        }
+        $design = rex_be_controller::getPageObject('consent_manager/design');
+        if (null === $design) {
+            return;
+        }
+        foreach (['theme', 'theme_editor'] as $key) {
+            $subpage = $design->getSubpage($key);
+            if (null !== $subpage) {
+                $subpage->setHidden(true);
             }
         }
     });

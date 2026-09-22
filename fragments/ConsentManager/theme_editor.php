@@ -27,7 +27,7 @@ $basePreviewThemeMap = [
     'fluid_dark' => 'consent_manager_frontend_a11y_fluid_dark.scss',
 ];
 $basePreviewTheme = $basePreviewThemeMap[$themeBase] ?? 'consent_manager_frontend_a11y.scss';
-$basePreviewUrl = rex_url::backendPage('consent_manager/theme', ['preview' => $basePreviewTheme, 'preview_cache' => (string) time()]);
+$basePreviewUrl = rex_url::backendPage('consent_manager/design/theme', ['preview' => $basePreviewTheme, 'preview_cache' => (string) time()]);
 $basePreviewUrl = html_entity_decode($basePreviewUrl, ENT_QUOTES);
 $formatRemLabel = static function ($value): string {
     if (!is_scalar($value) || '' === trim((string) $value)) {
@@ -758,7 +758,7 @@ $formatRemLabel = static function ($value): string {
                     <button class="btn btn-save" type="submit">
                         <i class="rex-icon fa-save"></i> Theme erstellen und speichern
                     </button>
-                    <a href="<?= rex_url::backendPage('consent_manager/theme') ?>" class="btn btn-default">
+                    <a href="<?= rex_url::backendPage('consent_manager/design/theme') ?>" class="btn btn-default">
                         <i class="rex-icon fa-arrow-left"></i> Zurück zur Theme-Übersicht
                     </a>
                 </div>

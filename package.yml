@@ -24,6 +24,14 @@ page:
     text:
       title: "translate:consent_manager_texts"
       icon: rex-icon fa-file-text-o
+    design:
+      title: "translate:consent_manager_design"
+      icon: rex-icon fa-paint-brush
+      perm: consent_manager[config]
+      subpages:
+        output: { title: "translate:consent_manager_design_output" }
+        theme: { title: "translate:consent_manager_theme" }
+        theme_editor: { title: "translate:consent_manager_nav_theme_editor" }
     editorial:
       title: "translate:consent_manager_editorial_title"
       icon: rex-icon fa-edit
@@ -34,16 +42,7 @@ page:
       perm: consent_manager[config]
       subpages:
         general: { title: "translate:consent_manager_config_general" }
-        display: { title: "translate:consent_manager_config_display" }
         data: { title: "translate:consent_manager_config_data" }
-    theme:
-      title: "translate:consent_manager_theme"
-      icon: rex-icon fa-grip
-      perm: consent_manager[config]
-    theme_editor:
-      title: "translate:consent_manager_nav_theme_editor"
-      icon: rex-icon fa-magic
-      perm: consent_manager[config]
     log:
       title: "translate:consent_manager_log"
       icon: rex-icon fa-list-alt

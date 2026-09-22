@@ -415,7 +415,7 @@ if ('delete' === $func) {
     $currentTheme = $form->isEditMode() ? $form->getSql()->getValue('theme') : '';
     $previewId = 'theme-preview-' . uniqid();
     $initialDisplay = !empty($currentTheme) ? 'block' : 'none';
-    $previewBaseUrl = rex_url::backendPage('consent_manager/theme');
+    $previewBaseUrl = rex_url::backendPage('consent_manager/design/theme');
 
     // Theme-Optionen sammeln
     $themeOptions = '<option value="">Standard (globales Theme verwenden)</option>';
@@ -671,7 +671,7 @@ if ('delete' === $func) {
                 Die Theme-Auswahl ist daher deaktiviert, da das Frontend-Framework die Gestaltung vorgibt.
             </p>
             <p style="font-size: 11px; margin-top: 10px; opacity: 0.7;">
-                Sie können den Modus in den <a href="' . rex_url::backendPage('consent_manager/config/display') . '">Einstellungen</a> ändern.
+                Sie können den Modus in den <a href="' . rex_url::backendPage('consent_manager/design/output') . '">Einstellungen</a> ändern.
             </p>
         </div>';
     }

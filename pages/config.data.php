@@ -97,7 +97,7 @@ if ('' !== $func && !isset($setupImports[$func])) {
             if ([] === $targetClangIds) {
                 echo rex_view::error(rex_i18n::msg('consent_manager_sync_missing_no_targets'));
             } else {
-                $syncResult = CLang::syncMissingFromSource($sourceClangId, $targetClangIds, $syncTables);
+                $syncResult = CLang::syncMissingFromSource($sourceClangId, $targetClangIds, array_values($syncTables));
                 if ((int) $syncResult['inserted'] > 0) {
                     $details = [];
                     foreach ($syncResult['per_table'] as $tableName => $count) {

@@ -60,5 +60,5 @@ $select->addOption(rex_i18n::msg('consent_manager_config_framework_rounded_yes')
 
 $form->addRawField('</fieldset>');
 
-$title = rex_i18n::msg('consent_manager_config_display');
+$title = rex_i18n::msg('consent_manager_design_output');
 require __DIR__ . '/config.shared.php';

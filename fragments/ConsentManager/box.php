@@ -21,12 +21,17 @@ if (is_string(rex_request::server('HTTP_HOST'))) {
 if (
     rex::isBackend()
     && 0 === count($consent_manager->cookiegroups)
-    && 'consent_manager/theme' === rex_request::request('page', 'string', '')
+    && 'consent_manager/design/theme' === rex_request::request('page', 'string', '')
 ) {
     $configuredDomains = ConsentManager::getDomains();
     $fallbackDomain = (string) array_key_first($configuredDomains);
     if ('' !== $fallbackDomain) {
         $consent_manager->setDomain($fallbackDomain);
+    }
+
+    // Ohne Domain bzw. ohne Gruppenzuordnung (z. B. direkt nach dem Setup-Import) trotzdem alle Gruppen der Sprache zeigen
+    if (0 === count($consent_manager->cookiegroups)) {
+        $consent_manager->loadAllForPreview();
     }
 }
 

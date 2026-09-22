@@ -8,6 +8,9 @@
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\Theme;
 
+/** @var rex_config_form $form */
+/** @var string $title */
+
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);
 $fragment->setVar('title', $title, false);

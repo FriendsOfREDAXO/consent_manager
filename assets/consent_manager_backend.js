@@ -2,7 +2,7 @@
 function consent_manager_show_preview(theme) {
     var modalIframe = $('.cm_modal-iframe');
     modalIframe.css('opacity', 0);
-    modalIframe.attr('src', '?page=consent_manager/theme&preview=' + theme);
+    modalIframe.attr('src', '?page=consent_manager/design/theme&preview=' + theme);
     
     modalIframe.one('load', function () {
         $('.cm_modal-overlay').addClass('is-open');
@@ -151,7 +151,7 @@ $(document).on('rex:ready', function (event, container) {
     
     function consent_manager_show_preview(theme) {
         modalIframe.css('opacity', 0);
-        modalIframe.attr('src', '?page=consent_manager/theme&preview=' + theme);
+        modalIframe.attr('src', '?page=consent_manager/design/theme&preview=' + theme);
         
         modalIframe.one('load', function () {
             modalOverlay.addClass('is-open');
