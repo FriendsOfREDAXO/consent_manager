@@ -1,6 +1,6 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.9.0-beta1
+## Version 5.9.0-beta1 - 2026-09-22
 
 ### Nutzerführung
 
