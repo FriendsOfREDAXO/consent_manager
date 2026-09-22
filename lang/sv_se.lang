@@ -572,3 +572,15 @@ consent_manager_editorial_autoblock_warning_admin = För att koderna som generer
 consent_manager_editorial_autoblock_warning_user = För att koderna som genereras här ska fungera måste auto-blocking aktiveras i inställningarna. <strong>Kontakta en administratör eller användare med config-behörighet</strong> för att aktivera denna funktion. Utan auto-blocking laddas externt innehåll direkt och kringgår samtyckes-mekanismen.
 
 consent_manager_config_css_framework_mode_active = "Framework-läge" är aktivt. Teman kan inte användas i detta läge eftersom layouten styrs av ramverket.
+
+consent_manager_onboarding_title = Kom igång
+consent_manager_onboarding_intro = Consent Manager är inte helt konfigurerad än. Snabbast går det med installationsguiden: den skapar domänen och importerar grupper, tjänster och texter som sedan kan anpassas här.
+consent_manager_onboarding_step_domain = Skapa domän
+consent_manager_onboarding_step_domain_desc = vilka webbplatser Consent Manager arbetar för
+consent_manager_onboarding_step_groups = Skapa grupper
+consent_manager_onboarding_step_groups_desc = t.ex. ”Nödvändiga”, ”Statistik”, ”Marknadsföring”; här tilldelas även domänen
+consent_manager_onboarding_step_services = Skapa tjänster
+consent_manager_onboarding_step_services_desc = t.ex. Google Analytics eller YouTube, var och en tilldelad en grupp
+consent_manager_onboarding_afterwards = Därefter: kontrollera <a href="{0}">texterna</a> och integrationen i frontend (automatiskt via domäninställningarna eller manuellt i mallen, se <a href="{1}">hjälp</a>).
+consent_manager_onboarding_wizard = Starta installationsguiden
+consent_manager_onboarding_manual = eller steg för steg manuellt via länkarna ovan

@@ -542,3 +542,14 @@ consent_manager_nav_settings = Einstellungen
 consent_manager_nav_theme_editor = Theme-Editor
 consent_manager_cookie_definition_notice = Ein Eintrag je Cookie oder Speicherwert, beginnend mit „-“: <code>name</code> (Cookie-Name), <code>time</code> (Laufzeit als Text, z. B. „30 Tage“) und <code>desc</code> (Zweck). Die Angaben erscheinen in der Cookie-Liste des Hinweises.
 consent_manager_cookie_uid_notice = Eindeutiger Schlüssel des Dienstes, z. B. für <code>has_consent('schluessel')</code> und <code>doConsent('schluessel', …)</code>. Nach dem Anlegen nur über „Umbenennen“ ändern.
+consent_manager_onboarding_title = Erste Schritte
+consent_manager_onboarding_intro = Der Consent Manager ist noch nicht vollständig eingerichtet. Am schnellsten geht es mit dem Setup-Assistenten: Er legt die Domain an und importiert Gruppen, Dienste und Texte, die anschließend hier angepasst werden können.
+consent_manager_onboarding_step_domain = Domain anlegen
+consent_manager_onboarding_step_domain_desc = für welche Website(s) der Consent Manager arbeitet
+consent_manager_onboarding_step_groups = Gruppen anlegen
+consent_manager_onboarding_step_groups_desc = z. B. „Notwendig“, „Statistik“, „Marketing“; hier wird auch die Domain zugeordnet
+consent_manager_onboarding_step_services = Dienste anlegen
+consent_manager_onboarding_step_services_desc = z. B. Google Analytics oder YouTube, jeweils einer Gruppe zugeordnet
+consent_manager_onboarding_afterwards = Danach: <a href="{0}">Texte</a> prüfen und die Einbindung ins Frontend kontrollieren (automatisch über die Domain-Einstellungen oder manuell im Template, siehe <a href="{1}">Hilfe</a>).
+consent_manager_onboarding_wizard = Setup-Assistent starten
+consent_manager_onboarding_manual = oder Schritt für Schritt manuell über die Links oben

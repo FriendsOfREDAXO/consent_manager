@@ -25,106 +25,16 @@ $defaultSourceClangId = rex_clang::getStartId();
 ?>
 
 <div class="rex-addon-output">
-    <!-- Setup Wizard / Domain Setup Button -->
-    <style>
-        .quickstart-btn, .setup-domain-btn {
-            padding: 15px 30px;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: visible;
-        }
-        
-        .quickstart-btn::before, .setup-domain-btn::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(90deg, #337ab7, #5bc0de, #5cb85c, #337ab7);
-            background-size: 300% 300%;
-            border-radius: 10px;
-            z-index: -1;
-            opacity: 0;
-            animation: gradient-border 4s ease infinite;
-            transition: opacity 0.3s ease;
-        }
-        
-        /* Setup Domain Button - permanente Animation */
-        .setup-domain-btn::before {
-            opacity: 1;
-        }
-        
-        .quickstart-btn:hover::before {
-            opacity: 1;
-        }
-        
-        .quickstart-btn:hover, .setup-domain-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(51, 122, 183, 0.3);
-        }
-        
-        /* Setup Domain Button - pulsierende Animation */
-        .setup-domain-btn {
-            animation: pulse-scale 2s ease-in-out infinite;
-        }
-        
-        @keyframes gradient-border {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        @keyframes pulse-scale {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-        
-        /* Dark Mode Support für Button-Text */
-        body.rex-theme-dark button.setup-domain-btn,
-        body.rex-theme-dark button.setup-domain-btn *,
-        body.rex-theme-dark button.quickstart-btn,
-        body.rex-theme-dark button.quickstart-btn *,
-        body.rex-theme-dark .btn-primary.quickstart-btn,
-        body.rex-theme-dark .btn-primary.quickstart-btn *,
-        body.rex-theme-dark .btn-success.setup-domain-btn,
-        body.rex-theme-dark .btn-success.setup-domain-btn * {
-            color: #ffffff !important;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            body:not(.rex-theme-light) button.setup-domain-btn,
-            body:not(.rex-theme-light) button.setup-domain-btn *,
-            body:not(.rex-theme-light) button.quickstart-btn,
-            body:not(.rex-theme-light) button.quickstart-btn *,
-            body:not(.rex-theme-light) .btn-primary.quickstart-btn,
-            body:not(.rex-theme-light) .btn-primary.quickstart-btn *,
-            body:not(.rex-theme-light) .btn-success.setup-domain-btn,
-            body:not(.rex-theme-light) .btn-success.setup-domain-btn * {
-                color: #ffffff !important;
-            }
-        }
-    </style>
+    <?php if ($hasDomains): ?>
+    <!-- Ohne Domain bietet bereits die Checkliste "Erste Schritte" den Assistenten an -->
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-md-12 text-right">
-            <?php if ($hasDomains): ?>
-            <button type="button" class="btn btn-primary btn-lg quickstart-btn" data-toggle="modal" data-target="#setup-wizard-modal">
-                <i class="rex-icon fa-magic" style="margin-right: 10px;"></i>
-                <strong>Setup Wizard</strong>
-                <i class="rex-icon fa-chevron-right" style="margin-left: 10px; font-size: 14px; opacity: 0.8;"></i>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#setup-wizard-modal">
+                <i class="rex-icon fa-magic"></i> Setup Wizard
             </button>
-            <?php else: ?>
-            <button type="button" class="btn btn-default btn-lg setup-domain-btn" data-toggle="modal" data-target="#setup-wizard-modal">
-                <i class="rex-icon fa-rocket" style="margin-right: 10px;"></i>
-                <strong><?= rex_i18n::msg('consent_manager_setup_first_domain') ?></strong>
-                <i class="rex-icon fa-chevron-right" style="margin-left: 10px; font-size: 14px; opacity: 0.8;"></i>
-            </button>
-            <?php endif ?>
         </div>
     </div>
+    <?php endif ?>
 
     <div class="row">
         <!-- Linke Spalte: Einstellungen (8 Spalten) -->
@@ -311,9 +221,3 @@ $defaultSourceClangId = rex_clang::getStartId();
         </div>
     </div>
 </div>
-<?php
-// Setup Wizard Modal einbinden
-$fragment = new rex_fragment();
-echo $fragment->parse('ConsentManager/setup_wizard.php');
-
-?>

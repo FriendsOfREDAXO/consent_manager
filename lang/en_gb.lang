@@ -615,3 +615,14 @@ consent_manager_nav_settings = Settings
 consent_manager_nav_theme_editor = Theme editor
 consent_manager_cookie_definition_notice = One entry per cookie or storage value, starting with “-”: <code>name</code> (cookie name), <code>time</code> (duration as text, e.g. “30 days”) and <code>desc</code> (purpose). These details appear in the cookie list of the notice.
 consent_manager_cookie_uid_notice = Unique key of the service, e.g. for <code>has_consent('key')</code> and <code>doConsent('key', …)</code>. After creation only change it via “Rename”.
+consent_manager_onboarding_title = Getting started
+consent_manager_onboarding_intro = The consent manager is not fully set up yet. The quickest way is the setup wizard: it creates the domain and imports groups, services and texts, which can then be adjusted here.
+consent_manager_onboarding_step_domain = Create a domain
+consent_manager_onboarding_step_domain_desc = the website(s) the consent manager works for
+consent_manager_onboarding_step_groups = Create groups
+consent_manager_onboarding_step_groups_desc = e.g. “Necessary”, “Statistics”, “Marketing”; the domain is assigned here as well
+consent_manager_onboarding_step_services = Create services
+consent_manager_onboarding_step_services_desc = e.g. Google Analytics or YouTube, each assigned to a group
+consent_manager_onboarding_afterwards = Afterwards: check the <a href="{0}">texts</a> and the frontend integration (automatically via the domain settings or manually in the template, see <a href="{1}">help</a>).
+consent_manager_onboarding_wizard = Start setup wizard
+consent_manager_onboarding_manual = or step by step manually via the links above

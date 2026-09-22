@@ -1,5 +1,5 @@
 package: consent_manager
-version: "5.8.6"
+version: "5.9.0-beta1"
 author: "Friends Of REDAXO"
 supportpage: https://redaxo.org/support/community/#slack
 
@@ -9,25 +9,25 @@ page:
   pjax: true
   icon: rex-icon fa-solid fa-cookie-bite
   subpages:
-    cookie:
-      title: "translate:consent_manager_cookies"
-      icon: rex-icon fa-cubes
-      perm: consent_manager[config]
     cookiegroup:
       title: "translate:consent_manager_cookiegroups"
       icon: rex-icon fa-folder-open
+      perm: consent_manager[config]
+    cookie:
+      title: "translate:consent_manager_cookies"
+      icon: rex-icon fa-cubes
       perm: consent_manager[config]
     domain:
       title: "translate:consent_manager_domains"
       icon: rex-icon fa-globe
       perm: consent_manager[config]
+    text:
+      title: "translate:consent_manager_texts"
+      icon: rex-icon fa-file-text-o
     editorial:
       title: "translate:consent_manager_editorial_title"
       icon: rex-icon fa-edit
       perm: consent_manager[editorial]
-    text:
-      title: "translate:consent_manager_texts"
-      icon: rex-icon fa-file-text-o
     config:
       title: "translate:consent_manager_nav_settings"
       icon: rex-icon fa-sliders

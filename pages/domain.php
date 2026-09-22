@@ -839,7 +839,3 @@ if ($showlist) {
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
-
-// Setup Wizard Modal einbinden
-$wizardFragment = new rex_fragment();
-echo $wizardFragment->parse('ConsentManager/setup_wizard.php');
