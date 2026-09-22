@@ -271,8 +271,8 @@ if ($showlist) {
             </div>
             <div class="modal-footer">
                 <a class="btn btn-default" href="<?= rex_url::currentBackendPage(['func' => '', 'rename_pid' => 0, 'start' => rex_request::request('start', 'string')]) ?>">Schliessen</a>
-                <button type="button" class="btn btn-warning" onclick="document.getElementById('cm-text-rename-func').value='uid_rename_dryrun'; document.getElementById('cm-text-rename-form').submit();"><i class="rex-icon fa-search"></i> Dry-Run</button>
-                <button type="button" class="btn btn-danger<?= $applyDisabled ? ' disabled' : '' ?>"<?= $applyDisabled ? ' title="Bitte zuerst Dry-Run ausfuehren." aria-disabled="true"' : '' ?> onclick="if (this.classList.contains('disabled')) { return false; } if (confirm('Umbenennung jetzt ausfuehren? Hinweise wurden geprueft?')) { document.getElementById('cm-text-rename-func').value='uid_rename_apply'; document.getElementById('cm-text-rename-form').submit(); }"><i class="rex-icon fa-play"></i> Umbenennen</button>
+                <button type="button" class="btn btn-default" onclick="document.getElementById('cm-text-rename-func').value='uid_rename_dryrun'; document.getElementById('cm-text-rename-form').submit();"><i class="rex-icon fa-search"></i> Dry-Run</button>
+                <button type="button" class="btn btn-delete<?= $applyDisabled ? ' disabled' : '' ?>"<?= $applyDisabled ? ' title="Bitte zuerst Dry-Run ausfuehren." aria-disabled="true"' : '' ?> onclick="if (this.classList.contains('disabled')) { return false; } if (confirm('Umbenennung jetzt ausfuehren? Hinweise wurden geprueft?')) { document.getElementById('cm-text-rename-func').value='uid_rename_apply'; document.getElementById('cm-text-rename-form').submit(); }"><i class="rex-icon fa-play"></i> Umbenennen</button>
             </div>
         </div>
     </div>

@@ -39,7 +39,7 @@ if (!$hasDomains) {
     echo rex_view::warning(
         '<h3><i class="fa fa-globe"></i> Keine Domains konfiguriert</h3>' .
         '<p>Bitte legen Sie zuerst mindestens eine Domain an, bevor Sie Themes konfigurieren.</p>' .
-        '<p><a href="' . rex_url::backendPage('consent_manager/domain') . '" class="btn btn-primary">' .
+        '<p><a href="' . rex_url::backendPage('consent_manager/domain') . '" class="btn btn-default">' .
         '<i class="fa fa-plus"></i> Domain anlegen</a></p>',
     );
     return;
@@ -54,7 +54,7 @@ if (!$hasGroups) {
     echo rex_view::warning(
         '<h3><i class="fa fa-list"></i> Keine Cookie-Gruppen konfiguriert</h3>' .
         '<p>Cookie-Gruppen müssen einer Domain zugeordnet sein, bevor Sie Themes verwenden können.</p>' .
-        '<p><a href="' . rex_url::backendPage('consent_manager/cookiegroup') . '" class="btn btn-primary">' .
+        '<p><a href="' . rex_url::backendPage('consent_manager/cookiegroup') . '" class="btn btn-default">' .
         '<i class="fa fa-plus"></i> Cookie-Gruppen verwalten</a></p>',
     );
     return;
@@ -153,7 +153,7 @@ $renderThemeCard = static function (string $themeid, array $theme_options, strin
     // Delete button nur für project themes die nicht aktiv sind
     $deleteButton = '';
     if ($isProjectTheme && !$isActive) {
-        $deleteButton = '<button class="btn btn-xs btn-danger" type="submit" name="delete" value="1" data-confirm="' . rex_escape($deletemsg) . '" title="' . rex_i18n::msg('consent_manager_config_btn_delete') . '">
+        $deleteButton = '<button class="btn btn-xs btn-delete" type="submit" name="delete" value="1" data-confirm="' . rex_escape($deletemsg) . '" title="' . rex_i18n::msg('consent_manager_config_btn_delete') . '">
                 <i class="rex-icon fa-trash"></i>
             </button>';
     }

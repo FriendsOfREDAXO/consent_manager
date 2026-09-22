@@ -263,7 +263,7 @@ if ('delete' === $func) {
             // Fallback-Hinweis für Nicht-Start-Sprachen (bezieht sich auf alle Felder)
             if ($clang_id !== rex_clang::getStartId()) {
                 $startLangName = rex_clang::get(rex_clang::getStartId())->getName();
-                $fallbackNotice = '<div class="alert alert-warning"><i class="rex-icon fa-info-circle"></i> ' .
+                $fallbackNotice = '<div class="alert alert-info"><i class="rex-icon fa-info-circle"></i> ' .
                     rex_i18n::msg('consent_manager_cookie_fallback_notice', $startLangName) . '</div>';
                 $field = $form->addRawField($fallbackNotice);
             }
@@ -297,6 +297,7 @@ if ('delete' === $func) {
     $field = $form->addTextAreaField('definition');
     $field->setAttributes(['class' => 'form-control codemirror', 'name' => $field->getAttribute('name'), 'data-codemirror-mode' => 'text/x-yaml']);
     $field->setLabel(rex_i18n::msg('consent_manager_cookie_definition'));
+    $field->setNotice(rex_i18n::rawMsg('consent_manager_cookie_definition_notice'));
     $field->getValidator()->add('custom', rex_i18n::msg('consent_manager_cookie_malformed_yaml'), RexFormSupport::validateYaml(...));
 
     $field = $form->addTextField('provider');
@@ -440,7 +441,7 @@ if ($showlist) {
         $variant = $list->getValue('variant');
         $html = '<strong>' . rex_escape($value) . '</strong>';
         if ('' !== $variant && null !== $variant) {
-            $html .= '<br><small style="color: #6c757d; font-style: italic;">→ ' . rex_escape($variant) . '</small>';
+            $html .= '<br><small class="text-muted">→ ' . rex_escape($variant) . '</small>';
         }
         return $html;
     });
@@ -538,8 +539,8 @@ if ($showlist) {
             </div>
             <div class="modal-footer">
                 <a class="btn btn-default" href="<?= rex_url::currentBackendPage(['func' => '', 'rename_pid' => 0, 'start' => rex_request::request('start', 'string')]) ?>">Schliessen</a>
-                <button type="button" class="btn btn-warning" onclick="document.getElementById('cm-cookie-rename-func').value='uid_rename_dryrun'; document.getElementById('cm-cookie-rename-form').submit();"><i class="rex-icon fa-search"></i> Dry-Run</button>
-                <button type="button" class="btn btn-danger<?= $applyDisabled ? ' disabled' : '' ?>"<?= $applyDisabled ? ' title="Bitte zuerst Dry-Run ausfuehren." aria-disabled="true"' : '' ?> onclick="if (this.classList.contains('disabled')) { return false; } if (confirm('Umbenennung jetzt ausfuehren? Hinweise wurden geprueft?')) { document.getElementById('cm-cookie-rename-func').value='uid_rename_apply'; document.getElementById('cm-cookie-rename-form').submit(); }"><i class="rex-icon fa-play"></i> Umbenennen</button>
+                <button type="button" class="btn btn-default" onclick="document.getElementById('cm-cookie-rename-func').value='uid_rename_dryrun'; document.getElementById('cm-cookie-rename-form').submit();"><i class="rex-icon fa-search"></i> Dry-Run</button>
+                <button type="button" class="btn btn-delete<?= $applyDisabled ? ' disabled' : '' ?>"<?= $applyDisabled ? ' title="Bitte zuerst Dry-Run ausfuehren." aria-disabled="true"' : '' ?> onclick="if (this.classList.contains('disabled')) { return false; } if (confirm('Umbenennung jetzt ausfuehren? Hinweise wurden geprueft?')) { document.getElementById('cm-cookie-rename-func').value='uid_rename_apply'; document.getElementById('cm-cookie-rename-form').submit(); }"><i class="rex-icon fa-play"></i> Umbenennen</button>
             </div>
         </div>
     </div>

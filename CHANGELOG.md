@@ -5,6 +5,8 @@
 ### Änderungen
 
 - Redaktions-Bereich: Farbige Karten, eigener Style-Block und Inline-Styles entfernt; die Seite nutzt jetzt die REDAXO-Standardbausteine (Hinweise, Panels, ein Primär-Button) und folgt damit auch dem dunklen Backend-Theme ohne Sonderregeln.
+- Backend aufgeräumt, ohne Funktionsänderung: Navigation einheitlich deutsch und neu sortiert (Dienste, Gruppen, Domains, Redaktion, Texte, Einstellungen, Themes, Theme-Editor, Protokoll, Hilfe); Einstellungen und Domain-Formular mit Standard-Abschnitten statt farbiger Panels; Gruppen-Formular mit Standard-Checkboxen und Hinweisliste; Sidebar-Panels und Setup-Buttons im Standard-Look; nur noch ein Primär-Button je Seite, Löschen als `btn-delete`.
+- Dienst-Formular: Hilfetext zum YAML-Format der Cookie-Definitionen.
 
 ## Version 5.8.5 - 2026-09-22
 

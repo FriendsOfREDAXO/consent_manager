@@ -107,15 +107,7 @@ if ('delete' === $func) {
     }
 
     // Domain Panel
-    $domainPanelStart = '
-    <div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.2); margin: 20px 0; padding: 15px;">
-        <div style="display: flex; align-items: start;">
-            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #5bc0de; line-height: 1;">
-                <i class="fa fa-globe"></i>
-            </div>
-            <div style="flex: 1;">
-                <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Domain</h4>
-    ';
+    $domainPanelStart = '<fieldset><legend>Domain</legend>';
     $field = $form->addRawField($domainPanelStart);
 
     $field = $form->addTextField('uid');
@@ -125,23 +117,11 @@ if ('delete' === $func) {
     $field->setNotice('Domain ohne Protokoll eingeben (z.B. "example.com" oder "müller.de"). Umlaut-Domains werden intern automatisch in Punycode umgewandelt (z.B. "xn--mller-kva.de").');
     $field->setAttribute('id', 'domain-uid-field');
 
-    $domainPanelEnd = '
-            </div>
-        </div>
-    </div>
-    ';
+    $domainPanelEnd = '</fieldset>';
     $field = $form->addRawField($domainPanelEnd);
 
     // Rechtliche Seiten Panel
-    $legalPanelStart = '
-    <div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.2); margin: 20px 0; padding: 15px;">
-        <div style="display: flex; align-items: start;">
-            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #5bc0de; line-height: 1;">
-                <i class="fa fa-file-text-o"></i>
-            </div>
-            <div style="flex: 1;">
-                <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Rechtliche Seiten</h4>
-    ';
+    $legalPanelStart = '<fieldset><legend>Rechtliche Seiten</legend>';
     $field = $form->addRawField($legalPanelStart);
 
     $field = $form->addLinkmapField('privacy_policy');
@@ -152,23 +132,11 @@ if ('delete' === $func) {
     $field->setLabel(rex_i18n::msg('consent_manager_domain_legal_notice')); /** @phpstan-ignore-line */
     $field->getValidator()->add('notEmpty', rex_i18n::msg('consent_manager_domain_legal_notic_empty_msg')); /** @phpstan-ignore-line */
 
-    $legalPanelEnd = '
-            </div>
-        </div>
-    </div>
-    ';
+    $legalPanelEnd = '</fieldset>';
     $field = $form->addRawField($legalPanelEnd);
 
     // Google Consent Mode Panel
-    $googlePanelStart = '
-    <div class="panel panel-primary" style="border-left: 4px solid #4285f4; background: rgba(66, 133, 244, 0.2); margin: 20px 0; padding: 15px;">
-        <div style="display: flex; align-items: start;">
-            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #4285f4; line-height: 1;">
-                <i class="fa fa-google"></i>
-            </div>
-            <div style="flex: 1;">
-                <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Google Consent Mode v2</h4>
-    ';
+    $googlePanelStart = '<fieldset><legend>Google Consent Mode v2</legend>';
     $field = $form->addRawField($googlePanelStart);
 
     $field = $form->addSelectField('google_consent_mode_enabled');
@@ -186,23 +154,11 @@ if ('delete' === $func) {
     $select->addOption('Aktiviert', '1');
     $field->setNotice('Debug-Panel im Frontend anzeigen. Zeigt Cookie-Status und Consent-Informationen für angemeldete Backend-Benutzer an.');
 
-    $googlePanelEnd = '
-            </div>
-        </div>
-    </div>
-    ';
+    $googlePanelEnd = '</fieldset>';
     $field = $form->addRawField($googlePanelEnd);
 
     // Inline-Only Mode Panel
-    $inlinePanelStart = '
-    <div class="panel panel-default" style="border-left: 4px solid #777; background: rgba(119, 119, 119, 0.2); margin: 20px 0; padding: 15px;">
-        <div style="display: flex; align-items: start;">
-            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #777; line-height: 1;">
-                <i class="fa fa-eye-slash"></i>
-            </div>
-            <div style="flex: 1;">
-                <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Inline-Only Modus</h4>
-    ';
+    $inlinePanelStart = '<fieldset><legend>Inline-Only Modus</legend>';
     $field = $form->addRawField($inlinePanelStart);
 
     $field = $form->addSelectField('inline_only_mode');
@@ -212,23 +168,11 @@ if ('delete' === $func) {
     $select->addOption(rex_i18n::msg('consent_manager_domain_inline_only_mode_enabled'), '1');
     $field->setNotice(rex_i18n::msg('consent_manager_domain_inline_only_mode_notice'));
 
-    $inlinePanelEnd = '
-            </div>
-        </div>
-    </div>
-    ';
+    $inlinePanelEnd = '</fieldset>';
     $field = $form->addRawField($inlinePanelEnd);
 
     // Auto-Inject Configuration - Hervorgehoben als Panel
-    $autoInjectPanelStart = '
-    <div class="panel panel-warning" style="border-left: 4px solid #f0ad4e; background: rgba(240, 173, 78, 0.2); margin: 20px 0; padding: 15px; position: relative; overflow: visible; contain: layout;">
-        <div style="display: flex; align-items: start;">
-            <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #f0ad4e; line-height: 1;">
-                <i class="fa fa-plug"></i>
-            </div>
-            <div style="flex: 1; position: relative; overflow: visible;">
-                <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">Automatische Frontend-Einbindung</h4>
-    ';
+    $autoInjectPanelStart = '<fieldset><legend>Automatische Frontend-Einbindung</legend>';
     $field = $form->addRawField($autoInjectPanelStart);
 
     $field = $form->addSelectField('auto_inject');
@@ -236,7 +180,7 @@ if ('delete' === $func) {
     $select = $field->getSelect();
     $select->addOption('Deaktiviert (manuelle Einbindung erforderlich)', '0');
     $select->addOption('Aktiviert (automatische Einbindung im Frontend)', '1');
-    $field->setNotice('<i class="fa fa-info-circle" style="color: #f0ad4e;"></i> Wenn aktiviert, wird das Consent Manager Script automatisch im Frontend eingebunden. Keine manuelle Integration im Template erforderlich.');
+    $field->setNotice('Wenn aktiviert, wird das Consent Manager Script automatisch im Frontend eingebunden. Keine manuelle Integration im Template erforderlich.');
 
     // Auto-Inject: Reload on Consent
     $field = $form->addSelectField('auto_inject_reload_on_consent');
@@ -340,11 +284,7 @@ if ('delete' === $func) {
     }
 
     // Auto-Inject Panel Ende
-    $autoInjectPanelEnd = '
-            </div>
-        </div>
-    </div>
-    ';
+    $autoInjectPanelEnd = '</fieldset>';
     $field = $form->addRawField($autoInjectPanelEnd);
 
     // Theme als Hidden Field (wird in Sidebar gesteuert)
@@ -352,15 +292,7 @@ if ('delete' === $func) {
 
     // oEmbed / CKE5 Video Configuration - nur anzeigen wenn CKE5 verfügbar ist
     if (rex_addon::exists('cke5') && rex_addon::get('cke5')->isAvailable()) {
-        $oembedPanelStart = '
-        <div class="panel panel-primary" style="border-left: 4px solid #9b59b6; background: rgba(155, 89, 182, 0.2); margin: 20px 0; padding: 15px;">
-            <div style="display: flex; align-items: start;">
-                <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #9b59b6; line-height: 1;">
-                    <i class="fa fa-video-camera"></i>
-                </div>
-                <div style="flex: 1;">
-                    <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">CKE5 oEmbed Integration</h4>
-        ';
+        $oembedPanelStart = '<fieldset><legend>CKE5 oEmbed Integration</legend>';
         $field = $form->addRawField($oembedPanelStart);
 
         $field = $form->addSelectField('oembed_enabled');
@@ -385,11 +317,7 @@ if ('delete' === $func) {
         $select->addOption('Drei Buttons (Einmal laden, Alle zulassen, Alle Einstellungen)', '1');
         $field->setNotice('Drei-Button-Variante zeigt zusätzlich "Alle zulassen" Button zum sofortigen Freischalten aller Services einer Gruppe.');
 
-        $oembedPanelEnd = '
-                </div>
-            </div>
-        </div>
-        ';
+        $oembedPanelEnd = '</fieldset>';
         $field = $form->addRawField($oembedPanelEnd);
     }
 
@@ -542,12 +470,9 @@ if ('delete' === $func) {
         flex-shrink: 0;
     }
     .cm-sidebar-panel {
-        background: rgba(255,255,255,0.1);
-        border: 2px solid rgba(0,0,0,0.1);
-        border-radius: 6px;
-        padding: 18px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05),
-                    0 1px 3px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 4px;
+        padding: 15px;
     }
     .cm-sidebar-title {
         font-weight: 600;
@@ -719,12 +644,9 @@ if ('delete' === $func) {
             flex-shrink: 0;
         }
         .cm-sidebar-panel {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(0,0,0,0.1);
-            border-radius: 6px;
-            padding: 18px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05),
-                        0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 15px;
         }
         .cm-sidebar-title {
             font-weight: 600;
@@ -742,8 +664,8 @@ if ('delete' === $func) {
             }
         }
         </style>
-        <div class="cm-sidebar-panel" style="border-left: 4px solid #337ab7; background: rgba(51, 122, 183, 0.05);">
-            <div class="cm-sidebar-title" style="color: #337ab7;"><i class="fa fa-paint-brush"></i> Framework Modus aktiv</div>
+        <div class="cm-sidebar-panel">
+            <div class="cm-sidebar-title">Framework-Modus aktiv</div>
             <p style="font-size: 13px; margin: 0;">
                 Sie nutzen den Modus <strong>' . rex_escape(ucfirst((string) $cssFrameworkMode)) . '</strong>. 
                 Die Theme-Auswahl ist daher deaktiviert, da das Frontend-Framework die Gestaltung vorgibt.
@@ -821,69 +743,7 @@ if ('delete' === $func) {
 echo $msg;
 if ($showlist) {
     // Setup Wizard Button
-    echo '
-    <style nonce="' . rex_response::getNonce() . '">
-        .domain-wizard-btn {
-            padding: 15px 30px;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: visible;
-        }
-        
-        .domain-wizard-btn::before {
-            content: "";
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(90deg, #337ab7, #5bc0de, #5cb85c, #337ab7);
-            background-size: 300% 300%;
-            border-radius: 10px;
-            z-index: -1;
-            opacity: 0;
-            animation: gradient-border 4s ease infinite;
-            transition: opacity 0.3s ease;
-        }
-        
-        .domain-wizard-btn:hover::before {
-            opacity: 1;
-        }
-        
-        .domain-wizard-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(51, 122, 183, 0.3);
-        }
-        
-        @keyframes gradient-border {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        /* Dark Mode Support */
-        body.rex-theme-dark button.domain-wizard-btn,
-        body.rex-theme-dark button.domain-wizard-btn * {
-            color: #ffffff !important;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            body:not(.rex-theme-light) button.domain-wizard-btn,
-            body:not(.rex-theme-light) button.domain-wizard-btn * {
-                color: #ffffff !important;
-            }
-        }
-    </style>
-    <div style="text-align: right; margin-bottom: 20px;">
-        <button type="button" class="btn btn-primary btn-lg domain-wizard-btn" data-toggle="modal" data-target="#setup-wizard-modal">
-            <i class="rex-icon fa-magic" style="margin-right: 10px;"></i>
-            <strong>Setup Wizard</strong>
-            <i class="rex-icon fa-chevron-right" style="margin-left: 10px; font-size: 14px; opacity: 0.8;"></i>
-        </button>
-    </div>';
+    echo '<p class="text-right"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#setup-wizard-modal"><i class="rex-icon fa-magic"></i> Setup Wizard</button></p>';
 
     $listDebug = false;
 

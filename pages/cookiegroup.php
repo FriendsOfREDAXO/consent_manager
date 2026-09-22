@@ -311,7 +311,7 @@ if ('delete' === $func) {
             $html = '<div style="display: flex; justify-content: center; margin-bottom: 5px;">';
             $html .= '<div id="cm-cookie-toolbar" class="input-group input-group-xs" style="width: auto;">';
             $html .= '<span class="input-group-btn">';
-            $html .= '<button type="button" class="btn btn-info cm-select-all"><i class="fa fa-check-square-o"></i> Alle auswählen</button>';
+            $html .= '<button type="button" class="btn btn-default cm-select-all"><i class="fa fa-check-square-o"></i> Alle auswählen</button>';
             $html .= '<button type="button" class="btn btn-default cm-deselect-all"><i class="fa fa-square-o"></i> Alle abwählen</button>';
             $html .= '</span>';
             $html .= '<input type="text" id="cm-cookie-search" class="form-control" placeholder="Suche..." style="width: 200px;">';
@@ -366,87 +366,7 @@ if ('delete' === $func) {
             });
             </script>';
             
-            $html .= '<style nonce="' . rex_response::getNonce() . '">
-            /* Toolbar Row Styling */
-            .cm-toolbar-group {
-                margin-bottom: 0 !important;
-                border-bottom: 0 !important;
-            }
-            .cm-toolbar-group dd {
-                padding-bottom: 5px;
-            }
-
-            /* Cookie List Styling */
-            .consent-manager-cookie-list .checkbox {
-                display: inline-block;
-                width: 49%;
-                margin: 5px 0;
-                vertical-align: top;
-                padding-right: 10px;
-                box-sizing: border-box; 
-                /* Removed background and border */
-                padding: 8px 0; 
-            }
-            .consent-manager-cookie-list .checkbox:hover {
-                /* Removed hover background */
-            }
-
-            /* Custom Checkbox Styling */
-            .consent-manager-cookie-list .checkbox input[type="checkbox"] {
-                appearance: none;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                width: 26px;
-                height: 26px;
-                border: 3px solid #e0e0e0;
-                border-radius: 50%;
-                cursor: pointer;
-                position: relative;
-                transition: all 0.3s ease;
-                vertical-align: middle;
-                margin-right: 8px;
-                margin-top: 0;
-                float: left; /* Ensure it floats left like standard checkbox */
-            }
-
-            .consent-manager-cookie-list .checkbox input[type="checkbox"]::before {
-                content: "";
-                position: absolute;
-                width: 12px;
-                height: 12px;
-                border-radius: 50%;
-                background: #667eea;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%) scale(0);
-                transition: transform 0.3s ease;
-            }
-
-            .consent-manager-cookie-list .checkbox input[type="checkbox"]:checked {
-                border-color: #667eea;
-            }
-
-            .consent-manager-cookie-list .checkbox input[type="checkbox"]:checked::before {
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            .consent-manager-cookie-list .checkbox input[type="checkbox"]:hover {
-                border-color: #667eea;
-            }
-
-            .consent-manager-cookie-list .checkbox input[type="checkbox"]:focus {
-                outline: 2px solid #667eea;
-                outline-offset: 2px;
-            }
-
-            .consent-manager-cookie-list .checkbox label {
-                width: 100%;
-                cursor: pointer;
-                display: block; /* Important for float layout */
-                padding-left: 0;
-                line-height: 28px; /* Align text vertically with 26px checkbox */
-            }
-            </style>';
+            $html .= '';
             
             $form->addRawField($html);
 
@@ -480,72 +400,7 @@ if ('delete' === $func) {
                 $form->addRawField('<p class="help-block cm-cookie-mode-hint cm-cookie-mode-hint-inherit"' . $inheritHintStyle . '>' . rex_i18n::msg('consent_manager_cookiegroup_cookie_mode_inherit_hint', $startLanguageName) . '</p>');
                 $form->addRawField('<p class="help-block cm-cookie-mode-hint cm-cookie-mode-hint-custom"' . $customHintStyle . '>' . rex_i18n::msg('consent_manager_cookiegroup_cookie_mode_custom_hint') . '</p>');
 
-                $form->addRawField('<style nonce="' . rex_response::getNonce() . '">
-                .cm-cookie-mode-section-custom .checkbox {
-                    display: inline-block;
-                    width: 49%;
-                    margin: 5px 0;
-                    vertical-align: top;
-                    padding-right: 10px;
-                    box-sizing: border-box;
-                    padding: 8px 0;
-                }
-
-                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"] {
-                    appearance: none;
-                    -webkit-appearance: none;
-                    -moz-appearance: none;
-                    width: 26px;
-                    height: 26px;
-                    border: 3px solid #e0e0e0;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    position: relative;
-                    transition: all 0.3s ease;
-                    vertical-align: middle;
-                    margin-right: 8px;
-                    margin-top: 0;
-                    float: left;
-                }
-
-                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]::before {
-                    content: "";
-                    position: absolute;
-                    width: 12px;
-                    height: 12px;
-                    border-radius: 50%;
-                    background: #667eea;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%) scale(0);
-                    transition: transform 0.3s ease;
-                }
-
-                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]:checked {
-                    border-color: #667eea;
-                }
-
-                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]:checked::before {
-                    transform: translate(-50%, -50%) scale(1);
-                }
-
-                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]:hover {
-                    border-color: #667eea;
-                }
-
-                .cm-cookie-mode-section-custom .checkbox input[type="checkbox"]:focus {
-                    outline: 2px solid #667eea;
-                    outline-offset: 2px;
-                }
-
-                .cm-cookie-mode-section-custom .checkbox label {
-                    width: 100%;
-                    cursor: pointer;
-                    display: block;
-                    padding-left: 0;
-                    line-height: 28px;
-                }
-                </style>');
+                $form->addRawField('');
 
                 $uid = (string) $form->getSql()->getValue('uid');
                 $inheritedCookieSelection = $primaryCookieSelectionByUid[$uid] ?? '';
@@ -615,23 +470,13 @@ if ('delete' === $func) {
     $mainSection->setVar('title', $title);
     $mainSection->setVar('body', $formContent, false);
 
-    $helpBody = '<div class="cm-cookiegroup-help-list">';
-    $helpBody .= '<div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.07); margin-bottom: 12px; padding: 10px 12px;">';
-    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_primary', $startLanguageName) . '</small>';
-    $helpBody .= '</div>';
-    $helpBody .= '<div class="panel panel-default" style="border-left: 4px solid #777; background: rgba(119, 119, 119, 0.05); margin-bottom: 12px; padding: 10px 12px;">';
-    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_system_cookie') . '</small>';
-    $helpBody .= '</div>';
-    $helpBody .= '<div class="panel panel-primary" style="border-left: 4px solid #337ab7; background: rgba(51, 122, 183, 0.07); margin-bottom: 12px; padding: 10px 12px;">';
-    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_translatable', $currentLanguageName) . '</small>';
-    $helpBody .= '</div>';
-    $helpBody .= '<div class="panel panel-default" style="border-left: 4px solid #777; background: rgba(119, 119, 119, 0.05); margin-bottom: 12px; padding: 10px 12px;">';
-    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_service_code') . '</small>';
-    $helpBody .= '</div>';
-    $helpBody .= '<div class="panel panel-warning" style="border-left: 4px solid #f0ad4e; background: rgba(240, 173, 78, 0.08); margin-bottom: 0; padding: 10px 12px;">';
-    $helpBody .= '<small>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_status') . '</small>';
-    $helpBody .= '</div>';
-    $helpBody .= '</div>';
+    $helpBody = '<ul class="cm-cookiegroup-help-list">';
+    $helpBody .= '<li>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_primary', $startLanguageName) . '</li>';
+    $helpBody .= '<li>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_system_cookie') . '</li>';
+    $helpBody .= '<li>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_translatable', $currentLanguageName) . '</li>';
+    $helpBody .= '<li>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_service_code') . '</li>';
+    $helpBody .= '<li>' . rex_i18n::msg('consent_manager_cookiegroup_helpbox_point_status') . '</li>';
+    $helpBody .= '</ul>';
 
     $helpSection = new rex_fragment();
     $helpSection->setVar('class', 'default', false);

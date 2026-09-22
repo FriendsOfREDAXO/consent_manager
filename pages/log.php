@@ -74,7 +74,7 @@ $fragmentsearch->setVar('autofocus', false);
 $fragmentsearch->setVar('value', $searchvalue);
 $cmsearch = $fragmentsearch->parse('core/form/search.php');
 
-$statsBtn = '<button class="btn btn-info" id="btn-consent-stats" style="margin-right: 10px;"><i class="rex-icon fa-bar-chart"></i> ' . rex_i18n::msg('consent_manager_stats') . '</button>';
+$statsBtn = '<button class="btn btn-default" id="btn-consent-stats" style="margin-right: 10px;"><i class="rex-icon fa-bar-chart"></i> ' . rex_i18n::msg('consent_manager_stats') . '</button>';
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', rex_i18n::msg('consent_manager_thead_title'));
@@ -136,7 +136,7 @@ function renderStats(data) {
         html += '<tr>';
         html += '<td>' + uid + '</td>';
         html += '<td>' + count + '</td>';
-        html += '<td><div class="progress" style="margin-bottom:0"><div class="progress-bar progress-bar-info" role="progressbar" style="width: ' + percent + '%;">' + percent + '%</div></div></td>';
+        html += '<td><div class="progress" style="margin-bottom:0"><div class="progress-bar" role="progressbar" style="width: ' + percent + '%;">' + percent + '%</div></div></td>';
         html += '</tr>';
     });
     html += '</tbody></table>';

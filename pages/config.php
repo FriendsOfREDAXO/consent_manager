@@ -256,15 +256,7 @@ $form = rex_config_form::factory((string) $addon->getPackageId());
 $form->addRawField('<section class="rex-page-section"><div class="panel panel-edit"><div class="panel-body">');
 
 // --- PANEL: Aussehen & Framework ---
-$panelStart = '
-<div class="panel panel-info" style="border-left: 4px solid #5bc0de; background: rgba(91, 192, 222, 0.05); margin-bottom: 20px; padding: 15px;">
-    <div style="display: flex; align-items: start;">
-        <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #5bc0de; line-height: 1;">
-            <i class="fa fa-paint-brush"></i>
-        </div>
-        <div style="flex: 1;">
-            <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">' . rex_i18n::msg('consent_manager_config_legend') . '</h4>
-';
+$panelStart = '<fieldset><legend>' . rex_i18n::msg('consent_manager_config_legend') . '</legend>';
 $form->addRawField($panelStart);
 
 // CSS Framework Modus
@@ -300,19 +292,11 @@ $select->addOption(rex_i18n::msg('consent_manager_config_backdrop_enabled'), 1);
 $select->addOption(rex_i18n::msg('consent_manager_config_backdrop_disabled'), 0);
 $field->setNotice(rex_i18n::msg('consent_manager_config_backdrop_desc'));
 
-$form->addRawField('</div></div></div>');
+$form->addRawField('</fieldset>');
 
 
 // --- PANEL: Framework-Optionen (Dynamisch) ---
-$panelStart = '
-<div id="framework-options-panel" class="panel panel-primary" style="border-left: 4px solid #337ab7; background: rgba(51, 122, 183, 0.05); margin: 20px 0; padding: 15px;">
-    <div style="display: flex; align-items: start;">
-        <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #337ab7; line-height: 1;">
-            <i class="fa fa-magic"></i>
-        </div>
-        <div style="flex: 1;">
-            <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">' . rex_i18n::msg('consent_manager_config_framework_legend') . '</h4>
-';
+$panelStart = '<fieldset id="framework-options-panel"><legend>' . rex_i18n::msg('consent_manager_config_framework_legend') . '</legend>';
 $form->addRawField($panelStart);
 
 $field = $form->addSelectField('css_framework_shadow');
@@ -328,19 +312,11 @@ $select = $field->getSelect();
 $select->addOption(rex_i18n::msg('consent_manager_config_framework_rounded_no'), '0');
 $select->addOption(rex_i18n::msg('consent_manager_config_framework_rounded_yes'), '1');
 
-$form->addRawField('</div></div></div>');
+$form->addRawField('</fieldset>');
 
 
 // --- PANEL: Funktionsweise ---
-$panelStart = '
-<div class="panel panel-default" style="border-left: 4px solid #777; background: rgba(119, 119, 119, 0.05); margin: 20px 0; padding: 15px;">
-    <div style="display: flex; align-items: start;">
-        <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #777; line-height: 1;">
-            <i class="fa fa-gears"></i>
-        </div>
-        <div style="flex: 1;">
-            <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Funktion & Datenschutz</h4>
-';
+$panelStart = '<fieldset><legend>Funktion &amp; Datenschutz</legend>';
 $form->addRawField($panelStart);
 
 // Inline-Only Modus
@@ -373,19 +349,11 @@ $field->setLabel(rex_i18n::msg('consent_manager_config_editorial_info'));
 $field->setAttribute('rows', '4');
 $field->setNotice(rex_i18n::msg('consent_manager_config_editorial_info_notice'));
 
-$form->addRawField('</div></div></div>');
+$form->addRawField('</fieldset>');
 
 
 // --- PANEL: Cookie-Technik ---
-$panelStart = '
-<div class="panel panel-warning" style="border-left: 4px solid #f0ad4e; background: rgba(240, 173, 78, 0.05); margin: 20px 0; padding: 15px;">
-    <div style="display: flex; align-items: start;">
-        <div style="flex-shrink: 0; margin-right: 15px; font-size: 28px; color: #f0ad4e; line-height: 1;">
-            <i class="fa fa-code"></i>
-        </div>
-        <div style="flex: 1;">
-            <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Technische Details</h4>
-';
+$panelStart = '<fieldset><legend>Technische Details</legend>';
 $form->addRawField($panelStart);
 
 // Cookie Name
@@ -405,7 +373,7 @@ $field = $form->addTextField('skip_consent');
 $field->setLabel(rex_i18n::msg('consent_manager_config_token_label'));
 $field->setNotice(rex_i18n::msg('consent_manager_config_token_notice'));
 
-$form->addRawField('</div></div></div>'); // Ende Technisches Panel
+$form->addRawField('</fieldset>'); // Ende Technisches Panel
 $form->addRawField('</div></div></section>'); // Ende Äußeres Panel + Section
 
 if (null !== $redirectUrlAfterAction) {

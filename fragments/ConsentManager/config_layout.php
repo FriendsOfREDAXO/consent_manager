@@ -117,7 +117,7 @@ $defaultSourceClangId = rex_clang::getStartId();
                 <i class="rex-icon fa-chevron-right" style="margin-left: 10px; font-size: 14px; opacity: 0.8;"></i>
             </button>
             <?php else: ?>
-            <button type="button" class="btn btn-success btn-lg setup-domain-btn" data-toggle="modal" data-target="#setup-wizard-modal">
+            <button type="button" class="btn btn-default btn-lg setup-domain-btn" data-toggle="modal" data-target="#setup-wizard-modal">
                 <i class="rex-icon fa-rocket" style="margin-right: 10px;"></i>
                 <strong><?= rex_i18n::msg('consent_manager_setup_first_domain') ?></strong>
                 <i class="rex-icon fa-chevron-right" style="margin-left: 10px; font-size: 14px; opacity: 0.8;"></i>
@@ -141,7 +141,7 @@ $defaultSourceClangId = rex_clang::getStartId();
         <!-- Rechte Spalte: Setup & Import/Export (4 Spalten) -->
         <div class="col-md-4">
             <!-- Schnellstart Panel -->
-            <div class="panel panel-primary" style="margin-bottom: 20px;">
+            <div class="panel panel-default" style="margin-bottom: 20px;">
                 <header class="panel-heading">
                     <div class="panel-title">
                         <i class="rex-icon fa-rocket"></i> <?= rex_i18n::msg('consent_manager_config_quickstart_title') ?>
@@ -163,7 +163,7 @@ $defaultSourceClangId = rex_clang::getStartId();
                                 <i class="rex-icon fa-download"></i> <?= rex_i18n::msg('consent_manager_config_load_complete') ?>
                             </a>
                             <a href="<?= rex_url::currentBackendPage(['func' => 'setup_standard_update']) ?>" 
-                               class="btn btn-outline btn-primary btn-sm" style="width: 48%;"
+                               class="btn btn-default btn-sm" style="width: 48%;"
                                onclick="return confirm('<?= rex_i18n::msg('consent_manager_config_standard_update_confirm') ?>')">
                                 <i class="rex-icon fa-plus"></i> <?= rex_i18n::msg('consent_manager_config_load_new_only') ?>
                             </a>
@@ -178,12 +178,12 @@ $defaultSourceClangId = rex_clang::getStartId();
                         </p>
                         <div class="text-center">
                             <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal']) ?>" 
-                               class="btn btn-success btn-sm" style="width: 48%; margin-right: 2%;"
+                               class="btn btn-default btn-sm" style="width: 48%; margin-right: 2%;"
                                onclick="return confirm('<?= rex_i18n::msg('consent_manager_config_minimal_confirm') ?>')">
                                 <i class="rex-icon fa-download"></i> <?= rex_i18n::msg('consent_manager_config_load_complete') ?>
                             </a>
                             <a href="<?= rex_url::currentBackendPage(['func' => 'setup_minimal_update']) ?>" 
-                               class="btn btn-outline btn-success btn-sm" style="width: 48%;"
+                               class="btn btn-default btn-sm" style="width: 48%;"
                                onclick="return confirm('<?= rex_i18n::msg('consent_manager_config_minimal_update_confirm') ?>')">
                                 <i class="rex-icon fa-plus"></i> <?= rex_i18n::msg('consent_manager_config_load_new_only') ?>
                             </a>
@@ -194,7 +194,7 @@ $defaultSourceClangId = rex_clang::getStartId();
 
             <?php if ($hasMultipleClangs): ?>
             <!-- Sprach-Sync -->
-            <div class="panel panel-warning" style="margin-bottom: 15px;">
+            <div class="panel panel-default" style="margin-bottom: 15px;">
                 <header class="panel-heading">
                     <div class="panel-title">
                         <i class="rex-icon fa-language"></i> <?= rex_i18n::msg('consent_manager_sync_missing_title') ?>
@@ -258,7 +258,7 @@ $defaultSourceClangId = rex_clang::getStartId();
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('<?= rex_i18n::msg('consent_manager_sync_missing_confirm') ?>')">
+                            <button type="submit" class="btn btn-default btn-sm" onclick="return confirm('<?= rex_i18n::msg('consent_manager_sync_missing_confirm') ?>')">
                                 <i class="rex-icon fa-random"></i> <?= rex_i18n::msg('consent_manager_sync_missing_button') ?>
                             </button>
                         </div>
@@ -268,7 +268,7 @@ $defaultSourceClangId = rex_clang::getStartId();
             <?php endif ?>
 
             <!-- Export -->
-            <div class="panel panel-success" style="margin-bottom: 15px;">
+            <div class="panel panel-default" style="margin-bottom: 15px;">
                 <header class="panel-heading">
                     <div class="panel-title">
                         <i class="rex-icon fa-upload"></i> <?= rex_i18n::msg('consent_manager_config_export_title') ?>
@@ -278,7 +278,7 @@ $defaultSourceClangId = rex_clang::getStartId();
                     <p><?= rex_i18n::msg('consent_manager_config_export_desc') ?></p>
                     <div class="text-center">
                         <a href="<?= rex_url::currentBackendPage(['func' => 'export'] + $csrf->getUrlParams()) ?>" 
-                           class="btn btn-success btn-sm">
+                           class="btn btn-default btn-sm">
                             <i class="rex-icon fa-download"></i> <?= rex_i18n::msg('consent_manager_config_export_button') ?>
                         </a>
                     </div>
@@ -286,7 +286,7 @@ $defaultSourceClangId = rex_clang::getStartId();
             </div>
             
             <!-- JSON Import -->
-            <div class="panel panel-info">
+            <div class="panel panel-default">
                 <header class="panel-heading">
                     <div class="panel-title">
                         <i class="rex-icon fa-file-code-o"></i> <?= rex_i18n::msg('consent_manager_config_import_title') ?>
@@ -301,7 +301,7 @@ $defaultSourceClangId = rex_clang::getStartId();
                             <input type="file" class="form-control" id="import_file" name="import_file" accept=".json" required>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-info btn-sm">
+                            <button type="submit" class="btn btn-default btn-sm">
                                 <i class="rex-icon fa-upload"></i> <?= rex_i18n::msg('consent_manager_config_import_button') ?>
                             </button>
                         </div>

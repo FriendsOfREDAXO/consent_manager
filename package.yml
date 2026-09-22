@@ -9,39 +9,40 @@ page:
   pjax: true
   icon: rex-icon fa-solid fa-cookie-bite
   subpages:
-    config:
-      title: "Settings"
-      icon: rex-icon fa-cog
+    cookie:
+      title: "translate:consent_manager_cookies"
+      icon: rex-icon fa-cubes
+      perm: consent_manager[config]
+    cookiegroup:
+      title: "translate:consent_manager_cookiegroups"
+      icon: rex-icon fa-folder-open
+      perm: consent_manager[config]
+    domain:
+      title: "translate:consent_manager_domains"
+      icon: rex-icon fa-globe
       perm: consent_manager[config]
     editorial:
       title: "translate:consent_manager_editorial_title"
       icon: rex-icon fa-edit
       perm: consent_manager[editorial]
-    cookiegroup:
-      title: "translate:consent_manager_cookiegroups"
-      icon: rex-icon fa-folder-open
-      perm: consent_manager[config]
-    cookie:
-      title: "translate:consent_manager_cookies"
-      icon: rex-icon fa-cog
-      perm: consent_manager[config]
     text:
       title: "translate:consent_manager_texts"
       icon: rex-icon fa-file-text-o
-    domain:
-      title: "translate:consent_manager_domains"
-      icon: rex-icon fa-globe
+    config:
+      title: "translate:consent_manager_nav_settings"
+      icon: rex-icon fa-sliders
       perm: consent_manager[config]
     theme:
       title: "translate:consent_manager_theme"
       icon: rex-icon fa-grip
       perm: consent_manager[config]
     theme_editor:
-      title: "Theme Editor"
+      title: "translate:consent_manager_nav_theme_editor"
       icon: rex-icon fa-magic
       perm: consent_manager[config]
     log:
       title: "translate:consent_manager_log"
+      icon: rex-icon fa-list-alt
     help:
       title: "translate:consent_manager_help"
       icon: rex-icon fa-info

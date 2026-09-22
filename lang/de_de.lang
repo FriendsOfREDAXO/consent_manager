@@ -460,7 +460,7 @@ consent_manager_auto_blocking_assistant_copied = Code kopiert!
 consent_manager_auto_blocking_assistant_input_help = Fügen Sie hier Ihren externen Script- oder iframe-Code ein
 
 # Editorial Page
-consent_manager_editorial_title = Redaktions-Bereich
+consent_manager_editorial_title = Redaktion
 consent_manager_editorial_welcome_title = Skripte im Inhalt datenschutzkonform einbinden
 consent_manager_editorial_welcome_intro = Hier haben Sie die Möglichkeit, externe Skripte und Inhalte die laut Anbieter <strong>im Text/Content eingefügt werden müssen</strong>, DSGVO-konform einzubinden (z.B. YouTube-Videos, Buchungswidgets, Kalender).
 consent_manager_editorial_important_title = Wichtig: Nicht für Head/Footer-Skripte!
@@ -533,3 +533,12 @@ consent_manager_toc_header = Inhalt
 consent_manager_toc_filter_placeholder = Inhalt filtern
 consent_manager_help_search_placeholder = Hilfe durchsuchen
 
+
+consent_manager_texts = Texte
+consent_manager_theme = Themes
+consent_manager_log = Protokoll
+consent_manager_help = Hilfe
+consent_manager_nav_settings = Einstellungen
+consent_manager_nav_theme_editor = Theme-Editor
+consent_manager_cookie_definition_notice = Ein Eintrag je Cookie oder Speicherwert, beginnend mit „-“: <code>name</code> (Cookie-Name), <code>time</code> (Laufzeit als Text, z. B. „30 Tage“) und <code>desc</code> (Zweck). Die Angaben erscheinen in der Cookie-Liste des Hinweises.
+consent_manager_cookie_uid_notice = Eindeutiger Schlüssel des Dienstes, z. B. für <code>has_consent('schluessel')</code> und <code>doConsent('schluessel', …)</code>. Nach dem Anlegen nur über „Umbenennen“ ändern.

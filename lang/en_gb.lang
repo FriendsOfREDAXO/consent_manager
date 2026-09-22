@@ -610,3 +610,8 @@ consent_manager_toc_header = Table of Contents
 consent_manager_toc_filter_placeholder = Filter content
 consent_manager_help_search_placeholder = Search help
 
+
+consent_manager_nav_settings = Settings
+consent_manager_nav_theme_editor = Theme editor
+consent_manager_cookie_definition_notice = One entry per cookie or storage value, starting with “-”: <code>name</code> (cookie name), <code>time</code> (duration as text, e.g. “30 days”) and <code>desc</code> (purpose). These details appear in the cookie list of the notice.
+consent_manager_cookie_uid_notice = Unique key of the service, e.g. for <code>has_consent('key')</code> and <code>doConsent('key', …)</code>. After creation only change it via “Rename”.
