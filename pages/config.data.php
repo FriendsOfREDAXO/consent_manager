@@ -196,10 +196,7 @@ $panel = static function (string $title, string $icon, string $body): string {
     return $fragment->parse('core/page/section.php');
 };
 
-// Ohne Domain bietet bereits die Checkliste "Erste Schritte" den Assistenten an
-if ($hasDomains) {
-    echo '<p class="text-right"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#setup-wizard-modal"><i class="rex-icon fa-magic"></i> Setup Wizard</button></p>';
-}
+echo '<p class="text-right"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#setup-wizard-modal"><i class="rex-icon fa-magic"></i> ' . ($hasDomains ? 'Setup Wizard' : rex_i18n::msg('consent_manager_setup_first_domain')) . '</button></p>';
 
 // Schnellstart: Setup-Vorlagen
 $setupBlock = static function (string $titleKey, string $descKey, string $icon, string $funcComplete, string $confirmComplete, string $funcUpdate, string $confirmUpdate): string {

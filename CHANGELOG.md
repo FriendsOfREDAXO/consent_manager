@@ -4,7 +4,7 @@
 
 ### Nutzerführung
 
-- Checkliste „Erste Schritte“: Solange Domain, Gruppen oder Dienste fehlen, zeigt jede Unterseite oben eine Checkliste mit Status je Schritt, Links zu den Seiten und dem Button zum Setup-Assistenten. Bisher landete man nach der Installation in einer leeren Liste ohne Hinweis, was zu tun ist.
+- Checkliste „Erste Schritte“: Solange Domain, Gruppen oder Dienste fehlen, zeigt jede Unterseite (außer den Einstellungen) oben eine Checkliste mit Status je Schritt, Links zu den Seiten und dem Button zum Setup-Assistenten. Bisher landete man nach der Installation in einer leeren Liste ohne Hinweis, was zu tun ist.
 - Setup-Assistent auf allen Unterseiten verfügbar (zentral eingebunden) statt nur auf Domains und Einstellungen; auf der Einstellungsseite war das Modal zuvor doppelt eingebunden.
 - Navigation neu sortiert und einheitlich deutsch: Gruppen, Dienste, Domains, Texte, Redaktion, Einstellungen, Themes, Theme-Editor, Protokoll, Hilfe.
 
