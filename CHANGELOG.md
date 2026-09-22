@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.8.5
+
+### Bugfixes
+
+- Duplizieren von Diensten und Gruppen: Der Parameter `func=duplicate` wurde von yform_usability abgefangen (Umleitung in die YForm-Tabellenverwaltung); die Aktion heißt jetzt `func=copy`. Die Weiterleitung zum neuen Datensatz enthielt `&amp;` und zeigte statt des Formulars die Liste.
+
 ## Version 5.8.4 - 2026-08-13
 
 ### Behobene Fehler (Bugfixes)

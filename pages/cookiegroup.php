@@ -102,7 +102,7 @@ if (1 === rex_request::request('uid_primary_only', 'int', 0)) {
 }
 if ('delete' === $func) {
     $msg = CLang::deleteDataset($table, $pid);
-} elseif ('duplicate' === $func) {
+} elseif ('copy' === $func) {
     // Cookie-Gruppe duplizieren
     if (!$csrf->isValid()) {
         $msg = rex_view::error(rex_i18n::msg('csrf_token_invalid'));
@@ -155,8 +155,7 @@ if ('delete' === $func) {
                 // Zur Edit-Seite des neuen Eintrags weiterleiten mit Hinweis
                 $msg = rex_view::warning(rex_i18n::msg('consent_manager_cookiegroup_duplicated_edit_uid'));
                 // Redirect zur Edit-Seite
-                header('Location: ' . rex_url::currentBackendPage(['func' => 'edit', 'pid' => $newPid, 'msg' => 'duplicated']));
-                exit;
+                rex_response::sendRedirect(rex_url::currentBackendPage(['func' => 'edit', 'pid' => $newPid, 'msg' => 'duplicated'], false));
             } catch (rex_sql_exception $e) {
                 $msg = rex_view::error(rex_i18n::msg('consent_manager_cookiegroup_duplicate_error') . ': ' . $e->getMessage());
             }
@@ -840,7 +839,7 @@ if ($showlist) {
 
     $list->addColumn(rex_i18n::msg('consent_manager_duplicate'), '<i class="rex-icon rex-icon-duplicate"></i> ' . rex_i18n::msg('consent_manager_duplicate'));
     $list->setColumnLayout(rex_i18n::msg('consent_manager_duplicate'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('consent_manager_duplicate'), ['pid' => '###pid###', 'func' => 'duplicate', 'start' => rex_request::request('start', 'string')] + $csrf->getUrlParams());
+    $list->setColumnParams(rex_i18n::msg('consent_manager_duplicate'), ['pid' => '###pid###', 'func' => 'copy', 'start' => rex_request::request('start', 'string')] + $csrf->getUrlParams());
 
     $list->addColumn(rex_i18n::msg('consent_manager_rename'), '<i class="rex-icon fa-exchange"></i> ' . rex_i18n::msg('consent_manager_rename'));
     $list->setColumnLayout(rex_i18n::msg('consent_manager_rename'), ['', '<td class="rex-table-action">###VALUE###</td>']);
