@@ -32,6 +32,10 @@ page:
       title: "translate:consent_manager_nav_settings"
       icon: rex-icon fa-sliders
       perm: consent_manager[config]
+      subpages:
+        general: { title: "translate:consent_manager_config_general" }
+        display: { title: "translate:consent_manager_config_display" }
+        data: { title: "translate:consent_manager_config_data" }
     theme:
       title: "translate:consent_manager_theme"
       icon: rex-icon fa-grip

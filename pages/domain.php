@@ -671,7 +671,7 @@ if ('delete' === $func) {
                 Die Theme-Auswahl ist daher deaktiviert, da das Frontend-Framework die Gestaltung vorgibt.
             </p>
             <p style="font-size: 11px; margin-top: 10px; opacity: 0.7;">
-                Sie können den Modus in den <a href="' . rex_url::backendPage('consent_manager/config') . '">Einstellungen</a> ändern.
+                Sie können den Modus in den <a href="' . rex_url::backendPage('consent_manager/config/display') . '">Einstellungen</a> ändern.
             </p>
         </div>';
     }

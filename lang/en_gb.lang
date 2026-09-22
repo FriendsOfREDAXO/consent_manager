@@ -626,3 +626,8 @@ consent_manager_onboarding_step_services_desc = e.g. Google Analytics or YouTube
 consent_manager_onboarding_afterwards = Afterwards: check the <a href="{0}">texts</a> and the frontend integration (automatically via the domain settings or manually in the template, see <a href="{1}">help</a>).
 consent_manager_onboarding_wizard = Start setup wizard
 consent_manager_onboarding_manual = or step by step manually via the links above
+consent_manager_config_general = General
+consent_manager_config_display = Display
+consent_manager_config_data = Setup, import & export
+consent_manager_config_function_legend = Function & privacy
+consent_manager_config_technical_legend = Technical details

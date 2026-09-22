@@ -584,3 +584,8 @@ consent_manager_onboarding_step_services_desc = t.ex. Google Analytics eller You
 consent_manager_onboarding_afterwards = Därefter: kontrollera <a href="{0}">texterna</a> och integrationen i frontend (automatiskt via domäninställningarna eller manuellt i mallen, se <a href="{1}">hjälp</a>).
 consent_manager_onboarding_wizard = Starta installationsguiden
 consent_manager_onboarding_manual = eller steg för steg manuellt via länkarna ovan
+consent_manager_config_general = Allmänt
+consent_manager_config_display = Utseende
+consent_manager_config_data = Installation, import & export
+consent_manager_config_function_legend = Funktion & integritet
+consent_manager_config_technical_legend = Tekniska detaljer

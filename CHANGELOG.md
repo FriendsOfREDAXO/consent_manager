@@ -6,6 +6,7 @@
 
 - Einstieg: Solange Domain, Gruppen oder Dienste fehlen, zeigt jede Unterseite oben die Checkliste „Erste Schritte“ mit Status je Schritt, Links zu den Seiten und dem Button zum Setup-Assistenten. Bisher landete man nach der Installation in einer leeren Liste ohne Hinweis, was zu tun ist.
 - Setup-Assistent auf allen Unterseiten verfügbar (zentral eingebunden), statt nur auf Domains und Einstellungen; auf der Einstellungsseite war das Modal zuvor doppelt eingebunden.
+- Einstellungen in Unterseiten aufgeteilt (wie bei anderen AddOns): „Allgemein“ (Funktion & Datenschutz, technische Details), „Darstellung“ (Frontend-Ausgabe, Framework-Optionen) und „Setup, Import & Export“ (Setup-Vorlagen, Sprach-Sync, JSON-Export/-Import, Wizard). Bisher stand alles auf einer zweispaltigen Seite. Links auf `consent_manager/config` landen automatisch auf „Allgemein“.
 - Einstellungen: Der Wizard-Button ist ein normaler Primär-Button ohne animierten Farbverlauf-Rahmen und Pulsieren; solange keine Domain existiert, übernimmt die Checkliste den Aufruf.
 - Navigation: Gruppen sind die erste Seite, danach Dienste, Domains, Texte, Redaktion, Einstellungen, Themes, Theme-Editor, Protokoll, Hilfe.
 - Redaktions-Bereich: Farbige Karten, eigener Style-Block und Inline-Styles entfernt; die Seite nutzt jetzt die REDAXO-Standardbausteine (Hinweise, Panels, ein Primär-Button) und folgt damit auch dem dunklen Backend-Theme ohne Sonderregeln.
