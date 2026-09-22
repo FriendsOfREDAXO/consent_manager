@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.8.6
+
+### Änderungen
+
+- Redaktions-Bereich: Farbige Karten, eigener Style-Block und Inline-Styles entfernt; die Seite nutzt jetzt die REDAXO-Standardbausteine (Hinweise, Panels, ein Primär-Button) und folgt damit auch dem dunklen Backend-Theme ohne Sonderregeln.
+
 ## Version 5.8.5 - 2026-09-22
 
 ### Bugfixes
