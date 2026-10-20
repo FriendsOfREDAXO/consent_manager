@@ -1299,7 +1299,7 @@ jQuery(function($) {
         var legalNotice = $('#REX_LINK_wizard_imprint').val() || '0';
         
         // AJAX Request - synchron, Setup läuft komplett durch
-        var url = '<?= rex_url::backendController() ?>?rex-api-call=consent_manager_setup_wizard';
+        var url = '<?= rex_url::backendController(rex_api_consent_manager_setup_wizard::getUrlParams(), false) ?>';
         
         $.ajax({
             url: url,
@@ -1363,7 +1363,7 @@ jQuery(function($) {
     }
     
     function triggerProcessing() {
-        var url = '<?= rex_url::backendController() ?>?rex-api-call=consent_manager_setup_wizard';
+        var url = '<?= rex_url::backendController(rex_api_consent_manager_setup_wizard::getUrlParams(), false) ?>';
         
         // Separaten Request für Processing senden - KEINE JSON Response erwartet
         $.ajax({
@@ -1389,7 +1389,7 @@ jQuery(function($) {
     }
     
     function startPolling() {
-        var url = '<?= rex_url::backendController() ?>?rex-api-call=consent_manager_setup_wizard';
+        var url = '<?= rex_url::backendController(rex_api_consent_manager_setup_wizard::getUrlParams(), false) ?>';
         
         pollingInterval = setInterval(function() {
             $.ajax({
