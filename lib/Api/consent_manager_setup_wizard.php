@@ -12,7 +12,18 @@ use FriendsOfRedaxo\ConsentManager\Utility;
 class rex_api_consent_manager_setup_wizard extends rex_api_function
 {
     private const SESSION_KEY = 'consent_manager_setup_progress';
-    protected $published = true;
+
+    // Nur im Backend aufrufbar (der Wizard läuft ausschließlich dort)
+    protected $published = false;
+
+    /**
+     * Der Wizard ändert Domain-, Gruppen- und Addon-Konfiguration.
+     * Ohne Token könnte eine fremde Seite das über die Sitzung eines eingeloggten Admins auslösen (CSRF).
+     */
+    protected function requiresCsrfProtection()
+    {
+        return true;
+    }
 
     public function execute()
     {
