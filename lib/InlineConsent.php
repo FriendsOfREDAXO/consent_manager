@@ -13,6 +13,7 @@ namespace FriendsOfRedaxo\ConsentManager;
 
 use rex;
 use rex_fragment;
+use rex_response;
 use rex_url;
 use rex_view;
 
@@ -384,8 +385,8 @@ class InlineConsent
                     style="border:0;" allowfullscreen="" loading="lazy"' . $attributesString . '></iframe>';
         }
 
-        // Für andere Inhalte: Direkt zurückgeben
-        return $content;
+        // Für andere Inhalte: Direkt zurückgeben, Scripts mit der CSP-Nonce der Seite (wie consent_inline.js beim Nachladen)
+        return (string) preg_replace('/<script\b(?![^>]*\snonce=)/i', '<script nonce="' . rex_response::getNonce() . '"', $content);
     }
 
     /**

@@ -2,6 +2,13 @@
 
 ## Version 5.9.0-beta1 - 2026-09-22
 
+### Bugfixes
+
+- Inline-Consent: „Alle zulassen“ hielt nur einen Seitenaufruf, sobald die Box mit ausgegeben wird ([#501](https://github.com/FriendsOfREDAXO/consent_manager/issues/501)). `consent_inline.js` schrieb einen Zeitstempel statt der `cachelogid` des Servers ins Cookie, `consent_manager_frontend.js` löschte es deshalb beim nächsten Aufruf. Jetzt übernimmt das Inline-Script Version, `cachelogid` und Dienst-Fingerprint vom Server, nutzt den eingestellten Cookie-Namen (bisher fest `consentmanager`) und dieselben Attribute `SameSite`/`Secure`.
+- `Frontend::getJS()` (manuelle Einbindung) gab eine leere `cachelogid` aus. Die Einwilligung hielt dadurch keinen einzigen Seitenaufruf, die Box erschien jedes Mal neu.
+- CSP: Nachgeladene Dienst-Scripts bekamen die Nonce des JS-Requests (`consent_manager_outputjs`) statt der Seite und wurden von einer nonce-basierten CSP blockiert ([#503](https://github.com/FriendsOfREDAXO/consent_manager/issues/503)). Die Seiten-Nonce kommt jetzt aus den Inline-Parametern von `box_cssjs.php`, ersatzweise vom eigenen Script-Tag; die gecachte JS-Antwort enthält keine Nonce mehr. Scripts, die ein Dienst selbst nachlädt (z. B. `matomo.js`), brauchen weiterhin `'strict-dynamic'` oder die Hosts in der CSP.
+- CSP im Inline-Consent: Scripts aus Inline-Inhalten bekommen die Nonce der Seite, sowohl beim Nachladen nach dem Klick als auch bei der direkten Ausgabe, wenn die Einwilligung schon besteht.
+
 ### Nutzerführung
 
 - Checkliste „Erste Schritte“: Solange Domain, Gruppen oder Dienste fehlen, zeigt jede Unterseite (außer Einstellungen und Darstellung) oben eine Checkliste mit Status je Schritt, Links zu den Seiten und dem Button zum Setup-Assistenten. Bisher landete man nach der Installation in einer leeren Liste ohne Hinweis, was zu tun ist.
