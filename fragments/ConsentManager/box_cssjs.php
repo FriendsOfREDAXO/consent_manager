@@ -197,6 +197,7 @@ $jsConfig = [
     'cacheLogId' => $consent_manager->cacheLogId,
     'focus' => $consent_manager->domainInfo['auto_inject_focus'] ?? 1,
     'mode' => 'opt-in',
+    'cspNonce' => rex_response::getNonce(),
 ];
 
 $consentparams['outputjs'] .= '    <script nonce="' . rex_response::getNonce() . '">var consent_manager_parameters = ' . json_encode($jsConfig, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';</script>' . PHP_EOL;

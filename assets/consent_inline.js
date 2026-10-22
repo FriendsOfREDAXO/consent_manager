@@ -330,16 +330,20 @@ if (typeof window.consentManagerInline !== 'undefined') {
             this.debug('✅ Inserted ' + insertedCount + ' elements');
             
             // Jetzt alle Script-Platzhalter durch neue Script-Tags ersetzen
+            var nonce = this.getNonce();
             scriptPlaceholders.forEach(function(item) {
                 console.log('🔧 Processing collected SCRIPT tag');
                 var originalScript = item.script;
                 var placeholder = item.placeholder;
                 var newScript = document.createElement('script');
+                if (nonce) {
+                    newScript.nonce = nonce;
+                }
                 
-                // Alle Attribute kopieren AUSSER data-consent-* (sonst würde es wieder blockiert)
+                // Alle Attribute kopieren AUSSER data-consent-* (sonst würde es wieder blockiert) und nonce
                 for (var i = 0; i < originalScript.attributes.length; i++) {
                     var attr = originalScript.attributes[i];
-                    if (attr.name.indexOf('data-consent-') !== 0) {
+                    if (attr.name.indexOf('data-consent-') !== 0 && attr.name !== 'nonce') {
                         newScript.setAttribute(attr.name, attr.value);
                     }
                 }
@@ -383,6 +387,48 @@ if (typeof window.consentManagerInline !== 'undefined') {
             }
         },
         
+        // Parameter des Haupt-Scripts (box_cssjs.php / outputJavascript / Frontend::getJS)
+        getParams: function() {
+            try {
+                if (typeof consent_manager_parameters !== 'undefined' && consent_manager_parameters) {
+                    return consent_manager_parameters;
+                }
+            } catch (e) { /* ignore */ }
+            return {};
+        },
+
+        getCookieName: function() {
+            return this.getParams().cookieName || 'consentmanager';
+        },
+
+        // Nonce der Seite für nachgeladene Scripts (CSP)
+        getNonce: function() {
+            var params = this.getParams();
+            if (params.cspNonce) {
+                return params.cspNonce;
+            }
+            var script = document.querySelector('script[nonce]');
+            return script ? (script.nonce || script.getAttribute('nonce') || '') : '';
+        },
+
+        // Version, cachelogid und Dienst-Fingerprint so schreiben, wie consent_manager_frontend.js sie prüft –
+        // sonst löscht es das Cookie beim nächsten Seitenaufruf
+        applyServerValues: function(data) {
+            var params = this.getParams();
+            var version = parseInt(params.version);
+            if (!isNaN(version)) {
+                data.version = version;
+            }
+            var cachelogid = (typeof params.cachelogid !== 'undefined') ? params.cachelogid : params.cacheLogId;
+            if (typeof cachelogid !== 'undefined' && cachelogid !== '') {
+                data.cachelogid = cachelogid;
+            }
+            if (params.service_scope_hash) {
+                data.service_scope_hash = params.service_scope_hash;
+            }
+            return data;
+        },
+
         getCookieData: function() {
             // resolve the current expected major version from global params when available
             var currentMajorVersion = 4;
@@ -519,6 +565,10 @@ if (typeof window.consentManagerInline !== 'undefined') {
         },
 
         setCookieData: function(data) {
+            this.applyServerValues(data);
+            var cookieName = this.getCookieName();
+            var params = this.getParams();
+
             if (this.isSessionScope()) {
                 try {
                     sessionStorage.setItem('consentmanager', JSON.stringify(data));
@@ -529,14 +579,14 @@ if (typeof window.consentManagerInline !== 'undefined') {
             // Vor dem Setzen: alte / invalide Cookies entfernen
             var shouldClear = false;
             try {
-                var raw = this.getCookie('consentmanager');
+                var raw = this.getCookie(cookieName);
                 if (raw !== null) {
                     try {
-                        var existing = JSON.parse(raw);
+                        var existing = JSON.parse(decodeURIComponent(raw));
 
                         // Wenn existierendes Cookie keine oder inkompatible Struktur hat -> löschen
                         // If existing cookie is missing/invalid or doesn't match expected major version -> clear
-                        var expectedVersion = parseInt(data.version || (typeof consent_manager_parameters !== 'undefined' ? consent_manager_parameters.version : currentMajorVersion)) || currentMajorVersion;
+                        var expectedVersion = parseInt(data.version || params.version) || 4;
                         if (!existing || typeof existing !== 'object' || !existing.hasOwnProperty('consents') || parseInt(existing.version || 0) !== expectedVersion) {
                             shouldClear = true;
                         }
@@ -562,10 +612,11 @@ if (typeof window.consentManagerInline !== 'undefined') {
             // User explizit löschen, damit nicht zwei parallele Cookies existieren.
             document.cookie = 'consent_manager=; expires=' + new Date(0).toUTCString() + '; path=/';
 
-            // Setze das neue Cookie (neu und sauber)
-            document.cookie = 'consentmanager=' + JSON.stringify(data) +
+            // Setze das neue Cookie (neu und sauber), mit denselben Attributen wie consent_manager_frontend.js
+            document.cookie = cookieName + '=' + encodeURIComponent(JSON.stringify(data)) +
                              '; expires=' + expires.toUTCString() +
-                             '; path=/; SameSite=Lax';
+                             '; path=/; SameSite=' + (params.cookieSameSite || 'Lax') +
+                             (params.cookieSecure ? '; Secure' : '');
         },
         
         isSessionScope: function() {
@@ -585,7 +636,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
                     return null;
                 }
             }
-            var raw = this.getCookie('consentmanager');
+            var raw = this.getCookie(this.getCookieName());
             if (raw !== null) {
                 return raw;
             }
@@ -598,7 +649,7 @@ if (typeof window.consentManagerInline !== 'undefined') {
                 try {
                     var expires = new Date();
                     expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
-                    document.cookie = 'consentmanager=' + legacy +
+                    document.cookie = this.getCookieName() + '=' + legacy +
                                      '; expires=' + expires.toUTCString() +
                                      '; path=/; SameSite=Lax';
                     document.cookie = 'consent_manager=; expires=' + new Date(0).toUTCString() + '; path=/';

@@ -299,14 +299,17 @@ class Frontend
             'fe_controller' => rex_url::frontend(),
             'forcereload' => rex_request::get('r', 'int', 0),
             'hidebodyscrollbar' => 'true' === rex_request::get('h', 'string', 'false'),
-            'cspNonce' => rex_response::getNonce(),
             'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
             'cookieName' => $addon->getConfig('cookie_name', 'consentmanager'),
             'service_scope_hash' => $serviceScopeHash,
             'reconsent_on_scope_change' => (bool) $addon->getConfig('reconsent_on_scope_change', true),
         ];
-        echo 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';' . PHP_EOL . PHP_EOL;
+        // Die Antwort wird bis zu einer Woche gecacht und hat eine eigene Nonce – die CSP-Nonce der Seite
+        // kommt deshalb aus den Inline-Parametern der Seite (box_cssjs.php), nicht aus diesem Request.
+        echo 'var consent_manager_parameters = (function (p, page) { p.cspNonce = (page && page.cspNonce) || \'\'; return p; })('
+            . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)
+            . ', window.consent_manager_parameters);' . PHP_EOL . PHP_EOL;
         echo '/* --- Consent-Manager Box Template lang=' . $clang . ' --- */' . PHP_EOL;
         echo 'var consent_manager_box_template = ' . json_encode($boxtemplate, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';' . PHP_EOL . PHP_EOL;
 
@@ -517,7 +520,7 @@ class Frontend
             'initially_hidden' => false,
             'domain' => Utility::hostname(),
             'consentid' => uniqid('', true),
-            'cachelogid' => '',
+            'cachelogid' => ConsentManager::getCacheLogId(),
             'version' => $addon->getVersion(),
             'fe_controller' => rex_url::frontend(),
             'forcereload' => 0,
@@ -526,6 +529,8 @@ class Frontend
             'cookieSameSite' => $addon->getConfig('cookie_samesite', 'Lax'),
             'cookieSecure' => (bool) $addon->getConfig('cookie_secure', false),
             'cookieName' => $addon->getConfig('cookie_name', 'consentmanager'),
+            'service_scope_hash' => self::getServiceScopeHashForCurrentContext(),
+            'reconsent_on_scope_change' => (bool) $addon->getConfig('reconsent_on_scope_change', true),
         ];
         $output .= 'var consent_manager_parameters = ' . json_encode($consent_manager_parameters, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';' . PHP_EOL . PHP_EOL;
 
