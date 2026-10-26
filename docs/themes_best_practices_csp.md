@@ -57,6 +57,8 @@ Die Ausgabe unterstützt Nonce-basierte Einbindung.
 </script>
 ```
 
+Nach der Einwilligung eingefügte Dienst-Scripts und Scripts aus Inline-Consent-Inhalten bekommen die Nonce der Seite (`rex_response::getNonce()`); die Seite muss dafür nur die Nonce im CSP-Header senden. Scripts, die ein Dienst-Snippet seinerseits nachlädt (z. B. `matomo.js`, `gtag/js`), tragen keine Nonce: Dafür die Hosts in `script-src` freigeben oder `'strict-dynamic'` verwenden.
+
 Externe Quellen (z. B. Analytics) müssen in der CSP explizit freigegeben werden.
 
 ## Weiterführend
