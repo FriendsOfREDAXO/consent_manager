@@ -2,14 +2,11 @@
 
 ## Version 5.9.0 - 2026-10-26
 
-Danke an @xong (#501) für den genauen Fehlerbericht, an @lemonhead (#503) für Fehlerbericht und Test der Korrektur, an @alexwenz für den Sicherheitsfix im Setup-Assistenten (#502) und an @IngoWinter für den Anstoß.
-
-### Sicherheit
-
-- Setup-Assistent: Die API `consent_manager_setup_wizard` war öffentlich erreichbar und ohne CSRF-Schutz. Ein präparierter Link konnte bei einem angemeldeten Admin das Setup mit fremden Werten ausführen (Domain, Datenschutz-/Impressums-Verweise, CSS-Framework-Modus, Standard-Setup). Sie läuft jetzt nur noch im Backend und verlangt ein CSRF-Token (#502).
+Danke an @xong (#501) für den genauen Fehlerbericht, an @lemonhead (#503) für Fehlerbericht und Test der Korrektur, an @alexwenz für die Überarbeitung des Setup-Assistenten (#502) und an @IngoWinter für den Anstoß.
 
 ### Bugfixes
 
+- Bei nur einer Sprache fehlten die Unterreiter von Darstellung (Themes, Theme-Editor) und Einstellungen (Setup, Import & Export). Ausgeblendet werden jetzt nur noch die Sprachreiter auf Gruppen, Diensten und Texten.
 - Inline-Consent: „Alle zulassen“ hielt nur einen Seitenaufruf, sobald die Box mit ausgegeben wird ([#501](https://github.com/FriendsOfREDAXO/consent_manager/issues/501)). `consent_inline.js` schrieb einen Zeitstempel statt der `cachelogid` des Servers ins Cookie, `consent_manager_frontend.js` löschte es deshalb beim nächsten Aufruf. Jetzt übernimmt das Inline-Script Version, `cachelogid` und Dienst-Fingerprint vom Server, nutzt den eingestellten Cookie-Namen (bisher fest `consentmanager`) und dieselben Attribute `SameSite`/`Secure`.
 - `Frontend::getJS()` (manuelle Einbindung) gab eine leere `cachelogid` aus. Die Einwilligung hielt dadurch keinen einzigen Seitenaufruf, die Box erschien jedes Mal neu.
 - CSP: Nachgeladene Dienst-Scripts bekamen die Nonce des JS-Requests (`consent_manager_outputjs`) statt der Seite und wurden von einer nonce-basierten CSP blockiert ([#503](https://github.com/FriendsOfREDAXO/consent_manager/issues/503)). Die Seiten-Nonce kommt jetzt aus den Inline-Parametern von `box_cssjs.php`, ersatzweise vom eigenen Script-Tag; die gecachte JS-Antwort enthält keine Nonce mehr. Scripts, die ein Dienst selbst nachlädt (z. B. `matomo.js`), brauchen weiterhin `'strict-dynamic'` oder die Hosts in der CSP.
@@ -25,10 +22,11 @@ Danke an @xong (#501) für den genauen Fehlerbericht, an @lemonhead (#503) für 
 ### Darstellung
 
 - Live-Preview im Theme-Editor und Theme-Vorschauen funktionieren jetzt auch ohne angelegte Domain bzw. ohne Domain-Zuordnung der Gruppen: Die Vorschau zeigt dann alle Gruppen der aktuellen Sprache (nur im Backend-Preview, das Frontend bleibt unverändert). Bisher blieb der Vorschau-Iframe leer und die Details ließen sich nicht öffnen; die Themes-Seite zeigt statt zweier Sperr-Hinweise einen Hinweis und trotzdem die Theme-Kacheln.
-- Themes und Theme-Editor werden im CSS-Framework-Modus aus der Navigation genommen, da sie dort nicht nutzbar sind. Die Einstellungsseiten laden sich nach dem Speichern neu, damit die Navigation sofort den gespeicherten Stand zeigt.
+- Themes und Theme-Editor sind immer erreichbar. Ist ein CSS-Framework oder „Eigenes CSS“ aktiv, erklärt ein Hinweis, warum Themes gerade nicht ausgegeben werden, und schaltet sie mit einem Klick wieder ein (bisher nur eine Fehlermeldung ohne Weg zurück). Die Einstellungsseiten laden sich nach dem Speichern neu.
 
 ### Einstellungen
 
+- Setup-Assistent technisch überarbeitet, er läuft nur noch im Backend (#502).
 - In Unterseiten aufgeteilt (wie bei anderen AddOns): „Allgemein“ (Funktion & Datenschutz, technische Details) und „Setup, Import & Export“ (Setup-Vorlagen, Sprach-Sync, JSON-Export/-Import, Wizard); die Ausgabe-/Framework-Optionen liegen unter „Darstellung“. Bisher stand alles auf einer zweispaltigen Seite. Links auf `consent_manager/config` landen automatisch auf „Allgemein“.
 - Wizard-Button ist ein normaler Primär-Button ohne animierten Farbverlauf-Rahmen und Pulsieren; solange keine Domain existiert, übernimmt die Checkliste den Aufruf.
 

@@ -187,6 +187,10 @@ consent_manager_config_css_framework_mode_bootstrap5 = Bootstrap 5
 consent_manager_config_css_framework_mode_tailwind = Tailwind CSS
 consent_manager_config_css_framework_mode_bulma = Bulma
 consent_manager_config_css_framework_mode_active = "Framework Mode" is active. Themes cannot be used in this mode as the layout is controlled by the framework.
+consent_manager_themes_inactive_framework = The cookie banner currently uses the {0} layout (framework mode). Themes are only output again once framework mode is off.
+consent_manager_themes_inactive_owncss = "Own CSS" is enabled. Themes are only output again once it is off.
+consent_manager_themes_enable = Switch off and use themes
+consent_manager_themes_enabled = Themes are active again. Choose a theme below.
 
 consent_manager_config_framework_legend = Framework Settings
 consent_manager_config_framework_shadow = Shadow

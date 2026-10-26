@@ -14,6 +14,11 @@ if (!rex_addon::get('project')->isAvailable()) {
     return;
 }
 
+$addon = rex_addon::get('consent_manager');
+
+// Themes lassen sich immer bearbeiten; greifen sie gerade nicht, sagt der Hinweis warum
+include __DIR__ . '/design.themes_inactive.php';
+
 $csrfToken = rex_csrf_token::factory('consent_manager_theme_editor');
 
 // Theme bases
