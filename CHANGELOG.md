@@ -2,7 +2,7 @@
 
 ## Version 5.9.0 - 2026-10-26
 
-Danke an @xong (#501) und @lemonhead (#503) für die genauen Fehlerberichte und das Testen der Korrekturen, an @alexwenz für den Sicherheitsfix im Setup-Assistenten (#502) und an @IngoWinter für den Anstoß.
+Danke an @xong (#501) für den genauen Fehlerbericht, an @lemonhead (#503) für Fehlerbericht und Test der Korrektur, an @alexwenz für den Sicherheitsfix im Setup-Assistenten (#502) und an @IngoWinter für den Anstoß.
 
 ### Sicherheit
 
