@@ -160,6 +160,8 @@ echo InlineConsent::doConsent('google-analytics', '<script>gtag("config", "GA_ME
 ?>
 ```
 
+> **CSP und Sicherheit:** `<script>`-Elemente im übergebenen Inhalt bekommen die CSP-Nonce der Seite, beim Nachladen nach der Einwilligung ebenso wie bei der direkten Ausgabe, wenn die Einwilligung schon besteht. Eine Nonce im Inhalt wird dabei ersetzt. Diese Scripts laufen also auch unter einer scharfen Content-Security-Policy. Deshalb nur Inhalte übergeben, die aus Template, Modul oder Backend stammen – niemals Besucher-Eingaben (z. B. aus Formularen), sonst würden eingeschleuste Scripts mit freigeschaltet.
+
 ---
 
 ## 🔌 Template-Integration
@@ -602,7 +604,7 @@ Hinweise:
 
 - Texte wie „Alle Einstellungen“, „Einmal laden“ usw. kommen standardmäßig aus der REDAXO Texte-Verwaltung und können dort pro Sprache angepasst werden.
 - Für YouTube/Vimeo wird – sofern möglich – die Video-ID automatisch aus vollständigen URLs extrahiert.
-- Sicherheit: Übergebene IDs/URLs werden intern sicher verarbeitet. Für eigene iframes/scripts in `custom-service` keine unvalidierten Nutzerdaten durchreichen.
+- Sicherheit: Übergebene IDs/URLs werden intern sicher verarbeitet. Für eigene iframes/scripts keine unvalidierten Nutzerdaten durchreichen: Scripts im Inhalt bekommen die CSP-Nonce der Seite und laufen damit auch unter scharfer CSP.
 
 ---
 

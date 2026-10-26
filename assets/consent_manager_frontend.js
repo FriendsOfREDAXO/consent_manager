@@ -6,6 +6,8 @@ var cmCookieSecure = consent_manager_parameters.cookieSecure || false;
 var cmCookieName = consent_manager_parameters.cookieName || 'consentmanager';
 var cmServiceScopeHash = consent_manager_parameters.service_scope_hash || '';
 var cmReconsentOnScopeChange = consent_manager_parameters.reconsent_on_scope_change !== false;
+// Nonce des eigenen Script-Tags (= Nonce der Seite), falls die Seite keine cspNonce mitgibt
+var cmScriptNonce = (document.currentScript && document.currentScript.nonce) || '';
 var cmCookieAPI = Cookies.withAttributes({ expires: cmCookieExpires, path: '/', sameSite: cmCookieSameSite, secure: cmCookieSecure });
 
 if (window.consentManagerDebugConfig && window.consentManagerDebugConfig.debug_enabled) {
@@ -561,8 +563,8 @@ function safeJSONParse(input, fallback) {
                 return;
             }
             
-            // Get nonce from consent_manager_parameters (passed from PHP)
-            var nonce = consent_manager_parameters.cspNonce || null;
+            // Nonce der Seite (Inline-Parameter), sonst die des eigenen Script-Tags
+            var nonce = consent_manager_parameters.cspNonce || cmScriptNonce || null;
             
             // CSP-compatible: Create script elements properly
             for (var i = 0; i < scriptDom.scripts.length; i++) {
