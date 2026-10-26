@@ -4,6 +4,7 @@ use FriendsOfRedaxo\ConsentManager\Api\ConsentManager;
 use FriendsOfRedaxo\ConsentManager\Api\ConsentStatsApi;
 use FriendsOfRedaxo\ConsentManager\Cache;
 use FriendsOfRedaxo\ConsentManager\CLang;
+use FriendsOfRedaxo\ConsentManager\Config;
 use FriendsOfRedaxo\ConsentManager\Cronjob\LogDelete;
 use FriendsOfRedaxo\ConsentManager\Cronjob\ThumbnailCleanup;
 use FriendsOfRedaxo\ConsentManager\Frontend;
@@ -67,24 +68,10 @@ if (rex::isBackend()) {
         }
     });
 
-    // Themes und Theme-Editor sind nur ohne CSS-Framework nutzbar, im Framework-Modus aus der Navigation nehmen
-    rex_extension::register('PAGES_PREPARED', static function () use ($addon) {
-        if (!$addon->getConfig('css_framework_mode')) {
-            return;
-        }
-        $design = rex_be_controller::getPageObject('consent_manager/design');
-        if (null === $design) {
-            return;
-        }
-        foreach (['theme', 'theme_editor'] as $key) {
-            $subpage = $design->getSubpage($key);
-            if (null !== $subpage) {
-                $subpage->setHidden(true);
-            }
-        }
-    });
-
-    if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)) {
+    // Bei nur einer Sprache die Sprachreiter ausblenden – nur auf den Seiten mit Sprachreitern (CLang::addLangNav),
+    // sonst verschwinden auch Unterseiten der dritten Ebene wie Darstellung > Themes, die in derselben Leiste stehen
+    if ('consent_manager' === rex_be_controller::getCurrentPagePart(1)
+        && in_array(rex_be_controller::getCurrentPagePart(2), array_diff(Config::getKeys(), ['domain']), true)) {
         rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
             if (1 === rex_clang::count()) {
                 $s = '</head>';

@@ -22,7 +22,7 @@ if ('' !== rex_request::post('_csrf_token', 'string', '')) {
     Theme::generateDefaultAssets();
     Theme::copyAllAssets();
 
-    // Neu laden, damit die Navigation den gespeicherten Stand zeigt (z. B. Themes im Framework-Modus)
+    // Neu laden, damit die Seite den gespeicherten Stand zeigt
     if ('' === $form->getWarning()) {
         rex_response::sendRedirect(rex_url::currentBackendPage(['applied' => 1], false));
     }
