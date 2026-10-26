@@ -1,6 +1,12 @@
 # REDAXO consent_manager - Changelog
 
-## Version 5.9.0-beta1 - 2026-09-22
+## Version 5.9.0 - 2026-10-26
+
+Danke an @xong (#501) und @lemonhead (#503) für die genauen Fehlerberichte und das Testen der Korrekturen, an @alexwenz für den Sicherheitsfix im Setup-Assistenten (#502) und an @IngoWinter für den Anstoß.
+
+### Sicherheit
+
+- Setup-Assistent: Die API `consent_manager_setup_wizard` war öffentlich erreichbar und ohne CSRF-Schutz. Ein präparierter Link konnte bei einem angemeldeten Admin das Setup mit fremden Werten ausführen (Domain, Datenschutz-/Impressums-Verweise, CSS-Framework-Modus, Standard-Setup). Sie läuft jetzt nur noch im Backend und verlangt ein CSRF-Token (#502).
 
 ### Bugfixes
 
