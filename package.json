@@ -1,6 +1,6 @@
 {
   "name": "@friendsofredaxo/consent-manager",
-  "version": "5.8.0",
+  "version": "5.9.1",
   "private": true,
   "description": "Build tooling for consent_manager addon assets",
   "engines": {
