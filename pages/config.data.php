@@ -17,7 +17,10 @@ $setupImports = [
     'setup_minimal_update' => ['minimal_setup.json', false, 'update', 'minimal_update'],
     'setup_standard_update' => ['default_setup.json', false, 'update', 'standard_update'],
 ];
-if (isset($setupImports[$func])) {
+$csrf = rex_csrf_token::factory(Config::class);
+if (isset($setupImports[$func]) && !$csrf->isValid()) {
+    echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+} elseif (isset($setupImports[$func])) {
     [$file, $clearExisting, $mode, $msgKey] = $setupImports[$func];
     $jsonSetupFile = rex_path::addon('consent_manager') . 'setup/' . $file;
 
@@ -37,7 +40,6 @@ if (isset($setupImports[$func])) {
 }
 
 // Alle weiteren Funktionen mit CSRF-Prüfung
-$csrf = rex_csrf_token::factory(Config::class);
 if ('' !== $func && !isset($setupImports[$func])) {
     if (!$csrf->isValid()) {
         echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
@@ -199,12 +201,12 @@ $panel = static function (string $title, string $icon, string $body): string {
 echo '<p class="text-right"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#setup-wizard-modal"><i class="rex-icon fa-magic"></i> ' . ($hasDomains ? 'Setup Wizard' : rex_i18n::msg('consent_manager_setup_first_domain')) . '</button></p>';
 
 // Schnellstart: Setup-Vorlagen
-$setupBlock = static function (string $titleKey, string $descKey, string $icon, string $funcComplete, string $confirmComplete, string $funcUpdate, string $confirmUpdate): string {
+$setupBlock = static function (string $titleKey, string $descKey, string $icon, string $funcComplete, string $confirmComplete, string $funcUpdate, string $confirmUpdate) use ($csrf): string {
     return '<h4><i class="rex-icon ' . $icon . '"></i> ' . rex_i18n::msg($titleKey) . '</h4>'
         . '<p>' . rex_i18n::msg($descKey) . '</p>'
         . '<p>'
-        . '<a href="' . rex_url::currentBackendPage(['func' => $funcComplete]) . '" class="btn btn-default" onclick="return confirm(\'' . rex_i18n::msg($confirmComplete) . '\')"><i class="rex-icon fa-download"></i> ' . rex_i18n::msg('consent_manager_config_load_complete') . '</a> '
-        . '<a href="' . rex_url::currentBackendPage(['func' => $funcUpdate]) . '" class="btn btn-default" onclick="return confirm(\'' . rex_i18n::msg($confirmUpdate) . '\')"><i class="rex-icon fa-plus"></i> ' . rex_i18n::msg('consent_manager_config_load_new_only') . '</a>'
+        . '<a href="' . rex_url::currentBackendPage(['func' => $funcComplete] + $csrf->getUrlParams()) . '" class="btn btn-default" onclick="return confirm(\'' . rex_i18n::msg($confirmComplete) . '\')"><i class="rex-icon fa-download"></i> ' . rex_i18n::msg('consent_manager_config_load_complete') . '</a> '
+        . '<a href="' . rex_url::currentBackendPage(['func' => $funcUpdate] + $csrf->getUrlParams()) . '" class="btn btn-default" onclick="return confirm(\'' . rex_i18n::msg($confirmUpdate) . '\')"><i class="rex-icon fa-plus"></i> ' . rex_i18n::msg('consent_manager_config_load_new_only') . '</a>'
         . '</p>';
 };
 $quickstart = '<p><strong>' . rex_i18n::msg('consent_manager_config_choose_setup') . '</strong></p>'

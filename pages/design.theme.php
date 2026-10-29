@@ -55,16 +55,21 @@ if ('1' === rex_request::post('formsubmit', 'string') && '1' === rex_request::po
 
     // Nur project-Themes löschen und nicht das aktive Theme
     if (str_starts_with($themeToDelete, 'project:') && $themeToDelete !== $currentTheme) {
-        $scssFile = rex_addon::get('project')->getPath('consent_manager_themes/' . str_replace('project:', '', $themeToDelete));
+        $themeFile = substr($themeToDelete, strlen('project:'));
+        $themesDir = rex_addon::get('project')->getPath('consent_manager_themes/');
+        $scssFile = $themesDir . $themeFile;
         $cssFile = Theme::getThemeCssPath($themeToDelete);
 
+        // Nur Dateien zulassen, die auch in der Theme-Liste stehen (verhindert ../ im Theme-Namen)
+        $projectThemeFiles = array_map('basename', (array) glob($themesDir . 'consent_manager_frontend*.scss'));
+
         $deleted = false;
-        if (file_exists($scssFile)) {
+        if (in_array($themeFile, $projectThemeFiles, true) && file_exists($scssFile)) {
             rex_file::delete($scssFile);
             $deleted = true;
-        }
-        if (file_exists($cssFile)) {
-            rex_file::delete($cssFile);
+            if (file_exists($cssFile)) {
+                rex_file::delete($cssFile);
+            }
         }
 
         if ($deleted) {
