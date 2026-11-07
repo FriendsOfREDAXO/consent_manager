@@ -284,3 +284,37 @@
         min-width: auto;
     }
 }
+
+/* Videos (YouTube, Vimeo): Platzhalter und geladenes Video im selben Seitenverhältnis.
+   Seitenverhältnis über --consent-video-aspect-ratio anpassbar (z. B. 4 / 3).
+   Ist der Platzhalter schmaler als 560px, behält er seine Mindesthöhe,
+   damit Hinweis und Buttons Platz haben (Container Query statt Bildschirmbreite). */
+.consent-inline-video {
+    --consent-video-aspect-ratio: 16 / 9;
+    container-type: inline-size;
+}
+
+/* Geladenes Video: ersetzt den Platzhalter, daher eigene Klasse am iframe */
+.consent-inline-video-frame {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--consent-video-aspect-ratio, 16 / 9);
+    border: 0;
+}
+
+@container (min-width: 560px) {
+    .consent-inline-video .consent-inline-placeholder {
+        box-sizing: border-box;
+        aspect-ratio: var(--consent-video-aspect-ratio);
+    }
+
+    .consent-inline-video .consent-inline-content {
+        height: 100%;
+        min-height: 0;
+    }
+
+    .consent-inline-video .consent-inline-thumbnail {
+        min-height: 0;
+    }
+}

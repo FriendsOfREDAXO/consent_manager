@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.9.2 - 2026-11-07
+
+### Verbesserungen
+
+- Inline-Consent für YouTube und Vimeo: Platzhalter und geladenes Video haben jetzt dasselbe Seitenverhältnis (Standard 16:9). Bisher war der Platzhalter bei voller Breite flach (Mindesthöhe 300px, z. B. 900 × 347px) und das Video lud danach mit festen 640 × 360px. Der Container trägt die Klasse `consent-inline-video`, das iframe `consent-inline-video-frame` (auch bei direkter Ausgabe mit bestehender Einwilligung); anpassbar über `--consent-video-aspect-ratio`. Ist der Platzhalter schmaler als 560px, behält er seine Mindesthöhe, damit Hinweis und Buttons nicht abgeschnitten werden (Container Query).
+
 ## Version 5.9.0 - 2026-10-26
 
 Danke an @xong (#501) für den genauen Fehlerbericht, an @lemonhead (#503) für Fehlerbericht und Test der Korrektur, an @alexwenz für die Überarbeitung des Setup-Assistenten (#502) und an @IngoWinter für den Anstoß.
