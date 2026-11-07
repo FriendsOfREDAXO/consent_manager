@@ -129,6 +129,8 @@ class InlineConsent
      */
     private static function renderYouTubePlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
+        $options = self::withVideoFrameClass($options);
+
         // Wenn bereits ein kompletter iframe übergeben wurde (z.B. von scanAndReplaceConsentElements),
         // diesen direkt als generischen Placeholder verwenden
         if (str_starts_with(trim($videoId), '<iframe')) {
@@ -172,6 +174,7 @@ class InlineConsent
 
         return self::renderPlaceholderHTML($serviceKey, $iframe, $options, $consentId, $service, [
             'thumbnail' => $thumbnail,
+            'video' => true,
             'icon' => 'uk-icon:play-circle',
             'icon_label' => 'YouTube Video',
             'service_name' => 'YouTube',
@@ -186,6 +189,8 @@ class InlineConsent
      */
     private static function renderVimeoPlaceholder(string $serviceKey, string $videoId, array $options, string $consentId, array $service): string
     {
+        $options = self::withVideoFrameClass($options);
+
         // Wenn bereits ein kompletter iframe übergeben wurde (z.B. von scanAndReplaceConsentElements),
         // diesen direkt als generischen Placeholder verwenden
         if (str_starts_with(trim($videoId), '<iframe')) {
@@ -233,6 +238,7 @@ class InlineConsent
 
         return self::renderPlaceholderHTML($serviceKey, $iframe, $options, $consentId, $service, [
             'thumbnail' => $thumbnail,
+            'video' => true,
             'icon' => '🎬',
             'service_name' => 'Vimeo',
         ]);
@@ -334,6 +340,23 @@ class InlineConsent
     }
 
     /**
+     * Video-iframes (YouTube, Vimeo) bekommen die Klasse consent-inline-video-frame,
+     * damit sie responsiv im selben Seitenverhältnis wie der Platzhalter erscheinen
+     * (consent_inline.css). Eigene Klassen aus $options['attributes'] bleiben erhalten.
+     *
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>
+     */
+    private static function withVideoFrameClass(array $options): array
+    {
+        $attributes = isset($options['attributes']) && is_array($options['attributes']) ? $options['attributes'] : [];
+        $attributes['class'] = trim((isset($attributes['class']) && is_string($attributes['class']) ? $attributes['class'] : '') . ' consent-inline-video-frame');
+        $options['attributes'] = $attributes;
+
+        return $options;
+    }
+
+    /**
      * Content direkt rendern (wenn bereits Consent vorhanden).
      *
      * @param array<string, mixed> $options
@@ -354,6 +377,15 @@ class InlineConsent
 
         // Für YouTube URLs oder Video-IDs
         $youtubeId = self::extractYouTubeId($content);
+        $vimeoId = null === $youtubeId ? self::extractVimeoId($content) : null;
+        if (null !== $youtubeId || null !== $vimeoId) {
+            $attributesString = '';
+            foreach (self::withVideoFrameClass($options)['attributes'] as $key => $value) {
+                $attributesString .= '' === $value
+                    ? ' ' . rex_escape($key)
+                    : ' ' . rex_escape($key) . '="' . rex_escape($value) . '"';
+            }
+        }
         if (null !== $youtubeId) {
             // TODO: Verlagerung in ein Fragment prüfen
             // Standard YouTube iframe
@@ -366,7 +398,6 @@ class InlineConsent
         }
 
         // Für Vimeo URLs oder Video-IDs
-        $vimeoId = self::extractVimeoId($content);
         if (null !== $vimeoId) {
             // TODO: Verlagerung in ein Fragment prüfen
             // Standard Vimeo iframe

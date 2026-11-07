@@ -35,6 +35,11 @@ $extraClass = (isset($options['css_class']) && is_string($options['css_class']) 
     ? ' ' . rex_escape($options['css_class'])
     : '';
 
+// Videos (YouTube, Vimeo): Platzhalter und geladenes Video im selben Seitenverhältnis (consent_inline.css)
+if (!empty($placeholderData['video'])) {
+    $extraClass .= ' consent-inline-video';
+}
+
 // Text-Variablen aus Fragment abrufen (von FriendsOfRedaxo\ConsentManager\InlineConsent::getButtonText())
 $inline_title_fallback = $this->getVar('inline_title_fallback', 'Externes Medium');
 $inline_privacy_notice = $this->getVar('inline_privacy_notice', 'Für die Anzeige werden Cookies benötigt.');

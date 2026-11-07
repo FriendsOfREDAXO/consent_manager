@@ -332,6 +332,23 @@ Das System verwendet **CSS Custom Properties** für maximale Flexibilität:
 }
 ```
 
+### Seitenverhältnis von Videos (YouTube, Vimeo)
+
+Platzhalter und geladenes Video haben dasselbe Seitenverhältnis (Standard 16:9), damit beim Laden nichts springt:
+
+- Der Container eines YouTube- oder Vimeo-Platzhalters trägt die Klasse `consent-inline-video`.
+- Das geladene iframe trägt die Klasse `consent-inline-video-frame` und füllt die Breite des umgebenden Elements – auch wenn die Einwilligung schon besteht und das Video direkt ausgegeben wird. Eigene Klassen aus der Option `attributes` bleiben erhalten.
+- Ist der Platzhalter schmaler als 560px (Smartphone, schmale Spalte), behält er seine Mindesthöhe, damit Hinweis und Buttons Platz haben. Das geladene Video erscheint auch dort im Seitenverhältnis. Gemessen wird die Breite des Platzhalters (Container Query), nicht die des Bildschirms.
+
+Anderes Seitenverhältnis, z. B. für 4:3-Videos:
+
+```css
+.consent-inline-video,
+.consent-inline-video-frame {
+    --consent-video-aspect-ratio: 4 / 3;
+}
+```
+
 ### Vordefinierte Themes:
 
 ```css
