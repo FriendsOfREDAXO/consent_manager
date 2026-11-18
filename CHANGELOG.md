@@ -9,6 +9,7 @@
 - Cookie-Bereinigung beim Seitenaufruf (`boot.php`): liest Cookies und HTTPS über `rex_request::cookie()` / `rex_request::isHttps()` statt über `$_COOKIE` / `$_SERVER`; toten, auskommentierten Code entfernt. Verhalten unverändert.
 - Vorschaubilder von YouTube/Vimeo (Media-Manager-Effekt `external_thumbnail`, `ThumbnailCache`) werden über `rex_socket` geladen statt über eigenes cURL mit `file_get_contents`-Fallback. Damit gilt der in REDAXO konfigurierte Proxy (`socket_proxy`), Fehler im Log nennen Status und URL. Neue Hilfsmethode `Utility::httpGet()`.
 - `ThumbnailCache`: keine PHP-Warnung mehr bei noch nicht gecachten Videos (`filemtime()` wurde vor der Existenzprüfung aufgerufen).
+- Weniger Einträge im Systemlog beim Laden von Vorschaubildern: keine Info-Zeilen mehr bei jedem Download und kein Fehler mehr, wenn ein YouTube-Video kein `maxresdefault.jpg` hat (das Ersatzbild `hqdefault.jpg` wird ohnehin geladen). Kommt gar kein Bild, steht genau ein Eintrag mit allen versuchten URLs im Log.
 
 ## Version 5.9.2 - 2026-11-07
 

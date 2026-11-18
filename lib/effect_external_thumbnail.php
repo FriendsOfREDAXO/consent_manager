@@ -69,37 +69,23 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                 throw new rex_exception('External thumbnail effect: Could not determine thumbnail URL for service "' . $service . '" with video ID "' . $videoId . '"');
             }
 
-            // Thumbnail herunterladen
-            rex_logger::factory()->info('External thumbnail: Downloading', [
-                'service' => $service,
-                'video_id' => $videoId,
-                'url' => $thumbnailUrl,
-            ]);
-
+            // Thumbnail herunterladen. Kein Log pro Versuch: Viele YouTube-Videos haben kein maxresdefault.jpg,
+            // der 404 darauf ist normal und wird über das Fallback aufgefangen. Geloggt wird nur, wenn gar nichts kommt.
+            $triedUrls = [$thumbnailUrl];
             $imageData = $this->downloadThumbnail($thumbnailUrl);
 
             if (null === $imageData || '' === $imageData) {
                 // Fallback versuchen
                 if ('youtube' === $service && isset(self::SERVICES[$service]['fallback_url'])) {
                     $fallbackUrl = sprintf(self::SERVICES[$service]['fallback_url'], $videoId);
-                    rex_logger::factory()->info('External thumbnail: Trying fallback', [
-                        'fallback_url' => $fallbackUrl,
-                    ]);
+                    $triedUrls[] = $fallbackUrl;
                     $imageData = $this->downloadThumbnail($fallbackUrl);
                 }
 
                 if (null === $imageData || '' === $imageData) {
-                    rex_logger::factory()->error('External thumbnail: Download failed', [
-                        'primary_url' => $thumbnailUrl,
-                        'fallback_tried' => isset($fallbackUrl),
-                    ]);
-                    throw new rex_exception('External thumbnail effect: Could not download thumbnail from "' . $thumbnailUrl . '"');
+                    throw new rex_exception('External thumbnail effect: Could not download thumbnail (tried: ' . implode(', ', $triedUrls) . ')');
                 }
             }
-
-            rex_logger::factory()->info('External thumbnail: Download successful', [
-                'data_size' => strlen($imageData),
-            ]);
 
             // Temporäre Datei erstellen
             $tempFile = rex_path::addonCache('media_manager', 'external_thumbnails/' . $filename);
@@ -210,7 +196,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             'Accept' => 'image/webp,image/apng,image/*,*/*;q=0.8',
             'Accept-Language' => 'de-DE,de;q=0.9,en;q=0.8',
             'Cache-Control' => 'no-cache',
-        ], true);
+        ]);
     }
 
     /**
