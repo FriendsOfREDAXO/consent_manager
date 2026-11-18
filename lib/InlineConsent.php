@@ -295,8 +295,6 @@ class InlineConsent
      */
     private static function renderPlaceholderHTML(string $serviceKey, string $content, array $options, string $consentId, array $service, array $placeholderData): string
     {
-        $debug = rex::isDebugMode();
-
         // Fragment verwenden für bessere Anpassbarkeit
         // escape=false: Das Fragment escaped jedes Feld schon selbst gezielt (rex_escape) -
         // Default-Escaping hier fuehrte zu doppelt escaptem Output (z.B. '&' -> '&amp;amp;').
@@ -310,11 +308,6 @@ class InlineConsent
         $fragment->setVar('service', $service, false);
         $fragment->setVar('placeholderData', $placeholderData, false);
 
-        if ($debug) {
-            echo "<!-- DEBUG renderPlaceholderHTML: serviceKey=$serviceKey -->\n";
-            echo '<!-- DEBUG options: ' . print_r($options, true) . " -->\n";
-        }
-
         // Alle Button-Texte für Fragment hinzufügen
         // TODO: Button-Texte etc. über .lang bereitstellen
         $fragment->setVar('button_inline_details_text', self::getButtonText('button_inline_details', 'Einstellungen'), false);
@@ -326,12 +319,6 @@ class InlineConsent
         $fragment->setVar('inline_privacy_notice', $privacyNotice, false);
         $fragment->setVar('inline_title_fallback', self::getButtonText('inline_title_fallback', 'Externes Medium'), false);
         $fragment->setVar('inline_privacy_link_text', self::getButtonText('inline_privacy_link_text', 'Datenschutzerklärung von'), false);
-
-        if ($debug) {
-            // TODO: Texte über .lang aufbauen?
-            // XSS-Schutz: Debug-Werte escapen da aus DB
-            echo '<!-- DEBUG inline_privacy_notice from DB: ' . htmlspecialchars($privacyNotice, ENT_QUOTES, 'UTF-8') . " -->\n";
-        }
 
         // Icon-Konfiguration
         $fragment->setVar('privacy_icon', $options['privacy_icon'] ?? 'uk-icon:shield', false);
