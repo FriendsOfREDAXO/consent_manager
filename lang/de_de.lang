@@ -317,6 +317,7 @@ consent_manager_config_minimal_update_confirm = Minimal Setup Update?\n\nNur neu
 consent_manager_config_export_title = Konfiguration exportieren
 consent_manager_config_export_desc = Exportieren Sie Ihre aktuelle Konfiguration als JSON-Datei zum Backup oder zur Übertragung.
 consent_manager_config_export_button = JSON exportieren
+consent_manager_config_export_failed = Export fehlgeschlagen: {0}
 consent_manager_config_import_title = JSON-Konfiguration importieren
 consent_manager_config_import_desc = Importieren Sie eine zuvor exportierte JSON-Konfiguration.
 consent_manager_config_import_button = JSON importieren

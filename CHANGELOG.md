@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Unveröffentlicht
+
+### Verbesserungen
+
+- JSON-Export (Setup, Import & Export): Ausgabe über `rex_response::sendContent()` statt `header()`/`echo` – leert die Ausgabepuffer, setzt Content-Type mit Zeichensatz, Content-Length und Cache-Header einheitlich. Lässt sich die Konfiguration nicht als JSON kodieren, erscheint eine Fehlermeldung statt einer leeren Datei.
+
 ## Version 5.9.2 - 2026-11-07
 
 ### Verbesserungen
