@@ -5,7 +5,10 @@ namespace FriendsOfRedaxo\ConsentManager;
 use rex;
 use rex_addon;
 use rex_clang;
+use rex_logger;
 use rex_request;
+use rex_socket;
+use rex_socket_exception;
 use rex_sql;
 
 use function count;
@@ -234,5 +237,46 @@ class Utility
         }
 
         return strtolower($value);
+    }
+
+    /**
+     * Lädt eine URL per HTTP GET über rex_socket.
+     *
+     * rex_socket nutzt automatisch den in REDAXO konfigurierten Proxy (`socket_proxy`),
+     * folgt Weiterleitungen und prüft SSL-Zertifikate.
+     *
+     * @param array<string, string> $headers zusätzliche Request-Header, z. B. ['User-Agent' => '…']
+     * @param bool $logErrors HTTP- und Verbindungsfehler ins Systemlog schreiben
+     * @return string|null Inhalt bei Status 200, sonst null
+     */
+    public static function httpGet(string $url, int $timeout = 10, array $headers = [], bool $logErrors = false): ?string
+    {
+        try {
+            $socket = rex_socket::factoryUrl($url);
+            $socket->setTimeout($timeout);
+            $socket->followRedirects(5);
+            foreach ($headers as $name => $value) {
+                $socket->addHeader($name, $value);
+            }
+            $response = $socket->doGet();
+
+            if (!$response->isOk()) {
+                if ($logErrors) {
+                    rex_logger::factory()->error('consent_manager: HTTP {status} for {url}', [
+                        'status' => $response->getStatusCode(),
+                        'url' => $url,
+                    ]);
+                }
+                return null;
+            }
+
+            $body = $response->getBody();
+            return '' !== $body ? $body : null;
+        } catch (rex_socket_exception $e) {
+            if ($logErrors) {
+                rex_logger::logException($e);
+            }
+            return null;
+        }
     }
 }
