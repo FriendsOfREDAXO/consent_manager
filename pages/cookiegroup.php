@@ -93,7 +93,7 @@ if ('uid_rename_dryrun' === $func || 'uid_rename_apply' === $func) {
 }
 
 if ('add' === $func && $clang_id !== $startClangId) {
-    rex_response::sendRedirect(rex_url::backendPage('consent_manager/cookiegroup/clang' . $startClangId, ['func' => 'add', 'uid_primary_only' => 1]));
+    rex_response::sendRedirect(rex_url::backendPage('consent_manager/cookiegroup/clang' . $startClangId, ['func' => 'add', 'uid_primary_only' => 1], false));
 }
 
 if (1 === rex_request::request('uid_primary_only', 'int', 0)) {
