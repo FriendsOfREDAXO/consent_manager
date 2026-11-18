@@ -20,14 +20,6 @@ if ('delete' === $func) {
     $formDebug = false;
     $showlist = false;
 
-    // Debug: POST-Daten anzeigen wenn Debug-Modus aktiv
-    if (rex::isDebugMode() && 'POST' === $_SERVER['REQUEST_METHOD']) {
-        dump('=== POST Request Data ===');
-        dump($_POST);
-        dump('=== auto_inject_include_templates ===');
-        dump($_POST['auto_inject_include_templates'] ?? 'NOT SET');
-    }
-
     $form = rex_form::factory($table, '', 'id = ' . $id, 'post', $formDebug);
     $form->addParam('id', $id);
     $form->addParam('sort', rex_request::request('sort', 'string', ''));

@@ -97,9 +97,6 @@ if ('1' === rex_request::post('formsubmit', 'string') && !$csrfToken->isValid())
     }
 }
 
-// dump($_POST);
-// dump($addon->getConfig('theme', false));
-
 // Aktuell aktives Theme ermitteln
 $configtheme = $addon->getConfig('theme', 'consent_manager_frontend.scss');
 if ('' === $configtheme || false === $configtheme) {
