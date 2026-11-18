@@ -6,6 +6,7 @@
 
 - JSON-Export (Setup, Import & Export): Ausgabe über `rex_response::sendContent()` statt `header()`/`echo` – leert die Ausgabepuffer, setzt Content-Type mit Zeichensatz, Content-Length und Cache-Header einheitlich. Lässt sich die Konfiguration nicht als JSON kodieren, erscheint eine Fehlermeldung statt einer leeren Datei.
 - Debug-Ausgaben entfernt: `InlineConsent` schrieb im Debug-Modus Kommentare samt `print_r($options)` per `echo` an der Rückgabe vorbei ins Frontend (an falscher Stelle im Dokument), die Domain-Seite gab im Debug-Modus `dump($_POST)` aus.
+- Cookie-Bereinigung beim Seitenaufruf (`boot.php`): liest Cookies und HTTPS über `rex_request::cookie()` / `rex_request::isHttps()` statt über `$_COOKIE` / `$_SERVER`; toten, auskommentierten Code entfernt. Verhalten unverändert.
 
 ## Version 5.9.2 - 2026-11-07
 
