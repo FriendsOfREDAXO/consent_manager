@@ -23,8 +23,7 @@ $buildRenameToken = static function (string $oldUid, string $newUid): string {
 };
 
 if ('add' === $func && $clang_id !== $startClangId) {
-    header('Location: ' . rex_url::backendPage('consent_manager/text/clang' . $startClangId, ['func' => 'add', 'uid_primary_only' => 1]));
-    exit;
+    rex_response::sendRedirect(rex_url::backendPage('consent_manager/text/clang' . $startClangId, ['func' => 'add', 'uid_primary_only' => 1]));
 }
 
 if (1 === rex_request::request('uid_primary_only', 'int', 0)) {
