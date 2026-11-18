@@ -7,6 +7,8 @@
 - JSON-Export (Setup, Import & Export): Ausgabe über `rex_response::sendContent()` statt `header()`/`echo` – leert die Ausgabepuffer, setzt Content-Type mit Zeichensatz, Content-Length und Cache-Header einheitlich. Lässt sich die Konfiguration nicht als JSON kodieren, erscheint eine Fehlermeldung statt einer leeren Datei.
 - Debug-Ausgaben entfernt: `InlineConsent` schrieb im Debug-Modus Kommentare samt `print_r($options)` per `echo` an der Rückgabe vorbei ins Frontend (an falscher Stelle im Dokument), die Domain-Seite gab im Debug-Modus `dump($_POST)` aus.
 - Cookie-Bereinigung beim Seitenaufruf (`boot.php`): liest Cookies und HTTPS über `rex_request::cookie()` / `rex_request::isHttps()` statt über `$_COOKIE` / `$_SERVER`; toten, auskommentierten Code entfernt. Verhalten unverändert.
+- Vorschaubilder von YouTube/Vimeo (Media-Manager-Effekt `external_thumbnail`, `ThumbnailCache`) werden über `rex_socket` geladen statt über eigenes cURL mit `file_get_contents`-Fallback. Damit gilt der in REDAXO konfigurierte Proxy (`socket_proxy`), Fehler im Log nennen Status und URL. Neue Hilfsmethode `Utility::httpGet()`.
+- `ThumbnailCache`: keine PHP-Warnung mehr bei noch nicht gecachten Videos (`filemtime()` wurde vor der Existenzprüfung aufgerufen).
 
 ## Version 5.9.2 - 2026-11-07
 

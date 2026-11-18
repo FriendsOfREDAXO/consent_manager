@@ -12,16 +12,9 @@ use rex_dir;
 use rex_path;
 use rex_url;
 
-use function function_exists;
 use function is_string;
 use function strlen;
 
-use const CURLINFO_HTTP_CODE;
-use const CURLOPT_FOLLOWLOCATION;
-use const CURLOPT_RETURNTRANSFER;
-use const CURLOPT_TIMEOUT;
-use const CURLOPT_URL;
-use const CURLOPT_USERAGENT;
 
 class ThumbnailCache
 {
@@ -53,8 +46,8 @@ class ThumbnailCache
         $cacheUrl = rex_url::addonAssets('consent_manager', 'cache/thumbnails/youtube_' . $videoId . '.jpg');
 
         // Prüfen ob bereits gecacht
-        $fileMtime = filemtime($cacheFile);
-        if (file_exists($cacheFile) && false !== $fileMtime && (time() - $fileMtime) < 86400 * 7) { // 7 Tage Cache
+        $fileMtime = file_exists($cacheFile) ? filemtime($cacheFile) : false;
+        if (false !== $fileMtime && (time() - $fileMtime) < 86400 * 7) { // 7 Tage Cache
             return $cacheUrl;
         }
 
@@ -103,8 +96,8 @@ class ThumbnailCache
         $cacheUrl = rex_url::addonAssets('consent_manager', 'cache/thumbnails/vimeo_' . $videoId . '.jpg');
 
         // Prüfen ob bereits gecacht
-        $fileMtime = filemtime($cacheFile);
-        if (file_exists($cacheFile) && false !== $fileMtime && (time() - $fileMtime) < 86400 * 7) {
+        $fileMtime = file_exists($cacheFile) ? filemtime($cacheFile) : false;
+        if (false !== $fileMtime && (time() - $fileMtime) < 86400 * 7) {
             return $cacheUrl;
         }
 
@@ -141,41 +134,15 @@ class ThumbnailCache
     }
 
     /**
-     * Bild herunterladen.
+     * Bild herunterladen (rex_socket: Proxy aus der REDAXO-Konfiguration, Weiterleitungen, SSL-Prüfung).
      */
     private static function downloadImage(string $url): string
     {
-        // cURL verwenden wenn verfügbar
-        if (function_exists('curl_init') && '' !== $url) {
-            $ch = curl_init();
-            /** @var non-empty-string $url */
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            /** @var non-empty-string $userAgent */
-            $userAgent = 'Mozilla/5.0 (compatible; ConsentManager/1.0)';
-            curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
-
-            $data = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if (200 === $httpCode && is_string($data)) {
-                return $data;
-            }
+        if ('' === $url) {
+            return '';
         }
 
-        // Fallback: file_get_contents
-        $context = stream_context_create([
-            'http' => [
-                'timeout' => 10,
-                'user_agent' => 'Mozilla/5.0 (compatible; ConsentManager/1.0)',
-            ],
-        ]);
-
-        $result = @file_get_contents($url, false, $context);
-        return is_string($result) ? $result : '';
+        return Utility::httpGet($url, 10, ['User-Agent' => 'Mozilla/5.0 (compatible; ConsentManager/1.0)']) ?? '';
     }
 
     /**

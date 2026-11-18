@@ -201,115 +201,16 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
     }
 
     /**
-     * HTTP-Request durchführen.
+     * HTTP-Request durchführen (rex_socket: Proxy aus der REDAXO-Konfiguration, Weiterleitungen, SSL-Prüfung).
      */
     private function makeHttpRequest(string $url): ?string
     {
-        // Zuerst cURL versuchen (oft zuverlässiger)
-        if (function_exists('curl_init')) {
-            return $this->downloadWithCurl($url);
-        }
-
-        // Fallback zu file_get_contents
-        return $this->downloadWithFileGetContents($url);
-    }
-
-    /**
-     * Download mit cURL.
-     *
-     * TODO: Prüfen,ob die (engl.) Meldungen weiter im Test stehen oder nach .lang übertragen werden
-     */
-    private function downloadWithCurl(string $url): ?string
-    {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Accept: image/webp,image/apng,image/*,*/*;q=0.8',
-            'Accept-Language: de-DE,de;q=0.9,en;q=0.8',
-            'Cache-Control: no-cache',
-        ]);
-
-        $data = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        curl_close($ch);
-
-        if (false === $data || ('' !== $error)) {
-            rex_logger::factory()->error('External thumbnail cURL error', [
-                'url' => $url,
-                'error' => $error,
-                'http_code' => $httpCode,
-            ]);
-            return null;
-        }
-
-        if (200 !== $httpCode) {
-            rex_logger::factory()->error('External thumbnail HTTP error', [
-                'url' => $url,
-                'http_code' => $httpCode,
-            ]);
-            return null;
-        }
-
-        return is_string($data) && '' < $data ? $data : null;
-    }
-
-    /**
-     * Download mit file_get_contents (Fallback).
-     *
-     * TODO: Prüfen,ob die (engl.) Meldungen weiter im Test stehen oder nach .lang übertragen werden
-     */
-    private function downloadWithFileGetContents(string $url): ?string
-    {
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'GET',
-                'timeout' => 30,
-                'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                'follow_location' => true,
-                'max_redirects' => 5,
-                'ignore_errors' => true,
-                'header' => [
-                    'Accept: image/webp,image/apng,image/*,*/*;q=0.8',
-                    'Accept-Language: de-DE,de;q=0.9,en;q=0.8',
-                    'Cache-Control: no-cache',
-                ],
-            ],
-        ]);
-
-        try {
-            $data = file_get_contents($url, false, $context);
-
-            /** @var array<int, string> $http_response_header materializes out of thin air */
-
-            $responseCode = null;
-            foreach ($http_response_header as $header) {
-                if ((bool) preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
-                    $responseCode = (int) $matches[1];
-                    break;
-                }
-            }
-
-            if (null !== $responseCode && 200 !== $responseCode) {
-                rex_logger::factory()->error('External thumbnail HTTP error', [
-                    'url' => $url,
-                    'response_code' => $responseCode,
-                    'headers' => $http_response_header,
-                ]);
-                return null;
-            }
-
-            return false !== $data && '' < $data ? $data : null;
-        } catch (Exception $e) {
-            rex_logger::logException($e);
-            return null;
-        }
+        return FriendsOfRedaxo\ConsentManager\Utility::httpGet($url, 30, [
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept' => 'image/webp,image/apng,image/*,*/*;q=0.8',
+            'Accept-Language' => 'de-DE,de;q=0.9,en;q=0.8',
+            'Cache-Control' => 'no-cache',
+        ], true);
     }
 
     /**
