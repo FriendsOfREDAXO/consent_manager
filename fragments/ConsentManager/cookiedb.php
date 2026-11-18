@@ -152,7 +152,7 @@ if (0 !== count($consent_manager->cookiegroups)) { /** phpstan-ignore-line */
     foreach ($_COOKIE as $cookiename => $cookieValue) { /** @phpstan-ignore-line */
         $output .= '<tr>';
         // XSS-Schutz: Cookie-Name escapen da aus externer Quelle ($_COOKIE)
-        $output .= '<td class="consent_manager-cookie-name">' . htmlspecialchars($cookiename, ENT_QUOTES, 'UTF-8') . '</td>';
+        $output .= '<td class="consent_manager-cookie-name">' . rex_escape($cookiename) . '</td>';
         if (isset($cookiedb[$cookiename]) || array_key_exists($cookiename, $cookiedb)) {
             $output .= '<td class="consent_manager-cookie-provider">' . rex_escape($cookiedb[$cookiename]['provider']) . '</td>';
             // Description darf HTML enthalten (bewusste Entscheidung)

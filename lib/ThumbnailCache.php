@@ -9,6 +9,7 @@ namespace FriendsOfRedaxo\ConsentManager;
 
 use Exception;
 use rex_dir;
+use rex_file;
 use rex_path;
 use rex_url;
 
@@ -63,7 +64,7 @@ class ThumbnailCache
             try {
                 $imageData = self::downloadImage($url);
                 if ('' !== $imageData && strlen($imageData) > 1000) { // Mindestgröße prüfen
-                    file_put_contents($cacheFile, $imageData);
+                    rex_file::put($cacheFile, $imageData);
 
                     // Auch in public assets kopieren für Web-Zugriff
                     $publicCacheDir = rex_path::addonAssets('consent_manager', 'cache/thumbnails/');
@@ -113,7 +114,7 @@ class ThumbnailCache
                     $imageData = self::downloadImage($thumbnailUrl);
 
                     if ('' !== $imageData) {
-                        file_put_contents($cacheFile, $imageData);
+                        rex_file::put($cacheFile, $imageData);
 
                         // In public assets kopieren
                         $publicCacheDir = rex_path::addonAssets('consent_manager', 'cache/thumbnails/');
@@ -171,7 +172,7 @@ class ThumbnailCache
 </svg>';
 
         $placeholderFile = self::getCacheDir() . $service . '_placeholder.svg';
-        file_put_contents($placeholderFile, $svg);
+        rex_file::put($placeholderFile, $svg);
 
         // In public assets kopieren
         $publicCacheDir = rex_path::addonAssets('consent_manager', 'cache/thumbnails/');
@@ -206,7 +207,7 @@ class ThumbnailCache
                 foreach ($files as $file) {
                     $fileMtime = filemtime($file);
                     if (is_file($file) && false !== $fileMtime && (time() - $fileMtime) > $maxAge) {
-                        unlink($file);
+                        rex_file::delete($file);
                     }
                 }
             }

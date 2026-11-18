@@ -6,6 +6,7 @@ use Exception;
 use rex;
 use rex_addon;
 use rex_clang;
+use rex_file;
 use rex_i18n;
 use rex_path;
 use rex_sql;
@@ -42,8 +43,8 @@ class JsonSetup
                 return ['success' => false, 'message' => 'JSON setup file not found: ' . $jsonFile];
             }
 
-            $jsonContent = file_get_contents($jsonFile);
-            if (false === $jsonContent) {
+            $jsonContent = rex_file::get($jsonFile);
+            if (null === $jsonContent) {
                 return ['success' => false, 'message' => 'Could not read JSON setup file'];
             }
 
@@ -191,8 +192,8 @@ class JsonSetup
                 continue;
             }
 
-            $jsonContent = file_get_contents($file);
-            if (false === $jsonContent) {
+            $jsonContent = rex_file::get($file);
+            if (null === $jsonContent) {
                 continue;
             }
 

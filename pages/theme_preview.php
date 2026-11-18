@@ -58,7 +58,7 @@ $layout = $layouts[array_rand($layouts)];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($theme_options['name'] ?? $preview) ?> - Theme Preview</title>
+    <title><?= rex_escape($theme_options['name'] ?? $preview) ?> - Theme Preview</title>
     <style>
         * {
             margin: 0;
@@ -482,12 +482,12 @@ $layout = $layouts[array_rand($layouts)];
             <!-- Sidebar Layout -->
             <div class="sidebar-wrapper">
                 <section class="theme-info-section">
-                    <h1><?= htmlspecialchars($theme_options['name'] ?? $preview) ?></h1>
-                    <p><?= htmlspecialchars($theme_options['description'] ?? 'Theme-Vorschau für Consent Manager') ?></p>
+                    <h1><?= rex_escape($theme_options['name'] ?? $preview) ?></h1>
+                    <p><?= rex_escape($theme_options['description'] ?? 'Theme-Vorschau für Consent Manager') ?></p>
                     <div class="theme-badges">
-                        <span class="theme-badge">Type: <?= htmlspecialchars($theme_options['type'] ?? 'Modal') ?></span>
-                        <span class="theme-badge">Style: <?= htmlspecialchars($theme_options['style'] ?? 'Modern') ?></span>
-                        <span class="theme-badge">Author: <?= htmlspecialchars($theme_options['autor'] ?? 'Unknown') ?></span>
+                        <span class="theme-badge">Type: <?= rex_escape($theme_options['type'] ?? 'Modal') ?></span>
+                        <span class="theme-badge">Style: <?= rex_escape($theme_options['style'] ?? 'Modern') ?></span>
+                        <span class="theme-badge">Author: <?= rex_escape($theme_options['autor'] ?? 'Unknown') ?></span>
                     </div>
                 </section>
             </div>
@@ -533,12 +533,12 @@ $layout = $layouts[array_rand($layouts)];
             <!-- Split Layout -->
             <div class="left-column">
                 <section class="theme-info-section">
-                    <h1><?= htmlspecialchars($theme_options['name'] ?? $preview) ?></h1>
-                    <p><?= htmlspecialchars($theme_options['description'] ?? 'Theme-Vorschau für Consent Manager') ?></p>
+                    <h1><?= rex_escape($theme_options['name'] ?? $preview) ?></h1>
+                    <p><?= rex_escape($theme_options['description'] ?? 'Theme-Vorschau für Consent Manager') ?></p>
                     <div class="theme-badges">
-                        <span class="theme-badge">Type: <?= htmlspecialchars($theme_options['type'] ?? 'Modal') ?></span>
-                        <span class="theme-badge">Style: <?= htmlspecialchars($theme_options['style'] ?? 'Modern') ?></span>
-                        <span class="theme-badge">Author: <?= htmlspecialchars($theme_options['autor'] ?? 'Unknown') ?></span>
+                        <span class="theme-badge">Type: <?= rex_escape($theme_options['type'] ?? 'Modal') ?></span>
+                        <span class="theme-badge">Style: <?= rex_escape($theme_options['style'] ?? 'Modern') ?></span>
+                        <span class="theme-badge">Author: <?= rex_escape($theme_options['autor'] ?? 'Unknown') ?></span>
                     </div>
                 </section>
                 <div class="feature-card">
@@ -581,12 +581,12 @@ $layout = $layouts[array_rand($layouts)];
         <?php else: ?>
             <!-- Default & Centered Layout -->
             <section class="theme-info-section">
-                <h1><?= htmlspecialchars($theme_options['name'] ?? $preview) ?></h1>
-                <p><?= htmlspecialchars($theme_options['description'] ?? 'Theme-Vorschau für Consent Manager') ?></p>
+                <h1><?= rex_escape($theme_options['name'] ?? $preview) ?></h1>
+                <p><?= rex_escape($theme_options['description'] ?? 'Theme-Vorschau für Consent Manager') ?></p>
                 <div class="theme-badges">
-                    <span class="theme-badge">Type: <?= htmlspecialchars($theme_options['type'] ?? 'Modal') ?></span>
-                    <span class="theme-badge">Style: <?= htmlspecialchars($theme_options['style'] ?? 'Modern') ?></span>
-                    <span class="theme-badge">Author: <?= htmlspecialchars($theme_options['autor'] ?? 'Unknown') ?></span>
+                    <span class="theme-badge">Type: <?= rex_escape($theme_options['type'] ?? 'Modal') ?></span>
+                    <span class="theme-badge">Style: <?= rex_escape($theme_options['style'] ?? 'Modern') ?></span>
+                    <span class="theme-badge">Author: <?= rex_escape($theme_options['autor'] ?? 'Unknown') ?></span>
                 </div>
             </section>
 

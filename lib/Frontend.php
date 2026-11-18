@@ -457,7 +457,7 @@ class Frontend
     public static function getNonceAttribute(): string
     {
         $nonce = rex_response::getNonce();
-        return ' nonce="' . htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8') . '"';
+        return ' nonce="' . rex_escape($nonce) . '"';
     }
 
     /**
