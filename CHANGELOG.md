@@ -1,16 +1,20 @@
 # REDAXO consent_manager - Changelog
 
-## Unveröffentlicht
+## Version 5.9.3 - 2026-11-19
 
-### Verbesserungen
+Danke an Norbert Micheel (@tyrant88) für die Korrektur der Weiterleitungen (#508).
 
-- JSON-Export (Setup, Import & Export): Ausgabe über `rex_response::sendContent()` statt `header()`/`echo` – leert die Ausgabepuffer, setzt Content-Type mit Zeichensatz, Content-Length und Cache-Header einheitlich. Lässt sich die Konfiguration nicht als JSON kodieren, erscheint eine Fehlermeldung statt einer leeren Datei.
-- Debug-Ausgaben entfernt: `InlineConsent` schrieb im Debug-Modus Kommentare samt `print_r($options)` per `echo` an der Rückgabe vorbei ins Frontend (an falscher Stelle im Dokument), die Domain-Seite gab im Debug-Modus `dump($_POST)` aus.
-- Cookie-Bereinigung beim Seitenaufruf (`boot.php`): liest Cookies und HTTPS über `rex_request::cookie()` / `rex_request::isHttps()` statt über `$_COOKIE` / `$_SERVER`; toten, auskommentierten Code entfernt. Verhalten unverändert.
-- Vorschaubilder von YouTube/Vimeo (Media-Manager-Effekt `external_thumbnail`, `ThumbnailCache`) werden über `rex_socket` geladen statt über eigenes cURL mit `file_get_contents`-Fallback. Damit gilt der in REDAXO konfigurierte Proxy (`socket_proxy`), Fehler im Log nennen Status und URL. Neue Hilfsmethode `Utility::httpGet()`.
-- `ThumbnailCache`: keine PHP-Warnung mehr bei noch nicht gecachten Videos (`filemtime()` wurde vor der Existenzprüfung aufgerufen).
-- Weniger Einträge im Systemlog beim Laden von Vorschaubildern: keine Info-Zeilen mehr bei jedem Download und kein Fehler mehr, wenn ein YouTube-Video kein `maxresdefault.jpg` hat (das Ersatzbild `hqdefault.jpg` wird ohnehin geladen). Kommt gar kein Bild, steht genau ein Eintrag mit allen versuchten URLs im Log.
-- Aufgeräumt: Dateizugriffe über `rex_file` statt `file_get_contents`/`file_put_contents`/`unlink`, Ausgaben über `rex_escape()` statt `htmlspecialchars()`.
+### Behoben
+
+- Wer Dienste, Gruppen oder Texte in einer weiteren Sprache anlegen wollte, wurde zur Hauptsprache weitergeleitet, landete dort aber in der Liste statt im Formular. Jetzt öffnet sich das Formular samt Hinweis. Die Weiterleitungen sind außerdem kompatibel mit Web Application Firewalls (#508).
+- Der JSON-Export zeigt eine Fehlermeldung, wenn er nicht klappt, statt eine leere Datei zu liefern (#509).
+- Im Debug-Modus erscheinen keine Testausgaben mehr im Frontend und beim Speichern von Domains (#510).
+- Vorschaubilder von YouTube und Vimeo nutzen den in REDAXO eingestellten Proxy (#512).
+- Das Systemlog bleibt beim Laden von Vorschaubildern ruhig – einen Eintrag gibt es nur noch, wenn wirklich kein Bild geladen werden kann (#512, #513).
+
+### Intern
+
+- Mehr REDAXO-Bordmittel statt eigener PHP-Lösungen (Cookies, Dateien, Ausgaben) (#509, #511, #514).
 
 ## Version 5.9.2 - 2026-11-07
 
