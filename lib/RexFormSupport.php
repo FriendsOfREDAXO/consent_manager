@@ -495,7 +495,7 @@ class RexFormSupport
      */
     public static function showInfo(string $msg): string
     {
-        return rex_view::info('<i class="fa fa-info-circle"></i> ' . htmlspecialchars($msg), 'consent_manager-rex-form-info');
+        return rex_view::info('<i class="fa fa-info-circle"></i> ' . rex_escape($msg), 'consent_manager-rex-form-info');
     }
 
     /**

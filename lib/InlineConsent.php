@@ -42,7 +42,7 @@ class InlineConsent
         if (null === $service) {
             if (rex::isDebugMode()) {
                 // TODO: Texte über .lang aufbauen
-                return rex_view::warning('Consent Manager: Service "' . htmlspecialchars($serviceKey) . '" nicht gefunden');
+                return rex_view::warning('Consent Manager: Service "' . rex_escape($serviceKey) . '" nicht gefunden');
             }
             // TODO: Texte über .lang aufbauen?
             return '<!-- Consent Manager: Service "' . $serviceKey . '" not found -->';

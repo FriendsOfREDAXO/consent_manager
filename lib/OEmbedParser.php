@@ -109,7 +109,7 @@ class OEmbedParser
             // Unbekannte Plattform - Original zurückgeben oder Fehler
             if (rex::isDebugMode()) {
                 // TODO: Texte über .lang aufbauen
-                return '<!-- Consent Manager oEmbed: Unsupported platform for URL: ' . htmlspecialchars($url) . ' -->';
+                return '<!-- Consent Manager oEmbed: Unsupported platform for URL: ' . rex_escape($url) . ' -->';
             }
             return '';
         }
@@ -122,7 +122,7 @@ class OEmbedParser
         if (!self::serviceExists($serviceKey)) {
             if (rex::isDebugMode()) {
                 // TODO: Texte über .lang aufbauen
-                return rex_view::warning('Consent Manager: Service "' . htmlspecialchars($serviceKey) . '" nicht konfiguriert');
+                return rex_view::warning('Consent Manager: Service "' . rex_escape($serviceKey) . '" nicht konfiguriert');
             }
             return '';
         }
@@ -343,7 +343,7 @@ class OEmbedParser
         } catch (Exception $e) {
             if (rex::isDebugMode()) {
                 // TODO: Texte über .lang aufbauen
-                return '<!-- Vidstack Error: ' . htmlspecialchars($e->getMessage()) . ' -->';
+                return '<!-- Vidstack Error: ' . rex_escape($e->getMessage()) . ' -->';
             }
             // TODO: Texte über .lang aufbauen
             return '<!-- Vidstack Error -->';

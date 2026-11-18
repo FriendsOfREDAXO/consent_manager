@@ -91,7 +91,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
             $tempFile = rex_path::addonCache('media_manager', 'external_thumbnails/' . $filename);
             rex_dir::create(dirname($tempFile));
 
-            if (false === file_put_contents($tempFile, $imageData)) {
+            if (!rex_file::put($tempFile, $imageData)) {
                 $this->createFallbackImage();
                 return;
             }
@@ -101,9 +101,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
             // Aufräumen nach Request
             register_shutdown_function(static function () use ($tempFile) {
-                if (file_exists($tempFile)) {
-                    unlink($tempFile);
-                }
+                rex_file::delete($tempFile);
             });
         } catch (Exception $e) {
             // Bei jedem Fehler: Fallback-Bild erstellen
@@ -143,9 +141,7 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
 
         // Aufräumen
         register_shutdown_function(static function () use ($tempFile) {
-            if (file_exists($tempFile)) {
-                unlink($tempFile);
-            }
+            rex_file::delete($tempFile);
         });
     }
 
