@@ -45,10 +45,6 @@ if ('' !== $func && !isset($setupImports[$func])) {
         echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
     } else {
         if ('export' === $func) {
-            while (0 < ob_get_level()) {
-                ob_end_clean();
-            }
-
             $export_data = [];
             $sql = rex_sql::factory();
             $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_cookie') . ' ORDER BY id');
@@ -60,15 +56,20 @@ if ('' !== $func && !isset($setupImports[$func])) {
             $sql->setQuery('SELECT * FROM ' . rex::getTable('consent_manager_domain') . ' ORDER BY id');
             $export_data['domains'] = $sql->getArray();
 
-            $json_export = json_encode($export_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-            header('Content-Type: application/json');
-            header('Content-Disposition: attachment; filename="consent_manager_export_' . date('Y-m-d_H-i-s') . '.json"');
-            if (false !== $json_export) {
-                header('Content-Length: ' . strlen($json_export));
-                echo $json_export;
+            try {
+                $json_export = json_encode($export_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+            } catch (JsonException $e) {
+                // Statt einer leeren Datei eine Meldung auf der Seite
+                $json_export = null;
+                echo rex_view::error(rex_i18n::msg('consent_manager_config_export_failed', $e->getMessage()));
             }
-            exit;
+
+            if (null !== $json_export) {
+                // sendContent() leert die Ausgabepuffer und setzt Content-Type, Content-Length und Cache-Header
+                rex_response::setHeader('Content-Disposition', 'attachment; filename="consent_manager_export_' . date('Y-m-d_H-i-s') . '.json"');
+                rex_response::sendContent($json_export, 'application/json; charset=utf-8');
+                exit;
+            }
         }
         if ('sync_missing_clang' === $func) {
             $sourceClangId = rex_request::post('source_clang_id', 'int', rex_clang::getStartId());
