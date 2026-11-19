@@ -1,5 +1,11 @@
 # REDAXO consent_manager - Changelog
 
+## Version 5.9.4 - 2026-11-19
+
+### Behoben
+
+- Vorschaubilder für YouTube-Videos, deren Kennung einen Unterstrich enthält (z. B. `EZ_K-FBZbn8`), werden wieder geladen – bisher erschien nur ein grauer Platzhalter (#516).
+
 ## Version 5.9.3 - 2026-11-19
 
 Danke an Norbert Micheel (@tyrant88) für die Korrektur der Weiterleitungen (#508).
