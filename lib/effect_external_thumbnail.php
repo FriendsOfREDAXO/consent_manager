@@ -42,7 +42,11 @@ class rex_effect_external_thumbnail extends rex_effect_abstract
                 array_keys(self::SERVICES),
             ));
 
-            if ((bool) preg_match('/^(' . $servicePattern . ')_([^_]+)_([^.]+)\.jpg$/', $filename, $matches)) {
+            // Die Video-ID kann selbst Unterstriche und Bindestriche enthalten (YouTube: z. B. „EZ_K-FBZbn8“).
+            // Deshalb gilt als ID alles zwischen Service und dem 8-stelligen Hash am Ende; der Hash muss
+            // zu Service und ID passen (siehe ThumbnailMediaManager::generateThumbnailFilename()).
+            if ((bool) preg_match('/^(' . $servicePattern . ')_([A-Za-z0-9_-]+)_([a-f0-9]{8})\.jpg$/', $filename, $matches)
+                && substr(md5($matches[1] . $matches[2]), 0, 8) === $matches[3]) {
                 $service = $matches[1];
                 $videoId = $matches[2];
             } else {
